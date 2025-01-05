@@ -1,35 +1,43 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* bus
-#
+# 
 # Translators:
-# Simon S, 2022
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2022
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
-# Martin Trigaux, 2022
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
-# Kim Asplund <kim.asplund@gmail.com>, 2022
-# Moa Nicklasson <Moa.nicklasson@hotmail.se>, 2022
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
-"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: bus
+#: model:ir.model,name:bus.model_res_groups
+msgid "Access Groups"
+msgstr "Rättighetsgrupper"
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_attachment
+msgid "Attachment"
+msgstr "Bilaga"
 
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
 msgid "Away"
 msgstr "Borta"
+
+#. module: bus
+#: model:ir.model,name:bus.model_bus_listener_mixin
+msgid "Can send messages via bus.bus"
+msgstr "Kan skicka meddelanden via bus.bus"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__channel
@@ -54,13 +62,18 @@ msgstr "Skapad av"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
 msgid "Created on"
-msgstr "Skapad"
+msgstr "Skapad den"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
 #: model:ir.model.fields,field_description:bus.field_bus_presence__display_name
 msgid "Display Name"
 msgstr "Visningsnamn"
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP-routing"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__id
@@ -93,7 +106,7 @@ msgstr "Senast uppdaterad av"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__write_date
 msgid "Last Updated on"
-msgstr "Senast uppdaterad på"
+msgstr "Senast uppdaterad den"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__message
@@ -108,24 +121,41 @@ msgstr "Modeller"
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__offline
 msgid "Offline"
-msgstr "Offline"
+msgstr "Frånvarande"
 
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__online
 msgid "Online"
-msgstr "Uppkopplad"
+msgstr "Online"
 
 #. module: bus
 #. odoo-javascript
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
 msgid "Refresh"
 msgstr "Ladda om"
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid ""
+"Save your work and refresh to get the latest updates and avoid potential "
+"issues."
+msgstr ""
+"Spara ditt arbete och uppdatera för att få de senaste uppdateringarna och "
+"undvika potentiella problem."
 
 #. module: bus
 #. odoo-javascript
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
 msgid "The page appears to be out of date."
 msgstr "Sidan verkar vara föråldrad."
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid "The page is out of date"
+msgstr "Sidan är inaktuell"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
@@ -138,6 +168,11 @@ msgid "User Presence"
 msgstr "Användarens närvaro/status"
 
 #. module: bus
+#: model:ir.model,name:bus.model_res_users_settings
+msgid "User Settings"
+msgstr "Användarinställningar"
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__user_id
 msgid "Users"
 msgstr "Användare"
@@ -145,10 +180,16 @@ msgstr "Användare"
 #. module: bus
 #. odoo-python
 #: code:addons/bus/controllers/home.py:0
-msgid "Your password is the default (admin)! If this system is exposed to untrusted users it is important to change it immediately for security reasons. I will keep nagging you about it!"
+msgid ""
+"Your password is the default (admin)! If this system is exposed to untrusted"
+" users it is important to change it immediately for security reasons. I will"
+" keep nagging you about it!"
 msgstr ""
+"Ditt lösenord är standard (admin)! Om systemet utsätts för otillförlitliga "
+"användare är det av säkerhetsskäl viktigt att omedelbart ändra lösenordet. "
+"Jag kommer att fortsätta tjata på dig om det!"
 
 #. module: bus
 #: model:ir.model,name:bus.model_ir_websocket
 msgid "websocket message handling"
-msgstr ""
+msgstr "websocket meddelandehantering"

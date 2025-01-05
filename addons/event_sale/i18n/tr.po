@@ -1,39 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* event_sale
-#
+# 
 # Translators:
-# Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2022
-# Levent Karakaş <levent@mektup.at>, 2022
-# Yedigen, 2022
-# Metin Akın <aknmetin@gmail.com>, 2022
-# Tugay Hatıl <tugayh@projetgrup.com>, 2022
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2022
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2022
-# İlknur Püskül <ilknurpuskull@gmail.com>, 2022
-# Murat Kaplan <muratk@projetgrup.com>, 2022
-# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Umur Akın <umura@projetgrup.com>, 2022
-# Halil, 2022
-# Ediz Duman <neps1192@gmail.com>, 2022
-# İlknur Gözütok, 2023
-# Murat Durmuş <muratd@projetgrup.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Murat Durmuş <muratd@projetgrup.com>, 2023\n"
+"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
-"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/sale_order.py:0
+msgid "%(event_name)s - Tickets"
+msgstr ""
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
@@ -43,6 +33,11 @@ msgid ""
 msgstr ""
 ".\n"
 "            <span>Manual actions may be needed.</span>"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "<i class=\"fa fa-arrow-right\"/> Configure Events &amp; Tickets"
+msgstr ""
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
@@ -55,29 +50,14 @@ msgid "<span class=\"o_stat_text\">Sales</span>"
 msgstr "<span class=\"o_stat_text\">Satış</span>"
 
 #. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
-msgid "<span>Not enough seats available. All registrations were created as \"Unconfirmed\" and can be updated later on.</span>"
-msgstr "<span>Yeterli koltuk yok. Tüm kayıtlar \"Onaylanmamış\" olarak oluşturulmuştur ve daha sonra güncellenebilir.</span>"
-
-#. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
 msgid "<span>Registration modification for attendee:</span>"
 msgstr "<span>Katılımcı için kayıt değişikliği:</span>"
 
 #. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_event_event_ticket__description
-#: model:ir.model.fields,help:event_sale.field_event_type_ticket__description
-msgid "A description of the ticket that you want to communicate to your customers."
-msgstr "Müşterilerinize iletmek istediğiniz biletin açıklaması."
-
-#. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_product_product__detailed_type
-#: model:ir.model.fields,help:event_sale.field_product_template__detailed_type
-msgid ""
-"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
-"A consumable product is a product for which stock is not managed.\n"
-"A service is a non-material product you provide."
-msgstr "Depolanabilir ürün, stokunu yönettiğiniz bir üründür. Envanter uygulaması yüklenmiş olmalıdır.Sarf malzemesi, stoku yönetilmeyen bir üründür.Hizmet, sağladığınız maddi olmayan bir üründür."
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "Add"
+msgstr "Ekle"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__sale_order_lines_ids
@@ -112,17 +92,12 @@ msgstr "Bağlantılı kayıtları güncellemeden önce"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Booked by"
-msgstr "Tarafından rezervasyon"
+msgstr "Rezerve eden"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_campaign_id
 msgid "Campaign"
 msgstr "Kampanya"
-
-#. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
-msgid "Cancel"
-msgstr "İptal"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__cancel
@@ -132,33 +107,50 @@ msgstr "İptal Edildi"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_id
-msgid "Choose an event and it will automatically create a registration for this event."
-msgstr "bir etkinlik seçin ve otomatik olarak bunun için bir kayıt oluşturacaktır etkinlik."
+msgid ""
+"Choose an event and it will automatically create a registration for this "
+"event."
+msgstr ""
+"bir etkinlik seçin ve otomatik olarak bunun için bir kayıt oluşturacaktır "
+"etkinlik."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
-msgid "Choose an event ticket and it will automatically create a registration for this event ticket."
-msgstr "Bir bilet seçtiğinizde bu bu etkinlik bileti kaydı otomatik olarak oluşturulur."
+msgid ""
+"Choose an event ticket and it will automatically create a registration for "
+"this event ticket."
+msgstr ""
+"Bir bilet seçtiğinizde bu bu etkinlik bileti kaydı otomatik olarak "
+"oluşturulur."
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "Close"
+msgstr "Kapat"
 
 #. module: event_sale
 #: model_terms:ir.actions.act_window,help:event_sale.event_sale_report_action
 msgid "Come back once tickets have been sold to overview your sales income."
-msgstr "Satış gelirinizi genel olarak görmek için biletler satıldıktan sonra geri dönün."
+msgstr ""
+"Satış gelirinizi genel olarak görmek için biletler satıldıktan sonra geri "
+"dönün."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__company_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__company_id
 msgid "Company"
-msgstr "Şirket"
-
-#. module: event_sale
-#: model:ir.actions.act_window,name:event_sale.event_configurator_action
-msgid "Configure an event"
-msgstr "Bir etkinliği yapılandır"
+msgstr "Firma"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__open
 msgid "Confirmed"
 msgstr "Doğrulanmış"
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/product_template.py:0
+msgid "Create an Attendee for the selected Event."
+msgstr ""
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -170,21 +162,14 @@ msgstr "Kayıt oluşturma/güncelleştirme"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__create_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__create_uid
 msgid "Created by"
-msgstr "Oluşturan"
+msgstr "Tarafından oluşturuldu"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__create_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__create_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__create_date
 msgid "Created on"
-msgstr "Oluşturulma"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event__currency_id
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__currency_id
-#: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__currency_id
-msgid "Currency"
-msgstr "Para Birimi"
+msgstr "Oluşturuldu"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_partner_id
@@ -193,10 +178,9 @@ msgid "Customer"
 msgstr "Müşteri"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__description
-#: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__description
-msgid "Description"
-msgstr "Açıklama"
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "Discard"
+msgstr "Sil"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__display_name
@@ -204,7 +188,7 @@ msgstr "Açıklama"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__display_name
 msgid "Display Name"
-msgstr "Görünüm Adı"
+msgstr "İsim Göster"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor
@@ -255,16 +239,6 @@ msgid "Event Registration"
 msgstr "Etkinlik Kaydı"
 
 #. module: event_sale
-#: model:product.template,name:event_sale.product_product_event_standard_product_template
-msgid "Event Registration - Standard"
-msgstr "Etkinlik Kaydı - Standart"
-
-#. module: event_sale
-#: model:product.template,name:event_sale.product_product_event_vip_product_template
-msgid "Event Registration - VIP"
-msgstr "Etkinlik Kaydı - VIP"
-
-#. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
 msgid "Event Registrations"
 msgstr "Etkinlik Kayıtları"
@@ -286,24 +260,11 @@ msgid "Event Start Date"
 msgstr "Etkinlik Başlama Tarihi"
 
 #. module: event_sale
-#: model:ir.model,name:event_sale.model_event_type_ticket
-msgid "Event Template Ticket"
-msgstr "Etkinlik Şablon Bileti"
-
-#. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event_ticket
-#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__event_ticket_id
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_ticket_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_ticket_id
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ticket_id
-#: model:ir.model.fields.selection,name:event_sale.selection__product_template__detailed_type__event
 msgid "Event Ticket"
 msgstr "Etkinlik Bileti"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_product_product__event_ticket_ids
-msgid "Event Tickets"
-msgstr "Etkinlik Biletleri"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_type_id
@@ -322,16 +283,27 @@ msgid "Exception:"
 msgstr "Exception:"
 
 #. module: event_sale
-#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__payment_status__free
-#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__payment_status__free
+#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__sale_status__free
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__free
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Free"
 msgstr "Ücretsiz"
 
 #. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/sale_order.py:0
+msgid "Get Your Tickets"
+msgstr ""
+
+#. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Group By"
 msgstr "Grupla"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__has_available_tickets
+msgid "Has Available Tickets"
+msgstr ""
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__id
@@ -353,20 +325,9 @@ msgid "Invoice Address"
 msgstr "Fatura Adresi"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_registration__is_paid
-#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__is_paid
-msgid "Is Paid"
-msgstr "Ödendi"
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__active
 msgid "Is registration active (not archived)?"
 msgstr "Kayıt etkin mi (arşivlenmiyor)?"
-
-#. module: event_sale
-#: model:ir.model,name:event_sale.model_account_move
-msgid "Journal Entry"
-msgstr "Yevmiye Kaydı"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__write_uid
@@ -383,19 +344,9 @@ msgid "Last Updated on"
 msgstr "Son Güncelleme"
 
 #. module: event_sale
-#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__done
-msgid "Locked"
-msgstr "Kilitli"
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_medium_id
 msgid "Medium"
-msgstr "Orta"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__mobile
-msgid "Mobile"
-msgstr "Mobil"
+msgstr "Aracı:"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__name
@@ -413,44 +364,21 @@ msgid "Non-free tickets"
 msgstr "Ücretsiz olmayan biletler"
 
 #. module: event_sale
-#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__payment_status__to_pay
-#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__payment_status__to_pay
-msgid "Not Paid"
-msgstr "Ödenmemiş"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor__seats_available_insufficient
-msgid "Not enough seats for all registrations"
-msgstr "Tüm kayıtlar için yeterli koltuk yok"
-
-#. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
-msgid "Ok"
-msgstr "Tamam"
+#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__sale_status__to_pay
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__to_pay
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
+msgid "Not Sold"
+msgstr ""
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_date
-#: model_terms:ir.ui.view,arch_db:event_sale.event_report_template_full_page_ticket_inherit_sale
 msgid "Order Date"
 msgstr "Sipariş Tarihi"
-
-#. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.event_report_template_full_page_ticket_inherit_sale
-msgid "Order Ref"
-msgstr "Sipariş Ref"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__registration_id
 msgid "Original Registration"
 msgstr "Orijinal Kayıt"
-
-#. module: event_sale
-#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__payment_status__paid
-#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__payment_status__paid
-#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
-#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
-msgid "Paid"
-msgstr "Ödendi"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
@@ -463,8 +391,7 @@ msgid "Past Events"
 msgstr "Geçmiş Etkinlikler"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_registration__payment_status
-#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__payment_status
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_status
 msgid "Payment Status"
 msgstr "Ödeme Durumu"
 
@@ -479,50 +406,20 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price
-#: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__price
-#: model_terms:ir.ui.view,arch_db:event_sale.event_report_template_full_page_ticket_inherit_sale
-msgid "Price"
-msgstr "Fiyat"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce
-#: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__price_reduce
-msgid "Price Reduce"
-msgstr "Fiyat Düşür"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce_taxinc
-msgid "Price Reduce Tax inc"
-msgstr "Fiyatı Vergi Dahil Düşür"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_incl
-msgid "Price include"
+#. odoo-python
+#: code:addons/event_sale/models/sale_order.py:0
+msgid ""
+"Please make sure all your event related lines are configured before "
+"confirming this order:%s"
 msgstr ""
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_template
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__product_id
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__product_id
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__product_id
-#: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__product_id
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_template_line__product_id
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_template_option__product_id
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Product"
 msgstr "Ürün"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_product_product__detailed_type
-#: model:ir.model.fields,field_description:event_sale.field_product_template__detailed_type
-msgid "Product Type"
-msgstr "Ürün Türü"
-
-#. module: event_sale
-#: model:ir.model,name:event_sale.model_product_product
-msgid "Product Variant"
-msgstr "Ürün Varyantı"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__draft
@@ -533,16 +430,6 @@ msgstr "Teklif"
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__sent
 msgid "Quotation Sent"
 msgstr "Teklif Gönderildi"
-
-#. module: event_sale
-#: model:ir.model,name:event_sale.model_sale_order_template_line
-msgid "Quotation Template Line"
-msgstr "Teklif Şablon Satırı"
-
-#. module: event_sale
-#: model:ir.model,name:event_sale.model_sale_order_template_option
-msgid "Quotation Template Option"
-msgstr "Teklif Şablonu Seçeneği"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
@@ -566,6 +453,11 @@ msgstr "Kayıt durumu"
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
 msgid "Registration revenues"
 msgstr "Kayıt gelirleri"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__registration_ids
+msgid "Registrations"
+msgstr "Kayıtlar"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__event_registration_ids
@@ -601,6 +493,11 @@ msgid "Sale Order Status"
 msgstr "Satış Siparişi Durumu"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_status
+msgid "Sale Status"
+msgstr ""
+
+#. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "Sales"
 msgstr "Satış"
@@ -609,11 +506,6 @@ msgstr "Satış"
 #: model:ir.model.fields,field_description:event_sale.field_event_event__sale_price_subtotal
 msgid "Sales (Tax Excluded)"
 msgstr "Sales (Tax Excluded)"
-
-#. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.event_event_ticket_view_tree_from_event
-msgid "Sales End"
-msgstr "Satış Bitti"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
@@ -631,19 +523,22 @@ msgid "Sales Order Line"
 msgstr "Satış Sipariş Satırı"
 
 #. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.event_event_ticket_view_tree_from_event
-msgid "Sales Start"
-msgstr "Sales Start"
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_user_id
 msgid "Salesperson"
 msgstr "Satış Temsilcisi"
 
 #. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
-msgid "Skip"
-msgstr "Atla"
+#: model:ir.actions.act_window,name:event_sale.event_configurator_action
+msgid "Select an Event"
+msgstr ""
+
+#. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__sale_status__sold
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__sold
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Sold"
+msgstr "Satılan"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_source_id
@@ -651,9 +546,28 @@ msgid "Source"
 msgstr "Kaynak"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__state
+msgid "Status"
+msgstr "Durumu"
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/sale_order_line.py:0
+msgid ""
+"The sale order line with the product %(product_name)s needs an event and a "
+"ticket."
+msgstr ""
+
+#. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Ticket"
 msgstr "Bilet"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__event_ticket_id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ticket_id
+msgid "Ticket Type"
+msgstr "Talep Türü"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
@@ -681,6 +595,15 @@ msgid "Unconfirmed"
 msgstr "Onaysız"
 
 #. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_event_registration__state
+msgid ""
+"Unconfirmed: registrations in a pending state waiting for an action (specific case, notably with sale status)\n"
+"Registered: registrations considered taken by a client\n"
+"Attended: registrations for which the attendee attended the event\n"
+"Cancelled: registrations cancelled manually"
+msgstr ""
+
+#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_price_untaxed
 msgid "Untaxed Revenues"
 msgstr "Vergilendirilmemiş Gelirler"
@@ -696,11 +619,16 @@ msgid "Upcoming/Running"
 msgstr "Yaklaşan/Aktif"
 
 #. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "We could not find a matching event ticket for this product. <br/>"
+msgstr ""
+
+#. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
-msgid "please give attendee details."
-msgstr "lütfen katılımcı bilgilerini verin."
+msgid "please provide attendee details."
+msgstr ""
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
 msgid "to"
-msgstr "kime"
+msgstr "den"

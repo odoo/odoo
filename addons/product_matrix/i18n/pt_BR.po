@@ -1,23 +1,37 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* product_matrix
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
-"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid ""
+"<small>Switch to the \"else\" condition of this block to view or edit the "
+"table.</small>"
+msgstr ""
+"<small>Alterne para a condição “else” deste bloco para visualizar ou editar "
+"a tabela.</small>"
+
+#. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid "<strong>Product matrix block</strong>"
+msgstr "<strong>Bloco da matriz de produtos</strong>"
 
 #. module: product_matrix
 #: model:product.attribute.value,name:product_matrix.product_attribute_value_color_1
@@ -25,10 +39,20 @@ msgid "Blue"
 msgstr "Azul"
 
 #. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid "Cell name"
+msgstr "Nome da célula"
+
+#. module: product_matrix
 #. odoo-javascript
-#: code:addons/product_matrix/static/src/js/product_matrix_dialog.js:0
+#: code:addons/product_matrix/static/src/xml/product_matrix_dialog.xml:0
 msgid "Choose Product Variants"
-msgstr ""
+msgstr "Selecione as variantes de produto"
+
+#. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid "Column name"
+msgstr "Nome da coluna"
 
 #. module: product_matrix
 #. odoo-javascript
@@ -40,12 +64,12 @@ msgstr "Confirmar"
 #. odoo-javascript
 #: code:addons/product_matrix/static/src/xml/product_matrix_dialog.xml:0
 msgid "Discard"
-msgstr ""
+msgstr "Cancelar"
 
 #. module: product_matrix
 #: model:product.attribute,name:product_matrix.product_attribute_gender
 msgid "Gender"
-msgstr "Sexo"
+msgstr "Gênero"
 
 #. module: product_matrix
 #: model:product.attribute.value,name:product_matrix.product_attribute_value_m
@@ -55,13 +79,13 @@ msgstr "Homem"
 #. module: product_matrix
 #: model:product.template,name:product_matrix.matrix_product_template_shirt
 msgid "My Company Tshirt (GRID)"
-msgstr "Camiseta Minha Empresa (GRADE)"
+msgstr "Camiseta da minha empresa (grade)"
 
 #. module: product_matrix
 #. odoo-javascript
 #: code:addons/product_matrix/static/src/xml/product_matrix.xml:0
 msgid "Not available"
-msgstr "Não Disponível"
+msgstr "Não disponível"
 
 #. module: product_matrix
 #: model:product.attribute.value,name:product_matrix.product_attribute_value_color_2
@@ -76,22 +100,36 @@ msgstr "Produto"
 #. module: product_matrix
 #: model:ir.model,name:product_matrix.model_product_template_attribute_value
 msgid "Product Template Attribute Value"
-msgstr "Valor de Atributo do Template de Produto"
+msgstr "Valor de atributo do modelo de produto"
 
 #. module: product_matrix
 #: model:product.attribute.value,name:product_matrix.product_attribute_value_color_4
 msgid "Rainbow"
-msgstr "Arco iris"
+msgstr "Arco íris"
 
 #. module: product_matrix
 #: model:product.template,description_sale:product_matrix.matrix_product_template_shirt
 msgid "Show your company love around you =)."
-msgstr "Mostre seu amor da sua empresa a sua volta =)."
+msgstr "Mostre o amor da sua empresa à sua volta =)."
 
 #. module: product_matrix
 #: model:product.attribute,name:product_matrix.product_attribute_size
 msgid "Size"
 msgstr "Tamanho"
+
+#. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid ""
+"The matrix of product variants of this order will be displayed here, if "
+"there are any."
+msgstr ""
+"A matriz de variantes do produto deste pedido será exibida aqui, se houver "
+"uma."
+
+#. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.extra_price
+msgid "Variant price"
+msgstr "Preço da variante"
 
 #. module: product_matrix
 #: model:product.attribute.value,name:product_matrix.product_attribute_value_w

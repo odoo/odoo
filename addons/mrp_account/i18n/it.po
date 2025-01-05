@@ -1,44 +1,126 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mrp_account
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: it\n"
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
-msgid "<span class=\"o_stat_text\">Analytic Account</span>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "$1000"
+msgstr "$1000"
 
 #. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
-msgid "<span class=\"o_stat_text\">Valuation</span>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "$5000"
+msgstr "$5000"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/mrp_production.py:0
+msgid "%s - Labour"
+msgstr "%s - Manodopera"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "2023-08-15"
+msgstr "15-08-2023"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_move_form_inherit_mrp_account
+msgid "<span class=\"o_stat_text\">Manufacturing</span>"
+msgstr "<span class=\"o_stat_text\">Produzione</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
+msgid "<span class=\"o_stat_text\">Valuation</span>"
+msgstr "<span class=\"o_stat_text\">Valutazione</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "<span style=\"margin-right: 15px;\">Total</span>"
+msgstr "<span style=\"margin-right: 15px;\">Totale</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "<span>Amount</span>"
+msgstr "<span>Importo</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "<span>Date</span>"
+msgstr "<span>Data</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "<span>Product</span>"
+msgstr "<span>Prodotto</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "<span>Quantity</span>"
+msgstr "<span>Quantità</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "<span>Ref.</span>"
+msgstr "<span>Rif.</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "<span>Unit of Measure</span>"
+msgstr "<span>Unità di misura</span>"
+
+#. module: mrp_account
+#: model:ir.model.constraint,message:mrp_account.constraint_mrp_account_wip_accounting_line_check_debit_credit
+msgid "A single line cannot be both credit and debit."
+msgstr "Una riga singola non può essere sia di debito che di credito."
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__account_id
+msgid "Account"
+msgstr "Account"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__account_move_line_id
+msgid "Account Move Line"
+msgstr "Riga movimento contabile"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting_line
+msgid "Account move line to be created when posting WIP account move"
+msgstr ""
+"Riga movimento contabile da creare dopo la pubblicazione del movimento "
+"contabile WIP"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "Acme Corp."
+msgstr "Acme Corp."
+
+#. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_account
-#: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__analytic_account_id
-#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__analytic_account_id
-#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_id
 msgid "Analytic Account"
 msgstr "Conto analitico"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__analytic_distribution
+msgid "Analytic Distribution"
+msgstr "Distribuzione analitica"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_line
@@ -46,24 +128,18 @@ msgid "Analytic Line"
 msgstr "Riga analitica"
 
 #. module: mrp_account
-#: model:ir.model.fields,help:mrp_account.field_mrp_production__analytic_account_id
-msgid "Analytic account in which cost and revenue entries will take        place for financial management of the manufacturing order."
-msgstr "Conto analitico in cui avverranno le registrazioni di costi e ricavi per la gestione finanziaria dell'ordine di produzione."
+#: model:ir.model,name:mrp_account.model_account_analytic_applicability
+msgid "Analytic Plan's Applicabilities"
+msgstr "Applicabilità del piano analitico"
 
 #. module: mrp_account
-#: model:ir.model.fields,help:mrp_account.field_mrp_bom__analytic_account_id
-msgid "Analytic account in which cost and revenue entries will take place for financial management of the manufacturing order."
-msgstr "Conto analitico in cui avverranno le registrazioni di costi e ricavi per la gestione finanziaria dell'ordine di produzione."
-
-#. module: mrp_account
-#: model:ir.model,name:mrp_account.model_mrp_bom
-msgid "Bill of Material"
-msgstr "Distinta base"
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__analytic_precision
+msgid "Analytic Precision"
+msgstr "Precisione analitica"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/analytic_account.py:0
-#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_ids
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
 msgid "Bills of Materials"
 msgstr "Distinte base"
@@ -72,6 +148,11 @@ msgstr "Distinte base"
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_count
 msgid "BoM Count"
 msgstr "Conteggio distinte base"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_ids
+msgid "Bom"
+msgstr "DiBa"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__category
@@ -91,13 +172,96 @@ msgstr "Calcola prezzo dalla distinta base"
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
-msgid "Compute the price of the product using products and operations of related bill of materials, for manufactured products only."
-msgstr "Calcolare il prezzo del prodotto usando i prodotti e le operazioni della relativa distinta base, solo se i prodotti sono fabbricati. "
+msgid ""
+"Compute the price of the product using products and operations of related "
+"bill of materials, for manufactured products only."
+msgstr ""
+"Calcolare il prezzo del prodotto usando i prodotti e le operazioni della "
+"relativa distinta base, solo se i prodotti sono fabbricati. "
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_ids
+msgid "Costs Hour Account"
+msgstr "Conto costo orario"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__create_uid
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__create_uid
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__create_date
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__create_date
+msgid "Created on"
+msgstr "Data creazione"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__credit
+msgid "Credit"
+msgstr "Avere"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__currency_id
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__date
+msgid "Date"
+msgstr "Data"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__debit
+msgid "Debit"
+msgstr "Dare"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
+msgid "Discard"
+msgstr "Abbandona"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Distribuzione conto analitico"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_applicability__business_domain
+msgid "Domain"
+msgstr "Dominio"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__expense_account_id
+msgid "Expense Account"
+msgstr "Conto di ammortamento"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
 msgid "Extra Unit Cost"
-msgstr ""
+msgstr "Costo unitario aggiuntivo"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__journal_id
+msgid "Journal"
+msgstr "Registro"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_account_move
+msgid "Journal Entry"
+msgstr "Registrazione contabile"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_move_line
@@ -105,6 +269,41 @@ msgid "Journal Item"
 msgstr "Movimento contabile"
 
 #. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__label
+msgid "Label"
+msgstr "Etichetta"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "Laptop"
+msgstr "Laptop"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__write_uid
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__write_uid
+msgid "Last Updated by"
+msgstr "Ultimo aggiornamento di"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__write_date
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__write_date
+msgid "Last Updated on"
+msgstr "Ultimo aggiornamento il"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_report_mrp_report_mo_overview
+msgid "MO Overview Report"
+msgstr "Resoconto panoramica ordine di produzione"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "Manual Entry"
+msgstr "Registrazione manuale"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_production
+#: model:ir.model.fields.selection,name:mrp_account.selection__account_analytic_applicability__business_domain__manufacturing_order
 #: model:ir.model.fields.selection,name:mrp_account.selection__account_analytic_line__category__manufacturing_order
 msgid "Manufacturing Order"
 msgstr "Ordine di produzione"
@@ -112,25 +311,56 @@ msgstr "Ordine di produzione"
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/analytic_account.py:0
-#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_ids
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
 msgid "Manufacturing Orders"
 msgstr "Ordini di produzione"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_count
+#: model:ir.model.fields,field_description:mrp_account.field_account_bank_statement_line__wip_production_count
+#: model:ir.model.fields,field_description:mrp_account.field_account_move__wip_production_count
 msgid "Manufacturing Orders Count"
 msgstr "Conteggio ordini di produzione"
 
 #. module: mrp_account
-#: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__mo_analytic_account_line_id
-msgid "Mo Analytic Account Line"
-msgstr ""
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "Manufacturing WIP - %(orders_list)s"
+msgstr "WIP produzione - %(orders_list)s"
 
 #. module: mrp_account
-#: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__costs_hour_account_id
-msgid "Posts analytical accounting entries in real time for both component and operational costs."
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__mo_ids
+msgid "Mo"
+msgstr "OdP"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__mo_analytic_account_line_ids
+msgid "Mo Analytic Account Line"
+msgstr "Riga conto analitico ordine di p."
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid ""
+"Please make sure the total credit amount equals the total debit amount."
 msgstr ""
+"Assicurati che l'importo totale del credito sia pari all'importo totale di "
+"debito."
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
+msgid "Post Manufacturing WIP"
+msgstr "Pubblica WIP produzione"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
+msgid "Post WIP"
+msgstr "Pubblica WIP"
+
+#. module: mrp_account
+#: model:ir.actions.act_window,name:mrp_account.action_wip_accounting
+msgid "Post WIP Accounting Entry"
+msgstr "Pubblica registrazione contabile WIP"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
@@ -140,7 +370,7 @@ msgstr "Prodotto"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_category
 msgid "Product Category"
-msgstr ""
+msgstr "Categoria prodotto"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_product
@@ -148,14 +378,47 @@ msgid "Product Variant"
 msgstr "Variante prodotto"
 
 #. module: mrp_account
-#: model:ir.model.fields,field_description:mrp_account.field_product_category__property_stock_account_production_cost_id
-msgid "Production Account"
-msgstr ""
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_ids
+msgid "Production"
+msgstr "Produzione"
 
 #. module: mrp_account
-#: model:ir.model,name:mrp_account.model_mrp_production
-msgid "Production Order"
-msgstr "Ordine di produzione"
+#: model:ir.model.fields,field_description:mrp_account.field_product_category__property_stock_account_production_cost_id
+msgid "Production Account"
+msgstr "Conto di produzione"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "REF123"
+msgstr "RIF123"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reference
+msgid "Reference"
+msgstr "Riferimento"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_bank_statement_line__wip_production_ids
+#: model:ir.model.fields,field_description:mrp_account.field_account_move__wip_production_ids
+msgid "Relevant WIP MOs"
+msgstr "OdP WIP rilevanti"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reversal_date
+msgid "Reversal Date"
+msgstr "Data di storno"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "Reversal date must be after the posting date."
+msgstr "La data di storno deve seguire la data di pubblicazione."
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "Reversal of: %s"
+msgstr "Storno di: %s"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__show_valuation
@@ -168,9 +431,25 @@ msgid "Stock Move"
 msgstr "Movimento di magazzino"
 
 #. module: mrp_account
-#: model:ir.model,name:mrp_account.model_stock_rule
-msgid "Stock Rule"
-msgstr "Regola di giacenza"
+#: model:ir.model.fields,help:mrp_account.field_account_bank_statement_line__wip_production_ids
+#: model:ir.model.fields,help:mrp_account.field_account_move__wip_production_ids
+msgid ""
+"The MOs that this WIP entry was based on. Expected to be set at time of WIP "
+"entry creation."
+msgstr ""
+"Gli OdP su cui si basa questa registrazione WIP. Configurazione prevista "
+"durante la creazione della registrazione WIP."
+
+#. module: mrp_account
+#: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
+msgid ""
+"The expense is accounted for when the manufacturing order is marked as done."
+" If not set, it is the expense account of the final product that will be "
+"used instead."
+msgstr ""
+"La spesa viene contabilizzata quando l'ordine di produzione viene "
+"contrassegnato come completato. Se non impostato, verrà utilizzato il conto "
+"spese del prodotto finale."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
@@ -178,11 +457,71 @@ msgid ""
 "This account will be used as a valuation counterpart for both components and final products for manufacturing orders.\n"
 "                If there are any workcenter/employee costs, this value will remain on the account once the production is completed."
 msgstr ""
+"Il conto verrà utilizzato come controparte di valutazione sia per i componenti che i prodotti finali degli ordini di produzione.\n"
+"                In caso di centri di lavoro/costi dipendenti, il valore resterà nel conto una volta che la produzione sarà completata."
 
 #. module: mrp_account
-#: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__wc_analytic_account_line_id
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
+msgid "Total Credit"
+msgstr "Totale avere"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
+msgid "Total Debit"
+msgstr "Totale dare"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "Units"
+msgstr "Unità"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "WIP - Component Value"
+msgstr "WIP - Valore componente"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "WIP - Overhead"
+msgstr "WIP - Spese generali"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/account_move.py:0
+msgid "WIP MOs of %s"
+msgstr "OdP WIP di %s"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "WIP Report for"
+msgstr "Resoconto WIP per"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__line_ids
+msgid "WIP accounting lines"
+msgstr "Righe contabili WIP"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__wip_accounting_id
+msgid "WIP accounting wizard"
+msgstr "Procedura guidata contabilità WIP"
+
+#. module: mrp_account
+#: model:ir.actions.report,name:mrp_account.wip_report
+msgid "WIP report"
+msgstr "Resoconto WIP"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__wc_analytic_account_line_ids
 msgid "Wc Analytic Account Line"
-msgstr ""
+msgstr "Riga conto analitico centro di lavoro"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting
+msgid "Wizard to post Manufacturing WIP account move"
+msgstr "Procedura guidata per pubblicare movimento contabile WIP produzione"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter
@@ -212,18 +551,17 @@ msgstr "Ordini di lavoro"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workcenter_ids
-msgid "Workcenters"
-msgstr "Workcenter"
+msgid "Workcenter"
+msgstr "Centro di lavoro"
 
 #. module: mrp_account
-#. odoo-python
-#: code:addons/mrp_account/models/stock_move.py:0
-msgid "[Raw] %s"
-msgstr ""
+#: model:ir.model,name:mrp_account.model_mrp_workcenter_productivity
+msgid "Workcenter Productivity Log"
+msgstr "Registro produttività del centro di lavoro"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/mrp_production.py:0
 #: code:addons/mrp_account/models/mrp_workorder.py:0
 msgid "[WC] %s"
-msgstr ""
+msgstr "[CDL] %s"

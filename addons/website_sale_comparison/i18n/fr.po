@@ -1,26 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_comparison
-#
+# 
 # Translators:
-# Cécile Collart <cco@odoo.com>, 2022
-# Martin Trigaux, 2022
-# Jolien De Paepe, 2023
-#
+# Wil Odoo, 2024
+# Manon Rondou, 2025
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
-"1000000 == 0 ? 1 : 2;\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_sale_comparison
 #: model:product.attribute.value,name:website_sale_comparison.product_attribute_value_8
@@ -47,6 +45,9 @@ msgid ""
 "<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
 "role=\"img\" aria-label=\"Collapse\" title=\"Collapse\"/><span>Tags</span>"
 msgstr ""
+"<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
+"role=\"img\" aria-label=\"Collapse\" "
+"title=\"Réduire\"/><span>Étiquettes</span>"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
@@ -67,7 +68,7 @@ msgstr "<span class=\"fa fa-exchange me-2\"/>Comparer"
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "<span>Tags</span>"
-msgstr ""
+msgstr "<span>Étiquettes</span>"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
@@ -172,19 +173,30 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
+msgid "In accordion"
+msgstr "En accordéon"
+
+#. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__write_uid
 msgid "Last Updated by"
-msgstr "Dernière mise à jour par"
+msgstr "Mis à jour par"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__write_date
 msgid "Last Updated on"
-msgstr "Dernière mise à jour le"
+msgstr "Mis à jour le"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
 msgid "None"
 msgstr "Aucun"
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.accordion_specs_item
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.specifications_table
+msgid "Others"
+msgstr "Autres"
 
 #. module: website_sale_comparison
 #. odoo-javascript
@@ -195,7 +207,7 @@ msgstr "Produit"
 #. module: website_sale_comparison
 #: model:ir.model,name:website_sale_comparison.model_product_attribute
 msgid "Product Attribute"
-msgstr "Attribut de produit"
+msgstr "Attribut du produit"
 
 #. module: website_sale_comparison
 #: model:ir.model,name:website_sale_comparison.model_product_attribute_category
@@ -206,7 +218,7 @@ msgstr "Catégorie d'attributs de produits"
 #. module: website_sale_comparison
 #: model:ir.model,name:website_sale_comparison.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr "Ligne d'attribut du modèle de produit"
+msgstr "Ligne d'attribut du modèle du produit"
 
 #. module: website_sale_comparison
 #: model:ir.model,name:website_sale_comparison.model_product_product
@@ -240,6 +252,8 @@ msgid ""
 "Set a category to regroup similar attributes under the same section in the "
 "Comparison page of eCommerce."
 msgstr ""
+"Définissez une catégorie pour regrouper les attributs similaires sous la "
+"même section sur la page de comparaison de l'eCommerce."
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
@@ -252,12 +266,12 @@ msgid "Specification"
 msgstr "Spécification"
 
 #. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.accordion_specs_item
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 msgid "Specifications"
 msgstr "Spécifications"
 
 #. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "Uncategorized"
 msgstr "Sans catégorie"
@@ -282,9 +296,4 @@ msgstr "Vous pouvez comparer 4 produits au maximum."
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute__category_id
 msgid "eCommerce Category"
-msgstr ""
-
-#. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
-msgid "or"
-msgstr "ou"
+msgstr "Catégorie d'eCommerce"

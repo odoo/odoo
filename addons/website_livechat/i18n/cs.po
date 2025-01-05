@@ -1,29 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_livechat
-#
+# 
 # Translators:
-# Ladislav Tomm <tomm@helemik.cz>, 2022
-# Michal Veselý <michal@veselyberanek.net>, 2022
-# Martin Trigaux, 2022
-# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2022
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
-# Jiří Podhorecký, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Jiří Podhorecký, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
-"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Language: cs\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website_visitor__session_count
@@ -34,8 +28,8 @@ msgstr "počet Sessions"
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
 msgid ""
-"%s started a conversation with %s.\n"
-"                        The chat request has been canceled."
+"%(visitor)s started a conversation with %(operator)s.\n"
+"The chat request has been cancelled"
 msgstr ""
 
 #. module: website_livechat
@@ -88,12 +82,12 @@ msgstr "Chat"
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_chatbot_script
 msgid "Chatbot Script"
-msgstr ""
+msgstr "Chatbot skript"
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_chatbot_script_step
 msgid "Chatbot Script Step"
-msgstr ""
+msgstr "Chatbot krok skriptu"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_form
@@ -104,7 +98,7 @@ msgstr ""
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_res_config_settings
 msgid "Config Settings"
-msgstr "Nastavení konfigurace"
+msgstr "Konfigurační nastavení"
 
 #. module: website_livechat
 #: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_description
@@ -114,7 +108,7 @@ msgstr "Popis kanálu zobrazeného na stránce webových stránek"
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_discuss_channel
 msgid "Discussion Channel"
-msgstr "Diskusní kanál"
+msgstr "Diskuzní kanál"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -162,7 +156,7 @@ msgstr "Live Podpora"
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_im_livechat_channel
 msgid "Livechat Channel"
-msgstr "Živý chat kanál"
+msgstr "Kanál živého chatu"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_list_page
@@ -211,8 +205,8 @@ msgstr "Jméno operátora"
 #. odoo-python
 #: code:addons/website_livechat/models/website_visitor.py:0
 msgid ""
-"Recipients are not available. Please refresh the page to get latest visitors "
-"status."
+"Recipients are not available. Please refresh the page to get latest visitors"
+" status."
 msgstr ""
 "Příjemci nejsou k dispozici. Obnovte stránku a získejte stav nejnovějších "
 "návštěvníků."
@@ -295,6 +289,18 @@ msgstr "Návštěvník"
 
 #. module: website_livechat
 #. odoo-python
+#: code:addons/website_livechat/models/discuss_channel.py:0
+msgid "Visitor #%(id)d left the conversation."
+msgstr ""
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/models/discuss_channel.py:0
+msgid "Visitor #%(id)d."
+msgstr ""
+
+#. module: website_livechat
+#. odoo-python
 #: code:addons/website_livechat/controllers/main.py:0
 #: code:addons/website_livechat/models/website_visitor.py:0
 msgid "Visitor #%d"
@@ -302,16 +308,14 @@ msgstr ""
 
 #. module: website_livechat
 #. odoo-python
-#. odoo-javascript
 #: code:addons/website_livechat/controllers/main.py:0
-#: code:addons/website_livechat/static/src/web/persona_model_patch.js:0
 msgid "Visitor #%s"
 msgstr ""
 
 #. module: website_livechat
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
-msgid "Visitor %s left the conversation."
+msgid "Visitor left the conversation."
 msgstr ""
 
 #. module: website_livechat
@@ -334,7 +338,7 @@ msgstr "Návštěvníci"
 #: code:addons/website_livechat/static/src/web/thread_patch.xml:0
 #: model:ir.model,name:website_livechat.model_website
 msgid "Website"
-msgstr "Webstránka"
+msgstr "Webová stránka"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__channel_id
@@ -356,7 +360,7 @@ msgstr "URL webové stránky"
 #: code:addons/website_livechat/tests/test_livechat_basic_flow.py:0
 #: model:ir.model,name:website_livechat.model_website_visitor
 msgid "Website Visitor"
-msgstr "Návštěvník webstránky"
+msgstr "Návštěvník webu"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_description

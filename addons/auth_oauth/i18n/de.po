@@ -1,34 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_oauth
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Larissa Manderfeld, 2023
-#
+# Wil Odoo, 2024
+# Larissa Manderfeld, 2025
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.providers
 msgid "- or -"
 msgstr "- oder -"
-
-#. module: auth_oauth
-#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
-msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Tutorial"
-msgstr ""
 
 #. module: auth_oauth
 #. odoo-python
@@ -39,12 +34,12 @@ msgstr "Zugriff verweigert"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__auth_oauth_google_enabled
 msgid "Allow users to sign in with Google"
-msgstr "Erlaube Benutzer sich mit Google Konto einzuloggen"
+msgstr "Benutzern erlauben, sich mit Google-Konto anzumelden"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Allow users to sign in with their Google account"
-msgstr "Erlaube den Benutzern sich mit deren Google Konto anzumelden"
+msgstr "Erlauben Sie Benutzern, sich mit ihrem Google-Konto anzumelden"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__enabled
@@ -59,18 +54,18 @@ msgstr "Autorisierungs-URL"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__css_class
 msgid "CSS class"
-msgstr "CSS Klasse"
+msgstr "CSS-Klasse"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__client_id
 #: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__auth_oauth_google_client_id
 msgid "Client ID"
-msgstr "Client ID"
+msgstr "Client-ID"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Client ID:"
-msgstr "Kunden ID:"
+msgstr "Client-ID"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_config_settings
@@ -94,6 +89,9 @@ msgstr "Datenendpunkt"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
 
@@ -104,6 +102,9 @@ msgstr "Authentifizierung via Google"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__id
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -120,7 +121,7 @@ msgstr "Zuletzt aktualisiert am"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_auth_oauth_provider__body
 msgid "Link text in Login Dialog"
-msgstr "Text für den Link im Login Dialog"
+msgstr "Text für den Link im Anmeldedialog"
 
 #. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_facebook
@@ -130,12 +131,12 @@ msgstr "Mit Facebook anmelden"
 #. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_google
 msgid "Log in with Google"
-msgstr "Login mit Google"
+msgstr "Mit Google anmelden"
 
 #. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_openerp
 msgid "Log in with Odoo.com"
-msgstr "Login mit Odoo.com"
+msgstr "Mit Odoo.com anmelden"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
@@ -143,35 +144,41 @@ msgid "Login button label"
 msgstr "Bezeichnung der Anmeldeschaltfläche"
 
 #. module: auth_oauth
+#. odoo-python
+#: code:addons/auth_oauth/models/res_users.py:0
+msgid "Missing subject identity"
+msgstr "Betreffidentität fehlt"
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_access_token
 msgid "OAuth Access Token"
-msgstr "OAuth Zugangstoken"
+msgstr "OAuth-Zugriffstoken"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_provider_id
 msgid "OAuth Provider"
-msgstr "OAuth Provider"
+msgstr "OAuth-Provider"
 
 #. module: auth_oauth
 #: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "OAuth Providers"
-msgstr "OAuth Provider"
+msgstr "OAuth-Provider"
 
 #. module: auth_oauth
 #: model:ir.model.constraint,message:auth_oauth.constraint_res_users_uniq_users_oauth_provider_oauth_uid
 msgid "OAuth UID must be unique per provider"
-msgstr "OAuth UID muss je Provider eindeutig sein"
+msgstr "OAuth-UID muss je Provider eindeutig sein"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_uid
 msgid "OAuth User ID"
-msgstr "OAuth User ID"
+msgstr "OAuth-Benutzer-ID"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_auth_oauth_provider
 msgid "OAuth2 provider"
-msgstr "OAuth2 Provider"
+msgstr "OAuth2-Provider"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_users_form
@@ -181,12 +188,12 @@ msgstr "Oauth"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users__oauth_uid
 msgid "Oauth Provider user_id"
-msgstr "Oauth Provider user_id"
+msgstr "Oauth-Provider user_id"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__name
 msgid "Provider name"
-msgstr "Provider Name"
+msgstr "Provider-Name"
 
 #. module: auth_oauth
 #: model:ir.actions.act_window,name:auth_oauth.action_oauth_provider
@@ -196,7 +203,7 @@ msgstr "Provider"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__scope
 msgid "Scope"
-msgstr "Gültigkeitsbereich"
+msgstr "Bereich"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__sequence
@@ -206,18 +213,23 @@ msgstr "Sequenz"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__server_uri_google
 msgid "Server uri"
-msgstr "Server URI"
+msgstr "Server-URI"
 
 #. module: auth_oauth
 #. odoo-python
 #: code:addons/auth_oauth/controllers/main.py:0
 msgid "Sign up is not allowed on this database."
-msgstr "Anmeldungen nimmt diese Datenbank nicht mehr an"
+msgstr "Die Anmeldung ist in dieser Datenbank nicht erlaubt."
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter
 msgid "System Parameter"
 msgstr "Systemparameter"
+
+#. module: auth_oauth
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+msgid "Tutorial"
+msgstr "Tutorial"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
@@ -232,8 +244,14 @@ msgstr "Benutzerinfo-URL"
 #. module: auth_oauth
 #. odoo-python
 #: code:addons/auth_oauth/controllers/main.py:0
-msgid "You do not have access to this database or your invitation has expired. Please ask for an invitation and be sure to follow the link in your invitation email."
-msgstr "Sie haben keinen Zugriff mehr auf die Datenbank, deren Einladungen mittlerweise ablaufen sind."
+msgid ""
+"You do not have access to this database or your invitation has expired. "
+"Please ask for an invitation and be sure to follow the link in your "
+"invitation email."
+msgstr ""
+"Sie haben keinen Zugriff mehr auf die Datenbank, deren Einladungen "
+"mittlerweise ablaufen sind. Bitte fragen Sie eine Einladung an und folgen "
+"Sie dem Link in Ihrer Einladungsmail."
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form

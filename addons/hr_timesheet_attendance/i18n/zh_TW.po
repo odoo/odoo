@@ -1,33 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_timesheet_attendance
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
-"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__attendance_cost
 msgid "Attendance Cost"
-msgstr ""
+msgstr "出勤成本"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_attendance
-msgid "Attendance Hours"
-msgstr ""
+msgid "Attendance Time"
+msgstr "出勤時間"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__company_id
@@ -37,12 +37,12 @@ msgstr "公司"
 #. module: hr_timesheet_attendance
 #: model_terms:ir.actions.act_window,help:hr_timesheet_attendance.action_hr_timesheet_attendance_report
 msgid "Compare the time recorded by your employees with their attendance."
-msgstr ""
+msgstr "將您的員工記錄的時間與他們的出勤情況進行比較。"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__cost_difference
 msgid "Cost Difference"
-msgstr ""
+msgstr "成本差異"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__date
@@ -56,34 +56,35 @@ msgid "Display Name"
 msgstr "顯示名稱"
 
 #. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__employee_id
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
 msgid "Employee"
 msgstr "員工"
 
 #. module: hr_timesheet_attendance
-#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_difference
-msgid "Hours Difference"
-msgstr ""
-
-#. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__id
 msgid "ID"
-msgstr "ID"
+msgstr "識別號"
+
+#. module: hr_timesheet_attendance
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
+msgid "Last Week"
+msgstr "上週"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model,name:hr_timesheet_attendance.model_ir_ui_menu
 msgid "Menu"
-msgstr "選單"
+msgstr "功能表"
 
 #. module: hr_timesheet_attendance
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
 msgid "My Department"
-msgstr ""
+msgstr "我的部門"
 
 #. module: hr_timesheet_attendance
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
 msgid "My Team"
-msgstr ""
+msgstr "我的團隊"
 
 #. module: hr_timesheet_attendance
 #: model_terms:ir.actions.act_window,help:hr_timesheet_attendance.action_hr_timesheet_attendance_report
@@ -91,23 +92,17 @@ msgid "No data yet!"
 msgstr "暫無資料！"
 
 #. module: hr_timesheet_attendance
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
-msgid "Sum of Total Attendance"
-msgstr "出勤總時數"
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
+msgid "This Week"
+msgstr "本週"
 
 #. module: hr_timesheet_attendance
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
-msgid "Sum of Total Difference"
-msgstr "差異總計"
-
-#. module: hr_timesheet_attendance
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
-msgid "Sum of Total Timesheet"
-msgstr "工時表總時數"
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_difference
+msgid "Time Difference"
+msgstr "時間差異"
 
 #. module: hr_timesheet_attendance
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_graph
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_pivot
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
 msgid "Timesheet Attendance"
@@ -127,14 +122,14 @@ msgstr "工時表成本"
 #: model:ir.actions.act_window,name:hr_timesheet_attendance.action_hr_timesheet_attendance_report
 #: model:ir.ui.menu,name:hr_timesheet_attendance.menu_hr_timesheet_attendance_report
 msgid "Timesheets / Attendance Analysis"
-msgstr ""
+msgstr "工時表 / 出勤分析"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_timesheet
-msgid "Timesheets Hours"
-msgstr ""
+msgid "Timesheets Time"
+msgstr "工時表時數"
 
 #. module: hr_timesheet_attendance
-#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__user_id
-msgid "User"
-msgstr "使用者"
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
+msgid "Today"
+msgstr "今天"

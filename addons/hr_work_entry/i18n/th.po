@@ -1,0 +1,470 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_work_entry
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_employee.py:0
+msgid "%s work entries"
+msgstr "%sการเข้างาน "
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_employee_view_form
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                            Work Entries\n"
+"                            </span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            รายการงาน\n"
+"                            </span>"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "<span>Hours</span>"
+msgstr "<span>ชั่วโมง</span>"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__active
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__active
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__active
+msgid "Active"
+msgstr "เปิดใช้งาน"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Archived"
+msgstr "เก็บถาวรแล้ว"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance
+msgid "Attendance"
+msgstr "การเข้าร่วม"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_tree
+msgid "Beginning"
+msgstr "การเริ่มต้น"
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__cancelled
+msgid "Cancelled"
+msgstr "ยกเลิก"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__code
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__code
+msgid ""
+"Careful, the Code is used in many references, changing it could lead to "
+"unwanted changes."
+msgstr ""
+"โปรดระวัง มีการใช้รหัสในการอ้างอิงจำนวนมาก "
+"การเปลี่ยนแปลงอาจนำไปสู่การเปลี่ยนแปลงที่ไม่พึงประสงค์ได้"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__color
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__color
+msgid "Color"
+msgstr "สี"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__company_id
+msgid "Company"
+msgstr "บริษัท"
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__conflict
+msgid "Conflict"
+msgstr "ความขัดแย้ง"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Conflicting"
+msgstr "ขัดแย้ง"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__conflict
+msgid "Conflicts"
+msgstr "ขัดแย้ง"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__country_id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_id
+msgid "Country"
+msgstr "ประเทศ"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_code
+msgid "Country Code"
+msgstr "รหัสประเทศ"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_type_action
+msgid "Create a new work entry type"
+msgstr "สร้างประเภทรายการงานใหม่"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__create_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__create_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Current Month"
+msgstr "เดือนปัจจุบัน"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Date"
+msgstr "วันที่"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__department_id
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Department"
+msgstr "แผนก"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "Description"
+msgstr "คำอธิบาย"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__draft
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Draft"
+msgstr "ร่าง"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__duration
+msgid "Duration"
+msgstr "ระยะเวลา"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_employee
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__employee_id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Employee"
+msgstr "พนักงาน"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_tree
+msgid "End"
+msgstr "สิ้นสุด"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__external_code
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__external_code
+msgid "External Code"
+msgstr "รหัสภายนอก"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date_start
+msgid "From"
+msgstr "จาก"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_work_entry
+msgid "HR Work Entry"
+msgstr "HR การเข้างาน"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_work_entry_type
+msgid "HR Work Entry Type"
+msgstr "HR ประเภทการเข้างาน"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__has_work_entries
+msgid "Has Work Entries"
+msgstr "มีรายการงาน"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__id
+msgid "ID"
+msgstr "ไอดี"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the work "
+"entry type without removing it."
+msgstr ""
+"หากฟิลด์ที่ใช้งานถูกตั้งค่าเป็นเท็จ "
+"ฟิลด์นี้จะอนุญาตให้คุณซ่อนประเภทรายการงานโดยไม่ต้องลบออก"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__write_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__write_uid
+msgid "Last Updated by"
+msgstr "อัปเดตครั้งล่าสุดโดย"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__write_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__write_date
+msgid "Last Updated on"
+msgstr "อัปเดตครั้งล่าสุดเมื่อ"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__user_id
+msgid "Me"
+msgstr "ฉัน"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__name
+msgid "Name"
+msgstr "ชื่อ"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
+msgid "No data to display"
+msgstr "ไม่มีข้อมูลให้แสดง"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "Note: Validated work entries cannot be modified."
+msgstr "หมายเหตุ: ไม่สามารถแก้ไขรายการเข้างานที่ตรวจสอบแล้วได้"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.overtime_work_entry_type
+msgid "Overtime Hours"
+msgstr "ชั่วโมงล่วงเวลา"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__code
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__code
+msgid "Payroll Code"
+msgstr "รหัสบัญชีเงินเดือน"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr "รายละเอียดทรัพยากรการลา"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Search Work Entry"
+msgstr "ค้นหาการเข้างาน"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
+msgid "Search Work Entry Type"
+msgstr "ค้นหาประเภทการเข้างาน"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__sequence
+msgid "Sequence"
+msgstr "ลำดับ"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/xml/work_entry_templates.xml:0
+msgid "Solve conflicts first"
+msgstr "แก้ปัญหาความขัดแย้งก่อน"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Start Date"
+msgstr "วันที่เริ่ม"
+
+#. module: hr_work_entry
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_work_entry_start_before_end
+msgid "Starting time should be before end time."
+msgstr "เวลาเริ่มต้นควรมาก่อนเวลาสิ้นสุด"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__state
+msgid "State"
+msgstr "รัฐ"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"โค้ดประเทศ ISO ในสองตัวอักษร\n"
+"คุณสามารถใช้ช่องนี้เพื่อการค้นหาอย่างรวดเร็ว"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "The same code cannot be associated to multiple work entry types."
+msgstr "โค้ดเดียวกันไม่สามารถเชื่อมโยงกับรายการเข้างานหลายประเภทได้"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "This work entry is validated. You can't delete it."
+msgstr "บันทึกงานนี้ได้รับการตรวจสอบแล้ว คุณไม่สามารถลบได้"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid "Time Off Options"
+msgstr "ตัวเลือกการลา"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date_stop
+msgid "To"
+msgstr "ถึง"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
+msgid ""
+"Try to add some records, or make sure that there is no active filter in the "
+"search bar."
+msgstr ""
+"ลองเพิ่มบันทึกหรือตรวจสอบให้แน่ใจว่าไม่มีตัวกรองที่ใช้งานอยู่ในแถบค้นหา"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Type"
+msgstr "ประเภท"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "Undefined"
+msgstr "ยังไม่กำหนด"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "Undefined Type"
+msgstr "ประเภทที่ยังไม่ได้กำหนด"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__external_code
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__external_code
+msgid "Use this code to export your data to a third party"
+msgstr "ใช้รหัสนี้เพื่อส่งออกข้อมูลของคุณไปยังบุคคลที่สาม"
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__validated
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Validated"
+msgstr "ตรวจสอบแล้ว"
+
+#. module: hr_work_entry
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_work_entries_no_validated_conflict
+msgid "Validated work entries cannot overlap"
+msgstr "รายการเข้างานที่ตรวจสอบแล้วต้องไม่ทับซ้อนกัน"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_resource_calendar_attendance
+msgid "Work Detail"
+msgstr "รายละเอียดงาน"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_pivot
+msgid "Work Entries"
+msgstr "การเข้างาน"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_user_work_entry_employee
+msgid "Work Entries Employees"
+msgstr "การเข้างานของพนักงาน"
+
+#. module: hr_work_entry
+#: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_action
+#: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_action_conflict
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "Work Entry"
+msgstr "การเข้างาน"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "Work Entry Name"
+msgstr "ชื่อการเข้างาน"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__work_entry_type_id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__work_entry_type_id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__work_entry_type_id
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.resource_calendar_leaves_view_search_inherit
+msgid "Work Entry Type"
+msgstr "ประเภทการเข้างาน"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid "Work Entry Type Name"
+msgstr "ชื่อประภทการเข้างาน"
+
+#. module: hr_work_entry
+#: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_type_action
+msgid "Work Entry Types"
+msgstr "ประเภทการเข้างาน"
+
+#. module: hr_work_entry
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_work_entry_has_end
+msgid "Work entry must end. Please define an end date or a duration."
+msgstr "รายการเข้างานต้องสิ้นสุด โปรดกำหนดวันที่สิ้นสุดหรือระยะเวลา"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid ""
+"You can't change the Country of this work entry type cause it's currently "
+"used by the system. You need to delete related working entries first."
+msgstr ""
+"คุณไม่สามารถเปลี่ยนประเทศของประเภทรายการงานนี้ได้เนื่องจากระบบกำลังใช้งานอยู่"
+" คุณต้องลบรายการงานที่เกี่ยวข้องออกก่อน"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "You can't change the country of this specific work entry type."
+msgstr "คุณไม่สามารถเปลี่ยนประเทศของประเภทรายการงานเฉพาะนี้ได้"
+
+#. module: hr_work_entry
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique
+msgid "You cannot have the same employee twice."
+msgstr "คุณไม่สามารถมีพนักงานคนเดียวกันได้สองครั้ง"

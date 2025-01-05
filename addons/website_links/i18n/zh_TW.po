@@ -1,53 +1,67 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_links
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Tony Ng, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
-"zh_TW/)\n"
-"Language: zh_TW\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
-msgid " clicks"
-msgstr "點選"
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
-msgid " countries"
-msgstr "國家"
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
 msgid "# of clicks"
-msgstr "# 點選"
+msgstr "點擊次數"
+
+#. module: website_links
+#. odoo-javascript
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
+msgid "%(clicks)s clicks"
+msgstr "%(clicks)s 次點擊"
+
+#. module: website_links
+#. odoo-javascript
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
+msgid "%(count)s countries"
+msgstr "%(count)s 個國家/地區"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+#: model_terms:ir.ui.view,arch_db:website_links.graphs
+msgid "<i class=\"fa fa-copy me-2\"/>Copy"
+msgstr "<i class=\"fa fa-copy me-2\"/> 複製"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "<span class=\"text-muted me-1\">Sort By:</span>"
+msgstr "<span class=\"text-muted me-1\">排序依據：</span>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Campaign</strong>"
-msgstr "<strong>活動</strong>"
+msgstr "<strong>宣傳活動</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Medium</strong>"
-msgstr "<strong>中等</strong>"
+msgstr "<strong>媒介</strong>"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.graphs
+msgid "<strong>Name</strong>"
+msgstr "<strong>姓名</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -76,49 +90,46 @@ msgstr "持續"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid ""
-"Campaign <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the context of your link. It might be an event you want to promote or a "
-"special promotion.\"/>"
-msgstr ""
+msgid "Campaign"
+msgstr "行銷活動"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
-msgid "Copied"
-msgstr "複製"
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 msgid "Copy"
 msgstr "複製"
 
 #. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Create a Link tracker"
+msgstr "建立一個連結追蹤器"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Create another Tracker"
+msgstr "建立另一個追蹤器"
+
+#. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
+#: code:addons/website_links/static/src/xml/website_links_tags_wrapper.xml:0
+msgid "Create option \""
+msgstr "建立選項 \""
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Edit code"
 msgstr "編輯代碼"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
-msgid "Generating link..."
-msgstr "產生連結中..."
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Generate Link Tracker"
+msgstr "生成連結追蹤工具"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "Get tracked link"
-msgstr "獲取追蹤連結"
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
-msgid "Icon"
-msgstr "圖示"
+msgid "Last Clicks"
+msgstr "最後點擊"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -128,29 +139,31 @@ msgstr "上月"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Last Week"
-msgstr "上周"
+msgstr "上週"
+
+#. module: website_links
+#. odoo-javascript
+#: code:addons/website_links/static/src/js/website_links.js:0
+#: code:addons/website_links/static/src/js/website_links_code_editor.js:0
+msgid "Link Copied!"
+msgstr "連結已複製！"
 
 #. module: website_links
 #: model:ir.model,name:website_links.model_link_tracker
 #: model:ir.ui.menu,name:website_links.menu_link_tracker
-#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Link Tracker"
 msgstr "連結追蹤"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid ""
-"Medium <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the medium used to share your link. It might be an email, or a Facebook Ads "
-"for instance.\"/>"
-msgstr ""
+msgid "Medium"
+msgstr "媒體"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "Most Clicked"
-msgstr "點選最多"
+msgid "Name"
+msgstr "名稱"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -165,25 +178,25 @@ msgstr "沒有資料"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "Recently Used"
-msgstr "最近使用"
+msgid "Number of Clicks"
+msgstr "點選次數"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Read More"
+msgstr "閱讀更多"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
 "Share this page with a <strong>short link</strong> that includes "
 "<strong>analytics trackers</strong>."
-msgstr ""
-"使用包含<strong>分析追蹤器</strong>的<strong>短網址</strong> 來分享這個頁面。"
+msgstr "使用包含<strong>分析追蹤器</strong>的<strong>短網址</strong> 來分享這個頁面。"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid ""
-"Source <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the source from which your traffic will come from, Facebook or Twitter for "
-"instance.\"/>"
-msgstr ""
+msgid "Source"
+msgstr "來源"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -192,14 +205,12 @@ msgid "Statistics"
 msgstr "統計資訊"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
-msgid "Stats"
-msgstr "統計資料"
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Target Link"
+msgstr "目標連結"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
 #: code:addons/website_links/static/src/js/website_links_code_editor.js:0
 msgid "The code cannot be left empty"
 msgstr "代碼不可空白"
@@ -212,7 +223,6 @@ msgstr "沒有顯示的資料"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
 #: code:addons/website_links/static/src/js/website_links_code_editor.js:0
 msgid "This code is already taken"
 msgstr "此代碼已被使用"
@@ -220,16 +230,14 @@ msgstr "此代碼已被使用"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Those trackers can be used in Google Analytics to track clicks and visitors, "
-"or in Odoo reports to track opportunities and related revenues."
-msgstr ""
-"這些追蹤器可以被Google分析去追蹤點選和訪問，或者在odoo的報表裡追蹤機會和相關"
-"收益。"
+"Those trackers can be used in Google Analytics to track clicks and visitors,"
+" or in Odoo reports to track opportunities and related revenues."
+msgstr "這些追蹤器可以被Google分析去追蹤點選和訪問，或者在odoo的報表裡追蹤機會和相關收益。"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "URL"
-msgstr "網址"
+msgid "Tracked Link"
+msgstr "追蹤連結"
 
 #. module: website_links
 #. odoo-javascript
@@ -242,6 +250,12 @@ msgstr "無法獲取最近連結"
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 msgid "Undefined"
 msgstr "未定義的"
+
+#. module: website_links
+#. odoo-javascript
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
+msgid "Visit Link"
+msgstr "造訪連結"
 
 #. module: website_links
 #. odoo-python
@@ -261,8 +275,7 @@ msgid "Your tracked links"
 msgstr "您追蹤的連結"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "cancel"
 msgstr "取消"
@@ -271,46 +284,44 @@ msgstr "取消"
 #. odoo-javascript
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 msgid "clicks"
-msgstr "點選"
+msgstr "點擊次數"
 
 #. module: website_links
-#: model_terms:ir.ui.view,arch_db:website_links.graphs
-msgid "copy"
-msgstr "複製"
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "e.g. \"Black Friday Mailing Campaign\""
+msgstr "例：新春郵寄推廣活動"
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 msgid "e.g. InMails, Ads, Social, ..."
-msgstr ""
+msgstr "例：InMail、廣告、社交網絡⋯"
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 msgid "e.g. June Sale, Paris Roadshow, ..."
-msgstr ""
+msgstr "例：六月大減價、巴黎路演⋯"
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 msgid "e.g. LinkedIn, Facebook, Leads, ..."
-msgstr ""
+msgstr "例：LinkedIn、Facebook、潛在客戶⋯"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "e.g. https://www.odoo.com/contactus"
-msgstr "例如.https://www.odoo.com/contactus"
+msgstr "例：https://www.odoo.com/contactus"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "ok"
 msgstr "確定"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "or"
 msgstr "或"

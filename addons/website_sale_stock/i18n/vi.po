@@ -1,29 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_stock
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Thi Huong Nguyen, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"POT-Creation-Date: 2024-10-25 07:50+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "<span invisible=\"not show_availability\">Units</span>"
-msgstr ""
+msgstr "<span invisible=\"not show_availability\">Đơn vị</span>"
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product_card/product_card.js:0
+msgid "All available quantity selected"
+msgstr "Toàn bộ số lượng hiện có đã được chọn"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__stock_notification_partner_ids
@@ -113,6 +118,12 @@ msgid "Out of Stock"
 msgstr "Hết hàng"
 
 #. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product/product.xml:0
+msgid "Out of stock"
+msgstr "Hết hàng"
+
+#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Out-of-Stock"
@@ -147,6 +158,12 @@ msgid "Regards,"
 msgstr "Trân trọng,"
 
 #. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product_card/product_card.xml:0
+msgid "Requested quantity not available"
+msgstr "Số lượng yêu cầu không có sẵn"
+
+#. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
 msgid "Sales Order"
 msgstr "Đơn bán hàng"
@@ -154,7 +171,7 @@ msgstr "Đơn bán hàng"
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Mục đơn bán hàng"
+msgstr "Dòng đơn bán hàng"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -180,8 +197,8 @@ msgstr "Hiển thị số lượng hiện có"
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 msgid ""
-"Some products became unavailable and your cart has been updated. We're sorry "
-"for the inconvenience."
+"Some products became unavailable and your cart has been updated. We're sorry"
+" for the inconvenience."
 msgstr ""
 "Một số sản phẩm không còn hàng và giỏ hàng của bạn đã được cập nhật. Chúng "
 "tôi rất tiếc về điều này."
@@ -195,7 +212,7 @@ msgstr "Sản phẩm sau hiện đã có hàng. "
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 msgid "The item has not been added to your cart since it is not available."
-msgstr ""
+msgstr "Mặt hàng này chưa được thêm vào giỏ hàng của bạn vì nó không còn."
 
 #. module: website_sale_stock
 #. odoo-python
@@ -212,7 +229,7 @@ msgstr "Sản phẩm này đã hết hàng."
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr "Điều chuyển"
+msgstr "Lệnh chuyển hàng"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -260,20 +277,28 @@ msgstr "Bạn vừa thêm tất cả sản phẩm còn hàng vào giỏ hàng. "
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 msgid "You already have %s Units in your cart."
-msgstr "Bạn đã có %s đơn vị trong giỏ hàng."
+msgstr "Bạn đã có %s sản phẩm trong giỏ hàng."
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order_line.py:0
+msgid ""
+"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
+"available"
+msgstr ""
+"Bạn yêu cầu %(desired_qty)s %(product_name)s nhưng chỉ còn %(new_qty)s "
 
 #. module: website_sale_stock
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
-#: code:addons/website_sale_stock/models/sale_order_line.py:0
 msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
 msgstr "Bạn yêu cầu %(desired_qty)s sản phẩm nhưng chỉ còn %(new_qty)s "
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
-msgid "You ask for %s Units but only %s are available."
-msgstr "Bạn yêu cầu %s đơn vị nhưng chỉ còn %s."
+msgid "You ask for %(quantity1)s Units but only %(quantity2)s are available."
+msgstr "Bạn yêu cầu %(quantity1)s đơn vị nhưng chỉ còn %(quantity2)s đơn vị. "
 
 #. module: website_sale_stock
 #. odoo-javascript

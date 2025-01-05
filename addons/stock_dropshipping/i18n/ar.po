@@ -1,29 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_dropshipping
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
-"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_res_company
 msgid "Companies"
-msgstr "الشركات "
+msgstr "الشركات"
 
 #. module: stock_dropshipping
 #: model:ir.model.fields.selection,name:stock_dropshipping.selection__stock_picking_type__code__dropship
@@ -44,12 +43,17 @@ msgstr "عدد إحالات الشحن "
 #: model:ir.ui.menu,name:stock_dropshipping.dropship_picking
 #: model_terms:ir.ui.view,arch_db:stock_dropshipping.view_picking_internal_search_inherit_stock_dropshipping
 msgid "Dropships"
-msgstr ""
+msgstr "إحالة الشحن "
 
 #. module: stock_dropshipping
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking__is_dropship
 msgid "Is a Dropship"
 msgstr "إحالة شحن "
+
+#. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_stock_lot
+msgid "Lot/Serial"
+msgstr "رقم الدفعة/الرقم التسلسلي "
 
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_stock_picking_type
@@ -62,14 +66,14 @@ msgid "Procurement Group"
 msgstr "مجموعة الشراء "
 
 #. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_stock_replenish_mixin
+msgid "Product Replenish Mixin"
+msgstr "Mixin لتجديد مخزون المنتج "
+
+#. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_purchase_order
 msgid "Purchase Order"
 msgstr "أمر شراء"
-
-#. module: stock_dropshipping
-#: model:ir.model,name:stock_dropshipping.model_purchase_order_line
-msgid "Purchase Order Line"
-msgstr "بند أمر الشراء"
 
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_sale_order
@@ -87,11 +91,16 @@ msgid "Stock Rule"
 msgstr "قاعدة المخزون"
 
 #. module: stock_dropshipping
+#: model_terms:ir.ui.view,arch_db:stock_dropshipping.stock_picking_type_kanban
+msgid "To Validate"
+msgstr "بانتظار التصديق "
+
+#. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_stock_picking
 msgid "Transfer"
-msgstr "الشحنة"
+msgstr "تحويل "
 
 #. module: stock_dropshipping
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking_type__code
 msgid "Type of Operation"
-msgstr ""
+msgstr "نوع العملية"

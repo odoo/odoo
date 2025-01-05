@@ -1,35 +1,43 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* bus
-#
+# 
 # Translators:
-# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2022
-# Martin Trigaux, 2022
-# Wojciech Warczakowski <w.warczakowski@gmail.com>, 2022
-# Mariusz, 2022
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2022
-# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2022
-# Maksym <ms@myodoo.pl>, 2022
-# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
-"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: pl\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: bus
+#: model:ir.model,name:bus.model_res_groups
+msgid "Access Groups"
+msgstr "Grupy dostępu"
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_attachment
+msgid "Attachment"
+msgstr "Załącznik"
 
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
 msgid "Away"
 msgstr "Zaraz wracam"
+
+#. module: bus
+#: model:ir.model,name:bus.model_bus_listener_mixin
+msgid "Can send messages via bus.bus"
+msgstr ""
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__channel
@@ -61,6 +69,11 @@ msgstr "Data utworzenia"
 #: model:ir.model.fields,field_description:bus.field_bus_presence__display_name
 msgid "Display Name"
 msgstr "Nazwa wyświetlana"
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_http
+msgid "HTTP Routing"
+msgstr "Wytyczanie HTTP"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__id
@@ -118,14 +131,29 @@ msgstr "Dostępny"
 #. module: bus
 #. odoo-javascript
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
 msgid "Refresh"
 msgstr "Odśwież"
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid ""
+"Save your work and refresh to get the latest updates and avoid potential "
+"issues."
+msgstr ""
 
 #. module: bus
 #. odoo-javascript
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
 msgid "The page appears to be out of date."
 msgstr "Strona wydaje się być nieaktualna."
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid "The page is out of date"
+msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
@@ -138,6 +166,11 @@ msgid "User Presence"
 msgstr "Obecność użytkownika"
 
 #. module: bus
+#: model:ir.model,name:bus.model_res_users_settings
+msgid "User Settings"
+msgstr "Ustawienia użytkownika"
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__user_id
 msgid "Users"
 msgstr "Użytkownicy"
@@ -145,8 +178,14 @@ msgstr "Użytkownicy"
 #. module: bus
 #. odoo-python
 #: code:addons/bus/controllers/home.py:0
-msgid "Your password is the default (admin)! If this system is exposed to untrusted users it is important to change it immediately for security reasons. I will keep nagging you about it!"
+msgid ""
+"Your password is the default (admin)! If this system is exposed to untrusted"
+" users it is important to change it immediately for security reasons. I will"
+" keep nagging you about it!"
 msgstr ""
+"Twoje hasło jest domyślne (admin)! Jeśli ten system jest narażony na "
+"niezaufanych użytkowników, należy go natychmiast zmienić ze względów "
+"bezpieczeństwa.  Będę Cię o to nękał!"
 
 #. module: bus
 #: model:ir.model,name:bus.model_ir_websocket

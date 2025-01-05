@@ -1,31 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_crm
-#
+# 
 # Translators:
-# Kristoffer Grundström <lovaren@gmail.com>, 2022
-# Haojun Zou <apollo_zhj@msn.com>, 2022
-# Kim Asplund <kim.asplund@gmail.com>, 2022
-# Simon S, 2022
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2022
-# Robin Chatfield <robin.chatfield@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
-"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_crm
@@ -36,7 +27,7 @@ msgstr "<span class=\"o_stat_text\"> Beställningar</span>"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__lead_id
 msgid "Associated Lead"
-msgstr "Förknippad lead"
+msgstr "Förknippat kundämne"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_quotation_partner_view_form
@@ -71,7 +62,7 @@ msgstr "Skapad av"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__create_date
 msgid "Created on"
-msgstr "Skapad"
+msgstr "Skapad den"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__partner_id
@@ -89,6 +80,13 @@ msgid "Do not link to a customer"
 msgstr "Länka inte till en kund"
 
 #. module: sale_crm
+#. odoo-python
+#: code:addons/sale_crm/models/crm_lead.py:0
+msgid "Expected revenue has been updated based on the linked Sales Orders."
+msgstr ""
+"Förväntade intäkter har uppdaterats baserat på länkade försäljningsorder."
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
 msgid "ID"
 msgstr "ID"
@@ -99,11 +97,6 @@ msgid "Invoiced in Sales Orders Target"
 msgstr "Fakturerad i försäljningsmål"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner____last_update
-msgid "Last Modified on"
-msgstr "Senast redigerad den"
-
-#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_uid
 msgid "Last Updated by"
 msgstr "Senast uppdaterad av"
@@ -111,22 +104,17 @@ msgstr "Senast uppdaterad av"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_date
 msgid "Last Updated on"
-msgstr "Senast uppdaterad på"
+msgstr "Senast uppdaterad den"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "Affärsmöjlighet/Möjlighet"
+msgstr "Kundämne/Möjlighet"
 
 #. module: sale_crm
 #: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__exist
 msgid "Link to an existing customer"
 msgstr "Länka till en befintlig kund"
-
-#. module: sale_crm
-#: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
-msgid "Log in the chatter from which opportunity the order originates"
-msgstr "Logga i chatten från vilken möjlighet ordern kommer"
 
 #. module: sale_crm
 #: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
@@ -181,6 +169,7 @@ msgid "Sale Orders"
 msgstr "Säljordrar"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/models/crm_team.py:0
 msgid "Sales Analysis"
 msgstr "Försäljningsanalys"
@@ -188,14 +177,15 @@ msgstr "Försäljningsanalys"
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
 msgid "Sales Order"
-msgstr "Order"
+msgstr "Försäljningsorder"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_team
 msgid "Sales Team"
-msgstr "Säljteam"
+msgstr "Säljlag"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/models/crm_team.py:0
 msgid "Sales: Untaxed Total"
 msgstr "Försäljning: totalt ex moms"
@@ -216,6 +206,7 @@ msgid "User"
 msgstr "Användare"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/wizard/crm_opportunity_to_quotation.py:0
 msgid "You can only apply this action from a lead."
-msgstr "Du kan bara verkställa detta från en lead."
+msgstr "Du kan bara verkställa detta från ett kundämne."

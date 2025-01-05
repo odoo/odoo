@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_mrp
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
-# Jolien De Paepe, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: purchase_mrp
@@ -50,7 +48,9 @@ msgstr "Stuklijstregel"
 #. odoo-python
 #: code:addons/purchase_mrp/models/mrp_bom.py:0
 msgid "Components cost share have to be positive or equals to zero."
-msgstr "Het kostenaandeel van de onderdelen moet positief zijn of gelijk zijn aan nul."
+msgstr ""
+"Het kostenaandeel van de onderdelen moet positief zijn of gelijk zijn aan "
+"nul."
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom_line__cost_share
@@ -75,7 +75,12 @@ msgstr "Boekingsregel"
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_report_mrp_report_mo_overview
 msgid "MO Overview Report"
-msgstr ""
+msgstr "Productieorderoverzicht"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Productieorder"
 
 #. module: purchase_mrp
 #. odoo-python
@@ -86,13 +91,12 @@ msgstr "Productiebron van %s"
 #. module: purchase_mrp
 #. odoo-python
 #: code:addons/purchase_mrp/models/stock_move.py:0
-msgid "Odoo is not able to generate the anglo saxon entries. The total valuation of %s is zero."
-msgstr "Odoo kan de Angelsaksische boekingen niet genereren. De totale waardering van %s is nul."
-
-#. module: purchase_mrp
-#: model:ir.model,name:purchase_mrp.model_mrp_production
-msgid "Production Order"
-msgstr "Productieorder"
+msgid ""
+"Odoo is not able to generate the anglo saxon entries. The total valuation of"
+" %s is zero."
+msgstr ""
+"Odoo kan de Angelsaksische boekingen niet genereren. De totale waardering "
+"van %s is nul."
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_purchase_order
@@ -117,11 +121,16 @@ msgstr "Voorraadverplaatsing"
 
 #. module: purchase_mrp
 #: model:ir.model.fields,help:purchase_mrp.field_mrp_bom_line__cost_share
-msgid "The percentage of the component repartition cost when purchasing a kit.The total of all components' cost have to be equal to 100."
-msgstr "Het percentage van de herverdelingskosten van onderdelen bij aankoop van een kit. Het totaal van de kosten van alle onderdelen moet gelijk zijn aan 100."
+msgid ""
+"The percentage of the component repartition cost when purchasing a kit.The "
+"total of all components' cost have to be equal to 100."
+msgstr ""
+"Het percentage van de herverdelingskosten van onderdelen bij inkoop van een "
+"kit. Het totaal van de kosten van alle onderdelen moet gelijk zijn aan 100."
 
 #. module: purchase_mrp
 #. odoo-python
 #: code:addons/purchase_mrp/models/mrp_bom.py:0
 msgid "The total cost share for a BoM's component have to be 100"
-msgstr "Het totale kostenaandeel voor een onderdeel van een stuklijst moet 100 zijn"
+msgstr ""
+"Het totale kostenaandeel voor een onderdeel van een stuklijst moet 100 zijn"

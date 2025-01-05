@@ -1,30 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* iap
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
-#
+# Wil Odoo, 2024
+# Marianna Ciofani, 2025
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
-"1 : 2;\n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account__account_info_id
-msgid "Account Info"
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
+msgid ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                                    Buy Credit"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                                    Acquista crediti"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -33,40 +36,39 @@ msgstr "Informazioni account"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__account_token
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__account_token
 msgid "Account Token"
 msgstr "Token account"
-
-#. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__account_uuid_hashed
-msgid "Account UUID"
-msgstr ""
 
 #. module: iap
 #: model:ir.model.fields,help:iap.field_iap_account__account_token
 msgid ""
 "Account token is your authentication key for this service. Do not share it."
 msgstr ""
+"Il token dell'account è la tua chiave di autenticazione per questo servizio."
+" Non condividerlo."
 
 #. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account__account_info_ids
-msgid "Accounts from IAP"
+#. odoo-python
+#: code:addons/iap/tools/iap_tools.py:0
+msgid ""
+"An error occurred while reaching %s. Please contact Odoo support if this "
+"error persists."
 msgstr ""
+"Si è verificato un errore durante la connessione a %s. Contatta il supporto "
+"Odoo se l'errore persiste."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__balance
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__balance
 msgid "Balance"
-msgstr ""
+msgstr "Saldo"
 
 #. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Buy Credit"
-msgstr ""
+#: model:ir.model.fields.selection,name:iap.selection__iap_account__state__banned
+msgid "Banned"
+msgstr "Bannato"
 
 #. module: iap
 #. odoo-javascript
-#: code:addons/iap/static/src/action_buttons_widget/action_buttons_widget.xml:0
 #: code:addons/iap/static/src/js/insufficient_credit_error_handler.js:0
 msgid "Buy credits"
 msgstr "Acquista crediti"
@@ -83,38 +85,54 @@ msgid "Company"
 msgstr "Azienda"
 
 #. module: iap
-#: model:ir.model,name:iap.model_res_config_settings
-msgid "Config Settings"
-msgstr "Impostazioni di configurazione"
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__create_uid
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__create_uid
+#: model:ir.model.fields,field_description:iap.field_iap_service__create_uid
 msgid "Created by"
 msgstr "Creato da"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__create_date
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__create_date
+#: model:ir.model.fields,field_description:iap.field_iap_service__create_date
 msgid "Created on"
 msgstr "Data creazione"
 
 #. module: iap
+#: model:iap.service,unit_name:iap.iap_service_reveal
+msgid "Credits"
+msgstr "Crediti"
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__description
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__description
+#: model:ir.model.fields,field_description:iap.field_iap_service__description
 msgid "Description"
-msgstr ""
+msgstr "Descrizione"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__display_name
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__display_name
+#: model:ir.model.fields,field_description:iap.field_iap_service__display_name
 msgid "Display Name"
 msgstr "Nome visualizzato"
 
 #. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Hide Token"
+#: model:ir.model.fields,field_description:iap.field_iap_account__warning_user_ids
+msgid "Email Alert Recipients"
+msgstr "Destinatari avvisi e-mail"
+
+#. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_account__warning_threshold
+msgid "Email Alert Threshold"
+msgstr "Soglia avvisi e-mail"
+
+#. module: iap
+#: model:iap.service,description:iap.iap_service_reveal
+msgid ""
+"Get quality leads and opportunities: convert your website visitors into "
+"leads, generate leads based on a set of criteria and enrich the company data"
+" of your opportunities."
 msgstr ""
+"Ottieni lead e opportunità di qualità: converti i visitatori del sito web in"
+" lead, genera lead in base a una serie di criteri e arricchisci i dati "
+"aziendali delle opportunità."
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
@@ -124,15 +142,9 @@ msgstr "Acquisti integrati"
 #. module: iap
 #: model:ir.actions.act_window,name:iap.iap_account_action
 #: model:ir.model,name:iap.model_iap_account
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__account_id
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "IAP Account"
 msgstr "Account acquisti integrati"
-
-#. module: iap
-#: model:ir.model,name:iap.model_iap_account_info
-msgid "IAP Account Info"
-msgstr ""
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_account_menu
@@ -146,8 +158,13 @@ msgid "IAP Lead Enrichment API"
 msgstr "API arricchimento contatto acquisti integrati"
 
 #. module: iap
+#: model:ir.model,name:iap.model_iap_service
+msgid "IAP Service"
+msgstr "Servizio IAP"
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__id
+#: model:ir.model.fields,field_description:iap.field_iap_service__id
 msgid "ID"
 msgstr "ID"
 
@@ -158,21 +175,33 @@ msgid "Insufficient credit to perform this service."
 msgstr "Credito insufficiente per l'esecuzione di questo servizio."
 
 #. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_service__integer_balance
+msgid "Integer Balance"
+msgstr "Saldo intero"
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_uid
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__write_uid
+#: model:ir.model.fields,field_description:iap.field_iap_service__write_uid
 msgid "Last Updated by"
 msgstr "Ultimo aggiornamento di"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_date
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__write_date
+#: model:ir.model.fields,field_description:iap.field_iap_service__write_date
 msgid "Last Updated on"
 msgstr "Ultimo aggiornamento il"
 
 #. module: iap
+#. odoo-javascript
+#: code:addons/iap/static/src/action_buttons_widget/action_buttons_widget.xml:0
+msgid "Manage Service & Buy Credits"
+msgstr "Gestisci servizio e acquista crediti"
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__name
+#: model:ir.model.fields,field_description:iap.field_iap_service__name
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
@@ -180,25 +209,40 @@ msgid "Odoo IAP"
 msgstr "Acquisti integrati Odoo"
 
 #. module: iap
-#: model:ir.actions.server,name:iap.open_iap_account
-msgid "Open IAP Account"
-msgstr "Apri conto acquisti integrati"
-
-#. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__service_name
-msgid "Related Service"
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid ""
+"One of the email alert recipients doesn't have an email address set. Users: "
+"%s"
 msgstr ""
+"Uno dei destinatari degli avvisi e-mail non ha un indirizzo e-mail "
+"impostato. Utenti: %s"
 
 #. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account__service_name
-msgid "Service Name"
-msgstr "Nome servizio"
+#: model:ir.model.constraint,message:iap.constraint_iap_service_unique_technical_name
+msgid "Only one service can exist with a specific technical_name"
+msgstr "Può esistere solo un servizio con un technical_name specifico"
 
 #. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account__show_token
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Show Token"
-msgstr ""
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid "Please set a positive email alert threshold."
+msgstr "Imposta una soglia di avviso e-mail positiva."
+
+#. module: iap
+#: model:ir.model.fields.selection,name:iap.selection__iap_account__state__registered
+msgid "Registered"
+msgstr "Registrati"
+
+#. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_account__service_id
+msgid "Service"
+msgstr "Servizio"
+
+#. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_account__service_locked
+msgid "Service Locked"
+msgstr "Servizio bloccato"
 
 #. module: iap
 #. odoo-javascript
@@ -207,25 +251,35 @@ msgid "Start a Trial at Odoo"
 msgstr "Inizia una prova con Odoo"
 
 #. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_account__state
+msgid "State"
+msgstr "Stato"
+
+#. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_account__service_name
+#: model:ir.model.fields,field_description:iap.field_iap_service__technical_name
+msgid "Technical Name"
+msgstr "Nome tecnico"
+
+#. module: iap
 #. odoo-python
 #: code:addons/iap/tools/iap_tools.py:0
 msgid ""
-"The url that this service requested returned an error. Please contact the "
-"author of the app. The url it tried to contact was %s"
+"The request to the service timed out. Please contact the author of the app. "
+"The URL it tried to contact was %s"
 msgstr ""
-"L'URL richiesto dal servizio ha restituito un errore, contattare l'autore "
-"dell'applicazione. URL richiesto dal servizio: %s"
+"La richiesta al servizio è scaduta. Contatta l'autore dell'app. L'URL che ha"
+" cercato di contattare era %s"
 
 #. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account__warning_threshold
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__warning_threshold
-msgid "Threshold"
-msgstr ""
-
-#. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__unit_name
+#: model:ir.model.fields,field_description:iap.field_iap_service__unit_name
 msgid "Unit Name"
-msgstr ""
+msgstr "Nome unità"
+
+#. module: iap
+#: model:ir.model.fields.selection,name:iap.selection__iap_account__state__unregistered
+msgid "Unregistered"
+msgstr "Non registrato"
 
 #. module: iap
 #. odoo-javascript
@@ -238,20 +292,3 @@ msgstr "Visualizza i servizi"
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 msgid "View your IAP Services and recharge your credits"
 msgstr "Visualizzazione servizi di acquisti integrati e ricarica crediti"
-
-#. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account__warn_me
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__warn_me
-msgid "Warn me"
-msgstr ""
-
-#. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account__warning_email
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__warning_email
-msgid "Warning Email"
-msgstr ""
-
-#. module: iap
-#: model:ir.model.fields,help:iap.field_iap_account__warn_me
-msgid "We will send you an email when your balance gets below that threshold"
-msgstr ""

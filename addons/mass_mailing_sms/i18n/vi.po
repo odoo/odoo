@@ -1,24 +1,46 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mass_mailing_sms
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Thi Huong Nguyen, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: mass_mailing_sms
+#. odoo-javascript
+#: code:addons/mass_mailing_sms/static/src/components/sms_widget/fields_sms_widget.js:0
+msgid " (including link trackers and opt-out link)"
+msgstr "(bao gồm trình theo dõi liên kết và liên kết huỷ đăng ký)"
+
+#. module: mass_mailing_sms
+#. odoo-javascript
+#: code:addons/mass_mailing_sms/static/src/components/sms_widget/fields_sms_widget.js:0
+msgid " (including link trackers)"
+msgstr "(bao gồm trình theo dõi liên kết)"
+
+#. module: mass_mailing_sms
+#. odoo-javascript
+#: code:addons/mass_mailing_sms/static/src/components/sms_widget/fields_sms_widget.js:0
+msgid " (including opt-out link)"
+msgstr "(bao gồm liên kết huỷ đăng ký)"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_marketing_campaign__mailing_sms_count
+msgid "# SMS Mailings"
+msgstr "# Thư SMS"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
@@ -26,12 +48,14 @@ msgid ""
 "+32 495 85 85 77\n"
 "+33 545 55 55 55"
 msgstr ""
+"+32 495 85 85 77\n"
+"+33 545 55 55 55"
 
 #. module: mass_mailing_sms
 #. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 msgid "24H Stats of %(mailing_type)s \"%(mailing_name)s\""
-msgstr ""
+msgstr "Số liệu thống kê 24h của %(mailing_type)s \"%(mailing_name)s\""
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_list_view_kanban
@@ -41,31 +65,64 @@ msgid ""
 "                        <i class=\"fa fa-phone\"/> Contacts\n"
 "                    </span>"
 msgstr ""
+"<br/>\n"
+"                    <span class=\"text-muted\">\n"
+"                        <i class=\"fa fa-phone\"/> Liên hệ\n"
+"                    </span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
-msgid "<span name=\"canceled_text_sms\" attrs=\"{'invisible': [('mailing_type', '!=', 'sms')]}\">SMS Text Message have been canceled and will not be sent.</span>"
+msgid ""
+"<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
+"Text Message have been cancelled and will not be sent.</span>"
 msgstr ""
+"<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">Tin "
+"nhắn văn bản SMS đã bị hủy và sẽ không được gửi đi.</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
-msgid "<span name=\"failed_text_sms\" attrs=\"{'invisible': [('mailing_type', '!=', 'sms')]}\">SMS Text Message could not be sent.</span>"
-msgstr "<span name=\"failed_text_sms\" attrs=\"{'invisible': [('mailing_type', '!=', 'sms')]}\">SMS Text Message could not be sent.</span>"
+msgid ""
+"<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
+"Messages could not be delivered.</span>"
+msgstr ""
+"<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">Không thể"
+" gửi tin nhắn văn bản SMS.</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
-msgid "<span name=\"next_departure_text\" attrs=\"{'invisible': [('mailing_type', '!=', 'sms')]}\">This SMS marketing is scheduled for </span>"
-msgstr "<span name=\"next_departure_text\" attrs=\"{'invisible': [('mailing_type', '!=', 'sms')]}\">This SMS marketing is scheduled for </span>"
+msgid ""
+"<span name=\"next_departure_text\" invisible=\"mailing_type != 'sms'\">This "
+"SMS marketing is scheduled for </span>"
+msgstr ""
+"<span name=\"next_departure_text\" invisible=\"mailing_type != 'sms'\">Chiến"
+" dịch marketing qua SMS này được lên lịch vào </span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
-msgid "<span name=\"scheduled_text_sms\" attrs=\"{'invisible': [('mailing_type', '!=', 'sms')]}\">SMS Text Message are in queue and will be sent soon.</span>"
-msgstr "<span name=\"scheduled_text_sms\" attrs=\"{'invisible': [('mailing_type', '!=', 'sms')]}\">SMS Text Message are in queue and will be sent soon.</span>"
+msgid ""
+"<span name=\"process_text_sms\" invisible=\"mailing_type != 'sms'\">SMS Text"
+" Messages are being processed.</span>"
+msgstr ""
+"<span name=\"process_text_sms\" invisible=\"mailing_type != 'sms'\">Tin nhắn"
+" văn bản SMS đang được xử lý.</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
-msgid "<span name=\"sent_sms\" attrs=\"{'invisible': [('mailing_type', '!=', 'sms')]}\">SMS Text Message have been sent.</span>"
-msgstr "<span name=\"sent_sms\" attrs=\"{'invisible': [('mailing_type', '!=', 'sms')]}\">SMS Text Message have been sent.</span>"
+msgid ""
+"<span name=\"scheduled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
+"Text Messages are in queue and will be sent soon.</span>"
+msgstr ""
+"<span name=\"scheduled_text_sms\" invisible=\"mailing_type != 'sms'\">Tin "
+"nhắn văn bản SMS đang nằm trong danh sách chờ và sẽ sớm được gửi.</span>"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid ""
+"<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
+"Messages have been sent.</span>"
+msgstr ""
+"<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">Tin nhắn văn bản"
+" SMS đã được gửi.</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
@@ -75,7 +132,7 @@ msgstr "<span widget=\"statinfo\">Mở người nhận</span>"
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_list_view_kanban
 msgid "<span>Valid SMS Recipients</span>"
-msgstr ""
+msgstr "<span>Người nhận SMS hợp lệ</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -85,7 +142,7 @@ msgid ""
 "                        </strong>"
 msgstr ""
 "<strong>\n"
-"                            It appears you don't have enough IAP credits. Click here to buy credits.\n"
+"                            Có vẻ như bạn không có đủ tín dụng IAP. Bấm vào đây để mua tín dụng.\n"
 "                        </strong>"
 
 #. module: mass_mailing_sms
@@ -96,18 +153,23 @@ msgid ""
 "                        </strong>"
 msgstr ""
 "<strong>\n"
-"                            It appears your SMS account is not registered. Click here to set up your account.\n"
+"                            Có vẻ như tài khoản SMS của bạn chưa được đăng ký. Nhấn vào đây để thiết lập tài khoản của bạn.\n"
 "                        </strong>"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
+msgid "<strong>This SMS could not be delivered.</strong>"
+msgstr "<strong>Không thể gửi SMS này.</strong>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
 msgid "<strong>This SMS could not be sent.</strong>"
-msgstr "<strong>This SMS could not be sent.</strong>"
+msgstr "<strong>Không thể gửi SMS này.</strong>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
 msgid "<strong>This number appears to be invalid.</strong>"
-msgstr "<strong>This number appears to be invalid.</strong>"
+msgstr "<strong>Số này có vẻ không hợp lệ.</strong>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
@@ -116,9 +178,11 @@ msgid "A/B Test"
 msgstr "Thử nghiệm A/B"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__ab_testing_mailings_sms_count
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_marketing_campaign__ab_testing_mailings_sms_count
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_campaign__ab_testing_mailings_sms_count
 msgid "A/B Test Mailings SMS #"
-msgstr ""
+msgstr "SMS thử nghiệm A/B #"
 
 #. module: mass_mailing_sms
 #. odoo-python
@@ -129,73 +193,72 @@ msgstr "Thử nghiệm A/B: %s"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Tác vụ cần thiết"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_attachment_count
 msgid "Attachment Count"
-msgstr "Số lượng tập tin đính kèm"
+msgstr "Số lượng tệp đính kèm"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
 msgid "Average of Bounced"
-msgstr ""
+msgstr "Trung bình đã trả về"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
 msgid "Average of Clicked"
-msgstr ""
+msgstr "Trung bình đã nhấp"
 
 #. module: mass_mailing_sms
 #. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 msgid "BOUNCED (%i)"
-msgstr ""
-
-#. module: mass_mailing_sms
-#: model:utm.tag,name:mass_mailing_sms.mailing_tag_0
-msgid "Bioutifoul SMS"
-msgstr ""
+msgstr "BỊ TRẢ VỀ (%i)"
 
 #. module: mass_mailing_sms
 #. odoo-python
 #: code:addons/mass_mailing_sms/controllers/main.py:0
-msgid "Blacklist through SMS Marketing unsubscribe (mailing ID: %s - model: %s)"
-msgstr "Blacklist through SMS Marketing unsubscribe (mailing ID: %s - model: %s)"
+msgid ""
+"Blacklist through SMS Marketing unsubscribe (mailing ID: %(mailing_id)s - "
+"model: %(model)s)"
+msgstr ""
+"Hạn chế thông qua huỷ đăng ký Marketing qua SMS (ID gửi thư: %(mailing_id)s "
+"- mô hình: %(model)s)"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_blacklist
 msgid "Blacklisted"
-msgstr "Blacklisted"
+msgstr "Đã hạn chế"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__mobile_blacklisted
 msgid "Blacklisted Phone Is Mobile"
-msgstr "Số điện thoại vào sổ đen là Di động"
+msgstr "Số điện thoại bị hạn chế là số di động"
 
 #. module: mass_mailing_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.phone_blacklist_menu
 msgid "Blacklisted Phone Numbers"
-msgstr "Blacklisted Phone Numbers"
+msgstr "Số điện thoại bị hạn chế"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr "Số điện thoại vào sổ đen là Điện thoại thường"
+msgstr "Số điện thoại bị hạn chế là số điện thoại bàn"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
 msgid "Bounced (%)"
-msgstr "Bounced (%)"
+msgstr "Đã trả về (%)"
 
 #. module: mass_mailing_sms
 #. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 msgid "CLICKED (%i)"
-msgstr ""
+msgstr "ĐÃ NHẤP (%i)"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__utm_campaign_id
@@ -210,20 +273,15 @@ msgid "Campaigns"
 msgstr "Chiến dịch"
 
 #. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
-msgid "Cancel"
-msgstr "Hủy"
-
-#. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_sms_test__numbers
 msgid "Carriage-return-separated list of phone numbers"
-msgstr ""
+msgstr "Danh sách số điện thoại được phân tách bằng cách chuyển dòng"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
 msgid "Clicked (%)"
-msgstr "Clicked (%)"
+msgstr "Đã nhấp (%)"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__sms_code
@@ -232,8 +290,9 @@ msgstr "Mã"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_trace_report_action_sms
-msgid "Come back once some SMS Mailings are sent to check out aggregated results."
-msgstr ""
+msgid ""
+"Come back once some SMS Mailings are sent to check out aggregated results."
+msgstr "Hãy quay lại để xem kết quả tổng hợp sau khi một số Thư SMS được gửi."
 
 #. module: mass_mailing_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_configuration
@@ -241,19 +300,29 @@ msgid "Configuration"
 msgstr "Cấu hình"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_country_not_supported
+msgid "Country Not Supported"
+msgstr "Quốc gia không được hỗ trợ"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_registration_needed
+msgid "Country-specific Registration Required"
+msgstr "Yêu cầu đăng ký theo quốc gia cụ thể"
+
+#. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_list_action_sms
 msgid "Create a Mailing List"
-msgstr "Create a Mailing List"
+msgstr "Tạo danh sách gửi thư"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_mailing_action_sms
 msgid "Create a SMS Marketing Mailing"
-msgstr ""
+msgstr "Tạo một Thư Marketing qua SMS"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_contact_action_sms
 msgid "Create a mailing contact"
-msgstr "Create a mailing contact"
+msgstr "Tạo liên hệ gửi thư"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__create_uid
@@ -272,7 +341,22 @@ msgid "Date"
 msgstr "Ngày"
 
 #. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
+msgid "Discard"
+msgstr "Huỷ bỏ"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__display_name
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__display_name
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__display_name
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__display_name
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_res_users__display_name
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__display_name
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_sms__display_name
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_tracker__display_name
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_campaign__display_name
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_medium__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
 
@@ -286,12 +370,17 @@ msgstr "Nhân bản"
 #. odoo-python
 #: code:addons/mass_mailing_sms/models/res_users.py:0
 msgid "Email Marketing"
-msgstr "Email Marketing"
+msgstr "Marketing qua Email"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_search
 msgid "Exclude Blacklisted Phone"
-msgstr "Exclude Blacklisted Phone"
+msgstr "Loại trừ số điện thoại bị hạn chế"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_expired
+msgid "Expired"
+msgstr "Đã hết hạn"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__failure_type
@@ -300,8 +389,12 @@ msgstr "Loại thất bại"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_sanitized
-msgid "Field used to store sanitized phone number. Helps speeding up searches and comparisons."
-msgstr "Trường được sử dụng để lưu trữ số điện thoại đã qua xử lý. Giúp tăng tốc tìm kiếm và so sánh."
+msgid ""
+"Field used to store sanitized phone number. Helps speeding up searches and "
+"comparisons."
+msgstr ""
+"Trường được sử dụng để chứa số điện thoại được làm sạch. Giúp tăng tốc tìm "
+"kiếm và so sánh. "
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_follower_ids
@@ -319,8 +412,8 @@ msgid ""
 "For an Email, Subject your Recipients will see in their inbox.\n"
 "                    For an SMS Text Message, internal Title of the Message."
 msgstr ""
-"For an Email, Subject your Recipients will see in their inbox.\n"
-"                    For an SMS Text Message, internal Title of the Message."
+"Đối với Email, Chủ đề mà Người nhận sẽ thấy trong hộp thư đến của họ.\n"
+"                    Đối với Tin nhắn văn bản SMS, Tiêu đề nội bộ của Tin nhắn."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_subject
@@ -328,6 +421,8 @@ msgid ""
 "For an email, the subject your recipients will see in their inbox.\n"
 "For an SMS, the internal title of the message."
 msgstr ""
+"Đối với email, chủ đề mà người nhận sẽ thấy trong hộp thư đến của họ.\n"
+"Đối với SMS, tiêu đề nội bộ của tin nhắn."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__has_message
@@ -337,74 +432,115 @@ msgstr "Có tin nhắn"
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__utm_campaign__ab_testing_sms_winner_selection__clicks_ratio
 msgid "Highest Click Rate"
-msgstr ""
+msgstr "Tỷ lệ nhấp cao nhất"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__id
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__id
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__id
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__id
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_res_users__id
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__id
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_sms__id
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_tracker__id
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_campaign__id
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_medium__id
 msgid "ID"
 msgstr "ID"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Nếu chọn, các tin nhắn mới yêu cầu sự có mặt của bạn."
+msgstr "Nếu chọn, bạn cần chú ý tới các tin nhắn mới."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_has_error
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Nếu đánh dấu thì một số thông điệp có lỗi."
+msgstr "Nếu chọn, một số tin nhắn sẽ có lỗi gửi."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_sanitized_blacklisted
-msgid "If the sanitized phone number is on the blacklist, the contact won't receive mass mailing sms anymore, from any list"
-msgstr "Nếu số điện thoại được làm sạch nằm trong danh sách đen, thì liên hệ sẽ không nhận được sms gửi thư hàng loạt nữa, từ bất kỳ danh sách nào"
+msgid ""
+"If the sanitized phone number is on the blacklist, the contact won't receive"
+" mass mailing sms anymore, from any list"
+msgstr ""
+"Nếu số điện thoại được làm sạch nằm trong danh sách hạn chế, thì liên hệ sẽ "
+"không nhận được sms hàng loạt từ bất kỳ danh sách nào nữa"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_force_send
-msgid "Immediately send the SMS Mailing instead of queuing up. Use at your own risk."
+msgid ""
+"Immediately send the SMS Mailing instead of queuing up. Use at your own "
+"risk."
 msgstr ""
+"Gửi ngay Thư SMS thay vì giữ lại trong danh sách chờ. Bạn chịu trách nhiệm "
+"cho mọi rủi ro."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_allow_unsubscribe
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__mass_sms_allow_unsubscribe
 msgid "Include opt-out link"
-msgstr "Include opt-out link"
+msgstr "Bao gồm liên kết huỷ đăng ký"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__mobile_blacklisted
-msgid "Indicates if a blacklisted sanitized phone number is a mobile number. Helps distinguish which number is blacklisted             when there is both a mobile and phone field in a model."
-msgstr "Cho biết số điện thoại được xử lý trong danh sách đen có phải là số di động hay không. Giúp phân biệt số nào nằm trong danh sách đen             khi có cả trường di động và trường điện thoại trong đối tượng."
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Cho biết số điện thoại được làm sạch trong danh sách hạn chế có phải là số "
+"di động hay không. Giúp phân biệt số nào bị hạn chế             khi có cả "
+"trường di động và trường điện thoại bàn trong một mô hình."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_blacklisted
-msgid "Indicates if a blacklisted sanitized phone number is a phone number. Helps distinguish which number is blacklisted             when there is both a mobile and phone field in a model."
-msgstr "Cho biết số điện thoại đã được xử lý trong danh sách đen có phải là số điện thoại hay không. Giúp phân biệt số nào nằm trong danh sách đen             khi có cả trường di động và điện thoại trong một đối tượng."
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a phone number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Cho biết số điện thoại được làm sạch trong danh sách hạn chế có phải là số "
+"điện thoại bàn hay không. Giúp phân biệt số nào bị hạn chế             khi "
+"có cả trường di động và trường điện thoại bàn trong một mô hình."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_credit
 msgid "Insufficient Credit"
-msgstr "Insufficient Credit"
+msgstr "Không đủ tín dụng"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_has_insufficient_credit
 msgid "Insufficient IAP credits"
-msgstr "Insufficient IAP credits"
+msgstr "Không đủ tín dụng IAP"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_kanban_sms
 msgid "Insufficient credits"
-msgstr "Insufficient credits"
+msgstr "Không đủ tín dụng"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_invalid_destination
+msgid "Invalid Destination"
+msgstr "Địa chỉ đích không hợp lệ"
+
+#. module: mass_mailing_sms
+#. odoo-python
+#: code:addons/mass_mailing_sms/controllers/main.py:0
+msgid "Invalid number %s"
+msgstr "Số không hợp lệ %s"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_is_follower
 msgid "Is Follower"
-msgstr "Trở thành người theo dõi"
+msgstr "Là người theo dõi"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__write_date
@@ -412,26 +548,31 @@ msgid "Last Updated on"
 msgstr "Cập nhật lần cuối vào"
 
 #. module: mass_mailing_sms
+#: model:ir.model,name:mass_mailing_sms.model_sms_tracker
+msgid "Link SMS to mailing/sms tracking models"
+msgstr "Liên kết SMS với các mô hình theo dõi thư/sms"
+
+#. module: mass_mailing_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.link_tracker_menu
 msgid "Link Tracker"
-msgstr "Kiểm soát đường dẫn"
+msgstr "Trình theo dõi Liên kết"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__mailing_id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__mailing_id
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
 msgid "Mailing"
-msgstr "Mailing"
+msgstr "Gửi thư"
 
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_mailing_contact
 msgid "Mailing Contact"
-msgstr "Mailing Contact"
+msgstr "Liên hệ gửi thư"
 
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_mailing_list
 msgid "Mailing List"
-msgstr "Danh sách Mailing"
+msgstr "Danh sách gửi thư"
 
 #. module: mass_mailing_sms
 #: model:ir.actions.act_window,name:mass_mailing_sms.mailing_contact_action_sms
@@ -449,17 +590,26 @@ msgstr "Danh sách Mail"
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_mailing_trace
 msgid "Mailing Statistics"
-msgstr "Mailing Statistics"
+msgstr "Thống kê gửi thư"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_tracker__mailing_trace_id
+msgid "Mailing Trace"
+msgstr "Theo dõi thư"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__mailing_type
 msgid "Mailing Type"
-msgstr "Mailing Type"
+msgstr "Kiểu gửi thư"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_contact_action_sms
-msgid "Mailing contacts allow you to separate your marketing audience from your contact directory."
+msgid ""
+"Mailing contacts allow you to separate your marketing audience from your "
+"contact directory."
 msgstr ""
+"Liên hệ gửi thư cho phép bạn tách riêng đối tượng marketing khỏi danh bạ "
+"liên hệ."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__utm_campaign__ab_testing_sms_winner_selection__manual
@@ -475,27 +625,28 @@ msgstr "Marketing"
 #: model:ir.model,name:mass_mailing_sms.model_mailing_mailing
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_sms__mailing_id
 msgid "Mass Mailing"
-msgstr "Gửi mail hàng loạt"
+msgstr "Gửi thư hàng loạt"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_marketing_campaign__mailing_sms_ids
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_campaign__mailing_sms_ids
 msgid "Mass SMS"
-msgstr "Mass SMS"
+msgstr "SMS hàng loạt"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_has_error
 msgid "Message Delivery error"
-msgstr "Thông báo gửi đi gặp lỗi"
+msgstr "Lỗi gửi tin nhắn"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_ids
 msgid "Messages"
-msgstr "Thông báo"
+msgstr "Tin nhắn"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_number_missing
 msgid "Missing Number"
-msgstr "Missing Number"
+msgstr "Thiếu số điện thoại"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__mobile
@@ -505,7 +656,7 @@ msgstr "Di động"
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_search_sms
 msgid "My SMS Marketing"
-msgstr "My SMS Marketing"
+msgstr "Marketing qua SMS của tôi"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_trace_report_action_sms
@@ -514,8 +665,22 @@ msgstr "Chưa có dữ liệu nào!"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_list_action_sms
-msgid "No need to import mailing lists, you can send SMS Text Messages to contacts saved in other Odoo apps."
+msgid ""
+"No need to import mailing lists, you can send SMS to contacts saved in other"
+" Odoo apps."
 msgstr ""
+"Không cần nhập danh sách thư, bạn có thể gửi SMS đến các liên hệ được lưu "
+"trong những ứng dụng Odoo khác."
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_not_allowed
+msgid "Not Allowed"
+msgstr "Được cho phép"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_not_delivered
+msgid "Not Delivered"
+msgstr "Chưa giao"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__sms_number
@@ -527,42 +692,51 @@ msgstr "Số"
 #. odoo-python
 #: code:addons/mass_mailing_sms/controllers/main.py:0
 msgid "Number %s not found"
-msgstr "Number %s not found"
+msgstr "Không tìm thấy số %s"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng tác vụ"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_campaign__mailing_sms_count
 msgid "Number of Mass SMS"
-msgstr "Number of Mass SMS"
+msgstr "Số SMS hàng loạt"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_has_error_counter
 msgid "Number of errors"
-msgstr "Số lỗi"
+msgstr "Số lượng lỗi"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Số thông báo cần xử lý"
+msgid "Number of messages requiring action"
+msgstr "Số tin nhắn cần xử lý"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Số lượng tin gửi đi bị lỗi"
+msgstr "Số tin nhắn bị gửi lỗi"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__numbers
 msgid "Number(s)"
-msgstr "Number(s)"
+msgstr "Số"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid ""
+"Once you send these text messages, they'll be making a grand entrance in all"
+" pockets, creating quite the bzzzzz!"
+msgstr ""
+"Sau khi bạn gửi các tin nhắn văn bản này, chúng sẽ xuất hiện trong hộp thoại"
+" tin nhắn của người nhận và góp phần quảng bá doanh nghiệp bạn!"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_tree_sms
 msgid "Open Recipient"
-msgstr ""
+msgstr "Người nhận mở thư"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_optout
@@ -577,33 +751,33 @@ msgstr "Tùy chọn"
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_sms_sms
 msgid "Outgoing SMS"
-msgstr "Outgoing SMS"
+msgstr "SMS đi"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
-msgstr "Số điện thoại đã vào sổ đen"
+msgstr "Số điện thoại hạn chế"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_mobile_search
 msgid "Phone/Mobile"
-msgstr "Di đông/Điện thoại"
+msgstr "Điện thoại/di động"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_main
 msgid "Please enter your phone number"
-msgstr "Please enter your phone number"
+msgstr "Vui lòng nhập số điện thoại của bạn"
 
 #. module: mass_mailing_sms
 #. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 msgid "RECEIVED (%i)"
-msgstr ""
+msgstr "ĐÃ NHẬN (%i)"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Đánh giá"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
@@ -612,10 +786,15 @@ msgid "Recipients"
 msgstr "Người nhận"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_rejected
+msgid "Rejected"
+msgstr "Bị từ chối"
+
+#. module: mass_mailing_sms
 #. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 msgid "Report for %(expected)i %(mailing_type)s Sent"
-msgstr ""
+msgstr "Đã gửi báo cáo về %(expected)i %(mailing_type)s"
 
 #. module: mass_mailing_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_reporting
@@ -623,7 +802,7 @@ msgid "Reporting"
 msgstr "Báo cáo"
 
 #. module: mass_mailing_sms
-#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__sms_sms_id
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__sms_id
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_mailing__mailing_type__sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__trace_type__sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
@@ -634,17 +813,17 @@ msgstr "SMS"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__body_plaintext
 msgid "SMS Body"
-msgstr "SMS Body"
+msgstr "Phần thân SMS"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__contact_count_sms
 msgid "SMS Contacts"
-msgstr ""
+msgstr "Liên hệ SMS"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid "SMS Content"
-msgstr "SMS Content"
+msgstr "Nội dung SMS"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_has_sms_error
@@ -652,15 +831,11 @@ msgid "SMS Delivery error"
 msgstr "Lỗi gửi SMS"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__sms_id_int
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
 msgid "SMS ID"
-msgstr ""
-
-#. module: mass_mailing_sms
-#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__sms_sms_id_int
-msgid "SMS ID (tech)"
-msgstr "SMS ID (tech)"
+msgstr "ID SMS"
 
 #. module: mass_mailing_sms
 #. odoo-python
@@ -670,18 +845,18 @@ msgstr "SMS ID (tech)"
 #: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_root
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
 msgid "SMS Marketing"
-msgstr "SMS Marketing"
+msgstr "Marketing qua SMS"
 
 #. module: mass_mailing_sms
 #: model:ir.actions.act_window,name:mass_mailing_sms.mailing_trace_report_action_sms
 msgid "SMS Marketing Analysis"
-msgstr "SMS Marketing Analysis"
+msgstr "Phân tích Marketing qua SMS"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_main
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_number
 msgid "SMS Subscription"
-msgstr "SMS Subscription"
+msgstr "Đăng ký SMS"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_template_id
@@ -697,15 +872,21 @@ msgstr "Thông điệp SMS"
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
 msgid "SMS Trace"
-msgstr "SMS Trace"
+msgstr "Theo dõi SMS"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_tree_sms
 msgid "SMS Traces"
-msgstr "SMS Traces"
+msgstr "Theo dõi SMS"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__sms_tracker_ids
+msgid "SMS Trackers"
+msgstr "Trình theo dõi SMS"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__ab_testing_sms_winner_selection
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_marketing_campaign__ab_testing_sms_winner_selection
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_campaign__ab_testing_sms_winner_selection
 msgid "SMS Winner Selection"
 msgstr "Lựa chọn phiên bản SMS chiến thắng"
@@ -713,24 +894,23 @@ msgstr "Lựa chọn phiên bản SMS chiến thắng"
 #. module: mass_mailing_sms
 #. odoo-python
 #: code:addons/mass_mailing_sms/wizard/sms_composer.py:0
-msgid "STOP SMS: %s"
-msgstr ""
+msgid "STOP SMS: %(unsubscribe_url)s"
+msgstr "NGỪNG SMS: %(unsubscribe_url)s"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_sanitized
 msgid "Sanitized Number"
-msgstr "Số đã xử lý"
+msgstr "Số đã làm sạch "
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
 msgid "Send"
 msgstr "Gửi"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_force_send
 msgid "Send Directly"
-msgstr "Send Directly"
+msgstr "Gửi trực tiếp"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -738,24 +918,30 @@ msgid "Send Now"
 msgstr "Gửi ngay"
 
 #. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_list_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
 msgid "Send SMS"
-msgstr "Send SMS"
+msgstr "Gửi SMS"
 
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_sms_composer
 msgid "Send SMS Wizard"
-msgstr "Send SMS Wizard"
+msgstr "Công cụ gửi SMS"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
+msgid "Send Test"
+msgstr "Gửi thử nghiệm"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
 msgid "Send a Sample SMS"
-msgstr "Send a Sample SMS"
+msgstr "Gửi một SMS mẫu"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
-msgid "Send a sample SMS for testing purpose to the numbers below (carriage-return-separated list)."
-msgstr ""
+msgid "Send a sample SMS for testing purpose to the numbers below."
+msgstr "Gửi SMS mẫu tới các số dưới đây để thử nghiệm."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_server
@@ -773,64 +959,57 @@ msgid "Status"
 msgstr "Trạng thái"
 
 #. module: mass_mailing_sms
-#: model:ir.model,name:mass_mailing_sms.model_mailing_sms_test
-msgid "Test SMS Mailing"
-msgstr "Test SMS Mailing"
+#. odoo-python
+#: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
+#: model:ir.actions.act_window,name:mass_mailing_sms.mailing_sms_test_action
+msgid "Test Mailing"
+msgstr "Thư thử nghiệm"
 
 #. module: mass_mailing_sms
-#: model:ir.actions.act_window,name:mass_mailing_sms.mailing_sms_test_action
-msgid "Test SMS Marketing"
-msgstr "Test SMS Marketing"
+#: model:ir.model,name:mass_mailing_sms.model_mailing_sms_test
+msgid "Test SMS Mailing"
+msgstr "Thử nghiệm thư SMS"
 
 #. module: mass_mailing_sms
 #. odoo-python
 #: code:addons/mass_mailing_sms/wizard/mailing_sms_test.py:0
-msgid "Test SMS could not be sent to %s:<br>%s"
-msgstr ""
-
-#. module: mass_mailing_sms
-#. odoo-python
-#: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
-msgid "Test SMS marketing"
-msgstr "Test SMS marketing"
+msgid "Test SMS could not be sent to %(destination)s: %(state)s"
+msgstr "Không thể gửi SMS thử nghiệm đến %(destination)s: %(state)s"
 
 #. module: mass_mailing_sms
 #. odoo-python
 #: code:addons/mass_mailing_sms/wizard/mailing_sms_test.py:0
 msgid "Test SMS successfully sent to %s"
-msgstr ""
+msgstr "SMS thử nghiệm đã được gửi thành công đến %s"
 
 #. module: mass_mailing_sms
 #. odoo-python
 #: code:addons/mass_mailing_sms/models/utm.py:0
-msgid "The UTM medium '%s' cannot be deleted as it is used in some main functional flows, such as the SMS Marketing."
+msgid ""
+"The UTM medium '%s' cannot be deleted as it is used in some main functional "
+"flows, such as the SMS Marketing."
 msgstr ""
+"Không thể xóa phương tiện UTM '%s' vì nó được sử dụng trong một số luồng "
+"chức năng chính, chẳng hạn như Marketing qua SMS."
 
 #. module: mass_mailing_sms
 #. odoo-python
 #: code:addons/mass_mailing_sms/wizard/mailing_sms_test.py:0
 msgid "The following numbers are not correctly encoded: %s"
-msgstr ""
+msgstr "Các số sau được nhập chưa chính xác: %s"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_number
 msgid "There was an error when trying to unsubscribe"
-msgstr "There was an error when trying to unsubscribe"
+msgstr "Đã xảy ra lỗi khi cố gắng hủy đăng ký"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_form
-msgid "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
-msgstr "Số điện thoại này được đưa vào danh sách đen cho SMS Marketing. Nhấp để bỏ danh sách đen."
-
-#. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
-msgid "This will send SMS to all recipients now. Do you still want to proceed?"
+msgid ""
+"This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
-
-#. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
-msgid "This will send SMS to all recipients. Do you still want to proceed?"
-msgstr ""
+"Số điện thoại này được đưa vào danh sách hạn chế SMS Marketing. Bấm để loại "
+"khỏi danh sách hạn chế. "
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_subject
@@ -859,22 +1038,22 @@ msgstr "Chiến dịch UTM"
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_utm_medium
 msgid "UTM Medium"
-msgstr "UTM Medium"
+msgstr "Phương tiện UTM"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_acc
 msgid "Unregistered Account"
-msgstr "Unregistered Account"
+msgstr "Tài khoản chưa đăng ký"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_has_unregistered_account
 msgid "Unregistered IAP account"
-msgstr "Unregistered IAP account"
+msgstr "Tài khoản IAP chưa đăng ký"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_kanban_sms
 msgid "Unregistered account"
-msgstr "Unregistered account"
+msgstr "Tài khoản chưa đăng ký"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_main
@@ -885,7 +1064,7 @@ msgstr "Bỏ đăng ký tôi"
 #. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 msgid "Unsupported %s for mass SMS"
-msgstr "Unsupported %s for mass SMS"
+msgstr "%s không được hỗ trợ cho SMS hàng loạt"
 
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_res_users
@@ -895,49 +1074,48 @@ msgstr "Người dùng"
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_search
 msgid "Valid SMS Recipients"
-msgstr "Valid SMS Recipients"
+msgstr "Người nhận SMS hợp lệ"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__website_message_ids
 msgid "Website Messages"
-msgstr "Thông báo Website"
+msgstr "Thông báo trên trang web"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__website_message_ids
 msgid "Website communication history"
-msgstr "Lịch sử thông tin liên lạc website"
+msgstr "Lịch sử trao đổi qua trang web"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid "Winner Selection"
-msgstr "Lựa chọn người chiến thắng"
+msgstr "Lựa chọn phiên bản chiến thắng"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_mailing_action_sms
-msgid "Write an appealing SMS Text Message, define recipients and track its results."
+msgid ""
+"Write an appealing SMS Text Message, define recipients and track its "
+"results."
 msgstr ""
+"Viết một Tin nhắn văn bản SMS hấp dẫn, xác định người nhận và theo dõi kết "
+"quả của SMS này."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_number_format
 msgid "Wrong Number Format"
-msgstr "Wrong Number Format"
-
-#. module: mass_mailing_sms
-#: model:utm.campaign,title:mass_mailing_sms.utm_campaign_0
-msgid "XMas Promo"
-msgstr ""
+msgstr "Định dạng số sai"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid "e.g. Black Friday SMS coupon"
-msgstr ""
+msgstr "VD: SMS mã khuyến mại Black Friday"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_number
 msgid "has been successfully blacklisted"
-msgstr "has been successfully blacklisted"
+msgstr "đã được đưa vào danh sách hạn chế thành công"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_number
 msgid "has been successfully removed from"
-msgstr "has been successfully removed from"
+msgstr "đã hoàn toàn được xoá khỏi"

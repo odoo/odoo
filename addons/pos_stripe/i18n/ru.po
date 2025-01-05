@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_stripe
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:51+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: pos_stripe
@@ -24,6 +26,11 @@ msgid "Complete the Stripe onboarding for company %s."
 msgstr "Завершите ввод в эксплуатацию Stripe для компании %s."
 
 #. module: pos_stripe
+#: model:ir.model.fields,field_description:pos_stripe.field_pos_payment_method__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: pos_stripe
 #. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 msgid "Do not have access to fetch token from Stripe"
@@ -31,8 +38,11 @@ msgstr "У вас нет доступа к получению токена из 
 
 #. module: pos_stripe
 #: model_terms:ir.ui.view,arch_db:pos_stripe.pos_payment_method_view_form_inherit_pos_stripe
-msgid "Don't forget to complete Stripe connect before using this payment method."
-msgstr "Не забудьте завершить подключение Stripe перед использованием этого способа оплаты."
+msgid ""
+"Don't forget to complete Stripe connect before using this payment method."
+msgstr ""
+"Не забудьте завершить подключение Stripe перед использованием этого способа "
+"оплаты."
 
 #. module: pos_stripe
 #. odoo-javascript
@@ -45,6 +55,11 @@ msgstr "Не удалось обнаружить: %s"
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Failed to load resource: net::ERR_INTERNET_DISCONNECTED."
 msgstr "Не удалось загрузить ресурс: net::ERR_INTERNET_DISCONNECTED."
+
+#. module: pos_stripe
+#: model:ir.model.fields,field_description:pos_stripe.field_pos_payment_method__id
+msgid "ID"
+msgstr "ID"
 
 #. module: pos_stripe
 #. odoo-javascript
@@ -62,11 +77,6 @@ msgstr ""
 #: model:ir.model,name:pos_stripe.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
 msgstr "Способы оплаты в торговых точках"
-
-#. module: pos_stripe
-#: model:ir.model,name:pos_stripe.model_pos_session
-msgid "Point of Sale Session"
-msgstr "Сессия в торговой точке"
 
 #. module: pos_stripe
 #. odoo-javascript
@@ -106,14 +116,16 @@ msgstr "Читатели Stripe %s не указаны в вашем аккау�
 #. module: pos_stripe
 #. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
-msgid "Terminal %s is already used on payment method %s."
-msgstr "Терминал %s уже используется для способа оплаты %s."
+msgid ""
+"Terminal %(terminal)s is already used on payment method %(payment_method)s."
+msgstr ""
 
 #. module: pos_stripe
 #. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 msgid "There are some issues between us and Stripe, try again later."
-msgstr "Между нами и Stripe возникли некоторые проблемы, повторите попытку позже."
+msgstr ""
+"Между нами и Stripe возникли некоторые проблемы, повторите попытку позже."
 
 #. module: pos_stripe
 #: model:ir.model.fields,help:pos_stripe.field_pos_payment_method__stripe_serial_number

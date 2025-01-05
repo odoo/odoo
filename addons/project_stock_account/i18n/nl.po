@@ -1,0 +1,96 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* project_stock_account
+# 
+# Translators:
+# Wil Odoo, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: project_stock_account
+#. odoo-python
+#: code:addons/project_stock_account/models/stock_move.py:0
+msgid ""
+"'%(missing_plan_names)s' analytic plan(s) required on the project "
+"'%(project_name)s' linked to the stock picking."
+msgstr ""
+"'%(missing_plan_names)s' analyseplan(nen) vereist voor het project "
+"'%(project_name)s' gekoppeld aan het kiezen van de aandelen."
+
+#. module: project_stock_account
+#: model:ir.model.fields,field_description:project_stock_account.field_stock_picking_type__analytic_costs
+msgid "Analytic Costs"
+msgstr "Analytische kosten"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Analytische boeking"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_account_analytic_applicability
+msgid "Analytic Plan's Applicabilities"
+msgstr "Toepassingen van analytische dimensies"
+
+#. module: project_stock_account
+#: model:ir.model.fields,field_description:project_stock_account.field_account_analytic_line__category
+msgid "Category"
+msgstr "Categorie"
+
+#. module: project_stock_account
+#: model:ir.model.fields,field_description:project_stock_account.field_account_analytic_applicability__business_domain
+msgid "Domain"
+msgstr "Domein"
+
+#. module: project_stock_account
+#: model:ir.model.fields.selection,name:project_stock_account.selection__account_analytic_line__category__picking_entry
+msgid "Inventory Transfer"
+msgstr ""
+
+#. module: project_stock_account
+#. odoo-python
+#: code:addons/project_stock_account/models/project_project.py:0
+msgid "Materials"
+msgstr "Materialen"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_stock_picking_type
+msgid "Picking Type"
+msgstr "Pickingsoort"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_project_project
+msgid "Project"
+msgstr "Project"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_stock_move
+msgid "Stock Move"
+msgstr "Voorraadverplaatsing"
+
+#. module: project_stock_account
+#: model:ir.model.fields.selection,name:project_stock_account.selection__account_analytic_applicability__business_domain__stock_picking
+msgid "Stock Picking"
+msgstr "Voorraad picking"
+
+#. module: project_stock_account
+#: model:ir.model.fields,help:project_stock_account.field_stock_picking_type__analytic_costs
+msgid ""
+"Validating stock pickings will generate analytic entries for the selected "
+"project. Products set for re-invoicing will also be billed to the customer."
+msgstr ""
+"Het bevestigen van voorraadpickings genereert analytische boekingen voor het"
+" geselecteerde project. Producten die zijn ingesteld voor herfacturering "
+"worden ook gefactureerd aan de klant."

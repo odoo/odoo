@@ -1,42 +1,52 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_links
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Jolien De Paepe, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
-msgid " clicks"
-msgstr "klikken"
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
-msgid " countries"
-msgstr "landen"
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 msgid "# of clicks"
 msgstr "# klikken"
+
+#. module: website_links
+#. odoo-javascript
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
+msgid "%(clicks)s clicks"
+msgstr "%(clicks)s klikken"
+
+#. module: website_links
+#. odoo-javascript
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
+msgid "%(count)s countries"
+msgstr "%(count)s landen"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+#: model_terms:ir.ui.view,arch_db:website_links.graphs
+msgid "<i class=\"fa fa-copy me-2\"/>Copy"
+msgstr "<i class=\"fa fa-copy me-2\"/>Kopie"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "<span class=\"text-muted me-1\">Sort By:</span>"
+msgstr "<span class=\"text-muted me-1\">Sorteren op:</span>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -47,6 +57,11 @@ msgstr "<strong>Campagne</strong>"
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Medium</strong>"
 msgstr "<strong>Kanaal</strong>"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.graphs
+msgid "<strong>Name</strong>"
+msgstr "<strong>Name</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -75,53 +90,46 @@ msgstr "Alle tijden"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid ""
-"Campaign <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the context of your link. It might be an event you want to promote or a "
-"special promotion.\"/>"
-msgstr ""
-"Campagne <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the context of your link. It might be an event you want to promote or a "
-"special promotion.\"/>"
+msgid "Campaign"
+msgstr "Campagne"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
-msgid "Copied"
-msgstr "Gekopieerd"
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 msgid "Copy"
-msgstr "Kopiëren"
+msgstr "Kopieer"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Create a Link tracker"
+msgstr "Maak een Link tracker"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Create another Tracker"
+msgstr "Maak een andere Tracker"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
+#: code:addons/website_links/static/src/xml/website_links_tags_wrapper.xml:0
+msgid "Create option \""
+msgstr "Maak optie \""
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Edit code"
 msgstr "Code bewerken"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
-msgid "Generating link..."
-msgstr "Link genereren..."
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Generate Link Tracker"
+msgstr "Link Tracker genereren"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "Get tracked link"
-msgstr "Krijg getraceerde link"
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
-msgid "Icon"
-msgstr "Icoon"
+msgid "Last Clicks"
+msgstr "Laatste klikken"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -134,30 +142,28 @@ msgid "Last Week"
 msgstr "Vorige week"
 
 #. module: website_links
+#. odoo-javascript
+#: code:addons/website_links/static/src/js/website_links.js:0
+#: code:addons/website_links/static/src/js/website_links_code_editor.js:0
+msgid "Link Copied!"
+msgstr "Link gekopieerd!"
+
+#. module: website_links
 #: model:ir.model,name:website_links.model_link_tracker
 #: model:ir.ui.menu,name:website_links.menu_link_tracker
-#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Link Tracker"
 msgstr "Link Tracker"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid ""
-"Medium <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the medium used to share your link. It might be an email, or a Facebook Ads "
-"for instance.\"/>"
-msgstr ""
-"Kanaal <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the medium used to share your link. It might be an email, or a Facebook Ads "
-"for instance.\"/>"
+msgid "Medium"
+msgstr "Medium"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "Most Clicked"
-msgstr "Meest geklikt"
+msgid "Name"
+msgstr "Naam"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -172,8 +178,13 @@ msgstr "Geen data"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "Recently Used"
-msgstr "Recentelijk gebruikt"
+msgid "Number of Clicks"
+msgstr "Aantal klikken"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Read More"
+msgstr "Lees meer"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -186,16 +197,8 @@ msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid ""
-"Source <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the source from which your traffic will come from, Facebook or Twitter for "
-"instance.\"/>"
-msgstr ""
-"Bron <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the source from which your traffic will come from, Facebook or Twitter for "
-"instance.\"/>"
+msgid "Source"
+msgstr "Bron"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -204,14 +207,12 @@ msgid "Statistics"
 msgstr "Statistieken"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
-msgid "Stats"
-msgstr "Statistieken"
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Target Link"
+msgstr "Doel-koppeling"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
 #: code:addons/website_links/static/src/js/website_links_code_editor.js:0
 msgid "The code cannot be left empty"
 msgstr "De code kan niet leeg gelaten worden"
@@ -224,7 +225,6 @@ msgstr "Er zijn geen gegevens om te tonen"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
 #: code:addons/website_links/static/src/js/website_links_code_editor.js:0
 msgid "This code is already taken"
 msgstr "Deze code is al in gebruik"
@@ -232,8 +232,8 @@ msgstr "Deze code is al in gebruik"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Those trackers can be used in Google Analytics to track clicks and visitors, "
-"or in Odoo reports to track opportunities and related revenues."
+"Those trackers can be used in Google Analytics to track clicks and visitors,"
+" or in Odoo reports to track opportunities and related revenues."
 msgstr ""
 "Deze trackers kunnen worden gebruikt in Google Analytics om klikken en "
 "bezoekers te volgen, of in Odoo rapportages om verkoopkansen en omzet te "
@@ -241,8 +241,8 @@ msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "URL"
-msgstr "URL"
+msgid "Tracked Link"
+msgstr "Getraceerde link"
 
 #. module: website_links
 #. odoo-javascript
@@ -255,6 +255,12 @@ msgstr "Onmogelijk om recente links op te halen"
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 msgid "Undefined"
 msgstr "Niet gedefinieerd"
+
+#. module: website_links
+#. odoo-javascript
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
+msgid "Visit Link"
+msgstr "Bezoek Link"
 
 #. module: website_links
 #. odoo-python
@@ -274,8 +280,7 @@ msgid "Your tracked links"
 msgstr "Je getraceerde links"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "cancel"
 msgstr "annuleren"
@@ -287,27 +292,27 @@ msgid "clicks"
 msgstr "klikken"
 
 #. module: website_links
-#: model_terms:ir.ui.view,arch_db:website_links.graphs
-msgid "copy"
-msgstr "kopiëren"
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "e.g. \"Black Friday Mailing Campaign\""
+msgstr "bijv. 'Campagne Black Friday Mailing'"
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 msgid "e.g. InMails, Ads, Social, ..."
-msgstr ""
+msgstr "bijv. InMails, Ads, Social, ..."
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 msgid "e.g. June Sale, Paris Roadshow, ..."
-msgstr ""
+msgstr "bijv. June Sale, Paris Roadshow, ..."
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 msgid "e.g. LinkedIn, Facebook, Leads, ..."
-msgstr ""
+msgstr "bijv. LinkedIn, Facebook, Leads, ..."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -315,15 +320,13 @@ msgid "e.g. https://www.odoo.com/contactus"
 msgstr "Bijv. https://www.odoo.com/contactus"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "ok"
 msgstr "ok"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "or"
 msgstr "of"

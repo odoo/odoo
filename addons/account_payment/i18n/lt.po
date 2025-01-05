@@ -1,33 +1,37 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_payment
-#
+# 
 # Translators:
-# grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2022
-# Jonas Zinkevicius <jozi@odoo.com>, 2022
-# Martin Trigaux, 2022
-# Arminas Grigonis <arminas@versada.lt>, 2022
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2022
-# Arunas V. <arunas@devoro.com>, 2022
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
-# Silvija Butko <silvija.butko@gmail.com>, 2022
-# Linas Versada <linaskrisiukenas@gmail.com>, 2022
-# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
-"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: lt\n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/wizards/payment_link_wizard.py:0
+msgid ""
+"#%(number)s - Installment of <strong>%(amount)s</strong> due on <strong "
+"class=\"text-primary\">%(date)s</strong>"
+msgstr ""
+
+#. module: account_payment
+#. odoo-javascript
+#: code:addons/account_payment/static/src/js/portal_my_invoices_payment.js:0
+msgid "%s day(s) overdue"
+msgstr ""
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
@@ -36,8 +40,12 @@ msgstr "<b>Komunikacija: </b>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
-msgid "<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> Pay Now</span>"
-msgstr "<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> Mokėti dabar</span>"
+msgid ""
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
+"Pay Now</span>"
+msgstr ""
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
+"Mokėti dabar</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -57,6 +65,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\"/>\n"
 "                <span class=\"d-none d-md-inline\"> Paid</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\"> Apmokėta </span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -69,23 +79,26 @@ msgid "<i class=\"fa fa-fw fa-check-circle\"/> Pending"
 msgstr "<i class=\"fa fa-fw fa-check-circle\"/>Laukia"
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
-msgid "<span class=\"d-none d-md-inline\"> Pending</span>"
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-fw fa-check-circle\"/> Processing Payment"
 msgstr ""
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
-msgid "<span class=\"o_stat_text\">Payment Transaction</span>"
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid "<span class=\"d-none d-md-inline\"> Pending</span>"
+msgstr "<span class=\"d-none d-md-inline\"> Laukia </span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "<strong>Full Amount</strong><br/>"
 msgstr ""
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"<strong>No suitable payment option could be found.</strong><br/>\n"
-"                                If you believe that it is an error, please contact the website administrator."
+"<strong>Installment</strong>\n"
+"                                        <br/>"
 msgstr ""
-"<strong>Nepavyko rasti tinkamo mokėjimo būdo.</strong><br/>\n"
-"                                Jei manote, kad tai klaida, kreipkitės į svetainės administratorių."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
@@ -93,6 +106,19 @@ msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
 "                        Wait a moment for it to be processed. If the refund is still pending in a\n"
 "                        few minutes, please check your payment provider configuration."
+msgstr ""
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/wizards/payment_link_wizard.py:0
+msgid "A discount will be applied if the customer pays before %s included."
+msgstr ""
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid ""
+"A payment has already been made on this invoice, please make sure to not pay"
+" twice."
 msgstr ""
 
 #. module: account_payment
@@ -108,9 +134,15 @@ msgid "A token is required to create a new payment transaction."
 msgstr "Naujos mokėjimo operacijos sukūrimui reikalingas prieigos raktas."
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.payment_onboarding_step
+#: model:onboarding.onboarding.step,button_text:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Activate Stripe"
 msgstr ""
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_overdue_invoices_page
+msgid "Amount"
+msgstr "Suma"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_available_for_refund
@@ -118,21 +150,28 @@ msgid "Amount Available For Refund"
 msgstr ""
 
 #. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__invoice_amount_due
+msgid "Amount Due"
+msgstr "Mokėtina suma"
+
+#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__amount_paid
 #: model:ir.model.fields,field_description:account_payment.field_account_move__amount_paid
-#: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_paid
 msgid "Amount paid"
-msgstr ""
+msgstr "Sumokėta suma"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
-msgid "Are you sure you want to void the authorized transaction? This action can't be undone."
-msgstr "Ar tikrai norite anuliuoti patvirtintą operaciją? Šio veiksmo atšaukti negalėsite."
+msgid ""
+"Are you sure you want to void the authorized transaction? This action can't "
+"be undone."
+msgstr ""
+"Ar tikrai norite anuliuoti patvirtintą operaciją? Šio veiksmo atšaukti "
+"negalėsite."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__authorized_transaction_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_move__authorized_transaction_ids
-#: model:ir.model.fields,field_description:account_payment.field_account_payment__authorized_transaction_ids
 msgid "Authorized Transactions"
 msgstr "Patvirtintos operacijos"
 
@@ -144,6 +183,7 @@ msgstr "Fiksuoti operaciją"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
 msgid "Close"
 msgstr "Uždaryti"
 
@@ -153,14 +193,9 @@ msgid "Code"
 msgstr "Kodas"
 
 #. module: account_payment
-#: model:ir.model,name:account_payment.model_res_company
-msgid "Companies"
-msgstr ""
-
-#. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Konfigūracijos nustatymai"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__create_uid
@@ -178,18 +213,56 @@ msgid "Currency"
 msgstr "Valiuta"
 
 #. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__discount_date
+msgid "Discount Date"
+msgstr "Nuolaidos data"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_move__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__display_name
+#: model:ir.model.fields,field_description:account_payment.field_onboarding_onboarding_step__display_name
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__display_name
+#: model:ir.model.fields,field_description:account_payment.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__display_name
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:account_payment.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Rodomas pavadinimas"
 
 #. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__display_open_installments
+msgid "Display Open Installments"
+msgstr ""
+
+#. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
-msgid "Done, your online payment has been successfully processed. Thank you for your order."
+msgid ""
+"Done, your online payment has been successfully processed. Thank you for "
+"your order."
 msgstr "Jūsų mokėjimas buvo sėkmingai apdorotas. Dėkojame už užsakymą."
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.payment_onboarding_step
-msgid "Enable credit &amp; debit card payments supported by Stripe"
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__epd_info
+msgid "Early Payment Discount Information"
+msgstr ""
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "Early Payment Discount of"
+msgstr ""
+
+#. module: account_payment
+#: model:onboarding.onboarding.step,description:account_payment.onboarding_onboarding_step_payment_provider
+msgid "Enable credit & debit card payments supported by Stripe."
+msgstr ""
+
+#. module: account_payment
+#: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__full_only
+msgid "Full Only"
 msgstr ""
 
 #. module: account_payment
@@ -203,14 +276,38 @@ msgid "Generate a Payment Link"
 msgstr "Generuoti nuorodą apmokėjimui"
 
 #. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__has_eligible_epd
+msgid "Has Eligible Epd"
+msgstr ""
+
+#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__has_pending_refund
 msgid "Has a pending refund"
 msgstr ""
 
 #. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_journal__id
+#: model:ir.model.fields,field_description:account_payment.field_account_move__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__id
+#: model:ir.model.fields,field_description:account_payment.field_onboarding_onboarding_step__id
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__id
+#: model:ir.model.fields,field_description:account_payment.field_payment_provider__id
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__id
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__id
+#: model:ir.model.fields,field_description:account_payment.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+msgid ""
+"Impossible to pay all the overdue invoices if they don't share the same "
+"currency."
+msgstr ""
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
@@ -222,7 +319,7 @@ msgstr ""
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.res_config_settings_view_form
 msgid "Invoice Online Payment"
-msgstr ""
+msgstr "S/F mokėjimas internetu"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_transaction_form
@@ -237,8 +334,18 @@ msgid "Invoices"
 msgstr "Sąskaitos-faktūros"
 
 #. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_overdue_invoice
+msgid "Invoices &amp; Bills"
+msgstr "Sąskaitos faktūros"
+
+#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction__invoices_count
 msgid "Invoices Count"
+msgstr ""
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_account_payment
+msgid "Invoices to pay"
 msgstr ""
 
 #. module: account_payment
@@ -264,34 +371,83 @@ msgstr "Paskutinį kartą atnaujinta"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_available_for_refund
 msgid "Maximum Refund Allowed"
+msgstr "Didžiausias leidžiamas grąžinimas"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_link_wizard__form_inherit_account_payment
+msgid "Next Installments"
 msgstr ""
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__payment_token_id
-msgid "Note that only tokens from providers allowing to capture the amount are available."
+msgid ""
+"Note that only tokens from providers allowing to capture the amount are "
+"available."
 msgstr ""
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
-msgid "Note that tokens from providers set to only authorize transactions (instead of capturing the amount) are not available."
+msgid ""
+"Note that tokens from providers set to only authorize transactions (instead "
+"of capturing the amount) are not available."
 msgstr ""
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.payment_onboarding_step
+#: model:onboarding.onboarding.step,step_image_alt:account_payment.onboarding_onboarding_step_payment_provider
+msgid "Onboarding Online Payments"
+msgstr ""
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_onboarding_onboarding_step
+msgid "Onboarding Step"
+msgstr ""
+
+#. module: account_payment
+#: model:onboarding.onboarding.step,title:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Online Payments"
+msgstr "Mokėjimai internetu"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/portal.py:0
+msgid "Overdue invoices should share the same company."
 msgstr ""
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.payment_onboarding_step
-msgid "Online payments enabled"
+#. odoo-python
+#: code:addons/account_payment/controllers/portal.py:0
+msgid "Overdue invoices should share the same currency."
+msgstr ""
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/portal.py:0
+msgid "Overdue invoices should share the same partner."
+msgstr ""
+
+#. module: account_payment
+#: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__partial
+msgid "Partial"
+msgstr "Dalinis"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_payment_register
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "Pay"
+msgstr "Apmokėti"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
+msgid "Pay Invoice"
 msgstr ""
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_res_config_settings__pay_invoices_online
 msgid "Pay Invoices Online"
-msgstr ""
+msgstr "Apmokėti sąskaitas faktūras internetu"
 
 #. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_docs_entry
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "Pay Now"
 msgstr "Apmokėti dabar"
@@ -302,9 +458,9 @@ msgid "Pay now"
 msgstr "Apmokėti dabar"
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
-msgid "Pay with"
-msgstr "Apmokėti su"
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_overdue_invoice
+msgid "Pay overdue"
+msgstr ""
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_id
@@ -333,12 +489,12 @@ msgstr "Mokėjimo būdai"
 #: model:ir.model,name:account_payment.model_payment_provider
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_id
 msgid "Payment Provider"
-msgstr ""
+msgstr "Mokėjimo paslaugos tiekėjas"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_provider_menu
 msgid "Payment Providers"
-msgstr ""
+msgstr "Mokėjimo paslaugos tiekėjas"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_refund_wizard
@@ -354,6 +510,7 @@ msgstr "Mokėjimo raktai"
 #: model:ir.model,name:account_payment.model_payment_transaction
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_transaction_id
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__transaction_id
+#: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Payment Transaction"
 msgstr "Mokėjimo operacija"
 
@@ -369,27 +526,40 @@ msgstr "Mokėjimai"
 
 #. module: account_payment
 #. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+msgid "Please log in to pay your overdue invoices"
+msgstr ""
+
+#. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid "Provider"
 msgstr "Tiekėjas"
 
 #. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_overdue_invoices_page
+msgid "Reference"
+msgstr "Numeris"
+
+#. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__support_refund
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
 msgid "Refund"
-msgstr "Grąžinimas"
+msgstr "Pinigų Grąžinimas"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_to_refund
 msgid "Refund Amount"
-msgstr ""
+msgstr "Grąžinama suma"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__refunded_amount
 msgid "Refunded Amount"
-msgstr ""
+msgstr "Grąžinta suma"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
@@ -400,11 +570,6 @@ msgstr "Kreditavimai"
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__refunds_count
 msgid "Refunds Count"
 msgstr ""
-
-#. module: account_payment
-#: model:ir.model,name:account_payment.model_account_payment_register
-msgid "Register Payment"
-msgstr "Užregistruoti mokėjimą"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_journal_form
@@ -432,6 +597,11 @@ msgid "State"
 msgstr "Būsena"
 
 #. module: account_payment
+#: model:onboarding.onboarding.step,done_text:account_payment.onboarding_onboarding_step_payment_provider
+msgid "Step Completed!"
+msgstr "Žingsnis atliktas!"
+
+#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
@@ -446,8 +616,9 @@ msgstr ""
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/wizards/payment_refund_wizard.py:0
-msgid "The amount to be refunded must be positive and cannot be superior to %s."
-msgstr ""
+msgid ""
+"The amount to be refunded must be positive and cannot be superior to %s."
+msgstr "Grąžintina suma turi būti teigiama ir negali būti didesnė už %s."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
@@ -457,7 +628,9 @@ msgstr ""
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/payment_transaction.py:0
-msgid "The payment related to the transaction with reference %(ref)s has been posted: %(link)s"
+msgid ""
+"The payment related to the transaction with reference %(ref)s has been "
+"posted: %(link)s"
 msgstr ""
 
 #. module: account_payment
@@ -478,8 +651,12 @@ msgstr "Įvyko klaida apdorojant jūsų mokėjimą: netinkama sąskaita-faktūra
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
-msgid "There was an error processing your payment: issue with credit card ID validation."
-msgstr "Įvyko klaida apdorojant jūsų mokėjimą: problema dėl kredito kortelės ID patvirtinimo."
+msgid ""
+"There was an error processing your payment: issue with credit card ID "
+"validation."
+msgstr ""
+"Įvyko klaida apdorojant jūsų mokėjimą: problema dėl kredito kortelės ID "
+"patvirtinimo."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -489,18 +666,29 @@ msgstr "Įvyko klaida apdorojant jūsų mokėjimą: operacija nepavyko.<br/>"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
-msgstr "Įvyko klaida apdorojant jūsų mokėjimą: netinkamas kreditinės kortelės ID."
+msgstr ""
+"Įvyko klaida apdorojant jūsų mokėjimą: netinkamas kreditinės kortelės ID."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
+msgid "This invoice has already been paid."
+msgstr ""
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_count
+#: model:ir.model.fields,field_description:account_payment.field_account_move__transaction_count
+msgid "Transaction Count"
+msgstr ""
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_move__transaction_ids
-#: model:ir.model.fields,field_description:account_payment.field_account_payment__transaction_ids
 msgid "Transactions"
 msgstr "Operacijos"
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__support_refund
-msgid "Type of Refund Supported"
+#: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__none
+msgid "Unsupported"
 msgstr ""
 
 #. module: account_payment
@@ -516,11 +704,21 @@ msgstr "Anuliuoti operaciją"
 
 #. module: account_payment
 #. odoo-python
-#: code:addons/account_payment/models/account_journal.py:0
+#: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
-"Linked provider(s): %s"
+"Linked providers(s): %s"
 msgstr ""
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_provider.py:0
+msgid ""
+"You cannot uninstall this module as payments using this payment method "
+"already exist."
+msgstr ""
+"Negalite pašalinti šio modulio, nes jau yra mokėjimai sukurti naudojant šį "
+"mokėjimo metodą."
 
 #. module: account_payment
 #. odoo-python
@@ -528,4 +726,26 @@ msgstr ""
 msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
+msgstr ""
+
+#. module: account_payment
+#. odoo-javascript
+#: code:addons/account_payment/static/src/js/portal_my_invoices_payment.js:0
+msgid "due in %s day(s)"
+msgstr ""
+
+#. module: account_payment
+#. odoo-javascript
+#: code:addons/account_payment/static/src/js/portal_my_invoices_payment.js:0
+msgid "due today"
+msgstr ""
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "has been applied."
+msgstr ""
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid "overdue"
 msgstr ""

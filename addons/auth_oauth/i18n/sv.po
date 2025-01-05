@@ -1,41 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_oauth
-#
+# 
 # Translators:
-# Simon S, 2022
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
-# lasch a <bmail440@gmail.com>, 2022
-# Robin Calvin, 2022
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
-# Kristoffer Grundström <lovaren@gmail.com>, 2022
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
-# Kim Asplund <kim.asplund@gmail.com>, 2022
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
-"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.providers
 msgid "- or -"
 msgstr "- eller -"
-
-#. module: auth_oauth
-#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
-msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Tutorial"
-msgstr ""
 
 #. module: auth_oauth
 #. odoo-python
@@ -51,7 +38,7 @@ msgstr "Tillåt användare logga in med Google"
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Allow users to sign in with their Google account"
-msgstr ""
+msgstr "Tillåt användare att logga in med sitt Google-konto"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__enabled
@@ -61,7 +48,7 @@ msgstr "Tillåten"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__auth_endpoint
 msgid "Authorization URL"
-msgstr ""
+msgstr "URL för auktorisering"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__css_class
@@ -72,12 +59,12 @@ msgstr "CSS-klass"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__client_id
 #: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__auth_oauth_google_client_id
 msgid "Client ID"
-msgstr "Klient-ID"
+msgstr "Kund-ID"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Client ID:"
-msgstr ""
+msgstr "Klient-ID:"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_config_settings
@@ -92,25 +79,31 @@ msgstr "Skapad av"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__create_date
 msgid "Created on"
-msgstr "Skapad"
+msgstr "Skapad den"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__data_endpoint
 msgid "Data Endpoint"
-msgstr ""
+msgstr "Slutpunkt för data"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__display_name
 msgid "Display Name"
 msgstr "Visningsnamn"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Google Authentication"
-msgstr ""
+msgstr "Google-autentisering"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__id
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -122,31 +115,37 @@ msgstr "Senast uppdaterad av"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__write_date
 msgid "Last Updated on"
-msgstr "Senast uppdaterad på"
+msgstr "Senast uppdaterad den"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_auth_oauth_provider__body
 msgid "Link text in Login Dialog"
-msgstr ""
+msgstr "Länktext i inloggningsdialog"
 
 #. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_facebook
 msgid "Log in with Facebook"
-msgstr ""
+msgstr "Logga in med Facebook"
 
 #. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_google
 msgid "Log in with Google"
-msgstr ""
+msgstr "Logga in med Google"
 
 #. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_openerp
 msgid "Log in with Odoo.com"
-msgstr ""
+msgstr "Logga in med Odoo.com"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
 msgid "Login button label"
+msgstr "Etikett för inloggningsknapp"
+
+#. module: auth_oauth
+#. odoo-python
+#: code:addons/auth_oauth/models/res_users.py:0
+msgid "Missing subject identity"
 msgstr ""
 
 #. module: auth_oauth
@@ -227,6 +226,11 @@ msgid "System Parameter"
 msgstr "Systemparameter"
 
 #. module: auth_oauth
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+msgid "Tutorial"
+msgstr "Handledning"
+
+#. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
 msgid "User"
 msgstr "Användare"
@@ -234,19 +238,25 @@ msgstr "Användare"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__validation_endpoint
 msgid "UserInfo URL"
-msgstr ""
+msgstr "URL för användarinformation"
 
 #. module: auth_oauth
 #. odoo-python
 #: code:addons/auth_oauth/controllers/main.py:0
-msgid "You do not have access to this database or your invitation has expired. Please ask for an invitation and be sure to follow the link in your invitation email."
-msgstr "Du saknar tillgång till denna databas eller så har din inbjudan gått ut. Vänligen be om en ny inbjudan och försäkra dig om att du använder länken i meddelandet."
+msgid ""
+"You do not have access to this database or your invitation has expired. "
+"Please ask for an invitation and be sure to follow the link in your "
+"invitation email."
+msgstr ""
+"Du saknar tillgång till denna databas eller så har din inbjudan gått ut. "
+"Vänligen be om en ny inbjudan och försäkra dig om att du använder länken i "
+"meddelandet."
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_tree
 msgid "arch"
-msgstr "Arkitektur"
+msgstr "valv"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form

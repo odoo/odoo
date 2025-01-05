@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_crm
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
-"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_crm
@@ -27,7 +27,7 @@ msgstr "<span class=\"o_stat_text\"> Order</span>"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__lead_id
 msgid "Associated Lead"
-msgstr ""
+msgstr "Lead Terkait"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_quotation_partner_view_form
@@ -47,12 +47,12 @@ msgstr "Buat pelanggan baru"
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_quotation_partner
 msgid "Create new or use existing Customer on new Quotation"
-msgstr ""
+msgstr "Buat baru atau gunakan Pelanggan yang tersedia pada Quotation baru"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "Create new quotation"
-msgstr ""
+msgstr "Buat new quotation"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__create_uid
@@ -80,6 +80,13 @@ msgid "Do not link to a customer"
 msgstr "Tidak hubungkan ke pelanggan"
 
 #. module: sale_crm
+#. odoo-python
+#: code:addons/sale_crm/models/crm_lead.py:0
+msgid "Expected revenue has been updated based on the linked Sales Orders."
+msgstr ""
+"Pendapatan yang diharapkan telah diupdate berdasarkan Sales Order terhubung."
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
 msgid "ID"
 msgstr "ID"
@@ -90,19 +97,14 @@ msgid "Invoiced in Sales Orders Target"
 msgstr "Yang Difakturkan Pada Order Penjualan Target"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner____last_update
-msgid "Last Modified on"
-msgstr "Terakhir diubah pada"
-
-#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_uid
 msgid "Last Updated by"
-msgstr "Terakhir diperbarui oleh"
+msgstr "Terakhir Diperbarui oleh"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_date
 msgid "Last Updated on"
-msgstr "Terakhir diperbarui pada"
+msgstr "Terakhir Diperbarui pada"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
@@ -115,14 +117,9 @@ msgid "Link to an existing customer"
 msgstr "Link ke pelanggan yang sudah ada"
 
 #. module: sale_crm
-#: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
-msgid "Log in the chatter from which opportunity the order originates"
-msgstr "Log masuk kolom catatan dari peluang mana sebuah order berasal"
-
-#. module: sale_crm
 #: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
 msgid "My Quotations"
-msgstr ""
+msgstr "Quotation Saya"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.crm_quotation_partner_action
@@ -139,7 +136,7 @@ msgstr "Jumlah Penawaran"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_order_count
 msgid "Number of Sale Orders"
-msgstr ""
+msgstr "Jumlah Sale Orders"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order__opportunity_id
@@ -159,7 +156,7 @@ msgstr "Penawaran"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__action
 msgid "Quotation Customer"
-msgstr ""
+msgstr "Quotation Pelanggan"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
@@ -169,9 +166,10 @@ msgstr "Penawaran"
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_lead_merge_summary_inherit_sale_crm
 msgid "Sale Orders"
-msgstr ""
+msgstr "Sale Orders"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/models/crm_team.py:0
 msgid "Sales Analysis"
 msgstr "Analisa Penjualan"
@@ -187,6 +185,7 @@ msgid "Sales Team"
 msgstr "Tim Penjualan"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/models/crm_team.py:0
 msgid "Sales: Untaxed Total"
 msgstr "Penjualan: Total Sebelum Pajak"
@@ -207,6 +206,7 @@ msgid "User"
 msgstr "Pengguna"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/wizard/crm_opportunity_to_quotation.py:0
 msgid "You can only apply this action from a lead."
-msgstr ""
+msgstr "Anda hanya dapat menerapkan tindakan ini dari lead."

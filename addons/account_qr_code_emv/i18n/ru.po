@@ -1,26 +1,39 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_qr_code_emv
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:37+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+msgid "A bank account is required for EMV QR Code generation."
+msgstr "Для создания EMV QR-кода требуется банковский счет."
 
 #. module: account_qr_code_emv
 #: model:ir.model,name:account_qr_code_emv.model_res_partner_bank
 msgid "Bank Accounts"
 msgstr "Банковские Счета"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__display_qr_setting
@@ -38,6 +51,11 @@ msgstr "EMV QR-код, представляемый продавцом"
 #: model_terms:ir.ui.view,arch_db:account_qr_code_emv.view_partner_bank_form_inherit_account
 msgid "EMV QR Configuration"
 msgstr "Конфигурация EMV QR"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__id
+msgid "ID"
+msgstr "ID"
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__include_reference
@@ -74,6 +92,14 @@ msgstr "Отсутствует Тип прокси."
 #: code:addons/account_qr_code_emv/models/res_bank.py:0
 msgid "Missing Proxy Value."
 msgstr "Отсутствующее значение прокси."
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+msgid ""
+"No EMV QR Code is available for the country of the account "
+"%(account_number)s."
+msgstr "EMV QR-код недоступен для страны счета %(account_number)s."
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields.selection,name:account_qr_code_emv.selection__res_partner_bank__proxy_type__none

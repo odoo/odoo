@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* spreadsheet_dashboard
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: spreadsheet_dashboard
@@ -52,6 +54,11 @@ msgid "Choose a dashboard...."
 msgstr "Выберите приборную панель...."
 
 #. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__company_id
+msgid "Company"
+msgstr "Компания"
+
+#. module: spreadsheet_dashboard
 #: model:ir.ui.menu,name:spreadsheet_dashboard.spreadsheet_dashboard_menu_configuration
 msgid "Configuration"
 msgstr "Конфигурация"
@@ -78,7 +85,6 @@ msgstr "Создано"
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__dashboard_ids
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__dashboard_id
-#: model:ir.module.category,name:spreadsheet_dashboard.dashboard_management
 msgid "Dashboard"
 msgstr "Панель управления"
 
@@ -96,6 +102,11 @@ msgstr "Группа приборной панели"
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_container_view_list
 msgid "Dashboards"
 msgstr "Панели управления"
+
+#. module: spreadsheet_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_list
+msgid "Data"
+msgstr "Данные"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__display_name
@@ -137,6 +148,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__is_published
+msgid "Is Published"
+msgstr "Опубликовано"
+
+#. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__write_uid
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__write_uid
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__write_uid
@@ -162,6 +178,16 @@ msgid "Logistics"
 msgstr "Логистика"
 
 #. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__main_data_model_ids
+msgid "Main Data Model"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_marketing
+msgid "Marketing"
+msgstr "Маркетинг"
+
+#. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__name
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__name
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__name
@@ -177,8 +203,17 @@ msgstr "Нет доступной приборной панели"
 #. module: spreadsheet_dashboard
 #. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_figure_container/mobile_figure_container.xml:0
-msgid "Only chart figures are displayed in small screens but this dashboard doesn't contain any"
-msgstr "На маленьких экранах отображаются только графики, но эта приборная панель не содержит никаких"
+msgid ""
+"Only chart figures are displayed in small screens but this dashboard doesn't"
+" contain any"
+msgstr ""
+"На маленьких экранах отображаются только графики, но эта приборная панель не"
+" содержит никаких"
+
+#. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__published_dashboard_ids
+msgid "Published Dashboard"
+msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_sales
@@ -208,6 +243,12 @@ msgid "Spreadsheet Data"
 msgstr "Данные электронной таблицы"
 
 #. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__spreadsheet_file_name
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__spreadsheet_file_name
+msgid "Spreadsheet File Name"
+msgstr ""
+
+#. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__spreadsheet_binary_data
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__spreadsheet_binary_data
 msgid "Spreadsheet file"
@@ -228,11 +269,6 @@ msgstr "Миниатюра"
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__full_url
 msgid "URL"
 msgstr "URL"
-
-#. module: spreadsheet_dashboard
-#: model:ir.module.category,description:spreadsheet_dashboard.dashboard_management
-msgid "User access level for Dashboard module"
-msgstr "Уровень доступа пользователя к модулю панели мониторинга"
 
 #. module: spreadsheet_dashboard
 #: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_website

@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_comparison
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Abe Manyo, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
-"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_sale_comparison
@@ -45,6 +44,8 @@ msgid ""
 "<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
 "role=\"img\" aria-label=\"Collapse\" title=\"Collapse\"/><span>Tags</span>"
 msgstr ""
+"<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
+"role=\"img\" aria-label=\"Collapse\" title=\"Collapse\"/><span>Tag</span>"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
@@ -65,7 +66,7 @@ msgstr "<span class=\"fa fa-exchange me-2\"/>Bandingkan"
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "<span>Tags</span>"
-msgstr ""
+msgstr "<span>Tag</span>"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
@@ -170,19 +171,30 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
+msgid "In accordion"
+msgstr "Di accordion"
+
+#. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__write_uid
 msgid "Last Updated by"
-msgstr "Terakhir diperbarui oleh"
+msgstr "Terakhir Diperbarui oleh"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__write_date
 msgid "Last Updated on"
-msgstr "Terakhir diperbarui pada"
+msgstr "Terakhir Diperbarui pada"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
 msgid "None"
 msgstr "Tidak Ada"
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.accordion_specs_item
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.specifications_table
+msgid "Others"
+msgstr "Lainnya"
 
 #. module: website_sale_comparison
 #. odoo-javascript
@@ -238,6 +250,8 @@ msgid ""
 "Set a category to regroup similar attributes under the same section in the "
 "Comparison page of eCommerce."
 msgstr ""
+"Pilih kategori untuk mengelompokkan ulang atribut yang mirip di dalam bagian"
+" yang sama di halaman Perbandingan eCommerce."
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
@@ -250,12 +264,12 @@ msgid "Specification"
 msgstr "Spesifikasi"
 
 #. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.accordion_specs_item
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 msgid "Specifications"
 msgstr "Spesifikasi"
 
 #. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "Uncategorized"
 msgstr "Tidak Berkategori"
@@ -280,9 +294,4 @@ msgstr "Anda dapat membandingkan maksimal 4 produk."
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute__category_id
 msgid "eCommerce Category"
-msgstr ""
-
-#. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
-msgid "or"
-msgstr "atau"
+msgstr "Kategori eCommerce"

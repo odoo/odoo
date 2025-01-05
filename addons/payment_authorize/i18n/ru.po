@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_authorize
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: payment_authorize
@@ -110,13 +112,15 @@ msgstr ""
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
-msgid "Could not retrieve the transaction details. (error code: %s; error_details: %s)"
-msgstr "Не удалось получить данные о транзакции. (код ошибки: %s; error_details: %s)"
+msgid ""
+"Could not retrieve the transaction details. (error code: %(error_code)s; "
+"error_details: %(error_message)s)"
+msgstr ""
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Expiration"
-msgstr "Срок действия"
+msgstr "Действительно до"
 
 #. module: payment_authorize
 #. odoo-python
@@ -173,7 +177,7 @@ msgstr "Платежный токен"
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "платеж"
+msgstr "Платеж"
 
 #. module: payment_authorize
 #. odoo-javascript
@@ -201,12 +205,18 @@ msgstr "Установить валюту счета"
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_login
 msgid "The ID solely used to identify the account with Authorize.Net"
-msgstr "Идентификатор, используемый исключительно для идентификации аккаунта в Authorize.Net"
+msgstr ""
+"Идентификатор, используемый исключительно для идентификации аккаунта в "
+"Authorize.Net"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_client_key
-msgid "The public client key. To generate directly from Odoo or from Authorize.Net backend."
-msgstr "Открытый ключ клиента. Генерировать непосредственно из Odoo или из бэкенда Authorize.Net."
+msgid ""
+"The public client key. To generate directly from Odoo or from Authorize.Net "
+"backend."
+msgstr ""
+"Открытый ключ клиента. Генерировать непосредственно из Odoo или из бэкенда "
+"Authorize.Net."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__code
@@ -216,8 +226,10 @@ msgstr "Технический код данного провайдера пла
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
-msgid "The transaction is not in a status to be refunded. (status: %s, details: %s)"
-msgstr "Транзакция не находится в статусе для возврата средств. (статус: %s, детали: %s)"
+msgid ""
+"The transaction is not in a status to be refunded. (status: %(status)s, "
+"details: %(message)s)"
+msgstr ""
 
 #. module: payment_authorize
 #. odoo-python
@@ -227,8 +239,11 @@ msgstr "Транзакция не привязана к токену."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
-msgid "The unique reference for the partner/token combination in the Authorize.net backend."
-msgstr "Уникальная ссылка для комбинации партнер/токен в бэкенде Authorize.net."
+msgid ""
+"The unique reference for the partner/token combination in the Authorize.net "
+"backend."
+msgstr ""
+"Уникальная ссылка для комбинации партнер/токен в бэкенде Authorize.net."
 
 #. module: payment_authorize
 #. odoo-python

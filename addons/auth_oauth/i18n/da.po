@@ -1,33 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_oauth
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
-"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.providers
 msgid "- or -"
 msgstr "- eller -"
-
-#. module: auth_oauth
-#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
-msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Tutorial"
-msgstr ""
 
 #. module: auth_oauth
 #. odoo-python
@@ -93,6 +88,9 @@ msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__display_name
 msgid "Display Name"
 msgstr "Vis navn"
 
@@ -103,6 +101,9 @@ msgstr "Google godkendelse"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__id
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -139,6 +140,12 @@ msgstr "Log ind med Odoo.com"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
 msgid "Login button label"
+msgstr ""
+
+#. module: auth_oauth
+#. odoo-python
+#: code:addons/auth_oauth/models/res_users.py:0
+msgid "Missing subject identity"
 msgstr ""
 
 #. module: auth_oauth
@@ -219,6 +226,11 @@ msgid "System Parameter"
 msgstr "Systemparameter"
 
 #. module: auth_oauth
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+msgid "Tutorial"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
 msgid "User"
 msgstr "Bruger"
@@ -231,8 +243,13 @@ msgstr ""
 #. module: auth_oauth
 #. odoo-python
 #: code:addons/auth_oauth/controllers/main.py:0
-msgid "You do not have access to this database or your invitation has expired. Please ask for an invitation and be sure to follow the link in your invitation email."
-msgstr "Du har ikke adgang til denne database eller din invitation er udløbet. Bed om en invitation og følg linket i invitations mailen."
+msgid ""
+"You do not have access to this database or your invitation has expired. "
+"Please ask for an invitation and be sure to follow the link in your "
+"invitation email."
+msgstr ""
+"Du har ikke adgang til denne database eller din invitation er udløbet. Bed "
+"om en invitation og følg linket i invitations mailen."
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form

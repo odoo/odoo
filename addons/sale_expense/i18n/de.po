@@ -1,35 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_expense
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Larissa Manderfeld, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:03+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_count
 msgid "# of Expenses"
-msgstr "# an Aufwänden"
+msgstr "# Ausgaben"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__can_be_reinvoiced
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__can_be_reinvoiced
 msgid "Can be reinvoiced"
-msgstr "Kann dem Kunden in Rechnung gestellt werden"
+msgstr "Kann weiterberechnet werden"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
@@ -40,7 +39,7 @@ msgstr "An Kunden berechnen"
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense
 msgid "Expense"
-msgstr "betrieblicher Aufwand"
+msgstr "Ausgabe"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_product_product__expense_policy_tooltip
@@ -51,7 +50,7 @@ msgstr "Tooltipp für die Spesenpolitik"
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense_sheet
 msgid "Expense Report"
-msgstr "Auslagenabrechnung"
+msgstr "Spesenabrechnung"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense_split
@@ -63,32 +62,53 @@ msgstr "Spesenaufteilung"
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_ids
 #: model_terms:ir.ui.view,arch_db:sale_expense.sale_order_form_view_inherit
 msgid "Expenses"
-msgstr "Aufwand"
+msgstr "Ausgaben"
 
 #. module: sale_expense
+#. odoo-python
 #: code:addons/sale_expense/models/product_template.py:0
 msgid "Expenses of this category may not be added to a Sales Order."
-msgstr "Spesen dieser Kategorie können einem Verkaufsauftrag möglicherweise nicht zugewiesen werden."
+msgstr ""
+"Spesen dieser Kategorie können einem Verkaufsauftrag möglicherweise nicht "
+"zugewiesen werden."
 
 #. module: sale_expense
+#. odoo-python
 #: code:addons/sale_expense/models/product_template.py:0
-msgid "Expenses will be added to the Sales Order at their actual cost when posted."
-msgstr "Spesen werden dem Verkaufsauftrag zu den tatsächlichen Kosten hinzugefügt, wenn sie gebucht werden."
+msgid ""
+"Expenses will be added to the Sales Order at their actual cost when posted."
+msgstr ""
+"Spesen werden dem Verkaufsauftrag zu den tatsächlichen Kosten hinzugefügt, "
+"wenn sie gebucht werden."
 
 #. module: sale_expense
+#. odoo-python
 #: code:addons/sale_expense/models/product_template.py:0
-msgid "Expenses will be added to the Sales Order at their sales price (product price, pricelist, etc.) when posted."
-msgstr "Spesen werden dem Verkaufsauftrag zum Verkaufspreis hinzugefügt (Produkt, Preis, Preisliste usw.), wenn sie gebucht werden."
+msgid ""
+"Expenses will be added to the Sales Order at their sales price (product "
+"price, pricelist, etc.) when posted."
+msgstr ""
+"Spesen werden dem Verkaufsauftrag zum Verkaufspreis hinzugefügt (Produkt, "
+"Preis, Preisliste usw.), wenn sie gebucht werden."
 
 #. module: sale_expense
 #: model:ir.model.fields,help:sale_expense.field_hr_expense__sale_order_id
-msgid "If the category has an expense policy, it will be reinvoiced on this sales order"
-msgstr "Wenn es für die Kategorie ein Spesenreglement gibt, wird sie bei diesem Kundenauftrag weiterberechnet."
+msgid ""
+"If the category has an expense policy, it will be reinvoiced on this sales "
+"order"
+msgstr ""
+"Wenn es für die Kategorie eine Spesenpolitik gibt, wird sie bei diesem "
+"Verkaufsauftrag weiterberechnet."
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
 msgid "Invoicing"
-msgstr "Abrechnung"
+msgstr "Rechnungsstellung"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_account_move
+msgid "Journal Entry"
+msgstr "Journalbuchung"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_account_move_line
@@ -101,19 +121,20 @@ msgid "Product"
 msgstr "Produkt"
 
 #. module: sale_expense
+#. odoo-python
 #: code:addons/sale_expense/models/hr_expense_sheet.py:0
 msgid "Reinvoiced Sales Orders"
-msgstr "Erneut fakturierte Verkaufsaufträge"
+msgstr "Weiterberechnete Verkaufsaufträge"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense_sheet__sale_order_count
 msgid "Sale Order Count"
-msgstr "Verkaufsauftragsanzahl"
+msgstr "Anzahl Verkaufsaufträge"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_sale_order
 msgid "Sales Order"
-msgstr "Verkaufsauftrag "
+msgstr "Verkaufsauftrag"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.hr_expense_sheet_view_form

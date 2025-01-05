@@ -1,30 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_livechat
-#
+# 
 # Translators:
-# Christelle Wehbe <libanon_cristelle@hotmail.com>, 2022
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2022
-# Simon S, 2022
-# Daniel Löfgren, 2022
-# Kim Asplund <kim.asplund@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
-# Dedu Dedu, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Dedu Dedu, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
-"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_livechat
@@ -36,9 +28,11 @@ msgstr "# sessioner"
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
 msgid ""
-"%s started a conversation with %s.\n"
-"                        The chat request has been canceled."
+"%(visitor)s started a conversation with %(operator)s.\n"
+"The chat request has been cancelled"
 msgstr ""
+"%(visitor)s började en konversation med %(operator)s.\n"
+"Chattförfrågan her blivit avbruten"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -90,12 +84,12 @@ msgstr "Chatt"
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_chatbot_script
 msgid "Chatbot Script"
-msgstr ""
+msgstr "Chatbot Script"
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_chatbot_script_step
 msgid "Chatbot Script Step"
-msgstr ""
+msgstr "Steg för skript för chatbot"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_form
@@ -116,7 +110,7 @@ msgstr "Beskrivning av kanalen beskriven på webbsidans sida."
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_discuss_channel
 msgid "Discussion Channel"
-msgstr "Kanal"
+msgstr "Diskussionskanal"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -126,7 +120,7 @@ msgstr "Bra"
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_ir_http
 msgid "HTTP Routing"
-msgstr "HTTP-rutt"
+msgstr "HTTP-routing"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -137,7 +131,7 @@ msgstr "Lyckligt ansikte"
 #. odoo-javascript
 #: code:addons/website_livechat/static/src/web/thread_patch.xml:0
 msgid "History"
-msgstr "Historik"
+msgstr "Historia"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
@@ -186,8 +180,8 @@ msgstr "Ny kanal"
 #: code:addons/website_livechat/models/website_visitor.py:0
 msgid "No Livechat Channel allows you to send a chat request for website %s."
 msgstr ""
-"Ingen livechatt kanal tillåter dig att skicka en chat request till webbsidan "
-"%s."
+"Ingen livechatt kanal tillåter dig att skicka en chat request till webbsidan"
+" %s."
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -213,8 +207,8 @@ msgstr "Operatorsnamn"
 #. odoo-python
 #: code:addons/website_livechat/models/website_visitor.py:0
 msgid ""
-"Recipients are not available. Please refresh the page to get latest visitors "
-"status."
+"Recipients are not available. Please refresh the page to get latest visitors"
+" status."
 msgstr ""
 "Mottagare är inte tillgängliga. Uppdatera sidan för att få senaste "
 "besökarnas status."
@@ -288,7 +282,7 @@ msgstr "Det finns inga betygsättningar för denna kanal. "
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_published
 msgid "Visible on current website"
-msgstr "Synlig på vald webbplats"
+msgstr "Synlig på nuvarande webbplats"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_discuss_channel__livechat_visitor_id
@@ -297,24 +291,34 @@ msgstr "Besökare"
 
 #. module: website_livechat
 #. odoo-python
-#: code:addons/website_livechat/controllers/main.py:0
-#: code:addons/website_livechat/models/website_visitor.py:0
-msgid "Visitor #%d"
-msgstr ""
-
-#. module: website_livechat
-#. odoo-python
-#. odoo-javascript
-#: code:addons/website_livechat/controllers/main.py:0
-#: code:addons/website_livechat/static/src/web/persona_model_patch.js:0
-msgid "Visitor #%s"
-msgstr ""
+#: code:addons/website_livechat/models/discuss_channel.py:0
+msgid "Visitor #%(id)d left the conversation."
+msgstr "Besökare #%(id)d lämnade konversationen."
 
 #. module: website_livechat
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
-msgid "Visitor %s left the conversation."
-msgstr ""
+msgid "Visitor #%(id)d."
+msgstr "Besökare #%(id)d."
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/controllers/main.py:0
+#: code:addons/website_livechat/models/website_visitor.py:0
+msgid "Visitor #%d"
+msgstr "Besökare #%d"
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/controllers/main.py:0
+msgid "Visitor #%s"
+msgstr "Besökare #%s"
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/models/discuss_channel.py:0
+msgid "Visitor left the conversation."
+msgstr "Besökaren lämnade samtalet."
 
 #. module: website_livechat
 #: model:ir.actions.act_window,name:website_livechat.website_visitor_livechat_session_action

@@ -1,49 +1,48 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_timesheet_attendance
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Wichanon Jamwutthipreecha, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
-"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__attendance_cost
 msgid "Attendance Cost"
-msgstr ""
+msgstr "ค่าใช้จ่ายในการเข้างาน"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_attendance
-msgid "Attendance Hours"
-msgstr ""
+msgid "Attendance Time"
+msgstr "เวลาบนใบลงเวลาทำงาน"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__company_id
 msgid "Company"
-msgstr "บริษัทเดียว"
+msgstr "บริษัท"
 
 #. module: hr_timesheet_attendance
 #: model_terms:ir.actions.act_window,help:hr_timesheet_attendance.action_hr_timesheet_attendance_report
 msgid "Compare the time recorded by your employees with their attendance."
-msgstr ""
+msgstr "เปรียบเทียบเวลาที่พนักงานของคุณบันทึกไว้กับการเข้างานของพวกเขา"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__cost_difference
 msgid "Cost Difference"
-msgstr ""
+msgstr "ส่วนต่างค่าใช้จ่าย"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__date
@@ -57,19 +56,20 @@ msgid "Display Name"
 msgstr "แสดงชื่อ"
 
 #. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__employee_id
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
 msgid "Employee"
 msgstr "พนักงาน"
 
 #. module: hr_timesheet_attendance
-#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_difference
-msgid "Hours Difference"
-msgstr ""
-
-#. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__id
 msgid "ID"
 msgstr "ไอดี"
+
+#. module: hr_timesheet_attendance
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
+msgid "Last Week"
+msgstr "สัปดาห์ที่แล้ว"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model,name:hr_timesheet_attendance.model_ir_ui_menu
@@ -79,12 +79,12 @@ msgstr "เมนู"
 #. module: hr_timesheet_attendance
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
 msgid "My Department"
-msgstr ""
+msgstr "แผนกของฉัน"
 
 #. module: hr_timesheet_attendance
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
 msgid "My Team"
-msgstr ""
+msgstr "ทีมของฉัน"
 
 #. module: hr_timesheet_attendance
 #: model_terms:ir.actions.act_window,help:hr_timesheet_attendance.action_hr_timesheet_attendance_report
@@ -92,23 +92,17 @@ msgid "No data yet!"
 msgstr "ยังไม่มีข้อมูล!"
 
 #. module: hr_timesheet_attendance
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
-msgid "Sum of Total Attendance"
-msgstr "ผลรวมของการลงเวลาทั้งหมด"
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
+msgid "This Week"
+msgstr "สัปดาห์นี้"
 
 #. module: hr_timesheet_attendance
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
-msgid "Sum of Total Difference"
-msgstr "ผลรวมของผลต่างทั้งหมด"
-
-#. module: hr_timesheet_attendance
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
-msgid "Sum of Total Timesheet"
-msgstr "ผลรวมของใบบันทึกเวลาทั้งหมด"
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_difference
+msgid "Time Difference"
+msgstr "ความต่างของเวลา"
 
 #. module: hr_timesheet_attendance
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_graph
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_pivot
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
 msgid "Timesheet Attendance"
@@ -128,14 +122,14 @@ msgstr "ต้นทุนใบบันทึกเวลา"
 #: model:ir.actions.act_window,name:hr_timesheet_attendance.action_hr_timesheet_attendance_report
 #: model:ir.ui.menu,name:hr_timesheet_attendance.menu_hr_timesheet_attendance_report
 msgid "Timesheets / Attendance Analysis"
-msgstr ""
+msgstr "การวิเคราะห์ ใบบันทึกเวลา / การเข้างาน"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_timesheet
-msgid "Timesheets Hours"
-msgstr ""
+msgid "Timesheets Time"
+msgstr "เวลาบนใบบันทึกเวลา"
 
 #. module: hr_timesheet_attendance
-#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__user_id
-msgid "User"
-msgstr "ผู้ใช้"
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
+msgid "Today"
+msgstr "วันนี้"

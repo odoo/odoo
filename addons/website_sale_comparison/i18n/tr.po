@@ -1,29 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_comparison
-#
+# 
 # Translators:
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
-# abc Def <hdogan1974@gmail.com>, 2022
-# Ediz Duman <neps1192@gmail.com>, 2022
-# Levent Karakaş <levent@mektup.at>, 2022
-# Murat Kaplan <muratk@projetgrup.com>, 2022
-# Murat Durmuş <muratd@projetgrup.com>, 2022
-# Martin Trigaux, 2022
-# Tugay Hatıl <tugayh@projetgrup.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
-"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_sale_comparison
@@ -133,12 +126,12 @@ msgstr "Yeni bir özellik kategorisi oluştur"
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__create_uid
 msgid "Created by"
-msgstr "Oluşturan"
+msgstr "Tarafından oluşturuldu"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__create_date
 msgid "Created on"
-msgstr "Oluşturulma"
+msgstr "Oluşturuldu"
 
 #. module: website_sale_comparison
 #: model:product.attribute,name:website_sale_comparison.product_attribute_8
@@ -149,7 +142,7 @@ msgstr "Boyutlar"
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__display_name
 msgid "Display Name"
-msgstr "Görünüm Adı"
+msgstr "İsim Göster"
 
 #. module: website_sale_comparison
 #: model:product.attribute.category,name:website_sale_comparison.product_attribute_category_duration
@@ -176,6 +169,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
+msgid "In accordion"
+msgstr ""
+
+#. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__write_uid
 msgid "Last Updated by"
 msgstr "Son Güncelleyen"
@@ -189,6 +187,12 @@ msgstr "Son Güncelleme"
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
 msgid "None"
 msgstr "Hiçbiri"
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.accordion_specs_item
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.specifications_table
+msgid "Others"
+msgstr "Diğerleri"
 
 #. module: website_sale_comparison
 #. odoo-javascript
@@ -236,7 +240,7 @@ msgstr "Kaldır"
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__sequence
 msgid "Sequence"
-msgstr "Sıra"
+msgstr "Sıralama"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,help:website_sale_comparison.field_product_attribute__category_id
@@ -256,12 +260,12 @@ msgid "Specification"
 msgstr "Tanımlama"
 
 #. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.accordion_specs_item
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 msgid "Specifications"
 msgstr "Özellikler"
 
 #. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "Uncategorized"
 msgstr "Kategorisiz"
@@ -287,8 +291,3 @@ msgstr "En fazla 4 ürünü karşılaştırabilirsiniz."
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute__category_id
 msgid "eCommerce Category"
 msgstr ""
-
-#. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
-msgid "or"
-msgstr "veya"

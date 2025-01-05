@@ -1,47 +1,52 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* fleet
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Muftiara Syuhada <muftiara.syuhada@gmail.com>, 2022
-# Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2022
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2022
-# Abe Manyo, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
-"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 msgid "<i class=\"fa fa-map-marker\" title=\"Location\"/>"
+msgstr "<i class=\"fa fa-map-marker\" title=\"Lokasi\"/>"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
+msgid ""
+"<span class=\"o_stat_value\">New</span>\n"
+"                                <span class=\"o_stat_text\">Vehicle</span>"
 msgstr ""
+"<span class=\"o_stat_value\">Baru</span>\n"
+"                                <span class=\"o_stat_text\">Kendaraan</span>"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
 msgid "<span> days before the end date</span>"
-msgstr ""
+msgstr "<span> hari sebelum tanggal akhir </span>"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
 msgid "<span>Send an alert </span>"
-msgstr ""
+msgstr "<span>Kirimkan peringatan </span>"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "<span>cm</span>"
-msgstr ""
+msgstr "<span>cm</span>"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
@@ -54,6 +59,12 @@ msgstr "<span>g/km</span>"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "<span>kW</span>"
 msgstr "<span>kW</span>"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+msgid "<span>km</span>"
+msgstr "<span>km</span>"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_1
@@ -84,8 +95,9 @@ msgstr "A / C Recharge"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_needaction
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_needaction
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_needaction
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_needaction
 msgid "Action Needed"
-msgstr "Perlu Tindakan"
+msgstr "Tindakan Diperluka"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -97,6 +109,7 @@ msgstr "Biaya aktivasi"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__active
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__active
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__active
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__active
 msgid "Active"
 msgstr "Aktif"
 
@@ -104,6 +117,7 @@ msgstr "Aktif"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_ids
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_ids
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_ids
 msgid "Activities"
 msgstr "Aktivitas"
 
@@ -111,6 +125,7 @@ msgstr "Aktivitas"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_exception_decoration
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_exception_decoration
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_exception_decoration
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_exception_decoration
 msgid "Activity Exception Decoration"
 msgstr "Dekorasi Pengecualian Aktivitas"
 
@@ -118,6 +133,7 @@ msgstr "Dekorasi Pengecualian Aktivitas"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_state
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_state
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_state
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_state
 msgid "Activity State"
 msgstr "Status Aktivitas"
 
@@ -125,6 +141,7 @@ msgstr "Status Aktivitas"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_type_icon
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_type_icon
 msgid "Activity Type Icon"
 msgstr "Ikon Jenis Aktifitas"
 
@@ -142,7 +159,7 @@ msgstr "Tambahkan tanda baru"
 #. module: fleet
 #: model:res.groups,name:fleet.fleet_group_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Administrator"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_6
@@ -157,13 +174,19 @@ msgstr "Semua kendaraan"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Apply New Driver"
-msgstr ""
+msgstr "Terapkan Pengemudi Baru"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
+msgid "Archive"
+msgstr "Arsip"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Archived"
@@ -172,13 +195,13 @@ msgstr "Diarsipkan"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__next_assignation_date
 msgid "Assignment Date"
-msgstr ""
+msgstr "Tanggal Tugas"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__log_drivers
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_assignation_log_view_list
 msgid "Assignment Logs"
-msgstr ""
+msgstr "Log Tugas"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_8
@@ -189,13 +212,24 @@ msgstr "bantuan"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_attachment_count
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_attachment_count
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_attachment_count
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_attachment_count
 msgid "Attachment Count"
 msgstr "Hitungan Lampiran"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__attachment_ids
+msgid "Attachments"
+msgstr "Lampiran"
+
+#. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 msgid "Attention: renewal overdue"
-msgstr ""
+msgstr "Perhatian: pembaruan terlambat"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__author_id
+msgid "Author"
+msgstr "Penulis"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__transmission__automatic
@@ -212,31 +246,31 @@ msgstr "Tersedia"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__avatar_1920
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__avatar_1920
 msgid "Avatar"
-msgstr ""
+msgstr "Avatar"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__avatar_1024
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__avatar_1024
 msgid "Avatar 1024"
-msgstr ""
+msgstr "Avatar 1024"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__avatar_128
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__avatar_128
 msgid "Avatar 128"
-msgstr ""
+msgstr "Avatar 128"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__avatar_256
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__avatar_256
 msgid "Avatar 256"
-msgstr ""
+msgstr "Avatar 256"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__avatar_512
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__avatar_512
 msgid "Avatar 512"
-msgstr ""
+msgstr "Avatar 512"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_7
@@ -262,12 +296,17 @@ msgstr "Sepeda"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__frame_type
 msgid "Bike Frame Type"
-msgstr ""
+msgstr "Tipe Rangka Sepeda Motor"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Bikes"
-msgstr ""
+msgstr "Sepeda Motor"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__body_has_template_value
+msgid "Body content is the same as the template"
+msgstr "Konten badan sama dengan templat"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_11
@@ -299,7 +338,7 @@ msgstr "Merek kendaraan"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__cng
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__default_fuel_type__cng
 msgid "CNG"
-msgstr ""
+msgstr "CNG"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2
@@ -310,7 +349,12 @@ msgstr "Emisi CO2"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_tree
 msgid "CO2 Emissions g/km"
-msgstr ""
+msgstr "Emisi CO2 g/km"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2_standard
+msgid "CO2 Standard"
+msgstr "Standar CO2"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__co2
@@ -323,16 +367,22 @@ msgid "Calculation Benefit In Kind"
 msgstr "Manfaat perhitungan Dalam Kind"
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__can_edit_body
+msgid "Can Edit Body"
+msgstr "Dapat Mengedit Body"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
 msgid "Cancel"
 msgstr "Batal"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__write_off_date
 msgid "Cancellation Date"
-msgstr ""
+msgstr "Tanggal Pembatalan"
 
 #. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__closed
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__cancelled
 msgid "Cancelled"
 msgstr "Dibatalkan"
@@ -351,12 +401,12 @@ msgstr "Mencuci mobil"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Cars"
-msgstr ""
+msgstr "Mobil-Mobil"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__car_value
 msgid "Catalog Value (VAT Incl.)"
-msgstr ""
+msgstr "Nilai Katalog (Termasuk Pajak)"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_15
@@ -370,27 +420,37 @@ msgid "Categories"
 msgstr "Kategori"
 
 #. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_category_action
+msgid ""
+"Categories will help you manage your fleet more efficiently and arrange your"
+" vehicles."
+msgstr ""
+"Kategori akan membantu Anda mengelola armada dengan lebih efisien dan "
+"mengatur kendaraan-kendaraan Anda."
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type__category
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__category_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__category_id
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 msgid "Category"
 msgstr "Kategori"
 
 #. module: fleet
 #: model:ir.model.constraint,message:fleet.constraint_fleet_vehicle_model_category_name_uniq
 msgid "Category name must be unique"
-msgstr ""
+msgstr "Nama kategori harus unik"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_model_category
 msgid "Category of the model"
-msgstr ""
+msgstr "Kategori modelnya"
 
 #. module: fleet
 #: model:mail.message.subtype,description:fleet.mt_fleet_driver_updated
 #: model:mail.message.subtype,name:fleet.mt_fleet_driver_updated
 msgid "Changed Driver"
-msgstr ""
+msgstr "Pengemudi Diubah"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_16
@@ -409,25 +469,20 @@ msgstr "Pilih apakah kontrak masih berlaku atau tidak"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_service_type__category
-msgid "Choose whether the service refer to contracts, vehicle services or both"
+msgid ""
+"Choose whether the service refer to contracts, vehicle services or both"
 msgstr ""
-
-#. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-msgid "Close Contract"
-msgstr ""
+"Pilih apakah layanan meruju ke kontrak, layanan kendaraan atau keduanya"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__contract_state__closed
-#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__closed
 msgid "Closed"
 msgstr "Ditutup"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2_standard
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__co2_standard
 msgid "Co2 Standard"
-msgstr ""
+msgstr "Standar Co2"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__color
@@ -440,6 +495,11 @@ msgstr "Warna"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__color
 msgid "Color of the vehicle"
 msgstr "Warna kendaraan"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
+msgid "Communication about your vehicle."
+msgstr "Komunikasi mengenai kendaraan Anda."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__company_id
@@ -467,8 +527,13 @@ msgstr "Kontak"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
-msgid "Contains Vehicles"
-msgstr ""
+msgid "Contains Vehicle"
+msgstr "Memiliki Kendaraan"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__body
+msgid "Contents"
+msgstr "Konten"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_service_type__category__contract
@@ -486,12 +551,12 @@ msgstr "Biaya kontrak Per Bulan"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_count
 msgid "Contract Count"
-msgstr ""
+msgstr "Jumlah Kontrak"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__expiration_date
 msgid "Contract Expiration Date"
-msgstr "Kontrak Tanggal Kadaluarsa"
+msgstr "Kontrak Tanggal Kadaluwarsa"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__start_date
@@ -512,7 +577,7 @@ msgstr "Kontrak untuk Diperbarui"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 msgid "Contract(s)"
-msgstr ""
+msgstr "Kontrak"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_contract_action
@@ -568,7 +633,7 @@ msgstr "Kode Negara"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_category_action
 msgid "Create a new category"
-msgstr ""
+msgstr "Buat kategori baru"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
@@ -578,7 +643,7 @@ msgstr "Buat kontrak baru"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_brand_action
 msgid "Create a new manufacturer"
-msgstr ""
+msgstr "Buat produsen baru"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
@@ -588,22 +653,22 @@ msgstr "Buat model baru"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
 msgid "Create a new odometer log"
-msgstr ""
+msgstr "Buat log odometer baru"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
 msgid "Create a new service entry"
-msgstr ""
+msgstr "Buat entri layanan baru"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
 msgid "Create a new type of service"
-msgstr ""
+msgstr "Buat tipe layanan baru"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_state_action
 msgid "Create a new vehicle status"
-msgstr ""
+msgstr "Buat status kendaraan baru"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type__create_uid
@@ -615,6 +680,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__create_uid
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_category__create_uid
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__create_uid
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__create_uid
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__create_uid
 msgid "Created by"
@@ -630,6 +696,7 @@ msgstr "Dibuat oleh"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__create_date
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_category__create_date
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__create_date
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__create_date
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__create_date
 msgid "Created on"
@@ -644,14 +711,13 @@ msgstr "Mata Uang"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_assignation_log_view_list
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Current Driver"
-msgstr ""
+msgstr "Pengemudi Saat Ini"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__state_id
 msgid "Current state of the vehicle"
-msgstr "Keadaan saat kendaraan"
+msgstr "Status kendaraan saat ini"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__daily
@@ -667,6 +733,11 @@ msgid "Date"
 msgstr "Tanggal"
 
 #. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__acquisition_date
+msgid "Date of vehicle registration"
+msgstr "Tanggal pendaftaran kendaraan"
+
+#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__date
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__date
 msgid "Date when the cost has been executed"
@@ -679,23 +750,27 @@ msgstr "Tanggal ketika cakupan kontrak dimulai"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__expiration_date
-msgid "Date when the coverage of the contract expirates (by default, one year after begin date)"
-msgstr "Tanggal ketika cakupan dari expirates kontrak (secara default, satu tahun setelah mulai tanggal)"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle__acquisition_date
-msgid "Date when the vehicle has been immatriculated"
+msgid ""
+"Date when the coverage of the contract expirates (by default, one year after"
+" begin date)"
 msgstr ""
+"Tanggal ketika cakupan dari expirates kontrak (secara default, satu tahun "
+"setelah mulai tanggal)"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__write_off_date
 msgid "Date when the vehicle's license plate has been cancelled/removed."
-msgstr ""
+msgstr "Tanggal saat plat nomor kendaraan telah dibatalkan/dihapus."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_res_config_settings__delay_alert_contract
 msgid "Delay alert contract outdated"
-msgstr ""
+msgstr "Tunda peringatan kontrak habis masa berlaku"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
+msgid "Delete"
+msgstr "Hapus"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_2
@@ -710,7 +785,7 @@ msgstr "Deskripsi"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__frame_type__diamant
 msgid "Diamant"
-msgstr ""
+msgstr "Diamant"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__diesel
@@ -729,8 +804,11 @@ msgstr "Diesel"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__display_name
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_category__display_name
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__display_name
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__display_name
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__display_name
+#: model:ir.model.fields,field_description:fleet.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:fleet.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Nama Tampilan"
 
@@ -753,7 +831,7 @@ msgstr "Pintu Nomor"
 #. module: fleet
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_downgraded
 msgid "Downgraded"
-msgstr ""
+msgstr "Downgraded"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__driver_id
@@ -773,7 +851,7 @@ msgstr "pengemudi"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__purchaser_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer__driver_id
 msgid "Driver address of the vehicle"
-msgstr ""
+msgstr "Alamat pengemudi untuk kendaraan"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
@@ -783,17 +861,17 @@ msgstr "Pengemudi"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Drivers History"
-msgstr ""
+msgstr "Sejarah Pengemudi"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__history_count
 msgid "Drivers History Count"
-msgstr ""
+msgstr "Jumlah Sejarah Pengemudi"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_assignation_log
 msgid "Drivers history on a vehicle"
-msgstr ""
+msgstr "Sejarah pengemudi untuk kendaraan"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
@@ -801,11 +879,15 @@ msgid ""
 "Each contract (e.g.: leasing) may include several services\n"
 "            (reparation, insurances, periodic maintenance)."
 msgstr ""
+"Setiap kontrak (contoh: leasing) mungkin termasuk beberapa layanan\n"
+"            (perbaikan, asuransi, maintenance periodik)."
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
 msgid "Each service can used in contracts, as a standalone service or both."
-msgstr "Setiap layanan dapat digunakan dalam kontrak, sebagai layanan mandiri atau keduanya."
+msgstr ""
+"Setiap layanan dapat digunakan dalam kontrak, sebagai layanan mandiri atau "
+"keduanya."
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__electric
@@ -817,7 +899,7 @@ msgstr "listrik"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__electric_assistance
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__electric_assistance
 msgid "Electric Assistance"
-msgstr ""
+msgstr "Bantuan Listrik"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_16
@@ -843,7 +925,7 @@ msgstr "Tanggal Berakhir"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
 msgid "End Date Contract Alert"
-msgstr ""
+msgstr "Peringatan Tanggal Akhir Kontrak"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
@@ -874,8 +956,12 @@ msgstr "Masuk ke layanan pajak"
 #. module: fleet
 #. odoo-javascript
 #: code:addons/fleet/static/src/js/fleet_form.js:0
-msgid "Every service and contract of this vehicle will be considered as archived. Are you sure that you want to archive this record?"
+msgid ""
+"Every service and contract of this vehicle will be considered as archived. "
+"Are you sure that you want to archive this record?"
 msgstr ""
+"Setiap layanan dan kontrak kendaraan ini akan dianggap sebagai diarsip. "
+"Apakah Anda yakin ingin mengarsip record ini?"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_21
@@ -892,17 +978,17 @@ msgstr "Berakhir"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__expires_today
 msgid "Expires Today"
-msgstr ""
+msgstr "Kadaluwarsa Hari Ini"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__first_contract_date
 msgid "First Contract Date"
-msgstr ""
+msgstr "Tanggal Kontrak Pertama"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Fiscality"
-msgstr ""
+msgstr "Fiskalitas"
 
 #. module: fleet
 #: model:ir.module.category,name:fleet.module_fleet_category
@@ -916,7 +1002,7 @@ msgstr "Armada"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_cost_report
 msgid "Fleet Analysis Report"
-msgstr ""
+msgstr "Laporan Analisis Armada"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_costs_report_view_graph
@@ -924,34 +1010,35 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vechicle_costs_report_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vechicle_costs_report_view_tree
 msgid "Fleet Costs Analysis"
-msgstr ""
+msgstr "Analisis Biaya Armada"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
 msgid "Fleet Management"
-msgstr ""
+msgstr "Manajemen Armada"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__manager_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__manager_id
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 msgid "Fleet Manager"
-msgstr ""
+msgstr "Manajer Armada"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_service_type
 msgid "Fleet Service Type"
-msgstr ""
+msgstr "Tipe Layanan Armada"
 
 #. module: fleet
 #: model:ir.actions.server,name:fleet.ir_cron_contract_costs_generator_ir_actions_server
 msgid "Fleet: Generate contracts costs based on costs frequency"
-msgstr ""
+msgstr "Armada: Buat biaya armada berdasarkan cost frequency"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_follower_ids
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_follower_ids
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_follower_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_follower_ids
 msgid "Followers"
 msgstr "Follower"
 
@@ -959,6 +1046,7 @@ msgstr "Follower"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_partner_ids
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_partner_ids
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_partner_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Follower (Mitra)"
 
@@ -966,13 +1054,14 @@ msgstr "Follower (Mitra)"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_type_icon
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_type_icon
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__activity_type_icon
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr "Ikon font awesome, misalnya fa-tasks"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__frame_size
 msgid "Frame Size"
-msgstr ""
+msgstr "Ukuran Frame"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_report__fuel_type
@@ -1000,7 +1089,7 @@ msgstr "Jenis Bahan Bakar"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__full_hybrid
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__default_fuel_type__full_hybrid
 msgid "Full Hybrid"
-msgstr ""
+msgstr "Full Hybrid"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
@@ -1011,12 +1100,12 @@ msgstr "Kegiatan - Kegiatan Mendatang"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__future_driver_id
 msgid "Future Driver"
-msgstr ""
+msgstr "Pengemudi Berikutnya"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 msgid "Future Driver :"
-msgstr ""
+msgstr "Pengemudi Berikutnya :"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__gasoline
@@ -1049,8 +1138,14 @@ msgstr "Memiliki Kontrak untuk memperbaharui"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__has_message
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__has_message
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__has_message
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__has_message
 msgid "Has Message"
 msgstr "Memiliki Pesan"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__has_open_contract
+msgid "Has Open Contract"
+msgstr "Has Open Contract"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_24
@@ -1080,6 +1175,8 @@ msgstr "Pemanas Selang Penggantian"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__horsepower
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__horsepower
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__power_unit__horsepower
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__power_unit__horsepower
 msgid "Horsepower"
 msgstr "Horsepower"
 
@@ -1093,7 +1190,7 @@ msgstr "Horsepower Perpajakan"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__hydrogen
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__default_fuel_type__hydrogen
 msgid "Hydrogen"
-msgstr ""
+msgstr "Hidrogen"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type__id
@@ -1106,8 +1203,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_category__id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__id
+#: model:ir.model.fields,field_description:fleet.field_res_config_settings__id
+#: model:ir.model.fields,field_description:fleet.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -1115,6 +1215,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_exception_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_exception_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_exception_icon
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_exception_icon
 msgid "Icon"
 msgstr "Ikon"
 
@@ -1122,6 +1223,7 @@ msgstr "Ikon"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_exception_icon
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_exception_icon
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__activity_exception_icon
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr "Ikon untuk menunjukkan sebuah aktivitas pengecualian."
 
@@ -1129,6 +1231,7 @@ msgstr "Ikon untuk menunjukkan sebuah aktivitas pengecualian."
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_needaction
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_needaction
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__message_needaction
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "Jika dicentang, pesan baru memerlukan penanganan dan perhatian Anda."
 
@@ -1136,6 +1239,7 @@ msgstr "Jika dicentang, pesan baru memerlukan penanganan dan perhatian Anda."
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_has_error
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_has_error
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__message_has_error
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Jika dicentang, beberapa pesan mempunyai kesalahan dalam pengiriman."
 
@@ -1148,40 +1252,34 @@ msgstr "Ignition Coil Penggantian"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__image_1920
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__image_1920
 msgid "Image"
-msgstr ""
+msgstr "Gambar"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__image_1024
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__image_1024
 msgid "Image 1024"
-msgstr ""
+msgstr "Gambar 1024"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__image_128
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__image_128
 msgid "Image 128"
-msgstr ""
+msgstr "Gambar 128"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__image_256
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__image_256
 msgid "Image 256"
-msgstr ""
+msgstr "Gambar 256"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__image_512
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__image_512
 msgid "Image 512"
-msgstr ""
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__acquisition_date
-msgid "Immatriculation Date"
-msgstr ""
+msgstr "Gambar 512"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__contract_state__open
-#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__open
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "In Progress"
 msgstr "Dalam Proses"
@@ -1193,7 +1291,6 @@ msgstr "Layanan termasuk"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__contract_state__futur
-#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__futur
 msgid "Incoming"
 msgstr "Barang Masuk"
 
@@ -1209,11 +1306,17 @@ msgid "Intake Manifold Gasket Replacement"
 msgstr "Intake Manifold Gasket Replacement"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__is_mail_template_editor
+msgid "Is Editor"
+msgstr "Adalah Editor"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_is_follower
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_is_follower
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_is_follower
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_is_follower
 msgid "Is Follower"
-msgstr "Pengikut"
+msgstr "Adalah Follower"
 
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_junior
@@ -1223,18 +1326,23 @@ msgstr "Junior"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_kanban
 msgid "Km"
-msgstr ""
+msgstr "Km"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__lpg
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__default_fuel_type__lpg
 msgid "LPG"
-msgstr ""
+msgstr "LPG"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__lang
+msgid "Language"
+msgstr "Bahasa"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_state
 msgid "Last Contract State"
-msgstr ""
+msgstr "Status Kontrak Terakhir"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__odometer
@@ -1251,10 +1359,11 @@ msgstr "Odometer terakhir"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__write_uid
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_category__write_uid
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__write_uid
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__write_uid
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__write_uid
 msgid "Last Updated by"
-msgstr "Terakhir diperbarui oleh"
+msgstr "Terakhir Diperbarui oleh"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type__write_date
@@ -1266,10 +1375,11 @@ msgstr "Terakhir diperbarui oleh"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__write_date
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_category__write_date
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__write_date
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__write_date
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__write_date
 msgid "Last Updated on"
-msgstr "Terakhir diperbarui pada"
+msgstr "Terakhir Diperbarui pada"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
@@ -1280,12 +1390,12 @@ msgstr "Aktifitas terakhir"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_contract_leasing
 msgid "Leasing"
-msgstr "Lokasi"
+msgstr "Sewa"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_action
 msgid "Let's create your first vehicle."
-msgstr ""
+msgstr "Mari buat kendaraan pertama Anda."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__license_plate
@@ -1297,6 +1407,11 @@ msgstr "Pelat"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__license_plate
 msgid "License plate number of the vehicle (i = plate number for a car)"
 msgstr "Nomor plat kendaraan (i = nomor plat untuk mobil)"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
+msgid "Load template"
+msgstr "Muat templat"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__location
@@ -1316,7 +1431,17 @@ msgstr "Logo"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
 msgid "MODELS"
-msgstr ""
+msgstr "MODELS"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__template_id
+msgid "Mail Template"
+msgstr "Templat Email"
+
+#. module: fleet
+#: model:ir.actions.server,name:fleet.action_fleet_vehicle_send_mail
+msgid "Mail to Driver"
+msgstr "Email ke Pengemudi"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
@@ -1325,11 +1450,15 @@ msgid ""
 "            their related services, costs. Odoo will automatically warn\n"
 "            you when some contracts have to be renewed."
 msgstr ""
+"Kelola semua kontrak Anda (leasing, asuransi, dsb.) dengan\n"
+"            layanan mereka yang terkait, serta biaya. Odoo akan otomatis\n"
+"            mengingatkan Anda saat beberapa kontrak harus diperbarui."
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
 msgid "Manage efficiently your different effective vehicles Costs with Odoo."
 msgstr ""
+"Kelola dengan efisien Biaya efektif beragam kendaraan Anda dengan Odoo."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_10
@@ -1345,18 +1474,20 @@ msgstr "Manual"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__brand_id
 msgid "Manufacturer"
-msgstr ""
+msgstr "Produsen"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_brand_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_model_brand_menu
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 msgid "Manufacturers"
-msgstr ""
+msgstr "Produsen-Produsen"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_has_error
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_has_error
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_has_error
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_has_error
 msgid "Message Delivery error"
 msgstr "Kesalahan Pengiriman Pesan"
 
@@ -1364,6 +1495,7 @@ msgstr "Kesalahan Pengiriman Pesan"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_ids
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_ids
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_ids
 msgid "Messages"
 msgstr "Pesan"
 
@@ -1381,12 +1513,12 @@ msgstr "Model"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_category_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_category_view_tree
 msgid "Model Category"
-msgstr ""
+msgstr "Kategori Model"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__model_count
 msgid "Model Count"
-msgstr ""
+msgstr "Jumlah Model"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_form
@@ -1398,7 +1530,7 @@ msgstr "Membuat model"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__model_year
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__model_year
 msgid "Model Year"
-msgstr ""
+msgstr "Tahun Model"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__name
@@ -1430,6 +1562,7 @@ msgstr "Bulanan"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__my_activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__my_activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__my_activity_date_deadline
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr "Deadline Kegiatan Saya"
 
@@ -1445,16 +1578,12 @@ msgid "Name"
 msgstr "Nama"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_renewal_name
-msgid "Name of contract to renew soon"
-msgstr "Nama kontrak untuk memperbaharui segera"
-
-#. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Need Action"
 msgstr "Butuh Tindakan"
 
 #. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__futur
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__new
 msgid "New"
 msgstr "Baru"
@@ -1468,6 +1597,7 @@ msgstr "Permintaan Baru"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_calendar_event_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_calendar_event_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_calendar_event_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
 msgstr "Kalender Acara Aktivitas Berikutnya"
 
@@ -1475,6 +1605,7 @@ msgstr "Kalender Acara Aktivitas Berikutnya"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_date_deadline
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Batas Waktu Aktivitas Berikutnya"
 
@@ -1482,6 +1613,7 @@ msgstr "Batas Waktu Aktivitas Berikutnya"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_summary
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_summary
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_summary
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_summary
 msgid "Next Activity Summary"
 msgstr "Ringkasan Aktivitas Berikutnya"
 
@@ -1489,13 +1621,14 @@ msgstr "Ringkasan Aktivitas Berikutnya"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_type_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_type_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_type_id
 msgid "Next Activity Type"
 msgstr "Tipe Aktivitas Berikutnya"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__future_driver_id
 msgid "Next Driver Address of the vehicle"
-msgstr ""
+msgstr "Alamat Pengemudi Berikutnya untuk kendaraan"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__no
@@ -1506,18 +1639,18 @@ msgstr "Tidak"
 #. odoo-python
 #: code:addons/fleet/models/fleet_vehicle.py:0
 msgid "No Plate"
-msgstr ""
+msgstr "Tidak ada Plat Kendaraan"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
 msgid "No data for analysis"
-msgstr ""
+msgstr "Tidak ada data untuk dianalisis"
 
 #. module: fleet
 #. odoo-python
 #: code:addons/fleet/models/fleet_vehicle.py:0
 msgid "No plate"
-msgstr ""
+msgstr "Tidak ada plat kendaraan"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__service_activity__none
@@ -1539,8 +1672,9 @@ msgstr "Catatan"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_needaction_counter
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_needaction_counter
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_needaction_counter
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Jumlah Tindakan"
+msgstr "Jumlah Action"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__doors
@@ -1551,6 +1685,7 @@ msgstr "Jumlah pintu kendaraan"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_has_error_counter
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_has_error_counter
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_has_error_counter
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_has_error_counter
 msgid "Number of errors"
 msgstr "Jumlah kesalahan"
 
@@ -1558,15 +1693,17 @@ msgstr "Jumlah kesalahan"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_needaction_counter
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_needaction_counter
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Jumlah pesan yang butuh tindakan"
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Jumlah pesan yang membutuhkan tindakan"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_has_error_counter
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_has_error_counter
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__message_has_error_counter
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Jumlah dari pesan dengan kesalahan pengiriman"
+msgstr "Jumlah pesan dengan kesalahan pengiriman"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__seats
@@ -1618,12 +1755,12 @@ msgstr "Ukuran odometer kendaraan pada saat log ini"
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_odometer_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_odometer_menu
 msgid "Odometers"
-msgstr ""
+msgstr "Odometer"
 
 #. module: fleet
 #: model:res.groups,name:fleet.fleet_group_user
 msgid "Officer: Manage all vehicles"
-msgstr ""
+msgstr "Petugas: kelola semua kendaraan"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_31
@@ -1641,6 +1778,25 @@ msgid "Omnium"
 msgstr "Omnium"
 
 #. module: fleet
+#. odoo-python
+#: code:addons/fleet/models/fleet_vehicle_model.py:0
+msgid "Operation not supported."
+msgstr "Operasi tidak didukung."
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_send_mail__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+"Bahasa terjemahan opsional (kode ISO) yang dipilih ketika mengirim email. "
+"Bila tidak diatur, versi Bahasa Inggris akan digunakan. Ini seharusnya "
+"merupakan expression placeholder yang menyediakan bahasa yang sesuai, "
+"misalnya {{ object.partner_id.lang }}."
+
+#. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_15
 msgid "Options"
 msgstr "Opsi"
@@ -1648,7 +1804,7 @@ msgstr "Opsi"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__order_date
 msgid "Order Date"
-msgstr ""
+msgstr "Tanggal Order"
 
 #. module: fleet
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_ordered
@@ -1675,31 +1831,31 @@ msgstr "Saturasi Oksigen"
 #: model:ir.model.fields,field_description:fleet.field_res_partner__plan_to_change_bike
 #: model:ir.model.fields,field_description:fleet.field_res_users__plan_to_change_bike
 msgid "Plan To Change Bike"
-msgstr ""
+msgstr "Rencana Untuk Mengganti Sepeda Motor"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__plan_to_change_car
 #: model:ir.model.fields,field_description:fleet.field_res_partner__plan_to_change_car
 #: model:ir.model.fields,field_description:fleet.field_res_users__plan_to_change_car
 msgid "Plan To Change Car"
-msgstr ""
+msgstr "Rencana Untuk Mengganti Mobil"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Planned for Change"
-msgstr ""
+msgstr "Direncanakan untuk Diganti"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__plug_in_hybrid_diesel
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__default_fuel_type__plug_in_hybrid_diesel
 msgid "Plug-in Hybrid Diesel"
-msgstr ""
+msgstr "Plug-in Hybrid Diesel"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__plug_in_hybrid_gasoline
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__default_fuel_type__plug_in_hybrid_gasoline
 msgid "Plug-in Hybrid Gasoline"
-msgstr ""
+msgstr "Plug-in Hybrid Gasoline"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__power
@@ -1718,9 +1874,21 @@ msgid "Power Steering Pump Replacement"
 msgstr "Power Steering Pump Penggantian"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__power_unit
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__power_unit
+msgid "Power Unit"
+msgstr "Power Unit"
+
+#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__power
 msgid "Power in kW of the vehicle"
 msgstr "Daya dalam kW kendaraan"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__vehicle_properties
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Properties"
+msgstr "Properti-Properti"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__net_car_value
@@ -1738,14 +1906,20 @@ msgid "Radiator Repair"
 msgstr "Radiator Perbaikan"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__vehicle_range
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__vehicle_range
+msgid "Range"
+msgstr "Jangkauan"
+
+#. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_action
 msgid "Ready to manage your fleet more efficiently?"
-msgstr ""
+msgstr "Siap untuk mengelola armada Anda dengan lebih efisien?"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_generated
 msgid "Recurring Cost"
-msgstr ""
+msgstr "Biaya Berulang"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_frequency
@@ -1766,6 +1940,16 @@ msgstr "Pengisian bahan bakar"
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_registered
 msgid "Registered"
 msgstr "Terdaftar"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__acquisition_date
+msgid "Registration Date"
+msgstr "Registrasi rawat inap"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__render_model
+msgid "Rendering Model"
+msgstr "Model Rendering"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
@@ -1798,14 +1982,9 @@ msgid "Reserve"
 msgstr "Cadangan"
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-msgid "Reset To Draft"
-msgstr "Reset To Draft"
-
-#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__residual_value
 msgid "Residual Value"
-msgstr "Nilai residual"
+msgstr "Nilai sisa"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_14
@@ -1826,8 +2005,14 @@ msgstr "Penanggung Jawab"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_user_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_user_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_user_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_user_id
 msgid "Responsible User"
 msgstr "Tanggung-jawab"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
+msgid "Restore"
+msgstr "Pulihkan"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_38
@@ -1845,15 +2030,37 @@ msgid "Rotor Replacement"
 msgstr "Rotor Penggantian"
 
 #. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__open
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__running
 msgid "Running"
 msgstr "Sedang berjalan"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
+msgid "Save as new template"
+msgstr "Simpan sebagai contoh baru"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__seats
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__seats
 msgid "Seats Number"
 msgstr "Kursi Nomor"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
+msgid "Send"
+msgstr "Kirim"
+
+#. module: fleet
+#. odoo-python
+#: code:addons/fleet/models/fleet_vehicle.py:0
+msgid "Send Email"
+msgstr "Kirim Email"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle_send_mail
+msgid "Send mails to Drivers"
+msgstr "Kirim email ke Pengemudi"
 
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_senior
@@ -1871,12 +2078,12 @@ msgstr "Urutan"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_cost_report__cost_type__service
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_costs_report_view_search
 msgid "Service"
-msgstr "Jasa"
+msgstr "Layanan"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__service_activity
 msgid "Service Activity"
-msgstr ""
+msgstr "Kegiatan Layanan"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__service_type_id
@@ -1897,7 +2104,7 @@ msgstr "Jenis layanan"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_activity
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Services"
-msgstr "Jasa"
+msgstr "Layanan"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_graph
@@ -1943,17 +2150,12 @@ msgstr "Spark Plug Penggantian"
 #. odoo-python
 #: code:addons/fleet/models/fleet_vehicle.py:0
 msgid "Specify the End date of %s"
-msgstr ""
+msgstr "Tentukan Tanggal akhir untuk %s"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__state
 msgid "Stage"
 msgstr "Tahapan"
-
-#. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-msgid "Start Contract"
-msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__date_start
@@ -1988,6 +2190,7 @@ msgstr "Status"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_state
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_state
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__activity_state
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__activity_state
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
@@ -2000,9 +2203,14 @@ msgstr ""
 "Direncanakan: Aktivitas yang akan datang."
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__subject
+msgid "Subject"
+msgstr "Judul"
+
+#. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vechicle_costs_report_view_tree
 msgid "Sum of Cost"
-msgstr ""
+msgstr "Jumlah Biaya"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_5
@@ -2017,7 +2225,7 @@ msgstr "Nama Tag"
 #. module: fleet
 #: model:ir.model.constraint,message:fleet.constraint_fleet_vehicle_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Nama tag sudah ada!"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_tag_action
@@ -2029,7 +2237,7 @@ msgstr "Label"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Tax Info"
-msgstr ""
+msgstr "Informasi Pajak"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_3
@@ -2052,14 +2260,30 @@ msgstr ""
 "Anda dapat menggunakan kolom ini untuk pencarian cepat."
 
 #. module: fleet
+#. odoo-python
+#: code:addons/fleet/wizard/fleet_vehicle_send_mail.py:0
+msgid "The following vehicle drivers are missing an email address: %s."
+msgstr "Pengemudi kendaraan berikut kurang alamat email: %s."
+
+#. module: fleet
+#. odoo-python
+#: code:addons/fleet/models/fleet_vehicle.py:0
+msgid "The odometer value cannot be lower than the previous one."
+msgstr "Nilai odometer tidak boleh lebih kecil dari yang sebelumnya."
+
+#. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_43
 msgid "Thermostat Replacement"
 msgstr "Penggantian Thermostat"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__next_assignation_date
-msgid "This is the date at which the car will be available, if not set it means available instantly"
+msgid ""
+"This is the date at which the car will be available, if not set it means "
+"available instantly"
 msgstr ""
+"Ini adalah tanggal di mana mobil tersedia, bila tidak ditetapkan berarti "
+"mobil tersedia instan"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_44
@@ -2079,7 +2303,7 @@ msgstr "Layanan"
 #. module: fleet
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_to_order
 msgid "To Order"
-msgstr ""
+msgstr "Untuk Dipesan"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__service_activity__today
@@ -2103,11 +2327,6 @@ msgid "Total expenses (Excluding VAT)"
 msgstr "Jumlah beban (Tidak Termasuk PPN)"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_renewal_total
-msgid "Total of contracts due or overdue minus one"
-msgstr "Total kontrak jatuh tempo atau terlambat minus satu"
-
-#. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_17
 msgid "Touring Assistance"
 msgstr "Bantuan tur"
@@ -2118,17 +2337,19 @@ msgid ""
 "Track all the services done on your vehicle.\n"
 "            Services can be of many types: occasional repair, fixed maintenance, etc."
 msgstr ""
+"Lacak semua layanan yang dilakukan pada kendaraan Anda.\n"
+"            Layanan dapat merupakan banyak tipe: perbaikan sesekali, maintenance tetap, dsb."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__trailer_hook
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__trailer_hook
 msgid "Trailer Hitch"
-msgstr ""
+msgstr "Trailer Hitch"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Trailer Hook"
-msgstr ""
+msgstr "Trailer Hook"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__transmission
@@ -2154,7 +2375,7 @@ msgstr "Penggantian transmisi"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__frame_type__trapez
 msgid "Trapez"
-msgstr ""
+msgstr "Trapez"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_subtype_id
@@ -2165,6 +2386,7 @@ msgstr "Jenis"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_exception_decoration
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_exception_decoration
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__activity_exception_decoration
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Jenis dari aktivitas pengecualian pada rekaman data."
 
@@ -2172,7 +2394,7 @@ msgstr "Jenis dari aktivitas pengecualian pada rekaman data."
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_service_types_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_service_types_menu
 msgid "Types"
-msgstr ""
+msgstr "Tipe"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__vin_sn
@@ -2183,9 +2405,11 @@ msgstr "Nomor unik yang ditulis pada kendaraan bermotor (VIN / nomor SN)"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__unit
 msgid "Unit"
-msgstr "Satuan"
+msgstr "Unit"
 
 #. module: fleet
+#. odoo-python
+#: code:addons/fleet/models/fleet_vehicle_model.py:0
 #: model:ir.model,name:fleet.model_fleet_vehicle
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__vehicle_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_report__vehicle_id
@@ -2201,7 +2425,7 @@ msgstr "Satuan"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_tree
 msgid "Vehicle"
-msgstr "Armada"
+msgstr "Kendaraan"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_log_contract
@@ -2211,7 +2435,7 @@ msgstr "Kontrak Kendaraan"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__vehicle_count
 msgid "Vehicle Count"
-msgstr ""
+msgstr "Jumlah Kendaraan"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__description
@@ -2227,6 +2451,11 @@ msgstr "Informasi Kendaraan"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_report__name
 msgid "Vehicle Name"
 msgstr "Nama Kendaraan"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__vehicle_properties_definition
+msgid "Vehicle Properties"
+msgstr "Properti Kendaraan"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_state
@@ -2248,13 +2477,21 @@ msgstr "Tanda Kendaraan"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__vehicle_type
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_report__vehicle_type
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__vehicle_type
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 msgid "Vehicle Type"
 msgstr "Tipe Kendaraan"
 
 #. module: fleet
 #. odoo-python
+#: code:addons/fleet/wizard/fleet_vehicle_send_mail.py:0
+msgid "Vehicle: Mass mail drivers"
+msgstr "Kendaraan: Email masal pengemudi"
+
+#. module: fleet
+#. odoo-python
 #: code:addons/fleet/models/fleet_vehicle_model.py:0
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_action
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__vehicle_ids
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_tree
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_activity
@@ -2308,7 +2545,7 @@ msgstr "Peringatan Tanggal"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 msgid "Warning: renewal due soon"
-msgstr ""
+msgstr "Peringatan: pembaruan sebentar lagi"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_50
@@ -2318,7 +2555,7 @@ msgstr "Pompa air Penggantian"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__frame_type__wave
 msgid "Wave"
-msgstr ""
+msgstr "Wave"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__weekly
@@ -2343,7 +2580,7 @@ msgstr "Wiper (s) Penggantian"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_search
 msgid "With Models"
-msgstr ""
+msgstr "Dengan Model"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -2361,6 +2598,11 @@ msgid "Write here any other information related to this vehicle"
 msgstr "Tulis di sini informasi lain terkait kendaraan"
 
 #. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
+msgid "Write your message here..."
+msgstr "Tuliskan pesan Anda di sini..."
+
+#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__model_year
 msgid "Year of the model"
 msgstr "Tahun model"
@@ -2373,7 +2615,7 @@ msgstr "Tahunan"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
 msgid "You can add various odometer entries for all vehicles."
-msgstr ""
+msgstr "Anda dapat menambahkan beragam entri odometer untuk semua kendaraan."
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_state_action
@@ -2381,11 +2623,15 @@ msgid ""
 "You can customize available status to track the evolution of\n"
 "            each vehicle. Example: active, being repaired, sold."
 msgstr ""
+"Anda dapat kustomisasi status tersedia untuk melacak evolusi dari\n"
+"            setiap kendaraan. Contoh: aktif, sedang diperbaiki, dijual."
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
 msgid "You can define several models (e.g. A3, A4) for each make (Audi)."
-msgstr "Anda dapat menentukan beberapa model (misalnya A3, A4) untuk masing-masing membuat (Audi)."
+msgstr ""
+"Anda dapat menentukan beberapa model (misalnya A3, A4) untuk masing-masing "
+"membuat (Audi)."
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
@@ -2404,9 +2650,10 @@ msgid "e.g. Tesla"
 msgstr "misalnya Tesla"
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
-msgid "img"
-msgstr ""
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__power_unit__power
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__power_unit__power
+msgid "kW"
+msgstr "kW"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__odometer_unit__kilometers

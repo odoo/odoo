@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_oauth
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Thi Huong Nguyen, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: auth_oauth
@@ -26,15 +25,10 @@ msgid "- or -"
 msgstr "- hoặc -"
 
 #. module: auth_oauth
-#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
-msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Tutorial"
-msgstr ""
-
-#. module: auth_oauth
 #. odoo-python
 #: code:addons/auth_oauth/controllers/main.py:0
 msgid "Access Denied"
-msgstr "Truy cập bị Từ chối"
+msgstr "Truy cập bị từ chối"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__auth_oauth_google_enabled
@@ -59,23 +53,23 @@ msgstr "URL Ủy quyền"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__css_class
 msgid "CSS class"
-msgstr "bộ chọn class trong CSS"
+msgstr "Bộ chọn class trong CSS"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__client_id
 #: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__auth_oauth_google_client_id
 msgid "Client ID"
-msgstr "ID Khách hàng"
+msgstr "ID khách hàng"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Client ID:"
-msgstr "ID Khách hàng:"
+msgstr "ID khách hàng:"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_config_settings
 msgid "Config Settings"
-msgstr "Cài đặt Cấu hình"
+msgstr "Cài đặt cấu hình"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__create_uid
@@ -90,12 +84,15 @@ msgstr "Được tạo vào"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__data_endpoint
 msgid "Data Endpoint"
-msgstr "Điểm cuối Dữ liệu"
+msgstr "Endpoint dữ liệu"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__display_name
 msgid "Display Name"
-msgstr "Tên Hiển thị"
+msgstr "Tên hiển thị"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
@@ -104,23 +101,26 @@ msgstr "Xác thực Google "
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__id
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__write_uid
 msgid "Last Updated by"
-msgstr "Cập nhật Lần cuối bởi"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__write_date
 msgid "Last Updated on"
-msgstr "Cập nhật Lần cuối vào"
+msgstr "Cập nhật lần cuối vào"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_auth_oauth_provider__body
 msgid "Link text in Login Dialog"
-msgstr "Văn bản liên kết trong Hộp thoại Đăng nhập"
+msgstr "Văn bản liên kết trong Hộp thoại đăng nhập"
 
 #. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_facebook
@@ -143,9 +143,15 @@ msgid "Login button label"
 msgstr "Nhãn nút đăng nhập"
 
 #. module: auth_oauth
+#. odoo-python
+#: code:addons/auth_oauth/models/res_users.py:0
+msgid "Missing subject identity"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_access_token
 msgid "OAuth Access Token"
-msgstr "Token Truy cập OAuth "
+msgstr "Token truy cập OAuth"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_provider_id
@@ -156,7 +162,7 @@ msgstr "Nhà cung cấp OAuth "
 #: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "OAuth Providers"
-msgstr "Các nhà cung cấp OAuth "
+msgstr "Nhà cung cấp OAuth "
 
 #. module: auth_oauth
 #: model:ir.model.constraint,message:auth_oauth.constraint_res_users_uniq_users_oauth_provider_oauth_uid
@@ -166,7 +172,7 @@ msgstr "Mỗi nhà cung cấp có một UID OAuth riêng."
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_uid
 msgid "OAuth User ID"
-msgstr "ID Người dùng OAuth "
+msgstr "ID người dùng OAuth "
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_auth_oauth_provider
@@ -181,7 +187,7 @@ msgstr "Oauth"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users__oauth_uid
 msgid "Oauth Provider user_id"
-msgstr "Tên người dùng của Nhà cung cấp Oauth"
+msgstr "user_id của nhà cung cấp Oauth"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__name
@@ -191,7 +197,7 @@ msgstr "Tên nhà cung cấp"
 #. module: auth_oauth
 #: model:ir.actions.act_window,name:auth_oauth.action_oauth_provider
 msgid "Providers"
-msgstr "Các nhà cung cấp "
+msgstr "Nhà cung cấp "
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__scope
@@ -217,7 +223,12 @@ msgstr "Không được phép đăng ký trên cơ sở dữ liệu này."
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter
 msgid "System Parameter"
-msgstr "Tham số Hệ thống"
+msgstr "Tham số hệ thống"
+
+#. module: auth_oauth
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+msgid "Tutorial"
+msgstr "Hướng dẫn"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
@@ -227,13 +238,19 @@ msgstr "Người dùng"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__validation_endpoint
 msgid "UserInfo URL"
-msgstr "URL Thông tin người dùng"
+msgstr "URL thông tin người dùng"
 
 #. module: auth_oauth
 #. odoo-python
 #: code:addons/auth_oauth/controllers/main.py:0
-msgid "You do not have access to this database or your invitation has expired. Please ask for an invitation and be sure to follow the link in your invitation email."
-msgstr "Bạn không có quyền truy cập vào cơ sở dữ liệu này hoặc lời mời của bạn đã hết hạn. Vui lòng yêu cầu một lời mời và nhấp vào liên kết trong email mời của bạn."
+msgid ""
+"You do not have access to this database or your invitation has expired. "
+"Please ask for an invitation and be sure to follow the link in your "
+"invitation email."
+msgstr ""
+"Bạn không có quyền truy cập vào cơ sở dữ liệu này hoặc lời mời của bạn đã "
+"hết hạn. Vui lòng yêu cầu một lời mời mới và nhấp vào liên kết trong email "
+"mời của bạn."
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form

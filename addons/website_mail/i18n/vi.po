@@ -1,33 +1,39 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_mail
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_mail
 #: model_terms:ir.ui.view,arch_db:website_mail.follow
 msgid "<small>Follow</small><i class=\"fa fa-fw ms-1\"/>"
-msgstr ""
+msgstr "<small>Theo dõi</small><i class=\"fa fa-fw ms-1\"/>"
 
 #. module: website_mail
 #: model_terms:ir.ui.view,arch_db:website_mail.follow
 msgid "<small>Unfollow</small><i class=\"fa fa-fw ms-1\"/>"
-msgstr ""
+msgstr "<small>Huỷ theo dõi</small><i class=\"fa fa-fw ms-1\"/>"
+
+#. module: website_mail
+#. odoo-javascript
+#: code:addons/website_mail/static/src/js/follow.js:0
+msgid "Error"
+msgstr "Lỗi"
 
 #. module: website_mail
 #: model:ir.model,name:website_mail.model_publisher_warranty_contract
@@ -38,6 +44,12 @@ msgstr "Hợp đồng bảo hành nhà phát hành"
 #: model_terms:ir.ui.view,arch_db:website_mail.follow
 msgid "Subscribe"
 msgstr "Đăng ký nhận tin"
+
+#. module: website_mail
+#. odoo-python
+#: code:addons/website_mail/controllers/main.py:0
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "Hoạt động đáng ngờ được Google reCaptcha phát hiện"
 
 #. module: website_mail
 #: model_terms:ir.ui.view,arch_db:website_mail.follow

@@ -1,23 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* event_sale
-#
+# 
 # Translators:
-# Martin Trigaux, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/sale_order.py:0
+msgid "%(event_name)s - Tickets"
+msgstr "%(event_name)s - Vé"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
@@ -26,50 +32,37 @@ msgid ""
 "            <span>Manual actions may be needed.</span>"
 msgstr ""
 ".\n"
-"            <span>Manual actions may be needed.</span>"
+"            <span>Có thể cần thao tác thủ công.</span>"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "<i class=\"fa fa-arrow-right\"/> Configure Events &amp; Tickets"
+msgstr "<i class=\"fa fa-arrow-right\"/> Cấu hình sự kiện &amp; vé"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
 msgid "<span class=\"o_stat_text\">Sale Order</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Đơn bán hàng</span>"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "<span class=\"o_stat_text\">Sales</span>"
-msgstr "<span class=\"o_stat_text\">Sales</span>"
-
-#. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
-msgid "<span>Not enough seats available. All registrations were created as \"Unconfirmed\" and can be updated later on.</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Bán hàng</span>"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
 msgid "<span>Registration modification for attendee:</span>"
-msgstr "<span>Registration modification for attendee:</span>"
+msgstr "<span>Điều chỉnh lượt đăng ký cho người tham dự:</span>"
 
 #. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_event_event_ticket__description
-#: model:ir.model.fields,help:event_sale.field_event_type_ticket__description
-msgid "A description of the ticket that you want to communicate to your customers."
-msgstr "A description of the ticket that you want to communicate to your customers."
-
-#. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_product_product__detailed_type
-#: model:ir.model.fields,help:event_sale.field_product_template__detailed_type
-msgid ""
-"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
-"A consumable product is a product for which stock is not managed.\n"
-"A service is a non-material product you provide."
-msgstr ""
-"Sản phẩm lưu kho là sản phẩm bạn muốn quản lý lượng tồn kho của nó. Hệ thống sẽ cần cài thêm phân hệ Kho.\n"
-"Sản phẩm tiêu dùng là sản phẩm bạn không cần quản lý lượng tồn kho.\n"
-"Sản phẩm dịch vụ là sản phẩm bạn cung cấp."
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "Add"
+msgstr "Thêm"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__sale_order_lines_ids
 msgid "All sale order lines pointing to this event"
-msgstr "All sale order lines pointing to this event"
+msgstr "Tất cả chi tiết đơn bán hàng chỉ tới sự kiện này"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__done
@@ -79,37 +72,32 @@ msgstr "Đã tham dự"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_sale_order__attendee_count
 msgid "Attendee Count"
-msgstr "Attendee Count"
+msgstr "Số người tham dự"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_name
 msgid "Attendee Name"
-msgstr "Tên Người tham dự"
+msgstr "Tên người tham dự"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.sale_order_view_form
 msgid "Attendees"
-msgstr "Người Tham dự"
+msgstr "Người tham dự"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Before updating the linked registrations of"
-msgstr ""
+msgstr "Trước khi cập nhật đăng ký liên kết của"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Booked by"
-msgstr "Booked by"
+msgstr "Đã đặt bởi"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_campaign_id
 msgid "Campaign"
 msgstr "Chiến dịch"
-
-#. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
-msgid "Cancel"
-msgstr "Hủy"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__cancel
@@ -119,38 +107,51 @@ msgstr "Đã hủy"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_id
-msgid "Choose an event and it will automatically create a registration for this event."
-msgstr "Chọn một sự kiện và điều đí sẽ tự động khởi tạo một đăng ký cho sự kiện này."
+msgid ""
+"Choose an event and it will automatically create a registration for this "
+"event."
+msgstr "Chọn một sự kiện và lượt đăng ký cho sự kiện này sẽ được tạo tự động."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
-msgid "Choose an event ticket and it will automatically create a registration for this event ticket."
-msgstr "Chọn một vé sự kiện và điều đó sẽ tự động khởi tạo một đăng ký cho vé sự kiện này."
+msgid ""
+"Choose an event ticket and it will automatically create a registration for "
+"this event ticket."
+msgstr ""
+"Chọn một vé sự kiện và lượt đăng ký cho vé sự kiện này sẽ được tạo tự động."
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "Close"
+msgstr "Đóng"
 
 #. module: event_sale
 #: model_terms:ir.actions.act_window,help:event_sale.event_sale_report_action
 msgid "Come back once tickets have been sold to overview your sales income."
 msgstr ""
+"Sau khi vé được bán, hãy quay lại để có cái nhìn tổng quan về doanh số."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__company_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__company_id
 msgid "Company"
 msgstr "Công ty"
 
 #. module: event_sale
-#: model:ir.actions.act_window,name:event_sale.event_configurator_action
-msgid "Configure an event"
-msgstr "Configure an event"
-
-#. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__open
 msgid "Confirmed"
-msgstr "Đã được xác nhận"
+msgstr "Đã xác nhận"
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/product_template.py:0
+msgid "Create an Attendee for the selected Event."
+msgstr "Tạo một Người tham dự cho Sự kiện đã chọn."
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Create/Update registrations"
-msgstr ""
+msgstr "Tạo/cập nhật lượt đăng ký"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__create_uid
@@ -167,23 +168,15 @@ msgid "Created on"
 msgstr "Được tạo vào"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event__currency_id
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__currency_id
-#: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__currency_id
-msgid "Currency"
-msgstr "Tiền tệ"
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_partner_id
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Customer"
 msgstr "Khách hàng"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__description
-#: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__description
-msgid "Description"
-msgstr "Mô tả"
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "Discard"
+msgstr "Huỷ bỏ"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__display_name
@@ -196,12 +189,12 @@ msgstr "Tên hiển thị"
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor
 msgid "Edit Attendee Details on Sales Confirmation"
-msgstr "Edit Attendee Details on Sales Confirmation"
+msgstr "Chỉnh sửa thông tin người tham dự trên Xác nhận bán hàng"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor_line
 msgid "Edit Attendee Line on Sales Confirmation"
-msgstr "Edit Attendee Line on Sales Confirmation"
+msgstr "Chỉnh sửa dòng người tham dự trên Xác nhận bán hàng"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__editor_id
@@ -227,98 +220,86 @@ msgstr "Sự kiện"
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event_configurator
 msgid "Event Configurator"
-msgstr "Event Configurator"
+msgstr "Trình cấu hình sự kiện"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_end
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Event End Date"
-msgstr "Ngày Kết thúc Sự kiện"
+msgstr "Ngày kết thúc sự kiện"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_id
 msgid "Event Registration"
-msgstr "Đăng ký Sự kiện"
-
-#. module: event_sale
-#: model:product.template,name:event_sale.product_product_event_standard_product_template
-msgid "Event Registration - Standard"
-msgstr ""
-
-#. module: event_sale
-#: model:product.template,name:event_sale.product_product_event_vip_product_template
-msgid "Event Registration - VIP"
-msgstr ""
+msgstr "Đăng ký sự kiện"
 
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
 msgid "Event Registrations"
-msgstr "Đăng ký Sự kiện"
+msgstr "Đăng ký sự kiện"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Event Sales Analysis"
-msgstr ""
+msgstr "Phân tích doanh số sự kiện"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_sale_report
 msgid "Event Sales Report"
-msgstr ""
+msgstr "Báo cáo doanh số sự kiện"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_begin
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Event Start Date"
-msgstr "Ngày Bắt đầu Sự kiện"
-
-#. module: event_sale
-#: model:ir.model,name:event_sale.model_event_type_ticket
-msgid "Event Template Ticket"
-msgstr "Event Template Ticket"
+msgstr "Ngày bắt đầu sự kiện"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event_ticket
-#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__event_ticket_id
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_ticket_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_ticket_id
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ticket_id
-#: model:ir.model.fields.selection,name:event_sale.selection__product_template__detailed_type__event
 msgid "Event Ticket"
-msgstr "Vé Sự kiện"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_product_product__event_ticket_ids
-msgid "Event Tickets"
-msgstr "Vé Sự kiện"
+msgstr "Vé sự kiện"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_type_id
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Event Type"
-msgstr "Kiểu Sự kiện"
+msgstr "Loại sự kiện"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Events that have ended"
-msgstr ""
+msgstr "Sự kiện đã kết thúc"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
 msgid "Exception:"
-msgstr "Exception:"
+msgstr "Ngoại lệ:"
 
 #. module: event_sale
-#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__payment_status__free
-#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__payment_status__free
+#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__sale_status__free
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__free
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Free"
-msgstr "Rảnh"
+msgstr "Miễn phí"
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/sale_order.py:0
+msgid "Get Your Tickets"
+msgstr "Nhận vé của bạn"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Group By"
 msgstr "Nhóm theo"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__has_available_tickets
+msgid "Has Available Tickets"
+msgstr "Còn vé"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__id
@@ -332,7 +313,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/event_sale/wizard/event_configurator.py:0
 msgid "Invalid ticket choice \"%(ticket_name)s\" for event \"%(event_name)s\"."
-msgstr ""
+msgstr "Lựa chọn vé không hợp lệ \"%(ticket_name)s\" cho sự kiện \"%(event_name)s\"."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__invoice_partner_id
@@ -340,27 +321,16 @@ msgid "Invoice Address"
 msgstr "Địa chỉ xuất hoá đơn"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_registration__is_paid
-#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__is_paid
-msgid "Is Paid"
-msgstr "Được thanh toán"
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__active
 msgid "Is registration active (not archived)?"
-msgstr ""
-
-#. module: event_sale
-#: model:ir.model,name:event_sale.model_account_move
-msgid "Journal Entry"
-msgstr "Bút toán "
+msgstr "Đăng ký có khả dụng không (chưa bị lưu trữ)?"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__write_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__write_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__write_date
@@ -370,19 +340,9 @@ msgid "Last Updated on"
 msgstr "Cập nhật lần cuối vào"
 
 #. module: event_sale
-#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__done
-msgid "Locked"
-msgstr "Đã khoá"
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_medium_id
 msgid "Medium"
-msgstr "Kênh trung gian"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__mobile
-msgid "Mobile"
-msgstr "Di động"
+msgstr "Phương tiện"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__name
@@ -392,52 +352,29 @@ msgstr "Tên"
 #. module: event_sale
 #: model_terms:ir.actions.act_window,help:event_sale.event_sale_report_action
 msgid "No Event Revenues yet!"
-msgstr ""
+msgstr "Chưa có doanh thu sự kiện!"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Non-free tickets"
-msgstr ""
+msgstr "Vé tính phí"
 
 #. module: event_sale
-#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__payment_status__to_pay
-#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__payment_status__to_pay
-msgid "Not Paid"
-msgstr "Chưa trả"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor__seats_available_insufficient
-msgid "Not enough seats for all registrations"
-msgstr ""
-
-#. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
-msgid "Ok"
-msgstr "Đồng ý"
+#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__sale_status__to_pay
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__to_pay
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
+msgid "Not Sold"
+msgstr "Không bán"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_date
-#: model_terms:ir.ui.view,arch_db:event_sale.event_report_template_full_page_ticket_inherit_sale
 msgid "Order Date"
 msgstr "Ngày đặt hàng"
 
 #. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.event_report_template_full_page_ticket_inherit_sale
-msgid "Order Ref"
-msgstr "Tham chiếu đơn hàng"
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__registration_id
 msgid "Original Registration"
-msgstr "Original Registration"
-
-#. module: event_sale
-#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__payment_status__paid
-#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__payment_status__paid
-#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
-#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
-msgid "Paid"
-msgstr "Đã thanh toán"
+msgstr "Đăng ký ban đầu"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
@@ -450,15 +387,14 @@ msgid "Past Events"
 msgstr "Sự kiện đã qua"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_registration__payment_status
-#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__payment_status
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_status
 msgid "Payment Status"
-msgstr "Tình trạng thanh toán"
+msgstr "Trạng thái thanh toán"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Pending payment"
-msgstr ""
+msgstr "Thanh toán đang chờ xử lý"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__phone
@@ -466,50 +402,22 @@ msgid "Phone"
 msgstr "Điện thoại"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price
-#: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__price
-#: model_terms:ir.ui.view,arch_db:event_sale.event_report_template_full_page_ticket_inherit_sale
-msgid "Price"
-msgstr "Giá"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce
-#: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__price_reduce
-msgid "Price Reduce"
-msgstr "Giảm Giá"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce_taxinc
-msgid "Price Reduce Tax inc"
-msgstr "Giảm Giá gồm Thuế"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_incl
-msgid "Price include"
+#. odoo-python
+#: code:addons/event_sale/models/sale_order.py:0
+msgid ""
+"Please make sure all your event related lines are configured before "
+"confirming this order:%s"
 msgstr ""
+"Hãy đảm bảo cấu hình tất cả các dòng liên quan đến sự kiện trước khi xác "
+"nhận đơn hàng này: %s"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_template
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__product_id
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__product_id
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__product_id
-#: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__product_id
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_template_line__product_id
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_template_option__product_id
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Product"
 msgstr "Sản phẩm"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_product_product__detailed_type
-#: model:ir.model.fields,field_description:event_sale.field_product_template__detailed_type
-msgid "Product Type"
-msgstr "Loại sản phẩm"
-
-#. module: event_sale
-#: model:ir.model,name:event_sale.model_product_product
-msgid "Product Variant"
-msgstr "Biến thể sản phẩm"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__draft
@@ -519,17 +427,7 @@ msgstr "Báo giá"
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__sent
 msgid "Quotation Sent"
-msgstr "Báo giá đã Gửi"
-
-#. module: event_sale
-#: model:ir.model,name:event_sale.model_sale_order_template_line
-msgid "Quotation Template Line"
-msgstr "Chi tiết mẫu báo giá"
-
-#. module: event_sale
-#: model:ir.model,name:event_sale.model_sale_order_template_option
-msgid "Quotation Template Option"
-msgstr "Tùy chọn mẫu báo giá"
+msgstr "Báo giá đã gửi"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
@@ -541,23 +439,28 @@ msgstr "Đăng ký"
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_create_date
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Registration Date"
-msgstr "Ngày Mở Đăng ký"
+msgstr "Ngày đăng ký"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_state
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Registration Status"
-msgstr ""
+msgstr "Trạng thái đăng ký"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
 msgid "Registration revenues"
-msgstr ""
+msgstr "Doanh thu đăng ký"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__registration_ids
+msgid "Registrations"
+msgstr "Đăng ký"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__event_registration_ids
 msgid "Registrations to Edit"
-msgstr "Đăng ký để Sửa"
+msgstr "Đăng ký cần chỉnh sửa"
 
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.event_sale_report_action
@@ -574,18 +477,23 @@ msgstr "Doanh thu"
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_id
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
 msgid "Sale Order"
-msgstr "Đơn hàng"
+msgstr "Đơn bán hàng"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_line_id
 msgid "Sale Order Line"
-msgstr "Chi tiết đơn hàng"
+msgstr "Dòng đơn bán hàng"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_state
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Sale Order Status"
-msgstr ""
+msgstr "Trạng thái đơn bán hàng"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_status
+msgid "Sale Status"
+msgstr "Trạng thái bán"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
@@ -595,12 +503,7 @@ msgstr "Bán hàng"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__sale_price_subtotal
 msgid "Sales (Tax Excluded)"
-msgstr "Sales (Tax Excluded)"
-
-#. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.event_event_ticket_view_tree_from_event
-msgid "Sales End"
-msgstr "Hết mở bán"
+msgstr "Bán hàng (chưa bao gồm thuế)"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
@@ -615,22 +518,25 @@ msgstr "Đơn bán hàng"
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_line_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__sale_order_line_id
 msgid "Sales Order Line"
-msgstr "Chi tiết đơn hàng"
-
-#. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.event_event_ticket_view_tree_from_event
-msgid "Sales Start"
-msgstr "Sales Start"
+msgstr "Dòng đơn bán hàng"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_user_id
 msgid "Salesperson"
-msgstr "Nhân viên kinh doanh"
+msgstr "Chuyên viên sales"
 
 #. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
-msgid "Skip"
-msgstr "Bỏ qua"
+#: model:ir.actions.act_window,name:event_sale.event_configurator_action
+msgid "Select an Event"
+msgstr "Chọn một sự kiện"
+
+#. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__sale_status__sold
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__sold
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Sold"
+msgstr "Đã bán"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_source_id
@@ -638,24 +544,43 @@ msgid "Source"
 msgstr "Nguồn"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__state
+msgid "Status"
+msgstr "Trạng thái"
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/sale_order_line.py:0
+msgid ""
+"The sale order line with the product %(product_name)s needs an event and a "
+"ticket."
+msgstr "Dòng đơn bán hàng có sản phẩm %(product_name)s cần có sự kiện và vé."
+
+#. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Ticket"
 msgstr "Vé"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__event_ticket_id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ticket_id
+msgid "Ticket Type"
+msgstr "Loại phiếu hỗ trợ"
+
+#. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
 msgid "Ticket changed from"
-msgstr "Ticket changed from"
+msgstr "Vé thay đổi từ"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_ticket_price
 msgid "Ticket price"
-msgstr ""
+msgstr "Giá vé"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "Total sales for this event"
-msgstr "Total sales for this event"
+msgstr "Tổng doanh thu từ sự kiện này"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
@@ -668,9 +593,22 @@ msgid "Unconfirmed"
 msgstr "Chưa xác nhận"
 
 #. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_event_registration__state
+msgid ""
+"Unconfirmed: registrations in a pending state waiting for an action (specific case, notably with sale status)\n"
+"Registered: registrations considered taken by a client\n"
+"Attended: registrations for which the attendee attended the event\n"
+"Cancelled: registrations cancelled manually"
+msgstr ""
+"Chưa xác nhận: đăng ký đang ở trạng thái treo để đợi một tác vụ khác (trường hợp cụ thể, đặc biệt là trạng thái bán hàng)\n"
+"Đã đăng ký: đăng ký được thực hiện bởi khách hàng\n"
+"Đã tham dự: đăng ký mà người tham dự đã dự sự kiện\n"
+"Đã hủy: đăng ký bị hủy thủ công"
+
+#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_price_untaxed
 msgid "Untaxed Revenues"
-msgstr ""
+msgstr "Doanh thu trước thuế"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
@@ -680,14 +618,20 @@ msgstr "Sự kiện sắp diễn ra từ hôm nay"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Upcoming/Running"
-msgstr "Sắp diễn ra / Đang chạy"
+msgstr "Sắp diễn ra/đang diễn ra"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "We could not find a matching event ticket for this product. <br/>"
+msgstr ""
+"Chúng tôi không thể tìm thấy vé sự kiện phù hợp cho sản phẩm này. <br/>"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
-msgid "please give attendee details."
-msgstr ""
+msgid "please provide attendee details."
+msgstr "vui lòng cung cấp thông tin người tham dự."
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
 msgid "to"
-msgstr "tới"
+msgstr "đến"

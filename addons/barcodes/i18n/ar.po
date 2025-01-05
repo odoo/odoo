@@ -1,31 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* barcodes
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Mehjabin Farsana, 2022
-# Malaz Abuidris <msea@odoo.com>, 2023
-#
+# Wil Odoo, 2024
+# Malaz Abuidris <msea@odoo.com>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:32+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
-"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
-msgstr ""
+msgstr "'*' ليس نمط باركود صحيح. هل تقصد '.*'؟"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -42,7 +41,9 @@ msgstr ""
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
-msgid "A barcode nomenclature defines how the point of sale identify and interprets barcodes"
+msgid ""
+"A barcode nomenclature defines how the point of sale identify and interprets"
+" barcodes"
 msgstr "تحدد تسمية الباركود كيفية تعرف نقطة البيع على الباركود وكيفية تفسيره "
 
 #. module: barcodes
@@ -78,9 +79,15 @@ msgstr "أي"
 
 #. module: barcodes
 #. odoo-javascript
+#: code:addons/barcodes/static/src/components/manual_barcode.xml:0
+msgid "Apply"
+msgstr "تطبيق"
+
+#. module: barcodes
+#. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 msgid "Barcode"
-msgstr ""
+msgstr "باركود"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
@@ -120,13 +127,13 @@ msgstr "الباركود الممسوح ضوئيًا"
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
-msgid "Barcode: "
-msgstr "الباركود: "
+msgid "Barcode: %(barcode)s"
+msgstr "الباركود: %(barcode)s "
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_res_company
 msgid "Companies"
-msgstr "الشركات "
+msgstr "الشركات"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_uid
@@ -143,6 +150,9 @@ msgstr "أنشئ في"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__display_name
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__display_name
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__display_name
+#: model:ir.model.fields,field_description:barcodes.field_ir_http__display_name
+#: model:ir.model.fields,field_description:barcodes.field_res_company__display_name
 msgid "Display Name"
 msgstr "اسم العرض "
 
@@ -167,6 +177,12 @@ msgid "Encoding"
 msgstr "التشفير"
 
 #. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/components/manual_barcode.js:0
+msgid "Enter a barcode..."
+msgstr "قم بإدخال باركود... "
+
+#. module: barcodes
 #: model:ir.model,name:barcodes.model_ir_http
 msgid "HTTP Routing"
 msgstr "مسار HTTP"
@@ -174,6 +190,9 @@ msgstr "مسار HTTP"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__id
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__id
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__id
+#: model:ir.model.fields,field_description:barcodes.field_ir_http__id
+#: model:ir.model.fields,field_description:barcodes.field_res_company__id
 msgid "ID"
 msgstr "المُعرف"
 
@@ -209,12 +228,18 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
+"يمكن أن تحدد الانماط أيضًا كيفية تشفير القيم الرقمية مثل الأوزان أو الأسعار\n"
+"                                داخل الباركود. يُشار إليها بـ <code>{NNN}</code> حيث يمثل حرف N\n"
+"                                مكان تشفير خانات الرقم. كما تدعم أنماط الباركود الأرقام الكسرية أيضًا\n"
+"                                ويتم التعبير عن الرقم العشري هكذا <code>{NNNDD}</code>. في هذه الحالات،\n"
+"                                <i>يجب</i> أن تظهر هذه الخانات في حقل الباركود كأصفار في السجلات\n"
+"                                المرتبطة. "
 
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.js:0
 msgid "Please, Scan again!"
-msgstr ""
+msgstr "يرجى المسح مجدداً! "
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
@@ -229,7 +254,7 @@ msgstr "القواعد"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__sequence
 msgid "Sequence"
-msgstr "التسلسل "
+msgstr "تسلسل "
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -240,12 +265,19 @@ msgstr "الجداول "
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 msgid "Tap to scan"
-msgstr ""
+msgstr "انقر للمسح "
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
 msgid "The barcode matching pattern"
 msgstr "نمط مطابقة الباركود"
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+msgid ""
+"The barcode pattern %(pattern)s does not lead to a valid regular expression."
+msgstr "لا يؤدي نمط الباركود %(pattern)s إلى تعبير نمطي صالح. "
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
@@ -260,25 +292,37 @@ msgstr "سوف يُستخدَم النمط المطابق كلقب لهذا ال
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
-msgid "There is a syntax error in the barcode pattern %(pattern)s: a rule can only contain one pair of braces."
-msgstr "يوجد خطأ في تركيبة نمط الباركود %(pattern)s: يمكن أن تحتوي القاعدة على زوج أقواس واحد فقط. "
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
+"contain one pair of braces."
+msgstr ""
+"يوجد خطأ في تركيبة نمط الباركود %(pattern)s: يمكن أن تحتوي القاعدة على زوج "
+"أقواس واحد فقط. "
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
-msgid "There is a syntax error in the barcode pattern %(pattern)s: braces can only contain N's followed by D's."
-msgstr "يوجد خطأ في تركيبة نمط الباركود %(pattern)s: يمكن أن تحتوي الأقواس فقط على N متبوعة بـ D."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: braces can only "
+"contain N's followed by D's."
+msgstr ""
+"يوجد خطأ في تركيبة نمط الباركود %(pattern)s: يمكن أن تحتوي الأقواس فقط على N"
+" متبوعة بـ D."
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
-msgid "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: empty braces."
 msgstr "يوجد خطأ في تركيبة نمط الباركود %(pattern)s: أقواس فارغة. "
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
-msgid "This rule will apply only if the barcode is encoded with the specified encoding"
-msgstr "ستُطبق هذه القاعدة فقط إذا كان الباركود مُشفرًا بطريقة التشفير المحددة"
+msgid ""
+"This rule will apply only if the barcode is encoded with the specified "
+"encoding"
+msgstr ""
+"ستُطبق هذه القاعدة فقط إذا كان الباركود مُشفرًا بطريقة التشفير المحددة"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
@@ -287,8 +331,14 @@ msgstr "النوع"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
-msgid "UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding."
-msgstr "يمكن تحويل أكواد UPC لأكواد EAN بوضع صفر كبادئة لهم. يحدد هذا الاختيار إن كان ينبغي تحويل باركود UPC أو EAN تلقائيًا للنوع الآخر عند محاولة تطبيق قاعدة بطريقة التشفير الأخرى."
+msgid ""
+"UPC Codes can be converted to EAN by prefixing them with a zero. This "
+"setting determines if a UPC/EAN barcode should be automatically converted in"
+" one way or another when trying to match a rule with the other encoding."
+msgstr ""
+"يمكن تحويل أكواد UPC لأكواد EAN بوضع صفر كبادئة لهم. يحدد هذا الاختيار إن "
+"كان ينبغي تحويل باركود UPC أو EAN تلقائيًا للنوع الآخر عند محاولة تطبيق "
+"قاعدة بطريقة التشفير الأخرى."
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
@@ -318,8 +368,10 @@ msgstr "أمر باركود غير معروف "
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
-msgid "Used to order rules such that rules with a smaller sequence match first"
-msgstr "يستخدم لترتيب القواعد بحيث تتم مطابقة القواعد ذات التسلسل الأصغر أولًا"
+msgid ""
+"Used to order rules such that rules with a smaller sequence match first"
+msgstr ""
+"يستخدم لترتيب القواعد بحيث تتم مطابقة القواعد ذات التسلسل الأصغر أولًا"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned

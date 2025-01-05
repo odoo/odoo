@@ -1,64 +1,75 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* rating
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# Daye Jeong, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
-"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_invalid_partner
+msgid "\" or someone from the same company can give it a rating."
+msgstr "\" 또는 같은 회사의 누군가가 평점을 매길 수 있습니다."
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_count
 msgid "# Ratings"
-msgstr ""
+msgstr "# 평점"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
+msgid "<i class=\"fa fa-arrow-left me-1\"/> Back to the Homepage"
+msgstr "<i class=\"fa fa-arrow-left me-1\"/> 홈페이지로 돌아가기"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
 msgid "<i class=\"fa fa-clock-o me-2\" aria-label=\"Create date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o me-2\" aria-label=\"Create date\"/>"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
 msgid "<i class=\"fa fa-folder me-2\" aria-label=\"Open folder\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-folder me-2\" aria-label=\"Open folder\"/>"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
 msgid "A star"
-msgstr ""
+msgstr "별"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "조치 필요"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "첨부 파일 수"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_avg
 msgid "Average Rating"
-msgstr ""
+msgstr "평균 평점"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_avg_percentage
 msgid "Average Rating (%)"
-msgstr ""
+msgstr "평균 점수 (%)"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__feedback
@@ -79,13 +90,8 @@ msgstr "고객"
 #. module: rating
 #. odoo-python
 #: code:addons/rating/controllers/main.py:0
-msgid "Customer rated %r."
-msgstr ""
-
-#. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-msgid "Date"
-msgstr "일자"
+msgid "Customer rated “%s”."
+msgstr "고객 평가 “%s”."
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__display_name
@@ -95,11 +101,15 @@ msgstr "표시명"
 #. module: rating
 #. odoo-python
 #: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__discuss_channel__rating_avg_text__ko
+#: model:ir.model.fields.selection,name:rating.selection__product_template__rating_avg_text__ko
+#: model:ir.model.fields.selection,name:rating.selection__project_task__rating_avg_text__ko
 #: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__ko
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__ko
+#: model:ir.model.fields.selection,name:rating.selection__slide_channel__rating_avg_text__ko
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Dissatisfied"
-msgstr ""
+msgstr "불만족"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_id
@@ -120,7 +130,7 @@ msgstr "이메일 스레드"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Feel free to share feedback on your experience:"
-msgstr ""
+msgstr "경험한 내용에 대해 피드백을 자유롭게 공유해주세요."
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__consumed
@@ -130,17 +140,12 @@ msgstr "채워진 평가"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "팔로워"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
-
-#. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
-msgid "Go back to the Homepage"
-msgstr ""
+msgstr "팔로워 (협력사)"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -155,12 +160,18 @@ msgstr "별 반개"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "메시지가 있습니다"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__is_internal
-msgid "Hide to public / portal users, independently from subtype configuration."
-msgstr ""
+msgid ""
+"Hide to public / portal users, independently from subtype configuration."
+msgstr "일반 및 포털 사용자에게 숨기며, 하위 환경 설정과는 무관합니다."
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_invalid_partner
+msgid "Home"
+msgstr "홈"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__id
@@ -170,12 +181,12 @@ msgstr "ID"
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_mixin__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "만약 선택하였으면, 신규 메시지에 주의를 기울여야 합니다."
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_mixin__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합니다."
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rating_image
@@ -191,27 +202,32 @@ msgstr "이미지 URL"
 #. odoo-python
 #: code:addons/rating/controllers/main.py:0
 msgid "Incorrect rating: should be 1, 3 or 5 (received %d)"
-msgstr ""
+msgstr "잘못된 평점: 1, 3 또는 5 이어야 합니다 (%d 입력)"
 
 #. module: rating
 #. odoo-python
 #: code:addons/rating/models/mail_thread.py:0
 msgid "Invalid token or rating."
-msgstr ""
+msgstr "잘못된 토큰 또는 평점입니다."
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "팔로워임"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-msgid "Last 30 days"
+msgid "Last 30 Days"
 msgstr "최근 30일"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-msgid "Last 7 days"
+msgid "Last 365 Days"
+msgstr "최근 365일"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Last 7 Days"
 msgstr "최근 7일"
 
 #. module: rating
@@ -233,12 +249,12 @@ msgstr "메시지"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "메시지 전송 오류"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "메시지"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -251,8 +267,12 @@ msgid "Name"
 msgstr "이름"
 
 #. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__discuss_channel__rating_avg_text__none
+#: model:ir.model.fields.selection,name:rating.selection__product_template__rating_avg_text__none
+#: model:ir.model.fields.selection,name:rating.selection__project_task__rating_avg_text__none
 #: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__none
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__none
+#: model:ir.model.fields.selection,name:rating.selection__slide_channel__rating_avg_text__none
 msgid "No Rating yet"
 msgstr "아직 평가 없음"
 
@@ -264,31 +284,40 @@ msgstr "아직 평가 없음"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "작업 수"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "오류 횟수"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_mixin__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
+msgid "Number of messages requiring action"
+msgstr "조치가 필요한 메시지 수"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_mixin__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "전송 오류가 발생한 메시지 수입니다."
 
 #. module: rating
 #. odoo-python
 #: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__discuss_channel__rating_avg_text__ok
+#: model:ir.model.fields.selection,name:rating.selection__product_template__rating_avg_text__ok
+#: model:ir.model.fields.selection,name:rating.selection__project_task__rating_avg_text__ok
 #: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__ok
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__ok
+#: model:ir.model.fields.selection,name:rating.selection__slide_channel__rating_avg_text__ok
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Okay"
 msgstr "괜찮아요"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_invalid_partner
+msgid "Only the customer of \""
+msgstr "\"의 고객만"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_id
@@ -308,12 +337,12 @@ msgstr "상위 문서명"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
 msgid "Parent Holder"
-msgstr ""
+msgstr "상위 보관"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_ref
 msgid "Parent Ref"
-msgstr ""
+msgstr "상위 참조"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model_id
@@ -326,19 +355,15 @@ msgid "Percentage of happy ratings"
 msgstr "좋음 평가 비율"
 
 #. module: rating
-#. odoo-python
-#: code:addons/rating/models/mail_thread.py:0
-msgid "Posting a rating should be done using message post API."
-msgstr ""
-
-#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_id
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Rated Operator"
-msgstr ""
+msgstr "평점 연산자"
 
 #. module: rating
 #: model:ir.model,name:rating.model_rating_rating
+#: model:ir.model.fields,field_description:rating.field_mail_mail__rating_id
+#: model:ir.model.fields,field_description:rating.field_mail_message__rating_id
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rating_text
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form_text
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -346,9 +371,15 @@ msgid "Rating"
 msgstr "평가"
 
 #. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
+msgid "Rating (/5)"
+msgstr "평가 (/5)"
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg_text
 msgid "Rating Avg Text"
-msgstr ""
+msgstr "평균 평가 텍스트"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_feedback
@@ -384,7 +415,7 @@ msgstr "만족도 평가"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_text
 msgid "Rating Text"
-msgstr ""
+msgstr "평가 텍스트"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_value
@@ -394,12 +425,6 @@ msgid "Rating Value"
 msgstr "평가 값"
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
-msgid "Rating Value (/5)"
-msgstr "평가 값(/5)"
-
-#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_count
 msgid "Rating count"
 msgstr "평가 수 "
@@ -407,13 +432,13 @@ msgstr "평가 수 "
 #. module: rating
 #: model:ir.model.constraint,message:rating.constraint_rating_rating_rating_range
 msgid "Rating should be between 0 and 5"
-msgstr ""
+msgstr "평점은 0에서 5 사이에 있어야 합니다."
 
 #. module: rating
 #. odoo-javascript
-#: code:addons/rating/static/src/notification_item_patch.xml:0
+#: code:addons/rating/static/src/core/web/notification_item_patch.xml:0
 msgid "Rating:"
-msgstr ""
+msgstr "평점:"
 
 #. module: rating
 #: model:ir.actions.act_window,name:rating.rating_rating_action
@@ -423,12 +448,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:rating.field_fleet_vehicle__rating_ids
 #: model:ir.model.fields,field_description:rating.field_fleet_vehicle_log_contract__rating_ids
 #: model:ir.model.fields,field_description:rating.field_fleet_vehicle_log_services__rating_ids
+#: model:ir.model.fields,field_description:rating.field_fleet_vehicle_model__rating_ids
 #: model:ir.model.fields,field_description:rating.field_gamification_badge__rating_ids
 #: model:ir.model.fields,field_description:rating.field_gamification_challenge__rating_ids
-#: model:ir.model.fields,field_description:rating.field_hr_department__rating_ids
-#: model:ir.model.fields,field_description:rating.field_hr_employee__rating_ids
-#: model:ir.model.fields,field_description:rating.field_hr_job__rating_ids
-#: model:ir.model.fields,field_description:rating.field_hr_plan_employee_activity__rating_ids
+#: model:ir.model.fields,field_description:rating.field_iap_account__rating_ids
 #: model:ir.model.fields,field_description:rating.field_lunch_supplier__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_blacklist__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_thread__rating_ids
@@ -439,8 +462,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:rating.field_maintenance_equipment__rating_ids
 #: model:ir.model.fields,field_description:rating.field_maintenance_equipment_category__rating_ids
 #: model:ir.model.fields,field_description:rating.field_maintenance_request__rating_ids
-#: model:ir.model.fields,field_description:rating.field_note_note__rating_ids
 #: model:ir.model.fields,field_description:rating.field_phone_blacklist__rating_ids
+#: model:ir.model.fields,field_description:rating.field_product_category__rating_ids
+#: model:ir.model.fields,field_description:rating.field_product_pricelist__rating_ids
 #: model:ir.model.fields,field_description:rating.field_product_product__rating_ids
 #: model:ir.model.fields,field_description:rating.field_product_template__rating_ids
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_ids
@@ -476,7 +500,7 @@ msgstr "리소스"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__resource_ref
 msgid "Resource Ref"
-msgstr ""
+msgstr "리소스 참조"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_name
@@ -486,8 +510,12 @@ msgstr "자원명"
 #. module: rating
 #. odoo-python
 #: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__discuss_channel__rating_avg_text__top
+#: model:ir.model.fields.selection,name:rating.selection__product_template__rating_avg_text__top
+#: model:ir.model.fields.selection,name:rating.selection__project_task__rating_avg_text__top
 #: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__top
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__top
+#: model:ir.model.fields.selection,name:rating.selection__slide_channel__rating_avg_text__top
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Satisfied"
 msgstr "만족"
@@ -504,18 +532,19 @@ msgstr "의견 보내기"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__create_date
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Submitted on"
 msgstr "제출일"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Thank you for rating our services!"
-msgstr ""
+msgstr "저희 서비스를 평가해주셔서 감사합니다!"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
-msgid "Thank you, we appreciate your feedback!"
-msgstr ""
+msgid "Thank you for your feedback!"
+msgstr "의견을 보내 주셔서 감사합니다"
 
 #. module: rating
 #: model_terms:ir.actions.act_window,help:rating.rating_rating_action
@@ -523,20 +552,20 @@ msgid "There is no rating for this object at the moment."
 msgstr "현재 이 대상에 대한 평가가 없습니다."
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-msgid "Today"
-msgstr "오늘"
-
-#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__is_internal
 msgid "Visible Internally Only"
-msgstr ""
+msgstr "내부에서만 확인 가능"
 
 #. module: rating
 #. odoo-python
 #: code:addons/rating/models/mail_thread.py:0
 msgid "Wrong rating value. A rate should be between 0 and 5 (received %d)."
-msgstr ""
+msgstr "잘못된 평점 값입니다. 평점은 0에서 5 사이에 있어야 합니다 (%d 입력)."
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_invalid_partner
+msgid "You cannot rate this"
+msgstr "평가할 수 없습니다."
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban

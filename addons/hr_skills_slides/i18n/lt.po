@@ -1,36 +1,38 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_skills_slides
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Linas Versada <linaskrisiukenas@gmail.com>, 2022
-# Jonas Zinkevicius <jozi@odoo.com>, 2022
-# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 17.1alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023\n"
+"POT-Creation-Date: 2024-01-08 06:51+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
-"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: lt\n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: hr_skills_slides
 #. odoo-python
 #: code:addons/hr_skills_slides/models/hr_employee.py:0
 msgid "%(completed)s / %(total)s"
-msgstr ""
+msgstr "%(completed)s / %(total)s"
 
 #. module: hr_skills_slides
 #: model:ir.model,name:hr_skills_slides.model_slide_channel_partner
 msgid "Channel / Partners (Members)"
+msgstr "Kanalas / Partneriai (nariai)"
+
+#. module: hr_skills_slides
+#: model:hr.resume.line.type,name:hr_skills_slides.resume_type_training
+msgid "Completed Internal Training"
 msgstr ""
 
 #. module: hr_skills_slides
@@ -43,7 +45,7 @@ msgstr "Kursas"
 #. module: hr_skills_slides
 #: model:ir.model.fields,field_description:hr_skills_slides.field_hr_resume_line__course_url
 msgid "Course Url"
-msgstr ""
+msgstr "Kurso Url"
 
 #. module: hr_skills_slides
 #: model_terms:ir.ui.view,arch_db:hr_skills_slides.hr_employee_view_form
@@ -53,7 +55,7 @@ msgstr "Kursai"
 #. module: hr_skills_slides
 #: model:ir.model.fields,field_description:hr_skills_slides.field_hr_employee__courses_completion_text
 msgid "Courses Completion Text"
-msgstr ""
+msgstr "Kursų baigimo tekstas"
 
 #. module: hr_skills_slides
 #: model:ir.model.fields,field_description:hr_skills_slides.field_hr_resume_line__display_type
@@ -68,30 +70,30 @@ msgstr "Darbuotojas"
 #. module: hr_skills_slides
 #: model:ir.model.fields,field_description:hr_skills_slides.field_hr_employee__has_subscribed_courses
 msgid "Has Subscribed Courses"
-msgstr ""
+msgstr "Užsiprenumeravo kursus"
 
 #. module: hr_skills_slides
 #: model:ir.model,name:hr_skills_slides.model_hr_resume_line
 msgid "Resume line of an employee"
-msgstr ""
+msgstr "Darbuotojo gyvenimo aprašymo eilutė"
 
 #. module: hr_skills_slides
 #. odoo-python
 #: code:addons/hr_skills_slides/models/slide_channel.py:0
 msgid "The employee has completed the course %s"
-msgstr ""
+msgstr "Darbuotojas baigė kursus %s"
 
 #. module: hr_skills_slides
 #. odoo-python
 #: code:addons/hr_skills_slides/models/slide_channel.py:0
-msgid "The employee left the course <a href=\"%(link)s\">%(course)s</a>"
-msgstr ""
+msgid "The employee left the course %s"
+msgstr "Darbuotojas paliko kursą %s"
 
 #. module: hr_skills_slides
 #. odoo-python
 #: code:addons/hr_skills_slides/models/slide_channel.py:0
 msgid "The employee subscribed to the course %s"
-msgstr ""
+msgstr "Darbuotoja užsisakė kursus %s"
 
 #. module: hr_skills_slides
 #: model:ir.model.fields,field_description:hr_skills_slides.field_hr_employee__subscribed_courses

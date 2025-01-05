@@ -1,0 +1,108 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_product_matrix
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_product_product__product_add_mode
+#: model:ir.model.fields,field_description:sale_product_matrix.field_product_template__product_add_mode
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order_line__product_add_mode
+msgid "Add product mode"
+msgstr "Lägg till produktläge"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,help:sale_product_matrix.field_product_product__product_add_mode
+#: model:ir.model.fields,help:sale_product_matrix.field_product_template__product_add_mode
+#: model:ir.model.fields,help:sale_product_matrix.field_sale_order_line__product_add_mode
+msgid ""
+"Configurator: choose attribute values to add the matching product variant to the order.\n"
+"Grid: add several variants at once from the grid of attribute values"
+msgstr ""
+"Konfigurator: välj attributvärden för att lägga till den matchande produktvarianten i ordern.\n"
+"Rutnät: lägg till flera varianter samtidigt från rutnätet med attributvärden"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_product_tmpl_id
+msgid "Grid Product Tmpl"
+msgstr "Produktmall för grid"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_update
+msgid "Grid Update"
+msgstr "Uppdatera grid"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid
+msgid "Matrix local storage"
+msgstr "Lokal lagring av matris"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__matrix
+msgid "Order Grid Entry"
+msgstr "Orderingång i grid"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__report_grids
+msgid "Print Variant Grids"
+msgstr "Skriv ut variantgrider"
+
+#. module: sale_product_matrix
+#: model:ir.model,name:sale_product_matrix.model_product_template
+msgid "Product"
+msgstr "Produkt"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__configurator
+msgid "Product Configurator"
+msgstr "Produktkonfigurator"
+
+#. module: sale_product_matrix
+#: model:ir.model,name:sale_product_matrix.model_sale_order
+msgid "Sales Order"
+msgstr "Försäljningsorder"
+
+#. module: sale_product_matrix
+#: model:ir.model,name:sale_product_matrix.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Försäljningsorderrad"
+
+#. module: sale_product_matrix
+#: model_terms:ir.ui.view,arch_db:sale_product_matrix.product_template_grid_view_form
+msgid "Sales Variant Selection"
+msgstr "Urval av försäljningsvarianter"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid
+msgid ""
+"Technical local storage of grid. \n"
+"If grid_update, will be loaded on the SO.\n"
+"If not, represents the matrix to open."
+msgstr ""
+"Teknisk lokal lagring av grid.\n"
+"Om grid_update, kommer att laddas på SO.\n"
+"Om inte, representerar det matrisen att öppna."
+
+#. module: sale_product_matrix
+#. odoo-python
+#: code:addons/sale_product_matrix/models/sale_order.py:0
+msgid ""
+"You cannot change the quantity of a product present in multiple sale lines."
+msgstr ""
+"Du kan inte ändra kvantiteten på en produkt som finns i flera "
+"försäljningsrader."

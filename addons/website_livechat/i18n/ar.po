@@ -1,25 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_livechat
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
-"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website_visitor__session_count
@@ -30,9 +28,11 @@ msgstr "عدد الجلسات "
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
 msgid ""
-"%s started a conversation with %s.\n"
-"                        The chat request has been canceled."
+"%(visitor)s started a conversation with %(operator)s.\n"
+"The chat request has been cancelled"
 msgstr ""
+"بدأ %(visitor)sمحادثة مع %(operator)s.\n"
+"تم إلغاء طلب الدردشة "
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -205,8 +205,8 @@ msgstr "اسم المشغل "
 #. odoo-python
 #: code:addons/website_livechat/models/website_visitor.py:0
 msgid ""
-"Recipients are not available. Please refresh the page to get latest visitors "
-"status."
+"Recipients are not available. Please refresh the page to get latest visitors"
+" status."
 msgstr "المستلمون غير متاحون. يرجى تحديث الصفحة لرؤية حالات آخر الزوار. "
 
 #. module: website_livechat
@@ -287,24 +287,34 @@ msgstr "زائر "
 
 #. module: website_livechat
 #. odoo-python
-#: code:addons/website_livechat/controllers/main.py:0
-#: code:addons/website_livechat/models/website_visitor.py:0
-msgid "Visitor #%d"
-msgstr ""
-
-#. module: website_livechat
-#. odoo-python
-#. odoo-javascript
-#: code:addons/website_livechat/controllers/main.py:0
-#: code:addons/website_livechat/static/src/web/persona_model_patch.js:0
-msgid "Visitor #%s"
-msgstr ""
+#: code:addons/website_livechat/models/discuss_channel.py:0
+msgid "Visitor #%(id)d left the conversation."
+msgstr "غادر الزائر رقم %(id)d المحادثة "
 
 #. module: website_livechat
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
-msgid "Visitor %s left the conversation."
-msgstr ""
+msgid "Visitor #%(id)d."
+msgstr "الزائر رقم %(id)d. "
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/controllers/main.py:0
+#: code:addons/website_livechat/models/website_visitor.py:0
+msgid "Visitor #%d"
+msgstr "زائر رقم %d "
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/controllers/main.py:0
+msgid "Visitor #%s"
+msgstr "الزائر رقم %s "
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/models/discuss_channel.py:0
+msgid "Visitor left the conversation."
+msgstr "غادر الزائر المحادثة. "
 
 #. module: website_livechat
 #: model:ir.actions.act_window,name:website_livechat.website_visitor_livechat_session_action

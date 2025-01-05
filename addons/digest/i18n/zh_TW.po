@@ -1,33 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* digest
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
-"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: digest
-#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
-msgid "<i class=\"oi oi-arrow-right\"/> Check our Documentation"
-msgstr ""
-
-#. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
-msgid "<span class=\"button\" id=\"button_open_report\">Open Report</span>"
-msgstr "<span class=\"button\" id=\"button_open_report\">打開報表</span>"
+msgid "<span class=\"button\" id=\"button_open_report\">➔ Open Report</span>"
+msgstr "<span class=\"button\" id=\"button_open_report\">➔ 開啟報告</span>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
@@ -36,8 +31,8 @@ msgstr "<span class=\"odoo_link_text\">Odoo</span>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
-msgid "<span style=\"color: #8f8f8f;\">Unsubscribe</span>"
-msgstr "<span style=\"color: #8f8f8f;\">取消訂閱</span>"
+msgid "<span style=\"color: #878d97;\">Unsubscribe</span>"
+msgstr "<span style=\"color: #878d97;\">取消訂閱</span>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -53,12 +48,12 @@ msgstr "已啟用"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Add new users as recipient of a periodic email with key metrics"
-msgstr "添加新使用者作為具有關鍵指標的定期電子信件的接收者"
+msgstr "將新的使用者加入為定期收取關鍵統計指標電郵的收件人"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__group_id
 msgid "Authorized Group"
-msgstr "經授權的組"
+msgstr "獲授權群組"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__available_fields
@@ -66,10 +61,20 @@ msgid "Available Fields"
 msgstr "可用欄位"
 
 #. module: digest
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
+msgid "Check our Documentation"
+msgstr "參看使用說明"
+
+#. module: digest
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
 msgid "Choose the metrics you care about"
-msgstr "選擇您所關心的指標"
+msgstr "選擇你最關注的統計指標，聚焦顯示"
+
+#. module: digest
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_6
+msgid "Click and hold on a Menu Item to reorder your Apps to your liking."
+msgstr "按下並按住不放選單項目，便可根據喜好，重新排序應用程式清單。"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__company_id
@@ -101,7 +106,7 @@ msgstr "已連接使用者"
 #: model:ir.model.fields,field_description:digest.field_digest_digest__create_uid
 #: model:ir.model.fields,field_description:digest.field_digest_tip__create_uid
 msgid "Created by"
-msgstr "創立者"
+msgstr "建立人員"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__create_date
@@ -112,7 +117,7 @@ msgstr "建立於"
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__currency_id
 msgid "Currency"
-msgstr "幣別"
+msgstr "貨幣"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -169,7 +174,7 @@ msgstr "摘要提示"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Digest Title"
-msgstr ""
+msgstr "摘錄標題"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__display_name
@@ -180,12 +185,17 @@ msgstr "顯示名稱"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Email Address"
-msgstr "Email地址"
+msgstr "電子郵件地址"
+
+#. module: digest
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_5
+msgid "Feeling eye strain? Give your eyes a break by switching to Dark Mode."
+msgstr "感覺眼睛疲勞？試試切換至深色模式，讓眼睛放鬆一下。"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "General"
-msgstr "通用"
+msgstr "一般"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_search
@@ -194,14 +204,16 @@ msgstr "分組"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_1
-msgid "Have a question about a document? Click on the responsible user's picture to start a conversation. If his avatar has a green dot, he is online."
+msgid ""
+"Have a question about a document? Click on the responsible user's picture to"
+" start a conversation. If his avatar has a green dot, he is online."
 msgstr "對文件有疑問? 點擊負責帳號的圖片開始進行對話. 如果他的頭像有一個綠點，他就在線."
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__id
 #: model:ir.model.fields,field_description:digest.field_digest_tip__id
 msgid "ID"
-msgstr "ID"
+msgstr "識別號"
 
 #. module: digest
 #. odoo-python
@@ -278,7 +290,7 @@ msgstr "最後更新於"
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_mail_message_total
 msgid "Messages Sent"
-msgstr ""
+msgstr "已傳送訊息"
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__monthly
@@ -293,24 +305,26 @@ msgstr "名稱"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
-msgid "New users are automatically added as recipient of the following digest email."
+msgid ""
+"New users are automatically added as recipient of the following digest "
+"email."
 msgstr "新使用者將自動添加為以下摘要信件的收件人。"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__next_run_date
 msgid "Next Mailing Date"
-msgstr ""
+msgstr "下次郵寄日期"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_section_mobile
 msgid "Odoo Mobile"
-msgstr "Odoo 行動端"
+msgstr "Odoo 流動應用程式"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__periodicity
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_search
 msgid "Periodicity"
-msgstr "週期"
+msgstr "周期"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
@@ -321,29 +335,31 @@ msgstr "官方技術支援"
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
 msgid "Prefer a broader overview?"
-msgstr ""
+msgstr "想要更廣泛的概覽？"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_0
-msgid "Press ALT in any screen to highlight shortcuts for every button in the screen. It is useful to process multiple documents in batch."
+msgid ""
+"Press ALT in any screen to highlight shortcuts for every button in the "
+"screen. It is useful to process multiple documents in batch."
 msgstr "在任何螢幕中按 ALT 以突出顯示螢幕中每個按鈕的快速鍵方式。 批量處理多個文件很有用."
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__quarterly
 msgid "Quarterly"
-msgstr "每季度"
+msgstr "每季"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__user_ids
 #: model:ir.model.fields,field_description:digest.field_digest_tip__user_ids
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Recipients"
-msgstr "收件人"
+msgstr "接收者"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_section_mobile
 msgid "Run your business from anywhere with <b>Odoo Mobile</b>."
-msgstr "使用 <b>Odoo 行動端</b> 隨時隨地開展業務."
+msgstr "利用 <b>Odoo 流動應用程式</b>，隨時隨地處理公司事務。"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -358,12 +374,7 @@ msgstr "發送者"
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__sequence
 msgid "Sequence"
-msgstr "序號"
-
-#. module: digest
-#: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
-msgid "Statistics"
-msgstr "統計資訊"
+msgstr "序列號"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__state
@@ -397,9 +408,21 @@ msgid "Tip: How to ping users in internal notes?"
 msgstr "提示：如何在內部筆記呼叫使用者？"
 
 #. module: digest
+#: model:digest.tip,name:digest.digest_tip_digest_5
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_5
+msgid "Tip: Join the Dark Side"
+msgstr "提示：進入黑暗世界"
+
+#. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_4
 msgid "Tip: Knowledge is power"
 msgstr "提示：知識就是力量"
+
+#. module: digest
+#: model:digest.tip,name:digest.digest_tip_digest_6
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_6
+msgid "Tip: Personalize your Home Menu"
+msgstr "提示：自訂你的主選單"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_0
@@ -434,17 +457,19 @@ msgstr "提示： 運用捷徑加速您的工作流程"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_tree
 msgid "Title"
-msgstr "標題"
+msgstr "稱謂"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_3
-msgid "Type \"@\" to notify someone in a message, or \"#\" to link to a channel. Try to notify @OdooBot to test the feature."
+msgid ""
+"Type \"@\" to notify someone in a message, or \"#\" to link to a channel. "
+"Try to notify @OdooBot to test the feature."
 msgstr "輸入“@”來在消息中通知某人，或輸入“#”來連結到頻道. 嘗試通知@OdooBot測試該功能."
 
 #. module: digest
 #: model:ir.model.fields,help:digest.field_digest_tip__sequence
 msgid "Used to display digest tip in email template base on order"
-msgstr "用於根據訂單在電子信件範本中顯示摘要提示"
+msgstr "用於在電郵範本中，根據訂單顯示摘要提示"
 
 #. module: digest
 #: model:ir.model,name:digest.model_res_users
@@ -459,19 +484,21 @@ msgstr "已經收到此提示的使用者"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Want to add your own KPIs?<br/>"
-msgstr ""
+msgstr "想加入您自己的KPI嗎？<br/>"
 
 #. module: digest
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
 msgid "Want to customize this email?"
-msgstr "想要客製化這封電子郵件？"
+msgstr "想自訂這封電郵的內容？"
 
 #. module: digest
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
-msgid "We have noticed you did not connect these last few days. We have automatically switched your preference to %(new_perioridicy_str)s Digests."
-msgstr ""
+msgid ""
+"We have noticed you did not connect these last few days. We have "
+"automatically switched your preference to %(new_perioridicy_str)s Digests."
+msgstr "我們注意到您最近幾天沒有連接。我們已自動將您的偏好切換到 %(new_perioridicy_str)s 摘要。"
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__weekly
@@ -480,7 +507,10 @@ msgstr "每週"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_2
-msgid "When editing a number, you can use formulae by typing the `=` character. This is useful when computing a margin or a discount on a quotation, sale order or invoice."
+msgid ""
+"When editing a number, you can use formulae by typing the `=` character. "
+"This is useful when computing a margin or a discount on a quotation, sale "
+"order or invoice."
 msgstr "編輯數字時，您可以通過鍵入 `=` 字元來使用公式. 這在計算報價單、銷售訂單或應收付憑單時的保證金或折扣時很有用."
 
 #. module: digest
@@ -495,12 +525,12 @@ msgstr ""
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
 msgid "You have been successfully unsubscribed from:<br/>"
-msgstr ""
+msgstr "您已成功退訂:<br/>"
 
 #. module: digest
 #: model:digest.digest,name:digest.digest_digest_default
 msgid "Your Odoo Periodic Digest"
-msgstr "您的 Odoo 定期摘要"
+msgstr "你的 Odoo 定期摘要"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -523,4 +553,4 @@ msgstr "quarterly"
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
 msgid "weekly"
-msgstr ""
+msgstr "每週"

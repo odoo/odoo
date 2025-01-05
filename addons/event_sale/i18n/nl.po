@@ -1,25 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* event_sale
-#
+# 
 # Translators:
-# Jolien De Paepe, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
-# Martin Trigaux, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/sale_order.py:0
+msgid "%(event_name)s - Tickets"
+msgstr "%(event_name)s - Tickets"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
@@ -31,9 +35,14 @@ msgstr ""
 "            <span>Handmatige acties zijn mogelijk nodig.</span>"
 
 #. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "<i class=\"fa fa-arrow-right\"/> Configure Events &amp; Tickets"
+msgstr "<i class=\"fa fa-arrow-right\"/> Evenementen & tickets beheren"
+
+#. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
 msgid "<span class=\"o_stat_text\">Sale Order</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Verkooporder</span>"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
@@ -41,32 +50,14 @@ msgid "<span class=\"o_stat_text\">Sales</span>"
 msgstr "<span class=\"o_stat_text\">Verkoop</span>"
 
 #. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
-msgid "<span>Not enough seats available. All registrations were created as \"Unconfirmed\" and can be updated later on.</span>"
-msgstr "<span>Niet genoeg stoelen beschikbaar. Alle registraties zijn gemaakt als \"Onbevestigd\" en kunnen later worden bijgewerkt.</span>"
-
-#. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
 msgid "<span>Registration modification for attendee:</span>"
 msgstr "<span>Registratiewijziging voor deelnemer:</span>"
 
 #. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_event_event_ticket__description
-#: model:ir.model.fields,help:event_sale.field_event_type_ticket__description
-msgid "A description of the ticket that you want to communicate to your customers."
-msgstr "Een beschrijving van het ticket dat je aan je klanten wilt communiceren."
-
-#. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_product_product__detailed_type
-#: model:ir.model.fields,help:event_sale.field_product_template__detailed_type
-msgid ""
-"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
-"A consumable product is a product for which stock is not managed.\n"
-"A service is a non-material product you provide."
-msgstr ""
-"Een voorraadproduct is een product waarvan je voorraad beheerd. De voorraad app moet geïnstalleerd worden.\n"
-"Een verbruiksproduct, is een product waarvoor geen voorraad wordt bijgehouden.\n"
-"Een dienst is een immateriëel product dat je verkoopt."
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "Add"
+msgstr "Toevoegen"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__sale_order_lines_ids
@@ -76,12 +67,12 @@ msgstr "Alle orderregels die verwijzen naar dit evenement"
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__done
 msgid "Attended"
-msgstr "Bezocht"
+msgstr "Aanwezig"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_sale_order__attendee_count
 msgid "Attendee Count"
-msgstr "Aanwezigheid teller"
+msgstr "Aantal aanwezigen"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_name
@@ -109,11 +100,6 @@ msgid "Campaign"
 msgstr "Campagne"
 
 #. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
-msgid "Cancel"
-msgstr "Annuleren"
-
-#. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__cancel
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__cancel
 msgid "Cancelled"
@@ -121,33 +107,50 @@ msgstr "Geannuleerd"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_id
-msgid "Choose an event and it will automatically create a registration for this event."
-msgstr "Kies een evenement en het zal automatisch een inschrijving voor dit evenement aanmaken."
+msgid ""
+"Choose an event and it will automatically create a registration for this "
+"event."
+msgstr ""
+"Kies een evenement en het zal automatisch een inschrijving voor dit "
+"evenement aanmaken."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
-msgid "Choose an event ticket and it will automatically create a registration for this event ticket."
-msgstr "Kies een evenement ticket en het zal automatisch een inschrijving aanmaken voor dit evenement ticket."
+msgid ""
+"Choose an event ticket and it will automatically create a registration for "
+"this event ticket."
+msgstr ""
+"Kies een evenement ticket en het zal automatisch een inschrijving aanmaken "
+"voor dit evenement ticket."
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "Close"
+msgstr "Afsluiten"
 
 #. module: event_sale
 #: model_terms:ir.actions.act_window,help:event_sale.event_sale_report_action
 msgid "Come back once tickets have been sold to overview your sales income."
-msgstr "Kom terug zodra tickets zijn verkocht om een overzicht te krijgen van je verkoopomzet."
+msgstr ""
+"Kom terug zodra tickets zijn verkocht om een overzicht te krijgen van je "
+"verkoopinkomsten."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__company_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__company_id
 msgid "Company"
 msgstr "Bedrijf"
-
-#. module: event_sale
-#: model:ir.actions.act_window,name:event_sale.event_configurator_action
-msgid "Configure an event"
-msgstr "Configureer een evenement"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__open
 msgid "Confirmed"
 msgstr "Bevestigd"
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/product_template.py:0
+msgid "Create an Attendee for the selected Event."
+msgstr "Maak een Deelnemer aan voor het geselecteerde Evenement."
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -169,23 +172,15 @@ msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event__currency_id
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__currency_id
-#: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__currency_id
-msgid "Currency"
-msgstr "Valuta"
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_partner_id
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Customer"
 msgstr "Klant"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__description
-#: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__description
-msgid "Description"
-msgstr "Omschrijving"
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "Discard"
+msgstr "Negeren"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__display_name
@@ -244,16 +239,6 @@ msgid "Event Registration"
 msgstr "Evenementinschrijving"
 
 #. module: event_sale
-#: model:product.template,name:event_sale.product_product_event_standard_product_template
-msgid "Event Registration - Standard"
-msgstr "Evenementregistratie - Standaard"
-
-#. module: event_sale
-#: model:product.template,name:event_sale.product_product_event_vip_product_template
-msgid "Event Registration - VIP"
-msgstr "Evenementregistratie - VIP"
-
-#. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
 msgid "Event Registrations"
 msgstr "Evenementinschrijvingen"
@@ -275,24 +260,11 @@ msgid "Event Start Date"
 msgstr "Startdatum evenement"
 
 #. module: event_sale
-#: model:ir.model,name:event_sale.model_event_type_ticket
-msgid "Event Template Ticket"
-msgstr "Evenement sjabloonticket"
-
-#. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event_ticket
-#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__event_ticket_id
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_ticket_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_ticket_id
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ticket_id
-#: model:ir.model.fields.selection,name:event_sale.selection__product_template__detailed_type__event
 msgid "Event Ticket"
-msgstr "Evenement ticket"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_product_product__event_ticket_ids
-msgid "Event Tickets"
-msgstr "Evenementtickets"
+msgstr "Evenementticket"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_type_id
@@ -311,16 +283,27 @@ msgid "Exception:"
 msgstr "Uitzondering:"
 
 #. module: event_sale
-#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__payment_status__free
-#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__payment_status__free
+#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__sale_status__free
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__free
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Free"
 msgstr "Gratis"
 
 #. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/sale_order.py:0
+msgid "Get Your Tickets"
+msgstr "Koop je tickets"
+
+#. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Group By"
-msgstr "Groepeer op"
+msgstr "Groeperen op"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__has_available_tickets
+msgid "Has Available Tickets"
+msgstr "Heeft beschikbare tickets"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__id
@@ -342,20 +325,9 @@ msgid "Invoice Address"
 msgstr "Factuuradres"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_registration__is_paid
-#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__is_paid
-msgid "Is Paid"
-msgstr "Is betaald"
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__active
 msgid "Is registration active (not archived)?"
 msgstr "Is de registratie actief (niet gearchiveerd)?"
-
-#. module: event_sale
-#: model:ir.model,name:event_sale.model_account_move
-msgid "Journal Entry"
-msgstr "Boeking"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__write_uid
@@ -372,19 +344,9 @@ msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: event_sale
-#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__done
-msgid "Locked"
-msgstr "Geblokkeerd"
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_medium_id
 msgid "Medium"
 msgstr "Medium"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__mobile
-msgid "Mobile"
-msgstr "Mobiel"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__name
@@ -402,44 +364,21 @@ msgid "Non-free tickets"
 msgstr "Niet-gratis tickets"
 
 #. module: event_sale
-#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__payment_status__to_pay
-#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__payment_status__to_pay
-msgid "Not Paid"
-msgstr "Niet betaald"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor__seats_available_insufficient
-msgid "Not enough seats for all registrations"
-msgstr "Niet genoeg plaatsen voor alle inschrijvingen"
-
-#. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
-msgid "Ok"
-msgstr "Ok"
+#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__sale_status__to_pay
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__to_pay
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
+msgid "Not Sold"
+msgstr "Niet verkocht"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_date
-#: model_terms:ir.ui.view,arch_db:event_sale.event_report_template_full_page_ticket_inherit_sale
 msgid "Order Date"
 msgstr "Orderdatum"
-
-#. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.event_report_template_full_page_ticket_inherit_sale
-msgid "Order Ref"
-msgstr "Orderreferentie"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__registration_id
 msgid "Original Registration"
 msgstr "Originele inschrijving"
-
-#. module: event_sale
-#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__payment_status__paid
-#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__payment_status__paid
-#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
-#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
-msgid "Paid"
-msgstr "Betaald"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
@@ -452,15 +391,14 @@ msgid "Past Events"
 msgstr "Vorige evenementen"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_registration__payment_status
-#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__payment_status
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_status
 msgid "Payment Status"
 msgstr "Status betaling"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Pending payment"
-msgstr "In afwachting van betaling"
+msgstr "Betaling in behandeling"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__phone
@@ -468,50 +406,22 @@ msgid "Phone"
 msgstr "Telefoon"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price
-#: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__price
-#: model_terms:ir.ui.view,arch_db:event_sale.event_report_template_full_page_ticket_inherit_sale
-msgid "Price"
-msgstr "Prijs"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce
-#: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__price_reduce
-msgid "Price Reduce"
-msgstr "Gereduceerde prijs"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce_taxinc
-msgid "Price Reduce Tax inc"
-msgstr "Gereduceerde prijs incl. BTW"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_incl
-msgid "Price include"
+#. odoo-python
+#: code:addons/event_sale/models/sale_order.py:0
+msgid ""
+"Please make sure all your event related lines are configured before "
+"confirming this order:%s"
 msgstr ""
+"Zorg ervoor dat alle regels met betrekking tot je evenement zijn "
+"geconfigureerd voordat je deze order bevestigt:%s"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_template
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__product_id
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__product_id
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__product_id
-#: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__product_id
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_template_line__product_id
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_template_option__product_id
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Product"
 msgstr "Product"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_product_product__detailed_type
-#: model:ir.model.fields,field_description:event_sale.field_product_template__detailed_type
-msgid "Product Type"
-msgstr "Productsoort"
-
-#. module: event_sale
-#: model:ir.model,name:event_sale.model_product_product
-msgid "Product Variant"
-msgstr "Productvariant"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__draft
@@ -522,16 +432,6 @@ msgstr "Offerte"
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__sent
 msgid "Quotation Sent"
 msgstr "Offerte verstuurd"
-
-#. module: event_sale
-#: model:ir.model,name:event_sale.model_sale_order_template_line
-msgid "Quotation Template Line"
-msgstr "Offertesjabloonregel"
-
-#. module: event_sale
-#: model:ir.model,name:event_sale.model_sale_order_template_option
-msgid "Quotation Template Option"
-msgstr "Offerte sjabloon optie"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
@@ -555,6 +455,11 @@ msgstr "Registratiestatus"
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
 msgid "Registration revenues"
 msgstr "Registratie omzet"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__registration_ids
+msgid "Registrations"
+msgstr "Registraties"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__event_registration_ids
@@ -590,6 +495,11 @@ msgid "Sale Order Status"
 msgstr "Verkooporderstatus"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_status
+msgid "Sale Status"
+msgstr "Verkoopstatus"
+
+#. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "Sales"
 msgstr "Verkoop"
@@ -597,12 +507,7 @@ msgstr "Verkoop"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__sale_price_subtotal
 msgid "Sales (Tax Excluded)"
-msgstr "Verkopen (exclusief BTW)"
-
-#. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.event_event_ticket_view_tree_from_event
-msgid "Sales End"
-msgstr "Einde verkoop"
+msgstr "Verkopen (exclusief btw)"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
@@ -620,19 +525,22 @@ msgid "Sales Order Line"
 msgstr "Verkooporderregel"
 
 #. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.event_event_ticket_view_tree_from_event
-msgid "Sales Start"
-msgstr "Start verkoop"
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_user_id
 msgid "Salesperson"
 msgstr "Verkoper"
 
 #. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
-msgid "Skip"
-msgstr "Overslaan"
+#: model:ir.actions.act_window,name:event_sale.event_configurator_action
+msgid "Select an Event"
+msgstr "Selecteer een evenement"
+
+#. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__sale_status__sold
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__sold
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Sold"
+msgstr "Verkocht"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_source_id
@@ -640,9 +548,30 @@ msgid "Source"
 msgstr "Bron"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__state
+msgid "Status"
+msgstr "Status"
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/sale_order_line.py:0
+msgid ""
+"The sale order line with the product %(product_name)s needs an event and a "
+"ticket."
+msgstr ""
+"De verkooporderregel met het product %(product_name)s moet een evenement en "
+"een ticket bevatten."
+
+#. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Ticket"
 msgstr "Ticket"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__event_ticket_id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ticket_id
+msgid "Ticket Type"
+msgstr "Ticketsoort"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
@@ -670,9 +599,22 @@ msgid "Unconfirmed"
 msgstr "Onbevestigd"
 
 #. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_event_registration__state
+msgid ""
+"Unconfirmed: registrations in a pending state waiting for an action (specific case, notably with sale status)\n"
+"Registered: registrations considered taken by a client\n"
+"Attended: registrations for which the attendee attended the event\n"
+"Cancelled: registrations cancelled manually"
+msgstr ""
+"Onbevestigd: registraties in afwachting van een actie (specifiek geval, met name met verkoopstatus)\n"
+"Geregistreerd: registraties die worden beschouwd als genomen door een klant\n"
+"Aanwezig: registraties waarvan de deelnemer het evenement heeft bijgewoond\n"
+"Geannuleerd: handmatig geannuleerde registraties"
+
+#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_price_untaxed
 msgid "Untaxed Revenues"
-msgstr "Omzet excl. BTW"
+msgstr "Omzet excl. btw"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
@@ -685,11 +627,17 @@ msgid "Upcoming/Running"
 msgstr "Aankomend/Bezig"
 
 #. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "We could not find a matching event ticket for this product. <br/>"
+msgstr ""
+"We konden geen bijhorende evenementtickets voor dit product vinden. <br/>"
+
+#. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
-msgid "please give attendee details."
-msgstr "geef de details van de deelnemer."
+msgid "please provide attendee details."
+msgstr "gelieve de gegevens van de deelnemer te vermelden."
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
 msgid "to"
-msgstr "t/m"
+msgstr "aan"

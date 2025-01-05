@@ -1,31 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_discount
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Larissa Manderfeld, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_discount
 #. odoo-python
 #: code:addons/pos_discount/models/pos_config.py:0
 msgid ""
-"A discount product is needed to use the Global Discount feature. Go to Point "
-"of Sale > Configuration > Settings to set it."
+"A discount product is needed to use the Global Discount feature. Go to Point"
+" of Sale > Configuration > Settings to set it."
 msgstr ""
 "Um die Funktion des Gesamtrabatts zu nutzen, ist ein Rabattprodukt "
 "erforderlich. Gehen Sie zu Kassensystem > Konfiguration > Einstellungen, um "
@@ -35,7 +34,7 @@ msgstr ""
 #: model:ir.model.fields,help:pos_discount.field_pos_config__iface_discount
 msgid "Allow the cashier to give discounts on the whole order."
 msgstr ""
-"Ermöglicht dem Kassierer die Eingabe von Rabatten auf die gesamte Bestellung."
+"Ermöglicht dem Kassierer die Eingabe von Rabatten auf den gesamten Auftrag."
 
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_res_config_settings
@@ -44,7 +43,8 @@ msgstr "Konfigurationseinstellungen"
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.xml:0
+#: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+#: model:product.template,name:pos_discount.product_product_consumable_product_template
 msgid "Discount"
 msgstr "Rabatt"
 
@@ -55,7 +55,7 @@ msgstr "Rabatt %"
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_pc
 msgid "Discount Percentage"
@@ -65,34 +65,37 @@ msgstr "% Rabatt"
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_product_id
 #: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
 msgid "Discount Product"
-msgstr "Produktrabatt"
+msgstr "Rabattprodukt"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_discount.field_product_template__display_name
+#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_discount.field_product_template__id
+#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "No discount product found"
 msgstr "Kein Rabattprodukt gefunden"
 
 #. module: pos_discount
-#. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
-msgid "No tax"
-msgstr "Keine Steuer"
-
-#. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__iface_discount
 msgid "Order Discounts"
-msgstr "Bestellrabatte"
+msgstr "Auftragsrabatte"
 
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "Point Of Sale Konfiguration"
-
-#. module: pos_discount
-#: model:ir.model,name:pos_discount.model_pos_session
-msgid "Point of Sale Session"
-msgstr "Point of Sale Sitzung"
+msgstr "Kassensystem-Konfiguration"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_product_id
@@ -100,10 +103,9 @@ msgid "Pos Discount Product"
 msgstr "Rabattprodukt für Kassensystem"
 
 #. module: pos_discount
-#. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
-msgid "Tax: %s"
-msgstr "Steuer: %s"
+#: model:ir.model,name:pos_discount.model_product_template
+msgid "Product"
+msgstr "Produkt"
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
@@ -114,16 +116,16 @@ msgstr ""
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid ""
-"The discount product seems misconfigured. Make sure it is flagged as 'Can be "
-"Sold' and 'Available in Point of Sale'."
+"The discount product seems misconfigured. Make sure it is flagged as 'Can be"
+" Sold' and 'Available in Point of Sale'."
 msgstr ""
 "Das Rabattprodukt scheint falsch konfiguriert zu sein. Stellen Sie sicher, "
-"dass es als \"Kann verkauft werden\" und \"Verfügbar in der Verkaufsstelle\" "
+"dass es als „Kann verkauft werden“ und „Verfügbar im Kassensystem“ "
 "gekennzeichnet ist."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
 msgid "The product used to apply the discount on the ticket."
-msgstr "Das Produkt wird zur Anwendung des Rabatts auf den Kassnebon benutzt."
+msgstr "Das Produkt wird zur Anwendung des Rabatts auf den Kassenbon benutzt."

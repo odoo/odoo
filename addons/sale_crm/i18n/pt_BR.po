@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_crm
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
-"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: sale_crm
@@ -27,7 +27,7 @@ msgstr "<span class=\"o_stat_text\"> Pedidos</span>"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__lead_id
 msgid "Associated Lead"
-msgstr "Lead Associado"
+msgstr "Lead associado"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_quotation_partner_view_form
@@ -47,12 +47,13 @@ msgstr "Criar um novo cliente"
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_quotation_partner
 msgid "Create new or use existing Customer on new Quotation"
-msgstr "Criar um novo Cliente ou utilizar um Cliente existente em uma nova Cotação"
+msgstr ""
+"Criar um novo cliente ou utilizar um cliente existente em uma nova cotação"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "Create new quotation"
-msgstr ""
+msgstr "Criar nova cotação"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__create_uid
@@ -77,7 +78,14 @@ msgstr "Nome exibido"
 #. module: sale_crm
 #: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__nothing
 msgid "Do not link to a customer"
-msgstr "Não associe a um cliente"
+msgstr "Não vincular a um cliente"
+
+#. module: sale_crm
+#. odoo-python
+#: code:addons/sale_crm/models/crm_lead.py:0
+msgid "Expected revenue has been updated based on the linked Sales Orders."
+msgstr ""
+"A receita esperada foi atualizada com base nos pedidos de venda vinculados."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
@@ -87,12 +95,7 @@ msgstr "ID"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users__target_sales_invoiced
 msgid "Invoiced in Sales Orders Target"
-msgstr "Faturados em Meta de Vendas"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner____last_update
-msgid "Last Modified on"
-msgstr "Última modificação em"
+msgstr "Faturados em meta de pedidos de vendas"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_uid
@@ -115,31 +118,26 @@ msgid "Link to an existing customer"
 msgstr "Conectar a um cliente existente"
 
 #. module: sale_crm
-#: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
-msgid "Log in the chatter from which opportunity the order originates"
-msgstr "Registre no chat de qual oportunidade o pedido é originatário"
-
-#. module: sale_crm
 #: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
 msgid "My Quotations"
-msgstr "Minhas Cotações"
+msgstr "Minhas cotações"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.crm_quotation_partner_action
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_quotation_partner_view_form
 msgid "New Quotation"
-msgstr "Nova Cotação"
+msgstr "Nova cotação"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead__quotation_count
 msgid "Number of Quotations"
-msgstr "Número de Cotações"
+msgstr "Número de cotações"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_order_count
 msgid "Number of Sale Orders"
-msgstr "Número de Pedidos de Vendas"
+msgstr "Número de pedidos de vendas"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order__opportunity_id
@@ -159,7 +157,7 @@ msgstr "Cotação"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__action
 msgid "Quotation Customer"
-msgstr "Cliente da Cotação"
+msgstr "Cliente da cotação"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
@@ -169,12 +167,13 @@ msgstr "Cotações"
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_lead_merge_summary_inherit_sale_crm
 msgid "Sale Orders"
-msgstr "Ordens de Venda"
+msgstr "Pedidos de venda"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/models/crm_team.py:0
 msgid "Sales Analysis"
-msgstr "Análise de Vendas"
+msgstr "Análise de vendas"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
@@ -184,22 +183,23 @@ msgstr "Pedido de venda"
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_team
 msgid "Sales Team"
-msgstr "Equipe de Vendas"
+msgstr "Equipe de vendas"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/models/crm_team.py:0
 msgid "Sales: Untaxed Total"
-msgstr "Vendas: Total sem Impostos"
+msgstr "Vendas: total sem impostos"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_amount_total
 msgid "Sum of Orders"
-msgstr "Soma de Pedidos"
+msgstr "Soma de pedidos"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_crm_lead__sale_amount_total
 msgid "Untaxed Total of Confirmed Orders"
-msgstr "Total (Sem Impostos) de Pedidos Confirmados"
+msgstr "Total sem impostos dos pedidos confirmados"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_res_users
@@ -207,6 +207,7 @@ msgid "User"
 msgstr "Usuário"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/wizard/crm_opportunity_to_quotation.py:0
 msgid "You can only apply this action from a lead."
 msgstr "Você só pode aplicar esta ação à partir de um lead."

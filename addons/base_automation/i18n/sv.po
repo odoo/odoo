@@ -1,29 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_automation
-#
+# 
 # Translators:
-# Kim Asplund <kim.asplund@gmail.com>, 2022
-# Martin Wilderoth <martin.wilderoth@linserv.se>, 2022
-# Kristoffer Grundström <lovaren@gmail.com>, 2022
-# Simon S, 2022
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023\n"
+"POT-Creation-Date: 2024-09-26 12:50+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
-"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_automation
@@ -33,12 +26,14 @@ msgid ""
 "\"\n"
 "                (ID:"
 msgstr ""
+"\"\n"
+"                (ID:"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/kanban_header_patch.js:0
 msgid "\"%s\" tag is added"
-msgstr ""
+msgstr "\"%s\"-taggen har lagts till"
 
 #. module: base_automation
 #. odoo-python
@@ -47,30 +42,34 @@ msgid ""
 "\"On live update\" automation rules can only be used with \"Execute Python "
 "Code\" action type."
 msgstr ""
+"Automatiseringsreglerna \"Vid liveuppdatering\" kan endast användas med "
+"åtgärdstypen \"Utför Python-kod\"."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "%s actions"
-msgstr ""
+msgstr "%s åtgärder"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "1 action"
-msgstr ""
+msgstr "1 åtgärd"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<code>env</code>: environment on which the action is triggered"
-msgstr ""
+msgstr "<code>env</code>: miljö där åtgärden utlöses"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
-"<code>model</code>: model of the record on which the action is triggered; is "
-"a void recordset"
+"<code>model</code>: model of the record on which the action is triggered; is"
+" a void recordset"
 msgstr ""
+"<code>model</code>: modell för den post som åtgärden utlöses på; är en void "
+"recordset"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -78,6 +77,8 @@ msgid ""
 "<code>payload</code>: the payload of the call (GET parameters, JSON body), "
 "as a dict."
 msgstr ""
+"<code>payload</code>: anropets nyttolast (GET-parametrar, JSON-kropp), som "
+"en dict."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -85,11 +86,13 @@ msgid ""
 "<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
 "<code>timezone</code>: useful Python libraries"
 msgstr ""
+"<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
+"<code>timezone</code>: användbara Pythonbibliotek"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 msgid "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Actions\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Åtgärder\"/>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -97,6 +100,9 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/> The default target record getter will work "
 "out-of-the-box for any webhook coming from another Odoo instance."
 msgstr ""
+"<i class=\"fa fa-info-circle\"/> Standardinställningen för att hämta "
+"målposter fungerar direkt för alla webhook som kommer från en annan Odoo-"
+"instans."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -105,55 +111,61 @@ msgid ""
 "be executed <em>every time</em> the watched fields change, <em>whether you "
 "save or not</em>."
 msgstr ""
+"<i class=\"fa fa-warning\"/> Automatiseringsregler som utlöses av ändringar "
+"i användargränssnittet kommer att utföras <em>varje gång</em> de bevakade "
+"fälten ändras, <em> oavsett om du sparar eller inte</em>."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span class=\"text-muted\"> Available variables: </span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"> Tillgängliga variabler: </span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "<span invisible=\"evaluation_type != 'value'\">to</span>\n"
-"                                                                <span "
-"invisible=\"evaluation_type != 'equation'\">as</span>"
+"                                                        <span invisible=\"evaluation_type != 'equation'\">as</span>"
 msgstr ""
+"<span osynlig=\"evaluation_type != 'value'\">till</span>\n"
+"                                                                <span invisible=\"evaluation_type != 'equation'\">som</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "<span invisible=\"trigger != 'on_time_created'\">after creation</span>\n"
-"                                    <span invisible=\"trigger != "
-"'on_time_updated'\">after last update</span>\n"
-"                                    <span invisible=\"trigger != "
-"'on_time'\">after</span>"
+"                                    <span invisible=\"trigger != 'on_time_updated'\">after last update</span>\n"
+"                                    <span invisible=\"trigger != 'on_time'\">after</span>"
 msgstr ""
+"<span osynlig=\"trigger != 'on_time_created'\">efter skapande</span>\n"
+"                                    <span osynlig=\"trigger != 'on_time_updated'\">efter senaste uppdatering</span>\n"
+"                                    <span osynlig=\"trigger != 'on_time'\">efter</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by adding</span>"
-msgstr ""
+msgstr "<span>genom att lägga till</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by clearing it</span>"
-msgstr ""
+msgstr "<span>genom att rensa den</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by removing</span>"
-msgstr ""
+msgstr "<span>genom att ta bort</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by setting it to</span>"
-msgstr ""
+msgstr "<span>genom att ställa in den på</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid ""
-"<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
+msgid "<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
 msgstr ""
+"<strong><i class=\"fa fa-lock\"/> Håll det hemligt, håll det "
+"säkert.</strong>"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__name
@@ -164,12 +176,12 @@ msgstr "Åtgärdsnamn"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__action_server_ids
 msgid "Actions"
-msgstr ""
+msgstr "Åtgärder"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Actions To Do"
-msgstr ""
+msgstr "Åtgärder att vidta"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__active
@@ -179,34 +191,34 @@ msgstr "Aktiv"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Add an action"
-msgstr ""
+msgstr "Lägg till en åtgärd"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Add followers"
-msgstr ""
+msgstr "Lägg till följare"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Add followers: %(partner_names)s"
-msgstr ""
+msgstr "Lägg till följare: %(partner_names)s"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_created
 msgid "After creation"
-msgstr ""
+msgstr "Efter skapandet"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_updated
 msgid "After last update"
-msgstr ""
+msgstr "Efter senaste uppdatering"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_domain
 msgid "Apply on"
-msgstr ""
+msgstr "Ansök på"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -218,7 +230,7 @@ msgstr "Arkiverad"
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Automate <em>everything</em> with Automation Rules"
-msgstr ""
+msgstr "Automatisera <em>allt</em> med automatiseringsregler"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
@@ -227,12 +239,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base_automation.selection__ir_actions_server__usage__base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Automation Rule"
-msgstr ""
+msgstr "Regel för automatisering"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__name
 msgid "Automation Rule Name"
-msgstr ""
+msgstr "Namn på automatiseringsregel"
 
 #. module: base_automation
 #: model:ir.actions.act_window,name:base_automation.base_automation_act
@@ -240,28 +252,28 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
 msgid "Automation Rules"
-msgstr ""
+msgstr "Regler för automatisering"
 
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 msgid "Automation Rules: check and execute"
-msgstr ""
+msgstr "Automatiseringsregler: kontrollera och utföra"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/kanban_header_patch.js:0
 msgid "Automations"
-msgstr ""
+msgstr "Automatiseringar"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time
 msgid "Based on date field"
-msgstr ""
+msgstr "Baserat på datumfält"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_pre_domain
 msgid "Before Update Domain"
-msgstr ""
+msgstr "Före uppdatering av domän"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -269,36 +281,39 @@ msgid ""
 "Change the URL's secret if you think the URL is no longer secure. You will "
 "have to update any automated system that calls this webhook to the new URL."
 msgstr ""
+"Ändra URL-adressens hemlighet om du anser att den inte längre är säker. Du "
+"måste uppdatera alla automatiserade system som anropar denna webhook till "
+"den nya URL-adressen."
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Compute"
-msgstr ""
+msgstr "Beräkna"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Create %(model_name)s with name %(value)s"
-msgstr ""
+msgstr "Skapa %(model_name)s med namn %(value)s"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Create a new Record"
-msgstr ""
+msgstr "Skapa en ny post"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Create activity: %(activity_name)s"
-msgstr ""
+msgstr "Skapa aktivitet: %(activity_name)s"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Create next activity"
-msgstr ""
+msgstr "Skapa nästa aktivitet"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
@@ -308,18 +323,18 @@ msgstr "Skapad av"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_date
 msgid "Created on"
-msgstr "Skapad"
+msgstr "Skapad den"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "Custom"
-msgstr ""
+msgstr "Anpassad"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Date Field"
-msgstr ""
+msgstr "Datumfält"
 
 #. module: base_automation
 #. odoo-javascript
@@ -331,7 +346,7 @@ msgstr "Dagar"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Delay"
-msgstr ""
+msgstr "Försening"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_range
@@ -340,6 +355,9 @@ msgid ""
 "delay before the trigger date, like sending a reminder 15 minutes before a "
 "meeting."
 msgstr ""
+"Fördröjning efter utlösningsdatumet. Du kan ange ett negativt tal om du "
+"behöver en fördröjning före utlösningsdatumet, till exempel om du vill "
+"skicka en påminnelse 15 minuter före ett möte."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -354,36 +372,38 @@ msgstr "Ledtidstyp"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Delete Action"
-msgstr ""
+msgstr "Radera åtgärd"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "Deprecated (do not use)"
-msgstr ""
+msgstr "Utfasad (använd inte)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__description
 msgid "Description"
-msgstr ""
+msgstr "Beskrivning"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid "Disable Automation Rule"
-msgstr ""
+msgstr "Inaktivera automatiseringsregel"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid ""
 "Disabling this automation rule will enable you to continue your workflow\n"
-"                but any data created after this could potentially be "
-"corrupted,\n"
-"                as you are effectively disabling a customization that may "
-"set\n"
+"                but any data created after this could potentially be corrupted,\n"
+"                as you are effectively disabling a customization that may set\n"
 "                important and/or required fields."
 msgstr ""
+"Om du inaktiverar denna automatiseringsregel kan du fortsätta ditt arbetsflöde\n"
+"                men alla data som skapas efter detta kan potentiellt vara skadade,\n"
+"                eftersom du effektivt inaktiverar en anpassning som kan ställa in\n"
+"                viktiga och/eller obligatoriska fält."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -394,19 +414,19 @@ msgstr "Visningsnamn"
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid "Edit Automation Rule"
-msgstr ""
+msgstr "Redigera automatiseringsregel"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Email"
-msgstr ""
+msgstr "E-post"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "Email Events"
-msgstr ""
+msgstr "E-post evenemang"
 
 #. module: base_automation
 #. odoo-python
@@ -415,45 +435,48 @@ msgid ""
 "Email, follower or activity action types cannot be used when deleting "
 "records, as there are no more records to apply these changes to!"
 msgstr ""
+"Åtgärdstyperna e-post, följare eller aktivitet kan inte användas när poster "
+"raderas, eftersom det inte finns några fler poster att tillämpa dessa "
+"ändringar på!"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Execute Python Code"
-msgstr ""
+msgstr "Exekvera Python-kod"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Execute several actions"
-msgstr ""
+msgstr "Utföra flera åtgärder"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "External"
-msgstr ""
+msgstr "Extern"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Extra Conditions"
-msgstr ""
+msgstr "Extra villkor"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__on_change_field_ids
 msgid "Fields that trigger the onchange."
-msgstr ""
+msgstr "Fält som utlöser onchange."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Generic User"
-msgstr ""
+msgstr "Generisk användare"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_is_mail_thread
 msgid "Has Mail Thread"
-msgstr ""
+msgstr "Har posttråd"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__hour
@@ -468,20 +491,22 @@ msgstr "ID"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
 msgid ""
-"If present, this condition must be satisfied before executing the automation "
-"rule."
+"If present, this condition must be satisfied before executing the automation"
+" rule."
 msgstr ""
+"Om detta villkor finns måste det uppfyllas innan automatiseringsregeln körs."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
 msgid ""
-"If present, this condition must be satisfied before the update of the record."
+"If present, this condition must be satisfied before the update of the "
+"record. Not checked on record creation."
 msgstr ""
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Keep track of what this automation does and why it exists..."
-msgstr ""
+msgstr "Håll koll på vad automatiseringen gör och varför den finns..."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
@@ -496,22 +521,22 @@ msgstr "Senast uppdaterad av"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_date
 msgid "Last Updated on"
-msgstr "Senast uppdaterad på"
+msgstr "Senast uppdaterad den"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__least_delay_msg
 msgid "Least Delay Msg"
-msgstr ""
+msgstr "Meddelande om minsta fördröjning"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__log_webhook_calls
 msgid "Log Calls"
-msgstr ""
+msgstr "Logga samtal"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Logs"
-msgstr ""
+msgstr "Loggar"
 
 #. module: base_automation
 #. odoo-python
@@ -520,6 +545,8 @@ msgid ""
 "Mail event can not be configured on model %s. Only models with discussion "
 "feature can be used."
 msgstr ""
+"E-posthändelse kan inte konfigureras på modell %s. Endast modeller med "
+"diskussionsfunktion kan användas."
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__minutes
@@ -543,11 +570,13 @@ msgid ""
 "Model of action %(action_name)s should match the one from automated rule "
 "%(rule_name)s."
 msgstr ""
+"Modell för åtgärd %(action_name)s ska matcha den från automatiserad regel "
+"%(rule_name)s."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
 msgid "Model on which the automation rule runs."
-msgstr ""
+msgstr "Modell på vilken automatiseringsregeln körs."
 
 #. module: base_automation
 #. odoo-javascript
@@ -560,7 +589,7 @@ msgstr "Månader"
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "No record to run the automation on was found."
-msgstr ""
+msgstr "Inget register att köra automatiseringen på hittades."
 
 #. module: base_automation
 #. odoo-python
@@ -569,159 +598,175 @@ msgid ""
 "Note that this automation rule can be triggered up to %d minutes after its "
 "schedule."
 msgstr ""
+"Observera att denna automatiseringsregel kan utlösas upp till %d minuter "
+"efter schemat."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Notes"
-msgstr ""
+msgstr "Noter"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
 msgid "On Change Fields Trigger"
-msgstr ""
+msgstr "Vid ändring Fält Trigger"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_change
 msgid "On UI change"
-msgstr ""
+msgstr "Förändring av användargränssnittet"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_archive
 msgid "On archived"
-msgstr ""
+msgstr "På arkiverad"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
 msgid "On creation"
-msgstr ""
+msgstr "Om skapande"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unlink
 msgid "On deletion"
-msgstr ""
+msgstr "On deletion"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_received
 msgid "On incoming message"
-msgstr ""
+msgstr "Vid inkommande meddelande"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_sent
 msgid "On outgoing message"
-msgstr ""
+msgstr "På utgående meddelande"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create_or_write
 msgid "On save"
-msgstr ""
+msgstr "På sparande"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unarchive
 msgid "On unarchived"
-msgstr ""
+msgstr "På oarkiverad"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_write
 msgid "On update"
-msgstr ""
+msgstr "På uppdatering"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_webhook
 msgid "On webhook"
-msgstr ""
+msgstr "På webhook"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Post as Message"
-msgstr ""
+msgstr "Post som meddelande"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Post as Note"
-msgstr ""
+msgstr "Post som anteckning"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_priority_set
 msgid "Priority is set to"
-msgstr ""
+msgstr "Prioritet är inställd på"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__record_getter
 msgid "Record Getter"
-msgstr ""
+msgstr "Hämta poster"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Remove followers"
-msgstr ""
+msgstr "Ta bort följare"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Remove followers: %(partner_names)s"
-msgstr ""
+msgstr "Ta bort följare: %(partner_names)s"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Rotate Secret"
-msgstr ""
+msgstr "Rotera hemlighet"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select a date field..."
-msgstr ""
+msgstr "Välj ett datumfält..."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select a value..."
-msgstr ""
+msgstr "Välj ett värde..."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select fields..."
-msgstr ""
+msgstr "Välj fält..."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
-msgid "Send SMS Text Message"
-msgstr ""
+msgid "Send SMS"
+msgstr "Skicka SMS"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Send SMS: %(template_name)s"
-msgstr ""
+msgstr "Skicka SMS: %(template_name)s"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Send Webhook Notification"
-msgstr ""
+msgstr "Skicka Webhook-avisering"
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Send an email when an object changes state, archive records\n"
-"                after a month of inactivity or remind yourself to follow-up "
-"on\n"
+"                after a month of inactivity or remind yourself to follow-up on\n"
 "                tasks when a specific tag is added."
 msgstr ""
+"Skicka ett e-postmeddelande när ett objekt ändrar status, arkivera poster\n"
+"                efter en månads inaktivitet eller påminn dig själv om att följa upp\n"
+"                uppgifter när en specifik tagg läggs till."
+
+#. module: base_automation
+#: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
+msgid ""
+"Send an email when an object changes state, archive records after a month of"
+" inactivity or remind yourself to follow-up on tasks when a specific tag is "
+"added.<br>With Automation Rules, you can automate any workflow."
+msgstr ""
+"Skicka ett e-postmeddelande när ett objekt ändrar tillstånd, arkivera poster"
+" efter en månads inaktivitet eller påminn dig själv om att följa upp "
+"uppgifter när en specifik tagg läggs till. <br> Med Automation Rules kan du "
+"automatisera vilket arbetsflöde som helst."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Send email"
-msgstr ""
+msgstr "Skicka e-post"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Send email: %(template_name)s"
-msgstr ""
+msgstr "Skicka e-post: %(template_name)s"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
@@ -734,51 +779,57 @@ msgid ""
 "Some triggers need a reference to a selection field. This field is used to "
 "store it."
 msgstr ""
+"Vissa triggers behöver en referens till ett urvalsfält. Detta fält används "
+"för att lagra det."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
 msgid ""
-"Some triggers need a reference to another field. This field is used to store "
-"it."
+"Some triggers need a reference to another field. This field is used to store"
+" it."
 msgstr ""
+"Vissa triggers behöver en referens till ett annat fält. Detta fält används "
+"för att lagra den."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Specific User"
-msgstr ""
+msgstr "Specifik användare"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_stage_set
 msgid "Stage is set to"
-msgstr ""
+msgstr "Scenen är inställd på"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/kanban_header_patch.js:0
 msgid "Stage is set to \"%s\""
-msgstr ""
+msgstr "Scenen är inställd på \"%s\""
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_state_set
 msgid "State is set to"
-msgstr ""
+msgstr "Staten är inställd på att"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_tag_set
 msgid "Tag is added"
-msgstr ""
+msgstr "Tagg har lagts till"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Target Record"
-msgstr ""
+msgstr "Målrekord"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
-msgid "Target model of actions %(action_names)s are different from rule model."
+msgid ""
+"Target model of actions %(action_names)s are different from rule model."
 msgstr ""
+"Målmodellen för åtgärder %(action_names)s skiljer sig från regelmodellen."
 
 #. module: base_automation
 #. odoo-python
@@ -787,6 +838,8 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr ""
+"\"%(trigger_value)s\" %(trigger_label)s kan endast användas med åtgärdstypen"
+" \"%(state_value)s\""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -794,6 +847,8 @@ msgid ""
 "The automation rule will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
 msgstr ""
+"Automatiseringsregeln utlöses om och endast om ett av dessa fält uppdateras."
+" Om de är tomma övervakas alla fält."
 
 #. module: base_automation
 #. odoo-javascript
@@ -802,6 +857,8 @@ msgid ""
 "The error occurred during the execution of the automation rule\n"
 "                \""
 msgstr ""
+"Felet uppstod under utförandet av automatiseringsregeln\n"
+"                \""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__record_getter
@@ -809,17 +866,25 @@ msgid ""
 "This code will be run to find on which record the automation rule should be "
 "run."
 msgstr ""
+"Denna kod kommer att användas för att avgöra på vilken post "
+"automatiseringsregeln ska köras."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "Timing Conditions"
-msgstr ""
+msgstr "Villkor för tidsinställning"
+
+#. module: base_automation
+#: model:digest.tip,name:base_automation.digest_tip_base_automation_0
+#: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
+msgid "Tip: Automate everything with Automation Rules"
+msgstr "Tips: Automatisera allt med automatiseringsregler"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
 msgid "Trigger"
-msgstr "Trigger"
+msgstr "Utlösare"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_id
@@ -829,59 +894,54 @@ msgstr "Utlösningsdatum"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_selection_field_id
 msgid "Trigger Field"
-msgstr ""
+msgstr "Utlösningsfält"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_model_name
 msgid "Trigger Field Model"
-msgstr ""
+msgstr "Modell för utlösningsfält"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
 msgid "Trigger Fields"
-msgstr ""
+msgstr "Fält för utlösare"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref
 msgid "Trigger Reference"
-msgstr ""
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_display_name
-msgid "Trigger Reference Display Name"
-msgstr ""
+msgstr "Referens för utlösare"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.ir_actions_server_view_form_automation
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "URL will be created once the rule is saved."
-msgstr ""
+msgstr "URL skapas när regeln har sparats."
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Update"
-msgstr ""
+msgstr "Uppdatera"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Update the Record"
-msgstr ""
+msgstr "Uppdatera registret"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__url
 msgid "Url"
-msgstr ""
+msgstr "Url"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__usage
@@ -892,18 +952,18 @@ msgstr "Användning"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
 msgid "Use Calendar"
-msgstr ""
+msgstr "Använd kalender"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_user_set
 msgid "User is set"
-msgstr ""
+msgstr "Användaren är inställd"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "Values Updated"
-msgstr ""
+msgstr "Värden uppdaterade"
 
 #. module: base_automation
 #. odoo-python
@@ -915,24 +975,24 @@ msgstr "Varning"
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "Webhook Log"
-msgstr ""
+msgstr "Webhook-logg"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "Webhook Logs"
-msgstr ""
+msgstr "Webhook-loggar"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__webhook_uuid
 msgid "Webhook UUID"
-msgstr ""
+msgstr "UUID för webhook"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Weeks"
-msgstr ""
+msgstr "Veckor"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
@@ -940,24 +1000,27 @@ msgid ""
 "When calculating a day-based timed condition, it is possibleto use a "
 "calendar to compute the date based on working days."
 msgstr ""
+"Vid beräkning av ett dagbaserat tidsvillkor är det möjligt att använda en "
+"kalender för att beräkna datumet baserat på arbetsdagar."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                If present, will be checked by the scheduler. If empty, will "
-"be checked at creation and update."
+"                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"När ska villkoret utlösas.\n"
+"                Om det finns kommer det att kontrolleras av schemaläggaren. Om tomt, kommer att kontrolleras vid skapande och uppdatering."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr ""
+msgstr "Om den är avmarkerad är regeln dold och kommer inte att utföras."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "When updating"
-msgstr ""
+msgstr "Vid uppdatering"
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -965,6 +1028,8 @@ msgid ""
 "With Automation Rules, you can automate\n"
 "                <em>any</em> workflow."
 msgstr ""
+"Med automatiseringsregler kan du automatisera\n"
+"                <em>vilket</em> arbetsflöde som helst."
 
 #. module: base_automation
 #. odoo-javascript
@@ -972,12 +1037,16 @@ msgstr ""
 msgid ""
 "You can ask an administrator to disable or correct this automation rule."
 msgstr ""
+"Du kan be en administratör att inaktivera eller korrigera denna "
+"automatiseringsregel."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid "You can disable this automation rule or edit it to solve the issue."
 msgstr ""
+"Du kan inaktivera denna automatiseringsregel eller redigera den för att lösa"
+" problemet."
 
 #. module: base_automation
 #. odoo-python
@@ -986,25 +1055,29 @@ msgid ""
 "You cannot send an email, add followers or create an activity for a deleted "
 "record.  It simply does not work."
 msgstr ""
+"Du kan inte skicka ett e-postmeddelande, lägga till följare eller skapa en "
+"aktivitet för en raderad post.  Det fungerar helt enkelt inte."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "Your webhook URL contains a secret. Don't share it online or carelessly."
 msgstr ""
+"Din webbhooks URL innehåller en hemlighet. Dela den inte online eller "
+"slarvigt."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 msgid "based on"
-msgstr ""
+msgstr "baserat på"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "e.g. Support flow"
-msgstr ""
+msgstr "t.ex. stödflöde"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.xml:0
 msgid "no action defined..."
-msgstr ""
+msgstr "ingen åtgärd definierad..."

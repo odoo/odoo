@@ -1,30 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_stock
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Andy Yiu, 2022
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"POT-Creation-Date: 2024-10-25 07:50+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "<span invisible=\"not show_availability\">Units</span>"
-msgstr ""
+msgstr "<span invisible=\"not show_availability\">単位</span>"
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product_card/product_card.js:0
+msgid "All available quantity selected"
+msgstr "全在庫が選択されました"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__stock_notification_partner_ids
@@ -59,9 +63,7 @@ msgstr "親愛なるお客様へ、"
 msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
-msgstr ""
-"新規作成された保管可能なプロダクトに設定したデフォルト入手可能性モード。プロ"
-"ダクトレベルで変更できます。"
+msgstr "新規作成された保管可能な製品に設定したデフォルト入手可能性モード。製品レベルで変更できます。"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -77,7 +79,7 @@ msgstr "再入荷時に通知を受け取る"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "How to display products having low quantities (on hand - reserved)"
-msgstr "在庫数の少ないプロダクトをどう表示するか (手持在庫 - 在庫引当)"
+msgstr "在庫数の少ないプロダクトの表示方法 (手持在庫 - 在庫引当)"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -114,6 +116,12 @@ msgid "Out of Stock"
 msgstr "在庫切れ"
 
 #. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product/product.xml:0
+msgid "Out of stock"
+msgstr "在庫切れ"
+
+#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Out-of-Stock"
@@ -135,12 +143,12 @@ msgstr "プロダクト"
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
 msgid "Product Variant"
-msgstr "プロダクトバリエーション"
+msgstr "プロダクトバリアント"
 
 #. module: website_sale_stock
 #: model:ir.actions.server,name:website_sale_stock.ir_cron_send_availability_email_ir_actions_server
 msgid "Product: send email regarding products availability"
-msgstr "プロダクト: プロダクトの在庫情報についてメールを送信"
+msgstr "製品: 製品の在庫情報についてメールを送信"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -148,14 +156,20 @@ msgid "Regards,"
 msgstr "よろしくお願い致します、"
 
 #. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product_card/product_card.xml:0
+msgid "Requested quantity not available"
+msgstr "ご希望の在庫数がありません"
+
+#. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
 msgid "Sales Order"
-msgstr "受注"
+msgstr "販売オーダ"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "受注明細"
+msgstr "販売オーダ明細"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -181,39 +195,37 @@ msgstr "入手可能数量を表示"
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 msgid ""
-"Some products became unavailable and your cart has been updated. We're sorry "
-"for the inconvenience."
-msgstr ""
-"いくつのプロダクトが販売不可になり、カートは更新されました。ご不便をおかけし"
-"て申し訳ございません。"
+"Some products became unavailable and your cart has been updated. We're sorry"
+" for the inconvenience."
+msgstr "一部の商品がご利用いただけなくなり、カートが更新されました。ご迷惑をおかけして申し訳ございません。"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "The following product is now available."
-msgstr "次のプロダクトは入手可能になりました。"
+msgstr "次の製品は入手可能になりました。"
 
 #. module: website_sale_stock
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 msgid "The item has not been added to your cart since it is not available."
-msgstr ""
+msgstr "この商品はご利用いただけないため、カートに追加されていません。"
 
 #. module: website_sale_stock
 #. odoo-python
 #: code:addons/website_sale_stock/models/product_product.py:0
 msgid "The product '%(product_name)s' is now available"
-msgstr "プロダクト「%(product_name)s」は入手可能になりました"
+msgstr "製品「%(product_name)s」は入手可能になりました"
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 msgid "This product is out of stock."
-msgstr "このプロダクトは只今在庫切れです。"
+msgstr "この製品は只今在庫切れです。"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr "移動"
+msgstr "転送"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -231,13 +243,13 @@ msgstr "倉庫"
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "We'll notify you once the product is back in stock."
-msgstr "プロダクトが再入荷次第お知らせいたします。"
+msgstr "製品が再入荷次第お知らせいたします。"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
 #: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__website_id
 msgid "Website"
-msgstr "Webサイト"
+msgstr "ウェブサイト"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
@@ -254,7 +266,7 @@ msgstr "カートに既に"
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "You already added all the available product in your cart."
-msgstr "カートに全て入手可能なプロダクトが追加されました。"
+msgstr "カートに全て入手可能な製品が追加されました。"
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -264,18 +276,23 @@ msgstr "カートに既に%s個あります。"
 
 #. module: website_sale_stock
 #. odoo-python
-#: code:addons/website_sale_stock/models/sale_order.py:0
 #: code:addons/website_sale_stock/models/sale_order_line.py:0
+msgid ""
+"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
+"available"
+msgstr " %(desired_qty)sの %(product_name)s をご希望ですが %(new_qty)s のみ利用可能です "
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order.py:0
 msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
-msgstr ""
-"ご希望の数量は%(desired_qty)s個ですが只今%(new_qty)s個だけ入手可能となってお"
-"ります"
+msgstr "ご希望の数量は%(desired_qty)s個ですが只今%(new_qty)s個だけ入手可能となっております"
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
-msgid "You ask for %s Units but only %s are available."
-msgstr "ご希望の数量は%s個ですが只今%s個だけ入手可能となっております。"
+msgid "You ask for %(quantity1)s Units but only %(quantity2)s are available."
+msgstr "ご希望数は %(quantity1)s単位ですが、現在利用可能なのは %(quantity2)sのみです。 "
 
 #. module: website_sale_stock
 #. odoo-javascript

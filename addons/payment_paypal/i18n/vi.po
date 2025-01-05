@@ -1,96 +1,123 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_paypal
-#
+# 
 # Translators:
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
-# Duy BQ <duybq86@gmail.com>, 2019
-# Dung Nguyen Thi <dungnt@trobz.com>, 2019
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-06 08:29+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Dung Nguyen Thi <dungnt@trobz.com>, 2019\n"
-"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_paypal
-#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
-msgid ""
-"<br/><br/>\n"
-"                Thanks,<br/>\n"
-"                <b>The Odoo Team</b>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "Client ID"
+msgstr "Client ID"
 
 #. module: payment_paypal
-#. odoo-python
-#: code:addons/payment_paypal/models/payment_provider.py:0
-msgid "Add your PayPal account to Odoo"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "Client Secret"
+msgstr "Mật khẩu khách"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__code
 msgid "Code"
-msgstr ""
+msgstr "Mã"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_provider.py:0
+msgid "Could not establish the connection to the API."
+msgstr "Không thể thiết lập kết nối với API."
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_provider.py:0
+msgid "Could not generate a new access token."
+msgstr "Không thể tạo token truy cập mới."
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_email_account
 msgid "Email"
-msgstr "Tên đăng nhập / Email"
+msgstr "Email"
 
 #. module: payment_paypal
-#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
-msgid ""
-"Hello,\n"
-"                <br/><br/>\n"
-"                You have received a payment through PayPal.<br/>\n"
-"                Kindly follow the instructions given by PayPal to create your account.<br/>\n"
-"                Then, help us complete your Paypal credentials in Odoo.<br/><br/>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "Generate your webhook"
+msgstr "Tạo webhook của bạn"
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
 msgid "How to configure your paypal account?"
-msgstr ""
+msgstr "Làm thế nào để cấu hình tài khoản PayPal của bạn?"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_seller_account
-msgid "Merchant Account ID"
-msgstr ""
+#. odoo-python
+#: code:addons/payment_paypal/controllers/main.py:0
+msgid "Invalid response format, can't normalize."
+msgstr "Định dạng phản hồi không hợp lệ, không thể chuẩn hóa."
 
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
-msgstr ""
+msgstr "Thiếu giá trị cho txn_id (%(txn_id)s) hoặc txn_type (%(txn_type)s)."
 
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Không tìm thấy giao dịch nào khớp với mã %s."
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_pdt_token
-msgid "PDT Identity Token"
-msgstr ""
+#: model:ir.model.fields.selection,name:payment_paypal.selection__payment_provider__code__paypal
+msgid "PayPal"
+msgstr "PayPal"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_access_token
+msgid "PayPal Access Token"
+msgstr "Token truy cập PayPal"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_access_token_expiry
+msgid "PayPal Access Token Expiry"
+msgstr "Ngày hết hạn token truy cập PayPal"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_client_id
+msgid "PayPal Client ID"
+msgstr "ID người dùng PayPal"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_client_secret
+msgid "PayPal Client Secret"
+msgstr "Mã bí mật người dùng PayPal"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
 msgid "PayPal Transaction Type"
-msgstr ""
+msgstr "Loại giao dịch PayPal"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_webhook_id
+msgid "PayPal Webhook ID"
+msgstr "ID Webhook PayPal"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Nhà cung cấp dịch vụ thanh toán"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_transaction
@@ -98,49 +125,59 @@ msgid "Payment Transaction"
 msgstr "Giao dịch thanh toán"
 
 #. module: payment_paypal
-#: model:ir.model.fields.selection,name:payment_paypal.selection__payment_provider__code__paypal
-msgid "Paypal"
-msgstr "Paypal"
-
-#. module: payment_paypal
-#: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_use_ipn
-msgid "Paypal Instant Payment Notification"
-msgstr ""
+#. odoo-javascript
+#: code:addons/payment_paypal/static/src/js/payment_form.js:0
+msgid "Payment processing failed"
+msgstr "Xử lý thanh toán không thành công"
 
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 msgid "Received data with invalid payment status: %s"
-msgstr ""
+msgstr "Dữ liệu đã nhận với trạng thái thanh toán không hợp lệ: %s"
 
 #. module: payment_paypal
-#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
-msgid "Set Paypal credentials"
-msgstr ""
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_provider.py:0
+msgid "The communication with the API failed. Details: %s"
+msgstr "Giao tiếp với API không thành công. Thông tin: %s"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+msgid "The customer left the payment page."
+msgstr "Khách hàng đã rời khỏi trang thanh toán."
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_access_token_expiry
+msgid "The moment at which the access token becomes invalid."
+msgstr "Thời điểm token trở nên không hợp lệ."
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_email_account
-msgid "The public business email solely used to identify the account with PayPal"
+msgid ""
+"The public business email solely used to identify the account with PayPal"
 msgstr ""
+"Email doanh nghiệp công khai chỉ được sử dụng để xác định tài khoản với "
+"PayPal"
 
 #. module: payment_paypal
-#. odoo-python
-#: code:addons/payment_paypal/controllers/main.py:0
-msgid "The status of transaction with reference %(ref)s was not synchronized because the 'Payment data transfer' option is not enabled on the PayPal dashboard."
-msgstr ""
-
-#. module: payment_paypal
-#. odoo-python
-#: code:addons/payment_paypal/controllers/main.py:0
-msgid "The status of transaction with reference %(ref)s was not synchronized because the PDT Identify Token is not configured on the provider %(record_link)s."
-msgstr ""
+#: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_access_token
+msgid "The short-lived token used to access Paypal APIs"
+msgstr "Token có hiệu lực ngắn được sử dụng để truy cập API Paypal"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Mã kỹ thuật của nhà cung cấp dịch vụ thanh toán này."
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_use_ipn
-msgid "Use IPN"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "Webhook ID"
+msgstr "ID Webhook"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_provider.py:0
+msgid "You must have an HTTPS connection to generate a webhook."
+msgstr "Bạn phải có kết nối HTTPS để tạo webhook."

@@ -1,33 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_oauth
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
-"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.providers
 msgid "- or -"
-msgstr ""
-
-#. module: auth_oauth
-#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
-msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Tutorial"
-msgstr ""
+msgstr "- atau -"
 
 #. module: auth_oauth
 #. odoo-python
@@ -43,7 +38,7 @@ msgstr "Memperbolehkan pengguna untuk masuk dengan akun Google"
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Allow users to sign in with their Google account"
-msgstr ""
+msgstr "Izinkan user untuk sign in dengan akun Google mereka"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__enabled
@@ -53,7 +48,7 @@ msgstr "Diperbolehkan"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__auth_endpoint
 msgid "Authorization URL"
-msgstr ""
+msgstr "URL Otorisasi"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__css_class
@@ -69,7 +64,7 @@ msgstr "Client ID"
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Client ID:"
-msgstr ""
+msgstr "Klien ID:"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_config_settings
@@ -89,56 +84,68 @@ msgstr "Dibuat pada"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__data_endpoint
 msgid "Data Endpoint"
-msgstr ""
+msgstr "Data Endpoint"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__display_name
 msgid "Display Name"
 msgstr "Nama Tampilan"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Google Authentication"
-msgstr ""
+msgstr "Autentikasi Google"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__id
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__write_uid
 msgid "Last Updated by"
-msgstr "Terakhir diperbarui oleh"
+msgstr "Terakhir Diperbarui oleh"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__write_date
 msgid "Last Updated on"
-msgstr "Terakhir diperbarui pada"
+msgstr "Terakhir Diperbarui pada"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_auth_oauth_provider__body
 msgid "Link text in Login Dialog"
-msgstr ""
+msgstr "Teks link di Login Dialog"
 
 #. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_facebook
 msgid "Log in with Facebook"
-msgstr ""
+msgstr "Log in dengan Facebook"
 
 #. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_google
 msgid "Log in with Google"
-msgstr ""
+msgstr "Log in dengan Google"
 
 #. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_openerp
 msgid "Log in with Odoo.com"
-msgstr ""
+msgstr "Log in dengan Odoo.com"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
 msgid "Login button label"
+msgstr "Label tombol login"
+
+#. module: auth_oauth
+#. odoo-python
+#: code:addons/auth_oauth/models/res_users.py:0
+msgid "Missing subject identity"
 msgstr ""
 
 #. module: auth_oauth
@@ -205,7 +212,7 @@ msgstr "Urutan"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__server_uri_google
 msgid "Server uri"
-msgstr ""
+msgstr "Server uri"
 
 #. module: auth_oauth
 #. odoo-python
@@ -219,6 +226,11 @@ msgid "System Parameter"
 msgstr "Parameter Sistem"
 
 #. module: auth_oauth
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+msgid "Tutorial"
+msgstr "Tutorial"
+
+#. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
 msgid "User"
 msgstr "Pengguna"
@@ -226,13 +238,19 @@ msgstr "Pengguna"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__validation_endpoint
 msgid "UserInfo URL"
-msgstr ""
+msgstr "UserInfo URL"
 
 #. module: auth_oauth
 #. odoo-python
 #: code:addons/auth_oauth/controllers/main.py:0
-msgid "You do not have access to this database or your invitation has expired. Please ask for an invitation and be sure to follow the link in your invitation email."
-msgstr "Anda tidak memiliki akses ke basisdata ini atau undangan anda  telah kadaluarsa. Mohon minta undangan dan pastikan untuk mengikuti tautan di email undangan."
+msgid ""
+"You do not have access to this database or your invitation has expired. "
+"Please ask for an invitation and be sure to follow the link in your "
+"invitation email."
+msgstr ""
+"Anda tidak memiliki akses ke basisdata ini atau undangan anda  telah "
+"kadaluwarsa. Mohon minta undangan dan pastikan untuk mengikuti tautan di "
+"email undangan."
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form

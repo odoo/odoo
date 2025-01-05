@@ -1,26 +1,39 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_payment
-#
+# 
 # Translators:
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
-# Martin Trigaux, 2022
-# Jolien De Paepe, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/wizards/payment_link_wizard.py:0
+msgid ""
+"#%(number)s - Installment of <strong>%(amount)s</strong> due on <strong "
+"class=\"text-primary\">%(date)s</strong>"
+msgstr ""
+"#%(number)s - Termijn van <strong>%(amount)s</strong> verschuldigd op "
+"<strong class=\"text-primary\">%(date)s</strong>"
+
+#. module: account_payment
+#. odoo-javascript
+#: code:addons/account_payment/static/src/js/portal_my_invoices_payment.js:0
+msgid "%s day(s) overdue"
+msgstr "%s dag(en) te laat"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
@@ -29,8 +42,12 @@ msgstr "<b>Communicatie: </b>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
-msgid "<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> Pay Now</span>"
-msgstr "<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> Betaal nu </span>"
+msgid ""
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
+"Pay Now</span>"
+msgstr ""
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
+"Betaal nu </span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -43,6 +60,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\"/>\n"
 "                <span class=\"d-none d-md-inline\"> Authorized</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\"> Geautoriseerd</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -50,6 +69,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\"/>\n"
 "                <span class=\"d-none d-md-inline\"> Paid</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\"> Betaald</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -62,23 +83,28 @@ msgid "<i class=\"fa fa-fw fa-check-circle\"/> Pending"
 msgstr "<i class=\"fa fa-fw fa-check-circle\"/> In behandeling"
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
-msgid "<span class=\"d-none d-md-inline\"> Pending</span>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-fw fa-check-circle\"/> Processing Payment"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> Betaling verwerken"
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
-msgid "<span class=\"o_stat_text\">Payment Transaction</span>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid "<span class=\"d-none d-md-inline\"> Pending</span>"
+msgstr "<span class=\"d-none d-md-inline\"> In behandeling</span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "<strong>Full Amount</strong><br/>"
+msgstr "<strong>Volledig bedrag</strong><br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"<strong>No suitable payment option could be found.</strong><br/>\n"
-"                                If you believe that it is an error, please contact the website administrator."
+"<strong>Installment</strong>\n"
+"                                        <br/>"
 msgstr ""
-"<strong>Geen geschikte betalingsoptie gevonden.</strong><br/>\n"
-"                                 Als je denkt dat het een fout is, neem dan contact op met de beheerder van de website."
+"<strong>Afbetaling</strong>\n"
+"                                        <br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
@@ -89,7 +115,22 @@ msgid ""
 msgstr ""
 "<strong>Waarschuwing!</strong> Er is een terugbetaling in behandeling voor deze betaling.\n"
 "                        Wacht even totdat het is verwerkt. Als de terugbetaling nog steeds in behandeling is over een\n"
-"                        enkele minuten, controleer de configuratie van je betalingsprovider."
+"                        enkele minuten, controleer de configuratie van je betaalprovider."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/wizards/payment_link_wizard.py:0
+msgid "A discount will be applied if the customer pays before %s included."
+msgstr "Er wordt een korting toegepast als de klant vóór %s betaalt."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid ""
+"A payment has already been made on this invoice, please make sure to not pay"
+" twice."
+msgstr ""
+"Er is al een betaling gedaan voor deze factuur, zorg ervoor dat je niet twee"
+" keer betaalt."
 
 #. module: account_payment
 #. odoo-python
@@ -104,9 +145,15 @@ msgid "A token is required to create a new payment transaction."
 msgstr "Een token is vereist om een betaaltransactie uit te voeren."
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.payment_onboarding_step
+#: model:onboarding.onboarding.step,button_text:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Activate Stripe"
-msgstr ""
+msgstr "Activeer Stripe"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_overdue_invoices_page
+msgid "Amount"
+msgstr "Bedrag"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_available_for_refund
@@ -114,34 +161,42 @@ msgid "Amount Available For Refund"
 msgstr "Bedrag beschikbaar voor terugbetaling"
 
 #. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__invoice_amount_due
+msgid "Amount Due"
+msgstr "Verschuldigd bedrag"
+
+#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__amount_paid
 #: model:ir.model.fields,field_description:account_payment.field_account_move__amount_paid
-#: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_paid
 msgid "Amount paid"
 msgstr "Betaald bedrag"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
-msgid "Are you sure you want to void the authorized transaction? This action can't be undone."
-msgstr "Weet je zeker dat je de geautoriseerde transactie ongeldig wilt maken? Deze actie is definitief."
+msgid ""
+"Are you sure you want to void the authorized transaction? This action can't "
+"be undone."
+msgstr ""
+"Weet je zeker dat je de geautoriseerde transactie ongeldig wilt maken? Deze "
+"actie is definitief."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__authorized_transaction_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_move__authorized_transaction_ids
-#: model:ir.model.fields,field_description:account_payment.field_account_payment__authorized_transaction_ids
 msgid "Authorized Transactions"
 msgstr "Geautoriseerde transacties"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Capture Transaction"
-msgstr "Afvangen transactie"
+msgstr "Verrichting vastleggen"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
 msgid "Close"
-msgstr "Sluiten"
+msgstr "Afsluiten"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_method_code
@@ -149,24 +204,19 @@ msgid "Code"
 msgstr "Code"
 
 #. module: account_payment
-#: model:ir.model,name:account_payment.model_res_company
-msgid "Companies"
-msgstr ""
-
-#. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Configuratie instellingen"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__create_uid
 msgid "Created by"
-msgstr "Gemaakt door"
+msgstr "Aangemaakt door"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__create_date
 msgid "Created on"
-msgstr "Gemaakt op"
+msgstr "Aangemaakt op"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__currency_id
@@ -174,19 +224,59 @@ msgid "Currency"
 msgstr "Valuta"
 
 #. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__discount_date
+msgid "Discount Date"
+msgstr "Kortingsdatum"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_move__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__display_name
+#: model:ir.model.fields,field_description:account_payment.field_onboarding_onboarding_step__display_name
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__display_name
+#: model:ir.model.fields,field_description:account_payment.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__display_name
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:account_payment.field_res_config_settings__display_name
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr "Schermnaam"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__display_open_installments
+msgid "Display Open Installments"
+msgstr "Openstaande termijnen weergeven"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
-msgid "Done, your online payment has been successfully processed. Thank you for your order."
+msgid ""
+"Done, your online payment has been successfully processed. Thank you for "
+"your order."
 msgstr "Gelukt, je online betaling is geslaagd. Bedankt voor je bestelling."
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.payment_onboarding_step
-msgid "Enable credit &amp; debit card payments supported by Stripe"
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__epd_info
+msgid "Early Payment Discount Information"
+msgstr "Informatie over vroegbetaalkorting"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "Early Payment Discount of"
+msgstr "Vroegbetalingskorting van"
+
+#. module: account_payment
+#: model:onboarding.onboarding.step,description:account_payment.onboarding_onboarding_step_payment_provider
+msgid "Enable credit & debit card payments supported by Stripe."
 msgstr ""
+"Betalingen met credit- & debetkaarten mogelijk maken die worden ondersteund "
+"door Stripe."
+
+#. module: account_payment
+#: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__full_only
+msgid "Full Only"
+msgstr "Alleen volledig"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_link_wizard
@@ -199,14 +289,40 @@ msgid "Generate a Payment Link"
 msgstr "Genereer een betaallink"
 
 #. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__has_eligible_epd
+msgid "Has Eligible Epd"
+msgstr "Komt in aanmerking voor Epd"
+
+#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__has_pending_refund
 msgid "Has a pending refund"
 msgstr "Heeft een terugbetaling in behandeling"
 
 #. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_journal__id
+#: model:ir.model.fields,field_description:account_payment.field_account_move__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__id
+#: model:ir.model.fields,field_description:account_payment.field_onboarding_onboarding_step__id
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__id
+#: model:ir.model.fields,field_description:account_payment.field_payment_provider__id
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__id
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__id
+#: model:ir.model.fields,field_description:account_payment.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+msgid ""
+"Impossible to pay all the overdue invoices if they don't share the same "
+"currency."
+msgstr ""
+"Onmogelijk om alle vervallen facturen te betalen als ze niet dezelfde valuta"
+" hebben."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
@@ -220,7 +336,7 @@ msgstr ""
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.res_config_settings_view_form
 msgid "Invoice Online Payment"
-msgstr ""
+msgstr "Facturen online betalen"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_transaction_form
@@ -235,9 +351,19 @@ msgid "Invoices"
 msgstr "Facturen"
 
 #. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_overdue_invoice
+msgid "Invoices &amp; Bills"
+msgstr "Verkoopfacturen &amp; Inkoopfacturen"
+
+#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction__invoices_count
 msgid "Invoices Count"
 msgstr "Aantal facturen"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_account_payment
+msgid "Invoices to pay"
+msgstr "Te betalen facturen"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_journal
@@ -265,31 +391,85 @@ msgid "Maximum Refund Allowed"
 msgstr "Maximaal toegestane restitutie"
 
 #. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_link_wizard__form_inherit_account_payment
+msgid "Next Installments"
+msgstr "Volgende termijnen"
+
+#. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__payment_token_id
-msgid "Note that only tokens from providers allowing to capture the amount are available."
-msgstr "Houd er rekening mee dat alleen tokens van providers die het bedrag kunnen vastleggen beschikbaar zijn."
+msgid ""
+"Note that only tokens from providers allowing to capture the amount are "
+"available."
+msgstr ""
+"Houd er rekening mee dat alleen tokens van providers die het bedrag kunnen "
+"vastleggen beschikbaar zijn."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
-msgid "Note that tokens from providers set to only authorize transactions (instead of capturing the amount) are not available."
-msgstr "Let op dat tokens van verwerkers ingesteld op alleen geautoriseerde transacties (in plaats van het vastleggen van het bedrag) niet beschikbaar zijn."
+msgid ""
+"Note that tokens from providers set to only authorize transactions (instead "
+"of capturing the amount) are not available."
+msgstr ""
+"Let op dat tokens van verwerkers ingesteld op alleen geautoriseerde "
+"transacties (in plaats van het vastleggen van het bedrag) niet beschikbaar "
+"zijn."
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.payment_onboarding_step
+#: model:onboarding.onboarding.step,step_image_alt:account_payment.onboarding_onboarding_step_payment_provider
+msgid "Onboarding Online Payments"
+msgstr "Onboarding online betalingen"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_onboarding_onboarding_step
+msgid "Onboarding Step"
+msgstr "Onboardingstap"
+
+#. module: account_payment
+#: model:onboarding.onboarding.step,title:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Online Payments"
-msgstr ""
+msgstr "Online betalingen"
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.payment_onboarding_step
-msgid "Online payments enabled"
-msgstr ""
+#. odoo-python
+#: code:addons/account_payment/controllers/portal.py:0
+msgid "Overdue invoices should share the same company."
+msgstr "Vervallen facturen moeten bij hetzelfde bedrijf horen."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/portal.py:0
+msgid "Overdue invoices should share the same currency."
+msgstr "Vervallen facturen moeten dezelfde valuta hebben."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/portal.py:0
+msgid "Overdue invoices should share the same partner."
+msgstr "Vervallen facturen moeten dezelfde contact hebben."
+
+#. module: account_payment
+#: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__partial
+msgid "Partial"
+msgstr "Gedeeltelijk"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_payment_register
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "Pay"
+msgstr "Betaal"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
+msgid "Pay Invoice"
+msgstr "Factuur betalen"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_res_config_settings__pay_invoices_online
 msgid "Pay Invoices Online"
-msgstr ""
+msgstr "Facturen online betalen"
 
 #. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_docs_entry
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "Pay Now"
 msgstr "Betaal nu"
@@ -300,9 +480,9 @@ msgid "Pay now"
 msgstr "Betaal nu"
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
-msgid "Pay with"
-msgstr "Betaal met"
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_overdue_invoice
+msgid "Pay overdue"
+msgstr "Betaal vervallen"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_id
@@ -331,12 +511,12 @@ msgstr "Betaalwijzes"
 #: model:ir.model,name:account_payment.model_payment_provider
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_id
 msgid "Payment Provider"
-msgstr "Betalingsprovider"
+msgstr "Betaalprovider"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_provider_menu
 msgid "Payment Providers"
-msgstr "Betalingsproviders"
+msgstr "Betaalproviders"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_refund_wizard
@@ -352,13 +532,14 @@ msgstr "Betaaltokens"
 #: model:ir.model,name:account_payment.model_payment_transaction
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_transaction_id
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__transaction_id
+#: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Payment Transaction"
 msgstr "Betalingstransactie"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_transaction_menu
 msgid "Payment Transactions"
-msgstr "Betalingstransacties"
+msgstr "Betaaltransacties"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment
@@ -367,17 +548,30 @@ msgstr "Betalingen"
 
 #. module: account_payment
 #. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+msgid "Please log in to pay your overdue invoices"
+msgstr "Log in om je vervallen facturen te betalen"
+
+#. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid "Provider"
 msgstr "Provider"
 
 #. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_overdue_invoices_page
+msgid "Reference"
+msgstr "Referentie"
+
+#. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__support_refund
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
 msgid "Refund"
-msgstr "Retour"
+msgstr "Creditfactuur"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_to_refund
@@ -392,17 +586,12 @@ msgstr "Terugbetaald bedrag"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
 msgid "Refunds"
-msgstr "Credits"
+msgstr "Creditfacturen"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__refunds_count
 msgid "Refunds Count"
-msgstr "Aantal credits"
-
-#. module: account_payment
-#: model:ir.model,name:account_payment.model_account_payment_register
-msgid "Register Payment"
-msgstr "Betaling registreren"
+msgstr "Aantal terugbetalingen"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_journal_form
@@ -430,6 +619,11 @@ msgid "State"
 msgstr "Status"
 
 #. module: account_payment
+#: model:onboarding.onboarding.step,done_text:account_payment.onboarding_onboarding_step_payment_provider
+msgid "Step Completed!"
+msgstr "Stap voltooid!"
+
+#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
@@ -444,19 +638,26 @@ msgstr "Het toegangstoken is ongeldig."
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/wizards/payment_refund_wizard.py:0
-msgid "The amount to be refunded must be positive and cannot be superior to %s."
-msgstr "Het terug te betalen bedrag moet positief zijn en mag niet hoger zijn dan %s."
+msgid ""
+"The amount to be refunded must be positive and cannot be superior to %s."
+msgstr ""
+"Het terug te betalen bedrag moet positief zijn en mag niet hoger zijn dan "
+"%s."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
 msgid "The journal in which the successful transactions are posted."
-msgstr "Het dagboek waarin de succesvolle transacties worden geboekt"
+msgstr "Het dagboek waarin de succesvolle transacties worden geboekt."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/payment_transaction.py:0
-msgid "The payment related to the transaction with reference %(ref)s has been posted: %(link)s"
-msgstr "De betaling met betrekking tot de transactie met kenmerk %(ref)s is geboekt: %(link)s"
+msgid ""
+"The payment related to the transaction with reference %(ref)s has been "
+"posted: %(link)s"
+msgstr ""
+"De betaling met betrekking tot de transactie met kenmerk %(ref)s is geboekt:"
+" %(link)s"
 
 #. module: account_payment
 #. odoo-python
@@ -472,34 +673,52 @@ msgstr "De bronbetaling van gerelateerde restitutiebetalingen"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice."
-msgstr "Er was een fout met het verwerken van je betalingen: incorrecte factuur."
+msgstr ""
+"Er was een fout met het verwerken van je betalingen: incorrecte factuur."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
-msgid "There was an error processing your payment: issue with credit card ID validation."
-msgstr "Er was een fout met het verwerken van je betalingen: fout in creditcard validatie."
+msgid ""
+"There was an error processing your payment: issue with credit card ID "
+"validation."
+msgstr ""
+"Er was een fout met het verwerken van je betalingen: fout in creditcard "
+"validatie."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
-msgstr "Er was een fout met het verwerken van je betalingen: transactie mislukt.<br/>"
+msgstr ""
+"Er was een fout met het verwerken van je betalingen: transactie "
+"mislukt.<br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
-msgstr "Er was een fout met het verwerken van je betalingen: foute creditcard ID."
+msgstr ""
+"Er was een fout met het verwerken van je betalingen: foute creditcard ID."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
+msgid "This invoice has already been paid."
+msgstr "Deze factuur is al betaald."
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_count
+#: model:ir.model.fields,field_description:account_payment.field_account_move__transaction_count
+msgid "Transaction Count"
+msgstr "Aantal transacties"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_move__transaction_ids
-#: model:ir.model.fields,field_description:account_payment.field_account_payment__transaction_ids
 msgid "Transactions"
 msgstr "Transacties"
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__support_refund
-msgid "Type of Refund Supported"
-msgstr "Soort credit ondersteund"
+#: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__none
+msgid "Unsupported"
+msgstr "Niet ondersteund"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method
@@ -514,13 +733,23 @@ msgstr "Ongeldige transactie"
 
 #. module: account_payment
 #. odoo-python
-#: code:addons/account_payment/models/account_journal.py:0
+#: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
-"Linked provider(s): %s"
+"Linked providers(s): %s"
 msgstr ""
-"Je kunt een betaalmethode die is gekoppeld aan een betaalprovider in de ingeschakelde of teststatus niet verwijderen.\n"
-"Gelinkte betaalprovider(s): %s"
+"Je kunt een betaalmethode die is gekoppeld aan een provider in de ingeschakelde of teststatus niet verwijderen.\n"
+"Gekoppelde provider(s): %s"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_provider.py:0
+msgid ""
+"You cannot uninstall this module as payments using this payment method "
+"already exist."
+msgstr ""
+"Je kunt deze module niet verwijderen omdat er al betalingen zijn die deze "
+"betaalmethode gebruiken."
 
 #. module: account_payment
 #. odoo-python
@@ -531,3 +760,25 @@ msgid ""
 msgstr ""
 "Je moet eerst een betaalprovider deactiveren voordat je het dagboek ervan verwijdert. \n"
 "Gekoppelde providers: %s"
+
+#. module: account_payment
+#. odoo-javascript
+#: code:addons/account_payment/static/src/js/portal_my_invoices_payment.js:0
+msgid "due in %s day(s)"
+msgstr "verschuldigd over %s dag(en)"
+
+#. module: account_payment
+#. odoo-javascript
+#: code:addons/account_payment/static/src/js/portal_my_invoices_payment.js:0
+msgid "due today"
+msgstr "vandaag verschuldigd"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "has been applied."
+msgstr "is toegepast."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid "overdue"
+msgstr "te laat"

@@ -1,77 +1,88 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_crm
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, "
-"2022\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
-"1 : 2;\n"
+"Language: es\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_count
 msgid "# Leads"
-msgstr "# de Iniciativas"
+msgstr "# Leads"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_page_count
 msgid "# Page Views"
-msgstr "# Páginas Vistas"
+msgstr "# Visitas a la página"
 
 #. module: website_crm
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Assign leads/opportunities to a sales team."
-msgstr "Asignar iniciativas/oportunidades a un equipo de ventas."
+msgstr "Asigne leads/oportunidades a un equipo de ventas."
 
 #. module: website_crm
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Assign leads/opportunities to a salesperson."
-msgstr "Asignar iniciativas/oportunidades a un comercial."
+msgstr "Asigne leads/oportunidades a un comercial."
 
 #. module: website_crm
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
 msgid "Default Sales Team for new leads created through the Contact Us form."
 msgstr ""
-"Equipo de ventas predeterminado para nuevos clientes potenciales creados a "
-"través del Formulario de Contacto."
+"Equipo de ventas por defecto para nuevos leads creados a través del "
+"formulario de contacto."
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_team_id
 msgid "Default Sales Teams"
-msgstr "Equipos de ventas predeterminados"
+msgstr "Equipos de ventas por defecto"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_user_id
 msgid "Default Salesperson"
-msgstr "Comercial predeterminado"
+msgstr "Comercial por defecto"
 
 #. module: website_crm
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_user_id
 msgid "Default salesperson for new leads created through the Contact Us form."
 msgstr ""
-"Comercial por defecto para nuevas iniciativas creadas a través del "
-"formulario \"Contacte con nosotros\"."
+"Comercial por defecto para nuevos leads creados a través del formulario de "
+"contacto."
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__display_name
+#: model:ir.model.fields,field_description:website_crm.field_website__display_name
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__id
+#: model:ir.model.fields,field_description:website_crm.field_website__id
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__id
+msgid "ID"
+msgstr "ID"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "Iniciativa/Oportunidad"
+msgid "Lead"
+msgstr "Lead"
 
 #. module: website_crm
 #: model:ir.actions.act_window,name:website_crm.crm_lead_action_from_visitor
@@ -79,28 +90,28 @@ msgstr "Iniciativa/Oportunidad"
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_form
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
 msgid "Leads"
-msgstr "Iniciativas"
+msgstr "Leads"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_kanban
 msgid "Leads / Opportunities"
-msgstr "Iniciativas / Oportunidades"
+msgstr "Leads / Oportunidades"
 
 #. module: website_crm
 #: model_terms:ir.actions.act_window,help:website_crm.crm_lead_action_from_visitor
 msgid "No lead linked for this visitor"
-msgstr "No hay iniciativa vinculada para este visitante."
+msgstr "No hay lead vinculado a este visitante."
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.crm_lead_view_form
 msgid "Page views"
-msgstr "Visitas a página"
+msgstr "Visitas a la página"
 
 #. module: website_crm
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Phone Number"
-msgstr ""
+msgstr "Número de teléfono"
 
 #. module: website_crm
 #. odoo-javascript
@@ -118,12 +129,12 @@ msgstr "Comercial"
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Subject"
-msgstr ""
+msgstr "Asunto"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_ids
 msgid "Web Visitors"
-msgstr "Visitantes de la web"
+msgstr "Visitantes del sitio web"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.crm_lead_merge_summary_inherit_website
@@ -149,22 +160,22 @@ msgstr "Visitante del sitio web"
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Your Company"
-msgstr ""
+msgstr "Su empresa "
 
 #. module: website_crm
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Your Email"
-msgstr ""
+msgstr "Su correo electrónico"
 
 #. module: website_crm
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Your Name"
-msgstr ""
+msgstr "Su nombre"
 
 #. module: website_crm
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Your Question"
-msgstr ""
+msgstr "Su pregunta"

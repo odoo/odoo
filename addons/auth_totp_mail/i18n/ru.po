@@ -1,58 +1,102 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_totp_mail
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-12-24 15:32+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
+msgid ""
+".\n"
+"                <br/>"
+msgstr ""
+".\n"
+"                <br/>"
 
 #. module: auth_totp_mail
 #: model:mail.template,body_html:auth_totp_mail.mail_template_totp_invite
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
-"        <t t-out=\"user.name  or ''\"></t> requested you activate two-factor authentication to protect your account.<br><br>\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
+"        <t t-out=\"user.name  or ''\"/> requested you activate two-factor authentication to protect your account.<br/><br/>\n"
 "        Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
 "        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
 "        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.\n"
 "\n"
-"        <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"        </p><p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
 "            <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
 "                Activate my two-factor Authentication\n"
 "            </a>\n"
 "        </p>\n"
-"    </p>\n"
+"    \n"
 "</div>\n"
 "        "
 msgstr ""
+
+#. module: auth_totp_mail
+#: model:mail.template,body_html:auth_totp_mail.mail_template_totp_mail_code
+msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Уважаемый <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
-"        <t t-out=\"user.name  or ''\"></t> просит вас активировать двухфакторную аутентификацию для защиты вашей учетной записи.<br><br>\n"
-"        Двухфакторная аутентификация (\"2FA\") - это система двойной аутентификации.\n"
-"        Первая осуществляется с помощью вашего пароля, а вторая - с помощью кода, который вы получаете из специального мобильного приложения.\n"
-"        Среди популярных - Authy, Google Authenticator или Microsoft Authenticator.\n"
+"Dear <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
+"<p>Someone is trying to log in into your account with a new device.</p>\n"
+"<ul>\n"
+"    <t t-set=\"not_available\">N/A</t>\n"
+"    <li>Location: <t t-out=\"ctx.get('location') or not_available\"/></li>\n"
+"    <li>Device: <t t-out=\"ctx.get('device') or not_available\"/></li>\n"
+"    <li>Browser: <t t-out=\"ctx.get('browser') or not_available\"/></li>\n"
+"    <li>IP address: <t t-out=\"ctx.get('ip') or not_available\"/></li>\n"
+"</ul>\n"
+"<p>If this is you, please enter the following code to complete the login:</p>\n"
+"<t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"/>\n"
+"<t t-set=\"code\" t-value=\"code_expiration[0]\"/>\n"
+"<t t-set=\"expiration\" t-value=\"code_expiration[1]\"/>\n"
+"<div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"    <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px solid #dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-radius: 5px;\"/>\n"
+"</div>\n"
+"<small>Please note that this code expires in <t t-out=\"expiration\"/>.</small>\n"
 "\n"
-"        <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"            <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
-"                Активируйте мою двухфакторную аутентификацию\n"
-"            </a>\n"
-"        </p>\n"
-"    </p>\n"
+"<p style=\"margin: 16px 0px 16px 0px;\">\n"
+"    If you did NOT initiate this log-in,\n"
+"    you should immediately change your password to ensure account security.\n"
+"</p>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px;\">\n"
+"    We also strongly recommend enabling the two-factor authentication using an authenticator app to help secure your account.\n"
+"</p>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"        Activate my two-factor authentication\n"
+"    </a>\n"
+"</p>\n"
 "</div>\n"
 "        "
+msgstr ""
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
+msgid ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"                To login, enter below the six-digit authentication code just sent via email to"
+msgstr ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"                Чтобы войти в систему, введите шестизначный код аутентификации, только что отправленный по электронной почте на адрес"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_setting_update
@@ -63,13 +107,18 @@ msgstr "<span>Рассмотрите</span>"
 #. odoo-python
 #: code:addons/auth_totp_mail/models/auth_totp_device.py:0
 msgid "A trusted device has just been added to your account: %(device_name)s"
-msgstr "В вашу учетную запись только что было добавлено доверенное устройство: %(device_name)s"
+msgstr ""
+"В вашу учетную запись только что было добавлено доверенное устройство: "
+"%(device_name)s"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/auth_totp_device.py:0
-msgid "A trusted device has just been removed from your account: %(device_names)s"
-msgstr "Только что с вашей учетной записи было удалено доверенное устройство: %(device_names)s"
+msgid ""
+"A trusted device has just been removed from your account: %(device_names)s"
+msgstr ""
+"Только что с вашей учетной записи было удалено доверенное устройство: "
+"%(device_names)s"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -78,20 +127,95 @@ msgid "Account Security"
 msgstr "Безопасность учетной записи"
 
 #. module: auth_totp_mail
+#: model:ir.model.fields.selection,name:auth_totp_mail.selection__res_config_settings__auth_totp_policy__all_required
+msgid "All users"
+msgstr "Все пользователи"
+
+#. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_auth_totp_device
 msgid "Authentication Device"
 msgstr "Устройство аутентификации"
 
 #. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "Cannot send email: user %s has no email address."
+msgstr ""
+"Невозможно отправить письмо: у пользователя %s нет адреса электронной почты."
+
+#. module: auth_totp_mail
+#: model:ir.model.fields.selection,name:auth_totp_mail.selection__auth_totp_rate_limit_log__limit_type__code_check
+msgid "Code Checking"
+msgstr "Проверка кода"
+
+#. module: auth_totp_mail
+#: model:ir.model,name:auth_totp_mail.model_res_config_settings
+msgid "Config Settings"
+msgstr "Параметры конфигурации"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_rate_limit_log__create_uid
+msgid "Created by"
+msgstr "Создано"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_rate_limit_log__create_date
+msgid "Created on"
+msgstr "Создано"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_device__display_name
+#: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_rate_limit_log__display_name
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_users__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields.selection,name:auth_totp_mail.selection__res_config_settings__auth_totp_policy__employee_required
+msgid "Employees only"
+msgstr "Только сотрудники"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_config_settings_view_form
+msgid ""
+"Enforce the two-factor authentication by email for employees or for all "
+"users (including portal users) if they didn't enable any other two-factor "
+"authentication method."
+msgstr ""
+"Примените двухфакторную аутентификацию по электронной почте для сотрудников "
+"или для всех пользователей (включая пользователей портала), если они не "
+"включили другой метод двухфакторной аутентификации."
+
+#. module: auth_totp_mail
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__auth_totp_enforce
+msgid "Enforce two-factor authentication"
+msgstr "Обеспечьте двухфакторную аутентификацию"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_device__id
+#: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_rate_limit_log__id
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_totp_mail
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_invite
 msgid "Invitation to activate two-factor authentication on your Odoo account"
-msgstr "Приглашение активировать двухфакторную аутентификацию на вашей учетной записи Odoo"
+msgstr ""
+"Приглашение активировать двухфакторную аутентификацию на вашей учетной "
+"записи Odoo"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
-msgid "Invitation to use two-factor authentication sent for the following user(s): %s"
-msgstr "Приглашение использовать двухфакторную аутентификацию отправлено для следующих пользователей: %s"
+msgid ""
+"Invitation to use two-factor authentication sent for the following user(s): "
+"%s"
+msgstr ""
+"Приглашение использовать двухфакторную аутентификацию отправлено для "
+"следующих пользователей: %s"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.view_users_form
@@ -104,6 +228,31 @@ msgid "Invite to use two-factor authentication"
 msgstr "Предложите использовать двухфакторную аутентификацию"
 
 #. module: auth_totp_mail
+#: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_rate_limit_log__ip
+msgid "Ip"
+msgstr "IP-адрес"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_rate_limit_log__write_uid
+msgid "Last Updated by"
+msgstr "Последнее обновление"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_rate_limit_log__write_date
+msgid "Last Updated on"
+msgstr "Последнее обновление"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
+msgid "Learn More"
+msgstr "Узнать больше"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_rate_limit_log__limit_type
+msgid "Limit Type"
+msgstr "Тип ограничения"
+
+#. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
 msgid "Name"
 msgstr "Имя"
@@ -112,6 +261,16 @@ msgstr "Имя"
 #: model:ir.actions.server,name:auth_totp_mail.action_activate_two_factor_authentication
 msgid "Open two-factor authentication configuration"
 msgstr "Открытая конфигурация двухфакторной аутентификации"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
+msgid "Re-send email"
+msgstr "Повторно отправить почту"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_rate_limit_log__scope
+msgid "Scope"
+msgstr "Сфера"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -138,9 +297,29 @@ msgid "Security Update: Device Removed"
 msgstr "Обновление системы безопасности: устройство удалено"
 
 #. module: auth_totp_mail
+#: model:ir.model.fields.selection,name:auth_totp_mail.selection__auth_totp_rate_limit_log__limit_type__send_email
+msgid "Send Email"
+msgstr "Отправить Email"
+
+#. module: auth_totp_mail
 #: model:mail.template,name:auth_totp_mail.mail_template_totp_invite
 msgid "Settings: 2Fa Invitation"
 msgstr "Параметры: 2Fa Приглашение"
+
+#. module: auth_totp_mail
+#: model:mail.template,name:auth_totp_mail.mail_template_totp_mail_code
+msgid "Settings: 2Fa New Login"
+msgstr "Настройки: 2Fa Новый вход"
+
+#. module: auth_totp_mail
+#: model:ir.model,name:auth_totp_mail.model_auth_totp_rate_limit_log
+msgid "TOTP rate limit logs"
+msgstr "Журналы ограничения скорости TOTP"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__auth_totp_policy
+msgid "Two-factor authentication enforcing policy"
+msgstr "Двухфакторная аутентификация, обеспечивающая соблюдение политики"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -156,8 +335,43 @@ msgstr "Двухфакторная аутентификация была отк�
 
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_res_users
+#: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_rate_limit_log__user_id
 msgid "User"
 msgstr "Пользователь"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "Verification failed, please double-check the 6-digit code"
+msgstr "Верификация не прошла, пожалуйста, перепроверьте 6-значный код"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
+msgid ""
+"We strongly recommend enabling the two-factor authentication using an authenticator app to help secure your account.\n"
+"                <br/>"
+msgstr ""
+"Мы настоятельно рекомендуем включить двухфакторную аутентификацию с помощью приложения-аутентификатора, чтобы обезопасить свою учетную запись.\n"
+"               <br/>"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "You reached the limit of authentication mails sent for your account"
+msgstr ""
+"Вы достигли лимита аутентификационных писем, отправленных для вашей учетной "
+"записи"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "You reached the limit of code verifications for your account"
+msgstr "Вы достигли лимита проверок кода для вашей учетной записи"
+
+#. module: auth_totp_mail
+#: model:mail.template,subject:auth_totp_mail.mail_template_totp_mail_code
+msgid "Your two-factor authentication code"
+msgstr "Ваш код двухфакторной аутентификации"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_setting_update

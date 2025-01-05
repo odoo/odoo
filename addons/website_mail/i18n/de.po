@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_mail
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Larissa Manderfeld, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_mail
@@ -31,14 +30,26 @@ msgid "<small>Unfollow</small><i class=\"fa fa-fw ms-1\"/>"
 msgstr "<small>Nicht mehr folgen</small><i class=\"fa fa-fw ms-1\"/>"
 
 #. module: website_mail
+#. odoo-javascript
+#: code:addons/website_mail/static/src/js/follow.js:0
+msgid "Error"
+msgstr "Fehler"
+
+#. module: website_mail
 #: model:ir.model,name:website_mail.model_publisher_warranty_contract
 msgid "Publisher Warranty Contract"
-msgstr "Publisher-Garantievertrag"
+msgstr "Garantievertrag des Veröffentlichers"
 
 #. module: website_mail
 #: model_terms:ir.ui.view,arch_db:website_mail.follow
 msgid "Subscribe"
 msgstr "Abonnieren"
+
+#. module: website_mail
+#. odoo-python
+#: code:addons/website_mail/controllers/main.py:0
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "Verdächtige Aktivität von Google reCaptcha erkannt."
 
 #. module: website_mail
 #: model_terms:ir.ui.view,arch_db:website_mail.follow
@@ -48,4 +59,4 @@ msgstr "Abmelden"
 #. module: website_mail
 #: model_terms:ir.ui.view,arch_db:website_mail.follow
 msgid "your email..."
-msgstr "Ihre E-Mail..."
+msgstr "Ihre E-Mail ..."

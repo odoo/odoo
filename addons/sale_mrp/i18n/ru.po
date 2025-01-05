@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_mrp
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: sale_mrp
@@ -50,7 +52,7 @@ msgstr "<span class=\"o_stat_text\">Продажа</span>"
 #. module: sale_mrp
 #: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
 msgid "<strong>Manufacturing Orders</strong>"
-msgstr "<strong>Производственные заказы</strong>"
+msgstr "<strong>Заявки на производство</strong>"
 
 #. module: sale_mrp
 #. odoo-python
@@ -85,7 +87,12 @@ msgstr "Дата:"
 #. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_account_move_line
 msgid "Journal Item"
-msgstr "Наименование в журнале"
+msgstr "Элемент журнала"
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Заказ на производство"
 
 #. module: sale_mrp
 #. odoo-python
@@ -99,14 +106,14 @@ msgid "Manufacturing orders associated with this sales order."
 msgstr "Производственные заказы, связанные с этим заказом на продажу."
 
 #. module: sale_mrp
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_production__sale_line_id
+msgid "Origin sale order line"
+msgstr ""
+
+#. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
 msgstr "Перемещение продукта (Позиции движения запасов)"
-
-#. module: sale_mrp
-#: model:ir.model,name:sale_mrp.model_mrp_production
-msgid "Production Order"
-msgstr "Заказ на производство"
 
 #. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_sale_order
@@ -125,6 +132,6 @@ msgid "Sources Sale Orders of %s"
 msgstr "Источники Продажа Заказы от %s"
 
 #. module: sale_mrp
-#: model:ir.model,name:sale_mrp.model_stock_move
-msgid "Stock Move"
-msgstr "Движение запасов"
+#: model:ir.model,name:sale_mrp.model_stock_rule
+msgid "Stock Rule"
+msgstr "Правило запаса"

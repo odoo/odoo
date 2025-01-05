@@ -1,0 +1,278 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* product_images
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+msgid ""
+"%(matching_images_count)s matching images have been found for "
+"%(product_count)s products."
+msgstr ""
+"%(matching_images_count)s vastaavaa kuvaa on löydetty %(product_count)s "
+"tuotteelle."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid ""
+"<span invisible=\"nb_products_selected &lt;= 10000\">\n"
+"                            As only 10,000 products can be processed per day, the remaining will be\n"
+"                            done tomorrow.\n"
+"                        </span>"
+msgstr ""
+"<span invisible=\"nb_products_selected &lt;= 10000\">\n"
+"                            Koska päivässä voidaan käsitellä vain 10 000 tuotetta, jäljelle jäävät tuotteet ovat\n"
+"                            vuorossa huomenna.\n"
+"                        </span>"
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+msgid ""
+"A task to process products in the background is already running. Please try "
+"againlater."
+msgstr ""
+"Tehtävä, joka käsittelee tuotteita taustalla, on jo käynnissä. Yritä "
+"uudelleen myöhemmin."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.res_config_settings_view_form
+msgid "API Key"
+msgstr "API Avain"
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid "Cancel"
+msgstr "Peruuta"
+
+#. module: product_images
+#: model:ir.model,name:product_images.model_res_config_settings
+msgid "Config Settings"
+msgstr "Asetukset"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__create_uid
+msgid "Created by"
+msgstr "Luonut"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__create_date
+msgid "Created on"
+msgstr "Luotu"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: product_images
+#: model:ir.model,name:product_images.model_product_fetch_image_wizard
+msgid ""
+"Fetch product images from Google Images based on the product's barcode "
+"number."
+msgstr ""
+"Hae tuotekuvia Google Imagesista tuotteen viivakoodinumeron perusteella."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid "Get Pictures"
+msgstr "Hanki kuvia"
+
+#. module: product_images
+#: model:ir.actions.act_window,name:product_images.product_product_action_get_pic_with_barcode
+#: model:ir.actions.act_window,name:product_images.product_template_action_get_pic_with_barcode
+msgid "Get Pictures from Google Images"
+msgstr "Hanki kuvia Google Imagesista"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_res_config_settings__google_custom_search_key
+msgid "Google Custom Search API Key"
+msgstr "Google Custom Search API-avain"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_product__image_fetch_pending
+msgid "Image Fetch Pending"
+msgstr "Kuvan haku odottaa käynnistymistä"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Viimeksi päivittänyt"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__write_date
+msgid "Last Updated on"
+msgstr "Viimeksi päivitetty"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_unable_to_process
+msgid "Number of product unprocessable"
+msgstr "Käsittelemättömien tuotteiden määrä"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_to_process
+msgid "Number of products to process"
+msgstr "Käsiteltävien tuotteiden määrä"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_selected
+msgid "Number of selected products"
+msgstr "Valittujen tuotteiden määrä"
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid ""
+"Please note that some images might not be royalty-free. You should not\n"
+"                        publish these on your website."
+msgstr ""
+"Huomaa, että jotkin kuvat eivät välttämättä ole maksutta käytettävissä. Sinun ei pitäisi\n"
+"                        julkaista niitä verkkosivustollasi."
+
+#. module: product_images
+#: model:ir.actions.server,name:product_images.ir_cron_fetch_image_ir_actions_server
+msgid "Product Images: Get product images from Google"
+msgstr "Tuotekuvat: Hanki tuotekuvat Googlesta"
+
+#. module: product_images
+#: model:ir.model,name:product_images.model_product_product
+msgid "Product Variant"
+msgstr "Tuotevariaatio"
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+msgid "Product images"
+msgstr "Palvelukuvat"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__products_to_process
+msgid "Products To Process"
+msgstr "Käsiteltävät tuotteet"
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+msgid ""
+"Products are processed in the background. Images will be updated "
+"progressively."
+msgstr "Tuotteita käsitellään taustalla. Kuvat päivitetään asteittain."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.res_config_settings_view_form
+msgid "Search Engine ID"
+msgstr "Hakukoneen tunnus"
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+msgid "The API Key and Search Engine ID must be set in the General Settings."
+msgstr "API-avain ja hakukoneen tunnus on asetettava Yleisissä asetuksissa."
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+msgid ""
+"The Custom Search API is not enabled in your Google project. Please visit "
+"your Google Cloud Platform project page and enable it, then retry. If you "
+"enabled this API recently, please wait a few minutes and retry."
+msgstr ""
+"Mukautetun haun sovellusliittymä ei ole käytössä Google-projektissasi. Käy "
+"Google Cloud Platform -projektisi sivulla ja ota se käyttöön ja yritä sitten"
+" uudelleen. Jos otit tämän API:n käyttöön hiljattain, odota muutama minuutti"
+" ja yritä uudelleen."
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_res_config_settings__google_pse_id
+msgid "The identifier of the Google Programmable Search Engine"
+msgstr "Googlen ohjelmoitavan hakukoneen tunniste"
+
+#. module: product_images
+#: model:ir.model.fields,help:product_images.field_product_fetch_image_wizard__products_to_process
+msgid ""
+"The list of selected products that meet the criteria (have a barcode and no "
+"image)"
+msgstr ""
+"Luettelo valituista tuotteista, jotka täyttävät kriteerit (joissa on "
+"viivakoodi, mutta ei kuvaa)"
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+msgid ""
+"The scheduled action \"Product Images: Get product images from Google\" has "
+"been deleted. Please contact your administrator to have the action restored "
+"or to reinstall the module \"product_images\"."
+msgstr ""
+"Ajastettu toiminto \"Tuotekuvat: Tuotekuvien hakeminen Googlesta\" on "
+"poistettu. Ota yhteyttä järjestelmänvalvojaan, jotta toiminto voidaan "
+"palauttaa tai jotta moduuli \"product_images\" voidaan asentaa uudelleen."
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/models/ir_cron_trigger.py:0
+msgid "This action is already scheduled. Please try again later."
+msgstr "Tämä toiminta on jo aikataulutettu. Yritä myöhemmin uudelleen."
+
+#. module: product_images
+#: model:ir.model,name:product_images.model_ir_cron_trigger
+msgid "Triggered actions"
+msgstr "Liipaisintoimenpiteet"
+
+#. module: product_images
+#: model:ir.model.fields,help:product_images.field_product_product__image_fetch_pending
+msgid "Whether an image must be fetched for this product. Handled by a cron."
+msgstr "Onko tälle tuotteelle haettava kuva. Käsitellään cronilla."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid "You selected"
+msgstr "Valitsit"
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+msgid "Your API Key or your Search Engine ID is incorrect."
+msgstr "API-avaimesi tai hakukoneen tunnus on väärä."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid "of which will be processed."
+msgstr "joista käsitellään."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid ""
+"products will not be\n"
+"                            processed because they either already have an image or their barcode\n"
+"                            number is not set."
+msgstr ""
+"tuotteet eivät ole\n"
+"                            käsitellä, koska niillä on joko jo kuva tai niiden viivakoodia\n"
+"                            numeroa ei ole asetettu."
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid "products,"
+msgstr "tuotteet,"

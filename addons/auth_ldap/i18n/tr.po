@@ -1,26 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_ldap
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
-# Levent Karakaş <levent@mektup.at>, 2019
-# Murat Kaplan <muratk@projetgrup.com>, 2019
-# Umur Akın <umura@projetgrup.com>, 2019
-# Buket Şeker <buket_skr@hotmail.com>, 2019
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2019\n"
-"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
-"Language: tr\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: auth_ldap
@@ -39,11 +35,27 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"    LDAP veritabanındaki kullanıcı hesaplarını aramak için kullanılan filtre. Dize gösteriminde rasgele bir LDAP filtresidir. Herhangi bir '%s' yer tutucusu, kullanıcı tarafından sağlanan oturum açma (tanımlayıcı) ile değiştirilecektir, filtre bu tür en az bir yer tutucu içermelidir.\n"
+"\n"
+"Filtre tam olarak bir (1) sonuçla sonuçlanmalıdır, aksi takdirde oturum açma geçersiz sayılır.\n"
+"\n"
+"Örnek (gerçek özellikler LDAP sunucusuna ve kuruluma bağlıdır):\n"
+"\n"
+"(&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"veya\n"
+"\n"
+"(| (mail=%s) (uid=%s))\n"
+"    "
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
-msgid "Automatically create local user accounts for new users authenticating via LDAP"
-msgstr "LDAP ile kimliği doğrulanan yeni kullanıcılar için otomatik yerel kullanıcı hesabı aç"
+msgid ""
+"Automatically create local user accounts for new users authenticating via "
+"LDAP"
+msgstr ""
+"LDAP ile kimliği doğrulanan yeni kullanıcılar için otomatik yerel kullanıcı "
+"hesabı aç"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -53,7 +65,7 @@ msgstr "Şirketler"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__company
 msgid "Company"
-msgstr "Şirket"
+msgstr "Firma"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
@@ -63,7 +75,7 @@ msgstr "Şirket LDAP yapılandırması"
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigürasyon Ayarları"
+msgstr "Yapılandırma Ayarları"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
@@ -73,25 +85,35 @@ msgstr "Kullanıcı Oluştur"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_uid
 msgid "Created by"
-msgstr "Oluşturan"
+msgstr "Tarafından oluşturuldu"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_date
 msgid "Created on"
-msgstr "Oluşturulma"
+msgstr "Oluşturuldu"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_base
-msgid "DN of the user search scope: all descendants of this base will be searched for users."
+msgid ""
+"DN of the user search scope: all descendants of this base will be searched "
+"for users."
 msgstr ""
+"Kullanıcı arama kapsamının DN'si: bu tabanın tüm alt öğeleri kullanıcılar "
+"için aranacaktır."
 
 #. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__display_name
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_ldap.field_res_users__display_name
 msgid "Display Name"
-msgstr "Görünüm Adı"
+msgstr "İsim Göster"
 
 #. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__id
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__id
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_ldap.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -143,11 +165,6 @@ msgid "LDAP password"
 msgstr "LDAP şifresi"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap____last_update
-msgid "Last Modified on"
-msgstr "Son Güncelleme"
-
-#. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
 msgid "Last Updated by"
 msgstr "Son Güncelleyen"
@@ -160,12 +177,15 @@ msgstr "Son Güncelleme"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Login Information"
-msgstr "Giriş bilgileri"
+msgstr "Giriş Bilgileri"
 
 #. module: auth_ldap
+#. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "No local user found for LDAP login and not configured to create one"
-msgstr "LDAP girişi için yerel kullanıcı bulunamadı ve bir tane oluşturacak şekilde yapılandırılmadı"
+msgstr ""
+"LDAP girişi için yerel kullanıcı bulunamadı ve bir tane oluşturacak şekilde "
+"yapılandırılmadı"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -174,13 +194,18 @@ msgstr "İşlem Parametresi"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
-msgid "Request secure TLS/SSL encryption when connecting to the LDAP server. This option requires a server with STARTTLS enabled, otherwise all authentication attempts will fail."
-msgstr "LDAP sunucuya bağlanırken güvenli TLS/SSL bağlantı iste. Bu opsiyon için sunucuda STARTTLS açık  olmalıdır, aksi durumda bağlantı kurulamaz."
+msgid ""
+"Request secure TLS/SSL encryption when connecting to the LDAP server. This "
+"option requires a server with STARTTLS enabled, otherwise all authentication"
+" attempts will fail."
+msgstr ""
+"LDAP sunucuya bağlanırken güvenli TLS/SSL bağlantı iste. Bu opsiyon için "
+"sunucuda STARTTLS açık olmalıdır, aksi durumda bağlantı kurulamaz."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
 msgid "Sequence"
-msgstr "Sıra"
+msgstr "Sıralama"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -199,18 +224,29 @@ msgstr "Şablon Kullanıcı"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
-msgid "The password of the user account on the LDAP server that is used to query the directory."
+msgid ""
+"The password of the user account on the LDAP server that is used to query "
+"the directory."
 msgstr "LDAP dizinini sorgulamak için gerekli kullanıcı şifresi."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
-msgid "The user account on the LDAP server that is used to query the directory. Leave empty to connect anonymously."
-msgstr "LDAP dizininde sorgulama yapmak için kullanılacak kullanıcı adı. Anonim giriş için boş bırakın."
+msgid ""
+"The user account on the LDAP server that is used to query the directory. "
+"Leave empty to connect anonymously."
+msgstr ""
+"LDAP dizininde sorgulama yapmak için kullanılacak kullanıcı adı. Anonim "
+"giriş için boş bırakın."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
 msgid "Use TLS"
 msgstr "TLS kullan"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_users
+msgid "User"
+msgstr "Kullanıcı"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -221,8 +257,3 @@ msgstr "Kullanıcı Bilgileri"
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__user
 msgid "User to copy when creating new users"
 msgstr "Yeni kullanıcılar oluşturulurken kopyalanacak kullanıcı"
-
-#. module: auth_ldap
-#: model:ir.model,name:auth_ldap.model_res_users
-msgid "Users"
-msgstr "Kullanıcılar"

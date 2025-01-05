@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_mrp
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Jolien De Paepe, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_mrp
@@ -33,7 +32,7 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>Bevestigd</b>"
 #. module: sale_mrp
 #: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>In progress</b>"
-msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>In uitvoering</b>"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>In behandeling</b>"
 
 #. module: sale_mrp
 #: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
@@ -68,7 +67,7 @@ msgstr ""
 #. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_mrp_bom
 msgid "Bill of Material"
-msgstr ""
+msgstr "Stuklijst"
 
 #. module: sale_mrp
 #: model:ir.model.fields,field_description:sale_mrp.field_sale_order__mrp_production_count
@@ -88,7 +87,12 @@ msgstr "Datum:"
 #. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_account_move_line
 msgid "Journal Item"
-msgstr "Boeking"
+msgstr "Boekingsregel"
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Productieorder"
 
 #. module: sale_mrp
 #. odoo-python
@@ -102,14 +106,14 @@ msgid "Manufacturing orders associated with this sales order."
 msgstr "Productieorders gekoppeld aan deze verkooporder."
 
 #. module: sale_mrp
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_production__sale_line_id
+msgid "Origin sale order line"
+msgstr "Originele verkooporderregel"
+
+#. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
 msgstr "Productverplaatstingen (voorraadverplaatsingsregels)"
-
-#. module: sale_mrp
-#: model:ir.model,name:sale_mrp.model_mrp_production
-msgid "Production Order"
-msgstr "Productieorder"
 
 #. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_sale_order
@@ -128,6 +132,6 @@ msgid "Sources Sale Orders of %s"
 msgstr "Bronverkooporders van %s"
 
 #. module: sale_mrp
-#: model:ir.model,name:sale_mrp.model_stock_move
-msgid "Stock Move"
-msgstr "Voorraadverplaatsing"
+#: model:ir.model,name:sale_mrp.model_stock_rule
+msgid "Stock Rule"
+msgstr "Voorraadregel"

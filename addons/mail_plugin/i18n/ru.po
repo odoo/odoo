@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mail_plugin
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:36+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: mail_plugin
@@ -26,8 +28,11 @@ msgstr "%s сотрудники"
 #. module: mail_plugin
 #. odoo-python
 #: code:addons/mail_plugin/controllers/authenticate.py:0
-msgid "Access Error: Only Internal Users can link their inboxes to this database."
-msgstr "Ошибка доступа: Только внутренние пользователи могут связывать свои почтовые ящики с этой базой данных."
+msgid ""
+"Access Error: Only Internal Users can link their inboxes to this database."
+msgstr ""
+"Ошибка доступа: Только внутренние пользователи могут связывать свои почтовые"
+" ящики с этой базой данных."
 
 #. module: mail_plugin
 #. odoo-javascript
@@ -62,8 +67,12 @@ msgstr "Годовой доход"
 #. module: mail_plugin
 #. odoo-javascript
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
-msgid "Attachments could not be logged in Odoo because their total size exceeded the allowed maximum."
-msgstr "Вложения не удалось зарегистрировать в Odoo, так как их общий размер превысил допустимый максимум."
+msgid ""
+"Attachments could not be logged in Odoo because their total size exceeded "
+"the allowed maximum."
+msgstr ""
+"Вложения не удалось зарегистрировать в Odoo, так как их общий размер "
+"превысил допустимый максимум."
 
 #. module: mail_plugin
 #. odoo-python
@@ -168,7 +177,9 @@ msgstr "Контакты найдены (%(count)s)"
 #. odoo-javascript
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 msgid "Could not autocomplete the company. Internal error. Try again later..."
-msgstr "Не удалось выполнить автозаполнение компании. Внутренняя ошибка. Повторите попытку позже..."
+msgstr ""
+"Не удалось выполнить автозаполнение компании. Внутренняя ошибка. Повторите "
+"попытку позже..."
 
 #. module: mail_plugin
 #. odoo-javascript
@@ -180,13 +191,16 @@ msgstr "Не удалось подключиться к базе данных. �
 #. odoo-javascript
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 msgid "Could not connect to your database. Please try again."
-msgstr "Не удалось подключиться к вашей базе данных. Пожалуйста, попробуйте еще раз."
+msgstr ""
+"Не удалось подключиться к вашей базе данных. Пожалуйста, попробуйте еще раз."
 
 #. module: mail_plugin
 #. odoo-javascript
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 msgid "Could not display image %(attachmentName)s, size is over limit."
-msgstr "Не удалось отобразить изображение %(attachmentName)s, размер превышает допустимый."
+msgstr ""
+"Не удалось отобразить изображение %(attachmentName)s, размер превышает "
+"допустимый."
 
 #. module: mail_plugin
 #. odoo-javascript
@@ -246,6 +260,8 @@ msgid "Description"
 msgstr "Описание"
 
 #. module: mail_plugin
+#: model:ir.model.fields,field_description:mail_plugin.field_ir_http__display_name
+#: model:ir.model.fields,field_description:mail_plugin.field_res_partner__display_name
 #: model:ir.model.fields,field_description:mail_plugin.field_res_partner_iap__display_name
 msgid "Display Name"
 msgstr "Отображаемое имя"
@@ -337,6 +353,8 @@ msgid "IAP response stored as a JSON string"
 msgstr "Ответ IAP хранится в виде строки JSON"
 
 #. module: mail_plugin
+#: model:ir.model.fields,field_description:mail_plugin.field_ir_http__id
+#: model:ir.model.fields,field_description:mail_plugin.field_res_partner__id
 #: model:ir.model.fields,field_description:mail_plugin.field_res_partner_iap__id
 msgid "ID"
 msgstr "ID"
@@ -443,7 +461,9 @@ msgstr "Ни одна компания, связанная с этим конт�
 #. odoo-javascript
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 msgid "No company linked to this contact could be enriched or found in Odoo"
-msgstr "Ни одна компания, связанная с этим контактом, не может быть найдена или обогащена в Odoo"
+msgstr ""
+"Ни одна компания, связанная с этим контактом, не может быть найдена или "
+"обогащена в Odoo"
 
 #. module: mail_plugin
 #. odoo-javascript
@@ -507,8 +527,12 @@ msgstr "Для одного партнера разрешен только од�
 #. module: mail_plugin
 #. odoo-javascript
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
-msgid "Oops, looks like you have exhausted your free enrichment requests. Please log in to try again."
-msgstr "Упс, похоже, что вы исчерпали свои запросы на бесплатное обогащение. Пожалуйста, войдите в систему, чтобы попробовать еще раз."
+msgid ""
+"Oops, looks like you have exhausted your free enrichment requests. Please "
+"log in to try again."
+msgstr ""
+"Упс, похоже, что вы исчерпали свои запросы на бесплатное обогащение. "
+"Пожалуйста, войдите в систему, чтобы попробовать еще раз."
 
 #. module: mail_plugin
 #. odoo-javascript
@@ -628,7 +652,8 @@ msgstr "Случилось что-то плохое. Пожалуйста, по�
 #. odoo-python
 #: code:addons/mail_plugin/controllers/mail_plugin.py:0
 msgid "The email of this contact is not valid and we can not enrich it"
-msgstr "Электронная почта этого контакта недействительна, и мы не можем ее обогатить"
+msgstr ""
+"Электронная почта этого контакта недействительна, и мы не можем ее обогатить"
 
 #. module: mail_plugin
 #. odoo-python
@@ -640,7 +665,8 @@ msgstr "У партнера уже есть связанная с ним ком�
 #. odoo-javascript
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 msgid "This company has no email address and could not be enriched."
-msgstr "У этой компании нет адреса электронной почты, и она не может быть обогащена."
+msgstr ""
+"У этой компании нет адреса электронной почты, и она не может быть обогащена."
 
 #. module: mail_plugin
 #. odoo-javascript
@@ -652,13 +678,19 @@ msgstr "Этот контакт не существует в базе данны
 #. odoo-javascript
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 msgid "This contact has no email address, no company could be enriched."
-msgstr "У этого контакта нет адреса электронной почты, компания не может быть обогащена."
+msgstr ""
+"У этого контакта нет адреса электронной почты, компания не может быть "
+"обогащена."
 
 #. module: mail_plugin
 #. odoo-python
 #: code:addons/mail_plugin/controllers/mail_plugin.py:0
-msgid "This is your notification address. Search the Contact manually to link this email to a record."
-msgstr "Это адрес вашего уведомления. Чтобы связать это письмо с записью, выполните поиск по контактам вручную."
+msgid ""
+"This is your notification address. Search the Contact manually to link this "
+"email to a record."
+msgstr ""
+"Это адрес вашего уведомления. Чтобы связать это письмо с записью, выполните "
+"поиск по контактам вручную."
 
 #. module: mail_plugin
 #. odoo-python
@@ -669,14 +701,22 @@ msgstr "Этот партнер не существует"
 #. module: mail_plugin
 #. odoo-javascript
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
-msgid "Warning: Attachments could not be logged in Odoo because their total size exceeded the allowed maximum."
-msgstr "Предупреждение: Вложения не могут быть зарегистрированы в Odoo, поскольку их общий размер превышает допустимый максимум."
+msgid ""
+"Warning: Attachments could not be logged in Odoo because their total size "
+"exceeded the allowed maximum."
+msgstr ""
+"Предупреждение: Вложения не могут быть зарегистрированы в Odoo, поскольку их"
+" общий размер превышает допустимый максимум."
 
 #. module: mail_plugin
 #. odoo-javascript
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
-msgid "Warning: Could not fetch the attachments %(attachments)s as their sizes are bigger then the maximum size of %(size)sMB per each attachment."
-msgstr "Предупреждение: Не удалось получить вложения %(attachments)s, так как их размер превышает максимальный размер %(size)sМБ для каждого вложения."
+msgid ""
+"Warning: Could not fetch the attachments %(attachments)s as their sizes are "
+"bigger then the maximum size of %(size)sMB per each attachment."
+msgstr ""
+"Предупреждение: Не удалось получить вложения %(attachments)s, так как их "
+"размер превышает максимальный размер %(size)sМБ для каждого вложения."
 
 #. module: mail_plugin
 #. odoo-javascript
@@ -701,7 +741,9 @@ msgstr "У вас недостаточно кредитов для обогащ�
 #. odoo-python
 #: code:addons/mail_plugin/controllers/mail_plugin.py:0
 msgid "You need to specify at least the partner_id or the name and the email"
-msgstr "Вам необходимо указать как минимум идентификатор партнера или имя и электронную почту"
+msgstr ""
+"Вам необходимо указать как минимум идентификатор партнера или имя и "
+"электронную почту"
 
 #. module: mail_plugin
 #: model_terms:ir.ui.view,arch_db:mail_plugin.app_auth

@@ -1,0 +1,512 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* event_crm
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_event__lead_count
+#: model:ir.model.fields,field_description:event_crm.field_event_registration__lead_count
+msgid "# Leads"
+msgstr "# Lead"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_crm_lead__registration_count
+msgid "# Registrations"
+msgstr "# Đăng ký"
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_registration.py:0
+msgid "(updated)"
+msgstr "(đã cập nhật)"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.crm_lead_view_form
+msgid "<span class=\"o_stat_text\"> Attendees</span>"
+msgstr "<span class=\"o_stat_text\"> Người tham dự</span>"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_registration_view_form
+msgid "<span class=\"o_stat_text\"> Leads</span>"
+msgstr "<span class=\"o_stat_text\">Lead</span>"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__active
+msgid "Active"
+msgstr "Đang hoạt động"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
+msgid "Archived"
+msgstr "Đã lưu trữ"
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__create
+msgid "Attendees are created"
+msgstr "Người tham dự đã được tạo"
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__confirm
+msgid "Attendees are registered"
+msgstr "Người tham dự đã được đăng ký"
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__done
+msgid "Attendees attended"
+msgstr "Người đã tham dự"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_tag_ids
+msgid "Automatically add these tags to the created leads."
+msgstr "Tự động thêm những thẻ này vào lead được tạo. "
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_sales_team_id
+msgid "Automatically assign the created leads to this Sales Team."
+msgstr "Tự động phân công lead đã tạo cho đội kinh doanh này. "
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_user_id
+msgid "Automatically assign the created leads to this Salesperson."
+msgstr "Tự động phân công lead đã tạo cho chuyên viên sales này. "
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_event.py:0
+msgid "Aww! No Leads created, check your Lead Generation Rules and try again."
+msgstr ""
+"Ôi! Chưa có lead nào được tạo, hãy kiểm tra Quy tắc tạo lead và thử lại."
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__company_id
+msgid "Company"
+msgstr "Công ty"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_crm_lead__registration_count
+msgid "Counter for the registrations linked to this lead"
+msgstr "Bộ đếm số đăng ký liên kết với lead này"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_basis
+msgid "Create"
+msgstr "Tạo"
+
+#. module: event_crm
+#: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
+msgid "Create a Lead Generation Rule"
+msgstr "Tạo quy tắc tạo lead"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_ids
+msgid "Created Leads"
+msgstr "Lead đã tạo"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__create_uid
+msgid "Created by"
+msgstr "Được tạo bởi"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__create_date
+msgid "Created on"
+msgstr "Được tạo vào"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
+msgid "Creation Type"
+msgstr "Kiểu tạo"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_creation_trigger
+msgid ""
+"Creation: at attendee creation;\n"
+"Registered: at attendee registration, manually or automatically;\n"
+"Attended: when attendance is confirmed and registration set to done;"
+msgstr ""
+"Tạo: khi tạo người tham dự;\n"
+"Đã đăng ký: khi đăng ký thông tin người tham dự, thủ công hoặc tự động;\n"
+"Đã tham dự: khi người tham dự được xác nhận và đăng ký được đặt là hoàn tất;"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_type
+msgid "Default lead type when this rule is applied."
+msgstr "Loại lead mặc định khi quy tắc này được áp dụng."
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_request__display_name
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: event_crm
+#: model:ir.model,name:event_crm.model_event_event
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_request__event_id
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_id
+msgid "Event"
+msgstr "Sự kiện"
+
+#. module: event_crm
+#: model:ir.actions.server,name:event_crm.ir_cron_generate_leads_ir_actions_server
+msgid "Event CRM: Generate Leads based on Rules"
+msgstr "CRM sự kiện: Tạo lead dựa trên Quy tắc"
+
+#. module: event_crm
+#: model:ir.model,name:event_crm.model_event_lead_request
+msgid "Event Lead Request"
+msgstr "Yêu cầu lead sự kiện"
+
+#. module: event_crm
+#: model:ir.model,name:event_crm.model_event_lead_rule
+msgid "Event Lead Rules"
+msgstr "Quy tắc lead sự kiện"
+
+#. module: event_crm
+#: model:ir.model,name:event_crm.model_event_registration
+msgid "Event Registration"
+msgstr "Đăng ký sự kiện"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_type_ids
+msgid "Event Templates"
+msgstr "Mẫu sự kiện"
+
+#. module: event_crm
+#: model:ir.actions.act_window,name:event_crm.event_registration_action_from_lead
+msgid "Event registrations"
+msgstr "Đăng ký sự kiện"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_crm_lead__event_id
+msgid "Event triggering the rule that created this lead"
+msgstr "Sự kiện kích hoạt quy tắc tạo nên lead này"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.crm_lead_merge_summary_inherit_event_crm
+msgid "Event:"
+msgstr "Sự kiện"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_registration_filter
+msgid "Filter the attendees that will or not generate leads."
+msgstr "Lọc người tham dự sẽ tạo hoặc không tạo thành lead."
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_type_ids
+msgid ""
+"Filter the attendees to include those of this specific event category. If "
+"not set, no event category restriction will be applied."
+msgstr ""
+"Lọc người tham dự để lấy những người thuộc danh mục sự kiện cụ thể này. Nếu "
+"không đặt, sẽ không áp dụng giới hạn danh mục sự kiện."
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_id
+msgid ""
+"Filter the attendees to include those of this specific event. If not set, no"
+" event restriction will be applied."
+msgstr ""
+"Lọc người tham dự để lấy những người thuộc danh mục sự kiện cụ thể này. Nếu "
+"không đặt, sẽ không áp dụng giới hạn sự kiện."
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "For any of these Events"
+msgstr "Cho bất kỳ một sự kiện nào "
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_view_form
+msgid "Generate Leads"
+msgstr "Tạo lead"
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_event.py:0
+msgid "Got it! We've noted your request. Your leads will be created soon!"
+msgstr "Đã hiểu! Chúng tôi đã ghi nhận yêu cầu của bạn. Lead sẽ sớm được tạo!"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_request__id
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "If the Attendees meet these Conditions"
+msgstr "Nếu người tham dự đáp ứng những điều kiện này"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__write_uid
+msgid "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__write_date
+msgid "Last Updated on"
+msgstr "Cập nhật lần cuối vào"
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__lead
+msgid "Lead"
+msgstr "Lead"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
+msgid "Lead Creation Type"
+msgstr "Kiểu tạo lead"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "Lead Default Values"
+msgstr "Giá trị mặc định lead"
+
+#. module: event_crm
+#: model:ir.ui.menu,name:event_crm.event_lead_rule_menu
+msgid "Lead Generation"
+msgstr "Tạo lead"
+
+#. module: event_crm
+#: model:ir.actions.act_window,name:event_crm.event_lead_rule_action
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "Lead Generation Rule"
+msgstr "Quy tắc tạo lead"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
+msgid "Lead Generation Rules"
+msgstr "Quy tắc tạo lead"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_type
+msgid "Lead Type"
+msgstr "Loại lead"
+
+#. module: event_crm
+#: model:ir.model,name:event_crm.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "Lead/Cơ hội"
+
+#. module: event_crm
+#: model:ir.actions.act_window,name:event_crm.crm_lead_action_from_event
+#: model:ir.actions.act_window,name:event_crm.crm_lead_action_from_registration
+#: model:ir.model.fields,field_description:event_crm.field_event_event__lead_ids
+#: model:ir.model.fields,field_description:event_crm.field_event_registration__lead_ids
+#: model_terms:ir.ui.view,arch_db:event_crm.event_view_form
+msgid "Leads"
+msgstr "Lead"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_event__lead_ids
+msgid "Leads generated from this event"
+msgstr "Lead được tạo từ sự kiện này"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
+msgid "Name"
+msgstr "Tên"
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_lead_rule.py:0
+msgid "New registrations"
+msgstr "Đăng ký mới"
+
+#. module: event_crm
+#: model_terms:ir.actions.act_window,help:event_crm.crm_lead_action_from_event
+#: model_terms:ir.actions.act_window,help:event_crm.crm_lead_action_from_registration
+msgid "No leads found"
+msgstr "Không tìm thấy lead "
+
+#. module: event_crm
+#: model_terms:ir.actions.act_window,help:event_crm.event_registration_action_from_lead
+msgid "No registration found"
+msgstr "Không tìm thấy đăng ký"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_event__has_lead_request
+msgid "Ongoing Generation Request"
+msgstr "Yêu cầu tạo hiện tại"
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_event.py:0
+msgid "Only Event Managers are allowed to re-generate all leads."
+msgstr "Chỉ Quản lý sự kiện mới được phép tạo lại tất cả lead."
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__opportunity
+msgid "Opportunity"
+msgstr "Cơ hội"
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_registration.py:0
+msgid "Participants"
+msgstr "Người tham gia"
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__attendee
+msgid "Per Attendee"
+msgstr "Cho mỗi người tham dự"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_creation_basis
+msgid ""
+"Per Attendee: A Lead is created for each Attendee (B2C).\n"
+"Per Order: A single Lead is created per Ticket Batch/Sale Order (B2B)"
+msgstr ""
+"Cho mỗi người tham dự: Tạo một lead cho mỗi người tham dự (B2C).\n"
+"Cho mỗi đơn hàng: Một lead được tạo cho một nhóm vé/Đơn bán hàng (B2B)."
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__order
+msgid "Per Order"
+msgstr "Cho mỗi đơn hàng"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_request__processed_registration_id
+msgid "Processed Registration"
+msgstr "Đăng ký đã được xử lý"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_lead_rule_id
+msgid "Registration Rule"
+msgstr "Quy tắc đăng ký"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.crm_lead_merge_summary_inherit_event_crm
+msgid "Registration Rule:"
+msgstr "Quy tắc đăng ký:"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_registration_filter
+msgid "Registrations Domain"
+msgstr "Miền đăng ký"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_crm_lead__registration_ids
+msgid "Registrations triggering the rule that created this lead"
+msgstr "Đăng ký kích hoạt quy tắc đã tạo ra lead này"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__company_id
+msgid ""
+"Restrict the trigger of this rule to events belonging to a specific company.\n"
+"If not set, no company restriction will be applied."
+msgstr ""
+"Giới hạn chỉ cho quy tắc này kích hoạt sự kiện thuộc về một công ty cụ thể.\n"
+"Nếu không đặt, không có giới hạn công ty nào được áp dụng."
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__name
+msgid "Rule Name"
+msgstr "Tên quy tắc"
+
+#. module: event_crm
+#: model:event.lead.rule,name:event_crm.event_lead_rule_0
+msgid "Rule on @example.com"
+msgstr "Quy tắc trên @example.com"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_crm_lead__event_lead_rule_id
+msgid "Rule that created this lead"
+msgstr "Quy tắc đã tạo ra lead này"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_sales_team_id
+msgid "Sales Team"
+msgstr "Bộ phận sales"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_user_id
+msgid "Salesperson"
+msgstr "Chuyên viên sales"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
+msgid "Search Lead Generation Rules"
+msgstr "Tìm kiếm quy tắc tạo lead"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_event__has_lead_request
+msgid "Set to True when a Lead Generation Request is currently running."
+msgstr "Đặt là True khi Yêu cầu tạo lead hiện đang chạy."
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_id
+msgid "Source Event"
+msgstr "Sự kiện nguồn"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_crm_lead__registration_ids
+msgid "Source Registrations"
+msgstr "Đăng ký nguồn"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_tag_ids
+msgid "Tags"
+msgstr "Thẻ"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_request__processed_registration_id
+msgid ""
+"The ID of the last processed event.registration, used to know where to "
+"resume."
+msgstr ""
+"ID của lượt đăng ký sự kiện được xử lý gần đây nhất, dùng để xác định xem "
+"nên tiếp tục từ đâu."
+
+#. module: event_crm
+#: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
+msgid "Those automatically create leads when attendees register."
+msgstr "Tự động tạo lead khi người dùng đăng ký."
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
+msgid "Trigger Type"
+msgstr "Loại kích hoạt"
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_registration.py:0
+msgid "Updated registrations"
+msgstr "Đăng ký đã cập nhật"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_trigger
+msgid "When"
+msgstr "Khi"
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_event.py:0
+msgid "Yee-ha, %(leads_count)s Leads have been created!"
+msgstr "Tuyệt! %(leads_count)s lead đã được tạo!"
+
+#. module: event_crm
+#: model:ir.model.constraint,message:event_crm.constraint_event_lead_request_uniq_event
+msgid "You can only have one generation request per event at a time."
+msgstr "Mỗi lần bạn chỉ có thể đưa ra một yêu cầu tạo cho mỗi sự kiện."
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "e.g. B2B Fairs"
+msgstr "VD: Hội chợ B2B"

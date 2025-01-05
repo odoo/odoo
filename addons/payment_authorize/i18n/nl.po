@@ -1,43 +1,43 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_authorize
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid ""
-"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-"
-"select\">\n"
-"                        <option value=\"checking\">Personal Checking</"
-"option>\n"
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">\n"
+"                        <option value=\"checking\">Personal Checking</option>\n"
 "                        <option value=\"savings\">Personal Savings</option>\n"
-"                        <option value=\"businessChecking\">Business "
-"Checking</option>\n"
+"                        <option value=\"businessChecking\">Business Checking</option>\n"
 "                    </select>"
 msgstr ""
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">\n"
+"                        <option value=\"checking\">Persoonlijke rekening</option>\n"
+"                        <option value=\"savings\">Persoonlijk spaargeld</option>\n"
+"                        <option value=\"businessChecking\">Zakelijke rekening</option>\n"
+"                    </select>"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "ABA Routing Number"
-msgstr ""
+msgstr "ABA-routeringsnummer"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_client_key
@@ -47,7 +47,7 @@ msgstr "API client sleutel"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_login
 msgid "API Login ID"
-msgstr ""
+msgstr "API-aanmeldings-ID"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_signature_key
@@ -62,7 +62,7 @@ msgstr "API Transactiesleutel"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Account Number"
-msgstr ""
+msgstr "Rekeningnummer"
 
 #. module: payment_authorize
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_provider__code__authorize
@@ -72,32 +72,32 @@ msgstr "Authorize.Net"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
 msgid "Authorize.Net Profile ID"
-msgstr ""
+msgstr "Authorize.Net profiel-ID"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Bank Account Type"
-msgstr ""
+msgstr "Type bankrekening"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Bank Name"
-msgstr ""
+msgstr "Naam bank"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Card Code"
-msgstr ""
+msgstr "Kaartcode"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Card Number"
-msgstr ""
+msgstr "Kaartnummer"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__code
 msgid "Code"
-msgstr ""
+msgstr "Code"
 
 #. module: payment_authorize
 #. odoo-python
@@ -106,19 +106,23 @@ msgid ""
 "Could not fetch merchant details:\n"
 "%s"
 msgstr ""
+"Kan verkopersgegevens niet ophalen:\n"
+"%s"
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 msgid ""
-"Could not retrieve the transaction details. (error code: %s; error_details: "
-"%s)"
+"Could not retrieve the transaction details. (error code: %(error_code)s; "
+"error_details: %(error_message)s)"
 msgstr ""
+"Kon de details van de transactie niet ophalen. (foutcode: %(error_code)s, "
+"error_details: %(error_message)s)"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Expiration"
-msgstr ""
+msgstr "Vervaldatum"
 
 #. module: payment_authorize
 #. odoo-python
@@ -127,6 +131,8 @@ msgid ""
 "Failed to authenticate.\n"
 "%s"
 msgstr ""
+"Kan niet verifiëren.\n"
+"%s"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
@@ -141,29 +147,29 @@ msgstr "Hoe betaald te worden met Authorize.Net"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "MM"
-msgstr ""
+msgstr "MM"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Name On Account"
-msgstr ""
+msgstr "Naam op account"
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Geen transactie gevonden die overeenkomt met referentie %s."
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_provider.py:0
 msgid "Only one currency can be selected by Authorize.Net account."
-msgstr ""
+msgstr "Er kan maar één valuta worden geselecteerd per Authorize.Net account."
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Betaalprovider"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token
@@ -179,30 +185,31 @@ msgstr "Betalingstransactie"
 #. odoo-javascript
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 msgid "Payment processing failed"
-msgstr ""
+msgstr "Betalingsverwerking mislukt"
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
-msgid ""
-"Received data with status code \"%(status)s\" and error code \"%(error)s\""
-msgstr ""
+msgid "Received data with status code \"%(status)s\" and error code \"%(error)s\""
+msgstr "Gegevens ontvangen met statuscode \"%(status)s\" en foutcode \"%(error)s\""
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/controllers/main.py:0
 msgid "Received tampered payment request data."
-msgstr ""
+msgstr "Ontvangen van geknoeid betalingsverzoekgegevens."
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "Set Account Currency"
-msgstr ""
+msgstr "Accountvaluta instellen"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_login
 msgid "The ID solely used to identify the account with Authorize.Net"
 msgstr ""
+"De ID die alleen wordt gebruikt om het account te identificeren bij "
+"Authorize.Net"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_client_key
@@ -210,24 +217,29 @@ msgid ""
 "The public client key. To generate directly from Odoo or from Authorize.Net "
 "backend."
 msgstr ""
+"De openbare clientsleutel. Om rechtstreeks vanuit Odoo of vanuit "
+"Authorize.Net backend te genereren."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "De technische code van deze betaalprovider."
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 msgid ""
-"The transaction is not in a status to be refunded. (status: %s, details: %s)"
+"The transaction is not in a status to be refunded. (status: %(status)s, "
+"details: %(message)s)"
 msgstr ""
+"De transactie heeft niet de status om terugbetaald te worden. (status: "
+"%(status)s, details: %(message)s)"
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 msgid "The transaction is not linked to a token."
-msgstr ""
+msgstr "De transactie is niet gekoppeld aan een token."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
@@ -235,14 +247,17 @@ msgid ""
 "The unique reference for the partner/token combination in the Authorize.net "
 "backend."
 msgstr ""
+"De unieke referentie voor het contact/token-combinatie in de Authorize.net-"
+"backend."
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_provider.py:0
 msgid "This action cannot be performed while the provider is disabled."
 msgstr ""
+"Deze actie kan niet worden uitgevoerd terwijl de provider is uitgeschakeld."
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "YY"
-msgstr ""
+msgstr "YY"

@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_sparse_field
-#
+# 
 # Translators:
-# Marius Stedjan <marius@stedjan.com>, 2022
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# Martin Trigaux, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
-"Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nb\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_sparse_field
@@ -31,6 +31,7 @@ msgid "Boolean"
 msgstr "Boolsk"
 
 #. module: base_sparse_field
+#. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
 msgid "Changing the storing system for field \"%s\" is not allowed."
 msgstr "Å endre lagringssystem for feltet \"%s\" er ikke tillatt."
@@ -48,7 +49,7 @@ msgstr "Opprettet av"
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__create_date
 msgid "Created on"
-msgstr "Opprettet"
+msgstr "Opprettet den"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__data
@@ -82,18 +83,18 @@ msgstr "ID"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,help:base_sparse_field.field_ir_model_fields__serialization_field_id
-msgid "If set, this field will be stored in the sparse structure of the serialization field, instead of having its own database column. This cannot be changed after creation."
-msgstr "Hvis satt, vil dette feltet bli lagret i serialiseringsfeltet istedet for en egen databasekolonne. Dette kan ikke endres etter opprettelse."
+msgid ""
+"If set, this field will be stored in the sparse structure of the "
+"serialization field, instead of having its own database column. This cannot "
+"be changed after creation."
+msgstr ""
+"Hvis satt, vil dette feltet bli lagret i serialiseringsfeltet istedet for en"
+" egen databasekolonne. Dette kan ikke endres etter opprettelse."
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__integer
 msgid "Integer"
 msgstr "Heltall"
-
-#. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test____last_update
-msgid "Last Modified on"
-msgstr "Sist endret"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__write_uid
@@ -116,6 +117,7 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: base_sparse_field
+#. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
 msgid "Renaming sparse field \"%s\" is not allowed"
 msgstr "Det er ikke tillatt å tildele feltet \"%s\" et nytt navn"
@@ -131,8 +133,11 @@ msgid "Serialization Field"
 msgstr "Serialiseringsfelt"
 
 #. module: base_sparse_field
+#. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
-msgid "Serialization field %r not found for sparse field %s!"
+msgid ""
+"Serialization field \"%(serialization_field)s\" not found for sparse field "
+"%(sparse_field)s!"
 msgstr ""
 
 #. module: base_sparse_field

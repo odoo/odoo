@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* partner_autocomplete
-#
+# 
 # Translators:
-# Malaz Abuidris <msea@odoo.com>, 2022
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
-"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: partner_autocomplete
@@ -25,6 +24,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__additional_info
 msgid "Additional info"
 msgstr "معلومات إضافية"
+
+#. module: partner_autocomplete
+#: model:iap.service,description:partner_autocomplete.iap_service_partner_autocomplete
+msgid "Automatically enrich your contact base with corporate data."
+msgstr ""
 
 #. module: partner_autocomplete
 #. odoo-javascript
@@ -35,13 +39,15 @@ msgstr "شراء رصيد أكثر"
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_company
 msgid "Companies"
-msgstr "الشركات "
+msgstr "الشركات"
 
 #. module: partner_autocomplete
 #. odoo-python
 #: code:addons/partner_autocomplete/models/res_company.py:0
 msgid "Company auto-completed by Odoo Partner Autocomplete Service"
-msgstr "تم إكمال بيانات الشركة تلقائياً باستخدام خدمة الإكمال التلقائي للشريك لدى أودو "
+msgstr ""
+"تم إكمال بيانات الشركة تلقائياً باستخدام خدمة الإكمال التلقائي للشريك لدى "
+"أودو "
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__partner_gid
@@ -79,6 +85,11 @@ msgstr "اسم العرض "
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__iap_enrich_auto_done
 msgid "Enrich Done"
 msgstr "تم الإثراء "
+
+#. module: partner_autocomplete
+#: model:iap.service,unit_name:partner_autocomplete.iap_service_partner_autocomplete
+msgid "Enrichments"
+msgstr "عمليات الإثراء "
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_ir_http
@@ -146,7 +157,7 @@ msgstr "مزامنة إكمال الشريك تلقائيًا"
 #. module: partner_autocomplete
 #: model:ir.actions.server,name:partner_autocomplete.ir_cron_partner_autocomplete_ir_actions_server
 msgid "Partner Autocomplete: Sync with remote DB"
-msgstr ""
+msgstr "إكمال الشريك تلقائياً: المزامنة مع قاعدة بيانات بعيدة "
 
 #. module: partner_autocomplete
 #. odoo-python

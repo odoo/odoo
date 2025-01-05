@@ -1,25 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * auth_ldap
-#
+# 	* auth_ldap
+# 
 # Translators:
-# Martin Trigaux, 2018
-# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018
-# gsong <gsong2014@foxmail.com>, 2018
-# Somchart Jabsung <jabsung.s@gmail.com>, 2018
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2018-08-24 09:15+0000\n"
-"Last-Translator: Somchart Jabsung <jabsung.s@gmail.com>, 2018\n"
-"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
-"Language: th\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: auth_ldap
@@ -38,11 +35,27 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"    ตัวกรองที่ใช้เพื่อค้นหาบัญชีผู้ใช้ในฐานข้อมูล LDAP ซึ่งเป็นตัวกรอง LDAP โดยพลการในการแทนค่าสตริง `%s` ตัวอย่างข้อความจะถูกแทนที่ด้วยการเข้าสู่ระบบ (ตัวระบุ) ​​ที่ผู้ใช้ให้มา ตัวกรองควรมีอย่างน้อยหนึ่งตัวอย่างข้อความดังกล่าว\n"
+"\n"
+"    ตัวกรองต้องส่งผลเพียงหนึ่ง (1) ผลลัพธ์ มิฉะนั้น การเข้าสู่ระบบจะถือว่าไม่ถูกต้อง\n"
+"\n"
+"    ตัวอย่าง (แอ็ตทริบิวต์จริงขึ้นอยู่กับเซิร์ฟเวอร์ LDAP และการตั้งค่า):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    or\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
-msgid "Automatically create local user accounts for new users authenticating via LDAP"
+msgid ""
+"Automatically create local user accounts for new users authenticating via "
+"LDAP"
 msgstr ""
+"สร้างบัญชีผู้ใช้ภายในเครื่องโดยอัตโนมัติสำหรับผู้ใช้ใหม่ที่ตรวจสอบสิทธิ์ผ่าน"
+" LDAP"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -57,12 +70,12 @@ msgstr "บริษัท"
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
 msgid "Company LDAP configuration"
-msgstr ""
+msgstr "การกำหนดค่า LDAP ของบริษัท"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "ตั้งค่าการกำหนดค่า"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
@@ -81,16 +94,25 @@ msgstr "สร้างเมื่อ"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_base
-msgid "DN of the user search scope: all descendants of this base will be searched for users."
+msgid ""
+"DN of the user search scope: all descendants of this base will be searched "
+"for users."
 msgstr ""
+"DN ของขอบเขตการค้นหาผู้ใช้: descendants ทั้งหมดของ base นี้จะถูกค้นหาผู้ใช้"
 
 #. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__display_name
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_ldap.field_res_users__display_name
 msgid "Display Name"
 msgstr "ชื่อที่ใช้แสดง"
 
 #. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__id
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__id
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_ldap.field_res_users__id
 msgid "ID"
 msgstr "รหัส"
 
@@ -104,47 +126,42 @@ msgstr "การตั้งค่า LDAP"
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company__ldaps
 #: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__ldaps
 msgid "LDAP Parameters"
-msgstr ""
+msgstr "พารามิเตอร์ LDAP"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
 msgid "LDAP Server"
-msgstr ""
+msgstr "เซิร์ฟเวอร์ LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
 msgid "LDAP Server address"
-msgstr ""
+msgstr "ที่อยู่เซิร์ฟเวอร์ LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server_port
 msgid "LDAP Server port"
-msgstr ""
+msgstr "พอร์ตเซิร์ฟเวอร์ LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_base
 msgid "LDAP base"
-msgstr ""
+msgstr "LDAP พื้นฐาน"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid "LDAP binddn"
-msgstr ""
+msgstr "LDAP binddn"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_filter
 msgid "LDAP filter"
-msgstr ""
+msgstr "LDAP ตัวกรอง"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_password
 msgid "LDAP password"
-msgstr ""
-
-#. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap____last_update
-msgid "Last Modified on"
-msgstr "แก้ไขครั้งสุดท้ายเมื่อ"
+msgstr "LDAP รหัส"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
@@ -159,22 +176,30 @@ msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Login Information"
-msgstr ""
+msgstr "ข้อมูลล็อกอิน"
 
 #. module: auth_ldap
+#. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "No local user found for LDAP login and not configured to create one"
 msgstr ""
+"ไม่พบผู้ใช้ท้องถิ่นในเการเข้าสู่ระบบ LDAP และไม่ได้กำหนดค่าให้สร้างขึ้น"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Process Parameter"
-msgstr ""
+msgstr "พารามิเตอร์กระบวนการ"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
-msgid "Request secure TLS/SSL encryption when connecting to the LDAP server. This option requires a server with STARTTLS enabled, otherwise all authentication attempts will fail."
+msgid ""
+"Request secure TLS/SSL encryption when connecting to the LDAP server. This "
+"option requires a server with STARTTLS enabled, otherwise all authentication"
+" attempts will fail."
 msgstr ""
+"ขอการเข้ารหัส TLS/SSL ที่ปลอดภัยเมื่อเชื่อมต่อกับเซิร์ฟเวอร์ LDAP "
+"ตัวเลือกนี้ต้องใช้เซิร์ฟเวอร์ที่เปิดใช้งาน STARTTLS "
+"ไม่เช่นนั้นการพยายามตรวจสอบสิทธิ์ทั้งหมดจะล้มเหลว"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
@@ -184,12 +209,12 @@ msgstr "ลำดับ"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Server Information"
-msgstr ""
+msgstr "ข้อมูลเซิร์ฟเวอร์"
 
 #. module: auth_ldap
 #: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
 msgid "Setup your LDAP Server"
-msgstr ""
+msgstr "ตั้งค่าเซิร์ฟเวอร์ LDAP ของคุณ"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
@@ -198,18 +223,29 @@ msgstr "ผู้ใช้ต้นแบบ"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
-msgid "The password of the user account on the LDAP server that is used to query the directory."
-msgstr ""
+msgid ""
+"The password of the user account on the LDAP server that is used to query "
+"the directory."
+msgstr "รหัสผ่านของบัญชีผู้ใช้บนเซิร์ฟเวอร์ LDAP ที่ใช้ในการสืบค้นทิศทาง"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
-msgid "The user account on the LDAP server that is used to query the directory. Leave empty to connect anonymously."
+msgid ""
+"The user account on the LDAP server that is used to query the directory. "
+"Leave empty to connect anonymously."
 msgstr ""
+"บัญชีผู้ใช้บนเซิร์ฟเวอร์ LDAP ที่ใช้ในการสืบค้นทิศทาง "
+"เว้นว่างไว้เพื่อเชื่อมต่อโดยไม่ระบุชื่อ"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
 msgid "Use TLS"
-msgstr ""
+msgstr "ใช้ TLS"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_users
+msgid "User"
+msgstr "ผู้ใช้"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -219,9 +255,4 @@ msgstr "ข้อมูลผู้ใช้"
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__user
 msgid "User to copy when creating new users"
-msgstr ""
-
-#. module: auth_ldap
-#: model:ir.model,name:auth_ldap.model_res_users
-msgid "Users"
-msgstr "ผู้ใช้งาน"
+msgstr "ผู้ใช้ที่จะคัดลอกเมื่อสร้างผู้ใช้ใหม่"

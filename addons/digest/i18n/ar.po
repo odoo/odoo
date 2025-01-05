@@ -1,36 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* digest
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Mehjabin Farsana, 2022
-# Niyas Raphy, 2022
-# Malaz Abuidris <msea@odoo.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
-"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: digest
-#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
-msgid "<i class=\"oi oi-arrow-right\"/> Check our Documentation"
-msgstr ""
-
-#. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
-msgid "<span class=\"button\" id=\"button_open_report\">Open Report</span>"
-msgstr "<span class=\"button\" id=\"button_open_report\">تقرير مفتوح</span> "
+msgid "<span class=\"button\" id=\"button_open_report\">➔ Open Report</span>"
+msgstr "<span class=\"button\" id=\"button_open_report\">➔ فتح التقرير</span> "
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
@@ -39,8 +31,8 @@ msgstr "<span class=\"odoo_link_text\">أودو</span> "
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
-msgid "<span style=\"color: #8f8f8f;\">Unsubscribe</span>"
-msgstr "<span style=\"color: #8f8f8f;\">إلغاء الاشتراك</span> "
+msgid "<span style=\"color: #878d97;\">Unsubscribe</span>"
+msgstr "<span style=\"color: #878d97;\">إلغاء الاشتراك</span> "
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -56,7 +48,9 @@ msgstr "مفعل"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Add new users as recipient of a periodic email with key metrics"
-msgstr "قم بإدراج المستخدمين الجدد في قائمة مستلمي رسائل البريد الدورية بمقاييس رئيسية "
+msgstr ""
+"قم بإدراج المستخدمين الجدد في قائمة مستلمي رسائل البريد الدورية بمقاييس "
+"رئيسية "
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__group_id
@@ -69,10 +63,20 @@ msgid "Available Fields"
 msgstr "الحقول المتاحة"
 
 #. module: digest
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
+msgid "Check our Documentation"
+msgstr "ألقِ نظرة على وثائق أودو "
+
+#. module: digest
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
 msgid "Choose the metrics you care about"
 msgstr "اختر المقاييس التي تعنيك "
+
+#. module: digest
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_6
+msgid "Click and hold on a Menu Item to reorder your Apps to your liking."
+msgstr "انقر مع الاستمرار على عنصر القائمة لإعادة ترتيب تطبيقاتك حسب رغبتك. "
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__company_id
@@ -172,7 +176,7 @@ msgstr "نصائح الموجز "
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Digest Title"
-msgstr "استوعب العنوان"
+msgstr "عنوان الموجز "
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__display_name
@@ -186,6 +190,12 @@ msgid "Email Address"
 msgstr "عنوان البريد الإلكتروني"
 
 #. module: digest
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_5
+msgid "Feeling eye strain? Give your eyes a break by switching to Dark Mode."
+msgstr ""
+"هل تشعر بإجهاد العين؟ امنح عينيك راحة من خلال التبديل إلى الوضع الداكن. "
+
+#. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "General"
 msgstr "عام"
@@ -197,8 +207,13 @@ msgstr "التجميع حسب "
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_1
-msgid "Have a question about a document? Click on the responsible user's picture to start a conversation. If his avatar has a green dot, he is online."
-msgstr "ألديك أي أسئلة حول مستند ما؟ اضغط على صورة المستخدم المسؤول لبدء محادثة. إذا كانت هناك نقطة خضراء بجانب الصورة الرمزية لذلك المستخدم، هذا يعني أنه متصل الآن. "
+msgid ""
+"Have a question about a document? Click on the responsible user's picture to"
+" start a conversation. If his avatar has a green dot, he is online."
+msgstr ""
+"ألديك أي أسئلة حول مستند ما؟ اضغط على صورة المستخدم المسؤول لبدء محادثة. إذا"
+" كانت هناك نقطة خضراء بجانب الصورة الرمزية لذلك المستخدم، هذا يعني أنه متصل "
+"الآن. "
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__id
@@ -296,8 +311,12 @@ msgstr "الاسم"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
-msgid "New users are automatically added as recipient of the following digest email."
-msgstr "يتم إضافة المستخدمين الجدد في قائمة مستلمي رسائل البريد الإلكتروني الموجزة التالية تلقائياً. "
+msgid ""
+"New users are automatically added as recipient of the following digest "
+"email."
+msgstr ""
+"يتم إضافة المستخدمين الجدد في قائمة مستلمي رسائل البريد الإلكتروني الموجزة "
+"التالية تلقائياً. "
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__next_run_date
@@ -324,12 +343,16 @@ msgstr "مشغل بواسطة "
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
 msgid "Prefer a broader overview?"
-msgstr ""
+msgstr " أتفضل أن تكون النظرة العامة شاملة أكثر؟ "
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_0
-msgid "Press ALT in any screen to highlight shortcuts for every button in the screen. It is useful to process multiple documents in batch."
-msgstr "اضغط على زر ALT في أي شاشة لإبراز الاختصارات لكل زر في الشاشة. يكون ذلك مفيداً عند معالجة عدة مستندات في دفعة واحدة. "
+msgid ""
+"Press ALT in any screen to highlight shortcuts for every button in the "
+"screen. It is useful to process multiple documents in batch."
+msgstr ""
+"اضغط على زر ALT في أي شاشة لإبراز الاختصارات لكل زر في الشاشة. يكون ذلك "
+"مفيداً عند معالجة عدة مستندات في دفعة واحدة. "
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__quarterly
@@ -346,7 +369,8 @@ msgstr "المستلمين"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_section_mobile
 msgid "Run your business from anywhere with <b>Odoo Mobile</b>."
-msgstr "تمكن من إدارة أعمالك من أي مكان باستخدام تطبيق <b>أودو للهاتف المحمول</b>. "
+msgstr ""
+"تمكن من إدارة أعمالك من أي مكان باستخدام تطبيق <b>أودو للهاتف المحمول</b>. "
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -361,12 +385,7 @@ msgstr "أُرسل من قِبَل "
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__sequence
 msgid "Sequence"
-msgstr "التسلسل "
-
-#. module: digest
-#: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
-msgid "Statistics"
-msgstr "الإحصائيات"
+msgstr "تسلسل "
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__state
@@ -400,9 +419,21 @@ msgid "Tip: How to ping users in internal notes?"
 msgstr " نصيحة: كيف تقوم بتنبيه المستخدمين في الملاحظات الداخلية؟ "
 
 #. module: digest
+#: model:digest.tip,name:digest.digest_tip_digest_5
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_5
+msgid "Tip: Join the Dark Side"
+msgstr "نصيحة: انضم إلى الجانب المعتم "
+
+#. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_4
 msgid "Tip: Knowledge is power"
 msgstr "نصيحة: المعرفة هي أساس القوة "
+
+#. module: digest
+#: model:digest.tip,name:digest.digest_tip_digest_6
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_6
+msgid "Tip: Personalize your Home Menu"
+msgstr "نصيحة: قم بتخصيص قائمتك الرئيسية "
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_0
@@ -437,12 +468,16 @@ msgstr "نصيحة: قم بتسريع سير عملك عن طريق الاخت�
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_tree
 msgid "Title"
-msgstr "العنوان"
+msgstr "اللقب "
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_3
-msgid "Type \"@\" to notify someone in a message, or \"#\" to link to a channel. Try to notify @OdooBot to test the feature."
-msgstr "اكتب \"@\" لتنبيه شخص في رسالة، أو \"#\" لربط أحدهم بقناة. جرب تنبيه @OdooBot لاختبار هذه الخاصية. "
+msgid ""
+"Type \"@\" to notify someone in a message, or \"#\" to link to a channel. "
+"Try to notify @OdooBot to test the feature."
+msgstr ""
+"اكتب \"@\" لتنبيه شخص في رسالة، أو \"#\" لربط أحدهم بقناة. جرب تنبيه "
+"@OdooBot لاختبار هذه الخاصية. "
 
 #. module: digest
 #: model:ir.model.fields,help:digest.field_digest_tip__sequence
@@ -473,8 +508,12 @@ msgstr "أترغب في تخصيص رسالة البريد الإلكتروني 
 #. module: digest
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
-msgid "We have noticed you did not connect these last few days. We have automatically switched your preference to %(new_perioridicy_str)s Digests."
-msgstr "لقد لاحظنا أنك لم تكن متصلاً أبداً خلال الأيام القليلة الماضية. لقد قمنا بتغيير تفضيلك تلقائياً إلى موجزات %(new_perioridicy_str)s. "
+msgid ""
+"We have noticed you did not connect these last few days. We have "
+"automatically switched your preference to %(new_perioridicy_str)s Digests."
+msgstr ""
+"لقد لاحظنا أنك لم تكن متصلاً أبداً خلال الأيام القليلة الماضية. لقد قمنا "
+"بتغيير تفضيلك تلقائياً إلى موجزات %(new_perioridicy_str)s. "
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__weekly
@@ -483,8 +522,14 @@ msgstr "أسبوعيًا"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_2
-msgid "When editing a number, you can use formulae by typing the `=` character. This is useful when computing a margin or a discount on a quotation, sale order or invoice."
-msgstr "عندما تقوم بتحرير رقم ما، بإمكانك استخدام معادلات عن طريق كتابة رمز `=`. يكون ذلك مفيداً عند احتساب الهوامش أو الخصومات في عروض الأسعار أو أوامر البيع أو الفواتير. "
+msgid ""
+"When editing a number, you can use formulae by typing the `=` character. "
+"This is useful when computing a margin or a discount on a quotation, sale "
+"order or invoice."
+msgstr ""
+"عندما تقوم بتحرير رقم ما، بإمكانك استخدام معادلات عن طريق كتابة رمز `=`. "
+"يكون ذلك مفيداً عند احتساب الهوامش أو الخصومات في عروض الأسعار أو أوامر "
+"البيع أو الفواتير. "
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_4

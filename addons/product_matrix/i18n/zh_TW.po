@@ -1,24 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* product_matrix
-#
+# 
 # Translators:
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
-"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid ""
+"<small>Switch to the \"else\" condition of this block to view or edit the "
+"table.</small>"
+msgstr "<small>切換至此區塊的「else」條件，以檢視或編輯該表格。</small>"
+
+#. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid "<strong>Product matrix block</strong>"
+msgstr "<strong>產品矩陣模塊</strong>"
 
 #. module: product_matrix
 #: model:product.attribute.value,name:product_matrix.product_attribute_value_color_1
@@ -26,10 +37,20 @@ msgid "Blue"
 msgstr "藍色"
 
 #. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid "Cell name"
+msgstr "儲存格名稱"
+
+#. module: product_matrix
 #. odoo-javascript
-#: code:addons/product_matrix/static/src/js/product_matrix_dialog.js:0
+#: code:addons/product_matrix/static/src/xml/product_matrix_dialog.xml:0
 msgid "Choose Product Variants"
-msgstr ""
+msgstr "選擇產品款式"
+
+#. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid "Column name"
+msgstr "欄名"
 
 #. module: product_matrix
 #. odoo-javascript
@@ -41,7 +62,7 @@ msgstr "確認"
 #. odoo-javascript
 #: code:addons/product_matrix/static/src/xml/product_matrix_dialog.xml:0
 msgid "Discard"
-msgstr ""
+msgstr "捨棄"
 
 #. module: product_matrix
 #: model:product.attribute,name:product_matrix.product_attribute_gender
@@ -92,7 +113,19 @@ msgstr "展示公司的愛圍繞著你=)."
 #. module: product_matrix
 #: model:product.attribute,name:product_matrix.product_attribute_size
 msgid "Size"
-msgstr "尺寸"
+msgstr "大小"
+
+#. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid ""
+"The matrix of product variants of this order will be displayed here, if "
+"there are any."
+msgstr "此處將顯示此訂單的產品款式矩陣（如有）。"
+
+#. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.extra_price
+msgid "Variant price"
+msgstr "款式變體價格"
 
 #. module: product_matrix
 #: model:product.attribute.value,name:product_matrix.product_attribute_value_w

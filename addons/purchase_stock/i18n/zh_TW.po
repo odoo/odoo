@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_stock
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Benson <Benson.Dr@Gmail.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Benson <Benson.Dr@Gmail.com>, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
-"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: purchase_stock
@@ -29,12 +28,7 @@ msgstr "% 準時到貨"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "+ %d day(s)"
-msgstr "+ %d day(s)"
-
-#. module: purchase_stock
-#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
-msgid "<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">No On-time Delivery Data</span>"
-msgstr "<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">尚無準交資訊</span>"
+msgstr "+ %d 天"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -52,9 +46,19 @@ msgid "<span class=\"o_stat_value\">%</span>"
 msgstr "<span class=\"o_stat_value\">%</span>"
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid "<span invisible=\"on_time_rate &gt;= 0\">No On-time Delivery Data</span>"
+msgstr "<span invisible=\"on_time_rate &gt;= 0\">無準時交付數據</span>"
+
+#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "<span> days</span>"
-msgstr ""
+msgstr "<span>天</span>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
+msgid "<span>Forecasted: </span>"
+msgstr "<span>預測：</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
@@ -75,6 +79,9 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"根據產品配置，收貨數量可以通過以下機制自動計算：\n"
+"  - 手動：手動設置行數量\n"
+"  - 庫存移動：已確認揀貨後獲取數量\n"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
@@ -127,14 +134,14 @@ msgstr "聯絡人"
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/purchase.py:0
+#: code:addons/purchase_stock/models/purchase_order.py:0
 msgid "Corresponding receipt not found."
 msgstr "未找到相應收貨"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_ids
 msgid "Created Purchase Order Lines"
-msgstr ""
+msgstr "已建立的採購訂單資料行"
 
 #. module: purchase_stock
 #. odoo-python
@@ -145,12 +152,17 @@ msgstr "幣別匯率差異"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__product_description_variants
 msgid "Custom Description"
-msgstr "產品說明"
+msgstr "自訂描述"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__days_to_arrive
+msgid "Days To Arrive"
+msgstr "抵達前等待日數"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Days needed to confirm a PO"
-msgstr ""
+msgstr "確認採購訂單所需天數"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_res_company__days_to_purchase
@@ -167,6 +179,11 @@ msgid "Days to Purchase"
 msgstr "平均採購天數"
 
 #. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__delay_pass
+msgid "Delay Pass"
+msgstr "延遲進程"
+
+#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_type_id
 msgid "Deliver To"
 msgstr "交貨到"
@@ -174,7 +191,10 @@ msgstr "交貨到"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_product_product__route_ids
 #: model:ir.model.fields,help:purchase_stock.field_product_template__route_ids
-msgid "Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, replenished on order, etc."
+msgid ""
+"Depending on the modules installed, this will allow you to define the route "
+"of the product: whether it will be bought, manufactured, replenished on "
+"order, etc."
 msgstr "根據所安裝的模組，這將允許您定義產品的補貨路線：是否會購買、製造、按訂單補充等。"
 
 #. module: purchase_stock
@@ -183,6 +203,33 @@ msgid "Destination Location Type"
 msgstr "目標位置類型"
 
 #. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_account_move__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_procurement_group__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_product_category__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_product_product__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_product_template__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_report_stock_report_stock_rule__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_res_company__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_res_partner__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_forecasted_product_product__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_move__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenish_mixin__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_option__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_return_picking__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_valuation_layer__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
@@ -190,7 +237,7 @@ msgstr "顯示名稱"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_dest_ids
 msgid "Downstream moves alt"
-msgstr ""
+msgstr "下游移動替代"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__dest_address_id
@@ -214,6 +261,11 @@ msgid "Effective Date Last Year"
 msgstr "生效日期-去年"
 
 #. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__days_to_arrival
+msgid "Effective Days To Arrival"
+msgstr "抵達前有效天數"
+
+#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s) occurred on the purchase order(s):"
 msgstr "採購訂單上發生異常:"
@@ -222,12 +274,6 @@ msgstr "採購訂單上發生異常:"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s):"
 msgstr "異常:"
-
-#. module: purchase_stock
-#. odoo-python
-#: code:addons/purchase_stock/models/purchase.py:0
-msgid "For the product %s, the warehouse of the operation type (%s) is inconsistent with the location (%s) of the reordering rule (%s). Change the operation type or cancel the request for quotation."
-msgstr "對於產品%s，操作類型（%s）的倉庫與重新排序規則（%s）的位置（%s）不一致。更改操作類型或取消報價請求。"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -242,7 +288,7 @@ msgstr "預測問題"
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__full
 msgid "Fully Received"
-msgstr ""
+msgstr "全數完成收貨"
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -257,9 +303,36 @@ msgid "Go back to the purchase order to generate the vendor bill."
 msgstr "返回採購訂單以生成供應商帳單。"
 
 #. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_account_move__id
+#: model:ir.model.fields,field_description:purchase_stock.field_account_move_line__id
+#: model:ir.model.fields,field_description:purchase_stock.field_procurement_group__id
+#: model:ir.model.fields,field_description:purchase_stock.field_product_category__id
+#: model:ir.model.fields,field_description:purchase_stock.field_product_product__id
+#: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__id
+#: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__id
+#: model:ir.model.fields,field_description:purchase_stock.field_product_template__id
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__id
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__id
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__id
+#: model:ir.model.fields,field_description:purchase_stock.field_report_stock_report_stock_rule__id
+#: model:ir.model.fields,field_description:purchase_stock.field_res_company__id
+#: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__id
+#: model:ir.model.fields,field_description:purchase_stock.field_res_partner__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_forecasted_product_product__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_move__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenish_mixin__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_option__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_return_picking__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_valuation_layer__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__id
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__id
 msgid "ID"
-msgstr "ID"
+msgstr "識別號"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoming_picking_count
@@ -272,19 +345,9 @@ msgid "Incoming Shipments"
 msgstr "入庫"
 
 #. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_id
-msgid "Incoterm"
-msgstr "國際貿易術語"
-
-#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_location
 msgid "Incoterm Location"
-msgstr ""
-
-#. module: purchase_stock
-#: model:ir.model.fields,help:purchase_stock.field_purchase_order__incoterm_id
-msgid "International Commercial Terms are a series of predefined commercial terms used in international transactions."
-msgstr "國際商業條款是一系列用於國際交易的事先定義的商業條款。"
+msgstr "國際貿易術語位置"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__is_shipped
@@ -299,17 +362,27 @@ msgstr "銷售模組是否已安裝"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_account_move
 msgid "Journal Entry"
-msgstr "日記帳分錄"
+msgstr "日記賬記項"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_account_move_line
 msgid "Journal Item"
-msgstr "日記帳項目"
+msgstr "日記賬項目"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__last_purchase_date
 msgid "Last Purchase"
 msgstr "上次採購"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_procurement_group__purchase_line_ids
+msgid "Linked Purchase Order Lines"
+msgstr "已連結採購訂單資料行"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__location_final_id
+msgid "Location from procurement"
+msgstr "採購物資位置"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -328,7 +401,10 @@ msgstr "可能需要手動操作."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
-msgid "Margin of error for vendor lead times. When the system generates Purchase Orders for reordering products,they will be scheduled that many days earlier to cope with unexpected vendor delays."
+msgid ""
+"Margin of error for vendor lead times. When the system generates Purchase "
+"Orders for reordering products,they will be scheduled that many days earlier"
+" to cope with unexpected vendor delays."
 msgstr "供應商提前期誤差幅度。當系統生成重新訂購產品的採購訂單時，它們將被調度提前幾天以應付意外的供應商延遲。"
 
 #. module: purchase_stock
@@ -339,7 +415,7 @@ msgstr "最小庫存規則"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Move forward expected request creation date by"
-msgstr ""
+msgstr "將預期的請求創建日期提前"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -352,6 +428,11 @@ msgid "No data yet"
 msgstr "尚無資訊"
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_help_message_template
+msgid "No receipt yet! Automate them with purchase orders."
+msgstr "尚未有收據！你可利用採購訂單，自動化處理收據。"
+
+#. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__pending
 msgid "Not Received"
 msgstr "未收到"
@@ -359,7 +440,9 @@ msgstr "未收到"
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_move.py:0
-msgid "Odoo is not able to generate the anglo saxon entries. The total valuation of %s is zero."
+msgid ""
+"Odoo is not able to generate the anglo saxon entries. The total valuation of"
+" %s is zero."
 msgstr "Odoo 無法生成盎格魯撒克遜庫存價值傳票。 %s 的總估值為零。"
 
 #. module: purchase_stock
@@ -373,7 +456,7 @@ msgstr "準時到貨"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_users__on_time_rate
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__on_time_rate
 msgid "On-Time Delivery Rate"
-msgstr "準交率"
+msgstr "準時交貨率"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_on_time
@@ -400,25 +483,30 @@ msgstr "訂貨點"
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
-msgid "Over the past 12 months; the number of products received on time divided by the number of ordered products."
-msgstr "在過去12個月中;按時收到的產品數量除以訂購的產品數量。"
+msgid ""
+"Over the past x days; the number of products received on time divided by the"
+" number of ordered products.x is either the System Parameter "
+"purchase_stock.on_time_delivery_days or the default 365"
+msgstr ""
+"過去 X 天內依時收到的產品數量除以訂購的產品數量。X 可以是系統參數 purchase_stock.on_time_delivery_days "
+"或預設值 365。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
 msgid "PO Lines"
-msgstr ""
+msgstr "採購訂單資料行"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__partial
 msgid "Partially Received"
-msgstr ""
+msgstr "部份完成收貨"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_category__property_account_creditor_price_difference_categ
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__property_account_creditor_price_difference
 #: model:ir.model.fields,field_description:purchase_stock.field_product_template__property_account_creditor_price_difference
 msgid "Price Difference Account"
-msgstr ""
+msgstr "價格差額賬戶"
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -433,6 +521,11 @@ msgid "Procurement Group"
 msgstr "補貨組"
 
 #. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__group_id
+msgid "Procurement group that generated this line"
+msgstr "產生此資料行的採購群組"
+
+#. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_template
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__product_id
 msgid "Product"
@@ -445,15 +538,25 @@ msgid "Product Category"
 msgstr "產品分類"
 
 #. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_id
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id
+#: model:ir.model,name:purchase_stock.model_product_replenish
+msgid "Product Replenish"
+msgstr "補料"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_replenish_mixin
+msgid "Product Replenish Mixin"
+msgstr "產品補貨混入程式"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__product_supplier_id
+#: model_terms:ir.ui.view,arch_db:purchase_stock.warehouse_orderpoint_search_inherit
 msgid "Product Supplier"
 msgstr "產品供應商"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_product
 msgid "Product Variant"
-msgstr "產品變體"
+msgstr "產品款式"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__propagate_cancel
@@ -480,6 +583,7 @@ msgstr "採購訂單項目"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_ids
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__purchase_id
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_help_message_template
 #: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
 msgid "Purchase Orders"
 msgstr "採購訂單"
@@ -498,7 +602,7 @@ msgstr "採購安全前置時間"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__purchase_visibility_days
 msgid "Purchase Visibility Days"
-msgstr ""
+msgstr "採購可見度天數"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_count
@@ -507,18 +611,20 @@ msgstr "採購訂單計數"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__dest_address_id
-msgid "Put an address if you want to deliver directly from the vendor to the customer. Otherwise, keep empty to deliver to your own company."
+msgid ""
+"Put an address if you want to deliver directly from the vendor to the "
+"customer. Otherwise, keep empty to deliver to your own company."
 msgstr "輸入地址,如果您想直接把貨直接從供應商發給客戶。空著就是發到自己公司。"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receipt"
-msgstr "收貨"
+msgstr "收據"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__receipt_status
 msgid "Receipt Status"
-msgstr ""
+msgstr "收貨狀態"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -540,6 +646,17 @@ msgstr "接收數量方法"
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_ids
 msgid "Receptions"
 msgstr "接收"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__receipt_status
+msgid ""
+"Red: Late\n"
+"            Orange: To process today\n"
+"            Green: On time"
+msgstr ""
+"紅色：遲到\n"
+"            橙色：今天處理\n"
+"            綠色：準時"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -571,7 +688,7 @@ msgstr "路線"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Schedule request for quotations earlier to avoid delays"
-msgstr ""
+msgstr "提早安排報價請求,以避免延誤"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
@@ -582,6 +699,12 @@ msgstr "設為供應商"
 #: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__show_set_supplier_button
 msgid "Show Set Supplier Button"
 msgstr "顯示設置供應商按鈕"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__show_vendor
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenish_mixin__show_vendor
+msgid "Show Vendor"
+msgstr "顯示供應商"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__show_supplier
@@ -610,6 +733,11 @@ msgid "Stock Rule"
 msgstr "庫存規則"
 
 #. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_valuation_layer
+msgid "Stock Valuation Layer"
+msgstr "庫存估值層"
+
+#. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "庫存規則報告"
@@ -620,9 +748,20 @@ msgid "Stock supplier replenishment information"
 msgstr "庫存供應商補貨資訊"
 
 #. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_replenishment_option
+msgid "Stock warehouse replenishment option"
+msgstr "庫存倉庫補貨選項"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id
+msgid "Supplier"
+msgstr "供應商"
+
+#. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_supplierinfo
 msgid "Supplier Pricelist"
-msgstr "供應商價格表"
+msgstr "供應商價目表"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_ids
@@ -642,31 +781,59 @@ msgstr "已建立以下補貨單"
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/purchase.py:0
-msgid "The quantities on your purchase order indicate less than billed. You should ask for a refund."
-msgstr "您的採購訂單上的數量少於已開立帳單數量。你應該要求進貨退折讓。"
+#: code:addons/purchase_stock/models/purchase_order_line.py:0
+msgid ""
+"The quantities on your purchase order indicate less than billed. You should "
+"ask for a refund."
+msgstr "您的採購訂單上的數量少於已開立帳單數量。你應該要求進貨退退款。"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase_order_line.py:0
+msgid ""
+"The warehouse of operation type (%(operation_type)s) is inconsistent with "
+"location (%(location)s) of reordering rule (%(reordering_rule)s) for product"
+" %(product)s. Change the operation type or cancel the request for quotation."
+msgstr ""
+"操作類型 (%(operation_type)s) 的倉庫，與產品 %(product)s 的再訂購規則 (%(reordering_rule)s) "
+"的位置 (%(location)s) 不一致。請更改操作類型，或取消報價請求。"
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
-msgid "There is no matching vendor price to generate the purchase order for product %s (no vendor defined, minimum quantity not reached, dates not valid, ...). Go on the product form and complete the list of vendors."
+msgid ""
+"There is no matching vendor price to generate the purchase order for product"
+" %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
+" Go on the product form and complete the list of vendors."
 msgstr "沒有匹配的供應商價格來生成產品 %s 的採購詢價單（未定義供應商、未達到最小數量、日期無效...）。進入產品主檔並填寫供應商清單。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_product_product__property_account_creditor_price_difference
 #: model:ir.model.fields,help:purchase_stock.field_product_template__property_account_creditor_price_difference
-msgid "This account is used in automated inventory valuation to record the price difference between a purchase order and its related vendor bill when validating this vendor bill."
-msgstr ""
+msgid ""
+"This account is used in automated inventory valuation to record the price "
+"difference between a purchase order and its related vendor bill when "
+"validating this vendor bill."
+msgstr "此賬戶用於存貨自動估值工作。核實供應商賬單時，若賬單上的價格與採購訂單不同，此賬戶會記錄有關差額。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_product_category__property_account_creditor_price_difference_categ
-msgid "This account will be used to value price difference between purchase price and accounting cost."
-msgstr ""
+msgid ""
+"This account will be used to value price difference between purchase price "
+"and accounting cost."
+msgstr "此賬戶用於記錄採購價格及會計成本之間的價格差額估值。"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
-msgid "This adds a dropshipping route to apply on products in order to request your vendors to deliver to your customers. A product to dropship will generate a purchase request for quotation once the sales order confirmed. This is a on-demand flow. The requested delivery address will be the customer delivery address and not your warehouse."
-msgstr "這增加一個直運路線來應用於產品，以請求您的供應商交付給您的客戶。 一旦銷售訂單被確認，要直運的產品將會產生報價的採購申請。這是按需流量。 請求的送貨地址將是客戶送貨地址，而不是您的倉庫。"
+msgid ""
+"This adds a dropshipping route to apply on products in order to request your"
+" vendors to deliver to your customers. A product to dropship will generate a"
+" purchase request for quotation once the sales order confirmed. This is a "
+"on-demand flow. The requested delivery address will be the customer delivery"
+" address and not your warehouse."
+msgstr ""
+"這增加一個直運路線來應用於產品，以請求您的供應商交付給您的客戶。 一旦銷售訂單被確認，要直運的產品將會產生報價的採購申請。這是按需流量。 "
+"請求的送貨地址將是客戶送貨地址，而不是您的倉庫。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
@@ -675,13 +842,15 @@ msgstr "這將決定進貨的作業類型。"
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/purchase.py:0
-msgid "Those dates couldn’t be modified accordingly on the receipt %s which had already been validated."
+#: code:addons/purchase_stock/models/purchase_order.py:0
+msgid ""
+"Those dates couldn’t be modified accordingly on the receipt %s which had "
+"already been validated."
 msgstr "無法在已驗證的收貨單 %s 上相應地修改這些日期。"
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/purchase.py:0
+#: code:addons/purchase_stock/models/purchase_order.py:0
 msgid "Those dates have been updated accordingly on the receipt %s."
 msgstr "這些日期已在收貨單 %s 上相應更新。"
 
@@ -693,13 +862,15 @@ msgstr "數量總計"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_picking
 msgid "Transfer"
-msgstr "調撥"
+msgstr "轉移"
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/purchase.py:0
-msgid "Unable to cancel purchase order %s as some receptions have already been done."
-msgstr "不能取消採購訂單 %s因為有些收貨已經完成。"
+#: code:addons/purchase_stock/models/purchase_order.py:0
+msgid ""
+"Unable to cancel purchase order(s): %s since they have receipts that are "
+"already done."
+msgstr "不能取消採購訂單：%s，因為有些收貨已經完成。"
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -708,6 +879,8 @@ msgid "Validate the receipt of all ordered products."
 msgstr "驗證所有訂購產品的收貨單"
 
 #. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__supplier_id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenish_mixin__supplier_id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__vendor_id
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__partner_id
 #: model_terms:ir.ui.view,arch_db:purchase_stock.view_warehouse_orderpoint_tree_editable_inherited_mrp
@@ -738,7 +911,7 @@ msgstr "供應商"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_stock_warehouse_orderpoint__purchase_visibility_days
 msgid "Visibility Days applied on the purchase routes."
-msgstr ""
+msgstr "在採購途程上已套用\"可見日\"。"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse
@@ -754,12 +927,15 @@ msgstr "已購買產品後能夠發運到此倉庫。"
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
-msgid "When products are needed in <b>%s</b>, <br/> a request for quotation is created to fulfill the need.<br/>Note: This rule will be used in combination with the rules<br/>of the reception route(s)"
-msgstr ""
+msgid ""
+"When products are needed in <b>%s</b>, <br/> a request for quotation is "
+"created to fulfill the need.<br/>Note: This rule will be used in combination"
+" with the rules<br/>of the reception route(s)"
+msgstr "當 <b>%s</b> 需要產品時，<br/>會建立報價請求以滿足需要。<br/>註：本規則將與收貨路線規則<br/>結合使用。"
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/purchase.py:0
+#: code:addons/purchase_stock/models/purchase_order_line.py:0
 msgid ""
 "You cannot decrease the ordered quantity below the received quantity.\n"
 "Create a return first."
@@ -769,14 +945,14 @@ msgstr ""
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/purchase.py:0
+#: code:addons/purchase_stock/models/purchase_order.py:0
 msgid "You must set a Vendor Location for this partner %s"
 msgstr "您必須為此合作夥伴設定一個供應商的位置%s"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "days"
-msgstr "天數"
+msgstr "天"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po

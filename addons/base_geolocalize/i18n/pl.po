@@ -1,32 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_geolocalize
-#
+# 
 # Translators:
-# Tomasz Leppich <t.leppich@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Wojciech Warczakowski <w.warczakowski@gmail.com>, 2022
-# Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2022
-# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2022
-# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2022
-# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2022
-# Piotr Strębski <strebski@gmail.com>, 2022
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2022
-# Maksym <ms@myodoo.pl>, 2022
-# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
-"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: pl\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: base_geolocalize
@@ -87,8 +77,8 @@ msgstr "Nazwa wyświetlana"
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
-msgid "Error with geolocation server:"
-msgstr "Błąd serwera geolokalizacji:"
+msgid "Error with geolocation server: %s"
+msgstr "Błąd serwera geolokalizacji: %s"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geocoder
@@ -103,7 +93,7 @@ msgstr "Geolokalizacja"
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geo_provider
 msgid "Geo Provider"
-msgstr "Dostawca geolokalizacji"
+msgstr "Operator geolokalizacji"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -160,7 +150,7 @@ msgstr "Nazwa"
 #. odoo-python
 #: code:addons/base_geolocalize/models/res_partner.py:0
 msgid "No match found for %(partner_names)s address(es)."
-msgstr "Nie znaleziono powiązanych dla adresów %(partner_names)s. "
+msgstr "Nie znaleziono dopasowania dla adresów %(partner_names)s. "
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -171,7 +161,7 @@ msgstr "Przypisanie partnera"
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 msgid "Provider %s is not implemented for geolocation service."
-msgstr "Dostawca %s nie jest zaimplementowany dla usługi geolokalizacji."
+msgstr "Operator %s nie jest zaimplementowany dla usługi geolokalizacji."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -187,7 +177,7 @@ msgstr "Odśwież lokalizację"
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_techname
 msgid "Technical Name"
-msgstr ""
+msgstr "Nazwa techniczna"
 
 #. module: base_geolocalize
 #. odoo-python
@@ -215,8 +205,12 @@ msgstr "Zaktualizowany: "
 
 #. module: base_geolocalize
 #: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
-msgid "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
-msgstr "Odwiedź https://developers.google.com/maps/documentation/geocoding/get-api-key aby uzyskać więcej informacji."
+msgid ""
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key"
+" for more information."
+msgstr ""
+"Odwiedź https://developers.google.com/maps/documentation/geocoding/get-api-"
+"key aby uzyskać więcej informacji."
 
 #. module: base_geolocalize
 #. odoo-python

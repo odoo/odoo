@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_automation
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Thi Huong Nguyen, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"POT-Creation-Date: 2024-09-26 12:50+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_automation
@@ -34,7 +33,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_automation/static/src/kanban_header_patch.js:0
 msgid "\"%s\" tag is added"
-msgstr ""
+msgstr "Đã thêm thẻ \"%s\""
 
 #. module: base_automation
 #. odoo-python
@@ -43,30 +42,34 @@ msgid ""
 "\"On live update\" automation rules can only be used with \"Execute Python "
 "Code\" action type."
 msgstr ""
+"Chỉ có thể sử dụng quy tắc tự động hóa \"Khi cập nhật trực tiếp\" với loại "
+"tác vụ \"Thực thi mã Python\"."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "%s actions"
-msgstr ""
+msgstr "%s tác vụ"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "1 action"
-msgstr ""
+msgstr "1 tác vụ"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<code>env</code>: environment on which the action is triggered"
-msgstr ""
+msgstr "<code>env</code>: môi trường mà tác vụ được kích hoạt"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
-"<code>model</code>: model of the record on which the action is triggered; is "
-"a void recordset"
+"<code>model</code>: model of the record on which the action is triggered; is"
+" a void recordset"
 msgstr ""
+"<code>model</code>: mô hình của bản ghi mà tác vụ được kích hoạt; là một tập"
+" bản ghi không còn hiệu lực"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -74,6 +77,8 @@ msgid ""
 "<code>payload</code>: the payload of the call (GET parameters, JSON body), "
 "as a dict."
 msgstr ""
+"<code>payload</code>: payload của cuộc gọi (tham số GET, nội dung JSON), "
+"dưới dạng từ điển dữ liệu."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -81,11 +86,13 @@ msgid ""
 "<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
 "<code>timezone</code>: useful Python libraries"
 msgstr ""
+"<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
+"<code>timezone</code>: các thư viện Python hữu ích"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 msgid "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Actions\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Tác vụ\"/>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -93,6 +100,8 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/> The default target record getter will work "
 "out-of-the-box for any webhook coming from another Odoo instance."
 msgstr ""
+"<i class=\"fa fa-info-circle\"/> Trình lấy bản ghi mục tiêu mặc định sẽ hoạt"
+" động ngay lập tức đối với mọi webhook đến từ một phiên bản Odoo khác."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -101,71 +110,76 @@ msgid ""
 "be executed <em>every time</em> the watched fields change, <em>whether you "
 "save or not</em>."
 msgstr ""
+"<i class=\"fa fa-warning\"/> Những quy tắc tự động hóa được kích hoạt bởi "
+"các thay đổi về giao diện người dùng sẽ được thực thi <em>mỗi khi</em> các "
+"trường được theo dõi thay đổi, <em>cho dù bạn có lưu hay không</em>."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span class=\"text-muted\"> Available variables: </span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"> Biến có sẵn: </span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "<span invisible=\"evaluation_type != 'value'\">to</span>\n"
-"                                                                <span "
-"invisible=\"evaluation_type != 'equation'\">as</span>"
+"                                                        <span invisible=\"evaluation_type != 'equation'\">as</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value'\">thành</span>\n"
+"                                                        <span invisible=\"evaluation_type != 'equation'\">là</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "<span invisible=\"trigger != 'on_time_created'\">after creation</span>\n"
-"                                    <span invisible=\"trigger != "
-"'on_time_updated'\">after last update</span>\n"
-"                                    <span invisible=\"trigger != "
-"'on_time'\">after</span>"
+"                                    <span invisible=\"trigger != 'on_time_updated'\">after last update</span>\n"
+"                                    <span invisible=\"trigger != 'on_time'\">after</span>"
 msgstr ""
+"<span invisible=\"trigger != 'on_time_created'\">sau khi tạo</span>\n"
+"                                    <span invisible=\"trigger != 'on_time_updated'\">sau lần cập nhật cuối cùng</span>\n"
+"                                    <span invisible=\"trigger != 'on_time'\">sau</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by adding</span>"
-msgstr ""
+msgstr "<span>bằng cách thêm</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by clearing it</span>"
-msgstr ""
+msgstr "<span>bằng cách xóa</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by removing</span>"
-msgstr ""
+msgstr "<span>bằng cách gỡ bỏ</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by setting it to</span>"
-msgstr ""
+msgstr "<span>bằng cách đặt thành</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid ""
-"<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
+msgid "<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
 msgstr ""
+"<strong><i class=\"fa fa-lock\"/> Đảm bảo bí mật, đảm bảo an toàn.</strong>"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__name
 #: model:ir.model.fields,field_description:base_automation.field_ir_cron__name
 msgid "Action Name"
-msgstr "Tên hành động"
+msgstr "Tên tác vụ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__action_server_ids
 msgid "Actions"
-msgstr ""
+msgstr "Tác vụ"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Actions To Do"
-msgstr ""
+msgstr "Tác vụ cần thực hiện"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__active
@@ -175,29 +189,29 @@ msgstr "Đang hoạt động"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Add an action"
-msgstr ""
+msgstr "Thêm một tác vụ"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Add followers"
-msgstr ""
+msgstr "Thêm người theo dõi"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Add followers: %(partner_names)s"
-msgstr ""
+msgstr "Thêm người theo dõi: %(partner_names)s"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_created
 msgid "After creation"
-msgstr ""
+msgstr "Sau khi tạo"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_updated
 msgid "After last update"
-msgstr ""
+msgstr "Sau lần cập nhật cuối cùng"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_domain
@@ -209,12 +223,12 @@ msgstr "Áp dụng cho"
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
 msgid "Archived"
-msgstr "Đã lưu"
+msgstr "Đã lưu trữ"
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Automate <em>everything</em> with Automation Rules"
-msgstr ""
+msgstr "Tự động hoá <em>mọi thứ</em> với Quy tắc tự động hoá"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
@@ -223,12 +237,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base_automation.selection__ir_actions_server__usage__base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Automation Rule"
-msgstr ""
+msgstr "Quy tắc tự động hoá"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__name
 msgid "Automation Rule Name"
-msgstr ""
+msgstr "Tên quy tắc tự động hoá"
 
 #. module: base_automation
 #: model:ir.actions.act_window,name:base_automation.base_automation_act
@@ -236,23 +250,23 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
 msgid "Automation Rules"
-msgstr ""
+msgstr "Quy tắc tự động hoá"
 
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 msgid "Automation Rules: check and execute"
-msgstr ""
+msgstr "Quy tắc tự động hóa: kiểm tra và thực thi"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/kanban_header_patch.js:0
 msgid "Automations"
-msgstr ""
+msgstr "Tự động hóa"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time
 msgid "Based on date field"
-msgstr ""
+msgstr "Dựa trên trường ngày"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_pre_domain
@@ -265,36 +279,38 @@ msgid ""
 "Change the URL's secret if you think the URL is no longer secure. You will "
 "have to update any automated system that calls this webhook to the new URL."
 msgstr ""
+"Hãy thay đổi bí mật của URL nếu bạn cho rằng URL đó không còn an toàn nữa. "
+"Bạn sẽ phải cập nhật mọi hệ thống tự động gọi webhook này sang URL mới."
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Compute"
-msgstr ""
+msgstr "Tính toán"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Create %(model_name)s with name %(value)s"
-msgstr ""
+msgstr "Tạo %(model_name)s với tên %(value)s"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Create a new Record"
-msgstr ""
+msgstr "Tạo một bản ghi mới"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Create activity: %(activity_name)s"
-msgstr ""
+msgstr "Tạo hoạt động: %(activity_name)s"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Create next activity"
-msgstr ""
+msgstr "Tạo hoạt động tiếp theo"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
@@ -310,12 +326,12 @@ msgstr "Được tạo vào"
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "Custom"
-msgstr ""
+msgstr "Tùy chỉnh"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Date Field"
-msgstr ""
+msgstr "Trường ngày"
 
 #. module: base_automation
 #. odoo-javascript
@@ -327,7 +343,7 @@ msgstr "Ngày"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Delay"
-msgstr ""
+msgstr "Thời gian trễ"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_range
@@ -336,6 +352,8 @@ msgid ""
 "delay before the trigger date, like sending a reminder 15 minutes before a "
 "meeting."
 msgstr ""
+"Trì hoãn sau ngày kích hoạt. Bạn có thể đặt số âm nếu bạn cần trì hoãn trước"
+" ngày kích hoạt, như gửi lời nhắc 15 phút trước cuộc họp."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -350,36 +368,38 @@ msgstr "Dạng trì hoãn"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Delete Action"
-msgstr ""
+msgstr "Xoá tác vụ"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "Deprecated (do not use)"
-msgstr ""
+msgstr "Không dùng nữa (đừng sử dụng)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__description
 msgid "Description"
-msgstr ""
+msgstr "Mô tả"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid "Disable Automation Rule"
-msgstr ""
+msgstr "Tắt quy tắc tự động hoá"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid ""
 "Disabling this automation rule will enable you to continue your workflow\n"
-"                but any data created after this could potentially be "
-"corrupted,\n"
-"                as you are effectively disabling a customization that may "
-"set\n"
+"                but any data created after this could potentially be corrupted,\n"
+"                as you are effectively disabling a customization that may set\n"
 "                important and/or required fields."
 msgstr ""
+"Việc tắt quy tắc tự động hóa này sẽ cho phép bạn tiếp tục luồng công việc\n"
+"                nhưng bất kỳ dữ liệu nào được tạo sau này cũng có thể bị hỏng,\n"
+"                vì bạn đã tắt một tùy chỉnh có thể đã thiết lập ra\n"
+"                những trường quan trọng và/hoặc trường bắt buộc."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -390,19 +410,19 @@ msgstr "Tên hiển thị"
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid "Edit Automation Rule"
-msgstr ""
+msgstr "Chỉnh sửa quy tắc tự động hoá"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "Email Events"
-msgstr ""
+msgstr "Sự kiện email"
 
 #. module: base_automation
 #. odoo-python
@@ -411,29 +431,31 @@ msgid ""
 "Email, follower or activity action types cannot be used when deleting "
 "records, as there are no more records to apply these changes to!"
 msgstr ""
+"Không thể sử dụng các loại tác vụ email, người theo dõi hoặc hoạt động khi "
+"xóa bản ghi vì không còn bản ghi nào để áp dụng những thay đổi này!"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Execute Python Code"
-msgstr ""
+msgstr "Thực thi Mã Python"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Execute several actions"
-msgstr ""
+msgstr "Thực thi tác vụ máy chủ"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "External"
-msgstr ""
+msgstr "Bên ngoài"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Extra Conditions"
-msgstr ""
+msgstr "Điều kiện bổ sung"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__on_change_field_ids
@@ -444,12 +466,12 @@ msgstr "Các trường kích hoạt sự thay đổi."
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Generic User"
-msgstr ""
+msgstr "Người dùng chung"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_is_mail_thread
 msgid "Has Mail Thread"
-msgstr ""
+msgstr "Có luồng email"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__hour
@@ -464,20 +486,26 @@ msgstr "ID"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
 msgid ""
-"If present, this condition must be satisfied before executing the automation "
-"rule."
+"If present, this condition must be satisfied before executing the automation"
+" rule."
 msgstr ""
+"Nếu có, điều kiện này phải được thỏa mãn trước khi thực thi quy tắc tự động "
+"hóa."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
 msgid ""
-"If present, this condition must be satisfied before the update of the record."
-msgstr "Nếu có, điều kiện này phải được thỏa mãn trước khi cập nhật hồ sơ."
+"If present, this condition must be satisfied before the update of the "
+"record. Not checked on record creation."
+msgstr ""
+"Nếu có, điều kiện này phải được thỏa mãn trước khi cập nhật bản ghi. Không "
+"chọn khi tạo bản ghi."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Keep track of what this automation does and why it exists..."
 msgstr ""
+"Theo dõi xem tính năng tự động hóa này làm gì và tại sao nó tồn tại..."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
@@ -487,7 +515,7 @@ msgstr "Chạy gần nhất"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_date
@@ -502,12 +530,12 @@ msgstr "Ít chậm trễ nhất Msg"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__log_webhook_calls
 msgid "Log Calls"
-msgstr ""
+msgstr "Ghi thông tin cuộc gọi"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Logs"
-msgstr ""
+msgstr "Nhật ký"
 
 #. module: base_automation
 #. odoo-python
@@ -516,6 +544,8 @@ msgid ""
 "Mail event can not be configured on model %s. Only models with discussion "
 "feature can be used."
 msgstr ""
+"Không thể cấu hình sự kiện thư trên mô hình %s. Chỉ có thể sử dụng các mô "
+"hình có tính năng thảo luận."
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__minutes
@@ -525,12 +555,12 @@ msgstr "Phút"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_id
 msgid "Model"
-msgstr "Model"
+msgstr "Mô hình"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_name
 msgid "Model Name"
-msgstr "Tên đối tượng"
+msgstr "Tên mô hình"
 
 #. module: base_automation
 #. odoo-python
@@ -539,11 +569,13 @@ msgid ""
 "Model of action %(action_name)s should match the one from automated rule "
 "%(rule_name)s."
 msgstr ""
+"Mô hình của tác vụ %(action_name)s phải khớp với mô hình từ quy tắc tự động "
+"hoá %(rule_name)s."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
 msgid "Model on which the automation rule runs."
-msgstr ""
+msgstr "Mô hình mà quy tắc tự động hóa chạy trên đó."
 
 #. module: base_automation
 #. odoo-javascript
@@ -556,7 +588,7 @@ msgstr "Tháng"
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "No record to run the automation on was found."
-msgstr ""
+msgstr "Không tìm thấy bản ghi nào để chạy tính năng tự động hóa."
 
 #. module: base_automation
 #. odoo-python
@@ -565,11 +597,13 @@ msgid ""
 "Note that this automation rule can be triggered up to %d minutes after its "
 "schedule."
 msgstr ""
+"Lưu ý là quy tắc tự động hoá này có thể được kích hoạt sau lịch trình tới %d"
+" phút."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Notes"
-msgstr ""
+msgstr "Ghi chú"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
@@ -579,150 +613,164 @@ msgstr "Bật trình kích hoạt trường thay đổi"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_change
 msgid "On UI change"
-msgstr ""
+msgstr "Khi thay đổi giao diện người dùng"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_archive
 msgid "On archived"
-msgstr ""
+msgstr "Khi được lưu trữ"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
 msgid "On creation"
-msgstr ""
+msgstr "Khi tạo"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unlink
 msgid "On deletion"
-msgstr ""
+msgstr "Khi xoá"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_received
 msgid "On incoming message"
-msgstr ""
+msgstr "Khi nhận tin nhắn"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_sent
 msgid "On outgoing message"
-msgstr ""
+msgstr "Khi gửi tin nhắn"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create_or_write
 msgid "On save"
-msgstr ""
+msgstr "Khi lưu"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unarchive
 msgid "On unarchived"
-msgstr ""
+msgstr "Khi huỷ lưu trữ"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_write
 msgid "On update"
-msgstr ""
+msgstr "Khi cập nhật"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_webhook
 msgid "On webhook"
-msgstr ""
+msgstr "Trên webhook"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Post as Message"
-msgstr ""
+msgstr "Đăng dưới dạng tin nhắn"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Post as Note"
-msgstr ""
+msgstr "Đăng dưới dạng ghi chú"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_priority_set
 msgid "Priority is set to"
-msgstr ""
+msgstr "Mức độ ưu tiên được đặt thành"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__record_getter
 msgid "Record Getter"
-msgstr ""
+msgstr "Trình thu nhận bản ghi"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Remove followers"
-msgstr ""
+msgstr "Xoá người theo dõi"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Remove followers: %(partner_names)s"
-msgstr ""
+msgstr "Xoá người theo dõi: %(partner_names)s"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Rotate Secret"
-msgstr ""
+msgstr "Rotate Secret"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select a date field..."
-msgstr ""
+msgstr "Chọn một trường ngày..."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select a value..."
-msgstr ""
+msgstr "Chọn một giá trị..."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select fields..."
-msgstr ""
+msgstr "Chọn các trường..."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
-msgid "Send SMS Text Message"
-msgstr ""
+msgid "Send SMS"
+msgstr "Gửi SMS"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Send SMS: %(template_name)s"
-msgstr ""
+msgstr "Gửi SMS: %(template_name)s"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Send Webhook Notification"
-msgstr ""
+msgstr "Gửi thông báo webhook"
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Send an email when an object changes state, archive records\n"
-"                after a month of inactivity or remind yourself to follow-up "
-"on\n"
+"                after a month of inactivity or remind yourself to follow-up on\n"
 "                tasks when a specific tag is added."
 msgstr ""
+"Gửi email khi một đối tượng thay đổi trạng thái, lưu trữ bản ghi\n"
+"                sau một tháng không hoạt động hoặc nhắc nhở bản thân theo dõi\n"
+"                các nhiệm vụ khi một thẻ cụ thể được thêm vào."
+
+#. module: base_automation
+#: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
+msgid ""
+"Send an email when an object changes state, archive records after a month of"
+" inactivity or remind yourself to follow-up on tasks when a specific tag is "
+"added.<br>With Automation Rules, you can automate any workflow."
+msgstr ""
+"Gửi email khi một đối tượng thay đổi trạng thái, lưu trữ bản ghi sau một "
+"tháng không hoạt động hoặc nhắc nhở bản thân follow-up các nhiệm vụ khi một "
+"thẻ cụ thể được thêm vào. <br>Với Quy tắc tự động hóa, bạn có thể tự động "
+"hóa bất kỳ quy trình làm việc nào."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Send email"
-msgstr ""
+msgstr "Gửi email"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Send email: %(template_name)s"
-msgstr ""
+msgstr "Gửi email: %(template_name)s"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
 msgid "Server Action"
-msgstr "Hành động phía Máy chủ"
+msgstr "Tác vụ phía máy chủ"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_selection_field_id
@@ -730,51 +778,57 @@ msgid ""
 "Some triggers need a reference to a selection field. This field is used to "
 "store it."
 msgstr ""
+"Một số trình kích hoạt cần tham chiếu đến trường lựa chọn. Trường này được "
+"sử dụng để lưu trữ nó."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
 msgid ""
-"Some triggers need a reference to another field. This field is used to store "
-"it."
+"Some triggers need a reference to another field. This field is used to store"
+" it."
 msgstr ""
+"Một số trình kích hoạt cần tham chiếu đến trường khác. Trường này được sử "
+"dụng để lưu trữ nó."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Specific User"
-msgstr ""
+msgstr "Người dùng cụ thể"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_stage_set
 msgid "Stage is set to"
-msgstr ""
+msgstr "Giai đoạn được đặt thành"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/kanban_header_patch.js:0
 msgid "Stage is set to \"%s\""
-msgstr ""
+msgstr "Giai đoạn được đặt thành \"%s\""
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_state_set
 msgid "State is set to"
-msgstr ""
+msgstr "Trạng thái được đặt thành"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_tag_set
 msgid "Tag is added"
-msgstr ""
+msgstr "Đã thêm thẻ"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Target Record"
-msgstr ""
+msgstr "Bản ghi mục tiêu"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
-msgid "Target model of actions %(action_names)s are different from rule model."
+msgid ""
+"Target model of actions %(action_names)s are different from rule model."
 msgstr ""
+"Mô hình mục tiêu của các tác vụ %(action_names)s khác với mô hình quy tắc."
 
 #. module: base_automation
 #. odoo-python
@@ -792,6 +846,8 @@ msgid ""
 "The automation rule will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
 msgstr ""
+"Quy tắc tự động hoá sẽ được kích hoạt khi và chỉ khi một trong các trường "
+"này được cập nhật. Nếu trống, tất cả các trường đều được theo dõi."
 
 #. module: base_automation
 #. odoo-javascript
@@ -800,6 +856,8 @@ msgid ""
 "The error occurred during the execution of the automation rule\n"
 "                \""
 msgstr ""
+"Đã xảy ra lỗi trong quá trình thực thi quy tắc tự động hóa\n"
+"                \""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__record_getter
@@ -807,17 +865,24 @@ msgid ""
 "This code will be run to find on which record the automation rule should be "
 "run."
 msgstr ""
+"Mã này sẽ được chạy để tìm xem quy tắc tự động hoá sẽ chạy trên bản ghi nào."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "Timing Conditions"
-msgstr ""
+msgstr "Điều kiện thời gian"
+
+#. module: base_automation
+#: model:digest.tip,name:base_automation.digest_tip_base_automation_0
+#: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
+msgid "Tip: Automate everything with Automation Rules"
+msgstr "Mẹo: Tự động hoá mọi thứ với Quy tắc tự động hoá"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
 msgid "Trigger"
-msgstr "Bộ khởi động"
+msgstr "Kích hoạt"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_id
@@ -827,12 +892,12 @@ msgstr "Ngày kích hoạt"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_selection_field_id
 msgid "Trigger Field"
-msgstr ""
+msgstr "Trường kích hoạt"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_model_name
 msgid "Trigger Field Model"
-msgstr ""
+msgstr "Mô hình trường kích hoạt"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
@@ -842,44 +907,39 @@ msgstr "Trường kích hoạt"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref
 msgid "Trigger Reference"
-msgstr ""
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_display_name
-msgid "Trigger Reference Display Name"
-msgstr ""
+msgstr "Tham chiếu kích hoạt"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.ir_actions_server_view_form_automation
 msgid "Type"
-msgstr ""
+msgstr "Loại"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "URL will be created once the rule is saved."
-msgstr ""
+msgstr "URL sẽ được tạo sau khi lưu quy tắc."
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Update"
-msgstr ""
+msgstr "Cập nhật"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Update the Record"
-msgstr ""
+msgstr "Cập nhật Bản ghi"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__url
 msgid "Url"
-msgstr ""
+msgstr "Url"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__usage
@@ -895,13 +955,13 @@ msgstr "Dùng lịch"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_user_set
 msgid "User is set"
-msgstr ""
+msgstr "Người dùng đã được thiết lập"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "Values Updated"
-msgstr ""
+msgstr "Giá trị đã được cập nhật"
 
 #. module: base_automation
 #. odoo-python
@@ -913,24 +973,24 @@ msgstr "Cảnh báo"
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "Webhook Log"
-msgstr ""
+msgstr "Nhật ký webhook"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "Webhook Logs"
-msgstr ""
+msgstr "Nhật ký webhook"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__webhook_uuid
 msgid "Webhook UUID"
-msgstr ""
+msgstr "UUID Webhook"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Weeks"
-msgstr ""
+msgstr "Tuần"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
@@ -938,14 +998,17 @@ msgid ""
 "When calculating a day-based timed condition, it is possibleto use a "
 "calendar to compute the date based on working days."
 msgstr ""
+"Khi tính toán điều kiện theo thời gian dựa trên ngày, có thể sử dụng lịch để"
+" tính toán ngày dựa trên ngày làm việc."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                If present, will be checked by the scheduler. If empty, will "
-"be checked at creation and update."
+"                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Khi nào thì điều kiện sẽ được kích hoạt.\n"
+"             Nếu có, sẽ được kiểm tra bởi công cụ lập kế hoạch. Nếu trống, sẽ được kiểm tra khi tạo và cập nhật. "
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
@@ -955,7 +1018,7 @@ msgstr "Khi không được chọn, quy tắc sẽ bị ẩn và sẽ không đ�
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "When updating"
-msgstr ""
+msgstr "Khi cập nhật"
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -963,6 +1026,8 @@ msgid ""
 "With Automation Rules, you can automate\n"
 "                <em>any</em> workflow."
 msgstr ""
+"Với Quy tắc tự động hóa, bạn có thể tự động hóa\n"
+"                <em>mọi</em> luồng công việc."
 
 #. module: base_automation
 #. odoo-javascript
@@ -970,12 +1035,14 @@ msgstr ""
 msgid ""
 "You can ask an administrator to disable or correct this automation rule."
 msgstr ""
+"Bạn có thể yêu cầu quản trị viên tắt hoặc sửa quy tắc tự động hóa này."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid "You can disable this automation rule or edit it to solve the issue."
 msgstr ""
+"Bạn có thể tắt hoặc chỉnh sửa quy tắc tự động hóa để giải quyết vấn đề này."
 
 #. module: base_automation
 #. odoo-python
@@ -992,19 +1059,21 @@ msgstr ""
 msgid ""
 "Your webhook URL contains a secret. Don't share it online or carelessly."
 msgstr ""
+"URL webhook của bạn chứa bí mật. Đừng chia sẻ online và hãy sử dụng cẩn "
+"thận."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 msgid "based on"
-msgstr ""
+msgstr "dựa trên"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "e.g. Support flow"
-msgstr ""
+msgstr "VD: Chu trình hỗ trợ"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.xml:0
 msgid "no action defined..."
-msgstr ""
+msgstr "không có tác vụ nào được xác định..."

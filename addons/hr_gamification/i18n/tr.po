@@ -1,28 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_gamification
-#
+# 
 # Translators:
-# Murat Kaplan <muratk@projetgrup.com>, 2022
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2022
-# Martin Trigaux, 2022
-# Umur Akın <umura@projetgrup.com>, 2022
-# Levent Karakaş <levent@mektup.at>, 2022
-# abc Def <hdogan1974@gmail.com>, 2022
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
-"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr_gamification
@@ -38,8 +32,11 @@ msgstr ""
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__badge_ids
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_base__badge_ids
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_public__badge_ids
-msgid "All employee badges, linked to the employee either directly or through the user"
-msgstr "Tüm personel rozetleri, personele doğrudan veya kullanıcı üzerinden bağlı"
+msgid ""
+"All employee badges, linked to the employee either directly or through the "
+"user"
+msgstr ""
+"Tüm personel rozetleri, personele doğrudan veya kullanıcı üzerinden bağlı"
 
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.challenge_list_action2
@@ -61,8 +58,11 @@ msgstr "Rozetler"
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
-msgid "Badges are rewards of good work. Give them to people you believe deserve it."
-msgstr "Rozetler iyi çalışmanın ödülüdür. Onu hakettiğine inandığınız kişilere verin."
+msgid ""
+"Badges are rewards of good work. Give them to people you believe deserve it."
+msgstr ""
+"Rozetler iyi çalışmanın ödülüdür. Onu hakettiğine inandığınız kişilere "
+"verin."
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__direct_badge_ids
@@ -114,7 +114,7 @@ msgstr "Doğrudan Rozetler"
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user__employee_id
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__employee_id
 msgid "Employee"
-msgstr "Personel"
+msgstr "Çalışan"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__badge_ids
@@ -192,11 +192,6 @@ msgid "Received Badges"
 msgstr "Alınan Rozetler"
 
 #. module: hr_gamification
-#: model:ir.model.fields,help:hr_gamification.field_gamification_badge_user_wizard__user_id
-msgid "Related user name for the resource to manage its access."
-msgstr "Kaynağın erişimini yönetmek için ilişkilendirilmiş kullanıcı."
-
-#. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.action_reward_wizard
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Reward Employee"
@@ -208,6 +203,7 @@ msgid "Reward Employee with"
 msgstr "Personeli Ödüllendir"
 
 #. module: hr_gamification
+#. odoo-python
 #: code:addons/hr_gamification/models/gamification.py:0
 msgid "The selected employee does not correspond to the selected user."
 msgstr "Seçilen personel seçilen kullanıcıya karşılık gelmiyor."
@@ -224,14 +220,10 @@ msgid "What are you thankful for?"
 msgstr "Ne için müteşekkirsiniz?"
 
 #. module: hr_gamification
+#. odoo-python
 #: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:0
 msgid "You can not send a badge to yourself."
 msgstr "Kendinize bir rozet gönderemezsiniz."
-
-#. module: hr_gamification
-#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:0
-msgid "You can send badges only to employees linked to a user."
-msgstr "Sadece bir kullanıcıya bağlı personele rozetleri gönderebilirsiniz."
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form

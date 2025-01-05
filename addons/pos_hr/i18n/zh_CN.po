@@ -1,44 +1,111 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_hr
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
+"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
-"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_report_pos_hr_multi_employee_sales_report
+msgid "A collection of single session reports. One for each employee"
+msgstr "单个会话报表的集合。每位员工一份"
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
+msgid "Abigal Peterson"
+msgstr "Abigal Peterson"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/overrides/screens/product_screen/order_summary/order_summary.js:0
+msgid "Access Denied"
+msgstr "访问被拒绝"
+
+#. module: pos_hr
+#: model:ir.model.fields,field_description:pos_hr.field_pos_daily_sales_reports_wizard__add_report_per_employee
+msgid "Add a report per each employee"
+msgstr "为每位员工添加一份报表"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-msgid "Allowed Employees"
-msgstr "允许的员工"
+msgid "Advanced rights"
+msgstr "高级权限"
 
 #. module: pos_hr
-#: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_form_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "All Employees"
+msgstr "所有员工"
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "银行对账单行"
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "Basic rights"
+msgstr "基本权限"
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.view_pos_daily_sales_reports_wizard
+msgid ""
+"Can't generate a report per employee! as selected session has no orders "
+"associated with any employee."
+msgstr "无法为每个员工生成报表！因为所选会话没有与任何员工关联的订单。"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
+msgid "Cash in/out"
+msgstr "现金进出"
+
+#. module: pos_hr
+#: model:ir.model.fields,field_description:pos_hr.field_pos_order__employee_id
+#: model:ir.model.fields,field_description:pos_hr.field_pos_payment__employee_id
+#: model:ir.model.fields,field_description:pos_hr.field_pos_session__employee_id
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_list_select_inherit
 msgid "Cashier"
 msgstr "收银员"
 
 #. module: pos_hr
+#. odoo-python
+#: code:addons/pos_hr/models/pos_order.py:0
+msgid "Cashier %s"
+msgstr "收银员%s"
+
+#. module: pos_hr
+#: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
+msgid "Cashier name"
+msgstr "收银员名称"
+
+#. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
 msgid "Change Cashier"
 msgstr "更换收银员"
+
+#. module: pos_hr
+#. odoo-python
+#: code:addons/pos_hr/models/pos_session.py:0
+msgid "Closed Register"
+msgstr "关闭收银机"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_res_config_settings
@@ -46,64 +113,146 @@ msgid "Config Settings"
 msgstr "配置设置"
 
 #. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
+msgid "Counted"
+msgstr "计数"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
+msgid "Difference"
+msgstr "差异"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/overrides/screens/login_screen/login_screen.js:0
+msgid "Discard"
+msgstr "丢弃"
+
+#. module: pos_hr
 #: model:ir.model,name:pos_hr.model_hr_employee
-#: model:ir.model.fields,field_description:pos_hr.field_pos_order__employee_id
+#: model:ir.model.fields,field_description:pos_hr.field_account_bank_statement_line__employee_id
+#: model:ir.model.fields,field_description:pos_hr.field_pos_daily_sales_reports_wizard__employee_ids
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__employee_id
 #: model_terms:ir.ui.view,arch_db:pos_hr.view_report_pos_order_search_inherit
 msgid "Employee"
 msgstr "员工"
 
 #. module: pos_hr
+#: model:ir.actions.report,name:pos_hr.multi_employee_sales_report_action
+msgid "Employee Sales Details"
+msgstr "员工销售详情"
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
+msgid "Employee Sales Report"
+msgstr "员工销售报表"
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
+msgid "Employee:"
+msgstr "员工："
+
+#. module: pos_hr
 #. odoo-python
 #: code:addons/pos_hr/models/hr_employee.py:0
-msgid "Employee: %s - PoS Config(s): %s \n"
-msgstr "员工：%s- PoS配置（多个）：%s\n"
+msgid "Employee: %(employee)s - PoS Config(s): %(config_list)s \n"
+msgstr "员工：%(employee)s - PoS 配置：%(config_list)s \n"
 
 #. module: pos_hr
-#: model:ir.model.fields,field_description:pos_hr.field_pos_config__employee_ids
-#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_employee_ids
-msgid "Employees with access"
-msgstr "有权访问的员工"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__basic_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_basic_employee_ids
+msgid "Employees with basic access"
+msgstr "有基本访问权限的员工"
 
 #. module: pos_hr
-#: model:ir.model.fields,help:pos_hr.field_pos_config__employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_employee_ids
-msgid "If left empty, all employees can log in to the PoS session"
-msgstr "如果保留为空，则所有员工都可以登录PoS会话"
-
-#. module: pos_hr
-#. odoo-javascript
-#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
-msgid "Incorrect Password"
-msgstr "密码错误"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__advanced_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_advanced_employee_ids
+msgid "Employees with manager access"
+msgstr "有经理权限的员工"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/xml/HeaderLockButton.xml:0
+#: code:addons/pos_hr/static/src/overrides/screens/login_screen/login_screen.xml:0
+msgid "Enter your PIN"
+msgstr "输入您的 PIN 码"
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_basic_employee_ids
+msgid "If left empty, all employees can log in to PoS"
+msgstr "如果为空，所有员工都可以登录 PoS"
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__advanced_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_advanced_employee_ids
+msgid "If left empty, only Odoo users have extended rights in PoS"
+msgstr "如果为空，则只有 Odoo 用户在 PoS 中拥有扩展权限"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/overrides/components/navbar/navbar.xml:0
 msgid "Lock"
 msgstr "锁"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
-msgid "Log in to"
-msgstr "登录到"
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+msgid "No Cashiers"
+msgstr "没有收银员"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
-msgid "Password?"
-msgstr ""
+#: code:addons/pos_hr/static/src/overrides/screens/login_screen/login_screen.xml:0
+msgid "Open Register"
+msgstr "开启收银机"
 
 #. module: pos_hr
-#: model:ir.model.fields,help:pos_hr.field_pos_order__employee_id
-msgid "Person who uses the cash register. It can be a reliever, a student or an interim employee."
-msgstr "使用收银机的人可以是救援者，学生或者临时工"
+#. odoo-python
+#: code:addons/pos_hr/models/pos_session.py:0
+msgid "Opened register"
+msgstr "已开启收银机"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
+msgid "Opening"
+msgstr "开业"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+msgid "PIN not found"
+msgstr "找不到 PIN 个人密码"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+msgid "Password?"
+msgstr "密码？"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
+msgid "Payments"
+msgstr "付款"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.js:0
+msgid "Payments in %(paymentMethod)s"
+msgstr "通过%(paymentMethod)s支付"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_config
 msgid "Point of Sale Configuration"
 msgstr "POS配置"
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_pos_daily_sales_reports_wizard
+msgid "Point of Sale Daily Report"
+msgstr "POS每日报表"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_order
@@ -113,7 +262,12 @@ msgstr "POS订单"
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_report_pos_order
 msgid "Point of Sale Orders Report"
-msgstr "销售网点订单报告"
+msgstr "POS订单报表"
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr "POS支付"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_session
@@ -122,24 +276,70 @@ msgstr "POS会话"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
-msgid "Scan your badge"
-msgstr "扫描您的徽标"
+#: code:addons/pos_hr/static/src/app/print_report_button/print_report_button.xml:0
+msgid "Print"
+msgstr "打印"
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_product_product
+msgid "Product Variant"
+msgstr "产品变体"
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "Select Employee(s)"
+msgstr "选择员工"
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_report_pos_hr_single_employee_sales_report
+msgid "Session sales details for a single employee"
+msgstr "单个员工的会话销售详细信息"
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_session__employee_id
+msgid "The employee who currently uses the cash register"
+msgstr "当前使用收银机的员工"
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_account_bank_statement_line__employee_id
+msgid "The employee who made the cash move."
+msgstr "进行现金分录的员工。"
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_order__employee_id
+#: model:ir.model.fields,help:pos_hr.field_pos_payment__employee_id
+msgid "The employee who uses the cash register."
+msgstr "使用收银机的员工。"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
-msgid "Select Cashier"
-msgstr "选择收银员"
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+msgid "There is no cashier available."
+msgstr "没有收银员。"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/overrides/screens/login_screen/login_screen.xml:0
+msgid "Unlock Register"
+msgstr "解锁收银机"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+msgid "Wrong PIN"
+msgstr "错误 PIN"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/overrides/screens/product_screen/order_summary/order_summary.js:0
+msgid "You are not allowed to change the price of a product."
+msgstr "您不得更改产品的价格。"
 
 #. module: pos_hr
 #. odoo-python
 #: code:addons/pos_hr/models/hr_employee.py:0
-msgid "You cannot delete an employee that may be used in an active PoS session, close the session(s) first: \n"
-msgstr "您无法删除可能在启用PoS会话中使用的员工，请先关闭会话：\n"
-
-#. module: pos_hr
-#. odoo-javascript
-#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
-msgid "or"
-msgstr "或"
+msgid ""
+"You cannot delete an employee that may be used in an active PoS session, "
+"close the session(s) first: \n"
+msgstr "您无法删除可能在有效PoS会话中使用的员工，请先关闭会话：\n"

@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_geolocalize
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Tony Ng, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
-"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_geolocalize
@@ -43,12 +42,12 @@ msgstr "API:"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Compute Localization"
-msgstr ""
+msgstr "計算本地化"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Compute based on address"
-msgstr ""
+msgstr "根據地址計算"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_config_settings
@@ -63,7 +62,7 @@ msgstr "聯絡人"
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__create_uid
 msgid "Created by"
-msgstr "創立者"
+msgstr "建立人員"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__create_date
@@ -78,8 +77,8 @@ msgstr "顯示名稱"
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
-msgid "Error with geolocation server:"
-msgstr "地理定位伺服器錯誤："
+msgid "Error with geolocation server: %s"
+msgstr "地理定位服務伺服器錯誤：%s"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geocoder
@@ -115,7 +114,7 @@ msgstr "Google Map API 金鑰"
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__id
 msgid "ID"
-msgstr "ID"
+msgstr "識別號"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
@@ -135,12 +134,12 @@ msgstr "最後更新於"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Lat :"
-msgstr ""
+msgstr "緯度："
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Long:"
-msgstr ""
+msgstr "經度："
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__name
@@ -151,7 +150,7 @@ msgstr "名稱"
 #. odoo-python
 #: code:addons/base_geolocalize/models/res_partner.py:0
 msgid "No match found for %(partner_names)s address(es)."
-msgstr ""
+msgstr "找不到 %(partner_names)s 地址的匹配項。"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -172,13 +171,13 @@ msgstr "重新載入"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Refresh Localization"
-msgstr ""
+msgstr "更新本地化"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_techname
 msgid "Technical Name"
-msgstr ""
+msgstr "技術名稱"
 
 #. module: base_geolocalize
 #. odoo-python
@@ -203,12 +202,16 @@ msgstr ""
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Updated on:"
-msgstr ""
+msgstr "更新於："
 
 #. module: base_geolocalize
 #: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
-msgid "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
-msgstr "有關詳細資訊，請訪問 https://developers.google.com/maps/documentation/geocoding/get-api-key"
+msgid ""
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key"
+" for more information."
+msgstr ""
+"有關詳細資訊，請訪問 https://developers.google.com/maps/documentation/geocoding/get-"
+"api-key"
 
 #. module: base_geolocalize
 #. odoo-python

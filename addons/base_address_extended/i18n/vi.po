@@ -1,29 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_address_extended
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Thi Huong Nguyen, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.2\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_city_extended_form
 msgid "<span class=\"o_stat_text\">Cities</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Thành phố</span>"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
@@ -34,13 +33,18 @@ msgstr "<span> - </span>"
 #: model:ir.model.fields,help:base_address_extended.field_res_country__enforce_cities
 #: model:ir.model.fields,help:base_address_extended.field_res_partner__country_enforce_cities
 #: model:ir.model.fields,help:base_address_extended.field_res_users__country_enforce_cities
-msgid "Check this box to ensure every address created in that country has a 'City' chosen in the list of the country's cities."
-msgstr "Chọn hộp này để đảm bảo mọi địa chỉ được tạo ở quốc gia đó có 'Thành phố' được chọn trong danh sách các thành phố của quốc gia"
+msgid ""
+"Check this box to ensure every address created in that country has a 'City' "
+"chosen in the list of the country's cities."
+msgstr ""
+"Chọn ô này để đảm bảo mọi địa chỉ được tạo ở quốc gia đó có 'Thành phố' được"
+" chọn trong danh sách các thành phố của quốc gia"
 
 #. module: base_address_extended
 #: model:ir.actions.act_window,name:base_address_extended.action_res_city_tree
+#: model:ir.ui.menu,name:base_address_extended.menu_res_city
 msgid "Cities"
-msgstr "Các thành phố"
+msgstr "Thành phố"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_city
@@ -55,7 +59,7 @@ msgstr "Thành phố"
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__city_id
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__city_id
 msgid "City ID"
-msgstr ""
+msgstr "ID thành phố"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_partner
@@ -81,6 +85,8 @@ msgstr "Được tạo vào"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
 
@@ -92,26 +98,26 @@ msgid ""
 "                to enforce any address of it to have a city in this list."
 msgstr ""
 "Hiển thị và quản lý danh sách tất cả thành phố có thể được chỉ định cho\n"
-"                hồ sơ đối tác của bạn. Lưu ý tác vụ có thể được đặt cho từng quốc gia riêng biệt\n"
-"                để bắt buộc mọi địa chỉ thuộc quốc gia đó phải có thành phố trong danh sách này."
+"                bản ghi đối tác. Lưu ý có thể thiết lập hành động cho từng quốc gia riêng biệt\n"
+"                để đảm bảo mọi địa chỉ thuộc quốc gia đó phải có thành phố nằm trong danh sách này."
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_number2
 msgid "Door"
-msgstr "Số nhà"
+msgstr "Nhà"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "Door #"
-msgstr ""
+msgstr "# nhà"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_country__enforce_cities
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__country_enforce_cities
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__country_enforce_cities
 msgid "Enforce Cities"
-msgstr "Thành phố bắt buộc"
+msgstr "Bắt buộc có thành phố"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
@@ -122,17 +128,19 @@ msgstr "Nhà"
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "House #"
-msgstr ""
+msgstr "# nhà"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__write_date
@@ -153,17 +161,17 @@ msgstr "Tìm thành phố"
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__state_id
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "State"
-msgstr "Trạng thái"
+msgstr "Tỉnh thành"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "Street"
-msgstr "Địa chỉ"
+msgstr "Đường"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "Street 2..."
-msgstr "Địa chỉ, đường..."
+msgstr "Đường 2..."
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_name
@@ -174,12 +182,12 @@ msgstr "Tên đường"
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "Street..."
-msgstr "Địa chỉ..."
+msgstr "Đường..."
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "ZIP"
-msgstr "Mã bưu điện"
+msgstr "Mã bưu chính"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__zipcode

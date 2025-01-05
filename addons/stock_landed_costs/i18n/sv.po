@@ -1,60 +1,39 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_landed_costs
-#
+# 
 # Translators:
-# 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2022
-# Haojun Zou <apollo_zhj@msn.com>, 2022
-# Kim Asplund <kim.asplund@gmail.com>, 2022
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
-# Martin Wilderoth <martin.wilderoth@linserv.se>, 2022
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
-# Kristoffer Grundström <lovaren@gmail.com>, 2022
-# lynnliuying <lynn.liu1971@gmail.com>, 2022
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
-# Martin Trigaux, 2022
-# Simon S, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Simon S, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
-"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
-msgid " already out"
-msgstr "redan ute"
+msgid "%(product)s: %(quantity)s already out"
+msgstr "%(product)s: %(quantity)s redan ute"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
 msgid "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
-msgstr "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
+msgstr "<i class=\"fa fa-clock-o\" title=\"Datum\" role=\"img\" aria-label=\"Datum\"/>"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "<span class=\"o_stat_text\">Valuation</span>"
-msgstr ""
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_account_move_line__product_type
-msgid ""
-"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
-"A consumable product is a product for which stock is not managed.\n"
-"A service is a non-material product you provide."
-msgstr ""
-"En lagerförd produkt är en produkt som du hanterar lager för. Appen Lager måste installeras.\n"
-"En förbrukningsvara är en produkt för vilken lager inte hanteras.\n"
-"En tjänst är en icke-materiell produkt du tillhandahåller."
+msgstr "<span class=\"o_stat_text\">Värdering</span>"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__account_id
@@ -79,12 +58,12 @@ msgstr "Aktiviteter"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Dekoration för aktivitetsundantag"
+msgstr "Aktivitet undantaget dekoration"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_state
 msgid "Activity State"
-msgstr "Aktivitetstillstånd"
+msgstr "Aktivitetsläge"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_type_icon
@@ -143,22 +122,17 @@ msgstr "Avbryt"
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__cancel
 msgid "Cancelled"
-msgstr "Annullerad"
+msgstr "Avbruten"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_res_company
 msgid "Companies"
-msgstr "Bolag"
+msgstr "Företag"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__company_id
 msgid "Company"
-msgstr "Bolag"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__company_id
-msgid "Company related to this journal"
-msgstr "Företag relaterat till denna journal"
+msgstr "Företag"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -189,8 +163,12 @@ msgstr "Kostnadsrader"
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
-msgid "Cost and adjustments lines do not match. You should maybe recompute the landed costs."
-msgstr "Kostnads- och justeringsraderna matchar inte. Du kanske behöver beräkna om landed costs."
+msgid ""
+"Cost and adjustments lines do not match. You should maybe recompute the "
+"landed costs."
+msgstr ""
+"Kostnads- och justeringsraderna matchar inte. Du kanske behöver beräkna om "
+"landed costs."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
@@ -214,7 +192,7 @@ msgstr "Skapad av"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__create_date
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__create_date
 msgid "Created on"
-msgstr "Skapad"
+msgstr "Skapad den"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__currency_id
@@ -254,9 +232,17 @@ msgid "Description"
 msgstr "Beskrivning"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_purchase_order_line__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_move__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_layer__display_name
 msgid "Display Name"
 msgstr "Visningsnamn"
 
@@ -287,6 +273,11 @@ msgid ""
 "By Weight: Cost will be divided depending on its weight.\n"
 "By Volume: Cost will be divided depending on its volume."
 msgstr ""
+"Lika: Kostnaden kommer att delas lika.\n"
+"Efter kvantitet: Kostnaden delas efter produktens kvantitet.\n"
+"Efter aktuell kostnad: Kostnaden kommer att delas efter produktens nuvarande kostnad.\n"
+"Efter vikt: Kostnaden delas upp beroende på dess vikt.\n"
+"Per volym: Kostnaden delas upp beroende på dess volym."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_follower_ids
@@ -296,7 +287,7 @@ msgstr "Följare"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Följare (partners)"
+msgstr "Följare (kontakter)"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_type_icon
@@ -306,12 +297,21 @@ msgstr "Font Awesome-ikon t.ex. fa-tasks"
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Future Activities"
-msgstr "Kommande aktiviteter"
+msgstr "Framtida aktiviteter"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_account_move_line__product_type
+msgid ""
+"Goods are tangible materials and merchandise you provide.\n"
+"A service is a non-material product you provide."
+msgstr ""
+"Varor är materiella material och handelsvaror som du tillhandahåller.\n"
+"En tjänst är en icke-materiell produkt som du tillhandahåller."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Group By"
-msgstr "Gruppera efter"
+msgstr "Grupp Av"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__has_message
@@ -319,9 +319,17 @@ msgid "Has Message"
 msgstr "Har meddelande"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_purchase_order_line__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_move__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_layer__id
 msgid "ID"
 msgstr "ID"
 
@@ -338,24 +346,28 @@ msgstr "Ikon för att indikera en undantagsaktivitet."
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Om markerad så finns det meddelanden som kräver din uppmärksamhet."
+msgstr "Om markerat, nya meddelanden kräver din uppmärksamhet."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Om markerad har det uppstått leveransfel för vissa meddelanden."
+msgstr "Om markerad, några meddelanden har leveransfel."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__landed_cost_ok
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__landed_cost_ok
-msgid "Indicates whether the product is a landed cost: when receiving a vendor bill, you can allocate this cost on preceding receipts."
+msgid ""
+"Indicates whether the product is a landed cost: when receiving a vendor "
+"bill, you can allocate this cost on preceding receipts."
 msgstr ""
+"Visar om produkten är en landningskostnad: när du tar emot en "
+"leverantörsfaktura kan du fördela denna kostnad på föregående mottagningar."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
 msgid "Is Follower"
-msgstr "Är följare"
+msgstr "Är Följare"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__is_landed_costs_line
@@ -371,7 +383,7 @@ msgstr "Är en landed cost"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__description
 msgid "Item Description"
-msgstr ""
+msgstr "Artikelbeskrivning"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -387,7 +399,7 @@ msgstr "Verifikat"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_account_move_line
 msgid "Journal Item"
-msgstr "Transaktion"
+msgstr "Journalpost"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__cost_id
@@ -401,7 +413,6 @@ msgstr "Landed cost"
 #: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_bank_statement_line__landed_costs_ids
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_ids
-#: model:ir.model.fields,field_description:stock_landed_costs.field_account_payment__landed_costs_ids
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -414,9 +425,8 @@ msgstr "Totala kostnader"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_bank_statement_line__landed_costs_visible
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_visible
-#: model:ir.model.fields,field_description:stock_landed_costs.field_account_payment__landed_costs_visible
 msgid "Landed Costs Visible"
-msgstr ""
+msgstr "Synliga Landningskostnader"
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
@@ -425,8 +435,12 @@ msgstr "Landed cost bekräftad"
 
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
-msgid "Landed costs allow you to include additional costs (shipment, insurance, customs duties, etc) into the cost of the product."
+msgid ""
+"Landed costs allow you to include additional costs (shipment, insurance, "
+"customs duties, etc) into the cost of the product."
 msgstr ""
+"Landade kostnader gör att du kan inkludera extra kostnader (frakt, "
+"försäkring, tullavgifter, etc) i kostnaden för produkten."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__write_uid
@@ -440,12 +454,12 @@ msgstr "Senast uppdaterad av"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__write_date
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__write_date
 msgid "Last Updated on"
-msgstr "Senast uppdaterad på"
+msgstr "Senast uppdaterad den"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Late Activities"
-msgstr "Försenade aktiviteter"
+msgstr "Sena aktiviteter"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__lc_journal_id
@@ -455,7 +469,7 @@ msgstr "LC-journal"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error
 msgid "Message Delivery error"
-msgstr "Fel vid leverans av meddelande"
+msgstr "Meddelande leveransfel"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_ids
@@ -487,7 +501,7 @@ msgstr "Nytt värde"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Nästa kalenderhändelse för aktivitet"
+msgstr "Nästa Kalenderhändelse för aktivitet"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_date_deadline
@@ -497,7 +511,7 @@ msgstr "Nästa slutdatum för aktivitet"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_summary
 msgid "Next Activity Summary"
-msgstr "Nästa aktivitetssummering"
+msgstr "Nästa aktivitetssammanställning"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_type_id
@@ -516,8 +530,8 @@ msgstr "Antal fel"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Antal meddelanden som kräver en åtgärd"
+msgid "Number of messages requiring action"
+msgstr "Antal meddelanden som kräver åtgärd"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error_counter
@@ -555,7 +569,7 @@ msgstr "Vänligen ange vilka %s som tilläggskostnaderna ska appliceras på."
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
 msgid "Posted"
-msgstr "Publicerad"
+msgstr "Bokförd"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_product_template
@@ -582,7 +596,7 @@ msgstr "Antal"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Betyg"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_user_id
@@ -607,7 +621,7 @@ msgstr "Fördelningsmetod"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__state
 msgid "State"
-msgstr "Status"
+msgstr "Läge"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -635,9 +649,10 @@ msgstr "Lager landed cost"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
 msgid "Stock Landed Cost Line"
-msgstr ""
+msgstr "Lager Landningskostnadsrad"
 
 #. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_move
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__move_id
 msgid "Stock Move"
 msgstr "Lagerflytt"
@@ -646,12 +661,12 @@ msgstr "Lagerflytt"
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_layer
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__stock_valuation_layer_ids
 msgid "Stock Valuation Layer"
-msgstr ""
+msgstr "Lager Värderingsskikt"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Today Activities"
-msgstr "Dagens aktiviteter"
+msgstr "Välj ledighetstyp"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__amount_total
@@ -667,18 +682,22 @@ msgstr "Flyttar"
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Typ av undantagsaktivitet i posten."
+msgstr "Typ av undantagsaktivitet som har registrerats."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Validate"
-msgstr "Bekräfta"
+msgstr "Validera"
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
-msgid "Validated landed costs cannot be cancelled, but you could create negative landed costs to reverse them"
-msgstr "Bekräftade landed costs kan inte avbrytas men man kan skapa negativa landed costs för att omvända dem"
+msgid ""
+"Validated landed costs cannot be cancelled, but you could create negative "
+"landed costs to reverse them"
+msgstr ""
+"Bekräftade landed costs kan inte avbrytas men man kan skapa negativa landed "
+"costs för att omvända dem"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
@@ -719,11 +738,19 @@ msgstr "Vikt"
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
-msgid "You cannot apply landed costs on the chosen %s(s). Landed costs can only be applied for products with FIFO or average costing method."
-msgstr "Du kan inte tillämpa landed costs på de valda %s. Landed costs kan bara tillämpas på produkter med kalkyleringsmetoderna FIFO eller Average Cost."
+msgid ""
+"You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
+"applied for products with FIFO or average costing method."
+msgstr ""
+"Du kan inte tillämpa landed costs på de valda %s. Landed costs kan bara "
+"tillämpas på produkter med kalkyleringsmetoderna FIFO eller Average Cost."
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/product.py:0
-msgid "You cannot change the product type or disable landed cost option because the product is used in an account move line."
-msgstr "Du kan inte ändra produkttypen eller slå av inställningen för landed cost eftersom produkten används in en journalrad."
+msgid ""
+"You cannot change the product type or disable landed cost option because the"
+" product is used in an account move line."
+msgstr ""
+"Du kan inte ändra produkttypen eller slå av inställningen för landed cost "
+"eftersom produkten används in en journalrad."

@@ -1,0 +1,236 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_presence
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ca\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+msgid "%(name)s has been noted as %(state)s today"
+msgstr ""
+
+#. module: hr_presence
+#: model:mail.template,body_html:hr_presence.mail_template_presence
+msgid ""
+"<div>\n"
+"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
+"We hope this message finds you well. It has come to our attention that you are currently not present at work, and there is no record of a time off request from you. If this absence is due to an oversight on our part, we sincerely apologize for any confusion.\n"
+"Please take the necessary steps to address this unplanned absence. Should you have any questions or need assistance, do not hesitate to reach out to your manager or the HR department at your earliest convenience.\n"
+"Thank you for your prompt attention to this matter.\n"
+"                    <br>Best Regards,<br><br>\n"
+"                </div>\n"
+"            "
+msgstr ""
+
+#. module: hr_presence
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__absent
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__absent
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
+msgid "Absent"
+msgstr "Absent"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_log
+msgid "Add a log note"
+msgstr ""
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "Empleat bàsic"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_res_company
+msgid "Companies"
+msgstr "Empreses"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_res_config_settings
+msgid "Config Settings"
+msgstr "Paràmetres de configuració"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_res_users_log__create_uid
+msgid "Create Uid"
+msgstr "Crea un Uid"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_time_off
+msgid "Create a Time Off"
+msgstr ""
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__email_sent
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__email_sent
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__email_sent
+msgid "Email Sent"
+msgstr "Correu electrònic enviat"
+
+#. module: hr_presence
+#: model:sms.template,name:hr_presence.sms_template_data_hr_presence
+msgid "Employee: Presence Reminder"
+msgstr "Empleat: Recordatori de presència"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.ir_cron_presence_control_ir_actions_server
+msgid "HR Presence: cron"
+msgstr "Presència HR: cron"
+
+#. module: hr_presence
+#: model:mail.template,name:hr_presence.mail_template_presence
+msgid "HR: Employee Absence email"
+msgstr "HR: Correu electrònic d'absència de treballador"
+
+#. module: hr_presence
+#: model:sms.template,body:hr_presence.sms_template_data_hr_presence
+msgid ""
+"Hi, we noticed you're not at work and no time-off was submitted. If this is "
+"an oversight from us, we apologize. Please contact your manager or HR ASAP. "
+"Thanks"
+msgstr ""
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
+msgid "Hr Presence Last Compute Date"
+msgstr "Hr Presència Última data de còmput"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__hr_presence_state_display
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__hr_presence_state_display
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__hr_presence_state_display
+msgid "Hr Presence State Display"
+msgstr "Hr presència de la Vizualització de l'estat"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_res_users_log__ip
+msgid "IP Address"
+msgstr "Adreça IP"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__ip_connected
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__ip_connected
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__ip_connected
+msgid "Ip Connected"
+msgstr "Ip Conectada"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__manually_set_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_presence
+msgid "Manually Set Presence"
+msgstr ""
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_present
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__manually_set_present
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_present
+msgid "Manually Set Present"
+msgstr "Estableix manualment el present"
+
+#. module: hr_presence
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__out_of_working_hour
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__out_of_working_hour
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__out_of_working_hour
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
+msgid "Out of Working Hours"
+msgstr ""
+
+#. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_tree
+msgid "Presence"
+msgstr "Presència"
+
+#. module: hr_presence
+#. odoo-javascript
+#: code:addons/hr_presence/static/src/search/hr_presence_cog_menu/hr_presence_cog_menu.xml:0
+msgid "Presence Control"
+msgstr "Registre de l'assistència"
+
+#. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
+msgid "Presence/Absence"
+msgstr ""
+
+#. module: hr_presence
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__present
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__present
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__present
+msgid "Present"
+msgstr "Present"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+msgid "Send SMS"
+msgstr "Enviar SMS"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_sms
+msgid "Send a SMS"
+msgstr ""
+
+#. module: hr_presence
+#: model:mail.template,description:hr_presence.mail_template_presence
+msgid ""
+"Sent manually in presence module when an employee wasn't working despite not"
+" being off"
+msgstr ""
+"Enviat manualment en el mòdul de presència quan un empleat no estava "
+"treballant malgrat no estar-hi"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_absent
+msgid "Set Absent"
+msgstr ""
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_present
+msgid "Set Present"
+msgstr ""
+
+#. module: hr_presence
+#: model:mail.template,subject:hr_presence.mail_template_presence
+msgid "Unexpected Absence"
+msgstr "Absència inesperada"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_res_users_log
+msgid "Users Log"
+msgstr "Registre d'usuaris"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+msgid ""
+"We hope this message finds you well. It has come to our attention that you are currently not present at work, and there is no record of a time off request from you. If this absence is due to an oversight on our part, we sincerely apologize for any confusion.\n"
+"Please take the necessary steps to address this unplanned absence. Should you have any questions or need assistance, do not hesitate to reach out to your manager or the HR department at your earliest convenience.\n"
+"Thank you for your prompt attention to this matter."
+msgstr ""
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+msgid "You don't have the right to do this. Please contact an Administrator."
+msgstr "No tens dret a fer-ho. Contacteu amb un administrador."
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_ir_websocket
+msgid "websocket message handling"
+msgstr "gestió de missatges websocket"

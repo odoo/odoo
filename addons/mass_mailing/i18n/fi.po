@@ -1,52 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mass_mailing
-#
+# 
 # Translators:
-# Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2022
-# Mikko Närjänen <mikko.narjanen@web-veistamo.fi>, 2022
-# Jukka Paulin <jukka.paulin@gmail.com>, 2022
-# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2022
-# Kari Lindgren <karisatu@gmail.com>, 2022
-# Topi Aura <topi@aurat.fi>, 2022
-# Mikko Salmela <salmemik@gmail.com>, 2022
-# Tommi Rintala <tommi.rintala@gmail.com>, 2022
-# Sari Mäyrä <sari.mayra@sv-oy.fi>, 2022
-# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
-# Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2022
-# Jussi Lehto <jussi@gulfeo.com>, 2022
-# Retropikzel, 2022
-# Miku Laitinen <miku.laitinen@gmail.com>, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Johanna Valkonen <miujohanna@gmail.com>, 2022
-# Konsta Aavaranta, 2023
-# Svante Suominen <svante.suominen@web-veistamo.fi>, 2023
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
-# Miika Nissi <miika.nissi@tawasta.fi>, 2023
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-# Martin Trigaux, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mass_mailing
 #. odoo-python
-#: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
-msgid " %i duplicates have been ignored."
-msgstr " %i kaksoiskappaleet on jätetty huomiotta."
+#: code:addons/mass_mailing/models/mailing.py:0
+msgid " %(subject)s (final)"
+msgstr " %(subject)s (lopullinen)"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -72,17 +49,17 @@ msgstr "18 €"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
 msgid "% Blacklist"
-msgstr ""
+msgstr "% Musta lista"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
 msgid "% Bounce"
-msgstr ""
+msgstr "% Bounce"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
 msgid "% Opt-out"
-msgstr ""
+msgstr "% Poistui listalta (opt-out)"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -90,15 +67,21 @@ msgid "% of recipients"
 msgstr "% vastaanottajista"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mass_mailing_kpi_link_trackers
-msgid "%Click (Total)"
-msgstr "%Klikkauksia (Yhteensä)"
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing_list.py:0
+msgid "%(contact_name)s subscribed to the following mailing list(s)"
+msgstr "%(contact_name)s tilattu seuraaville postituslistoille"
 
 #. module: mass_mailing
 #. odoo-python
-#: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
-msgid "%i Contacts have been imported."
-msgstr "%i Yhteystiedot on tuotu."
+#: code:addons/mass_mailing/models/mailing_list.py:0
+msgid "%(contact_name)s unsubscribed from the following mailing list(s)"
+msgstr "%(contact_name)s poistui seuraavilta postituslistoilta"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mass_mailing_kpi_link_trackers
+msgid "%Click (Total)"
+msgstr "%Klikkauksia (Yhteensä)"
 
 #. module: mass_mailing
 #. odoo-python
@@ -181,6 +164,10 @@ msgid ""
 "                                        <i class=\"fa fa-envelope-o\"/> Contacts\n"
 "                                    </span>"
 msgstr ""
+"<br/>\n"
+"                                    <span class=\"text-muted\">\n"
+"                                        <i class=\"fa fa-envelope-o\"/> Yhteystiedot\n"
+"                                    </span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
@@ -188,6 +175,8 @@ msgid ""
 "<br/>\n"
 "                                    <span class=\"text-muted\">Blacklist</span>"
 msgstr ""
+"<br/>\n"
+"                                    <span class=\"text-muted\">Musta lista</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
@@ -195,6 +184,8 @@ msgid ""
 "<br/>\n"
 "                                    <span class=\"text-muted\">Bounce</span>"
 msgstr ""
+"<br/>\n"
+"                                    <span class=\"text-muted\">Bounce</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
@@ -202,6 +193,8 @@ msgid ""
 "<br/>\n"
 "                                    <span class=\"text-muted\">Mailings</span>"
 msgstr ""
+"<br/>\n"
+"                                    <span class=\"text-muted\">Postitukset</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
@@ -209,6 +202,8 @@ msgid ""
 "<br/>\n"
 "                                    <span class=\"text-muted\">Opt-Out</span>"
 msgstr ""
+"<br/>\n"
+"                                    <span class=\"text-muted\">Opt-Out</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.theme_default_template
@@ -231,18 +226,30 @@ msgstr "<font class=\"text-o-color-1\">26 syyskuuta 2022 - 13:30</font>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
-msgid "<font class=\"text-o-color-2\"><span style=\"font-weight:bolder;\">-20%</span></font>"
-msgstr "<font class=\"text-o-color-2\"><span style=\"font-weight:bolder;\">-20%</span></font>"
+msgid ""
+"<font class=\"text-o-color-2\"><span style=\"font-"
+"weight:bolder;\">-20%</span></font>"
+msgstr ""
+"<font class=\"text-o-color-2\"><span style=\"font-"
+"weight:bolder;\">-20%</span></font>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_alert
-msgid "<font style=\"color: rgb(12 84 96);\">Don't write about products or services here, write about solutions.</font>"
-msgstr "<font style=\"color: rgb(12 84 96);\">Älä kirjoita täällä tuotteista tai palveluista. Kirjoita ratkaisuista.</font>"
+msgid ""
+"<font style=\"color: rgb(12 84 96);\">Don't write about products or services"
+" here, write about solutions.</font>"
+msgstr ""
+"<font style=\"color: rgb(12 84 96);\">Älä kirjoita täällä tuotteista tai "
+"palveluista. Kirjoita ratkaisuista.</font>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_picture
-msgid "<font style=\"font-size: 12px;\">Add a caption to enhance the meaning of this image.</font>"
-msgstr "<font style=\"font-size: 12px;\">Lisää kuvateksti, joka korostaa kuvan merkitystä.</font>"
+msgid ""
+"<font style=\"font-size: 12px;\">Add a caption to enhance the meaning of "
+"this image.</font>"
+msgstr ""
+"<font style=\"font-size: 12px;\">Lisää kuvateksti, joka korostaa kuvan "
+"merkitystä.</font>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_event
@@ -262,17 +269,31 @@ msgstr "<font style=\"font-size: 48px;\">Iskevä otsikko</font>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_cover
 msgid "<font style=\"font-size: 62px; font-weight: bold;\">Catchy Headline</font>"
-msgstr "<font style=\"font-size: 62px; font-weight: bold;\">Mieleenjäävä Otsikko</font>"
+msgstr ""
+"<font style=\"font-size: 62px; font-weight: bold;\">Mieleenjäävä "
+"otsikko</font>"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_form
-msgid "<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"This email is blacklisted for mass mailings\" aria-label=\"Blacklisted\" attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" groups=\"base.group_user\"/>"
-msgstr "<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"Tämä sähköposti on joukkopostitusten mustalla listalla\" aria-label=\"Mustalla listalla\" attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" groups=\"base.group_user\"/>"
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_form
+msgid ""
+"<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"This email is "
+"blacklisted for mass mailings\" aria-label=\"Blacklisted\" invisible=\"not "
+"is_blacklisted\" groups=\"base.group_user\"/>"
+msgstr ""
+"<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"Tämä "
+"sähköpostiosoite on massasähköpostin mustalla listalla\" aria-"
+"label=\"Blacklisted\" invisible=\"not is_blacklisted\" "
+"groups=\"base.group_user\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<i class=\"fa fa-bar-chart\"/> Compare Version"
 msgstr "<i class=\"fa fa-bar-chart\"/> Vertaa versiota"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid "<i class=\"fa fa-bullseye me-2\" role=\"img\" aria-label=\"Lead/Opportunity\"/>"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -281,23 +302,19 @@ msgstr "<i class=\"fa fa-copy\"/> Luo vaihtoehto"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid ""
-"<i class=\"fa fa-envelope\"/> <span name=\"ab_test_manual\" attrs=\"{'invisible': [('ab_testing_winner_selection', '!=', 'manual')]}\">\n"
-"                                                    Send this version to remaining recipients\n"
-"                                                </span> <span name=\"ab_test_auto\" attrs=\"{'invisible': [('ab_testing_winner_selection', '=', 'manual')]}\">\n"
-"                                                    Send Winner Now\n"
-"                                                </span>"
-msgstr ""
-"<i class=\"fa fa-envelope\"/> <span name=\"ab_test_manual\" attrs=\"{'invisible': [('ab_testing_winner_selection', '!=', 'manual')]}\">\n"
-"                                                    Lähetä tämä versio jäljellä oleville vastaanottajille\n"
-"                                                </span> <span name=\"ab_test_auto\" attrs=\"{'invisible': [('ab_testing_winner_selection', '=', 'manual')]}\">\n"
-"                                                    Lähetä voittaja nyt\n"
-"                                                </span>"
+msgid "<i class=\"fa fa-envelope\"/> Send this as winner"
+msgstr "<i class=\"fa fa-envelope\"/> Lähetä tämä voittajana"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "<i class=\"fa fa-envelope\"/> Send this as winner"
-msgstr "<i class=\"fa fa-envelope\"/> Lähetä tämä voittajana"
+msgid ""
+"<i class=\"fa fa-envelope\"/><span name=\"ab_test_auto\">\n"
+"                                                    Send Winner Now\n"
+"                                                </span>"
+msgstr ""
+"<i class=\"fa fa-envelope\"/><span name=\"ab_test_auto\">\n"
+"                                                    Lähetä voittaja nyt\n"
+"                                                </span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -305,11 +322,17 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle text-danger\" aria-hidden=\"true\"/>\n"
 "                        The sum of all percentages for this A/B campaign totals"
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle text-danger\" aria-hidden=\"true\"/>\n"
+"                        Tämän A/B-kampanjan kaikkien prosenttiosuuksien summa on yhteensä seuraavat määrät"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_kanban
-msgid "<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-label=\"Warning\" title=\"Warning\"/>"
-msgstr "<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-label=\"Warning\" title=\"Warning\"/>"
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-label=\"Warning\" "
+"title=\"Warning\"/>"
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-label=\"Warning\" "
+"title=\"Warning\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_rating_options
@@ -342,44 +365,52 @@ msgid "<i class=\"fa fa-fw fa-thumbs-up\"/> Thumbs"
 msgstr "<i class=\"fa fa-fw fa-thumbs-up\"/> Peukut"
 
 #. module: mass_mailing
+#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_subscription_action_report_optout
+msgid "<i class=\"oi oi-arrow-right\"></i> Configure Opt-out Reasons"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_blockquote
-msgid "<i>Write a quote here from one of your customers. Quotes are a great way to build confidence in your products or services.</i>"
-msgstr "<i>Kirjoita tähän lainaus joltakin asiakkaaltasi. Lainaukset ovat hyvä tapa lisätä luottamusta tuotteisiisi tai palveluihisi.</i>"
+msgid ""
+"<i>Write a quote here from one of your customers. Quotes are a great way to "
+"build confidence in your products or services.</i>"
+msgstr ""
+"<i>Kirjoita tähän lainaus joltakin asiakkaaltasi. Lainaukset ovat hyvä tapa "
+"lisätä luottamusta tuotteisiisi tai palveluihisi.</i>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid ""
-"<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" attrs=\"{'invisible': ['|', ('reply_to_mode', '=', 'update'), ('mailing_model_name', 'in', ['mailing.contact', 'res.partner', 'mailing.list'])],}\">\n"
+"<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing.contact', 'res.partner', 'mailing.list']\">\n"
 "                                                    To track replies, this address must belong to this database.\n"
 "                                                </small>"
 msgstr ""
-"<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" attrs=\"{'invisible': ['|', ('reply_to_mode', '=', 'update'), ('mailing_model_name', 'in', ['mailing.contact', 'res.partner', 'mailing.list'])],}\">\n"
-"                                                    Jotta vastauksia voidaan seurata, osoitteen on kuuluttava tietokantaan.\n"
+"<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing.contact', 'res.partner', 'mailing.list']\">\n"
+"                                                    Jotta vastauksia voidaan seurata, osoitteen on kuuluttava tähän tietokantaan.\n"
 "                                                </small>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
-msgid "<span attrs=\"{'invisible': [('mailing_on_mailing_list', '=', False)]}\">Mailing Contact</span>"
+msgid ""
+"<span class=\"fa fa-hourglass-half me-2 small my-auto\" aria-"
+"label=\"Scheduled date\"/>"
 msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
-msgid "<span class=\"fa fa-calendar-check-o me-2 small my-auto\" aria-label=\"Sent date\"/>"
-msgstr "<span class=\"fa fa-calendar-check-o me-2 small my-auto\" aria-label=\"Lähetyspäivä\"/>"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
-msgid "<span class=\"fa fa-hourglass-half me-2 small my-auto\" aria-label=\"Scheduled date\"/>"
-msgstr "<span class=\"fa fa-hourglass-half me-2 small my-auto\" aria-label=\"Aikataulutettu päivälle\"/>"
+"<span class=\"fa fa-hourglass-half me-2 small my-auto\" aria-"
+"label=\"Aikataulutettu päivälle\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid ""
 "<span class=\"fa fa-hourglass-o me-2 small my-auto\" aria-label=\"Scheduled date\"/>\n"
-"                                            <span class=\"align-self-baseline\">Next Batch</span>"
+"                                        <span>Next Batch</span>"
 msgstr ""
-"<span class=\"fa fa-hourglass-o me-2 small my-auto\" aria-label=\"Aikataulutettu päivälle\"/>\n"
-"                                            <span class=\"align-self-baseline\">Seuraava erä</span>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid ""
+"<span class=\"fa fa-paper-plane me-2 small my-auto\" aria-label=\"Sent "
+"date\"/>"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_rating_options
@@ -389,6 +420,11 @@ msgstr "<span class=\"mx-2\">/</span>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
 msgid "<span class=\"o_stat_text\">Open Recipient</span>"
+msgstr "<span class=\"o_stat_text\">Avoin vastaanottaja</span>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form_split_name
+msgid "<span class=\"opacity-50\" invisible=\"name\">e.g. \"John Smith\"</span>"
 msgstr ""
 
 #. module: mass_mailing
@@ -412,14 +448,18 @@ msgid "<span class=\"text-muted\">Opt-out</span>"
 msgstr "<span class=\"text-muted\">Markkinointikielto</span>"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "<span name=\"canceled_text\">emails have been canceled and will not be sent.</span>"
-msgstr "<span name=\"canceled_text\">sähköpostit on peruutettu eikä niitä lähetetä.</span>"
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid "<span invisible=\"not mailing_on_mailing_list\">Mailing Contact</span>"
+msgstr ""
+"<span invisible=\"not mailing_on_mailing_list\">Postiosoite "
+"Yhteyshenkilö</span>"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_form_full_width
-msgid "<span name=\"failed_text\">email(s) not sent.</span>"
-msgstr "<span name=\"failed_text\">sähköpostia ei ole lähetetty.</span>"
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid ""
+"<span name=\"canceled_text\">emails have been cancelled and will not be "
+"sent.</span>"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -428,18 +468,40 @@ msgstr "<span name=\"failed_text\">sähköposteja ei voitu lähettää.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid ""
+"<span name=\"mailing_schedule_type_now_text\">This mailing will be sent as "
+"soon as possible.</span>"
+msgstr ""
+"<span name=\"mailing_schedule_type_now_text\">Tämä postitus lähetetään "
+"mahdollisimman pian.</span>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"next_departure_text\">This mailing is scheduled for </span>"
 msgstr "<span name=\"next_departure_text\">Postitus on ajastettu </span>"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_form_full_width
-msgid "<span name=\"scheduled_text\">email(s) scheduled for </span>"
-msgstr "<span name=\"scheduled_text\">sähköpostiviesti(t) on aikataulutettu </span>"
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "<span name=\"process_text\">emails are being processed.</span>"
+msgstr "<span name=\"process_text\">sähköposteja käsitellään.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "<span name=\"scheduled_text\">emails are in queue and will be sent soon.</span>"
-msgstr "<span name=\"scheduled_text\">sähköpostit ovat jonossa ja lähetetään pian.</span>"
+msgid ""
+"<span name=\"refresh_text\">This mailing will be sent as soon as "
+"possible.</span>"
+msgstr ""
+"<span name=\"refresh_text\">Tämä postitus lähetetään mahdollisimman "
+"pian.</span>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid ""
+"<span name=\"scheduled_text\">emails are in queue and will be sent "
+"soon.</span>"
+msgstr ""
+"<span name=\"scheduled_text\">sähköpostit ovat jonossa ja lähetetään "
+"pian.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -448,18 +510,24 @@ msgstr "<span name=\"sent\">sähköpostit on lähetetty.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.digest_mail_main
-msgid "<span style=\"color: #8f8f8f;\">Turn off Mailing Reports</span>"
-msgstr "<span style=\"color: #8f8f8f;\">Kytke raporttien lähettäminen pois päältä</span>"
+msgid "<span style=\"color: #878d97;\">Turn off Mailing Reports</span>"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_alert
-msgid "<span style=\"color: rgb(12 84 96); font-size: 16px; font-weight: bolder;\">Explain the benefits you offer</span>"
-msgstr "<span style=\"color: rgb(12 84 96); font-size: 16px; font-weight: bolder;\">Kerro tarjoamistasi eduista</span>"
+msgid ""
+"<span style=\"color: rgb(12 84 96); font-size: 16px; font-weight: "
+"bolder;\">Explain the benefits you offer</span>"
+msgstr ""
+"<span style=\"color: rgb(12 84 96); font-size: 16px; font-weight: "
+"bolder;\">Kerro tarjoamistasi eduista</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
 msgid "<span style=\"font-size: 11px\">user / month (billed annually)</span>"
-msgstr "<span style=\"font-size: 11px\">käyttäjä / kuukausi (laskutetaan vuosittain)</span>"
+msgstr ""
+"<span style=\"font-size: 11px\">käyttäjä / kuukausi (laskutetaan "
+"vuosittain)</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_numbers
@@ -479,7 +547,9 @@ msgstr "<span style=\"font-size: 48px;\">8</span>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_call_to_action
 msgid "<span style=\"font-weight: bolder;\">50,000+ companies</span> run Odoo."
-msgstr "<span style=\"font-weight: bolder;\">yli 50 000 yritystä</span> käyttää Odoota."
+msgstr ""
+"<span style=\"font-weight: bolder;\">yli 50 000 yritystä</span> käyttää "
+"Odoota."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -530,9 +600,9 @@ msgid "<span>Contacts</span>"
 msgstr "<span>Yhteystiedot</span>"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
-msgid "<span>Design</span>"
-msgstr "<span>Suunnittelu</span>"
+#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
+msgid "<span>There wasn't enough recipients left for this mailing</span>"
+msgstr "<span>Vastaanottajia ei ollut tarpeeksi tätä postitusta varten</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
@@ -545,6 +615,22 @@ msgid "<span>​</span>"
 msgstr "<span>​</span>"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid ""
+"<strong class=\"d-block\" invisible=\"mailing_type == 'mail' or not ab_testing_enabled or state != 'done' or sent != 0 or failed != 0 or canceled != 0\">\n"
+"                                <span name=\"ab_test_text\">There wasn't enough recipients given to this mailing. </span>\n"
+"                            </strong>"
+msgstr ""
+"<strong class=\"d-block\" invisible=\"mailing_type == 'mail' or not ab_testing_enabled or state != 'done' or sent != 0 or failed != 0 or canceled != 0\">\n"
+"                                <span name=\"ab_test_text\">Tälle postitukselle ei annettu riittävästi vastaanottajia. </span>\n"
+"                            </strong>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "<u>Refresh <i class=\"fa fa-refresh ms-1\"/></u>"
+msgstr "<u>Päivitä <i class=\"fa fa-refresh ms-1\"/></u>"
+
+#. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 msgid "A campaign should be set when A/B test is enabled"
@@ -553,7 +639,7 @@ msgstr "Kampanja on asetettava, kun A/B-testi on käytössä"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_color_blocks_2
 msgid "A color block"
-msgstr "A color block"
+msgstr "Värilohko"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_alternation_image_text_template
@@ -569,9 +655,12 @@ msgid "A great title"
 msgstr "Mahtava otsikko"
 
 #. module: mass_mailing
-#: model:ir.model.constraint,message:mass_mailing.constraint_mailing_contact_list_rel_unique_contact_list
-msgid "A mailing contact cannot subscribe to the same mailing list multiple times."
-msgstr "Postitusyhteyshenkilö ei voi liittyä samalle postituslistalle useita kertoja."
+#: model:ir.model.constraint,message:mass_mailing.constraint_mailing_subscription_unique_contact_list
+msgid ""
+"A mailing contact cannot subscribe to the same mailing list multiple times."
+msgstr ""
+"Postitusyhteyshenkilö ei voi liittyä samalle postituslistalle useita "
+"kertoja."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -596,7 +685,7 @@ msgstr "Yksilöllinen arvo"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__ab_testing_winner_mailing_id
 msgid "A/B Campaign Winner Mailing"
-msgstr ""
+msgstr "A/B-kampanjan voittajan postitus"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
@@ -695,8 +784,14 @@ msgstr "Toimenpiteen ikoni"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_three_columns
-msgid "Adapt these three columns to fit your design need. To duplicate, delete or move columns, select the column and use the top icons to perform your action."
-msgstr "Mukauta nämä kolme saraketta suunnittelutarpeesi mukaan. Jos haluat monistaa, poistaa tai siirtää sarakkeita, valitse sarake ja suorita toiminto ylimpien kuvakkeiden avulla."
+msgid ""
+"Adapt these three columns to fit your design need. To duplicate, delete or "
+"move columns, select the column and use the top icons to perform your "
+"action."
+msgstr ""
+"Mukauta nämä kolme saraketta suunnittelutarpeesi mukaan. Jos haluat "
+"monistaa, poistaa tai siirtää sarakkeita, valitse sarake ja suorita toiminto"
+" ylimpien kuvakkeiden avulla."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -799,8 +894,14 @@ msgstr "Aline Turner, CTO"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_company_team
-msgid "Aline is one of the iconic people in life who can say they love what they do. She mentors 100+ in-house developers and looks after the community of thousands of developers."
-msgstr "Alina on yksi ikonisimmista ihmisistä elämässä, joka voi sanoa rakastavansa sitä, mitä hän tekee. Hän ohjaa yli 100 omaa kehittäjää ja huolehtii tuhansien kehittäjien yhteisöstä."
+msgid ""
+"Aline is one of the iconic people in life who can say they love what they "
+"do. She mentors 100+ in-house developers and looks after the community of "
+"thousands of developers."
+msgstr ""
+"Alina on yksi ikonisimmista ihmisistä elämässä, joka voi sanoa rakastavansa "
+"sitä, mitä hän tekee. Hän ohjaa yli 100 omaa kehittäjää ja huolehtii "
+"tuhansien kehittäjien yhteisöstä."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social
@@ -819,19 +920,36 @@ msgid "Allow A/B Testing"
 msgstr "Salli A/B -testaus"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_optout_view_tree
+msgid "Allow Feedback"
+msgstr "Salli palaute"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Allow recipients to blacklist themselves"
 msgstr "Salli käyttäjien merkata itsensä estolistalle"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_res_config_settings__show_blacklist_buttons
-msgid "Allow the recipient to manage themselves their state in the blacklist via the unsubscription page."
-msgstr "Anna vastaanottajan hallita itse mustalla listalla oloaan tilauksen peruuttamissivun kautta."
+msgid ""
+"Allow the recipient to manage themselves their state in the blacklist via "
+"the unsubscription page."
+msgstr ""
+"Anna vastaanottajan hallita itse mustalla listalla oloaan tilauksen "
+"peruuttamissivun kautta."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
-msgid "Allow the recipient to manage themselves their state in the blacklist via the unsubscription page. If the option is active, the 'Blacklist Me' button is hidden on the unsubscription page. The 'come Back' button will always be visible in any case to allow leads and partners to re-subscribe."
+msgid ""
+"Allow the recipient to manage themselves their state in the blacklist via "
+"the unsubscription page. If the option is active, the 'Blacklist Me' button "
+"is hidden on the unsubscription page. The 'come Back' button will always be "
+"visible in any case to allow leads and partners to re-subscribe."
 msgstr ""
+"Anna vastaanottajan hallita itse mustalla listalla oloaan tilauksen "
+"peruuttamissivun kautta. Jos vaihtoehto on aktiivinen, 'Mustalle listalle' "
+"-painike on piilotettu tilauksen peruutussivulla. Tule takaisin -painike on "
+"aina näkyvissä, jotta liidit ja partnerit voivat tilata uudelleen."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
@@ -860,15 +978,16 @@ msgstr "Mahtavat sivut"
 
 #. module: mass_mailing
 #. odoo-javascript
-#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
-msgid "An error occurred. Please try again later or contact us."
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_feedback.xml:0
+msgid "An error occurred. Please retry later or contact us."
 msgstr "Tapahtui virhe. Yritä myöhemmin uudelleen tai ota yhteyttä."
 
 #. module: mass_mailing
 #. odoo-javascript
-#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
-msgid "An error occurred. Your changes have not been saved, try again later."
-msgstr "Tapahtui virhe. Muutoksia ei ole tallennettu, yritäthän uudelleen myöhemmin."
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_blocklist.xml:0
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
+msgid "An error occurred. Please retry later."
+msgstr "Tapahtui virhe. Yritä myöhemmin uudelleen."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_alternation_image_text_template
@@ -886,12 +1005,17 @@ msgstr "Ja loistava alaotsikko"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_color_blocks_2
 msgid "Another color block"
-msgstr "Toinen väripalikka"
+msgstr "Toinen värilohko"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_showcase
 msgid "Another feature"
 msgstr "Toinen ominaisuus"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+msgid "Apply changes"
+msgstr "Ota muutokset käyttöön"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -912,10 +1036,19 @@ msgid "Archived"
 msgstr "Arkistoitu"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription_optout__is_feedback
+msgid "Ask For Feedback"
+msgstr ""
+
+#. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_list.py:0
-msgid "At least one of the mailing list you are trying to archive is used in an ongoing mailing campaign."
-msgstr "Ainakin yksi sähköpostilista jota yritetään arkistoida, on käytössä meneillään olevassa sähköpostikampanjassa."
+msgid ""
+"At least one of the mailing list you are trying to archive is used in an "
+"ongoing mailing campaign."
+msgstr ""
+"Ainakin yksi sähköpostilista jota yritetään arkistoida, on käytössä "
+"meneillään olevassa sähköpostikampanjassa."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -977,7 +1110,7 @@ msgstr "Taustaväri"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_on_mailing_list
 msgid "Based on Mailing Lists"
-msgstr ""
+msgstr "Postituslistojen perusteella"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -997,11 +1130,11 @@ msgstr "Kauniita palikoita"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Big Boxes"
-msgstr ""
+msgstr "Isot laatikot"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__is_blacklisted
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__is_blacklisted
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription__is_blacklisted
 msgid "Blacklist"
 msgstr "Markkinointikielto"
 
@@ -1009,12 +1142,6 @@ msgstr "Markkinointikielto"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_tree
 msgid "Blacklist (%s)"
 msgstr "Musta lista (%s)"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_done
-#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
-msgid "Blacklist Me"
-msgstr "Aseta markkinointikielto päälle"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__show_blacklist_buttons
@@ -1040,31 +1167,53 @@ msgstr "Mustalla listalla olevat sähköpostiosoitteet"
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid "Blocklist removal request from portal"
-msgstr ""
+msgstr "Estoluettelon poistopyyntö portaalista"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
-msgid "Blocklist removal request from portal of mailing %(mailing_link)s (document %(record_link)s)"
+msgid ""
+"Blocklist removal request from portal of mailing %(mailing_link)s (document "
+"%(record_link)s)"
 msgstr ""
+"Estoluettelon poistopyyntö postitusportaalista %(mailing_link)s (asiakirja "
+"%(record_link)s)"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid "Blocklist request from portal"
-msgstr ""
+msgstr "Estolistapyyntö portaalista"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
-msgid "Blocklist request from portal of mailing %(mailing_link)s (document %(record_link)s)"
+msgid ""
+"Blocklist request from portal of mailing %(mailing_link)s (document "
+"%(record_link)s)"
 msgstr ""
+"Postitusportaalin %(mailing_link)s (asiakirja %(record_link)s) "
+"estolistapyyntö"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
-msgid "Blocklist request from unsubscribe link of mailing %(mailing_link)s (document %(record_link)s)"
+msgid ""
+"Blocklist request from unsubscribe link of mailing %(mailing_link)s (direct "
+"link usage)"
 msgstr ""
+"Estolistapyyntö postituksen peruutuslinkistä %(mailing_link)s (suoran linkin"
+" käyttö)"
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+msgid ""
+"Blocklist request from unsubscribe link of mailing %(mailing_link)s "
+"(document %(record_link)s)"
+msgstr ""
+"Estolistapyyntö postituksen %(mailing_link)s tilauksen peruutuslinkistä "
+"(asiakirja %(record_link)s)"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -1106,7 +1255,7 @@ msgstr "Reunus"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_bounce
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__message_bounce
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription__message_bounce
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_bounce
 msgid "Bounce"
 msgstr "Viestin palautus"
@@ -1119,8 +1268,13 @@ msgstr "Takaisin palautunut (%)"
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
-msgid "Bounce happens when a mailing cannot be delivered (fake address, server issues, ...). Check each record to see what went wrong."
-msgstr "Takaisin palautuminen tapahtuu, kun postitusta ei voida toimittaa (väärennetty osoite, palvelinongelmia, ...). Tarkista tietueet nähdäksesi, mikä meni pieleen."
+msgid ""
+"Bounce happens when a mailing cannot be delivered (fake address, server "
+"issues, ...). Check each record to see what went wrong."
+msgstr ""
+"Takaisin palautuminen tapahtuu, kun postitusta ei voida toimittaa "
+"(väärennetty osoite, palvelinongelmia, ...). Tarkista tietueet nähdäksesi, "
+"mikä meni pieleen."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__bounced
@@ -1159,7 +1313,8 @@ msgstr "Painikkeen otsikko"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 msgid "By using the <b>Breadcrumb</b>, you can navigate back to the overview."
-msgstr "Käyttämällä <b>Murupolkua</b>, voit siirtyä takaisin yleiskatsaukseen."
+msgstr ""
+"Käyttämällä <b>Murupolkua</b>, voit siirtyä takaisin yleiskatsaukseen."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__calendar_date
@@ -1199,8 +1354,10 @@ msgstr "Kampanjat"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_utm_campaigns
-msgid "Campaigns are the perfect tool to track results across multiple mailings."
-msgstr "Kampanjat ovat täydellinen työkalu useiden lähetysten tulosten seuraamiseen."
+msgid ""
+"Campaigns are the perfect tool to track results across multiple mailings."
+msgstr ""
+"Kampanjat ovat täydellinen työkalu useiden lähetysten tulosten seuraamiseen."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
@@ -1213,9 +1370,13 @@ msgstr "Peruuta"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__canceled
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__canceled
+msgid "Canceled"
+msgstr "Peruttu"
+
+#. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_status__cancel
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
-msgid "Canceled"
+msgid "Cancelled"
 msgstr "Peruttu"
 
 #. module: mass_mailing
@@ -1251,19 +1412,16 @@ msgid "Change Icons"
 msgstr "Vaihda ikonit"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_form_full_width
-msgid "Chat"
-msgstr "Chat"
-
-#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Check how well your mailing is doing a day after it has been sent"
-msgstr "Tarkista, miten hyvin postituksesi menestyy päivä sen lähettämisen jälkeen"
+msgstr ""
+"Tarkista, miten hyvin postituksesi menestyy päivä sen lähettämisen jälkeen"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_res_config_settings__mass_mailing_reports
 msgid "Check how well your mailing is doing a day after it has been sent."
-msgstr "Tarkista, miten hyvin postituksesi menestyy päivä sen lähettämisen jälkeen."
+msgstr ""
+"Tarkista, miten hyvin postituksesi menestyy päivä sen lähettämisen jälkeen."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_product_list
@@ -1287,21 +1445,22 @@ msgid "Check the email address and click send."
 msgstr "Tarkista sähköpostiosoite ja klikkaa Lähetä."
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
+msgid "Choose a date"
+msgstr "Valitse päivämäärä"
+
+#. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 msgid "Choose this <b>theme</b>."
 msgstr "Valitse tämä <b>teema</b>."
 
 #. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
 msgid "Choose your mailing subscriptions"
 msgstr "Valitse sähköpostitilauksesi"
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/xml/mass_mailing.xml:0
-msgid "Click on the ⭐ next to the subject to save this mailing as a"
-msgstr "Napsauta aiheen vieressä olevaa ⭐-painiketta tallentaaksesi tämän postituksen"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -1335,9 +1494,10 @@ msgid "Clicked On"
 msgstr "Klikattu"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
-msgid "Clicks"
-msgstr "Klikkausta"
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mass_mailing_mobile_preview.xml:0
+msgid "Close"
+msgstr "Sulje"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_product_list
@@ -1351,8 +1511,16 @@ msgstr "Väri-indeksi"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_color_blocks_2
-msgid "Color blocks are a simple and effective way to <b>present and highlight your content</b>. Choose an image or a color for the background. You can even resize and duplicate the blocks to create your own layout. Add images or icons to customize the blocks."
-msgstr "Väripalikat ovat yksinketainen ja tehokas tapa <b>esitellä ja korostaa sisältöäsi</b>. Valitse taustalle kuva tai väri. Voit jopa muuttaa palikkojen kokoa ja monistaa ne luodaksesi oman asettelun. Lisää kuvia tai kuvakkeita palikkojen mukauttamiseksi."
+msgid ""
+"Color blocks are a simple and effective way to <b>present and highlight your"
+" content</b>. Choose an image or a color for the background. You can even "
+"resize and duplicate the blocks to create your own layout. Add images or "
+"icons to customize the blocks."
+msgstr ""
+"Väripalikat ovat yksinketainen ja tehokas tapa <b>esitellä ja korostaa "
+"sisältöäsi</b>. Valitse taustalle kuva tai väri. Voit jopa muuttaa "
+"palikkojen kokoa ja monistaa ne luodaksesi oman asettelun. Lisää kuvia tai "
+"kuvakkeita palikkojen mukauttamiseksi."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -1361,16 +1529,31 @@ msgid "Columns"
 msgstr "Sarakkeet"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_done
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
 msgid "Come Back"
 msgstr "Tule takaisin"
 
 #. module: mass_mailing
+#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_subscription_action_report_optout
+msgid "Come back later to discover why contacts unsubscribe.<br>"
+msgstr ""
+
+#. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
-msgid "Come back once your mailing has been sent to track who opened your mailing."
-msgstr "Palaa takaisin, kun massapostitus on lähetetty. Seuraa, ketkä ovat avanneet viestin."
+msgid ""
+"Come back once your mailing has been sent to track who clicked on the "
+"embedded links."
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+msgid ""
+"Come back once your mailing has been sent to track who opened your mailing."
+msgstr ""
+"Palaa takaisin, kun massapostitus on lähetetty. Seuraa, ketkä ovat avanneet "
+"viestin."
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_res_company
@@ -1385,7 +1568,7 @@ msgstr "Yrityksen nimi"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Comparisons"
-msgstr ""
+msgstr "Vertailut"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_res_config_settings
@@ -1403,8 +1586,7 @@ msgid "Configure Outgoing Mail Servers"
 msgstr "Määritä lähtevän sähköpostin palvelimet"
 
 #. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+#: model_terms:web_tour.tour,rainbow_man_message:mass_mailing.mass_mailing_tour
 msgid "Congratulations, I love your first mailing. :)"
 msgstr "Onnittelut, rakastan ensimmäistä viestiäsi. :)"
 
@@ -1415,7 +1597,7 @@ msgstr "Yhteys epäonnistui (ongelma lähettävässä sähköpostipalvelimessa)"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_res_partner
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__contact_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription__contact_id
 msgid "Contact"
 msgstr "Kontakti"
 
@@ -1433,6 +1615,11 @@ msgid "Contact Name"
 msgstr "Yhteystiedon nimi"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
+msgid "Contact Naming"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact_import__contact_list
 msgid "Contact list that will be imported, one contact per line"
 msgstr "Tuodut yhteystiedot, yksi yhteystieto riviä kohti"
@@ -1448,13 +1635,40 @@ msgid "Contacts"
 msgstr "Yhteystiedot"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
+msgid ""
+"Contacts successfully imported. Number of contacts imported: "
+"%(imported_count)s"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
+msgid ""
+"Contacts successfully imported. Number of contacts imported: "
+"%(imported_count)s. Number of duplicates ignored: %(duplicate_count)s"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
+msgid "Content Background"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_media_list
 msgid "Continue reading <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 msgstr "Jatka lukemista <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+msgid "Could not retrieve URL: %s"
+msgstr "URL-osoitetta ei voitu hakea: %s"
+
+#. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_bounce
-#: model:ir.model.fields,help:mass_mailing.field_mailing_contact_subscription__message_bounce
+#: model:ir.model.fields,help:mass_mailing.field_mailing_subscription__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
 msgstr "Tämän yhteystiedon bounced-tilassa olevien sähköpostien laskuri"
 
@@ -1502,13 +1716,14 @@ msgstr "Luo vaihtoehtoinen versio"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__create_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_import__create_uid
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__create_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__create_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__create_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__create_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__create_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_schedule_date__create_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_test__create_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription__create_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription_optout__create_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__create_uid
 msgid "Created by"
 msgstr "Luonut"
@@ -1516,7 +1731,6 @@ msgstr "Luonut"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__create_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_import__create_date
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__create_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__create_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_filter__create_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__create_date
@@ -1524,6 +1738,8 @@ msgstr "Luonut"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__create_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_schedule_date__create_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_test__create_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription__create_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription_optout__create_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__create_date
 msgid "Created on"
 msgstr "Luotu"
@@ -1540,6 +1756,7 @@ msgstr "Luontijakso"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_rating_options
+#: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "Custom"
 msgstr "Mukautettu"
 
@@ -1569,8 +1786,11 @@ msgstr "Päivä, jona postitus lähetettiin tai lähetetään."
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__ab_testing_schedule_datetime
 #: model:ir.model.fields,help:mass_mailing.field_utm_campaign__ab_testing_schedule_datetime
-msgid "Date that will be used to know when to determine and send the winner mailing"
-msgstr "Päivämäärä, jonka perusteella tiedetään, milloin voittavan sähköpostin lähetys määritetään ja lähetetään"
+msgid ""
+"Date that will be used to know when to determine and send the winner mailing"
+msgstr ""
+"Päivämäärä, jonka perusteella tiedetään, milloin voittavan sähköpostin "
+"lähetys määritetään ja lähetetään"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__mass_mailing_outgoing_mail_server
@@ -1604,12 +1824,18 @@ msgstr "Poista lohkoja"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_three_columns
-msgid "Delete the above image or replace it with a picture that illustrates your message. Click on the picture to change its <em>rounded corner</em> style."
-msgstr "Poista yllä oleva kuva tai korvaa se kuvalla, joka havainnollistaa viestiäsi. Klikkaa kuvaa muuttaaksesi sen <em>pyöristetyn kulman</em> tyyliä."
+msgid ""
+"Delete the above image or replace it with a picture that illustrates your "
+"message. Click on the picture to change its <em>rounded corner</em> style."
+msgstr ""
+"Poista yllä oleva kuva tai korvaa se kuvalla, joka havainnollistaa "
+"viestiäsi. Klikkaa kuvaa muuttaaksesi sen <em>pyöristetyn kulman</em> "
+"tyyliä."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__delivered
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__delivered
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_status__sent
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 msgid "Delivered"
 msgstr "Toimitettu"
@@ -1621,9 +1847,10 @@ msgid "Delivered (%)"
 msgstr "Toimitettu (%)"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
-msgid "Delivered to"
-msgstr "Toimitettu vastaanottajalle"
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mass_mailing.editor.xml:0
+msgid "Design"
+msgstr "Suunnittelu"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -1634,7 +1861,9 @@ msgstr "Design asetukset"
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_mailing_action_mail
 msgid "Design a striking email, define recipients and track its results."
-msgstr "Suunnittele näyttävä sähköposti, määrittele vastaanottajat ja seuraa tuloksia."
+msgstr ""
+"Suunnittele näyttävä sähköposti, määrittele vastaanottajat ja seuraa "
+"tuloksia."
 
 #. module: mass_mailing
 #. odoo-python
@@ -1662,7 +1891,7 @@ msgstr "Hylkää"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Discount Offer"
-msgstr ""
+msgstr "Alennustarjous"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_media_list
@@ -1675,14 +1904,18 @@ msgid "Discover all the features"
 msgstr "Löydä kaikki ominaisuudet"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.s_rating_options
-msgid "Display Inline"
-msgstr "Näytä upotettuna"
-
-#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_ir_http__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_ir_mail_server__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_ir_model__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_link_tracker__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_click__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_blacklist__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_render_mixin__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_thread__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_import__display_name
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_filter__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__display_name
@@ -1690,8 +1923,17 @@ msgstr "Näytä upotettuna"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_schedule_date__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_test__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription_optout__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_res_company__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_res_partner__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_res_users__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_utm_medium__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_utm_source__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
 
@@ -1711,6 +1953,12 @@ msgstr "Dokumenttimalli"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_tree
 msgid "Domain"
 msgstr "Verkkotunnus"
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/mailing_m2o_filter.js:0
+msgid "Domain field"
+msgstr "Domain-kenttä"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -1804,8 +2052,11 @@ msgstr "Sähköpostimarkkinointi"
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/ir_mail_server.py:0
-msgid "Email Marketing uses it as its default mail server to send mass mailings"
-msgstr "Email Marketing käyttää tätä oletussähköpostipalvelimena massapostitusten lähettämiseen"
+msgid ""
+"Email Marketing uses it as its default mail server to send mass mailings"
+msgstr ""
+"Email Marketing käyttää tätä oletussähköpostipalvelimena massapostitusten "
+"lähettämiseen"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_thread
@@ -1813,9 +2064,21 @@ msgid "Email Thread"
 msgstr "Sähköpostiviestiketju"
 
 #. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_blocklist.xml:0
+msgid "Email added to our blocklist"
+msgstr "Sähköposti lisätty estolistalle"
+
+#. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_compose_message
 msgid "Email composition wizard"
 msgstr "Sähköpostin ohjattu koostaminen"
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_blocklist.xml:0
+msgid "Email removed from our blocklist"
+msgstr "Sähköposti poistettu estolistaltamme"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1860,6 +2123,11 @@ msgid "Exclude Blacklisted Emails"
 msgstr "Sulje pois estolistalla olevat"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+msgid "Exclude Me"
+msgstr "Jätä minut pois"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 msgid "Exclude Opt Out"
 msgstr "Älä sisällytä massapostituksesta kieltäytyneitä"
@@ -1888,7 +2156,7 @@ msgstr "Epäonnistui"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__failure_reason
 msgid "Failure reason"
-msgstr ""
+msgstr "Epäonnistumisen syy"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__failure_type
@@ -1944,18 +2212,19 @@ msgstr "Ominaisuudet"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Features Grid"
-msgstr ""
+msgstr "Ominaisuuksien ruudukko"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
-msgid "Feedback from %(email)s: %(feedback)s"
-msgstr "Palaute %(email)s: %(feedback)s"
+msgid "Feedback from %(author_name)s"
+msgstr "Palaute %(author_name)s"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "Filter"
-msgstr "Suodatin"
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+msgid "File size exceeds configured maximum (%s bytes)"
+msgstr "Tiedostokoko ylittää suurimman sallitun (%s tavua)"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_filter__mailing_domain
@@ -1971,7 +2240,7 @@ msgstr "Suotimen nimi"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mass_mailing_html_field.js:0
 msgid "Filter templates"
-msgstr ""
+msgstr "Suodatinmallit"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_search
@@ -1982,6 +2251,11 @@ msgstr "Omat suodattimeni"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features
 msgid "First Feature"
 msgstr "Ensimmäinen ominaisuus"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__first_name
+msgid "First Name"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_showcase
@@ -2011,6 +2285,11 @@ msgid "Followers (Partners)"
 msgstr "Seuraajat (kumppanit)"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
+msgid "Font Family"
+msgstr "Fonttiperhe"
+
+#. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr "Font awesome -ikoni esim.. fa-tasks"
@@ -2018,12 +2297,12 @@ msgstr "Font awesome -ikoni esim.. fa-tasks"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Footer Center"
-msgstr ""
+msgstr "Alatunnisteen keskus"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Footer Left"
-msgstr ""
+msgstr "Alareunan vasen laita"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -2032,8 +2311,14 @@ msgstr "Alatunnisteet"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_company_team
-msgid "Founder and chief visionary, Tony is the driving force behind the company. He lovesto keep his hands full by participating in the development of the software, marketing, and customer experience strategies."
-msgstr "Perustaja ja päävisionääri Tony on yrityksen kantava voima. Hän rakastaa pitää kädet täynnä työtä osallistumalla ohjelmistojen, markkinoinnin ja asiakaskokemusstrategioiden kehittämiseen."
+msgid ""
+"Founder and chief visionary, Tony is the driving force behind the company. "
+"He loves to keep his hands full by participating in the development of the "
+"software, marketing, and customer experience strategies."
+msgstr ""
+"Perustaja ja päävisionääri Tony on yrityksen kantava voima. Hän rakastaa "
+"osallistua ohjelmistojen, markkinoinnin ja asiakaskokemusstrategioiden "
+"kehittämiseen."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__email_from
@@ -2046,7 +2331,8 @@ msgid "Full"
 msgstr "Täysi"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mass_mailing.editor.xml:0
 msgid "Fullscreen"
 msgstr "Koko ruutu"
 
@@ -2057,8 +2343,10 @@ msgstr "Huonekalut"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_image_text
-msgid "Get your inside sales (CRM) fully integrated with online sales (eCommerce), in-store sales (Point of Sale) and marketplaces like eBay and Amazon."
-msgstr "Integroi asiakkuudenhallinta (CRM) täydellisesti verkkokauppaasi (eCommerce), kassajrjestelmääsi (Point of Sale) ja markkinapaikkoihin, kuten eBay ja Amazon."
+msgid ""
+"Get your inside sales (CRM) fully integrated with online sales (eCommerce), "
+"in-store sales (Point of Sale) and marketplaces like Amazon."
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
@@ -2066,9 +2354,11 @@ msgid "Great Value"
 msgstr "Suuri arvo"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mail_blacklist_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Group By"
@@ -2078,6 +2368,11 @@ msgstr "Ryhmittely"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_search
 msgid "Group By..."
 msgstr "Ryhmittele.."
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP-reititys"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__has_message
@@ -2113,7 +2408,9 @@ msgstr "Korkeus"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_coupon_code
 msgid "Here's your coupon code - but hurry! Ends 9/28"
-msgstr "Tässä on kuponkikoodisi - mutta pidä kiirettä! Sen voimassaolo päättyy 28. syyskuuta"
+msgstr ""
+"Tässä on kuponkikoodisi - mutta pidä kiirettä! Sen voimassaolo päättyy 28. "
+"syyskuuta"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__utm_campaign__ab_testing_winner_selection__clicks_ratio
@@ -2131,9 +2428,33 @@ msgid "Highest Reply Rate"
 msgstr "Korkein vastausprosentti"
 
 #. module: mass_mailing
+#: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_1
+msgid "I changed my mind"
+msgstr "Muutin mieleni"
+
+#. module: mass_mailing
+#: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_0
+msgid "I never subscribed to this list"
+msgstr "En ole koskaan tilannut tätä listaa"
+
+#. module: mass_mailing
+#: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_2
+msgid "I receive too many emails from this list"
+msgstr "Saan liikaa sähköposteja tältä listalta"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_ir_http__id
+#: model:ir.model.fields,field_description:mass_mailing.field_ir_mail_server__id
+#: model:ir.model.fields,field_description:mass_mailing.field_ir_model__id
+#: model:ir.model.fields,field_description:mass_mailing.field_link_tracker__id
+#: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_click__id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_blacklist__id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail__id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_render_mixin__id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_thread__id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_import__id
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_filter__id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__id
@@ -2141,15 +2462,30 @@ msgstr "Korkein vastausprosentti"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_schedule_date__id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_test__id
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription__id
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription_optout__id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__id
+#: model:ir.model.fields,field_description:mass_mailing.field_res_company__id
+#: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__id
+#: model:ir.model.fields,field_description:mass_mailing.field_res_partner__id
+#: model:ir.model.fields,field_description:mass_mailing.field_res_users__id
+#: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__id
+#: model:ir.model.fields,field_description:mass_mailing.field_utm_medium__id
+#: model:ir.model.fields,field_description:mass_mailing.field_utm_source__id
 msgid "ID"
 msgstr "ID"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_trace__mail_mail_id_int
-msgid "ID of the related mail_mail. This field is an integer field because the related mail_mail can be deleted separately from its statistics. However the ID is needed for several action and controllers."
-msgstr "Asiaan liittyvän mail_mailin tunnus. Tämä kenttä on kokonaislukukenttä, koska siihen liittyvä mail_mail voidaan poistaa erikseen sen tilastoista. Tunnus tarvitaan kuitenkin useille toiminnoille ja ohjaimille."
+msgid ""
+"ID of the related mail_mail. This field is an integer field because the "
+"related mail_mail can be deleted separately from its statistics. However the"
+" ID is needed for several action and controllers."
+msgstr ""
+"Asiaan liittyvän mail_mailin tunnus. Tämä kenttä on kokonaislukukenttä, "
+"koska siihen liittyvä mail_mail voidaan poistaa erikseen sen tilastoista. "
+"Tunnus tarvitaan kuitenkin useille toiminnoille ja ohjaimille."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_exception_icon
@@ -2160,7 +2496,7 @@ msgstr "Kuvake"
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Ikoni joka kertoo poikkeustoiminnosta."
+msgstr "Kuvake joka kertoo poikkeustoiminnosta."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_needaction
@@ -2170,8 +2506,15 @@ msgstr "Jos valittu, uudet viestit vaativat huomiotasi."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__ab_testing_enabled
-msgid "If checked, recipients will be mailed only once for the whole campaign. This lets you send different mailings to randomly selected recipients and test the effectiveness of the mailings, without causing duplicate messages."
-msgstr "Jos valittu, vastaanottajille lähetetään postia vain kerran koko kampanjan aikana. Tämä mahdollistaa erilaisten postitusten lähetysten satunnaisesti valituille vastaanottajille, sekä postitusten tehokkuuden testaamisen, ilman että tuplapostituksia aiheutuu."
+msgid ""
+"If checked, recipients will be mailed only once for the whole campaign. This"
+" lets you send different mailings to randomly selected recipients and test "
+"the effectiveness of the mailings, without causing duplicate messages."
+msgstr ""
+"Jos valittu, vastaanottajille lähetetään postia vain kerran koko kampanjan "
+"aikana. Tämä mahdollistaa erilaisten postitusten lähetysten satunnaisesti "
+"valituille vastaanottajille, sekä postitusten tehokkuuden testaamisen, ilman"
+" että tuplapostituksia aiheutuu."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_has_error
@@ -2183,29 +2526,41 @@ msgstr "Jos valittu, joitakin viestejä ei ole toimitettu."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_compose_message__mass_mailing_name
-msgid "If set, a mass mailing will be created so that you can track its results in the Email Marketing app."
-msgstr "Jos valittu, luodaan massapostitus, jonka tuloksia voit seurata Sähköpostimarkkinointi-sovelluksessa."
+msgid ""
+"If set, a mass mailing will be created so that you can track its results in "
+"the Email Marketing app."
+msgstr ""
+"Jos valittu, luodaan massapostitus, jonka tuloksia voit seurata "
+"Sähköpostimarkkinointi-sovelluksessa."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__is_blacklisted
-#: model:ir.model.fields,help:mass_mailing.field_mailing_contact_subscription__is_blacklisted
-msgid "If the email address is on the blacklist, the contact won't receive mass mailing anymore, from any list"
-msgstr "Jos sähköpostiosoite on markkinointikiellossa, yhteystieto ei vastaanota postituksia miltään postituslistalta."
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_form_full_width
-msgid "Ignored"
-msgstr "Jätetty huomiotta"
+#: model:ir.model.fields,help:mass_mailing.field_mailing_subscription__is_blacklisted
+msgid ""
+"If the email address is on the blacklist, the contact won't receive mass "
+"mailing anymore, from any list"
+msgstr ""
+"Jos sähköpostiosoite on markkinointikiellossa, yhteystieto ei vastaanota "
+"postituksia miltään postituslistalta."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Image - Text"
-msgstr ""
+msgstr "Kuva - Teksti"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
 msgid "Image Text Image"
 msgstr "Kuva Teksti Kuva"
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+msgid ""
+"Image size excessive, imported images must be smaller than 42 million pixel"
+msgstr ""
+"Valtavan suuri kuvan koko. Ladattavien kuvien tulee olla pienempiä kuin 42 "
+"miljoonaa pikseliä"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
@@ -2220,6 +2575,7 @@ msgid "Import"
 msgstr "Tuo"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
 msgid "Import Contacts"
 msgstr "Tuo kontaktit"
@@ -2249,6 +2605,12 @@ msgid "In Queue"
 msgstr "Lähetysjonossa"
 
 #. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/mass_mailing_html_field.js:0
+msgid "Inline field"
+msgstr "Rivikenttä"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Inner Content"
 msgstr "Sisäinen sisältö"
@@ -2264,14 +2626,30 @@ msgid "Invalid email address"
 msgstr "Virheellinen sähköpostiosoite"
 
 #. module: mass_mailing
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_from_invalid
+msgid "Invalid from address"
+msgstr "Virheellinen osoite"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_company_team
 msgid "Iris Joe, CFO"
 msgstr "Iris Joe, CFO"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_company_team
-msgid "Iris, with her international experience, helps us easily understand the numbers and improves them. She is determined to drive success and delivers her professional acumen to bring the company to the next level."
-msgstr "Kansainvälisen kokemuksensa ansiosta Iiris auttaa meitä ymmärtämään numeroita ja kehittämään niitä. Hän pyrkii määrätietoisesti edistämään menestystä ja tuo ammattitaitonsa avulla yrityksen seuraavalle tasolle."
+msgid ""
+"Iris, with her international experience, helps us easily understand the "
+"numbers and improves them. She is determined to drive success and delivers "
+"her professional acumen to bring the company to the next level."
+msgstr ""
+"Kansainvälisen kokemuksensa ansiosta Iiris auttaa meitä ymmärtämään "
+"numeroita ja kehittämään niitä. Hän pyrkii määrätietoisesti edistämään "
+"menestystä ja tuo ammattitaitonsa avulla yrityksen seuraavalle tasolle."
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__is_ab_test_sent
+msgid "Is Ab Test Sent"
+msgstr "Onko A/B-testi lähetetty"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__is_body_empty
@@ -2292,7 +2670,7 @@ msgstr "Onko postituskampanja aktivoitu"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__ab_testing_is_winner_mailing
 msgid "Is the Winner of its Campaign"
-msgstr ""
+msgstr "On kampanjansa voittaja"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
@@ -2307,7 +2685,7 @@ msgstr "Viennit"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_call_to_action
 msgid "Join us and make your company a better place."
-msgstr "Liity meihin ja tee yrityksestäsi parempi paikka."
+msgstr "Liity joukkoomme ja tee yrityksestäsi parempi paikka."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__kpi_mail_required
@@ -2342,6 +2720,11 @@ msgid "Last Feature"
 msgstr "Viimeinen ominaisuus"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__last_name
+msgid "Last Name"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 msgid "Last State Update"
 msgstr "Viimeisin tilan päivitys"
@@ -2349,7 +2732,6 @@ msgstr "Viimeisin tilan päivitys"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__write_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_import__write_uid
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__write_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__write_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_filter__write_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__write_uid
@@ -2357,6 +2739,8 @@ msgstr "Viimeisin tilan päivitys"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__write_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_schedule_date__write_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_test__write_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription__write_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription_optout__write_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__write_uid
 msgid "Last Updated by"
 msgstr "Viimeksi päivittänyt"
@@ -2364,7 +2748,6 @@ msgstr "Viimeksi päivittänyt"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__write_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_import__write_date
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__write_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__write_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_filter__write_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__write_date
@@ -2372,12 +2755,15 @@ msgstr "Viimeksi päivittänyt"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__write_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_schedule_date__write_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_test__write_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription__write_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription_optout__write_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__write_date
 msgid "Last Updated on"
 msgstr "Viimeksi päivitetty"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_hr_options
+#: model_terms:ir.ui.view,arch_db:mass_mailing.s_rating_options
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "Left"
 msgstr "Vasen"
@@ -2385,12 +2771,12 @@ msgstr "Vasen"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Left Logo"
-msgstr ""
+msgstr "Vasen logo"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Left Text"
-msgstr ""
+msgstr "Vasen teksti"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2410,10 +2796,25 @@ msgid "Link Tracker Click"
 msgstr "Seurantalinkin klikkaus"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "Link Trackers"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__link_trackers_count
+msgid "Link Trackers Count"
+msgstr ""
+
+#. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
-msgid "Link Trackers will measure how many times each link is clicked as well as the proportion of %s who clicked at least once in your mailing."
-msgstr "Link Trackers mittaa, kuinka monta kertaa kutakin linkkiä on klikattu, sekä niiden %s-osuuden, jotka ovat klikanneet linkkiäsi vähintään kerran postituksessasi."
+msgid ""
+"Link Trackers will measure how many times each link is clicked as well as "
+"the proportion of %s who clicked at least once in your mailing."
+msgstr ""
+"Link Trackers mittaa, kuinka monta kertaa kutakin linkkiä on klikattu, sekä "
+"niiden %s-osuuden, jotka ovat klikanneet linkkiäsi vähintään kerran "
+"postituksessasi."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.social_links
@@ -2447,14 +2848,14 @@ msgid "Mail"
 msgstr "Sähköposti"
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_mail_blacklist
+msgid "Mail Blacklist"
+msgstr "Sähköpostin estolista"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Mail Body"
 msgstr "Viestin teksti"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_form_full_width
-msgid "Mail Debug"
-msgstr "Sähköpostin vianmääritys"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
@@ -2513,10 +2914,14 @@ msgstr "Sähköpostin jäljet"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_graph
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Mailing"
 msgstr "Sähköpostitus"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
+msgid "Mailing Background"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__campaign
@@ -2529,7 +2934,10 @@ msgid "Mailing Campaigns"
 msgstr "Postituskampanjat"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing_subscription.py:0
 #: model:ir.model,name:mass_mailing.model_mailing_contact
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_tree
 msgid "Mailing Contact"
 msgstr "Sähköpostikontakti"
 
@@ -2537,6 +2945,12 @@ msgstr "Sähköpostikontakti"
 #: model:ir.model,name:mass_mailing.model_mailing_contact_import
 msgid "Mailing Contact Import"
 msgstr "Sähköpostitusyhteystietojen tuonti"
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing_subscription.py:0
+msgid "Mailing Contacts"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_model__is_mailing_enabled
@@ -2556,11 +2970,18 @@ msgstr "Sähköpostimarkkinoinnin suodattimet"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_list
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mailing_list_ids
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__list_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__mailing_list_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__name
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription__list_id
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Mailing List"
 msgstr "Postituslista"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+msgid "Mailing List #"
+msgstr "Postituslista #"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_contacts
@@ -2574,13 +2995,16 @@ msgid "Mailing List Contacts"
 msgstr "Postituslistan yhteystiedot"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_form
+#: model:ir.model,name:mass_mailing.model_mailing_subscription
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_form
 msgid "Mailing List Subscription"
 msgstr "Sähköpostilistan tilaukset"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_search
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_tree
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_graph
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_pivot
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_tree
 msgid "Mailing List Subscriptions"
 msgstr "Sähköpostilistan tilaukset"
 
@@ -2596,6 +3020,11 @@ msgstr "Sähköpostilistan tilaukset"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_tree
 msgid "Mailing Lists"
 msgstr "Postituslistat"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "Mailing Lists:"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_report_deactivated
@@ -2617,7 +3046,11 @@ msgid "Mailing Statistics"
 msgstr "Postitusstatistiikka"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_done
+#: model:ir.model,name:mass_mailing.model_mailing_subscription_optout
+msgid "Mailing Subscription Reason"
+msgstr "Postituksen tilauksen syy"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
 msgid "Mailing Subscriptions"
 msgstr "Postituksen tilaukset"
@@ -2652,8 +3085,12 @@ msgstr "Sähköpostiosoitteet virheellisiä: %s"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts
-msgid "Mailing contacts allow you to separate your marketing audience from your business contact directory."
-msgstr "Postitusyhteystietojen avulla voit erottaa markkinointiyleisösi yrityksesi yhteystietoluettelosta."
+msgid ""
+"Mailing contacts allow you to separate your marketing audience from your "
+"business contact directory."
+msgstr ""
+"Postitusyhteystietojen avulla voit erottaa markkinointiyleisösi yrityksesi "
+"yhteystietoluettelosta."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_form
@@ -2738,6 +3175,7 @@ msgstr "Massapostitus \"%s\""
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_trace_report_action_mail
+#: model:ir.ui.menu,name:mass_mailing.mailing_menu_report_mailing
 msgid "Mass Mailing Analysis"
 msgstr "Massapostituksen analyysi"
 
@@ -2762,22 +3200,6 @@ msgid "Mass Mailing Statistics"
 msgstr "Massapostituksen tilastot"
 
 #. module: mass_mailing
-#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_trace_report_action_mail
-msgid ""
-"Mass Mailing Statistics allows you to check different mailing related information\n"
-"    like number of bounced mails, opened mails, replied mails. You can sort out\n"
-"    your analysis by different groups to get accurate grained analysis."
-msgstr ""
-"Massapostitustilastojen avulla voit tarkistaa erilaisia postitukseen liittyviä tietoja\n"
-"    kuten hylättyjen, avattujen ja vastattujen postien määrä. Voit selvittää\n"
-"    analyysisi eri ryhmien mukaan saadaksesi tarkan ja rakeisen analyysin."
-
-#. module: mass_mailing
-#: model:ir.model,name:mass_mailing.model_mailing_contact_subscription
-msgid "Mass Mailing Subscription Information"
-msgstr "Massapostituksen tilausten tiedot"
-
-#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__mailing_ids
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__mailing_mail_ids
 msgid "Mass Mailings"
@@ -2786,7 +3208,7 @@ msgstr "Massapostitus"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Media List"
-msgstr ""
+msgstr "Medialuettelo"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_media_list
@@ -2802,6 +3224,12 @@ msgstr "Mediaotsikko"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Medium"
 msgstr "Media"
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
+msgid "Membership updated"
+msgstr "Jäsenyys päivitetty"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_list_merge_action
@@ -2854,8 +3282,15 @@ msgstr "Mich Stark, COO"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_company_team
-msgid "Mich loves taking on challenges. With his multi-year experience as Commercial Director in the software industry, Mich has helped the company to get where it is today. Mich is among the best minds."
-msgstr "Mikko rakastaa haasteita. Monivuotisen kokemuksensa ansiosta, jonka hän on saanut kaupallisena johtajana ohjelmistoteollisuudessa, Mikko on auttanut yritystä pääsemään nykyiseen asemaansa. Mikko kuuluu firman fiksuimpien joukkoon."
+msgid ""
+"Mich loves taking on challenges. With his multi-year experience as "
+"Commercial Director in the software industry, Mich has helped the company to"
+" get where it is today. Mich is among the best minds."
+msgstr ""
+"Mikko rakastaa haasteita. Monivuotisen kokemuksensa ansiosta, jonka hän on "
+"saanut kaupallisena johtajana ohjelmistoteollisuudessa, Mikko on auttanut "
+"yritystä pääsemään nykyiseen asemaansa. Mikko kuuluu firman fiksuimpien "
+"joukkoon."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.theme_default_template
@@ -2872,10 +3307,21 @@ msgid "Missing email address"
 msgstr "Puuttuva sähköpostiosoite"
 
 #. module: mass_mailing
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_from_missing
+msgid "Missing from address"
+msgstr "Osoitteesta puuttuu"
+
+#. module: mass_mailing
 #. odoo-javascript
-#: code:addons/mass_mailing/static/src/js/mass_mailing_html_field.js:0
+#: code:addons/mass_mailing/static/src/js/snippets.editor.js:0
 msgid "Mobile Preview"
 msgstr "Esikatselu mobiililaitteille"
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/mailing_m2o_filter.js:0
+msgid "Model field"
+msgstr "Mallin kenttä"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_ir_model
@@ -2890,7 +3336,7 @@ msgstr "Lisää"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_color_blocks_2
 msgid "More Details"
-msgstr "More Details"
+msgstr "Lisätiedot"
 
 #. module: mass_mailing
 #. odoo-python
@@ -2972,6 +3418,11 @@ msgid "Next Activity Type"
 msgstr "Seuraavan toimenpiteen tyyppi"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__next_departure_is_past
+msgid "Next Departure Is Past"
+msgstr "Seuraavan lähdön aika on menneisyydessä"
+
+#. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 msgid "No %s address bounced yet!"
@@ -3003,19 +3454,39 @@ msgstr "Yksikään %s ei ole vielä vastannut postitukseesi!"
 
 #. module: mass_mailing
 #. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+msgid "No Link Tracker for that mailing!"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_trace_report_action_mail
+msgid "No Mailing Data yet!"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
-msgid "No contacts were imported. All email addresses are already in the mailing list."
-msgstr "Yhteystietoja ei tuotu. Kaikki sähköpostiosoitteet ovat jo postituslistalla."
+msgid ""
+"No contacts were imported. All email addresses are already in the mailing "
+"list."
+msgstr ""
+"Yhteystietoja ei tuotu. Kaikki sähköpostiosoitteet ovat jo postituslistalla."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
 msgid "No customization"
-msgstr "Ei kustomointeja"
+msgstr "Ei mukautuksia"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mail_mail_statistics_mailing
 msgid "No data yet!"
 msgstr "Ei vielä tietoja!"
+
+#. module: mass_mailing
+#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_subscription_action_report_optout
+#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_subscription_optout_action
+msgid "No data yet."
+msgstr "Ei vielä tietoja."
 
 #. module: mass_mailing
 #. odoo-python
@@ -3026,13 +3497,21 @@ msgstr "Sähköpostituskampanjaa ei ole löydetty"
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
-msgid "No mailing for this A/B testing campaign has been sent yet! Send one first and try again later."
-msgstr "Tämän A/B-testauskampanjan postitusta ei ole vielä lähetetty! Lähetä ensin yksi ja yritä myöhemmin uudelleen."
+msgid ""
+"No mailing for this A/B testing campaign has been sent yet! Send one first "
+"and try again later."
+msgstr ""
+"Tämän A/B-testauskampanjan postitusta ei ole vielä lähetetty! Lähetä ensin "
+"yksi ja yritä myöhemmin uudelleen."
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
-msgid "No need to import mailing lists, you can send mailings to contacts saved in other Odoo apps."
-msgstr "Postituslistoja ei tarvitse tuoda, vaan voit lähettää postituksia muihin Odoo-sovelluksiin tallennettuihin yhteystietoihin."
+msgid ""
+"No need to import mailing lists, you can send mailings to contacts saved in "
+"other Odoo apps."
+msgstr ""
+"Postituslistoja ei tarvitse tuoda, vaan voit lähettää postituksia muihin "
+"Odoo-sovelluksiin tallennettuihin yhteystietoihin."
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_filter_action
@@ -3051,6 +3530,7 @@ msgid "No valid email address found."
 msgstr "Kelvollista sähköpostiosoitetta ei löytynyt."
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.s_rating_options
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "None"
 msgstr "Ei mitään"
@@ -3064,6 +3544,18 @@ msgstr "Normalisoitu sähköposti"
 #: model:ir.model.fields,help:mass_mailing.field_mailing_trace__email
 msgid "Normalized email address"
 msgstr "Normalisoitu sähköpostiosoite"
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+msgid "Not subscribed"
+msgstr "Ei tilattu"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_view_generic
+msgid "Nothing to see yet!"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_needaction_counter
@@ -3125,7 +3617,7 @@ msgstr "Virheiden määrä"
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_needaction_counter
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Toimenpiteitä vaativien viestien määrä"
 
 #. module: mass_mailing
@@ -3137,7 +3629,7 @@ msgstr "Toimitusvirheellisten viestien määrä"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Numbers"
-msgstr ""
+msgstr "Numerot"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
@@ -3157,8 +3649,20 @@ msgstr "Monikanavainen myynti"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
-msgid "Once the best version is identified, we will send the best one to the remaining recipients."
-msgstr "Kun paras versio on tunnistettu, lähetämme sen lopuille vastaanottajille."
+msgid ""
+"Once the best version is identified, we will send the best one to the "
+"remaining recipients."
+msgstr ""
+"Kun paras versio on tunnistettu, lähetämme sen lopuille vastaanottajille."
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid ""
+"Once you send these emails, they'll be making a grand entrance in all the "
+"inboxes, creating quite the buzz!"
+msgstr ""
+"Kun lähetät nämä sähköpostiviestit, ne tekevät suuren sisääntulon kaikkiin "
+"postilaatikoihin ja aiheuttavat melkoisen kohun!"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
@@ -3177,7 +3681,6 @@ msgstr "Avoin vastaanottaja"
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_status__open
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Opened"
 msgstr "Avattu"
 
@@ -3200,19 +3703,35 @@ msgstr "Avattujen suhde"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__opt_out
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__opt_out
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription__opt_out
 msgid "Opt Out"
 msgstr "Markkinointikielto"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__opt_out
-msgid "Opt out flag for a specific mailing list. This field should not be used in a view without a unique and active mailing list context."
-msgstr "Poistumislippu tiettyä postituslistaa varten. Tätä kenttää ei tulisi käyttää näkymässä, jossa ei ole ainutlaatuista ja aktiivista postituslistakontekstia."
+msgid ""
+"Opt out flag for a specific mailing list. This field should not be used in a"
+" view without a unique and active mailing list context."
+msgstr ""
+"Poistumislippu tiettyä postituslistaa varten. Tätä kenttää ei tulisi käyttää"
+" näkymässä, jossa ei ole ainutlaatuista ja aktiivista "
+"postituslistakontekstia."
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.mailing_subscription_action_report_optout
+#: model:ir.ui.menu,name:mass_mailing.mailing_menu_report_subscribe_reason
+msgid "Opt-Out Report"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_tree
 msgid "Opt-out (%)"
 msgstr "Markkinointikielto (%)"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_blacklist__opt_out_reason_id
+msgid "Opt-out Reason"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_optout
@@ -3226,8 +3745,27 @@ msgstr "Markkinointikiellon asettaneiden määrä"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__lang
-msgid "Optional translation language (ISO code) to select when sending out an email. If not set, the english version will be used. This should usually be a placeholder expression that provides the appropriate language, e.g. {{ object.partner_id.lang }}."
-msgstr "Valinnainen käännöskieli (ISO-koodi), joka valitaan sähköpostia lähetettäessä. Jos sitä ei ole asetettu, käytetään englanninkielistä versiota. Tämän pitäisi yleensä olla sijoitusilmaus, joka antaa sopivan kielen, esim. {{ object.partner_id.lang }}."
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+"Valinnainen käännöskieli (ISO-koodi), joka valitaan sähköpostia "
+"lähetettäessä. Jos sitä ei ole asetettu, käytetään englanninkielistä "
+"versiota. Tämän pitäisi yleensä olla sijoitusilmaus, joka antaa sopivan "
+"kielen, esim. {{ object.partner_id.lang }}."
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.mailing_subscription_optout_action
+#: model:ir.ui.menu,name:mass_mailing.mailing_subscription_optout_menu
+msgid "Optout Reasons"
+msgstr "Poistumisen syyt"
+
+#. module: mass_mailing
+#: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_4
+msgid "Other"
+msgstr "Muu"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_references
@@ -3246,13 +3784,19 @@ msgstr "Lähtevät sähköpostit"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
+msgid "Padding ↔"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "Padding ↕"
 msgstr "Sisämarginaali"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
-msgid "Padding ⭤"
-msgstr "Sisämarginaali ⭤"
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__pending
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__pending
+msgid "Pending"
+msgstr "Odottaa"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__contact_pct_blacklisted
@@ -3271,8 +3815,12 @@ msgstr "Poistuneiden osuus prosentteina"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__ab_testing_pc
-msgid "Percentage of the contacts that will be mailed. Recipients will be chosen randomly."
-msgstr "Prosenttiosuus postitettavista yhteystiedoista. Vastaanottajat valitaan satunnaisesti."
+msgid ""
+"Percentage of the contacts that will be mailed. Recipients will be chosen "
+"randomly."
+msgstr ""
+"Prosenttiosuus postitettavista yhteystiedoista. Vastaanottajat valitaan "
+"satunnaisesti."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
@@ -3291,9 +3839,22 @@ msgid "Picture"
 msgstr "Kuva"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_themes
 msgid "Plain Text"
 msgstr "Pelkkä teksti"
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/mailing_portal_subscription_feedback.js:0
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+msgid "Please let us know why you updated your subscription."
+msgstr "Kerro meille, miksi päivitit tilauksesi."
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/mailing_portal_subscription_feedback.js:0
+msgid "Please let us know why you want to be in our block list."
+msgstr "Kerro meille, miksi haluat olla estolistallamme."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -3325,6 +3886,18 @@ msgstr "Esikatsele tekstiä"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "Primary Buttons"
 msgstr "Ensisijaiset painikkeet"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__process
+msgid "Process"
+msgstr "Käsittele"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__processing
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_status__process
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
+msgid "Processing"
+msgstr "Käsittelyssä"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -3362,7 +3935,7 @@ msgstr "Arvostelu"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__rating_ids
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Arviointi"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_image_text
@@ -3375,6 +3948,14 @@ msgstr "Lue lisää"
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 msgid "Ready for take-off!"
 msgstr "Valmiina nousuun!"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription__opt_out_reason_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription_optout__name
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mail_blacklist_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_search
+msgid "Reason"
+msgstr "Syy"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -3480,7 +4061,6 @@ msgstr "Renderöintimalli"
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_status__reply
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Replied"
 msgstr "Vastauksia"
 
@@ -3639,8 +4219,12 @@ msgstr "Pisteet"
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/ir_model.py:0
-msgid "Searching Mailing Enabled models supports only direct search using '='' or '!='."
-msgstr "Postituksen mahdollistavien mallien haku tukee vain suoraa hakua käyttämällä '='' tai '!='."
+msgid ""
+"Searching Mailing Enabled models supports only direct search using '='' or "
+"'!='."
+msgstr ""
+"Postituksen mahdollistavien mallien haku tukee vain suoraa hakua käyttämällä"
+" '='' tai '!='."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features
@@ -3663,6 +4247,11 @@ msgid "Secondary Buttons"
 msgstr "Toissijaiset painikkeet"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_form
+msgid "Select a Target Model..."
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
 msgid "Select and delete blocks to remove features."
 msgstr "Valitse ja poista lohkoja poistaaksesi ominaisuuksia."
@@ -3674,13 +4263,8 @@ msgstr "Valitse postituslistat"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "Select mailing lists..."
-msgstr "Valitse postituslistat..."
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "Select mailing lists:"
-msgstr "Valitse postituslistat:"
+msgid "Select recipients..."
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__ab_testing_winner_selection
@@ -3706,6 +4290,7 @@ msgid "Send From"
 msgstr "Lähettäjä"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
 #: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
 msgid "Send Mailing"
@@ -3724,13 +4309,22 @@ msgstr "Lähetä malliposti"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
-msgid "Send a report to the mailing responsible one day after the mailing has been sent."
-msgstr "Lähetä raportti postituksesta vastaavalle taholle yhden päivän kuluttua postituksen lähettämisestä."
+msgid ""
+"Send a report to the mailing responsible one day after the mailing has been "
+"sent."
+msgstr ""
+"Lähetä raportti postituksesta vastaavalle taholle yhden päivän kuluttua "
+"postituksen lähettämisestä."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Send a sample mailing for testing purpose to the address below."
 msgstr "Lähetä näytepostilähetys testausta varten alla olevaan osoitteeseen."
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_view_generic
+msgid "Send a test version of your mailing to preview its design"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__schedule_type__now
@@ -3746,7 +4340,7 @@ msgstr "Lähetä ajankohtana"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Send test"
-msgstr ""
+msgstr "Lähetä testi"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__state__sending
@@ -3757,9 +4351,8 @@ msgstr "Lähetetään"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__sent
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__state__done
-#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_status__sent
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_status__pending
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace_report__state__done
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_form_full_width
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 msgid "Sent"
 msgstr "Lähetetty"
@@ -3797,6 +4390,18 @@ msgid "Sent on #{record.sent_date.value}"
 msgstr "Lähetetty #{record.sent_date.value}"
 
 #. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_feedback.xml:0
+msgid "Sent. Thanks you for your feedback!"
+msgstr "Lähetetty. Kiitos palautteestasi!"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_res_config_settings__mass_mailing_split_contact_name
+#: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
+msgid "Separate Mailing Contact Names into two fields"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Separator"
 msgstr "Erotin"
@@ -3805,6 +4410,11 @@ msgstr "Erotin"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "Separators"
 msgstr "Erottimet"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription_optout__sequence
+msgid "Sequence"
+msgstr "Järjestys"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_mass_mailing_configuration
@@ -3826,7 +4436,7 @@ msgstr "Näytä asetuksissa"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Showcase"
-msgstr ""
+msgstr "Esittely"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.theme_default_template
@@ -3835,8 +4445,12 @@ msgstr "Allekirjoitus"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
-msgid "Since the date and time for this test has not been scheduled, don't forget to manually send your preferred version."
-msgstr "Tämän kokeen päivämäärää ja kellonaikaa ei ole määritetty. Älä unohda lähettää haluamaasi versiota manuaalisesti."
+msgid ""
+"Since the date and time for this test has not been scheduled, don't forget "
+"to manually send your preferred version."
+msgstr ""
+"Tämän kokeen päivämäärää ja kellonaikaa ei ole määritetty. Älä unohda "
+"lähettää haluamaasi versiota manuaalisesti."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_alert_options
@@ -3867,8 +4481,14 @@ msgstr "Lähde"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_media_list
-msgid "Speakers from all over the world will join our experts to give inspiring talks on various topics. Stay on top of the latest business management trends &amp; technologies"
-msgstr "Asiantuntijoidemme kanssa eri puolilta maailmaa tulevat puhujat pitävät inspiroivia puheenvuoroja eri aiheista. Pysy ajan tasalla uusimmista liikkeenjohdon trendeistä ja teknologioista"
+msgid ""
+"Speakers from all over the world will join our experts to give inspiring "
+"talks on various topics. Stay on top of the latest business management "
+"trends &amp; technologies"
+msgstr ""
+"Asiantuntijoidemme kanssa eri puolilta maailmaa tulevat puhujat pitävät "
+"inspiroivia puheenvuoroja eri aiheista. Pysy ajan tasalla uusimmista "
+"liikkeenjohdon trendeistä ja teknologioista"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__reply_to_mode__new
@@ -3876,7 +4496,12 @@ msgid "Specified Email Address"
 msgstr "Määritetty sähköpostiosoite"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+#: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__mass_mailing_split_contact_name
+msgid "Split First and Last Name"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_themes
 msgid "Start From Scratch"
 msgstr "Aloita tyhjästä"
 
@@ -3890,7 +4515,7 @@ msgstr "Aloita luomalla ensimmäinen <b>postitus</b>."
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 msgid "State"
-msgstr "Tila"
+msgstr "Alue"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail__mailing_trace_ids
@@ -3917,12 +4542,13 @@ msgstr ""
 "Tila aktiviteetin perusteella\n"
 "Myöhässä: Eräpäivä on menneisyydessä\n"
 "Tänään: Eräpäivä on tänään\n"
-"Suunniteltu: Tulevaisuudessa"
+"Suunniteltu: Tulevaisuudessa."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_trace__links_click_datetime
 msgid "Stores last click datetime in case of multi clicks."
-msgstr "Tallentaa viimeisimmän napsautuksen ajankohdan, jos on useita klikkauksia."
+msgstr ""
+"Tallentaa viimeisimmän napsautuksen ajankohdan, jos on useita klikkauksia."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
@@ -3931,19 +4557,42 @@ msgstr "Venytä yhtä korkeaksi"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__subject
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Subject"
 msgstr "Aihe"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__subscription_list_ids
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+msgid "Subscribed"
+msgstr "Tilattu"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_tree
+msgid "Subscription Date"
+msgstr "Tilauspäivämäärä"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__subscription_ids
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__subscription_ids
 msgid "Subscription Information"
 msgstr "Tilauksen tiedot"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__tag_ids
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
+msgid "Subscriptions"
+msgstr "Tilaukset"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+msgid "Successfully Unsubscribed"
+msgstr "Onnistunut tilauksen poistaminen"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__tag_ids
 msgid "Tags"
 msgstr "Tunnisteet"
 
@@ -3959,8 +4608,12 @@ msgstr "Tiimi"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__mail_server_available
-msgid "Technical field used to know if the user has activated the outgoing mail server option in the settings"
-msgstr "Tekninen kenttä, jonka avulla tiedetään, onko käyttäjä aktivoinut lähtevän postin palvelin -vaihtoehdon asetuksissa"
+msgid ""
+"Technical field used to know if the user has activated the outgoing mail "
+"server option in the settings"
+msgstr ""
+"Tekninen kenttä, jonka avulla tiedetään, onko käyttäjä aktivoinut lähtevän "
+"postin palvelin -vaihtoehdon asetuksissa"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features
@@ -3987,7 +4640,7 @@ msgstr "Postituksen testaus"
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_mailing_test.py:0
 msgid "Test mailing could not be sent to %s:"
-msgstr ""
+msgstr "Testipostia ei voitu lähettää osoitteeseen %s:"
 
 #. module: mass_mailing
 #. odoo-python
@@ -4015,7 +4668,7 @@ msgstr "Teksti"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Text - Image"
-msgstr ""
+msgstr "Teksti - Kuva"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -4034,12 +4687,6 @@ msgid "Thank you for joining us!"
 msgstr "Kiitoksia liittymisestä!"
 
 #. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
-msgid "Thank you! Your feedback has been sent successfully!"
-msgstr "Kiitos! Palautteesi on lähetetty onnistuneesti!"
-
-#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_block
 msgid "That way, Odoo evolves much faster than any other solution."
 msgstr "Näin Odoo kehittyy paljon nopeammin, kuin mikään muu ratkaisu."
@@ -4050,9 +4697,16 @@ msgid "The A/B Testing Percentage needs to be between 0 and 100%"
 msgstr "A/B-testausprosentin on oltava välillä 0-100 %"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mailing_contact_subscription__opt_out
+#: model:ir.model.fields,help:mass_mailing.field_mailing_subscription__opt_out
 msgid "The contact has chosen not to receive mails anymore from this list"
-msgstr "Tämä kontakti on valinnut olla vastaanottamatta enää sähköpostia tältä listalta"
+msgstr ""
+"Tämä kontakti on valinnut olla vastaanottamatta enää sähköpostia tältä "
+"listalta"
+
+#. module: mass_mailing
+#: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_3
+msgid "The content of these emails is not relevant to me"
+msgstr "Näiden sähköpostiviestien sisältö ei ole minulle merkityksellinen"
 
 #. module: mass_mailing
 #. odoo-python
@@ -4062,8 +4716,12 @@ msgstr "Suodatinalue ei ole voimassa tämän vastaanottajan kohdalla."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_list__is_public
-msgid "The mailing list can be accessible by recipients in the subscription management page to allows them to update their preferences."
-msgstr "Vastaanottajat pääsevät postituslistalle tilausten hallintasivulla, jotta he voivat päivittää asetuksiaan."
+msgid ""
+"The mailing list can be accessible by recipients in the subscription "
+"management page to allow them to update their preferences."
+msgstr ""
+"Vastaanottajat voivat käyttää postituslistaa tilausten hallintasivulla, "
+"jotta he voivat päivittää asetuksiaan."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_block
@@ -4076,31 +4734,33 @@ msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_image
-msgid "The open source model of Odoo has allowed us to leverage thousands of developers and business experts to build hundreds of apps in just a few years."
-msgstr "Odoon avoimen lähdekoodin malli on mahdollistanut satojen sovellusten luomisen tuhansien kehittäjien ja konsulttien avulla, vain muutamien vuosien aikana."
+msgid ""
+"The open source model of Odoo has allowed us to leverage thousands of "
+"developers and business experts to build hundreds of apps in just a few "
+"years."
+msgstr ""
+"Odoon avoimen lähdekoodin malli on mahdollistanut satojen sovellusten "
+"luomisen tuhansien kehittäjien ja konsulttien avulla, vain muutamien vuosien"
+" aikana."
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
-msgid "The recipient <strong>subscribed to %s</strong> mailing list(s)"
-msgstr "Vastaanottaja <strong>teki tilauksen %s</strong> postituslistalle"
-
-#. module: mass_mailing
-#. odoo-python
-#: code:addons/mass_mailing/models/mailing.py:0
-msgid "The recipient <strong>unsubscribed from %s</strong> mailing list(s)"
-msgstr "Vastaanottaja <strong>lopetti tilauksen %s</strong> postituslistalta"
-
-#. module: mass_mailing
-#. odoo-python
-#: code:addons/mass_mailing/models/mailing.py:0
-msgid "The saved filter targets different recipients and is incompatible with this mailing."
-msgstr "Tallennettu suodatin on suunnattu eri vastaanottajille, eikä se ole yhteensopiva tämän postituksen kanssa."
+msgid ""
+"The saved filter targets different recipients and is incompatible with this "
+"mailing."
+msgstr ""
+"Tallennettu suodatin on suunnattu eri vastaanottajille, eikä se ole "
+"yhteensopiva tämän postituksen kanssa."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
-msgid "The winner has already been sent. Use <b>Compare Version</b> to get an overview of this A/B testing campaign."
-msgstr "Voittaja on jo lähetetty. Käytä <b>Vertaa versiota</b> -toimintoa saadaksesi yleiskuvan tästä A/B-testauskampanjasta."
+msgid ""
+"The winner has already been sent. Use <b>Compare Version</b> to get an "
+"overview of this A/B testing campaign."
+msgstr ""
+"Voittaja on jo lähetetty. Käytä <b>Vertaa versiota</b> -toimintoa saadaksesi"
+" yleiskuvan tästä A/B-testauskampanjasta."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -4136,86 +4796,126 @@ msgstr ""
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mail_thread.py:0
-msgid "This email has been automatically added in blocklist because of too much bounced."
+msgid ""
+"This email has been automatically added in blocklist because of too much "
+"bounced."
 msgstr ""
+"Tämä sähköposti on lisätty automaattisesti estolistalle, koska sitä on "
+"palautunut liikaa."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
-msgstr "Tämä sähköposti on massapostitusten mustalla listalla. Klikkaa poistaaksesi mustalta listalta."
+msgstr ""
+"Tämä sähköposti on massapostitusten mustalla listalla. Klikkaa poistaaksesi "
+"mustalta listalta."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__email_normalized
-msgid "This field is used to search on email address as the primary email field can contain more than strictly an email address."
-msgstr "Tätä kenttää käytetään sähköpostiosoitteiden hakuun, koska ensisijainen sähköpostiosoite voi sisältää muutakin kuin vain sähköpostiosoitteen."
+msgid ""
+"This field is used to search on email address as the primary email field can"
+" contain more than strictly an email address."
+msgstr ""
+"Tätä kenttää käytetään sähköpostiosoitteiden hakuun, koska ensisijainen "
+"sähköpostiosoite voi sisältää muutakin kuin vain sähköpostiosoitteen."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_res_config_settings__group_mass_mailing_campaign
-msgid "This is useful if your marketing campaigns are composed of several emails"
-msgstr "Tämä on hyödyllinen, jos markkinointikampanjat koostuvat useista sähköposteista"
+msgid ""
+"This is useful if your marketing campaigns are composed of several emails"
+msgstr ""
+"Tämä on hyödyllinen, jos markkinointikampanjat koostuvat useista "
+"sähköposteista"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_form_full_width
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "This mailing has no selected design (yet!)."
 msgstr "Tälle postitukselle ei ole valittu ulkoasua (vielä!)."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
-msgid "This tool is advised if your marketing campaign is composed of several emails."
-msgstr "Tätä työkalua suositellaan, jos markkinointikampanjasi koostuu useista sähköposteista."
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "This will send the email to all recipients. Are you sure you want to proceed?"
+msgid ""
+"This tool is advised if your marketing campaign is composed of several "
+"emails."
 msgstr ""
+"Tätä työkalua suositellaan, jos markkinointikampanjasi koostuu useista "
+"sähköposteista."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__reply_to_mode
-msgid "Thread: replies go to target document. Email: replies are routed to a given email."
-msgstr "Lanka: vastaukset menevät kohdeasiakirjaan. Sähköposti: vastaukset ohjataan tiettyyn sähköpostiin."
+msgid ""
+"Thread: replies go to target document. Email: replies are routed to a given "
+"email."
+msgstr ""
+"Lanka: vastaukset menevät kohdeasiakirjaan. Sähköposti: vastaukset ohjataan "
+"tiettyyn sähköpostiin."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.social_links
 msgid "TikTok"
-msgstr ""
+msgstr "TikTok"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__title_id
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Title"
 msgstr "Otsikko"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.s_rating_options
+msgid "Title Position"
+msgstr "Nimike ja asema"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_three_columns
-msgid "To add a fourth column, reduce the size of these three columns using the right icon of each block. Then, duplicate one of the columns to create a new one as a copy."
-msgstr "Jos haluat lisätä neljännen sarakkeen, pienennä näiden kolmen sarakkeen kokoa kunkin lohkon oikeanpuoleisen kuvakkeen avulla. Kopioi sitten yksi sarakkeista luodaksesi uuden sarakkeen kopiona."
+msgid ""
+"To add a fourth column, reduce the size of these three columns using the "
+"right icon of each block. Then, duplicate one of the columns to create a new"
+" one as a copy."
+msgstr ""
+"Jos haluat lisätä neljännen sarakkeen, pienennä näiden kolmen sarakkeen "
+"kokoa kunkin lohkon oikeanpuoleisen kuvakkeen avulla. Kopioi sitten yksi "
+"sarakkeista luodaksesi uuden sarakkeen kopiona."
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
-msgid "To send the winner mailing the campaign should not have been completed."
-msgstr "Voittajapostituksen lähettämiseksi kampanjaa ei olisi pitänyt päättää."
+msgid ""
+"To send the winner mailing the campaign should not have been completed."
+msgstr ""
+"Voittajapostituksen lähettämiseksi kampanjaa ei olisi pitänyt päättää."
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
-msgid "To send the winner mailing the same campaign should be used by the mailings"
-msgstr "Voittajapostituksen lähettämiseen on käytettävä samaa kampanjaa kuin postituksissa"
+msgid ""
+"To send the winner mailing the same campaign should be used by the mailings"
+msgstr ""
+"Voittajapostituksen lähettämiseen on käytettävä samaa kampanjaa kuin "
+"postituksissa"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
-msgid "To track how many replies this mailing gets, make sure its reply-to address belongs to this database."
-msgstr "Jos haluat seurata, kuinka monta vastausta tämä lähetys saa, varmista, että sen vastausosoite kuuluu tähän tietokantaan."
+msgid ""
+"To track how many replies this mailing gets, make sure its reply-to address "
+"belongs to this database."
+msgstr ""
+"Jos haluat seurata, kuinka monta vastausta tämä lähetys saa, varmista, että "
+"sen vastausosoite kuuluu tähän tietokantaan."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_company_team
 msgid "Tony Fred, CEO"
-msgstr "Tony Fred, CEO"
+msgstr "Tony Fred, toimitusjohtaja"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.s_rating_options
+msgid "Top"
+msgstr "Ylin"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__total
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_tree
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
 msgid "Total"
 msgstr "Yhteensä"
@@ -4233,7 +4933,8 @@ msgstr "Pomppaamiset yhteensä"
 #. module: mass_mailing
 #: model:ir.model.constraint,message:mass_mailing.constraint_mailing_trace_check_res_id_is_set
 msgid "Traces have to be linked to records with a not null res_id."
-msgstr "Jäljet on yhdistettävä tietueisiin, joiden res_id-tietue ei ole nolla."
+msgstr ""
+"Jäljet on yhdistettävä tietueisiin, joiden res_id-tietue ei ole nolla."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -4251,11 +4952,6 @@ msgid "Turn every feature into a benefit for your reader."
 msgstr "Muuta jokainen ominaisuus hyödyksi lukijallesi."
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.social_links
-msgid "Twitter"
-msgstr "Twitter"
-
-#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__trace_type
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__mailing_type
 msgid "Type"
@@ -4264,7 +4960,7 @@ msgstr "Tyyppi"
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Poikkeusaktiviteetin tyyppi tietueella"
+msgstr "Poikkeusaktiviteetin tyyppi tietueella."
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_utm_campaign
@@ -4306,25 +5002,10 @@ msgid "Unsubscribe"
 msgstr "Lopeta kanavan tilaus"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
-msgid "Unsubscribed"
-msgstr "Erottu"
-
-#. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__unsubscription_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription__opt_out_datetime
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_search
 msgid "Unsubscription Date"
 msgstr "Tilauksen lopettamisen päivä"
-
-#. module: mass_mailing
-#. odoo-python
-#: code:addons/mass_mailing/models/mailing.py:0
-msgid "Unsupported mass mailing model %s"
-msgstr "Massapostitusmalli ei ole tuettu %s"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
-msgid "Update my subscriptions"
-msgstr "Päivitä tilaukseni"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -4344,13 +5025,19 @@ msgstr ""
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__mail_server_id
 #: model:ir.model.fields,help:mass_mailing.field_res_config_settings__mass_mailing_outgoing_mail_server
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
-msgid "Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails."
-msgstr "Käytä ensimmäisenä tiettyä sähköpostipalvelinta. Muutoin Odoo käyttää ensimmäistä saatavilla olevaa lähtevän postin palvelinta (järjestysnumerointiin perustuen), kuten tavallisissa sähköpostiviesteissä."
+msgid ""
+"Use a specific mail server in priority. Otherwise Odoo relies on the first "
+"outgoing mail server available (based on their sequencing) as it does for "
+"normal mails."
+msgstr ""
+"Käytä ensimmäisenä tiettyä sähköpostipalvelinta. Muutoin Odoo käyttää "
+"ensimmäistä saatavilla olevaa lähtevän postin palvelinta "
+"(järjestysnumerointiin perustuen), kuten tavallisissa sähköpostiviesteissä."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "Use alternative versions to be able to select the winner."
-msgstr ""
+msgstr "Käytä vaihtoehtoisia versioita voittajan valitsemiseksi."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_coupon_code
@@ -4359,13 +5046,30 @@ msgstr "Käytä nyt"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_media_list
-msgid "Use this component for creating a list of featured elements to which you want to bring attention."
-msgstr "Käytä tätä komponenttia luodaksesi luettelon esillä olevista elementeistä, joihin haluat kiinnittää huomiota."
+msgid ""
+"Use this component for creating a list of featured elements to which you "
+"want to bring attention."
+msgstr ""
+"Käytä tätä komponenttia luodaksesi luettelon esillä olevista elementeistä, "
+"joihin haluat kiinnittää huomiota."
+
+#. module: mass_mailing
+#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_trace_report_action_mail
+msgid ""
+"Use this menu to keep track of the results of your mailings.<br>\n"
+"                    From here, you'll be able to overview the rate of replies, clicks, bounces..."
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_media_list
-msgid "Use this snippet to build various types of components that feature a left- or right-aligned image alongside textual content. Duplicate the element to create a list that fits your needs."
-msgstr "Tämän pätkän avulla voit rakentaa erilaisia komponentteja, joissa on vasemmalle tai oikealle kohdistettu kuva tekstisisällön ohella. Monista elementti luodaksesi tarpeisiisi sopivan luettelon."
+msgid ""
+"Use this snippet to build various types of components that feature a left- "
+"or right-aligned image alongside textual content. Duplicate the element to "
+"create a list that fits your needs."
+msgstr ""
+"Tämän pätkän avulla voit rakentaa erilaisia komponentteja, joissa on "
+"vasemmalle tai oikealle kohdistettu kuva tekstisisällön ohella. Monista "
+"elementti luodaksesi tarpeisiisi sopivan luettelon."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_numbers
@@ -4402,8 +5106,12 @@ msgstr "Katso verkossa"
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
-msgid "Wait until your mailing has been sent to check how many recipients you managed to reach."
-msgstr "Tarkista, kuinka monta vastaanottajaa onnistuit tavoittamaan, kun lähetys on lähetetty."
+msgid ""
+"Wait until your mailing has been sent to check how many recipients you "
+"managed to reach."
+msgstr ""
+"Tarkista, kuinka monta vastaanottajaa onnistuit tavoittamaan, kun lähetys on"
+" lähetetty."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -4422,18 +5130,21 @@ msgstr "Postituslomakkeen näkymässä näkyvä varoitusviesti"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
-msgid "We are continuing to grow and we miss seeing you be a part of it! We've increased store hours and have lot's of new brands available. To welcome you back please accept this 20% discount on you next purchase by clicking the button."
-msgstr "Kasvumme jatkuu ja haluamme nähdä sinut osana sitä! Olemme laajentaneet myymälän aukioloaikoja ja meillä on paljon uusia tuotemerkkejä. Toivottaaksemme sinut takaisin, tarjoamme sinulle 20% alennuksen seuraavasta tilauksestasi."
+msgid ""
+"We are continuing to grow and we miss seeing you be a part of it! We've "
+"increased store hours and have lot's of new brands available. To welcome you"
+" back please accept this 20% discount on you next purchase by clicking the "
+"button."
+msgstr ""
+"Kasvumme jatkuu ja haluamme nähdä sinut osana sitä! Olemme laajentaneet "
+"myymälän aukioloaikoja ja meillä on paljon uusia tuotemerkkejä. "
+"Toivottaaksemme sinut takaisin, tarjoamme sinulle 20% alennuksen seuraavasta"
+" tilauksestasi."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_references
 msgid "We are in good company."
 msgstr "Olemme hyvässä seurassa."
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
-msgid "We would appreciate if you provide feedback about why you updated<br/>your subscriptions"
-msgstr "Olisimme kiitollisia jos annat meille palautetta, miksi päivitit <br/>tilauksesi."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__website_message_ids
@@ -4448,7 +5159,7 @@ msgid "Website communication history"
 msgstr "Verkkosivun viestihistoria"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_themes
 msgid "Welcome Message"
 msgstr "Tervetuloviesti"
 
@@ -4464,8 +5175,12 @@ msgstr "Kun tämä postitus lisättiin suosikkeihin"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_ir_model__is_mailing_enabled
-msgid "Whether this model supports marketing mailing capabilities (notably email and SMS)."
-msgstr "Tukeeko tämä malli markkinointipostitusominaisuuksia (erityisesti sähköpostia ja tekstiviestejä)."
+msgid ""
+"Whether this model supports marketing mailing capabilities (notably email "
+"and SMS)."
+msgstr ""
+"Tukeeko tämä malli markkinointipostitusominaisuuksia (erityisesti "
+"sähköpostia ja tekstiviestejä)."
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_filter_action
@@ -4474,6 +5189,9 @@ msgid ""
 "                To save the same criteria for future use, you can add it to the favorite list\n"
 "                by clicking on <i class=\"fa fa-floppy-o text-warning\"></i> icon next to \"Recipients\"."
 msgstr ""
+"Kun suunnittelet postitusta, voit määritellä säännöt vastaanottajien suodattamiseksi.\n"
+"                Voit tallentaa samat kriteerit myöhempää käyttöä varten lisäämällä ne suosikkiluetteloon\n"
+"                klikkaamalla <i class=\"fa fa-floppy-o text-warning\"></i> -kuvaketta \"Vastaanottajat\" -kohdan vieressä."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_hr_options
@@ -4498,13 +5216,25 @@ msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_picture
-msgid "With strong technical foundations, Odoo's framework is unique. It provides <span style=\"font-weight: bolder;\">top notch usability that scales across all apps</span>."
-msgstr "Odoon kehys on ainutlaatuinen vahvan teknisen perustan ansiosta. Se tarjoaa <span style=\"font-weight: bolder;\">huippuluokan käytettävyyden, joka skaalautuu kaikissa sovelluksissa</span>."
+msgid ""
+"With strong technical foundations, Odoo's framework is unique. It provides "
+"<span style=\"font-weight: bolder;\">top notch usability that scales across "
+"all apps</span>."
+msgstr ""
+"Odoon kehys on ainutlaatuinen vahvan teknisen perustan ansiosta. Se tarjoaa "
+"<span style=\"font-weight: bolder;\">huippuluokan käytettävyyden, joka "
+"skaalautuu kaikissa sovelluksissa</span>."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_cover
-msgid "Write one or two paragraphs describing your product, services or a specific feature.<br/> To be successful your content needs to be useful to your readers."
-msgstr "Kirjoita yksi tai kaksi kappaletta, joissa kuvataan tuotetta, palveluja tai tiettyä ominaisuutta.<br/> Onnistuakseen sisältösi on oltava hyödyllistä lukijoille."
+msgid ""
+"Write one or two paragraphs describing your product, services or a specific "
+"feature.<br/> To be successful your content needs to be useful to your "
+"readers."
+msgstr ""
+"Kirjoita yksi tai kaksi kappaletta, joissa kuvataan tuotetta, palveluja tai "
+"tiettyä ominaisuutta.<br/> Onnistuakseen sisältösi on oltava hyödyllistä "
+"lukijoille."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -4518,13 +5248,33 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features
 msgid "Write what the customer would like to know, not what you want to show."
-msgstr "Kirjoita se, mitä asiakas haluaa tietää, <br/>ei sitä, mitä haluat näyttää."
+msgstr ""
+"Kirjoita se, mitä asiakas haluaa tietää, <br/>ei sitä, mitä haluat näyttää."
 
 #. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
-msgid "You are not authorized to do this!"
-msgstr "Sinulla ei ole oikeuksia tähän toimintoon!"
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+msgid "You are no longer part of our mailing list(s)."
+msgstr "Et ole enää postituslistallamme."
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+msgid ""
+"You are no longer part of our services and will not be contacted again."
+msgstr "Et ole enää osa palveluitamme, eikä sinuun oteta enää yhteyttä."
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+msgid "You are no longer part of the %(mailing_name)s mailing list."
+msgstr "Et ole enää %(mailing_name)s-postituslistan jäsen."
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+msgid "You are no longer part of the %(mailing_names)s mailing list."
+msgstr "Et ole enää %(mailing_names)s-postituslistan jäsen."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
@@ -4573,50 +5323,42 @@ msgstr ""
 "                lähettää sähköposteja<br> mille tahansa yhteystiedolle, joka on tallennettu muihin Odoo-sovelluksiin."
 
 #. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
-msgid "You have been <strong>successfully unsubscribed from %s</strong>."
-msgstr "Sinut on <strong>onnistuneesti poistettu postituslistalta %s</strong>."
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
-msgid "You have been <strong>successfully unsubscribed</strong>."
-msgstr "Sinut on <strong>onnistuneesti poistettu postituslistalta</strong>."
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
-msgid "You have been successfully <strong>added to our blacklist</strong>. You will not be contacted anymore by our services."
-msgstr "Sinut on onnistuneesti <strong>lisätty markkinointikieltoon</strong>. Et saa enää yhteydenottoja palveluihimme liittyen."
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
-msgid "You have been successfully <strong>removed from our blacklist</strong>. You are now able to be contacted by our services."
-msgstr "Sinut on onnistuneesti <strong>poistettu markkinointikiellostamme</strong>. Voit taas saada yhteydenottoja palveluihimme liittyen."
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_done
-msgid "You have been successfully <strong>unsubscribed</strong>!"
-msgstr "Tilauksesi on onnistuneesti <strong>lopetettu</strong>!"
-
-#. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 msgid "You have to much emails, please upload a file."
 msgstr "Sinulla on liikaa sähköposteja, lataa tiedosto."
 
 #. module: mass_mailing
-#. odoo-python
-#: code:addons/mass_mailing/models/mailing_contact.py:0
-msgid "You should give either list_ids, either subscription_list_ids to create new contacts."
-msgstr "Uusien yhteystietojen luomiseksi on annettava joko list_ids tai subscription_list_ids."
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+msgid "You may also be interested in"
+msgstr "Kiinnostavatko nämä tuotteet?"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_done
-msgid "You were still subscribed to those newsletters. You will not receive any news from them anymore:"
-msgstr "Olit edelleen näiden uutiskirjeiden tilaaja. Et saa heiltä enää uutisia:"
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing_contact.py:0
+msgid ""
+"You should give either list_ids, either subscription_ids to create new "
+"contacts."
+msgstr ""
+"Uusien yhteystietojen luomiseksi on annettava joko list_ids tai "
+"subscription_ids."
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+msgid "You will not hear from us anymore."
+msgstr "Ette kuule meistä enää mitään."
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+msgid ""
+"You will not receive any news from those mailing lists you are a member of:"
+msgstr "Et saa mitään uutisia niiltä postituslistoilta, joiden jäsen olet:"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_title
@@ -4625,15 +5367,46 @@ msgstr "Sinun otsikkosi"
 
 #. module: mass_mailing
 #. odoo-javascript
-#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
-msgid "Your changes have been saved."
-msgstr "Muutokset on tallennettu."
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
+msgid "Your email is currently"
+msgstr "Sähköpostisi on tällä hetkellä"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+msgid "Your email is currently <strong>in our block list</strong>."
+msgstr "Sähköpostisi on tällä hetkellä <strong>estolistallamme</strong>."
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/wizard/mailing_mailing_test.py:0
+msgid "[TEST] %(mailing_subject)s"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_form
+msgid "e.g. \"B2B Canadian Customers\""
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form_split_name
+msgid "e.g. \"John\""
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form_split_name
+msgid "e.g. \"Smith\""
+msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/xml/mailing_filter_widget.xml:0
 msgid "e.g. \"VIP Customers\""
 msgstr "esim. \"VIP-asiakkaat\""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
+msgid "e.g. \"VIP\", \"Roadshow\", ..."
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -4645,6 +5418,11 @@ msgstr "esim. Ota selvää ennen kuin on liian myöhäistä!"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form_simplified
 msgid "e.g. Consumer Newsletter"
 msgstr "esim. Asiakaskirje"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mail_blacklist_view_form
+msgid "e.g. I received too many emails"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
@@ -4671,9 +5449,19 @@ msgid "having the"
 msgstr "jolla on kategoria"
 
 #. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
+msgid "in our block list"
+msgstr "estoluettelossamme"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
-msgid "is the winner of the A/B testing campaign and has been sent to all remaining recipients."
-msgstr "on A/B-testauskampanjan voittaja, ja se on lähetetty kaikille jäljellä oleville vastaanottajille."
+msgid ""
+"is the winner of the A/B testing campaign and has been sent to all remaining"
+" recipients."
+msgstr ""
+"on A/B-testauskampanjan voittaja, ja se on lähetetty kaikille jäljellä "
+"oleville vastaanottajille."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -4681,11 +5469,13 @@ msgid ""
 "of all potential recipients.<br/>\n"
 "                        <b class=\"text-danger\">Some of the mailings will not be sent</b>, as only 1 email will be sent for each unique recipient in this campaign."
 msgstr ""
+"kaikista mahdollisista vastaanottajista.<br/>\n"
+"                       <b class=\"text-danger\">Joitakin lähetyksiä ei lähetetä</b>, koska jokaiselle yksittäiselle vastaanottajalle lähetetään vain yksi sähköposti tässä kampanjassa."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "on"
-msgstr "päiväyksellä"
+msgstr "on"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_mailing_schedule_date
@@ -4693,20 +5483,14 @@ msgid "schedule a mailing"
 msgstr "aikatauluta postitus"
 
 #. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/xml/mass_mailing.xml:0
-msgid "template"
-msgstr "malli"
-
-#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "the"
-msgstr " "
+msgstr "se"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "to the remaining recipients."
-msgstr ""
+msgstr "jäljellä oleville vastaanottajille."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -4716,12 +5500,12 @@ msgstr "lähetetään"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "will receive this version."
-msgstr ""
+msgstr "saavat tämän version."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "will receive this version.<br/>"
-msgstr ""
+msgstr "saavat tämän version.<br/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_rating_options

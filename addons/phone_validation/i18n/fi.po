@@ -1,39 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* phone_validation
-#
+# 
 # Translators:
-# Svante Suominen <svante.suominen@web-veistamo.fi>, 2022
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
-# Jussi Lehto <jussi@gulfeo.com>, 2022
-# Sari Mäyrä <sari.mayra@sv-oy.fi>, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Johanna Valkonen <miujohanna@gmail.com>, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2022
-# Teija Hölttä <teija.holtta@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:01+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:57+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/phone_blacklist.py:0
-msgid " Please correct the number and try again."
+msgid "%(error)s Please correct the number and try again."
 msgstr ""
 
 #. module: phone_validation
@@ -50,7 +39,7 @@ msgstr "Aktiivinen"
 #. module: phone_validation
 #: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
 msgid "Add a phone number in the blacklist"
-msgstr ""
+msgstr "Lisää puhelinnumero mustalle listalle"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
@@ -59,10 +48,21 @@ msgid "Archived"
 msgstr "Arkistoitu"
 
 #. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/models/phone_blacklist.py:0
+msgid "Are you sure you want to unblacklist this phone number?"
+msgstr ""
+
+#. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_attachment_count
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_attachment_count
 msgid "Attachment Count"
 msgstr "Liitteiden määrä"
+
+#. module: phone_validation
+#: model:ir.model,name:phone_validation.model_base
+msgid "Base"
+msgstr "Pohja"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
@@ -93,17 +93,18 @@ msgstr "Markkinointikiellossa oleva puhelin on muu puhelin"
 #: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
 msgid "Blacklisted phone numbers won't receive SMS Mailings anymore."
 msgstr ""
+"Mustalle listalle lisätyt puhelinnumerot eivät enää vastaanota "
+"tekstiviestilähetyksiä."
 
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/res_users.py:0
-msgid "Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s (#%(user_id)s)"
-msgstr "Estetty, koska portaali-tili on poistettu %(portal_user_name)s tekijänä %(user_name)s (#%(user_id)s)"
-
-#. module: phone_validation
-#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
-msgid "Confirm"
-msgstr "Vahvista"
+msgid ""
+"Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s "
+"(#%(user_id)s)"
+msgstr ""
+"Estetty, koska portaali-tili on poistettu %(portal_user_name)s tekijänä "
+"%(user_name)s (#%(user_id)s)"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_res_partner
@@ -135,8 +136,12 @@ msgstr "Näyttönimi"
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized
-msgid "Field used to store sanitized phone number. Helps speeding up searches and comparisons."
-msgstr "Kenttä, jota käytetään puhdistetun puhelinnumeron tallentamiseen. Auttaa nopeuttamaan hakuja ja vertailuja."
+msgid ""
+"Field used to store sanitized phone number. Helps speeding up searches and "
+"comparisons."
+msgstr ""
+"Kenttä, jota käytetään puhdistetun puhelinnumeron tallentamiseen. Auttaa "
+"nopeuttamaan hakuja ja vertailuja."
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_follower_ids
@@ -176,36 +181,70 @@ msgstr "Jos valittu, joitakin viestejä ei ole toimitettu."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
-msgid "If the sanitized phone number is on the blacklist, the contact won't receive mass mailing sms anymore, from any list"
-msgstr "Jos puhdistettu puhelinnumero on mustalla listalla, yhteyshenkilö ei enää saa massatekstiviestejä miltään listalta"
+msgid ""
+"If the sanitized phone number is on the blacklist, the contact won't receive"
+" mass mailing sms anymore, from any list"
+msgstr ""
+"Jos puhdistettu puhelinnumero on mustalla listalla, yhteyshenkilö ei enää "
+"saa massatekstiviestejä miltään listalta"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/tools/phone_validation.py:0
+msgid "Impossible number %s: not a valid country prefix."
+msgstr "Mahdoton numero %s: ei kelvollinen maakohtainen etuliite."
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/tools/phone_validation.py:0
+msgid "Impossible number %s: not enough digits."
+msgstr "Mahdoton luku %s: ei tarpeeksi numeroita."
 
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
 msgid "Impossible number %s: probably invalid number of digits."
-msgstr ""
+msgstr "Mahdoton luku %s: luultavasti virheellinen määrä numeroita."
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/tools/phone_validation.py:0
+msgid "Impossible number %s: too many digits."
+msgstr "Mahdoton luku %s: liian monta numeroa."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__mobile_blacklisted
-msgid "Indicates if a blacklisted sanitized phone number is a mobile number. Helps distinguish which number is blacklisted             when there is both a mobile and phone field in a model."
-msgstr "Ilmaisee, onko mustalle listalle joutunut puhdistettu puhelinnumero matkapuhelinnumero. Auttaa erottamaan, mikä numero on mustalla listalla, kun mallissa on sekä matkapuhelin- että puhelinkenttä."
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Ilmaisee, onko mustalle listalle joutunut puhdistettu puhelinnumero "
+"matkapuhelinnumero. Auttaa erottamaan, mikä numero on mustalla listalla, kun"
+" mallissa on sekä matkapuhelin- että puhelinkenttä."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_blacklisted
-msgid "Indicates if a blacklisted sanitized phone number is a phone number. Helps distinguish which number is blacklisted             when there is both a mobile and phone field in a model."
-msgstr "Ilmaisee, onko mustalle listalle merkitty puhdistettu puhelinnumero puhelinnumero. Auttaa erottamaan, mikä numero on mustalla listalla, kun mallissa on sekä matkapuhelin- että puhelinkenttä."
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a phone number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Ilmaisee, onko mustalle listalle merkitty puhdistettu puhelinnumero "
+"puhelinnumero. Auttaa erottamaan, mikä numero on mustalla listalla, kun "
+"mallissa on sekä matkapuhelin- että puhelinkenttä."
 
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
 msgid "Invalid number %s: probably incorrect prefix."
-msgstr ""
+msgstr "Virheellinen numero %s: luultavasti väärä etuliite."
 
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 msgid "Invalid primary phone field on model %s"
-msgstr ""
+msgstr "Mallin %s ensisijainen puhelinkenttä on virheellinen"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_is_follower
@@ -226,12 +265,6 @@ msgid "Last Updated on"
 msgstr "Viimeksi päivitetty"
 
 #. module: phone_validation
-#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_main_attachment_id
-#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_main_attachment_id
-msgid "Main Attachment"
-msgstr "Pääliitetiedosto"
-
-#. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_has_error
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_has_error
 msgid "Message Delivery error"
@@ -247,12 +280,12 @@ msgstr "Viestit"
 #. odoo-python
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 msgid "Missing definition of phone fields."
-msgstr ""
+msgstr "Puhelinkenttien määrittely puuttuu."
 
 #. module: phone_validation
 #: model:ir.model.constraint,message:phone_validation.constraint_phone_blacklist_unique_number
 msgid "Number already exists"
-msgstr ""
+msgstr "Numero on jo olemassa"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_needaction_counter
@@ -269,7 +302,7 @@ msgstr "Virheiden määrä"
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_needaction_counter
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Toimenpiteitä vaativien viestien määrä"
 
 #. module: phone_validation
@@ -281,12 +314,12 @@ msgstr "Toimitusvirheellisten viestien määrä"
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__number
 msgid "Number should be E164 formatted"
-msgstr ""
+msgstr "Numeron olisi oltava E164-muotoinen"
 
 #. module: phone_validation
 #: model:ir.ui.menu,name:phone_validation.phone_menu_main
 msgid "Phone / SMS"
-msgstr ""
+msgstr "Puhelin / SMS"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_blacklist
@@ -294,12 +327,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_tree
 msgid "Phone Blacklist"
-msgstr ""
+msgstr "Puhelimen musta lista"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_mail_thread_phone
 msgid "Phone Blacklist Mixin"
-msgstr ""
+msgstr "Puhelimen mustan listan yhdistelmä"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
@@ -321,8 +354,10 @@ msgstr "Puhelin / matkapuhelin"
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
-msgid "Please enter at least 3 characters when searching a Phone/Mobile number."
+msgid ""
+"Please enter at least 3 characters when searching a Phone/Mobile number."
 msgstr ""
+"Kirjoita vähintään 3 merkkiä, kun etsit puhelin- tai matkapuhelinnumeroa."
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__reason
@@ -332,8 +367,9 @@ msgstr "Syy"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_blacklist_remove
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
 msgid "Remove phone from blacklist"
-msgstr ""
+msgstr "Poista puhelin mustalta listalta"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized
@@ -344,7 +380,7 @@ msgstr "Puhdistettu numero"
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
 msgid "Unable to parse %(phone)s: %(error)s"
-msgstr ""
+msgstr "Ei pystytä jäsentämään %(phone)s: %(error)s"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
@@ -355,7 +391,7 @@ msgstr "Poista sähköpostin markkinointikiellosta"
 #. odoo-python
 #: code:addons/phone_validation/wizard/phone_blacklist_remove.py:0
 msgid "Unblock Reason: %(reason)s"
-msgstr ""
+msgstr "Poissulkemisen poistamisen syy: %(reason)s"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_res_users
@@ -364,5 +400,10 @@ msgstr "Käyttäjä"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
+msgid "e.g \"Asked to receive our next newsletters\""
+msgstr "esim. \"Pyydetty vastaanottamaan seuraavat uutiskirjeemme\""
+
+#. module: phone_validation
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
 msgid "phone_blacklist_removal"
-msgstr ""
+msgstr "phone_blacklist_removal"

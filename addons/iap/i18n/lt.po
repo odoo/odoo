@@ -1,34 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* iap
-#
+# 
 # Translators:
-# grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
-# Arunas V. <arunas@devoro.com>, 2022
-# Anatolij, 2022
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
-# Martin Trigaux, 2022
-# Linas Versada <linaskrisiukenas@gmail.com>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
-"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
-"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
-"1 : n % 1 != 0 ? 2: 3);\n"
+"Language: lt\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account__account_info_id
-msgid "Account Info"
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
+msgid ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                                    Buy Credit"
 msgstr ""
 
 #. module: iap
@@ -38,14 +33,8 @@ msgstr "Paskyros informacija"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__account_token
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__account_token
 msgid "Account Token"
 msgstr "Paskyros prieigos raktas"
-
-#. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__account_uuid_hashed
-msgid "Account UUID"
-msgstr ""
 
 #. module: iap
 #: model:ir.model.fields,help:iap.field_iap_account__account_token
@@ -54,24 +43,25 @@ msgid ""
 msgstr ""
 
 #. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account__account_info_ids
-msgid "Accounts from IAP"
+#. odoo-python
+#: code:addons/iap/tools/iap_tools.py:0
+msgid ""
+"An error occurred while reaching %s. Please contact Odoo support if this "
+"error persists."
 msgstr ""
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__balance
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__balance
 msgid "Balance"
-msgstr ""
+msgstr "Balansas"
 
 #. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Buy Credit"
+#: model:ir.model.fields.selection,name:iap.selection__iap_account__state__banned
+msgid "Banned"
 msgstr ""
 
 #. module: iap
 #. odoo-javascript
-#: code:addons/iap/static/src/action_buttons_widget/action_buttons_widget.xml:0
 #: code:addons/iap/static/src/js/insufficient_credit_error_handler.js:0
 msgid "Buy credits"
 msgstr "Įsigyti kreditų"
@@ -88,37 +78,50 @@ msgid "Company"
 msgstr "Įmonė"
 
 #. module: iap
-#: model:ir.model,name:iap.model_res_config_settings
-msgid "Config Settings"
-msgstr "Konfigūracijos nustatymai"
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__create_uid
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__create_uid
+#: model:ir.model.fields,field_description:iap.field_iap_service__create_uid
 msgid "Created by"
 msgstr "Sukūrė"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__create_date
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__create_date
+#: model:ir.model.fields,field_description:iap.field_iap_service__create_date
 msgid "Created on"
 msgstr "Sukurta"
 
 #. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account__description
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__description
-msgid "Description"
+#: model:iap.service,unit_name:iap.iap_service_reveal
+msgid "Credits"
 msgstr ""
 
 #. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_account__description
+#: model:ir.model.fields,field_description:iap.field_iap_service__description
+msgid "Description"
+msgstr "Aprašymas"
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__display_name
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__display_name
+#: model:ir.model.fields,field_description:iap.field_iap_service__display_name
 msgid "Display Name"
 msgstr "Rodomas pavadinimas"
 
 #. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Hide Token"
+#: model:ir.model.fields,field_description:iap.field_iap_account__warning_user_ids
+msgid "Email Alert Recipients"
+msgstr ""
+
+#. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_account__warning_threshold
+msgid "Email Alert Threshold"
+msgstr ""
+
+#. module: iap
+#: model:iap.service,description:iap.iap_service_reveal
+msgid ""
+"Get quality leads and opportunities: convert your website visitors into "
+"leads, generate leads based on a set of criteria and enrich the company data"
+" of your opportunities."
 msgstr ""
 
 #. module: iap
@@ -129,15 +132,9 @@ msgstr "IAP"
 #. module: iap
 #: model:ir.actions.act_window,name:iap.iap_account_action
 #: model:ir.model,name:iap.model_iap_account
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__account_id
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "IAP Account"
 msgstr "IAP paskyra"
-
-#. module: iap
-#: model:ir.model,name:iap.model_iap_account_info
-msgid "IAP Account Info"
-msgstr ""
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_account_menu
@@ -151,8 +148,13 @@ msgid "IAP Lead Enrichment API"
 msgstr ""
 
 #. module: iap
+#: model:ir.model,name:iap.model_iap_service
+msgid "IAP Service"
+msgstr ""
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__id
+#: model:ir.model.fields,field_description:iap.field_iap_service__id
 msgid "ID"
 msgstr "ID"
 
@@ -163,21 +165,33 @@ msgid "Insufficient credit to perform this service."
 msgstr "Šios paslaugos atlikimui nepakankamas kreditas."
 
 #. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_service__integer_balance
+msgid "Integer Balance"
+msgstr ""
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_uid
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__write_uid
+#: model:ir.model.fields,field_description:iap.field_iap_service__write_uid
 msgid "Last Updated by"
 msgstr "Paskutinį kartą atnaujino"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_date
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__write_date
+#: model:ir.model.fields,field_description:iap.field_iap_service__write_date
 msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
 #. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account__name
-msgid "Name"
+#. odoo-javascript
+#: code:addons/iap/static/src/action_buttons_widget/action_buttons_widget.xml:0
+msgid "Manage Service & Buy Credits"
 msgstr ""
+
+#. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_account__name
+#: model:ir.model.fields,field_description:iap.field_iap_service__name
+msgid "Name"
+msgstr "Pavadinimas"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
@@ -185,24 +199,37 @@ msgid "Odoo IAP"
 msgstr ""
 
 #. module: iap
-#: model:ir.actions.server,name:iap.open_iap_account
-msgid "Open IAP Account"
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid ""
+"One of the email alert recipients doesn't have an email address set. Users: "
+"%s"
 msgstr ""
 
 #. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__service_name
-msgid "Related Service"
+#: model:ir.model.constraint,message:iap.constraint_iap_service_unique_technical_name
+msgid "Only one service can exist with a specific technical_name"
 msgstr ""
 
 #. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account__service_name
-msgid "Service Name"
-msgstr "Paslaugos pavadinimas"
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid "Please set a positive email alert threshold."
+msgstr ""
 
 #. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account__show_token
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Show Token"
+#: model:ir.model.fields.selection,name:iap.selection__iap_account__state__registered
+msgid "Registered"
+msgstr "Registruotas"
+
+#. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_account__service_id
+msgid "Service"
+msgstr "Paslauga"
+
+#. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_account__service_locked
+msgid "Service Locked"
 msgstr ""
 
 #. module: iap
@@ -212,22 +239,32 @@ msgid "Start a Trial at Odoo"
 msgstr "Pradėti \"Odoo\" bandymą"
 
 #. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_account__state
+msgid "State"
+msgstr "Būsena"
+
+#. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_account__service_name
+#: model:ir.model.fields,field_description:iap.field_iap_service__technical_name
+msgid "Technical Name"
+msgstr "Techninis pavadinimas"
+
+#. module: iap
 #. odoo-python
 #: code:addons/iap/tools/iap_tools.py:0
 msgid ""
-"The url that this service requested returned an error. Please contact the "
-"author of the app. The url it tried to contact was %s"
+"The request to the service timed out. Please contact the author of the app. "
+"The URL it tried to contact was %s"
 msgstr ""
 
 #. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account__warning_threshold
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__warning_threshold
-msgid "Threshold"
-msgstr ""
-
-#. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__unit_name
+#: model:ir.model.fields,field_description:iap.field_iap_service__unit_name
 msgid "Unit Name"
+msgstr ""
+
+#. module: iap
+#: model:ir.model.fields.selection,name:iap.selection__iap_account__state__unregistered
+msgid "Unregistered"
 msgstr ""
 
 #. module: iap
@@ -240,21 +277,4 @@ msgstr ""
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 msgid "View your IAP Services and recharge your credits"
-msgstr ""
-
-#. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account__warn_me
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__warn_me
-msgid "Warn me"
-msgstr ""
-
-#. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account__warning_email
-#: model:ir.model.fields,field_description:iap.field_iap_account_info__warning_email
-msgid "Warning Email"
-msgstr ""
-
-#. module: iap
-#: model:ir.model.fields,help:iap.field_iap_account__warn_me
-msgid "We will send you an email when your balance gets below that threshold"
 msgstr ""

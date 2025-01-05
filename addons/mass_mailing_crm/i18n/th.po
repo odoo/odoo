@@ -1,51 +1,53 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mass_mailing_crm
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Wichanon Jamwutthipreecha, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-07 10:47+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
-"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mass_mailing_crm
 #: model_terms:ir.ui.view,arch_db:mass_mailing_crm.mailing_mailing_view_form
 msgid ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', False)]}\">Leads</span>\n"
-"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', True)]}\">Opportunities</span>"
+"<span class=\"o_stat_text\" invisible=\"not use_leads\">Leads</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"use_leads\">Opportunities</span>"
 msgstr ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', False)]}\">ลูกค้าเป้าหมาย</span>\n"
-"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', True)]}\">โอกาส</span>"
+"<span class=\"o_stat_text\" invisible=\"not use_leads\">ลูกค้าเป้าหมาย</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"use_leads\">ผู้ที่มีโอกาสจะซื้อ</span>"
 
 #. module: mass_mailing_crm
+#. odoo-python
 #: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
 msgid "LEADS"
-msgstr ""
+msgstr "ลูกค้าเป้าหมาย"
 
 #. module: mass_mailing_crm
 #: model:ir.model,name:mass_mailing_crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "ลูกค้าเป้าหมาย / โอกาส"
+msgstr "ลูกค้าเป้าหมาย / ผู้ที่มีโอกาสจะซื้อ"
 
 #. module: mass_mailing_crm
+#. odoo-python
 #: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
 #: model:ir.model.fields.selection,name:mass_mailing_crm.selection__utm_campaign__ab_testing_winner_selection__crm_lead_count
 msgid "Leads"
 msgstr "ลูกค้าเป้าหมาย"
 
 #. module: mass_mailing_crm
+#. odoo-python
 #: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
 msgid "Leads Analysis"
 msgstr "การวิเคราะห์ลูกค้าเป้าหมาย"
@@ -53,7 +55,7 @@ msgstr "การวิเคราะห์ลูกค้าเป้าหม
 #. module: mass_mailing_crm
 #: model:ir.model.fields,field_description:mass_mailing_crm.field_mailing_mailing__crm_lead_count
 msgid "Leads/Opportunities Count"
-msgstr ""
+msgstr "จำนวน ลูกค้าเป้าหมาย/ผู้ที่มีโอกาสจะซื้อ"
 
 #. module: mass_mailing_crm
 #: model:ir.model,name:mass_mailing_crm.model_mailing_mailing
@@ -61,16 +63,23 @@ msgid "Mass Mailing"
 msgstr "การส่งจดหมายจำนวนมาก"
 
 #. module: mass_mailing_crm
+#. odoo-python
 #: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
 msgid "No %s yet!"
-msgstr ""
+msgstr "ยังไม่มี %s !"
 
 #. module: mass_mailing_crm
+#. odoo-python
 #: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
-msgid "Note that Odoo cannot track replies if they are sent towards email addresses to this database."
+msgid ""
+"Note that Odoo cannot track replies if they are sent towards email addresses"
+" to this database."
 msgstr ""
+"โปรดทราบว่า Odoo ไม่สามารถติดตามการตอบกลับได้ "
+"หากการตอบกลับเหล่านั้นถูกส่งไปยังที่อยู่อีเมลไปยังฐานข้อมูลนี้"
 
 #. module: mass_mailing_crm
+#. odoo-python
 #: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
 msgid "Opportunities"
 msgstr "โอกาสในการขาย"

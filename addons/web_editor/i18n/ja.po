@@ -1,25 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* web_editor
-#
+# 
 # Translators:
-# Ryoko Tsuda <ryoko@quartile.co>, 2022
-# Noma Yuki, 2022
-# Andy Yiu, 2023
-# Martin Trigaux, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: web_editor
@@ -32,37 +29,39 @@ msgstr "%spx"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 msgid "%spx (Original)"
-msgstr ""
+msgstr "%spx (Original)"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 msgid "%spx (Suggested)"
-msgstr ""
+msgstr "%spx （推奨）"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
-msgid "'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...)."
+msgid ""
+"'Alt tag' specifies an alternate text for an image, if the image cannot be "
+"displayed (slow connection, missing image, screen reader ...)."
 msgstr "画像が表示できない場合 (遅い接続、見つからない画像、スクリーンリーダーなど)、「代替タグ」は画像に代替テキストを特定します。"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "'Title tag' is shown as a tooltip when you hover the picture."
 msgstr "画像の上にマウスを置くと「タイトルタグ」はツールチップとして表示されます。"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.xml:0
 msgid "(ALT Tag)"
 msgstr "(代替タグ)"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.xml:0
 msgid "(TITLE Tag)"
 msgstr "(タイトルタグ)"
 
@@ -93,7 +92,7 @@ msgstr "1x"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 msgid "2 columns"
-msgstr "2列"
+msgstr "2カラム"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
@@ -122,7 +121,7 @@ msgstr "3星"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 msgid "3 columns"
-msgstr "3列"
+msgstr "3カラム"
 
 #. module: web_editor
 #. odoo-javascript
@@ -135,7 +134,7 @@ msgstr "3x"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 msgid "4 columns"
-msgstr "4列"
+msgstr "4カラム"
 
 #. module: web_editor
 #. odoo-javascript
@@ -191,43 +190,45 @@ msgstr "<span class=\"me-2\">X</span>"
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 msgid "<span class=\"w-100\">Basic</span>"
-msgstr ""
+msgstr "<span class=\"w-100\">ベーシック</span>"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 msgid "<span class=\"w-100\">Creative</span>"
-msgstr ""
+msgstr "<span class=\"w-100\">クリエイティブ</span>"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "<span class=\"w-100\">Decorative</span>"
-msgstr ""
+msgstr "<span class=\"w-100\">デコラティブ</span>"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "<span class=\"w-100\">Devices</span>"
-msgstr ""
+msgstr "<span class=\"w-100\">デバイス</span>"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 msgid "<span class=\"w-100\">Linear</span>"
-msgstr ""
-
-#. module: web_editor
-#: model_terms:ir.ui.view,arch_db:web_editor.snippets
-msgid "<span>Blocks</span>"
-msgstr "<span>ブロック</span>"
-
-#. module: web_editor
-#: model_terms:ir.ui.view,arch_db:web_editor.snippets
-msgid "<span>Customize</span>"
-msgstr "<span>カスタマイズ</span>"
+msgstr "<span class=\"w-100\">線状</span>"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/common/ace.js:0
-msgid "A server error occured. Please check you correctly signed in and that the file you are saving is correctly formatted."
-msgstr "サーバーエラーが発生しました。正しくサインインしたか、又は保存しているファイルは正しくフォーマットされているかをご確認ください。"
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+msgid "ACCESS OPTIONS ANYWAY"
+msgstr "いずれにせよアクセスオプション"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_alternatives_dialog.xml:0
+msgid "AI Copywriter"
+msgstr "AIコピーライター"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+msgid "AI Tools"
+msgstr "AIツール"
 
 #. module: web_editor
 #. odoo-javascript
@@ -252,7 +253,7 @@ msgstr "追加"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 msgid "Add Column"
-msgstr "列を追加"
+msgstr "カラム追加"
 
 #. module: web_editor
 #. odoo-javascript
@@ -262,6 +263,7 @@ msgstr "行を追加"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/document_selector.js:0
 #: code:addons/web_editor/static/src/components/media_dialog/image_selector.js:0
 msgid "Add URL"
 msgstr "URLを追加"
@@ -270,31 +272,31 @@ msgstr "URLを追加"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 msgid "Add a blockquote section"
-msgstr ""
+msgstr "Blockquoteセクションを追加"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 msgid "Add a button"
-msgstr ""
+msgstr "ボタンを追加"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 msgid "Add a code section"
-msgstr ""
+msgstr "コードセクションを追加"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 msgid "Add a link"
-msgstr ""
+msgstr "リンクを追加"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/components/media_dialog/document_selector.js:0
-msgid "Add document"
-msgstr "書類を追加"
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+msgid "Add an emoji"
+msgstr "絵文字を追加する"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
@@ -309,13 +311,13 @@ msgstr "Airy & Zigs"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 msgid "Airy &amp; Zigs"
-msgstr ""
+msgstr "Airy &amp; Zigs"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/components/media_dialog/file_selector.js:0
 msgid "Alert"
-msgstr "警告"
+msgstr "アラート"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
@@ -345,12 +347,6 @@ msgstr "全て"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/ace.xml:0
-msgid "All SCSS Files"
-msgstr "全てのSCSSファイル"
-
-#. module: web_editor
-#. odoo-javascript
 #: code:addons/web_editor/static/src/components/media_dialog/document_selector.js:0
 msgid "All documents have been loaded"
 msgstr "全ての書類が読み込まれました"
@@ -362,9 +358,21 @@ msgid "All images have been loaded"
 msgstr "全ての画像が読み込まれました"
 
 #. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/backend/html_field.js:0
+msgid "Allow users to view and edit the field in HTML."
+msgstr "ユーザがHTMLでフィールドを表示、編集できるようにします。"
+
+#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "Alt tag"
 msgstr "代替タグ"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/image_selector.js:0
+msgid "An error occurred while fetching the entered URL."
+msgstr "入力されたURLの取得中にエラーが発生しました。"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
@@ -393,14 +401,14 @@ msgstr "適用"
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
-msgid "Are you sure you want to delete the snippet: %s?"
-msgstr ""
+msgid "Are you sure you want to delete the block %s?"
+msgstr "本当にブロック%sを削除しますか?"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/components/media_dialog/file_selector.js:0
 msgid "Are you sure you want to delete this file?"
-msgstr ""
+msgstr "このファイルを本当に削除しますか？"
 
 #. module: web_editor
 #. odoo-javascript
@@ -414,14 +422,10 @@ msgid "Assets Utils"
 msgstr "アセットユーティリティ"
 
 #. module: web_editor
-#: model:ir.model,name:web_editor.model_ir_attachment
-msgid "Attachment"
-msgstr "添付ファイル"
-
-#. module: web_editor
-#: model:ir.model.fields,field_description:web_editor.field_ir_attachment__local_url
-msgid "Attachment URL"
-msgstr "添付URL"
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+msgid "Autoconvert to Relative Link"
+msgstr "相対リンクへの自動変換"
 
 #. module: web_editor
 #. odoo-javascript
@@ -439,7 +443,7 @@ msgstr "自動再生"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 msgid "Back to one column"
-msgstr ""
+msgstr "1カラム戻る"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
@@ -461,7 +465,37 @@ msgstr "背景位置"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 msgid "Background Shapes"
-msgstr ""
+msgstr "背景形状"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+msgid "Banner Danger"
+msgstr "バナーの危険性"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+msgid "Banner Info"
+msgstr "バナー情報"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+msgid "Banner Success"
+msgstr "バナー成功"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+msgid "Banner Warning"
+msgstr "バナー警告"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+msgid "Banners"
+msgstr "バナー"
 
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_base
@@ -484,7 +518,7 @@ msgstr "下"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 msgid "Big section heading"
-msgstr ""
+msgstr "大セクション見出し"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
@@ -500,7 +534,13 @@ msgstr "ブロック"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 msgid "Block &amp; Rainy"
-msgstr ""
+msgstr "ブロック & レイニー"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+msgid "Blocks"
+msgstr "ブロック"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
@@ -521,13 +561,13 @@ msgstr "ボールド"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 msgid "Border"
-msgstr "ボーダー"
+msgstr "ふち"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 msgid "Border Color"
-msgstr "ボーダー色"
+msgstr "ふち色"
 
 #. module: web_editor
 #. odoo-javascript
@@ -539,7 +579,7 @@ msgstr "ボーダースタイル"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 msgid "Border Width"
-msgstr "ボーダー幅"
+msgstr "ふち幅"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
@@ -554,7 +594,7 @@ msgstr "明るさ"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "Brushed"
-msgstr ""
+msgstr "ブラシ仕上げ"
 
 #. module: web_editor
 #. odoo-javascript
@@ -564,6 +604,7 @@ msgstr "箇条書きリスト"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 msgid "Button"
@@ -571,22 +612,29 @@ msgstr "ボタン"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/link.js:0
+msgid "Button Primary"
+msgstr "プライマリボタン"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/link.js:0
+msgid "Button Secondary"
+msgstr "セカンダリボタン"
+
+#. module: web_editor
+#. odoo-javascript
 #: code:addons/web_editor/static/src/js/backend/html_field.js:0
 msgid "CSS Edit"
-msgstr ""
+msgstr "CSS編集"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
-#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_alternatives_dialog.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_translate_dialog.xml:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 msgid "Cancel"
 msgstr "キャンセル"
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/js/common/ace.js:0
-msgid "Careful!"
-msgstr ""
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
@@ -595,9 +643,15 @@ msgstr "中央"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.xml:0
 msgid "Change media description and tooltip"
 msgstr "メディアの説明とツールチップを変更"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+msgid "ChatGPT"
+msgstr "ChatGPT"
 
 #. module: web_editor
 #. odoo-javascript
@@ -614,7 +668,6 @@ msgstr "レコードを選択..."
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/components/upload_progress_toast/upload_progress_toast.xml:0
-#: code:addons/web_editor/static/src/xml/ace.xml:0
 msgid "Close"
 msgstr "閉じる"
 
@@ -629,13 +682,19 @@ msgstr "コード"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/backend/html_field.js:0
 msgid "Codeview"
-msgstr ""
+msgstr "コードビュー"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/backend/html_field.js:0
-msgid "Collaborative"
-msgstr ""
+msgid "Collaborative edition"
+msgstr "共同編集"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/backend/html_field.js:0
+msgid "Collaborative trigger"
+msgstr "共同トリガ"
 
 #. module: web_editor
 #. odoo-javascript
@@ -648,8 +707,8 @@ msgstr "色"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
-msgid "Color filter"
-msgstr "色フィルダー"
+msgid "Color Filter"
+msgstr "カラーフィルタ"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
@@ -662,7 +721,7 @@ msgstr "色"
 #: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 msgid "Column"
-msgstr "列"
+msgstr "カラム"
 
 #. module: web_editor
 #. odoo-javascript
@@ -673,30 +732,30 @@ msgstr "一般的な色"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "Composites"
-msgstr ""
+msgstr "コンポジット"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "Composition"
-msgstr ""
+msgstr "合成"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 msgid "Confirm"
 msgstr "確認"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
-msgid "Confirmation"
-msgstr "確認"
+#: code:addons/web_editor/static/src/js/wysiwyg/conflict_dialog.xml:0
+msgid "Content conflict"
+msgstr "衝突コンテンツ"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
-msgid "Content conflict"
-msgstr "衝突コンテンツ"
+msgid "Content generated"
+msgstr "コンテンツが生成されました"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
@@ -707,25 +766,19 @@ msgstr "コントラスト"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 msgid "Convert into 2 columns"
-msgstr ""
+msgstr "2カラムに変換"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 msgid "Convert into 3 columns"
-msgstr ""
+msgstr "3カラムに変換"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 msgid "Convert into 4 columns"
-msgstr ""
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-msgid "Copy Link"
-msgstr "リンクをコピー"
+msgstr "4カラムに変換"
 
 #. module: web_editor
 #. odoo-javascript
@@ -736,8 +789,14 @@ msgstr "ここにURL又は埋め込みコードをコピーペーストしてく
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
-msgid "Could not install module <strong>%s</strong>"
-msgstr "モジュール<strong>%s</strong>はインストールできませんでした"
+msgid "Could not install module %s"
+msgstr "モジュール%sをインストールできませんでした"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/components/upload_progress_toast/upload_service.js:0
+msgid "Could not load the file \"%s\"."
+msgstr "ファイル \"%s\"をロードできませんでした"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
@@ -754,13 +813,13 @@ msgstr "作成"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 msgid "Create a list with numbering"
-msgstr ""
+msgstr "番号でリストを作成"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 msgid "Create a simple bulleted list"
-msgstr ""
+msgstr "簡単な箇条書きリストを作成"
 
 #. module: web_editor
 #. odoo-javascript
@@ -771,12 +830,12 @@ msgstr "URLを作成。"
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub__create_uid
 msgid "Created by"
-msgstr "作成者:"
+msgstr "作成者"
 
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub__create_date
 msgid "Created on"
-msgstr "作成日:"
+msgstr "作成日"
 
 #. module: web_editor
 #. odoo-javascript
@@ -803,6 +862,18 @@ msgstr "カスタム%s"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
+msgid "Custom Button"
+msgstr "カスタムボタン"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+msgid "Customize"
+msgstr "カスタマイズ"
+
+#. module: web_editor
+#. odoo-javascript
 #: code:addons/web_editor/static/src/components/media_dialog/video_selector.xml:0
 msgid "Dailymotion"
 msgstr "Dailymotion"
@@ -812,6 +883,12 @@ msgstr "Dailymotion"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 msgid "Dashed"
 msgstr "破線"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+msgid "Decoration"
+msgstr "装飾"
 
 #. module: web_editor
 #. odoo-javascript
@@ -846,8 +923,8 @@ msgstr "削除%s"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.xml:0
 #: code:addons/web_editor/static/src/xml/editor.xml:0
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "Description"
 msgstr "説明"
@@ -859,18 +936,52 @@ msgstr "装置"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/components/media_dialog/media_dialog.xml:0
-#: code:addons/web_editor/static/src/js/wysiwyg/dialog.js:0
-#: code:addons/web_editor/static/src/xml/editor.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-#: model_terms:ir.ui.view,arch_db:web_editor.snippets
+msgid "Direct Download"
+msgstr "直接ダウンロード"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/media_dialog.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.xml:0
+#: code:addons/web_editor/static/src/xml/add_snippet_dialog.xml:0
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 msgid "Discard"
 msgstr "破棄"
 
 #. module: web_editor
-#: model_terms:ir.ui.view,arch_db:web_editor.snippets
-msgid "Discard record"
-msgstr "レコードを破棄"
+#. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/image_selector.xml:0
+msgid ""
+"Discover a world of awesomeness in our copyright-free image haven. No legal "
+"drama, just nice images!"
+msgstr "著作権フリーの画像の楽園で、素晴らしい世界を発見して下さい。法的に問題のない、素敵な画像です！"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+msgid "Display 1"
+msgstr "ディスプレイ 1"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+msgid "Display 2"
+msgstr "ディスプレイ 2"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+msgid "Display 3"
+msgstr "ディスプレイ 3"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+msgid "Display 4"
+msgstr "ディスプレイ 4"
 
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub__display_name
@@ -880,8 +991,14 @@ msgstr "表示名"
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
-msgid "Do you want to install the %s App?"
-msgstr "%sアプリをインストールしますがよろしいでしょうか?"
+msgid "Do you want to install %s App?"
+msgstr " %s アプリをインストールしますか？"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/media_dialog.js:0
+msgid "Documents"
+msgstr "書類"
 
 #. module: web_editor
 #. odoo-javascript
@@ -922,30 +1039,12 @@ msgstr "ダイナミック色"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/backend/html_field.js:0
 msgid "Dynamic Placeholder"
-msgstr "ダイナミックプレースホルダー"
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/js/backend/html_field.js:0
-msgid "Dynamic placeholder"
-msgstr ""
-
-#. module: web_editor
-#. odoo-python
-#: code:addons/web_editor/controllers/main.py:0
-msgid "ERROR: couldn't get download urls from media library."
-msgstr "エラー: メディアライブラリーからURLをダウンロードできませんでした。"
+msgstr "動的プレースホルダ"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "EarlyBird"
 msgstr "EarlyBird"
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-msgid "Edit Link"
-msgstr "リンクを編集"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
@@ -957,12 +1056,6 @@ msgstr "画像を編集"
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 msgid "Edit media description"
 msgstr "メディア説明を編集"
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/xml/ace.xml:0
-msgid "Editing a built-in file through this editor is not advised, as it will prevent it from being updated during future App upgrades."
-msgstr "今後のアプリアップグレード時に更新されないのでこのエディタを使って組み込みファイルを編集することはおすすめしません。"
 
 #. module: web_editor
 #. odoo-javascript
@@ -990,15 +1083,21 @@ msgstr "書類にYoutube動画を埋め込みます。"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
-msgid "Empty quote"
-msgstr ""
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+msgid "Emoji"
+msgstr "絵文字"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/common/ace.js:0
-msgid "Expected "
-msgstr "予定"
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+msgid "Empty quote"
+msgstr "絵文字引用"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/image_selector.js:0
+msgid "Error"
+msgstr "エラー"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
@@ -1019,6 +1118,11 @@ msgstr "最も遠い隅に伸ばす"
 #: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
 msgid "Extend to the farthest side"
 msgstr "最も遠い側に伸ばす"
+
+#. module: web_editor
+#: model:ir.model,name:web_editor.model_html_field_history_mixin
+msgid "Field html History"
+msgstr "フリートhtml履歴"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1045,8 +1149,6 @@ msgid "Fill Color"
 msgstr "塗りつぶし"
 
 #. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/xml/ace.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "Filter"
 msgstr "フィルター"
@@ -1064,7 +1166,7 @@ msgstr "フラット"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_crop_widget.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_crop.js:0
 msgid "Flexible"
 msgstr "柔軟"
 
@@ -1087,8 +1189,14 @@ msgstr "上下に反転"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
-msgid "Floating shapes"
+msgid "Floating Shapes"
 msgstr "浮遊形状"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/backend/html_field.js:0
+msgid "Focus"
+msgstr "フォーカス"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1111,9 +1219,15 @@ msgstr "技術上の理由でこのブロックはここにドロップできま
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
-#: code:addons/web_editor/static/src/xml/ace.xml:0
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "Format"
 msgstr "フォーマット"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+msgid "Full screen"
+msgstr "全画面"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1122,25 +1236,49 @@ msgid "Fullscreen"
 msgstr "全画面表示"
 
 #. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_prompt_dialog.xml:0
+msgid "Generate Text with AI"
+msgstr "AIでテキストを生成"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+msgid "Generate or transform content with AI"
+msgstr "AIでコンテンツを作成または変更"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+msgid "Generate or transform content with AI."
+msgstr "AIでコンテンツを作成または変更"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_alternatives_dialog.xml:0
+msgid "Generating"
+msgstr "生成中"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_alternatives_dialog.xml:0
+msgid "Generating an alternative..."
+msgstr "代替を生成中..."
+
+#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "Geometrics"
-msgstr ""
+msgstr "幾何学模様"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "Geometrics Panels"
-msgstr ""
+msgstr "幾何学模様パネル"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "Geometrics Rounded"
-msgstr ""
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/components/media_dialog/image_selector.xml:0
-msgid "Get the perfect image by searching in our library of copyright free photos and illustrations."
-msgstr "私たちの著作権フリー写真・イラストライブラリーから完璧な画像を見つけ出しましょう。"
+msgstr "丸みを帯びた幾何学模様"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1158,6 +1296,30 @@ msgstr "HTTPルーティング"
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 msgid "Header 1"
 msgstr "ヘッダ 1"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+msgid "Header 1 Display 1"
+msgstr "見出し1 ディスプレイ1"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+msgid "Header 1 Display 2"
+msgstr "見出し1 ディスプレイ2"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+msgid "Header 1 Display 3"
+msgstr "見出し1 ディスプレイ3"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+msgid "Header 1 Display 4"
+msgstr "見出し1 ディスプレイ4"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1192,38 +1354,44 @@ msgstr "ヘッダ 6"
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/xml/editor.xml:0
 msgid "Heading 1"
 msgstr "見出し 1"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/xml/editor.xml:0
 msgid "Heading 2"
 msgstr "見出し 2"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/xml/editor.xml:0
 msgid "Heading 3"
 msgstr "見出し 3"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/xml/editor.xml:0
 msgid "Heading 4"
-msgstr ""
+msgstr "見出し 4"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/xml/editor.xml:0
 msgid "Heading 5"
-msgstr ""
+msgstr "見出し 5"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/xml/editor.xml:0
 msgid "Heading 6"
-msgstr ""
+msgstr "見出し 6"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1237,12 +1405,6 @@ msgstr "高さ"
 #: code:addons/web_editor/static/src/components/media_dialog/video_selector.js:0
 msgid "Hide Dailymotion logo"
 msgstr "Dailymotionロゴを非表示"
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/components/media_dialog/video_selector.js:0
-msgid "Hide Youtube logo"
-msgstr "YouTubeロゴを非表示"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1261,6 +1423,21 @@ msgstr "プレイヤーコントロールを非表示"
 #: code:addons/web_editor/static/src/components/media_dialog/video_selector.js:0
 msgid "Hide sharing button"
 msgstr "共有ボタンを非表示"
+
+#. module: web_editor
+#: model:ir.model.fields,field_description:web_editor.field_html_field_history_mixin__html_field_history
+msgid "History data"
+msgstr "履歴データ"
+
+#. module: web_editor
+#: model:ir.model.fields,field_description:web_editor.field_html_field_history_mixin__html_field_history_metadata
+msgid "History metadata"
+msgstr "履歴メタデータ"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
+msgid "Horizontal mirror"
+msgstr "水平ミラー"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1317,15 +1494,17 @@ msgstr "アイコンサイズ 5x"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
-msgid "If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."
-msgstr "現在の編集を破棄した場合、未保存の全ての変更が失われます。キャンセルして編集モードに戻られます。"
+#: code:addons/web_editor/static/src/components/media_dialog/media_dialog.js:0
+msgid "Icons"
+msgstr "アイコン"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/common/ace.js:0
-msgid "If you reset this file, all your customizations will be lost as it will be reverted to the default file."
-msgstr "このファイルをリセットする場合、全てのカスタマイズが失われてデフォルトファイルに戻ります。"
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+msgid ""
+"If you discard the current edits, all unsaved changes will be lost. You can "
+"cancel to return to edit mode."
+msgstr "現在の編集を破棄した場合、未保存の全ての変更が失われます。キャンセルして編集モードに戻られます。"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1348,25 +1527,16 @@ msgid "Image Formatting"
 msgstr "画像フォーマット"
 
 #. module: web_editor
-#: model:ir.model.fields,field_description:web_editor.field_ir_attachment__image_height
-msgid "Image Height"
-msgstr "画像高さ"
-
-#. module: web_editor
-#: model:ir.model.fields,field_description:web_editor.field_ir_attachment__image_src
-msgid "Image Src"
-msgstr "画像Src"
-
-#. module: web_editor
-#: model:ir.model.fields,field_description:web_editor.field_ir_attachment__image_width
-msgid "Image Width"
-msgstr "画像幅"
-
-#. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 msgid "Image padding"
 msgstr "画像パディング"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/media_dialog.js:0
+msgid "Images"
+msgstr "画像"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
@@ -1381,33 +1551,83 @@ msgstr "インラインテキスト"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_alternatives_dialog.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_prompt_dialog.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_translate_dialog.xml:0
+msgid "Insert"
+msgstr "挿入"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+msgid "Insert a Link / Button"
+msgstr "リンク/ボタンを挿入"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/add_snippet_dialog.xml:0
+msgid "Insert a block"
+msgstr "ブロックを挿入"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+msgid "Insert a danger banner"
+msgstr "危険バナーを挿入"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/backend/html_field.js:0
+msgid "Insert a field"
+msgstr "フィールドを挿入"
+
+#. module: web_editor
+#. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 msgid "Insert a horizontal rule separator"
-msgstr ""
+msgstr "水平方向の罫線を挿入"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+msgid "Insert a picture"
+msgstr "写真の挿入"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 msgid "Insert a rating over 3 stars"
-msgstr ""
+msgstr "3星以上の評価を挿入"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 msgid "Insert a rating over 5 stars"
-msgstr ""
+msgstr "5星以上の評価を挿入"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+msgid "Insert a success banner"
+msgstr "成功バナーを挿入"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 msgid "Insert a table"
-msgstr ""
+msgstr "表を挿入"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 msgid "Insert a video"
-msgstr ""
+msgstr "ビデオを挿入"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+msgid "Insert a warning banner"
+msgstr "警告バナーを挿入"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1418,8 +1638,8 @@ msgstr "上に挿入"
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
-msgid "Insert an image"
-msgstr ""
+msgid "Insert an info banner"
+msgstr "情報バナーを挿入"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1447,12 +1667,6 @@ msgstr "リンクを挿入・編集"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/backend/html_field.js:0
-msgid "Insert personalized content"
-msgstr "パーソナライズコンテンツを挿入"
-
-#. module: web_editor
-#. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 msgid "Insert right"
 msgstr "右に挿入"
@@ -1461,35 +1675,30 @@ msgstr "右に挿入"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 msgid "Insert your signature"
-msgstr ""
+msgstr "自分の署名を挿入"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 msgid "Install"
 msgstr "インストール"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/js/editor/add_snippet_dialog.js:0
 #: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 msgid "Install %s"
 msgstr "インストール%s"
 
 #. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
-msgid "Install in progress"
-msgstr "インストール中"
-
-#. module: web_editor
 #. odoo-python
 #: code:addons/web_editor/models/ir_ui_view.py:0
-msgid "Invalid field value for %s: %s"
-msgstr "%sに無効なフィールド値: %s"
+msgid "Invalid field value for %(field_name)s: %(value)s"
+msgstr "以下のための無効なフィールド値: %(field_name)s: %(value)s"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 msgid "Invisible Elements"
 msgstr "非表示要素"
 
@@ -1501,21 +1710,9 @@ msgstr "項目"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/ace.xml:0
-msgid "JS"
-msgstr "JS"
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/js/common/ace.js:0
-msgid "JS file: %s"
-msgstr "JSファイル: %s"
-
-#. module: web_editor
-#. odoo-javascript
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 msgid "Label"
-msgstr ""
+msgstr "ラベル"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1527,12 +1724,18 @@ msgstr "大"
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub__write_uid
 msgid "Last Updated by"
-msgstr "最終更新担当:"
+msgstr "最終更新者"
 
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub__write_date
 msgid "Last Updated on"
-msgstr "最終更新日:"
+msgstr "最終更新日"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+msgid "Layout"
+msgstr "レイアウト"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1540,6 +1743,12 @@ msgstr "最終更新日:"
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "Left"
 msgstr "左"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+msgid "Light"
+msgstr "ライト"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
@@ -1563,19 +1772,19 @@ msgstr "リンクラベル"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 msgid "Link Shape"
-msgstr ""
+msgstr "形をリンク"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 msgid "Link Size"
-msgstr ""
+msgstr "サイズをリンク"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 msgid "Link Style"
-msgstr ""
+msgstr "リンクスタイル"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1585,9 +1794,9 @@ msgstr "リンクはクリップボードにコピーされました。"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/link.js:0
-msgid "Link to"
-msgstr "リンク先:"
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+msgid "Link to an uploaded document"
+msgstr "アップロード済ドキュメントにリンク"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1601,6 +1810,16 @@ msgstr "リスト"
 #: code:addons/web_editor/static/src/components/media_dialog/file_selector.xml:0
 msgid "Load more..."
 msgstr "さらに読み込む..."
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/file_selector.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_alternatives_dialog.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_prompt_dialog.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_translate_dialog.xml:0
+#: code:addons/web_editor/static/src/xml/add_snippet_dialog.xml:0
+msgid "Loading..."
+msgstr "読込中..."
 
 #. module: web_editor
 #. odoo-javascript
@@ -1628,7 +1847,7 @@ msgstr "Maven"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/backend/html_field.js:0
 msgid "Max height"
-msgstr ""
+msgstr "最大の高さ"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1648,13 +1867,13 @@ msgstr "中"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 msgid "Medium section heading"
-msgstr ""
+msgstr "中セクション見出し"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/backend/html_field.js:0
 msgid "Min height"
-msgstr ""
+msgstr "最小の高さ"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1693,6 +1912,8 @@ msgid "My Images"
 msgstr "自分の画像"
 
 #. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/add_snippet_dialog.xml:0
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub__name
 msgid "Name"
 msgstr "名称"
@@ -1729,12 +1950,6 @@ msgstr "画像は見つかりませんでした。"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
-msgid "No location to drop in"
-msgstr "ドロップできる場所はありません"
-
-#. module: web_editor
-#. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 msgid "No more records"
 msgstr "これ以上のレコードはありません"
@@ -1749,7 +1964,7 @@ msgstr "ピクトグラムは見つかりませんでした。"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/backend/html_field.js:0
 msgid "No videos"
-msgstr ""
+msgstr "動画なし"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1781,32 +1996,14 @@ msgstr "Odooエディターテスト"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/ace.xml:0
-msgid "Only Custom SCSS Files"
-msgstr "カスタムSCSSファイルのみ"
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/xml/ace.xml:0
-msgid "Only Page SCSS Files"
-msgstr "ページSCSSファイルのみ"
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/xml/ace.xml:0
-msgid "Only Views"
-msgstr "閲覧のみ"
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-msgid "Open in a new tab"
-msgstr "新しいタブで開く"
-
-#. module: web_editor
-#. odoo-javascript
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
+msgid "Open in New Window"
+msgstr "新規ウィンドウで開く"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 msgid "Open in new window"
 msgstr "新しいウインドウで開く"
 
@@ -1815,11 +2012,6 @@ msgstr "新しいウインドウで開く"
 #: code:addons/web_editor/static/src/components/media_dialog/image_selector.xml:0
 msgid "Optimized"
 msgstr "最適化済"
-
-#. module: web_editor
-#: model:ir.model.fields,field_description:web_editor.field_ir_attachment__original_id
-msgid "Original (unoptimized, unresized) attachment"
-msgstr "元 (未最適化・サイズ変更)の添付ファイル"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
@@ -1839,6 +2031,12 @@ msgid "Outline + Rounded"
 msgstr "アウトライン + 丸い"
 
 #. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
+msgid "Overlay"
+msgstr "オーバーレイ"
+
+#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "Padding"
 msgstr "パディング"
@@ -1852,13 +2050,13 @@ msgstr "ページオプション"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "Panels"
-msgstr ""
+msgstr "パネル"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 msgid "Paragraph block"
-msgstr ""
+msgstr "パラグラフブロック"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1879,16 +2077,22 @@ msgstr "ポジション"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/components/media_dialog/video_selector.xml:0
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-msgid "Preview"
-msgstr "プレビュー表示"
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+msgid "Preset #{number}"
+msgstr "プリセット #{number}"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/link.js:0
-msgid "Primary"
-msgstr "プライマリ"
+#: code:addons/web_editor/static/src/components/media_dialog/video_selector.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+msgid "Preview"
+msgstr "プレビュー"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/components/upload_progress_toast/upload_progress_toast.xml:0
+msgid "Progress bar"
+msgstr "進捗バー"
 
 #. module: web_editor
 #: model:ir.model.fields.selection,name:web_editor.selection__web_editor_converter_test__selection_str__c
@@ -1998,6 +2202,12 @@ msgid "Qweb Field qweb"
 msgstr "Qwebフィールドqweb"
 
 #. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+msgid "REPLACE BY NEW VERSION"
+msgstr "新バージョンに置換え"
+
+#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
 msgid "Radial"
 msgstr "放射状"
@@ -2029,13 +2239,7 @@ msgstr "ブロックを削除"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 msgid "Remove Current"
-msgstr "現在のを削除"
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-msgid "Remove Link"
-msgstr "リンクを削除"
+msgstr "現在のものを削除"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
@@ -2046,11 +2250,12 @@ msgstr "選択した色を削除"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 msgid "Remove columns"
-msgstr "列を削除"
+msgstr "カラムを削除"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 msgid "Remove format"
 msgstr "フォマットを削除"
 
@@ -2065,6 +2270,12 @@ msgstr "リンクを削除"
 #: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 msgid "Rename %s"
 msgstr "名前変更%s"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/add_snippet_dialog.xml:0
+msgid "Rename the block"
+msgstr "ブロック名を変更"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
@@ -2087,7 +2298,6 @@ msgstr "メディアを置き換える"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/ace.xml:0
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "Reset"
@@ -2098,6 +2308,13 @@ msgstr "リセット"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 msgid "Reset Image"
 msgstr "画像をリセット"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+msgid "Reset Size"
+msgstr "サイズを再設定"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
@@ -2111,15 +2328,9 @@ msgstr "変形をリセット"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/common/ace.js:0
-msgid "Reseting views is not supported yet"
-msgstr "閲覧リセットにまだ対応してません"
-
-#. module: web_editor
-#. odoo-javascript
 #: code:addons/web_editor/static/src/js/backend/html_field.js:0
 msgid "Resizable"
-msgstr ""
+msgstr "サイズ変更可能"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2169,6 +2380,16 @@ msgid "Rotate Right"
 msgstr "右に回転"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
+msgid "Rotate left"
+msgstr "左に回転"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
+msgid "Rotate right"
+msgstr "右に回転"
+
+#. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 msgid "Row"
@@ -2176,15 +2397,9 @@ msgstr "行"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/ace.xml:0
-msgid "SCSS (CSS)"
-msgstr "SCSS (CSS)"
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/js/common/ace.js:0
-msgid "SCSS file: %s"
-msgstr "SCSSファイル: %s"
+#: code:addons/web_editor/static/src/js/backend/html_field.js:0
+msgid "Sandboxed preview"
+msgstr "サンドボックスプレビュー"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
@@ -2193,9 +2408,9 @@ msgstr "彩度"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/wysiwyg/dialog.js:0
-#: code:addons/web_editor/static/src/xml/ace.xml:0
-#: model_terms:ir.ui.view,arch_db:web_editor.snippets
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.xml:0
+#: code:addons/web_editor/static/src/xml/add_snippet_dialog.xml:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 msgid "Save"
 msgstr "保存"
 
@@ -2212,11 +2427,6 @@ msgid "Save and Reload"
 msgstr "保存して再読込"
 
 #. module: web_editor
-#: model_terms:ir.ui.view,arch_db:web_editor.snippets
-msgid "Save record"
-msgstr "レコードを保存"
-
-#. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/components/media_dialog/document_selector.js:0
 msgid "Search a document"
@@ -2224,7 +2434,7 @@ msgstr "書類を検索"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/components/media_dialog/icon_selector.js:0
+#: code:addons/web_editor/static/src/components/media_dialog/icon_selector.xml:0
 msgid "Search a pictogram"
 msgstr "ピクトグラムを検索"
 
@@ -2235,7 +2445,14 @@ msgid "Search an image"
 msgstr "画像を検索"
 
 #. module: web_editor
-#: model_terms:ir.ui.view,arch_db:web_editor.snippets
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/add_snippet_dialog.xml:0
+msgid "Search for a block"
+msgstr "ブロックを検索"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 msgid "Search for a block (e.g. numbers, image wall, ...)"
 msgstr "ブロックを検索 (例: 番号、画像壁...)"
 
@@ -2259,21 +2476,21 @@ msgstr "検索してさらにレコードを表示"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/link.js:0
-msgid "Secondary"
-msgstr "セカンダリ"
-
-#. module: web_editor
-#. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 msgid "Select a block on your page to style it."
 msgstr "ページ中のブロックを選択して編集します。"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/components/media_dialog/media_dialog.js:0
+#: code:addons/web_editor/static/src/components/media_dialog/media_dialog.xml:0
 msgid "Select a media"
 msgstr "メディアを選択"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_prompt_dialog.xml:0
+msgid "Send a message"
+msgstr "メッセージを送信"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2289,16 +2506,10 @@ msgstr "Sepia"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/common/ace.js:0
-msgid "Server error"
-msgstr "サーバーエラー"
-
-#. module: web_editor
-#. odoo-javascript
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "Shadow"
-msgstr "影"
+msgstr "シャドウ"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2332,13 +2543,18 @@ msgstr "形状: サムネイル"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "Shapes"
-msgstr ""
+msgstr "形"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/components/media_dialog/file_selector.xml:0
 msgid "Show optimized images"
 msgstr "最適化済画像を表示"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Show/Hide on Mobile"
+msgstr "モバイルに表示・非表示"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2391,13 +2607,19 @@ msgstr "小"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 msgid "Small section heading"
-msgstr ""
+msgstr "小セクション見出し"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/add_snippet_dialog.xml:0
+msgid "Snippet name"
+msgstr "スニペット名"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/backend/html_field.js:0
 msgid "Snippets"
-msgstr ""
+msgstr "スニペット"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2414,7 +2636,9 @@ msgstr "ソリッド"
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
-msgid "Someone with escalated rights previously modified this area, you are therefore not able to modify it yourself."
+msgid ""
+"Someone with escalated rights previously modified this area, you are "
+"therefore not able to modify it yourself."
 msgstr "より高いアクセス権を有するユーザーは最近このエリアを変更しましたのであなたは変更できないようになりました。"
 
 #. module: web_editor
@@ -2424,10 +2648,37 @@ msgstr "スペシャル"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/js/backend/html_field.js:0
+msgid ""
+"Specify when the collaboration starts. 'Focus' will start the collaboration "
+"session when the user clicks inside the text field (default), 'Start' when "
+"the record is loaded (could impact performance if set)."
+msgstr ""
+"コラボレーションを開始するタイミングを指定します。'フォーカス'はユーザがテキストフィールド内をクリックした時(デフォルト)、'スタート'はレコードが読み込まれた時(設定するとパフォーマンスに影響する可能性があります)にコラボレーションセッションを開始します。"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Speed"
+msgstr "速度"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/backend/html_field.js:0
+msgid "Start"
+msgstr "開始"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
+msgid "Stretch"
+msgstr "ストレッチ"
+
+#. module: web_editor
+#. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 msgid "Structure"
-msgstr "構造"
+msgstr "給与体系"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2452,7 +2703,7 @@ msgstr "方向を変更"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 msgid "Switch the text's direction"
-msgstr ""
+msgstr "テキスト方向を変更"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2465,12 +2716,6 @@ msgstr "表"
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 msgid "Table Options"
 msgstr "表オプション"
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/js/common/ace.js:0
-msgid "Template ID: %s"
-msgstr "テンプレートID: %s"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2512,14 +2757,18 @@ msgstr "URLは有効みたいです。"
 #. module: web_editor
 #. odoo-python
 #: code:addons/web_editor/models/ir_qweb_fields.py:0
-msgid "The datetime %s does not match the format %s"
-msgstr "%sの日時は%sのフォーマットと一致しません"
+msgid "The datetime %(value)s does not match the format %(format)s"
+msgstr "datetime %(value)sがフォーマット %(format)sに一致しません"
 
 #. module: web_editor
 #. odoo-python
-#: code:addons/web_editor/controllers/main.py:0
-msgid "The document was already saved from someone with a different history for model %r, field %r with id %r."
+#: code:addons/web_editor/tools.py:0
+msgid ""
+"The document was already saved from someone with a different history for "
+"model \"%(model)s\", field \"%(field)s\" with id \"%(id)d\"."
 msgstr ""
+"ドキュメントはモデル\"%(model)s\", フィールド \"%(field)s\" 、id "
+"\"%(id)d\"用に異なる履歴を持つ他の誰かによって既に保存されています。"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2541,13 +2790,13 @@ msgstr "提供されたURLは無効です"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/conflict_dialog.xml:0
 msgid ""
 "The version from the database will be used.\n"
-"                    If you need to keep your changes, copy the content below and edit the new document."
+"                            If you need to keep your changes, copy the content below and edit the new document."
 msgstr ""
-"データベースのバージョンが使われます。\n"
-"                    変更を保存したい場合は下のコンテンツをコピーして新規書類に編集してください。"
+"データベースからのバージョンが使われます。\n"
+"                    　　変更を保存したい場合は以下の内容をコピーして新規書類を編集して下さい。"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2563,21 +2812,33 @@ msgstr "テーマ色"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/conflict_dialog.xml:0
 msgid "There is a conflict between your version and the one in the database."
 msgstr "お使いのバージョンとデータベースのバージョンは一致ではありません。"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_prompt_dialog.xml:0
+msgid "Thinking..."
+msgstr "思考中..."
+
+#. module: web_editor
+#. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/link_popover_widget.js:0
 msgid "This URL is invalid. Preview couldn't be updated."
-msgstr "このURLは無効です。プレビュー表示はアップデートできません。"
+msgstr "このURLは無効です。プレビュー表示が更新できませんでした。"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
-msgid "This block is outdated"
-msgstr "このブロックは古いです"
+msgid "This block cannot be dropped anywhere on this page."
+msgstr "このブロックはこのページのどこにもドロップできません。"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+msgid "This block is outdated."
+msgstr "このブロックは古いです。"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2599,15 +2860,23 @@ msgstr "このファイルは現在のレコードに添付されています。
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_crop_widget.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_crop.js:0
 msgid "This image is an external image"
 msgstr "この画像は外部画像です"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_crop_widget.js:0
-msgid "This type of image is not supported for cropping.<br/>If you want to crop it, please first download it from the original source and upload it in Odoo."
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_crop.js:0
+msgid ""
+"This type of image is not supported for cropping.<br/>If you want to crop "
+"it, please first download it from the original source and upload it in Odoo."
 msgstr "この画像タイプは切抜に対応してません。<br/>切抜したい場合は元のソースから画像をダウンロードしてOdooにアップロードしてください。"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+msgid "Tip: Esc to preview"
+msgstr "ヒント: Escでプレビュー"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2622,21 +2891,11 @@ msgstr "タイトルタグ"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/snippets.xml:0
-msgid "To make changes, drop this block and use the new options in the last version."
-msgstr "変更するにはこのブロックをドロップして最新バージョンの新規オプションを使ってください。"
-
-#. module: web_editor
-#. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
-msgid "To save a snippet, we need to save all your previous modifications and reload the page."
+msgid ""
+"To save a snippet, we need to save all your previous modifications and "
+"reload the page."
 msgstr "スニペットを保存するには以前の全変更を保存してページを再読み込みしなければなりません。"
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
-msgid "To-do"
-msgstr ""
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
@@ -2693,7 +2952,7 @@ msgstr "順序なしリストを切り替える"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "Tooltip"
 msgstr "ツールチップ"
@@ -2702,7 +2961,7 @@ msgstr "ツールチップ"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 msgid "Track tasks with a checklist"
-msgstr ""
+msgstr "チェックリストで作業を追跡"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
@@ -2723,8 +2982,22 @@ msgstr "画像を変形 (2回クリックしてリセットできる)"
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/backend.xml:0
+#: code:addons/web_editor/static/src/xml/editor.xml:0
 msgid "Translate"
 msgstr "翻訳"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_translate_dialog.xml:0
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+msgid "Translate with AI"
+msgstr "AIで翻訳"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_translate_dialog.xml:0
+msgid "Translating..."
+msgstr "翻訳中..."
 
 #. module: web_editor
 #. odoo-javascript
@@ -2739,8 +3012,6 @@ msgid "Try searching with other keywords."
 msgstr "他のキーワードで検索してみましょう。"
 
 #. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
 msgid "Type"
 msgstr "タイプ"
@@ -2764,12 +3035,6 @@ msgstr "整列なし"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/js/common/ace.js:0
-msgid "Unexpected "
-msgstr "予想外"
-
-#. module: web_editor
-#. odoo-javascript
 #: code:addons/web_editor/static/src/components/media_dialog/document_selector.js:0
 msgid "Upload a document"
 msgstr "書類をアップロード"
@@ -2787,15 +3052,14 @@ msgid "Uploaded image's format is not supported. Try with: "
 msgstr "アップロードされた画像のフォーマットは対応されてません。他のを試行してください:"
 
 #. module: web_editor
-#. odoo-python
-#: code:addons/web_editor/controllers/main.py:0
-msgid "Uploaded image's format is not supported. Try with: %s"
-msgstr "アップロードされた画像のフォーマットは対応されてません。他のを試行してください: %s"
-
-#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "Valencia"
 msgstr "Valencia"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
+msgid "Vertical mirror"
+msgstr "垂直ミラー"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2818,6 +3082,12 @@ msgstr "動画コード"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/media_dialog.js:0
+msgid "Videos"
+msgstr "ビデオ"
+
+#. module: web_editor
+#. odoo-javascript
 #: code:addons/web_editor/static/src/components/media_dialog/video_selector.js:0
 msgid "Videos are muted when autoplay is enabled"
 msgstr "自動再生を有効化すると動画がミュートされます"
@@ -2826,12 +3096,6 @@ msgstr "自動再生を有効化すると動画がミュートされます"
 #: model:ir.model,name:web_editor.model_ir_ui_view
 msgid "View"
 msgstr "ビュー"
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/xml/ace.xml:0
-msgid "Views and Assets bundles"
-msgstr "ビュー及びアセットバンドル"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2846,8 +3110,10 @@ msgstr "Walden"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-msgid "Warning: after closing this dialog, the version you were working on will be discarded and will never be available anymore."
+#: code:addons/web_editor/static/src/js/wysiwyg/conflict_dialog.xml:0
+msgid ""
+"Warning: after closing this dialog, the version you were working on will be "
+"discarded and will never be available anymore."
 msgstr "警告: このダイアログを閉じた後、現在作業中のバージョンは放棄されて今後も使えなくなります。"
 
 #. module: web_editor
@@ -2868,33 +3134,42 @@ msgstr "Webエディターコンバーターテスト"
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 msgid "Widgets"
 msgstr "ウィジェット"
 
 #. module: web_editor
-#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
-#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "Width"
 msgstr "幅"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/js/backend/html_field.js:0
+msgid ""
+"With the option enabled, all content can only be viewed in a sandboxed "
+"iframe or in the code editor."
+msgstr "このオプションを有効にすると、全てのコンテンツはサンドボックス化されたiframeまたはコードエディタでのみ閲覧できるようになります。"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/image_selector.xml:0
+msgid ""
+"Wow, it feels a bit empty in here. Upload from the button in the top right "
+"corner!"
+msgstr "ここは少し空な印象です。右上のボタンからアップロードしましょう！"
+
+#. module: web_editor
+#. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 msgid "Write something..."
-msgstr "何か書いて..."
+msgstr "何か書いて下さい..."
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 msgid "XL"
 msgstr "XL"
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/xml/ace.xml:0
-msgid "XML (HTML)"
-msgstr "XML (HTML)"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
@@ -2909,21 +3184,40 @@ msgstr "はい"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/components/media_dialog/document_selector.xml:0
-msgid "You can upload documents with the button located in the top left of the screen."
-msgstr "画面の左上にあるボタンで書類をアップロードすることができます。"
+#: code:addons/web_editor/static/src/components/media_dialog/image_selector.js:0
+#, python-format
+msgid ""
+"You can not replace a field by this image. If you want to use this image, "
+"first save it on your computer and then upload it here."
+msgstr ""
+"この画像をフィールドに置き換えることはできません。この画像を使用したい場合は、まずコンピュータに保存してから、こちらにアップロードして下さい。"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/components/media_dialog/image_selector.xml:0
-msgid "You can upload images with the button located in the top left of the screen."
-msgstr "画面の左上にあるボタンで画像をアップロードすることができます。"
+#, python-format
+msgid "You can not use this image in a field"
+msgstr "この画像をフィールド内で使用できません"
 
 #. module: web_editor
-#. odoo-python
-#: code:addons/web_editor/controllers/main.py:0
-msgid "You need to specify either data or url to create an attachment."
-msgstr "添付ファイルを作成するにはデータかURLかを指定してください。"
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+msgid "You can still access the block options but it might be ineffective."
+msgstr "ブロックオプションにアクセスすることはできるが、効果がないかもしれません。"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/document_selector.xml:0
+msgid ""
+"You can upload documents with the button located in the top left of the "
+"screen."
+msgstr "画面の左上にあるボタンで書類をアップロードすることができます。"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+msgid "You might not be able to customize it anymore."
+msgstr "もうカスタマイズできないかもしれません。"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2937,6 +3231,12 @@ msgstr "Youku"
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "Your URL"
 msgstr "あなたのURL"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+msgid "Your content was successfully generated."
+msgstr "コンテンツが正常に生成されました。"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2954,12 +3254,24 @@ msgstr "拡大"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 msgid "Zoom Out"
-msgstr "縮小"
+msgstr "ズームアウト"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "add"
 msgstr "追加"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/file_selector.xml:0
+msgid "all"
+msgstr "全て"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_alternatives_dialog.xml:0
+msgid "alternatives..."
+msgstr "代替..."
 
 #. module: web_editor
 #. odoo-javascript
@@ -2979,9 +3291,9 @@ msgstr "暗くする"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-msgid "default"
-msgstr "デフォルト"
+#: code:addons/web_editor/static/src/components/media_dialog/file_selector.xml:0
+msgid "database"
+msgstr "データベース"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
@@ -2989,14 +3301,56 @@ msgid "exclusion"
 msgstr "除外"
 
 #. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+msgid "fill"
+msgstr "塗りつぶし"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+msgid "fill,rounded-circle"
+msgstr "塗りつぶし、円"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+msgid "flat"
+msgstr "フラット"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+msgid "lg"
+msgstr "lg"
+
+#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "lighten"
 msgstr "明るくする"
 
 #. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/file_selector.xml:0
+msgid "media-library"
+msgstr "メディアライブラリ"
+
+#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "multiply"
 msgstr "掛ける"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+msgid "outline"
+msgstr "輪郭"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+msgid "outline,rounded-circle"
+msgstr "輪郭、円形"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
@@ -3010,9 +3364,27 @@ msgid "px"
 msgstr "px"
 
 #. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+msgid "rounded-circle"
+msgstr "円形"
+
+#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "screen"
 msgstr "画面"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+msgid "sm"
+msgstr "sm"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+msgid "to"
+msgstr "から"
 
 #. module: web_editor
 #. odoo-javascript

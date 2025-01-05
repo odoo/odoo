@@ -1,57 +1,45 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_management
-#
+# 
 # Translators:
-# Carles Antoli <carlesantoli@hotmail.com>, 2022
-# Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
-# Sandra Franch <sandra.franch@upc.edu>, 2022
-# jabelchi, 2022
-# Quim - eccit <quim@eccit.com>, 2022
-# Martin Trigaux, 2022
-# marcescu, 2022
-# Arnau Ros, 2022
-# jabiri7, 2022
-# Ivan Espinola, 2022
-#
+# Wil Odoo, 2024
+# Josep Anton Belchi, 2024
+# Xavier, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Ivan Espinola, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:30+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Xavier, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
-"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_management
-#: model:sale.order.template.line,name:sale_management.sale_order_template_line_1
-msgid "4 Person Desk"
-msgstr "Escriptori per a 4 persones"
+#: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
+msgid "1.5"
+msgstr "1.5"
 
 #. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
-msgid "<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
+msgid "<span class=\"btn btn-secondary\">Add to order</span>"
+msgstr "<span class=\"btn btn-secondary\">Afegeix a la comanda</span>"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "<span invisible=\"not require_payment\">of</span>"
+msgstr "<span invisible=\"not require_payment\">de</span>"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "<span>Options</span>"
 msgstr "<span>Opcions</span>"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "<span>Payment</span>"
-msgstr "<span>Pagament</span>"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "<span>Signature</span>"
-msgstr "<span>Signatura</span>"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
@@ -123,7 +111,7 @@ msgstr "Empresa"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_res_config_settings
 msgid "Config Settings"
-msgstr "Ajustos de configuració"
+msgstr "Paràmetres de configuració"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__mail_template_id
@@ -134,8 +122,12 @@ msgstr "Correu electrònic de confirmació"
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__product_uom_category_id
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__product_uom_category_id
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_option__product_uom_category_id
-msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
-msgstr "La conversió entre les unitats de mesura només és possible si pertanyen a la mateixa categoria. La conversió es basarà en les ràtios establertes."
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"La conversió entre les unitats de mesura només és possible si pertanyen a la"
+" mateixa categoria. La conversió es basarà en les ràtios establertes."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
@@ -174,11 +166,6 @@ msgid "Default Template"
 msgstr "Plantilla per defecte"
 
 #. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
-msgid "Default values will be overwritten by values provided by the quotation template."
-msgstr ""
-
-#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__name
@@ -186,11 +173,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Description"
 msgstr "Descripció"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
-msgid "Design your quotation templates using building blocks"
-msgstr ""
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
@@ -210,12 +192,17 @@ msgid "Discount (%)"
 msgstr "Descompte (%)"
 
 #. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_digest_digest__display_name
+#: model:ir.model.fields,field_description:sale_management.field_res_company__display_name
+#: model:ir.model.fields,field_description:sale_management.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:sale_management.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__display_name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__display_name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__display_name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__display_name
 msgid "Display Name"
-msgstr "Nom a mostrar"
+msgstr "Nom mostrat"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__display_type
@@ -226,22 +213,33 @@ msgstr "Tipus de visualització"
 #. odoo-python
 #: code:addons/sale_management/models/digest.py:0
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "Sense accés, omet aquesta informació per a usuaris amb correu electrònic"
+msgstr ""
+"Sense accés, omet aquesta informació per a usuaris amb correu electrònic"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
+msgid "Extra Chips"
+msgstr "Xips extra"
 
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
 msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
-msgstr "Producte prohibit, quantitat i UoM en línia de cotització de venda no comptable"
+msgstr ""
+"Producte prohibit, quantitat i UoM en línia de cotització de venda no "
+"comptable"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
 msgid "Gives the sequence order when displaying a list of optional products."
-msgstr "Dóna l'ordre de seqüència quan mostra la llista de productes opcionals."
+msgstr ""
+"Dóna l'ordre de seqüència quan mostra la llista de productes opcionals."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
 msgid "Gives the sequence order when displaying a list of sale quote lines."
-msgstr "Dóna l'ordre de seqüència quan mostra la llista de venta de línies de cotització de venda."
+msgstr ""
+"Dóna l'ordre de seqüència quan mostra la llista de línies de cotització de "
+"venda."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
@@ -249,6 +247,11 @@ msgid "Group By"
 msgstr "Agrupar per"
 
 #. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_digest_digest__id
+#: model:ir.model.fields,field_description:sale_management.field_res_company__id
+#: model:ir.model.fields,field_description:sale_management.field_res_config_settings__id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_line__id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__id
@@ -257,9 +260,27 @@ msgid "ID"
 msgstr "ID"
 
 #. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__journal_id
+msgid ""
+"If set, SO with this template will invoice in this journal; otherwise the "
+"sales journal with the lowest sequence is used."
+msgstr ""
+"Si s'estableix, SO amb aquesta plantilla es facturarà en aquest diari; en "
+"cas contrari, s'utilitza el diari de vendes amb la seqüència més baixa."
+
+#. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__active
-msgid "If unchecked, it will allow you to hide the quotation template without removing it."
-msgstr "Si no està marcat, et permetrà amagar la plantilla de pressupost sense eliminar-la"
+msgid ""
+"If unchecked, it will allow you to hide the quotation template without "
+"removing it."
+msgstr ""
+"Si no està marcat, et permetrà amagar la plantilla de pressupost sense "
+"eliminar-la"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__journal_id
+msgid "Invoicing Journal"
+msgstr "Diari de facturació"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
@@ -296,7 +317,9 @@ msgstr "Línies"
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_accountable_product_id_required
 msgid "Missing required product and UoM on accountable sale quote line."
-msgstr "Falta el producte obligatori i UoM en la línia de pressupost de venda responsable."
+msgstr ""
+"Falta el producte obligatori i UoM en la línia de pressupost de venda "
+"responsable."
 
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_note
@@ -310,11 +333,6 @@ msgid "Number of days for the validity date computation of the quotation"
 msgstr "Nombre de dies per al càlcul de la data de validesa del pressupost"
 
 #. module: sale_management
-#: model:sale.order.template.option,name:sale_management.sale_order_template_option_1
-msgid "Office Chair"
-msgstr "Cadira d'oficina"
-
-#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_payment
 msgid "Online Payment"
 msgstr "Pagament online"
@@ -323,11 +341,6 @@ msgstr "Pagament online"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_signature
 msgid "Online Signature"
 msgstr "Signatura online"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "Online confirmation"
-msgstr "Confirmació en línia"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sale_order_template_option_ids
@@ -346,6 +359,17 @@ msgstr "Línia de productes opcionals"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Options"
 msgstr "Opcions"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__prepayment_percent
+msgid "Prepayment percentage"
+msgstr "Percentatge de bestreta"
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid "Prepayment percentage must be a valid percentage."
+msgstr "El percentatge de bestreta ha d'ésser un percentatge vàlid."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__is_present
@@ -373,11 +397,6 @@ msgid "Quantity:"
 msgstr "Quantitat:"
 
 #. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_res_config_settings__module_sale_quotation_builder
-msgid "Quotation Builder"
-msgstr "Creador de pressupostos"
-
-#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__number_of_days
 msgid "Quotation Duration"
 msgstr "Duració de pressupostos"
@@ -389,7 +408,7 @@ msgstr "Duració de pressupostos"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_tree
 msgid "Quotation Template"
-msgstr "Plantilla de pressupostos"
+msgstr "Plantilla de pressupost"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_line
@@ -404,7 +423,7 @@ msgstr "Línies de plantilla de pressupostos"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_option
 msgid "Quotation Template Option"
-msgstr "Opció de plantilla de pressupostos"
+msgstr "Opció de plantilla de pressupost"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sale_order_template_id
@@ -423,8 +442,8 @@ msgstr "Plantilles de pressupostos"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "Quotation expires after"
-msgstr "El pressupost caduca després"
+msgid "Quotation Validity"
+msgstr "Validesa del pressupost"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -438,13 +457,21 @@ msgstr "Eliminar un"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_signature
-msgid "Request a online signature to the customer in order to confirm orders automatically."
-msgstr "Sol·licita una signatura en línia al client per tal de confirmar comandes automàticament."
+msgid ""
+"Request a online signature to the customer in order to confirm orders "
+"automatically."
+msgstr ""
+"Sol·licita una signatura en línia al client per tal de confirmar comandes "
+"automàticament."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_payment
-msgid "Request an online payment to the customer in order to confirm orders automatically."
-msgstr "Sol·licita un pagament en línia al client per tal de confirmar comandes automàticament."
+msgid ""
+"Request an online payment to the customer in order to confirm orders "
+"automatically."
+msgstr ""
+"Sol·licita un pagament en línia al client per tal de confirmar comandes "
+"automàticament."
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_option
@@ -459,7 +486,7 @@ msgstr "Vendes"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order
 msgid "Sales Order"
-msgstr "Comanda de venda"
+msgstr "Comanda"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_line
@@ -489,19 +516,33 @@ msgstr "Secció"
 
 #. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
-msgid "Selling the same product in different sizes or colors? Try the product grid and populate your orders with multiple quantities of each variant. This feature also exists in the Purchase application."
-msgstr "Vendre el mateix producte en diferents grandàries o colors? Proveu la graella del producte i ompliu les vostres comandes amb múltiples quantitats de cada variant. Aquesta funció també existeix en l'aplicació de compres."
+msgid ""
+"Selling the same product in different sizes or colors? Try the product grid "
+"and populate your orders with multiple quantities of each variant. This "
+"feature also exists in the Purchase application."
+msgstr ""
+"Vendre el mateix producte en diferents grandàries o colors? Proveu la "
+"graella del producte i ompliu les vostres comandes amb múltiples quantitats "
+"de cada variant. Aquesta funció també existeix en l'aplicació de compres."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sequence
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sequence
 msgid "Sequence"
 msgstr "Seqüència"
 
 #. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
-msgid "Struggling with a complex product catalog? Try out the Product Configurator to help sales configure a product with different options: colors, size, capacity, etc. Make sale orders encoding easier and error-proof."
-msgstr "Contractar amb un catàleg de productes complex? Prova el configurador de productes per ajudar a les vendes configurar un producte amb diferents opcions: colors, grandària, capacitat, etc. Faciliti la codificació de les comandes de venda i eviti errors."
+msgid ""
+"Struggling with a complex product catalog? Try out the Product Configurator "
+"to help sales configure a product with different options: colors, size, "
+"capacity, etc. Make sale orders encoding easier and error-proof."
+msgstr ""
+"Contractar amb un catàleg de productes complex? Prova el configurador de "
+"productes per ajudar a les vendes configurar un producte amb diferents "
+"opcions: colors, grandària, capacitat, etc. Faciliti la codificació de les "
+"comandes de venda i eviti errors."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -515,18 +556,36 @@ msgstr "Termes i condicions "
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "The Administrator can set default Terms & Conditions in Sales Settings. Terms set here will show up instead if you select this quotation template."
-msgstr "L'administrador pot establir Termes i Condicions a Opcions de Vendes. Els termes que es defineixen aquí es mostraran en lloc de si selecciona aquesta plantilla de pressupost."
+msgid ""
+"The Administrator can set default Terms & Conditions in Sales Settings. "
+"Terms set here will show up instead if you select this quotation template."
+msgstr ""
+"L'administrador pot establir Termes i Condicions a Opcions de Vendes. Els "
+"termes que es defineixen aquí es mostraran en lloc de si selecciona aquesta "
+"plantilla de pressupost."
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__prepayment_percent
+msgid "The percentage of the amount needed to be paid to confirm quotations."
+msgstr "El percentatge de l'import que cal pagar per confirmar el pressupost."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
-msgid "This e-mail template will be sent on confirmation. Leave empty to send nothing."
-msgstr "Aquesta plantilla de correu electrònic serà enviada com a confirmació. Deixa el camp buit per no enviar res."
+msgid ""
+"This e-mail template will be sent on confirmation. Leave empty to send "
+"nothing."
+msgstr ""
+"Aquesta plantilla de correu electrònic serà enviada com a confirmació. Deixa"
+" el camp buit per no enviar res."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__is_present
-msgid "This field will be checked if the option line's product is already present in the quotation."
-msgstr "Aquest camp es marcarà si el producte de la línia opcional ja és present en el pressupost."
+msgid ""
+"This field will be checked if the option line's product is already present "
+"in the quotation."
+msgstr ""
+"Aquest camp es marcarà si el producte de la línia opcional ja és present en "
+"el pressupost."
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale1_management_0
@@ -550,7 +609,7 @@ msgstr "Preu un."
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 msgid "Unit Price:"
-msgstr "Preu Unitat:"
+msgstr "Preu unitari:"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__uom_id
@@ -584,8 +643,12 @@ msgstr "No pot afegir opcions a una comanda confirmada"
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template_line.py:0
-msgid "You cannot change the type of a sale quote line. Instead you should delete the current line and create a new line of the proper type."
-msgstr "No pots canviar el tipus de línia de pressupost de venda. En canvi hauries d'eliminar la línia actual i crear-ne una de nova del tipus correcte."
+msgid ""
+"You cannot change the type of a sale quote line. Instead you should delete "
+"the current line and create a new line of the proper type."
+msgstr ""
+"No pots canviar el tipus de línia de pressupost de venda. En canvi hauries "
+"d'eliminar la línia actual i crear-ne una de nova del tipus correcte."
 
 #. module: sale_management
 #. odoo-python
@@ -595,7 +658,7 @@ msgid ""
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
 "El pressupost conté productes de la companyia  %(product_company)s i el pressupost pertany a la companyia %(quote_company)s. \n"
-"Canvieu la companyia de la comanda o retireu els productes d'altres companyies (%(bad_products)s)."
+"Canvieu la companyia del pressupost o retireu els productes d'altres companyies (%(bad_products)s)."
 
 #. module: sale_management
 #. odoo-python

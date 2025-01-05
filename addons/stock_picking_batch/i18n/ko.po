@@ -1,44 +1,66 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_picking_batch
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Sarah Park, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
-"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "2023-08-20"
+msgstr "2023-08-20"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
+msgid "<span class=\"col-6\">Waves</span>"
+msgstr "<span class=\"col-6\">웨이브</span>"
+
+#. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
-msgid "<span class=\"o_form_label fw-bold\" attrs=\"{'invisible':[('auto_batch', '=', False)]}\">Group by</span>"
+msgid ""
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\" "
+"style=\"white-space: nowrap;\">Wave Grouping</span>"
 msgstr ""
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\" "
+"style=\"white-space: nowrap;\">웨이브 그룹화</span>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+msgid ""
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Batch "
+"Grouping</span>"
+msgstr ""
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">일괄 "
+"그룹화</span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>FROM</strong>"
-msgstr ""
+msgstr "<strong>다음에서</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>Lot/Serial Number</strong>"
-msgstr "<strong>로트/일련번호</strong>"
+msgstr "<strong>LOT/일련번호</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>Package</strong>"
-msgstr "<strong>꾸러미 상품</strong>"
+msgstr "<strong>패키지 상품</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -53,12 +75,12 @@ msgstr "<strong>책임 :</strong>"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>TO</strong>"
-msgstr ""
+msgstr "<strong>다음으로</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>→</strong>"
-msgstr ""
+msgstr "<strong>→</strong>"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_lines
@@ -66,6 +88,8 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
+"이 라인 수를 초과하여 전송 항목 추가 시 일괄 전송 항목에 자동으로 추가되지 않습니다. \n"
+"라인 한도가 없는 경우 이 값을 '0'으로 두십시오."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
@@ -73,6 +97,8 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
+"이 전송 항목 수를 초과할 시 일괄 전송 항목에 자동으로 추가되지 않습니다. \n"
+"전송 한도가 없는 경우 이 값을 '0'으로 두십시오."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
@@ -97,19 +123,19 @@ msgstr "활동 상태"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "업무 유형 아이콘"
+msgstr "활동 유형 아이콘"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking.py:0
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 msgid "Add Operations"
-msgstr ""
+msgstr "작업 추가"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
 msgid "Add pickings to"
-msgstr ""
+msgstr "다음에 픽업 추가"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
@@ -123,7 +149,7 @@ msgstr "다음에 추가하기"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree_detailed_wave
 msgid "Add to Wave"
-msgstr ""
+msgstr "웨이브에 추가"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_to_batch_action_stock_picking
@@ -133,7 +159,7 @@ msgstr "일괄 작업 추가하기"
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_add_to_wave_action_stock_picking
 msgid "Add to wave"
-msgstr ""
+msgstr "웨이브에 추가"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -149,7 +175,7 @@ msgstr "허용된 선별"
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking.py:0
 msgid "Assigned to %s Responsible"
-msgstr ""
+msgstr "담당자 %s 배정"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_attachment_count
@@ -159,37 +185,38 @@ msgstr "첨부 파일 수"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_auto_confirm
 msgid "Auto-confirm"
-msgstr ""
+msgstr "자동 승인"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__auto_batch
 msgid "Automatic Batches"
-msgstr ""
+msgstr "자동 배치"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_partner
 msgid "Automatically group batches by contacts."
-msgstr ""
+msgstr "연락처별로 배치를 자동으로 그룹화합니다."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_destination
 msgid "Automatically group batches by destination country."
-msgstr ""
+msgstr "목적지 국가별로 배치를 자동으로 그룹화합니다."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
 msgid "Automatically group batches by their destination location."
-msgstr ""
+msgstr "목적지 위치별로 배치를 자동으로 그룹화합니다."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
 msgid "Automatically group batches by their source location."
-msgstr ""
+msgstr "출발 위치별로 배치를 자동으로 그룹화합니다."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__auto_batch
-msgid "Automatically put pickings into batches as they are confirmed when possible."
-msgstr ""
+msgid ""
+"Automatically put pickings into batches as they are confirmed when possible."
+msgstr "픽업 내역이 확인 가능한 경우 배치에 자동으로 포함됩니다."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -197,13 +224,30 @@ msgid "Barcode"
 msgstr "바코드"
 
 #. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_form_inherit
 msgid "Batch"
 msgstr "배치"
 
 #. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+msgid "Batch & Wave Transfers"
+msgstr "배치 및 웨이브 이송"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Batch Name"
+msgstr "배치 이름"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_properties_definition
+msgid "Batch Properties"
+msgstr "배치 속성"
+
+#. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
 #: model:ir.actions.report,name:stock_picking_batch.action_report_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_move_line__batch_id
@@ -214,7 +258,7 @@ msgstr "배치"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_internal_search_inherit
 msgid "Batch Transfer"
-msgstr "이송 일괄 작업"
+msgstr "일괄 이송 작업"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
@@ -224,9 +268,8 @@ msgstr "이송 일괄 작업 명세"
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_batch_action
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_batch_menu
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid "Batch Transfers"
-msgstr "이송 일괄 작업"
+msgstr "일괄 이송 작업"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -240,9 +283,20 @@ msgid "Batch associated to this transfer"
 msgstr "이 이송과 관련된 일괄 작업"
 
 #. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+msgid "Batch transfers"
+msgstr "일괄 전송"
+
+#. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
 msgid "Batches"
 msgstr "배치"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_calendar
+msgid "Calendar View"
+msgstr "일정표 화면"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
@@ -254,13 +308,18 @@ msgstr "취소"
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__cancel
 msgid "Cancelled"
-msgstr "취소 됨"
+msgstr "취소됨"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 msgid "Cannot create wave transfers"
-msgstr ""
+msgstr "웨이브 이송을 생성할 수 없습니다"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_category_ids
+msgid "Categories to consider when grouping waves."
+msgstr "웨이브를 그룹화할 때 고려해야 할 카테고리."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -271,18 +330,19 @@ msgstr "사용 가능 확인"
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "Choose Labels Layout"
-msgstr "라벨 레이아웃 선택"
+msgstr "라벨 인쇄용 레이아웃 선택"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "Choose Type of Labels To Print"
-msgstr ""
+msgstr "인쇄할 라벨 유형 선택"
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
-msgid "Clear quantities"
-msgstr "수량 삭제"
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+msgid "Cluster transfers"
+msgstr "클러스터 전송"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__company_id
@@ -305,22 +365,12 @@ msgstr "연락처"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_batch
 msgid "Count Picking Batch"
-msgstr ""
+msgstr "픽업 배치 수"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_wave
 msgid "Count Picking Wave"
-msgstr ""
-
-#. module: stock_picking_batch
-#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
-msgid "Create a new batch transfer"
-msgstr "새 이송 일괄 작업 만들기"
-
-#. module: stock_picking_batch
-#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
-msgid "Create a new wave transfer"
-msgstr ""
+msgstr "픽업 웨이브 수"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__create_uid
@@ -337,12 +387,18 @@ msgid "Created on"
 msgstr "작성일자"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_destination
-msgid "Destination Country"
-msgstr ""
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__description
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__description
+msgid "Description"
+msgstr "설명"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_destination
+msgid "Destination Country"
+msgstr "목적지 국가"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid "Destination Location"
 msgstr "목적지 위치"
 
@@ -369,7 +425,7 @@ msgstr "완료"
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__draft
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Draft"
-msgstr "임시"
+msgstr "미결"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_follower_ids
@@ -379,12 +435,12 @@ msgstr "팔로워"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "팔로워 (파트너)"
+msgstr "팔로워 (협력사)"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "멋진 아이콘 폰트 예 : fa-tasks"
+msgstr "멋진 아이콘 폰트 예: fa-tasks"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -395,6 +451,21 @@ msgstr "향후 활동"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Group By"
 msgstr "그룹별"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
+msgid "Group by Destination Location"
+msgstr "목적지 위치별 그룹"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
+msgid "Group by Source Location"
+msgstr "출발지 위치별 그룹"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Gujarat"
+msgstr "Gujarat"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__has_message
@@ -432,8 +503,10 @@ msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합�
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking.py:0
-msgid "If the Automatic Batches feature is enabled, at least one 'Group by' option must be selected."
-msgstr ""
+msgid ""
+"If the Automatic Batches feature is enabled, at least one 'Group by' option "
+"must be selected."
+msgstr "자동 배치 기능이 활성화된 경우 하나 이상 '그룹화 기준' 옵션을 선택하셔야 합니다."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -449,6 +522,16 @@ msgstr "진행중"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_is_follower
 msgid "Is Follower"
 msgstr "팔로워임"
+
+#. module: stock_picking_batch
+#: model:ir.ui.menu,name:stock_picking_batch.menu_stock_jobs
+msgid "Jobs"
+msgstr "직무"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "John Doe"
+msgstr "홍길동"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__write_uid
@@ -470,6 +553,14 @@ msgid "Late Activities"
 msgstr "지연된 활동"
 
 #. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+msgid ""
+"Launch picking orders by aisle or area and regroup at packing zone. Ideal "
+"for large warehouses."
+msgstr "통로 또는 구역별로 피킹 주문을 시작한 다음 포장 구역에서 재집결합니다. 이 방식은 대형 창고에 이상적입니다. "
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__line_ids
 msgid "Line"
 msgstr "선"
@@ -480,14 +571,39 @@ msgid "List of transfers associated to this batch"
 msgstr "이 일괄 작업과 관련된 이송 목록"
 
 #. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_group_by_location
+msgid "Location"
+msgstr "위치"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Location From Name"
+msgstr "이름 기준 위치"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Location To Name"
+msgstr "이름 지정 위치"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_location_ids
+msgid "Locations to consider when grouping waves."
+msgstr "웨이브를 그룹화할 때 고려해야 할 위치."
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Lot Number"
+msgstr "로트 번호"
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_lines
-msgid "Maximum lines per batch"
-msgstr ""
+msgid "Maximum lines"
+msgstr "최대 라인"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_pickings
-msgid "Maximum transfers per batch"
-msgstr ""
+msgid "Maximum transfers"
+msgstr "최대 전송 횟수"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
@@ -538,7 +654,7 @@ msgstr "다음 활동 요약"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_type_id
 msgid "Next Activity Type"
-msgstr "다음 업무 유형"
+msgstr "다음 활동 유형"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction_counter
@@ -552,13 +668,13 @@ msgstr "오류 횟수"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "조치가 필요한 메시지 수"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "전송 오류 메시지 수"
+msgstr "전송 오류가 발생한 메시지 수입니다."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_type_id
@@ -569,6 +685,19 @@ msgstr "작업 유형"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Operations"
 msgstr "작업"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Package ID"
+msgstr "패키지 ID"
+
+#. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+msgid ""
+"Pick multiple orders in one trip and prepare orders as you pick. This "
+"reduces packing time and is ideal for small products."
+msgstr "한 번에 여러 주문을 피킹하고 피킹하면서 주문을 준비합니다. 이렇게 하면 포장 시간이 최소화되며 소형 제품에 이상적입니다."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__picking_ids
@@ -583,8 +712,23 @@ msgstr "선별 유형"
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
-msgid "Please add 'Done' quantities to the batch picking to create a new pack."
+msgid ""
+"Please add 'Done' quantities to the batch picking to create a new pack."
 msgstr "새로운 포장을 생성하려면 '완료된' 수량을 일괄 선별에 넣어주세요."
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
+msgid "Prepare Batch"
+msgstr "배치 준비"
+
+#. module: stock_picking_batch
+#: model:ir.actions.act_window,name:stock_picking_batch.action_prepare_wave
+#: model:ir.actions.act_window,name:stock_picking_batch.action_prepare_wave_for_picking_type
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_wave_kanban
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_wave_tree
+msgid "Prepare Wave"
+msgstr "웨이브 준비"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -597,14 +741,35 @@ msgid "Print Labels"
 msgstr "라벨 인쇄"
 
 #. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_group_by_product
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Product"
 msgstr "품목"
 
 #. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Product Barcode"
+msgstr "품목 바코드"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_group_by_category
+msgid "Product Category"
+msgstr "품목 카테고리"
+
+#. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
 msgstr "품목 이동 (재고 이동 상세)"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Product Name"
+msgstr "품목명"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__properties
+msgid "Properties"
+msgstr "속성"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -617,9 +782,22 @@ msgid "Quantity"
 msgstr "수량"
 
 #. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Quantity Done"
+msgstr "수량 완료됨"
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "평가"
+
+#. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+msgid ""
+"Regroup multiple orders into one picking and consolidate at the packing "
+"zone."
+msgstr "여러 주문을 하나의 피킹으로 통합하고 포장 구역에서 결합합니다."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__user_id
@@ -635,6 +813,11 @@ msgid "Responsible User"
 msgstr "담당 사용자"
 
 #. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Result Package ID"
+msgstr "결과 패키지 ID"
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "SMS 전송 에러"
@@ -643,7 +826,7 @@ msgstr "SMS 전송 에러"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__scheduled_date
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Scheduled Date"
-msgstr "계획된 날짜"
+msgstr "예정일"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__scheduled_date
@@ -653,6 +836,10 @@ msgid ""
 "              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
 "                but this scheduled date will not be set for all transfers in batch."
 msgstr ""
+"이체 처리 예정일.\n"
+"              - 수동으로 설정할 경우 모든 일괄 이체 예정일이 자동으로 이 날짜로 업데이트됩니다.\n"
+"              - 수동으로 변경하지 않고 이체를 추가, 제거 또는 업데이트할 경우 이 날짜가 가장 빠른 예정일이 됩니다.\n"
+"                그러나 이 예정일이 이체 전체 항목에 대해 일괄적으로 설정되지는 않습니다."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -660,14 +847,24 @@ msgid "Search Batch Transfer"
 msgstr "이송 일괄 작업 검색"
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
-msgid "Set quantities"
-msgstr "수량 설정"
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+msgid "Select locations you want to group"
+msgstr "그룹화할 위치 선택"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+msgid "Select product categories you want to group"
+msgstr "그룹화할 품목 카테고리를 선택합니다."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking__batch_sequence
+msgid "Sequence"
+msgstr "순서"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_allocation
 msgid "Show Allocation Button"
-msgstr ""
+msgstr "할당 버튼 표시"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_check_availability
@@ -675,19 +872,9 @@ msgid "Show Check Availability"
 msgstr "사용 가능 여부 확인"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_clear_qty_button
-msgid "Show Clear Qty Button"
-msgstr ""
-
-#. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_set_qty_button
-msgid "Show Set Qty Button"
-msgstr ""
-
-#. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_validate
-msgid "Show Validate Button"
-msgstr ""
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_lots_text
+msgid "Show Lots Text"
+msgstr "LOT 텍스트 표시"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -695,9 +882,29 @@ msgid "Show all records which has next action date is before today"
 msgstr "다음 행동 날짜가 오늘 이전 인 모든 기록보기"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid "Source Location"
-msgstr "원래 위치"
+msgstr "기존 위치"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_location
+msgid ""
+"Split transfers by defined locations, then group transfers with the same "
+"location."
+msgstr "지정된 위치별로 배송을 분리한 다음 같은 위치의 배송을 그룹화합니다."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_category
+msgid ""
+"Split transfers by product category, then group transfers that have the same"
+" product category."
+msgstr "품목 카테고리별로 전송을 분리한 다음 같은 카테고리의 항목을 그룹화하세요."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_product
+msgid ""
+"Split transfers by product then group transfers that have the same product."
+msgstr "제품별로 전송을 분할하고 동일한 제품을 가진 품목을 그룹화합니다."
 
 #. module: stock_picking_batch
 #: model:mail.message.subtype,description:stock_picking_batch.mt_batch_state
@@ -724,10 +931,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"활동에 기조한 상태입니다\n"
-"기한초과: 이미 기한이 지났습니다\n"
-"오늘: 활동 날짜가 오늘입니다\n"
-"계획: 향후 활동입니다."
+"활동 기준 상태\n"
+"기한 초과: 기한이 이미 지났습니다.\n"
+"오늘: 활동 날짜가 오늘입니다.\n"
+"예정: 향후 계획된 활동입니다."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -743,7 +950,7 @@ msgstr "재고 이동"
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_package_destination
 msgid "Stock Package Destination"
-msgstr "재고 꾸러미 상품 목적지"
+msgstr "재고 패키지 목적지"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_line_ids
@@ -764,38 +971,19 @@ msgstr "요약 :"
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid ""
-"The following transfers cannot be added to batch transfer %s. Please check their states and operation types, if they aren't immediate transfers.\n"
+"The following transfers cannot be added to batch transfer %(batch)s. Please check their states and operation types.\n"
 "\n"
-"Incompatibilities: %s"
+"Incompatibilities: %(incompatible_transfers)s"
 msgstr ""
-
-#. module: stock_picking_batch
-#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
-msgid ""
-"The goal of the batch transfer is to group operations that may\n"
-"            (needs to) be done together in order to increase their efficiency.\n"
-"            It may also be useful to assign jobs (one person = one batch) or\n"
-"            help the timing management of operations (tasks to be done at 1pm)."
-msgstr ""
-"이송 일괄 작업의 목표는 효율성을 높이기 위해 함께 수행되어야 할(필요할) \n"
-"                 그룹 작업을 수행하는 것입니다.\n"
-"                 작업을 할당하거나(한 사람 = 한 일괄 작업) 작업의 타이밍 \n"
-"                 관리(일 오후 1시에 수행해야 하는 태스크)를 돕는 것도 유용할 수 있습니다."
-
-#. module: stock_picking_batch
-#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
-msgid ""
-"The goal of the wave transfer is to group operations from different transfer\n"
-"                    together in order to increase their efficiency.\n"
-"                    It may also be useful to assign jobs (one person = one batch) or\n"
-"                    help the timing management of operations (tasks to be done at 1pm)."
-msgstr ""
+"다음 전송은 일괄 전송 %(batch)s에 포함할 수 없습니다. 해당 전송의 상태 및 작업 유형에서 비호환성을 검토하세요:\n"
+"\n"
+"비호환성: %(incompatible_transfers)s"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 msgid "The selected operations should belong to a unique company."
-msgstr ""
+msgstr "선택한 작업은 하나의 회사에만 속해야 합니다."
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -807,23 +995,23 @@ msgstr "선택된 선별작업은 하나의 회사에 속해있어야 합니다.
 #. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 msgid "The selected transfers should belong to a unique company."
-msgstr ""
+msgstr "선택한 전송 항목은 하나의 회사에만 속해야 합니다."
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 msgid "The selected transfers should belong to the same operation type"
-msgstr ""
+msgstr "선택한 전송 항목은 동일한 작업 유형에만 속해야 합니다."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__is_wave
 msgid "This batch is a wave"
-msgstr ""
+msgstr "이 배치는 웨이브 항목입니다"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "To Do"
-msgstr "할 일"
+msgstr "To Do"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -835,6 +1023,16 @@ msgstr "오늘 활동"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Transfer"
 msgstr "전송"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Transfer Display Name"
+msgstr "이송 표시명"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Transfer Name"
+msgstr "이송 이름"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -859,6 +1057,16 @@ msgid "Type of the exception activity on record."
 msgstr "레코드에 있는 예외 활동의 유형입니다."
 
 #. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Unit of Measure"
+msgstr "단위"
+
+#. module: stock_picking_batch
+#: model:ir.actions.server,name:stock_picking_batch.action_unreserve_batch_picking
+msgid "Unreserve"
+msgstr "예약 해제"
+
+#. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Validate"
 msgstr "승인"
@@ -869,25 +1077,36 @@ msgid "Warehouse"
 msgstr "창고"
 
 #. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_location_ids
+msgid "Wave Locations"
+msgstr "웨이브 위치"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_category_ids
+msgid "Wave Product Categories"
+msgstr "웨이브 제품 카테고리"
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__wave_id
 msgid "Wave Transfer"
-msgstr ""
+msgstr "웨이브 이송"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_add_to_wave
 msgid "Wave Transfer Lines"
-msgstr ""
+msgstr "웨이브 이송 명세"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.action_picking_tree_wave
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_wave_menu
 msgid "Wave Transfers"
-msgstr ""
+msgstr "웨이브 이송"
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
-msgid "Waves"
-msgstr ""
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+msgid "Wave transfers"
+msgstr "웨이브 전송"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__website_message_ids
@@ -902,19 +1121,19 @@ msgstr "웹사이트 대화 이력"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_to_batch__is_create_draft
 msgid "When checked, create the batch in draft status"
-msgstr ""
+msgstr "선택할 경우, 미결 상태로 배치를 생성합니다."
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "You cannot delete Done batch transfers."
-msgstr ""
+msgstr "일괄 전송이 완료된 경우 삭제할 수 없습니다."
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "You have to set some pickings to batch."
-msgstr ""
+msgstr "일부 픽업 항목을 배치로 설정해야 합니다."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__new
@@ -924,14 +1143,24 @@ msgstr "새 이송 일괄 작업"
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__new
 msgid "a new wave transfer"
-msgstr ""
+msgstr "새로운 웨이브 이송"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__existing
 msgid "an existing batch transfer"
-msgstr ""
+msgstr "기존 배치 전송"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__existing
 msgid "an existing wave transfer"
-msgstr ""
+msgstr "기존 웨이브 이송"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__estimated_shipping_volume
+msgid "shipping_volume"
+msgstr "shipping_volume"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__estimated_shipping_weight
+msgid "shipping_weight"
+msgstr "shipping_weight"

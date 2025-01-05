@@ -1,43 +1,47 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* fleet
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
-# Vo Thanh Thuy, 2022
-# Duy BQ <duybq86@gmail.com>, 2022
-# Dung Nguyen Thi <dungnt@trobz.com>, 2022
-# Thi Huong Nguyen, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 msgid "<i class=\"fa fa-map-marker\" title=\"Location\"/>"
-msgstr "<i class=\"fa fa-map-marker\" title=\"Location\"/>"
+msgstr "<i class=\"fa fa-map-marker\" title=\"Vị trí\"/>"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
+msgid ""
+"<span class=\"o_stat_value\">New</span>\n"
+"                                <span class=\"o_stat_text\">Vehicle</span>"
+msgstr ""
+"<span class=\"o_stat_value\">Phương tiện</span>\n"
+"                                <span class=\"o_stat_text\">mới</span>"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
 msgid "<span> days before the end date</span>"
-msgstr "<span> days before the end date</span>"
+msgstr "<span> ngày trước ngày kết thúc</span>"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
 msgid "<span>Send an alert </span>"
-msgstr "<span>Send an alert </span>"
+msgstr "<span>Gửi cảnh báo </span>"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -55,6 +59,12 @@ msgstr "<span>g/km</span>"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "<span>kW</span>"
 msgstr "<span>kW</span>"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+msgid "<span>km</span>"
+msgstr "<span>km</span>"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_1
@@ -85,8 +95,9 @@ msgstr "Nạp lại khí điều hòa"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_needaction
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_needaction
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_needaction
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Tác vụ cần thiết"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -98,6 +109,7 @@ msgstr "Phí kích hoạt"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__active
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__active
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__active
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__active
 msgid "Active"
 msgstr "Đang hoạt động"
 
@@ -105,20 +117,23 @@ msgstr "Đang hoạt động"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_ids
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_ids
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_ids
 msgid "Activities"
-msgstr "Các hoạt động"
+msgstr "Hoạt động"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_exception_decoration
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_exception_decoration
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_exception_decoration
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Hành động ngoại lệ"
+msgstr "Hoạt động ngoại lệ"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_state
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_state
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_state
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_state
 msgid "Activity State"
 msgstr "Trạng thái hoạt động"
 
@@ -126,24 +141,25 @@ msgstr "Trạng thái hoạt động"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_type_icon
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Biểu tượng kiểu hoạt động"
+msgstr "Biểu tượng loại hoạt động"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.mail_activity_type_action_config_fleet
 #: model:ir.ui.menu,name:fleet.fleet_menu_config_activity_type
 msgid "Activity Types"
-msgstr "Kiểu hoạt động"
+msgstr "Loại hoạt động"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_tag_action
 msgid "Add a new tag"
-msgstr "Thêm từ khóa mới"
+msgstr "Thêm thẻ mới"
 
 #. module: fleet
 #: model:res.groups,name:fleet.fleet_group_manager
 msgid "Administrator"
-msgstr "Người quản trị"
+msgstr "Quản trị viên"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_6
@@ -161,25 +177,31 @@ msgid "Apply New Driver"
 msgstr "Áp dụng tài xế mới"
 
 #. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
+msgid "Archive"
+msgstr "Lưu trữ"
+
+#. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Archived"
-msgstr "Đã lưu"
+msgstr "Đã lưu trữ"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__next_assignation_date
 msgid "Assignment Date"
-msgstr "Ngày giao"
+msgstr "Ngày phân công"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__log_drivers
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_assignation_log_view_list
 msgid "Assignment Logs"
-msgstr "Assignment Logs"
+msgstr "Nhật ký phân công"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_8
@@ -190,13 +212,24 @@ msgstr "Phụ xe"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_attachment_count
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_attachment_count
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_attachment_count
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_attachment_count
 msgid "Attachment Count"
-msgstr "Số lượng tập tin đính kèm"
+msgstr "Số lượng tệp đính kèm"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__attachment_ids
+msgid "Attachments"
+msgstr "Tệp đính kèm"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 msgid "Attention: renewal overdue"
 msgstr "Chú ý: gia hạn quá hạn"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__author_id
+msgid "Author"
+msgstr "Tác giả"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__transmission__automatic
@@ -207,37 +240,37 @@ msgstr "Tự động"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Available"
-msgstr "Khả dụng"
+msgstr "Có hàng"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__avatar_1920
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__avatar_1920
 msgid "Avatar"
-msgstr ""
+msgstr "Ảnh đại diện"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__avatar_1024
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__avatar_1024
 msgid "Avatar 1024"
-msgstr ""
+msgstr "Hình đại diện 1024"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__avatar_128
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__avatar_128
 msgid "Avatar 128"
-msgstr ""
+msgstr "Hình đại diện 128"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__avatar_256
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__avatar_256
 msgid "Avatar 256"
-msgstr ""
+msgstr "Hình đại diện 256"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__avatar_512
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__avatar_512
 msgid "Avatar 512"
-msgstr ""
+msgstr "Hình đại diện 512"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_7
@@ -258,17 +291,22 @@ msgstr "Thay thế ắc quy"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_cost_report__vehicle_type__bike
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__vehicle_type__bike
 msgid "Bike"
-msgstr "Bike"
+msgstr "Xe đạp"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__frame_type
 msgid "Bike Frame Type"
-msgstr ""
+msgstr "Kiểu khung xe đạp"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Bikes"
 msgstr "Xe đạp"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__body_has_template_value
+msgid "Body content is the same as the template"
+msgstr "Nội dung chính giống với mẫu"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_11
@@ -311,7 +349,12 @@ msgstr "Lượng khí thải CO2"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_tree
 msgid "CO2 Emissions g/km"
-msgstr "CO2 Emissions g/km"
+msgstr "Lượng khí thải CO2 g/km"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2_standard
+msgid "CO2 Standard"
+msgstr "Tiêu chuẩn CO2"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__co2
@@ -324,16 +367,22 @@ msgid "Calculation Benefit In Kind"
 msgstr "Tính lợi ích bằng hiện vật"
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__can_edit_body
+msgid "Can Edit Body"
+msgstr "Có thể sửa nội dung chính"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
 msgid "Cancel"
 msgstr "Hủy"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__write_off_date
 msgid "Cancellation Date"
-msgstr ""
+msgstr "Ngày huỷ"
 
 #. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__closed
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__cancelled
 msgid "Cancelled"
 msgstr "Đã hủy"
@@ -342,7 +391,7 @@ msgstr "Đã hủy"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_cost_report__vehicle_type__car
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__vehicle_type__car
 msgid "Car"
-msgstr "Car"
+msgstr "Ô tô"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_14
@@ -352,7 +401,7 @@ msgstr "Rửa xe"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Cars"
-msgstr "Cars"
+msgstr "Ô tô"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__car_value
@@ -368,12 +417,21 @@ msgstr "Thay thế bộ chuyển đổi khí thải"
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_category_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_model_category_menu
 msgid "Categories"
-msgstr "Phân loại"
+msgstr "Danh mục"
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_category_action
+msgid ""
+"Categories will help you manage your fleet more efficiently and arrange your"
+" vehicles."
+msgstr ""
+"Danh mục sẽ giúp bạn tăng hiệu quả quản lý đội xe và bố trí phương tiện."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type__category
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__category_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__category_id
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 msgid "Category"
 msgstr "Danh mục"
 
@@ -410,22 +468,16 @@ msgstr "Chọn xem hợp đồng có còn hiệu lực hay không"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_service_type__category
-msgid "Choose whether the service refer to contracts, vehicle services or both"
+msgid ""
+"Choose whether the service refer to contracts, vehicle services or both"
 msgstr "Chọn xem dịch vụ có liên quan đến hợp đồng, dịch vụ xe hay cả hai"
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-msgid "Close Contract"
-msgstr "Đóng hợp đồng"
-
-#. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__contract_state__closed
-#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__closed
 msgid "Closed"
-msgstr "Đã đóng"
+msgstr "Đã chốt"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2_standard
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__co2_standard
 msgid "Co2 Standard"
 msgstr "Co2 tiêu chuẩn"
@@ -443,6 +495,11 @@ msgid "Color of the vehicle"
 msgstr "Chi phí của phương tiện"
 
 #. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
+msgid "Communication about your vehicle."
+msgstr "Thông tin về phương tiện của bạn."
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__company_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_report__company_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__company_id
@@ -453,7 +510,7 @@ msgstr "Công ty"
 #. module: fleet
 #: model:ir.model,name:fleet.model_res_config_settings
 msgid "Config Settings"
-msgstr "Cấu hình"
+msgstr "Cài đặt cấu hình"
 
 #. module: fleet
 #: model:ir.ui.menu,name:fleet.fleet_configuration
@@ -468,8 +525,13 @@ msgstr "Liên hệ"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
-msgid "Contains Vehicles"
-msgstr "Chứa phương tiện"
+msgid "Contains Vehicle"
+msgstr "Bao gồm phương tiện"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__body
+msgid "Contents"
+msgstr "Nội dung"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_service_type__category__contract
@@ -529,7 +591,7 @@ msgstr "Hợp đồng"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__amount
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Cost"
-msgstr "Giá vốn"
+msgstr "Chi phí"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_report__cost_type
@@ -564,7 +626,7 @@ msgstr "Quốc gia"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__country_code
 msgid "Country Code"
-msgstr "Mã quốc gia"
+msgstr "Mã Quốc gia"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_category_action
@@ -579,7 +641,7 @@ msgstr "Tạo hợp đồng mới"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_brand_action
 msgid "Create a new manufacturer"
-msgstr "Create a new manufacturer"
+msgstr "Tạo nhà sản xuất mới"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
@@ -616,6 +678,7 @@ msgstr "Tạo trạng thái phương tiện mới"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__create_uid
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_category__create_uid
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__create_uid
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__create_uid
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__create_uid
 msgid "Created by"
@@ -631,6 +694,7 @@ msgstr "Được tạo bởi"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__create_date
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_category__create_date
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__create_date
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__create_date
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__create_date
 msgid "Created on"
@@ -645,9 +709,8 @@ msgstr "Tiền tệ"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_assignation_log_view_list
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Current Driver"
-msgstr "Current Driver"
+msgstr "Tài xế hiện tại"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__state_id
@@ -668,6 +731,11 @@ msgid "Date"
 msgstr "Ngày"
 
 #. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__acquisition_date
+msgid "Date of vehicle registration"
+msgstr "Ngày đăng ký xe"
+
+#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__date
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__date
 msgid "Date when the cost has been executed"
@@ -680,23 +748,27 @@ msgstr "Ngày mà phạm vi bao quát của hợp đồng bắt đầu"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__expiration_date
-msgid "Date when the coverage of the contract expirates (by default, one year after begin date)"
-msgstr "Ngày mà phạm vi bao quát của hợp đồng kết thúc (mặc định, một năm sau ngày bắt đầu)"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle__acquisition_date
-msgid "Date when the vehicle has been immatriculated"
-msgstr "Ngày phương tiện đã được đăng kiểm"
+msgid ""
+"Date when the coverage of the contract expirates (by default, one year after"
+" begin date)"
+msgstr ""
+"Ngày mà phạm vi bao quát của hợp đồng kết thúc (mặc định, một năm sau ngày "
+"bắt đầu)"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__write_off_date
 msgid "Date when the vehicle's license plate has been cancelled/removed."
-msgstr ""
+msgstr "Ngày mà biển số xe bị hủy/gỡ bỏ."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_res_config_settings__delay_alert_contract
 msgid "Delay alert contract outdated"
-msgstr "Delay alert contract outdated"
+msgstr "Hoãn cảnh báo hợp đồng quá hạn"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
+msgid "Delete"
+msgstr "Xoá"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_2
@@ -730,15 +802,18 @@ msgstr "Diesel"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__display_name
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_category__display_name
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__display_name
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__display_name
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__display_name
+#: model:ir.model.fields,field_description:fleet.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:fleet.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__done
 msgid "Done"
-msgstr "Hoàn thành"
+msgstr "Hoàn tất"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_17
@@ -779,7 +854,7 @@ msgstr "Địa chỉ tài xế của phương tiện"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Drivers"
-msgstr "Drivers"
+msgstr "Tài xế"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -789,7 +864,7 @@ msgstr "Lịch sử tài xế"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__history_count
 msgid "Drivers History Count"
-msgstr "Drivers History Count"
+msgstr "Số lịch sử tài xế"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_assignation_log
@@ -808,7 +883,9 @@ msgstr ""
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
 msgid "Each service can used in contracts, as a standalone service or both."
-msgstr "Mỗi dịch vụ có thể được sử dụng trong hợp đồng, như một dịch vụ độc lập hoặc cả hai."
+msgstr ""
+"Mỗi dịch vụ có thể được sử dụng trong hợp đồng, như một dịch vụ độc lập hoặc"
+" cả hai."
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__electric
@@ -846,13 +923,13 @@ msgstr "Ngày kết thúc"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
 msgid "End Date Contract Alert"
-msgstr ""
+msgstr "Cảnh báo ngày kết thúc hợp đồng"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Engine"
-msgstr "Engine"
+msgstr "Động cơ"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_18
@@ -877,8 +954,12 @@ msgstr "Nhập thuế dịch vụ"
 #. module: fleet
 #. odoo-javascript
 #: code:addons/fleet/static/src/js/fleet_form.js:0
-msgid "Every service and contract of this vehicle will be considered as archived. Are you sure that you want to archive this record?"
+msgid ""
+"Every service and contract of this vehicle will be considered as archived. "
+"Are you sure that you want to archive this record?"
 msgstr ""
+"Tất cả dịch vụ và hợp đồng của phương tiện này sẽ được coi là đã lưu trữ. "
+"Bạn có chắc chắn muốn lưu trữ bản ghi này không?"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_21
@@ -895,7 +976,7 @@ msgstr "Đã hết hạn"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__expires_today
 msgid "Expires Today"
-msgstr ""
+msgstr "Hết hạn hôm nay"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__first_contract_date
@@ -905,7 +986,7 @@ msgstr "Ngày hợp đồng đầu tiên"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Fiscality"
-msgstr ""
+msgstr "Tài chính"
 
 #. module: fleet
 #: model:ir.module.category,name:fleet.module_fleet_category
@@ -919,7 +1000,7 @@ msgstr "Đội xe"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_cost_report
 msgid "Fleet Analysis Report"
-msgstr "Fleet Analysis Report"
+msgstr "Báo cáo phân tích đội xe"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_costs_report_view_graph
@@ -927,7 +1008,7 @@ msgstr "Fleet Analysis Report"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vechicle_costs_report_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vechicle_costs_report_view_tree
 msgid "Fleet Costs Analysis"
-msgstr "Fleet Costs Analysis"
+msgstr "Phân tích chi phí đội xe"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
@@ -939,7 +1020,7 @@ msgstr "Quản lý phương tiện"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__manager_id
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 msgid "Fleet Manager"
-msgstr "Fleet Manager"
+msgstr "Quản lý đội xe"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_service_type
@@ -955,6 +1036,7 @@ msgstr "Phương tiện: Tạo chi phí hợp đồng dựa trên tần suất c
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_follower_ids
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_follower_ids
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_follower_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_follower_ids
 msgid "Followers"
 msgstr "Người theo dõi"
 
@@ -962,6 +1044,7 @@ msgstr "Người theo dõi"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_partner_ids
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_partner_ids
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_partner_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Người theo dõi (Đối tác)"
 
@@ -969,8 +1052,9 @@ msgstr "Người theo dõi (Đối tác)"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_type_icon
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_type_icon
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__activity_type_icon
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font biểu tượng ví dụ: fa-tasks"
+msgstr "Font biểu tượng, ví dụ: fa-tasks"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__frame_size
@@ -1003,23 +1087,23 @@ msgstr "Loại nhiên liệu"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__full_hybrid
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__default_fuel_type__full_hybrid
 msgid "Full Hybrid"
-msgstr ""
+msgstr "Full Hybrid"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Future Activities"
-msgstr "Hoạt động tương lai"
+msgstr "Hoạt động trong tương lai"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__future_driver_id
 msgid "Future Driver"
-msgstr "Future Driver"
+msgstr "Tài xế sắp tới"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 msgid "Future Driver :"
-msgstr "Future Driver :"
+msgstr "Tài xế sắp tới:"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__gasoline
@@ -1052,8 +1136,14 @@ msgstr "Có hợp đồng gia hạn"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__has_message
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__has_message
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__has_message
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__has_message
 msgid "Has Message"
 msgstr "Có tin nhắn"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__has_open_contract
+msgid "Has Open Contract"
+msgstr "Có hợp đồng mở"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_24
@@ -1083,6 +1173,8 @@ msgstr "Thay ống dẫn khí nóng"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__horsepower
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__horsepower
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__power_unit__horsepower
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__power_unit__horsepower
 msgid "Horsepower"
 msgstr "Sức ngựa"
 
@@ -1109,8 +1201,11 @@ msgstr "Hydrogen"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_category__id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__id
+#: model:ir.model.fields,field_description:fleet.field_res_config_settings__id
+#: model:ir.model.fields,field_description:fleet.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -1118,6 +1213,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_exception_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_exception_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_exception_icon
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_exception_icon
 msgid "Icon"
 msgstr "Biểu tượng"
 
@@ -1125,22 +1221,25 @@ msgstr "Biểu tượng"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_exception_icon
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_exception_icon
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__activity_exception_icon
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Biểu tượng để chỉ ra một hoạt động ngoại lệ."
+msgstr "Biểu tượng cho thấy một hoạt động ngoại lệ."
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_needaction
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_needaction
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__message_needaction
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Nếu chọn, các tin nhắn mới yêu cầu sự có mặt của bạn."
+msgstr "Nếu chọn, bạn cần chú ý tới các tin nhắn mới."
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_has_error
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_has_error
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__message_has_error
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Nếu đánh dấu thì một số thông điệp có lỗi."
+msgstr "Nếu chọn, một số tin nhắn sẽ có lỗi gửi."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_29
@@ -1151,40 +1250,34 @@ msgstr "Thay thế bôbin đánh lửa"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__image_1920
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__image_1920
 msgid "Image"
-msgstr ""
+msgstr "Hình ảnh"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__image_1024
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__image_1024
 msgid "Image 1024"
-msgstr ""
+msgstr "Hình ảnh 1024"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__image_128
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__image_128
 msgid "Image 128"
-msgstr ""
+msgstr "Hình ảnh 128"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__image_256
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__image_256
 msgid "Image 256"
-msgstr ""
+msgstr "Hình ảnh 256"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__image_512
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__image_512
 msgid "Image 512"
-msgstr ""
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__acquisition_date
-msgid "Immatriculation Date"
-msgstr "Ngày đăng kiểm"
+msgstr "Hình ảnh 512"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__contract_state__open
-#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__open
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "In Progress"
 msgstr "Đang thực hiện"
@@ -1196,9 +1289,8 @@ msgstr "Các dịch vụ bao gồm"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__contract_state__futur
-#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__futur
 msgid "Incoming"
-msgstr "Sắp về"
+msgstr "Nhập về"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -1212,11 +1304,17 @@ msgid "Intake Manifold Gasket Replacement"
 msgstr "Thay thế gioăng cổ góp ống hút"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__is_mail_template_editor
+msgid "Is Editor"
+msgstr "Là biên tập"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_is_follower
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_is_follower
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_is_follower
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_is_follower
 msgid "Is Follower"
-msgstr "Trở thành người theo dõi"
+msgstr "Là người theo dõi"
 
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_junior
@@ -1233,6 +1331,11 @@ msgstr "Km"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__default_fuel_type__lpg
 msgid "LPG"
 msgstr "LPG"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__lang
+msgid "Language"
+msgstr "Ngôn ngữ"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_state
@@ -1254,10 +1357,11 @@ msgstr "Chỉ số công tơ mét cuối"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__write_uid
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_category__write_uid
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__write_uid
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__write_uid
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type__write_date
@@ -1269,6 +1373,7 @@ msgstr "Last Updated by"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__write_date
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_category__write_date
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__write_date
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__write_date
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__write_date
 msgid "Last Updated on"
@@ -1278,7 +1383,7 @@ msgstr "Cập nhật lần cuối vào"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Late Activities"
-msgstr "Hoạt động trễ"
+msgstr "Hoạt động chậm trễ"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_contract_leasing
@@ -1288,7 +1393,7 @@ msgstr "Cho thuê"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_action
 msgid "Let's create your first vehicle."
-msgstr "Let's create your first vehicle."
+msgstr "Hãy tạo phương tiện đầu tiên."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__license_plate
@@ -1302,9 +1407,14 @@ msgid "License plate number of the vehicle (i = plate number for a car)"
 msgstr "Biển số của phương tiện (vd: 16 = Biển Hải Phòng)"
 
 #. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
+msgid "Load template"
+msgstr "Tải mẫu"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__location
 msgid "Location"
-msgstr "Địa điểm"
+msgstr "Vị trí"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__location
@@ -1314,12 +1424,22 @@ msgstr "Vị trí của phương tiện (ga-ra, ...)"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__image_128
 msgid "Logo"
-msgstr "Biểu tượng"
+msgstr "Logo"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
 msgid "MODELS"
-msgstr "MODELS"
+msgstr "DÒNG XE"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__template_id
+msgid "Mail Template"
+msgstr "Mẫu mail"
+
+#. module: fleet
+#: model:ir.actions.server,name:fleet.action_fleet_vehicle_send_mail
+msgid "Mail to Driver"
+msgstr "Email cho tài xế"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
@@ -1356,22 +1476,25 @@ msgstr "Nhà sản xuất"
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_brand_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_model_brand_menu
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 msgid "Manufacturers"
-msgstr "Manufacturers"
+msgstr "Nhà sản xuất"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_has_error
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_has_error
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_has_error
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_has_error
 msgid "Message Delivery error"
-msgstr "Thông báo gửi đi gặp lỗi"
+msgstr "Lỗi gửi tin nhắn"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_ids
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_ids
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_ids
 msgid "Messages"
-msgstr "Thông báo"
+msgstr "Tin nhắn"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__model_id
@@ -1381,7 +1504,7 @@ msgstr "Thông báo"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Model"
-msgstr "Model"
+msgstr "Mô hình"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_category_view_form
@@ -1392,7 +1515,7 @@ msgstr "Danh mục dòng xe"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__model_count
 msgid "Model Count"
-msgstr "Model Count"
+msgstr "Số dòng xe"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_form
@@ -1436,8 +1559,9 @@ msgstr "Hàng tháng"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__my_activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__my_activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__my_activity_date_deadline
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Hạn chót hoạt động"
+msgstr "Hạn chót hoạt động của tôi"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type__name
@@ -1451,16 +1575,12 @@ msgid "Name"
 msgstr "Tên"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_renewal_name
-msgid "Name of contract to renew soon"
-msgstr "Tên của hợp đồng để gia hạn"
-
-#. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Need Action"
-msgstr "Cần có hành động"
+msgstr "Cần có tác vụ"
 
 #. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__futur
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__new
 msgid "New"
 msgstr "Mới"
@@ -1474,20 +1594,23 @@ msgstr "Đề nghị mới"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_calendar_event_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_calendar_event_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_calendar_event_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Sự kiện lịch hoạt động tiếp theo"
+msgstr "Sự kiện trên lịch cho hoạt động tiếp theo"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_date_deadline
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Hạn chót cho hành động kế tiếp"
+msgstr "Hạn chót cho hoạt động tiếp theo"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_summary
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_summary
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_summary
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_summary
 msgid "Next Activity Summary"
 msgstr "Tóm tắt hoạt động tiếp theo"
 
@@ -1495,8 +1618,9 @@ msgstr "Tóm tắt hoạt động tiếp theo"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_type_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_type_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_type_id
 msgid "Next Activity Type"
-msgstr "Kiểu hoạt động kế tiếp"
+msgstr "Loại hoạt động tiếp theo"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__future_driver_id
@@ -1523,12 +1647,12 @@ msgstr "Không có dữ liệu để phân tích"
 #. odoo-python
 #: code:addons/fleet/models/fleet_vehicle.py:0
 msgid "No plate"
-msgstr "No plate"
+msgstr "Không biển số"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__service_activity__none
 msgid "None"
-msgstr "Không "
+msgstr "Không"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -1545,8 +1669,9 @@ msgstr "Ghi chú"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_needaction_counter
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_needaction_counter
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_needaction_counter
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng tác vụ"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__doors
@@ -1557,22 +1682,25 @@ msgstr "Số cửa của phương tiện"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_has_error_counter
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_has_error_counter
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_has_error_counter
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_has_error_counter
 msgid "Number of errors"
-msgstr "Số lỗi"
+msgstr "Số lượng lỗi"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_needaction_counter
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_needaction_counter
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Số thông báo cần xử lý"
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Số tin nhắn cần xử lý"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_has_error_counter
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_has_error_counter
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__message_has_error_counter
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Số lượng tin gửi đi bị lỗi"
+msgstr "Số tin nhắn bị gửi lỗi"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__seats
@@ -1624,12 +1752,12 @@ msgstr "Chỉ số của công tơ mét của phương tiện tại thời đi�
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_odometer_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_odometer_menu
 msgid "Odometers"
-msgstr "Odometers"
+msgstr "Công tơ mét"
 
 #. module: fleet
 #: model:res.groups,name:fleet.fleet_group_user
 msgid "Officer: Manage all vehicles"
-msgstr ""
+msgstr "Người phụ trách: Quản lý tất cả phương tiện"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_31
@@ -1647,6 +1775,24 @@ msgid "Omnium"
 msgstr "Omnium"
 
 #. module: fleet
+#. odoo-python
+#: code:addons/fleet/models/fleet_vehicle_model.py:0
+msgid "Operation not supported."
+msgstr "Thao tác không được hỗ trợ."
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_send_mail__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+"Ngôn ngữ dịch tuỳ chọn (mã ISO) để chọn khi gửi email. Nếu không đặt, phiên "
+"bản tiếng Anh sẽ được sử dụng. Đây luôn là biểu thức phần giữ chỗ cung cấp "
+"ngôn ngữ thích hợp, VD: {{ object.partner_id.lang }}."
+
+#. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_15
 msgid "Options"
 msgstr "Tùy chọn"
@@ -1654,7 +1800,7 @@ msgstr "Tùy chọn"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__order_date
 msgid "Order Date"
-msgstr ""
+msgstr "Ngày đặt hàng"
 
 #. module: fleet
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_ordered
@@ -1688,12 +1834,12 @@ msgstr "Kế hoạch thay xe đạp"
 #: model:ir.model.fields,field_description:fleet.field_res_partner__plan_to_change_car
 #: model:ir.model.fields,field_description:fleet.field_res_users__plan_to_change_car
 msgid "Plan To Change Car"
-msgstr "Plan To Change Car"
+msgstr "Kế hoạch đổi xe"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Planned for Change"
-msgstr "Planned for Change"
+msgstr "Đã có kế hoạch thay đổi"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__plug_in_hybrid_diesel
@@ -1724,14 +1870,26 @@ msgid "Power Steering Pump Replacement"
 msgstr "Thay thế bơm trợ lái"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__power_unit
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__power_unit
+msgid "Power Unit"
+msgstr "Đơn vị điện"
+
+#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__power
 msgid "Power in kW of the vehicle"
 msgstr "Công suất đo bằng Kilowat của phương tiện"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__vehicle_properties
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Properties"
+msgstr "Thuộc tính"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__net_car_value
 msgid "Purchase Value"
-msgstr "Purchase Value"
+msgstr "Giá trị mua"
 
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_purchased
@@ -1744,14 +1902,20 @@ msgid "Radiator Repair"
 msgstr "Sửa chữa lò sưởi"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__vehicle_range
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__vehicle_range
+msgid "Range"
+msgstr "Phạm vi"
+
+#. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_action
 msgid "Ready to manage your fleet more efficiently?"
-msgstr ""
+msgstr "Bạn đã sẵn sàng nâng cao hiệu quả quản lý đội xe hay chưa?"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_generated
 msgid "Recurring Cost"
-msgstr "Recurring Cost"
+msgstr "Chi phí định kỳ"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_frequency
@@ -1761,7 +1925,7 @@ msgstr "Tần suất phí thường xuyên"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__ins_ref
 msgid "Reference"
-msgstr "Mã phiếu"
+msgstr "Mã tham chiếu"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_refueling
@@ -1772,6 +1936,16 @@ msgstr "Đổ nhiên liệu"
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_registered
 msgid "Registered"
 msgstr "Đã đăng kiểm"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__acquisition_date
+msgid "Registration Date"
+msgstr "Ngày đăng ký"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__render_model
+msgid "Rendering Model"
+msgstr "Kết xuất mô hình"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
@@ -1801,12 +1975,7 @@ msgstr "Báo cáo"
 #. module: fleet
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_reserve
 msgid "Reserve"
-msgstr "Đặt trước"
-
-#. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-msgid "Reset To Draft"
-msgstr "Đặt lại dự thảo"
+msgstr "Dự trữ"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__residual_value
@@ -1826,14 +1995,20 @@ msgstr "Giá trị còn lại theo %"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__user_id
 msgid "Responsible"
-msgstr "Phụ trách"
+msgstr "Người phụ trách"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_user_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_user_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_user_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_user_id
 msgid "Responsible User"
 msgstr "Người phụ trách"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
+msgid "Restore"
+msgstr "Khôi phục"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_38
@@ -1851,15 +2026,37 @@ msgid "Rotor Replacement"
 msgstr "Thay Rô-to"
 
 #. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__open
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__running
 msgid "Running"
 msgstr "Đang chạy"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
+msgid "Save as new template"
+msgstr "Lưu mẫu mới"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__seats
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__seats
 msgid "Seats Number"
 msgstr "Số ghế"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
+msgid "Send"
+msgstr "Gửi"
+
+#. module: fleet
+#. odoo-python
+#: code:addons/fleet/models/fleet_vehicle.py:0
+msgid "Send Email"
+msgstr "Gửi email"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle_send_mail
+msgid "Send mails to Drivers"
+msgstr "Gửi email cho tài xế"
 
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_senior
@@ -1882,7 +2079,7 @@ msgstr "Dịch vụ"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__service_activity
 msgid "Service Activity"
-msgstr ""
+msgstr "Hoạt động dịch vụ"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__service_type_id
@@ -1903,7 +2100,7 @@ msgstr "Loại dịch vụ"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_activity
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Services"
-msgstr "Các dịch vụ"
+msgstr "Dịch vụ"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_graph
@@ -1927,13 +2124,13 @@ msgstr "Các dịch vụ cho phương tiện"
 #: model:ir.actions.act_window,name:fleet.fleet_config_settings_action
 #: model:ir.ui.menu,name:fleet.fleet_config_settings_menu
 msgid "Settings"
-msgstr "Thiết lập"
+msgstr "Cài đặt"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Show all records which has next action date is before today"
-msgstr "Hiển thị tất cả dữ liệu có ngày xử lý tiếp theo trước ngày hôm nay"
+msgstr "Hiển thị tất cả bản ghi có ngày xử lý tiếp theo trước ngày hôm nay"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_6
@@ -1955,11 +2152,6 @@ msgstr "Xác định ngày kết thúc của %s"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__state
 msgid "Stage"
 msgstr "Giai đoạn"
-
-#. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-msgid "Start Contract"
-msgstr "Start Contract"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__date_start
@@ -1994,6 +2186,7 @@ msgstr "Trạng thái"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_state
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_state
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__activity_state
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__activity_state
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
@@ -2001,9 +2194,14 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Trạng thái dựa trên hoạt động\n"
-"Quá hạn: Ngày đến hạn phải được chuyển\n"
+"Quá hạn: Hạn chót hạn đã qua\n"
 "Hôm nay: Hôm nay là ngày phải thực hiện\n"
-"Kế hoạch: Các hoạt động trong tương lai."
+"Kế hoạch: Cần thực hiện trong tương lai."
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__subject
+msgid "Subject"
+msgstr "Tiêu đề"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vechicle_costs_report_view_tree
@@ -2018,19 +2216,19 @@ msgstr "Lốp mùa hè"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__name
 msgid "Tag Name"
-msgstr "Tên Từ khóa"
+msgstr "Tên thẻ"
 
 #. module: fleet
 #: model:ir.model.constraint,message:fleet.constraint_fleet_vehicle_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Tên thẻ đã tồn tại!"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_tag_action
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__tag_ids
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_tag_menu
 msgid "Tags"
-msgstr "Tag"
+msgstr "Thẻ"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -2046,7 +2244,7 @@ msgstr "Danh sách thuế"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__notes
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Terms and Conditions"
-msgstr "Điều khoản và Điều kiện"
+msgstr "Điều khoản và điều kiện"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__country_code
@@ -2054,8 +2252,20 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
-"The ISO country code in two chars. \n"
-"You can use this field for quick search."
+"Mã quốc gia ISO với hai ký tự.\n"
+"Bạn có thể sử dụng trường này để tìm kiếm nhanh."
+
+#. module: fleet
+#. odoo-python
+#: code:addons/fleet/wizard/fleet_vehicle_send_mail.py:0
+msgid "The following vehicle drivers are missing an email address: %s."
+msgstr "Các tài xế sau thiếu địa chỉ email: %s."
+
+#. module: fleet
+#. odoo-python
+#: code:addons/fleet/models/fleet_vehicle.py:0
+msgid "The odometer value cannot be lower than the previous one."
+msgstr "Giá trị công tơ mét không thể thấp hơn giá trị trước đó."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_43
@@ -2064,8 +2274,11 @@ msgstr "Thay thế bộ ổn nhiệt"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__next_assignation_date
-msgid "This is the date at which the car will be available, if not set it means available instantly"
-msgstr "This is the date at which the car will be available, if not set it means available instantly"
+msgid ""
+"This is the date at which the car will be available, if not set it means "
+"available instantly"
+msgstr ""
+"Đây là ngày xe có lịch trống, nếu không đặt nghĩa là xe có lịch trống ngay"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_44
@@ -2085,7 +2298,7 @@ msgstr "Dịch vụ lốp"
 #. module: fleet
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_to_order
 msgid "To Order"
-msgstr "Để đặt"
+msgstr "Cần đặt hàng"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__service_activity__today
@@ -2096,7 +2309,7 @@ msgstr "Hôm nay"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Today Activities"
-msgstr "Các oạt động hôm nay"
+msgstr "Hoạt động hôm nay"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_tree
@@ -2107,11 +2320,6 @@ msgstr "Tổng"
 #: model:fleet.service.type,name:fleet.type_service_service_13
 msgid "Total expenses (Excluding VAT)"
 msgstr "Tổng chi phí (Không gồm VAT)"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_renewal_total
-msgid "Total of contracts due or overdue minus one"
-msgstr "Tổng các hợp đồng đến hạn hoặc quá hạn trừ một"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_17
@@ -2131,12 +2339,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__trailer_hook
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__trailer_hook
 msgid "Trailer Hitch"
-msgstr "Móc rơ-mooc"
+msgstr "Đầu móc rơ-mooc"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Trailer Hook"
-msgstr ""
+msgstr "Móc rơ-mooc"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__transmission
@@ -2162,7 +2370,7 @@ msgstr "Thay thế hộp số"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__frame_type__trapez
 msgid "Trapez"
-msgstr ""
+msgstr "Trapez"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_subtype_id
@@ -2173,14 +2381,15 @@ msgstr "Loại"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_exception_decoration
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_exception_decoration
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__activity_exception_decoration
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Loại hoạt động ngoại lệ trên hồ sơ."
+msgstr "Loại hoạt động ngoại lệ trong bản ghi."
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_service_types_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_service_types_menu
 msgid "Types"
-msgstr "Types"
+msgstr "Loại"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__vin_sn
@@ -2194,6 +2403,8 @@ msgid "Unit"
 msgstr "Đơn vị"
 
 #. module: fleet
+#. odoo-python
+#: code:addons/fleet/models/fleet_vehicle_model.py:0
 #: model:ir.model,name:fleet.model_fleet_vehicle
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__vehicle_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_report__vehicle_id
@@ -2214,7 +2425,7 @@ msgstr "Phương tiện"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_log_contract
 msgid "Vehicle Contract"
-msgstr "Vehicle Contract"
+msgstr "Hợp đồng phương tiện"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__vehicle_count
@@ -2224,17 +2435,22 @@ msgstr "Số phương tiện"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__description
 msgid "Vehicle Description"
-msgstr "Vehicle Description"
+msgstr "Mô tả phương tiện"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 msgid "Vehicle Information"
-msgstr "Vehicle Information"
+msgstr "Thông tin phương tiện"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_report__name
 msgid "Vehicle Name"
-msgstr "Vehicle Name"
+msgstr "Tên phương tiện"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__vehicle_properties_definition
+msgid "Vehicle Properties"
+msgstr "Thuộc tính phương tiện"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_state
@@ -2256,13 +2472,21 @@ msgstr "Thẻ xe"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__vehicle_type
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_report__vehicle_type
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__vehicle_type
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 msgid "Vehicle Type"
-msgstr "Vehicle Type"
+msgstr "Loại phương tiện"
+
+#. module: fleet
+#. odoo-python
+#: code:addons/fleet/wizard/fleet_vehicle_send_mail.py:0
+msgid "Vehicle: Mass mail drivers"
+msgstr "Phương tiện: Gửi email hàng loạt cho tài xế"
 
 #. module: fleet
 #. odoo-python
 #: code:addons/fleet/models/fleet_vehicle_model.py:0
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_action
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__vehicle_ids
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_tree
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_activity
@@ -2326,7 +2550,7 @@ msgstr "Thay thế bơm nước"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__frame_type__wave
 msgid "Wave"
-msgstr ""
+msgstr "Wave"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__weekly
@@ -2351,7 +2575,7 @@ msgstr "Thay gạt nước kính chắn gió"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_search
 msgid "With Models"
-msgstr ""
+msgstr "Kèm dòng xe"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -2366,7 +2590,12 @@ msgstr "Viết các thông tin khác liên quan đến dịch vụ đã hoàn th
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Write here any other information related to this vehicle"
-msgstr "Write here any other information related to this vehicle"
+msgstr "Viết các thông tin khác liên quan tới phương tiện tại đây"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
+msgid "Write your message here..."
+msgstr "Viết lời nhắn của bạn ở đây..."
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__model_year
@@ -2381,7 +2610,7 @@ msgstr "Hàng năm"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
 msgid "You can add various odometer entries for all vehicles."
-msgstr "Bạn có thể thêm các mục đo đường khác nhau cho tất cả các phương tiện."
+msgstr "Bạn có thể các mục nhập công tơ mét khác nhau cho tất cả phương tiện."
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_state_action
@@ -2395,13 +2624,15 @@ msgstr ""
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
 msgid "You can define several models (e.g. A3, A4) for each make (Audi)."
-msgstr "Bạn có thể xác định một số kiểu máy (ví dụ: A3, A4) cho mỗi nhãn hiệu (Audi)."
+msgstr ""
+"Bạn có thể xác định một số kiểu máy (ví dụ: A3, A4) cho mỗi nhãn hiệu "
+"(Audi)."
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "e.g. Model S"
-msgstr "vd. Model S"
+msgstr "VD: Mô hình S"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -2414,9 +2645,10 @@ msgid "e.g. Tesla"
 msgstr "vd. Tesla"
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
-msgid "img"
-msgstr ""
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__power_unit__power
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__power_unit__power
+msgid "kW"
+msgstr "kW"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__odometer_unit__kilometers

@@ -1,36 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sales_team
-#
+# 
 # Translators:
-# Ryanto The <ry.the77@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Abe Manyo, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
-"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-msgstr ""
-
-#. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
-msgid "<span class=\"text-bg-danger\">Archived</span>"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
@@ -51,7 +44,7 @@ msgstr "<span>Lihat</span>"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_needaction
 msgid "Action Needed"
-msgstr "Perlu Tindakan"
+msgstr "Tindakan Diperluka"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__active
@@ -67,38 +60,74 @@ msgstr "Jenis Aktivitas"
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
 msgid "Add a Team Member"
-msgstr ""
+msgstr "Tambahkan Anggota Tim"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__crm_team_member_ids
-msgid "Add members to automatically assign their documents to this sales team."
+msgid ""
+"Add members to automatically assign their documents to this sales team."
 msgstr ""
+"Tambahkan anggota untuk secara otomatis menetapkan dokumen mereka ke tim "
+"sales."
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
-msgid "Adding %(user_name)s in this team would remove him/her from its current team %(team_name)s."
+msgid ""
+"Adding %(user_name)s in this team would remove him/her from its current team"
+" %(team_name)s."
 msgstr ""
+"Menambahkan %(user_name)s ke tim ini akan menghapus mereka dari tim mereka "
+"saat ini %(team_name)s."
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team_member.py:0
-msgid "Adding %(user_name)s in this team would remove him/her from its current teams %(team_names)s."
+msgid ""
+"Adding %(user_name)s in this team would remove him/her from its current "
+"teams %(team_names)s."
 msgstr ""
+"Menambahkan %(user_name)s ke tim ini akan menghapus mereka dari tim mereka "
+"saat ini %(team_names)s."
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
-msgid "Adding %(user_names)s in this team would remove them from their current teams (%(team_names)s)."
+msgid ""
+"Adding %(user_names)s in this team would remove them from their current "
+"teams (%(team_names)s)."
 msgstr ""
+"Menambahkan %(user_names)s ke tim ini akan menghapus mereka dari tim mereka "
+"saat ini (%(team_names)s)."
+
+#. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team_member.py:0
+msgid ""
+"Adding %(user_name)s in this team will remove them from %(team_names)s. "
+"Working in multiple teams? Activate the option under Configuration>Settings."
+msgstr ""
+"Menambahkan %(user_name)s di tim ini akan menghapus mereka dari "
+"%(team_names)s. Bekerja di lebih dari satu tim? Aktifkan opsi di bawah "
+"Konfigurasi>Pengaturan."
+
+#. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team.py:0
+msgid ""
+"Adding %(user_names)s in this team will remove them from %(team_names)s."
+msgstr ""
+"Menambahkan %(user_names)s di tim ini akan menghapus mereka dari "
+"%(team_names)s."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Administrator"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
@@ -126,13 +155,13 @@ msgstr "Tombol Besar yang Cantik :)"
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_tag
 msgid "CRM Tag"
-msgstr ""
+msgstr "Tag CRM"
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 msgid "Cannot delete default team \"%s\""
-msgstr ""
+msgstr "Tidak dapat menghapus tim default \"%s\""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__color
@@ -162,24 +191,19 @@ msgid "Consulting"
 msgstr "Konsultasi"
 
 #. module: sales_team
-#: model:ir.model,name:sales_team.model_res_partner
-msgid "Contact"
-msgstr "Kontak"
-
-#. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
 msgid "Create CRM Tags"
-msgstr ""
+msgstr "Buat Tag-Tag CRM"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
 msgid "Create a Sales Team"
-msgstr ""
+msgstr "Buat Tim Sales"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
 msgid "Create an Activity Type"
-msgstr ""
+msgstr "Buat Tipe Kegiatan"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_uid
@@ -203,18 +227,18 @@ msgstr "Mata Uang"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_button_name
 msgid "Dashboard Button"
-msgstr "Tombol Dasbor"
+msgstr "Tombol Dashboard"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_data
 msgid "Dashboard Graph Data"
-msgstr "Data Grafik Dasbor"
+msgstr "Data Grafik Dashboard"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
 msgid "Define a new sales team"
-msgstr ""
+msgstr "Definisikan tim sales baru"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor5
@@ -240,13 +264,11 @@ msgstr "Anggota Favorit"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
-msgid "Favorite teams to display them in the dashboard and access them easily."
-msgstr "Tim favorit untuk ditampilkan di dasbor dan dengan mudah mengakses mereka."
-
-#. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "Follow this salesteam to automatically track the events associated to users of this team."
-msgstr "Ikuti tim penjualan ini untuk secara otomatis melacak kejadian terkait dengan pengguna dari tim ini."
+msgid ""
+"Favorite teams to display them in the dashboard and access them easily."
+msgstr ""
+"Tim favorit untuk ditampilkan di dashboard dan dengan mudah mengakses "
+"mereka."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
@@ -286,8 +308,12 @@ msgstr "ID"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_membership_multi
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__is_membership_multi
-msgid "If True, users may belong to several sales teams. Otherwise membership is limited to a single sales team."
+msgid ""
+"If True, users may belong to several sales teams. Otherwise membership is "
+"limited to a single sales team."
 msgstr ""
+"Jika TRUE, user dapat berada di lebih dari satu tim sales. Jika tidak, "
+"membership dibatasi ke satu tim sales saja."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
@@ -302,15 +328,13 @@ msgid "If checked, some messages have a delivery error."
 msgstr "Jika dicentang, beberapa pesan mempunyai kesalahan dalam pengiriman."
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_res_partner__team_id
-#: model:ir.model.fields,help:sales_team.field_res_users__team_id
-msgid "If set, this Sales Team will be used for sales and assignments related to this partner"
-msgstr ""
-
-#. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
-msgid "If the active field is set to false, it will allow you to hide the Sales Team without removing it."
+msgid ""
+"If the active field is set to false, it will allow you to hide the Sales "
+"Team without removing it."
 msgstr ""
+"Bila field aktif disetel sebagai false, akan memugkinkan Anda untuk "
+"menyembunyikan Tim Sales tanpa menghapus tim. "
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_1920
@@ -320,7 +344,7 @@ msgstr "Gambar"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_128
 msgid "Image (128)"
-msgstr ""
+msgstr "Image (128)"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor4
@@ -331,36 +355,40 @@ msgstr "Informasi"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_is_follower
 msgid "Is Follower"
-msgstr "Pengikut"
+msgstr "Adalah Follower"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__write_uid
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__write_uid
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__write_uid
 msgid "Last Updated by"
-msgstr "Terakhir diperbarui oleh"
+msgstr "Terakhir Diperbarui oleh"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__write_date
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__write_date
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__write_date
 msgid "Last Updated on"
-msgstr "Terakhir diperbarui pada"
+msgstr "Terakhir Diperbarui pada"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_users__sale_team_id
-msgid "Main user sales team. Used notably for pipeline, or to set sales team in invoicing or subscription."
+msgid ""
+"Main user sales team. Used notably for pipeline, or to set sales team in "
+"invoicing or subscription."
 msgstr ""
+"User utama tim sales. Digunakan terutama untuk pipeline, atau untuk "
+"menetapkan tim sales di faktur atau langganan."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
 msgid "Member Company"
-msgstr ""
+msgstr "Anggota Perusahaan"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__member_warning
 msgid "Member Warning"
-msgstr ""
+msgstr "Peringatan Anggota"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -370,7 +398,7 @@ msgstr "Anggota"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_warning
 msgid "Membership Issue Warning"
-msgstr ""
+msgstr "Peringatan Masalah Membership"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
@@ -387,13 +415,13 @@ msgstr "Pesan"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__mobile
 msgid "Mobile"
-msgstr "Ponsel"
+msgstr "Telepon Mobile"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_membership_multi
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__is_membership_multi
 msgid "Multiple Memberships Allowed"
-msgstr ""
+msgstr "Lebih Dari Satu Membership Diizinkan"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__name
@@ -404,7 +432,7 @@ msgstr "Nama"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction_counter
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Jumlah Tindakan"
+msgstr "Jumlah Action"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error_counter
@@ -415,14 +443,14 @@ msgstr "Jumlah kesalahan"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction_counter
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Jumlah pesan yang butuh tindakan"
+msgid "Number of messages requiring action"
+msgstr "Jumlah pesan yang membutuhkan tindakan"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error_counter
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Jumlah dari pesan dengan kesalahan pengiriman"
+msgstr "Jumlah pesan dengan kesalahan pengiriman"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor8
@@ -442,7 +470,7 @@ msgstr "POS"
 #. module: sales_team
 #: model:crm.team,name:sales_team.crm_team_1
 msgid "Pre-Sales"
-msgstr ""
+msgstr "Pra-Penjualan"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor1
@@ -453,7 +481,7 @@ msgstr "Produk"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__rating_ids
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Rating"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
@@ -464,7 +492,7 @@ msgstr "Penjualan"
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_tree
 msgid "Sales Men"
-msgstr ""
+msgstr "Salesmen"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
@@ -475,8 +503,6 @@ msgstr "Sales Person"
 #: model:ir.model,name:sales_team.model_crm_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__name
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__crm_team_id
-#: model:ir.model.fields,field_description:sales_team.field_res_partner__team_id
-#: model:ir.model.fields,field_description:sales_team.field_res_users__team_id
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_tree
@@ -486,18 +512,18 @@ msgstr "Tim Penjualan"
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team_member
 msgid "Sales Team Member"
-msgstr ""
+msgstr "Anggota Tim Sales"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_ids
 #: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_member_ids
 msgid "Sales Team Members"
-msgstr ""
+msgstr "Anggota Tim Sales"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_all_ids
 msgid "Sales Team Members (incl. inactive)"
-msgstr ""
+msgstr "Anggota Tim Sales (termasuk yang tidak aktif)"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_config
@@ -514,7 +540,7 @@ msgstr "Penjual"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_ids
 msgid "Salespersons"
-msgstr ""
+msgstr "Salesperson"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
@@ -535,12 +561,12 @@ msgstr "Urutan"
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor3
 msgid "Services"
-msgstr "Jasa"
+msgstr "Layanan"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_favorite
 msgid "Show on dashboard"
-msgstr "Tampilkan pada dasbor"
+msgstr "Tampilkan pada dashboard"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor2
@@ -555,7 +581,7 @@ msgstr "Nama Tag"
 #. module: sales_team
 #: model:ir.model.constraint,message:sales_team.constraint_crm_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Nama tag sudah ada!"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.sales_team_crm_tag_action
@@ -567,7 +593,7 @@ msgstr "Label"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Details"
-msgstr ""
+msgstr "Detail Tim"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
@@ -583,7 +609,7 @@ msgstr "Anggota tim"
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
 msgid "Team Members are salespersons assigned to specific teams."
-msgstr ""
+msgstr "Anggota Tim adalah salesperson yang ditugaskan ke tim-tim spesifik."
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_pipeline
@@ -598,18 +624,26 @@ msgstr "Warna saluran ini"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__company_id
 msgid "The default company for this user."
-msgstr ""
+msgstr "Perusahaan default untuk user ini."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
-msgid "Those represent the different categories of things you have to do (e.g. \"Call\" or \"Prepare meeting\")."
+msgid ""
+"Those represent the different categories of things you have to do (e.g. "
+"\"Call\" or \"Prepare meeting\")."
 msgstr ""
+"Mereka mewakili kategori-kategori berbeda untuk kegiatan yang harus Anda "
+"lakukan (contohnya \"Telepon\" atau \"Siapkan meeting\")."
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
-msgid "To add a Salesperson into multiple Teams, activate the Multi-Team option in settings."
+msgid ""
+"To add a Salesperson into multiple Teams, activate the Multi-Team option in "
+"settings."
 msgstr ""
+"Untuk menambahkan Salesperson ke lebih dari satu Tim, aktifkan opsi Multi-"
+"Tim di Pengaturan."
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor6
@@ -618,25 +652,31 @@ msgstr "Pelatihan"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_in_teams_ids
-msgid "UX: Give users not to add in the currently chosen team to avoid duplicates"
+msgid ""
+"UX: Give users not to add in the currently chosen team to avoid duplicates"
 msgstr ""
+"UX: Beritahu user untuk tidak menambahkan tim yang saat ini dipilih untuk "
+"menghindari duplikat"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_company_ids
 msgid "UX: Limit to team company or all if no company"
-msgstr ""
+msgstr "UX: Batasi ke perusahaan tim atau semua bila tidak ada perusahaan"
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 msgid "Undefined graph model for Sales Team: %s"
-msgstr ""
+msgstr "Model grafik undefined untuk Tim Sales: %s"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
-msgid "Use Sales Teams to organize your sales departments and draw up reports."
-msgstr "Gunakan Sales Teams untuk mengatur departemen sales Anda dan membuat laporan."
+msgid ""
+"Use Sales Teams to organize your sales departments and draw up reports."
+msgstr ""
+"Gunakan Sales Teams untuk mengatur departemen sales Anda dan membuat "
+"laporan."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
@@ -650,8 +690,12 @@ msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
-msgid "Use Tags to manage and track your Opportunities (product structure, sales type, ...)"
+msgid ""
+"Use Tags to manage and track your Opportunities (product structure, sales "
+"type, ...)"
 msgstr ""
+"Gunakan Tag untuk mengelola dan melacak Opportunities Anda (struktur produk,"
+" tipe sales, ...)"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
@@ -661,17 +705,17 @@ msgstr "Pengguna"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_company_ids
 msgid "User Company"
-msgstr ""
+msgstr "Perusahaan User"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_in_teams_ids
 msgid "User In Teams"
-msgstr ""
+msgstr "User Di Tim"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
 msgid "User Sales Team"
-msgstr ""
+msgstr "User Tim Sales"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
@@ -686,7 +730,7 @@ msgstr "Pengguna: Hanya Dokumen Milik Sendiri"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
 msgid "Users assigned to this team."
-msgstr ""
+msgstr "User ditetapkan ke tim ini."
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.salesteam_website_sales
@@ -695,36 +739,52 @@ msgstr "Website"
 
 #. module: sales_team
 #. odoo-python
-#: code:addons/sales_team/models/crm_team_member.py:0
-msgid "You are trying to create duplicate membership(s). We found that %(duplicates)s already exist(s)."
+#: code:addons/sales_team/models/crm_team.py:0
+msgid ""
+"Working in multiple teams? Activate the option under Configuration>Settings."
 msgstr ""
+"Bekerja di lebih dari satu tim? Aktifkan opsi di bawah Konfigurasi > "
+"Pengaturan."
+
+#. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team_member.py:0
+msgid ""
+"You are trying to create duplicate membership(s). We found that "
+"%(duplicates)s already exist(s)."
+msgstr ""
+"Anda sedang mencoba untuk membuat membership duplikat. Kita menemukan bahwa "
+"%(duplicates)s sudah dibuat."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "e.g. North America"
-msgstr ""
+msgstr "contoh Amerika Utara"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
 msgid "e.g. Services"
-msgstr ""
-
-#. module: sales_team
-#: model:crm.team,name:sales_team.ebay_sales_team
-msgid "eBay"
-msgstr ""
+msgstr "contoh Layanan"
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
-msgid "the user will have access to all records of everyone in the sales application."
-msgstr "pengguna akan memiliki akses ke data semua orang di aplikasi penjualan."
+msgid ""
+"the user will have access to all records of everyone in the sales "
+"application."
+msgstr ""
+"pengguna akan memiliki akses ke data semua orang di aplikasi penjualan."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman
 msgid "the user will have access to his own data in the sales application."
-msgstr "pengguna akan memiliki akses ke datanya sendiri di aplikasi penjualan."
+msgstr ""
+"pengguna akan memiliki akses ke datanya sendiri di aplikasi penjualan."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager
-msgid "the user will have an access to the sales configuration as well as statistic reports."
-msgstr "pengguna akan memiliki akses ke konfigurasi penjualan serta laporan statistik."
+msgid ""
+"the user will have an access to the sales configuration as well as statistic"
+" reports."
+msgstr ""
+"pengguna akan memiliki akses ke konfigurasi penjualan serta laporan "
+"statistik."

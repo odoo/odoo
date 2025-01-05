@@ -1,47 +1,52 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_links
-#
+# 
 # Translators:
-# Kristoffer Grundström <lovaren@gmail.com>, 2022
-# Claes-Johan Dahlin, 2022
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
-# Simon S, 2022
-# Kim Asplund <kim.asplund@gmail.com>, 2022
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
-"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
-msgid " clicks"
-msgstr "klick"
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
-msgid " countries"
-msgstr "länder"
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 msgid "# of clicks"
 msgstr "# klick"
+
+#. module: website_links
+#. odoo-javascript
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
+msgid "%(clicks)s clicks"
+msgstr "%(clicks)s klick"
+
+#. module: website_links
+#. odoo-javascript
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
+msgid "%(count)s countries"
+msgstr "%(count)s länder"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+#: model_terms:ir.ui.view,arch_db:website_links.graphs
+msgid "<i class=\"fa fa-copy me-2\"/>Copy"
+msgstr "<i class=\"fa fa-copy me-2\"/>Kopia"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "<span class=\"text-muted me-1\">Sort By:</span>"
+msgstr "<span class=\"text-muted me-1\">Sortera efter:</span>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -51,17 +56,22 @@ msgstr "<strong>Kampanj</strong>"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Medium</strong>"
-msgstr ""
+msgstr "<strong>Medium</strong>"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.graphs
+msgid "<strong>Name</strong>"
+msgstr "<strong>Namn</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Original URL</strong>"
-msgstr ""
+msgstr "<strong>Original URL</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Redirected URL</strong>"
-msgstr ""
+msgstr "<strong>Omdirigerad URL</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -71,58 +81,55 @@ msgstr "<strong>Källa</strong>"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Tracked Link</strong>"
-msgstr ""
+msgstr "<strong>Spårad länk</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "All Time"
-msgstr ""
+msgstr "Hela tiden"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid ""
-"Campaign <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the context of your link. It might be an event you want to promote or a "
-"special promotion.\"/>"
-msgstr ""
+msgid "Campaign"
+msgstr "Kampanj"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
-msgid "Copied"
-msgstr "Kopierad"
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 msgid "Copy"
 msgstr "Kopiera"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
-#: model_terms:ir.ui.view,arch_db:website_links.graphs
-msgid "Edit code"
-msgstr ""
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
-msgid "Generating link..."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Create a Link tracker"
+msgstr "Skapa en Link spårning"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "Get tracked link"
-msgstr ""
+msgid "Create another Tracker"
+msgstr "Skapa ytterligare Spårning"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
-msgid "Icon"
-msgstr "Ikon"
+#: code:addons/website_links/static/src/xml/website_links_tags_wrapper.xml:0
+msgid "Create option \""
+msgstr "Skapa alternativ \""
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+#: model_terms:ir.ui.view,arch_db:website_links.graphs
+msgid "Edit code"
+msgstr "Redigera kod"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Generate Link Tracker"
+msgstr "Skapa Länkspårning"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Last Clicks"
+msgstr "Senast klickade"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -135,26 +142,28 @@ msgid "Last Week"
 msgstr "Förra veckan"
 
 #. module: website_links
+#. odoo-javascript
+#: code:addons/website_links/static/src/js/website_links.js:0
+#: code:addons/website_links/static/src/js/website_links_code_editor.js:0
+msgid "Link Copied!"
+msgstr "Länk kopierad!"
+
+#. module: website_links
 #: model:ir.model,name:website_links.model_link_tracker
 #: model:ir.ui.menu,name:website_links.menu_link_tracker
-#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Link Tracker"
 msgstr "Länkspårning"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid ""
-"Medium <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the medium used to share your link. It might be an email, or a Facebook Ads "
-"for instance.\"/>"
-msgstr ""
+msgid "Medium"
+msgstr "Medium"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "Most Clicked"
-msgstr ""
+msgid "Name"
+msgstr "Namn"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -169,8 +178,13 @@ msgstr "Ingen data"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "Recently Used"
-msgstr ""
+msgid "Number of Clicks"
+msgstr "Antal klick"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Read More"
+msgstr "Läs mer"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -178,15 +192,13 @@ msgid ""
 "Share this page with a <strong>short link</strong> that includes "
 "<strong>analytics trackers</strong>."
 msgstr ""
+"Dela den här sidan med en <strong>kort länk</strong> som innehåller "
+"<strong>analytiska spårare</strong>."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid ""
-"Source <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the source from which your traffic will come from, Facebook or Twitter for "
-"instance.\"/>"
-msgstr ""
+msgid "Source"
+msgstr "Källa"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -195,36 +207,33 @@ msgid "Statistics"
 msgstr "Statistik"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
-msgid "Stats"
-msgstr "Statistik"
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Target Link"
+msgstr "Mållänk"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
 #: code:addons/website_links/static/src/js/website_links_code_editor.js:0
 msgid "The code cannot be left empty"
-msgstr ""
+msgstr "Koden kan inte lämnas tom"
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 msgid "There is no data to show"
-msgstr ""
+msgstr "Det finns ingen data att visa"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
 #: code:addons/website_links/static/src/js/website_links_code_editor.js:0
 msgid "This code is already taken"
-msgstr ""
+msgstr "Denna kod är redan upptagen"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Those trackers can be used in Google Analytics to track clicks and visitors, "
-"or in Odoo reports to track opportunities and related revenues."
+"Those trackers can be used in Google Analytics to track clicks and visitors,"
+" or in Odoo reports to track opportunities and related revenues."
 msgstr ""
 "Dessa spårare kan användas i Google Analytics för att spåra klick och "
 "besökare, eller i Odoo-rapporter för att spåra möjligheter och relaterade "
@@ -232,8 +241,8 @@ msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "URL"
-msgstr "URL"
+msgid "Tracked Link"
+msgstr "Spårad länk"
 
 #. module: website_links
 #. odoo-javascript
@@ -248,6 +257,12 @@ msgid "Undefined"
 msgstr "Odefinierad"
 
 #. module: website_links
+#. odoo-javascript
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
+msgid "Visit Link"
+msgstr "Besökt länk"
+
+#. module: website_links
 #. odoo-python
 #: code:addons/website_links/models/link_tracker.py:0
 msgid "Visit Webpage Statistics"
@@ -257,16 +272,15 @@ msgstr "Besök webbsidans statistik"
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 msgid "You don't have any recent links."
-msgstr ""
+msgstr "Du har inte några nya länkar."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Your tracked links"
-msgstr ""
+msgstr "Dina spårade länkar"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "cancel"
 msgstr "avbryt"
@@ -278,27 +292,27 @@ msgid "clicks"
 msgstr "klick"
 
 #. module: website_links
-#: model_terms:ir.ui.view,arch_db:website_links.graphs
-msgid "copy"
-msgstr "kopiera"
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "e.g. \"Black Friday Mailing Campaign\""
+msgstr "t.ex. \"Black Friday E-post Kampanj\""
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 msgid "e.g. InMails, Ads, Social, ..."
-msgstr ""
+msgstr "t.ex. InMails, Ads, Social, ..."
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 msgid "e.g. June Sale, Paris Roadshow, ..."
-msgstr ""
+msgstr "t.ex. Sommarrea, Paris Runt, ..."
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 msgid "e.g. LinkedIn, Facebook, Leads, ..."
-msgstr ""
+msgstr "t.ex. LinkedIn, Facebook, Leads, ..."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -306,15 +320,13 @@ msgid "e.g. https://www.odoo.com/contactus"
 msgstr "t.ex. https://www.odoo.com/contactus"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "ok"
 msgstr "ok"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "or"
 msgstr "eller"

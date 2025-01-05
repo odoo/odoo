@@ -1,35 +1,57 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_customer
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Jolien De Paepe, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.details
+msgid "<i class=\"fa fa-chevron-left me-2\"/>Back to references"
+msgstr "<i class=\"fa fa-chevron-left me-2\"/>Terug naar de referenties"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid ""
+"<i class=\"fa fa-info-circle me-2\"/>\n"
+"                        There are no matching customers found for the selected country. Displaying results across all countries instead."
+msgstr ""
+"<i class=\"fa fa-info-circle me-2\"/>\n"
+"                        Er zijn geen overeenkomende klanten gevonden voor het geselecteerde land. Bekijk de resultaten voor alle landen."
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_country
+msgid ""
+"<i class=\"fa fa-map-marker\" role=\"img\" aria-label=\"Open map\" "
+"title=\"Open map\"/>"
+msgstr ""
+"<i class=\"fa fa-map-marker\" role=\"img\" aria-label=\"Open map\" "
+"title=\"Kaart openen\"/>"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_tag_list
 msgid "<span class=\"fa fa-1x fa-tags\"/> All"
 msgstr "<span class=\"fa fa-1x fa-tags\"/> Alle"
 
 #. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.opt_country
-msgid "<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External link\" title=\"External link\"/>"
-msgstr "<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"Externe link\" title=\"Externe link\"/>"
+#: model_terms:ir.ui.view,arch_db:website_customer.implemented_by_block
+msgid "<span class=\"small text-muted\">Implemented by</span>"
+msgstr "<span class=\"small text-muted\">Geïmplementeerd door</span>"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__active
@@ -37,19 +59,26 @@ msgid "Active"
 msgstr "Actief"
 
 #. module: website_customer
+#. odoo-python
 #: code:addons/website_customer/controllers/main.py:0
 msgid "All Countries"
 msgstr "Alle landen"
 
 #. module: website_customer
+#. odoo-python
 #: code:addons/website_customer/controllers/main.py:0
 msgid "All Industries"
-msgstr "Alle industrieën"
+msgstr "Alle sectoren"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.res_partner_tag_view_search
 msgid "Archived"
 msgstr "Gearchiveerd"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.details
+msgid "Back to references list"
+msgstr "Terug naar de referenties"
 
 #. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag__classname
@@ -72,9 +101,10 @@ msgid "Class"
 msgstr "Class"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_country
 msgid "Close"
-msgstr "Sluiten"
+msgstr "Afsluiten"
 
 #. module: website_customer
 #: model:ir.model,name:website_customer.model_res_partner
@@ -102,9 +132,51 @@ msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.details
+msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL CUSTOMERS"
+msgstr ""
+"ZET HIER BOUWBLOKKEN NEER OM ZE VOOR ALLE KLANTEN BESCHIKBAAR TE MAKEN"
+
+#. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__display_name
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr "Schermnaam"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Enter a short description"
+msgstr "Geef een korte omschrijving"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Filter by Country"
+msgstr "Filter op land"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Filter by Industry"
+msgstr "Filter op branche"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Filter by Tags"
+msgstr "Filteren op labels"
+
+#. module: website_customer
+#: model:ir.model.fields,help:website_customer.field_res_partner__website_tag_ids
+#: model:ir.model.fields,help:website_customer.field_res_users__website_tag_ids
+msgid "Filter published customers on the .../customers website page"
+msgstr "Gepubliceerde klanten filteren op de .../klanten websitepagina"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Filters"
+msgstr "Filters"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Go to customer"
+msgstr "Ga naar de klant"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__id
@@ -112,24 +184,14 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.implemented_by_block
-msgid "Implemented By"
-msgstr "Geïmplementeerd door"
-
-#. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
 msgid "Industry Filter"
-msgstr "Industriefilter"
+msgstr "Branchefilter"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__is_published
 msgid "Is Published"
 msgstr "Is gepubliceerd"
-
-#. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag____last_update
-msgid "Last Modified on"
-msgstr "Laatst gewijzigd op"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__write_uid
@@ -143,36 +205,54 @@ msgstr "Laatst bijgewerkt op"
 
 #. module: website_customer
 #: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
-msgid "Manage contact tags to better classify them for tracking and analysis purposes."
-msgstr "Beheer contactlabels om contacten beter te beheren voor opvolging en analyses."
+msgid ""
+"Manage contact tags to better classify them for tracking and analysis "
+"purposes."
+msgstr ""
+"Beheer contactlabels om contacten beter te beheren voor opvolging en "
+"analyses."
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
-msgid "No result found"
-msgstr "Geen resultaat gevonden"
+msgid "No results found for \""
+msgstr "Geen resultaten gevonden voor \""
 
 #. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.details
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_country_list
+msgid "Open countries dropdown"
+msgstr "Dropdown landen openen"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_industry_list
+msgid "Open industries dropdown"
+msgstr "Dropdown sectoren openen"
+
+#. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
-msgid "Our References"
+msgid "Our references"
 msgstr "Onze referenties"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.view_partner_tag_form
 msgid "Partner Tag"
-msgstr "Partnerlabel"
+msgstr "Contactlabel"
 
 #. module: website_customer
 #: model:ir.model,name:website_customer.model_res_partner_tag
-msgid "Partner Tags - These tags can be used on website to find customers by sector, or ..."
-msgstr "Partnerlabels - Deze labels kunnen gebruikt worden op de website om klanten te vinden op sector, of ..."
+msgid ""
+"Partner Tags - These tags can be used on website to find customers by "
+"sector, or ..."
+msgstr ""
+"Contactlabels - Deze labels kunnen gebruikt worden op de website om klanten "
+"te vinden op sector, of ..."
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__partner_ids
 msgid "Partners"
-msgstr "Relaties"
+msgstr "Contacten"
 
 #. module: website_customer
+#. odoo-python
 #: code:addons/website_customer/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_customer.references_block
 msgid "References"
@@ -184,21 +264,6 @@ msgid "References Page"
 msgstr "Referenties pagina"
 
 #. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.opt_country_list
-msgid "References by Country"
-msgstr "Referenties per land"
-
-#. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.opt_industry_list
-msgid "References by Industries"
-msgstr "Referenties per industrie"
-
-#. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.opt_tag_list
-msgid "References by Tag"
-msgstr "Referenties op label"
-
-#. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
 msgid "Search"
 msgstr "Zoeken"
@@ -206,7 +271,22 @@ msgstr "Zoeken"
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.res_partner_tag_view_search
 msgid "Search Partner Tag"
-msgstr "Zoek partnerlabel"
+msgstr "Zoek contactlabel"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "See all customers"
+msgstr "Alle klanten weergeven"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "See countries filters"
+msgstr "Zie landenfilter"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "See industries filters"
+msgstr "Zie sectorfilters"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
@@ -221,12 +301,8 @@ msgstr "Labelfilter"
 #. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag__website_url
 msgid "The full URL to access the document through the website."
-msgstr "De volledige URL om toegang tot het document te krijgen via de website."
-
-#. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.index
-msgid "Trusted by millions worldwide"
-msgstr "Vertrouwd door miljoenen wereldwijd"
+msgstr ""
+"De volledige URL om toegang tot het document te krijgen via de website."
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_published
@@ -261,8 +337,3 @@ msgstr "Websitelabels"
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_country
 msgid "World Map"
 msgstr "Wereldkaart"
-
-#. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.implemented_by_block
-msgid "reference(s))"
-msgstr "referentie(s))"

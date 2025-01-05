@@ -1,29 +1,53 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_hr_recruitment
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Abe Manyo, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
-"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
-msgid "%s open positions"
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/hr_job.py:0
+msgid ""
+"\n"
+"            <span class=\"text-muted small\">Time to Answer</span>\n"
+"            <h6>2 open days</h6>\n"
+"            <span class=\"text-muted small\">Process</span>\n"
+"            <h6>1 Phone Call</h6>\n"
+"            <h6>1 Onsite Interview</h6>\n"
+"            <span class=\"text-muted small\">Days to get an Offer</span>\n"
+"            <h6>4 Days after Interview</h6>\n"
+"        "
 msgstr ""
+"\n"
+"            <span class=\"text-muted small\">Waktu untuk Menjawab</span>\n"
+"            <h6>2 hari terbuka</h6>\n"
+"            <span class=\"text-muted small\">Proses</span>\n"
+"            <h6>1 Panggilan Telepon</h6>\n"
+"            <h6>1 Wawancara Di Tempat</h6>\n"
+"            <span class=\"text-muted small\">Hari untuk mendapatkan Tawaran</span>\n"
+"            <h6>4 Hari setelah Wawancara</h6>\n"
+"        "
+
+#. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
+msgid " In case of issue, contact %(contact_infos)s"
+msgstr "Apabila ada masalah, hubungi %(contact_infos)s"
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -34,12 +58,12 @@ msgstr "Lamaran %s"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "'. Showing results for '"
-msgstr ""
+msgstr "'. Menunjukkan hasil untuk '"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
-msgid "+1 (650) 691-3277"
-msgstr ""
+msgid "+1 (650) 555-0187"
+msgstr "+1 (650) 555-0187"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -63,17 +87,21 @@ msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.detail
 msgid "<i class=\"fa fa-long-arrow-left text-primary me-2\"/>All Jobs"
-msgstr ""
+msgstr "<i class=\"fa fa-long-arrow-left text-primary me-2\"/>Semua Pekerjaan"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
-msgid "<i class=\"fa fa-suitcase fa-fw\" title=\"Employment type\" role=\"img\" aria-label=\"Employment type\"/>"
+msgid ""
+"<i class=\"fa fa-suitcase fa-fw\" title=\"Employment type\" role=\"img\" "
+"aria-label=\"Employment type\"/>"
 msgstr ""
+"<i class=\"fa fa-suitcase fa-fw\" title=\"Tipe karyawan\" role=\"img\" aria-"
+"label=\"Employment type\"/>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "<i class=\"oi oi-arrow-left\"/> Job Description"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-left\"/> Job Description"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -83,7 +111,7 @@ msgstr "<small><b>BACA</b></small>"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
 msgid "<span class=\"fst-italic\">No address specified</span>"
-msgstr ""
+msgstr "<span class=\"fst-italic\">Tidak ada alamat yang ditentukan</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
@@ -91,11 +119,13 @@ msgid ""
 "<span class=\"h5 fw-light\">In the meantime,</span><br/>\n"
 "                                            <span class=\"h3 mt8 mb32 fw-bold\">Take a look around our website:</span>"
 msgstr ""
+"<span class=\"h5 fw-light\">Sementara itu,,</span><br/>\n"
+"                                            <span class=\"h3 mt8 mb32 fw-bold\">Silakan lihat website kami:</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "<span class=\"navbar-brand h5 my-0 me-sm-auto\">Our Job Offers</span>"
-msgstr ""
+msgstr "<span class=\"navbar-brand h5 my-0 me-sm-auto\">Tawaran Kerja Kami</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -150,11 +180,6 @@ msgstr ""
 "                                                <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
-msgid "<span class=\"text-bg-success\">Published</span>"
-msgstr ""
-
-#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "<span class=\"text-muted small\">Department</span>"
 msgstr "<span class=\"text-muted small\">Departemen</span>"
@@ -176,8 +201,24 @@ msgstr "<span class=\"text-muted small\">Lokasi</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
-msgid "<span class=\"text-muted\" style=\"margin-left: 200px; font-size: 0.8rem\">The resume is optional if you have a Linkedin profile</span>"
-msgstr "<span class=\"text-muted\" style=\"margin-left: 200px; font-size: 0.8rem\">Resume ini opsional bila Anda memiliki profil Linkedin</span>"
+msgid ""
+"<span class=\"text-muted small\">Provide either a resume file or a linkedin "
+"profile</span>"
+msgstr ""
+"<span class=\"text-muted small\">Sediakan baik file resume atau profil "
+"linkedin</span>"
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
+msgid "A clickable label for the toggle. Contains text for the false state."
+msgstr "Label yang dapat diklik. Memiliki teks untuk status FALSE."
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
+msgid "A clickable label for the toggle. Contains text for the true state."
+msgstr "Label yang dapat diklik. Memiliki teks untuk status TRUE."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -187,7 +228,7 @@ msgstr "Posisi penuh-waktu <br/>Paket gaji menarik."
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 msgid "About Us"
-msgstr ""
+msgstr "Tentang Kami"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
@@ -227,12 +268,27 @@ msgstr "Semua Kantor"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_employment_type
 msgid "All Types"
+msgstr "Semua Tipe"
+
+#. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
+msgid ""
+"An application already exists for %(value)s. Duplicates might be rejected. "
+"%(recruiter_contact)s"
 msgstr ""
+"Lamaran sudah ada untuk %(value)s. Duplikat mungkin ditolak. "
+"%(recruiter_contact)s"
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_hr_applicant
 msgid "Applicant"
 msgstr "Pelamar"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_form_inherit
+msgid "Application Info"
+msgstr "Info lamaran"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -279,6 +335,12 @@ msgid "Autonomy"
 msgstr "Otonomi"
 
 #. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
+msgid "Autosave"
+msgstr "Autosave"
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Bachelor Degree or Higher"
 msgstr "Gelar Sarjana atau Lebih"
@@ -291,7 +353,9 @@ msgstr "Dapat Dipublikasikan"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__job_details
 msgid "Complementary information that will appear on the job submission page"
-msgstr "Informasi komplementer yang akan muncul pada halaman pengiriman lamaran pekerjaan"
+msgstr ""
+"Informasi komplementer yang akan muncul pada halaman pengiriman lamaran "
+"pekerjaan"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
@@ -302,6 +366,12 @@ msgstr "Selamat!"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
 msgid "Contact us"
 msgstr "Hubungi kami"
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js:0
+msgid "Copied"
+msgstr "Tersalin"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
@@ -315,8 +385,12 @@ msgstr "Buat konten yang akan membantu user kami dari hari ke hari"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
-msgid "Create new job pages from the <strong>+ <i>New</i></strong> top-right button."
+msgid ""
+"Create new job pages from the <strong>+ <i>New</i></strong> top-right "
+"button."
 msgstr ""
+"Buat halaman kerja baru dari tombol <strong>+ <i>Baru</i></strong> di pojok "
+"kanan atas."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -338,7 +412,7 @@ msgstr "Filter Departemen"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.jobs_searchbar_input_snippet_options
 msgid "Description"
-msgstr ""
+msgstr "Deskripsi"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -346,13 +420,22 @@ msgid "Discover our products."
 msgstr "Temukan produk-produk kami."
 
 #. module: website_hr_recruitment
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_applicant__display_name
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_department__display_name
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__display_name
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__display_name
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_website__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid ""
 "Each employee has a chance to see the impact of his work.\n"
-"                You can make a real contribution to the success of the company.\n"
-"                <br/>\n"
-"                Several activities are often organized all over the year, such as weekly\n"
-"                sports sessions, team building events, monthly drink, and much more"
+"                    You can make a real contribution to the success of the company.\n"
+"                    <br/>\n"
+"                    Several activities are often organized all over the year, such as weekly\n"
+"                    sports sessions, team building events, monthly drink, and much more"
 msgstr ""
 "Setiap karyawan memiliki kesempatan untuk melihat dampak dari pekerjaan mereka.\n"
 "                Anda dapat membuat kontribusi nyata untuk kesuksesan perusaahaan.\n"
@@ -382,8 +465,13 @@ msgstr "Pengalaman dalam menulis konten online"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
+msgid "Facebook"
+msgstr "Facebook"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
 msgid "Follow us"
-msgstr ""
+msgstr "Ikuti kami"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -398,7 +486,8 @@ msgstr "Pengalaman Google Adwords"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Great team of smart people, in a friendly and open culture"
-msgstr "Tim hebat penuh orang-orang pintar, di dalam budaya yang ramah dan terbuka"
+msgstr ""
+"Tim hebat penuh orang-orang pintar, di dalam budaya yang ramah dan terbuka"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -408,7 +497,7 @@ msgstr "Sangat kreatif dan mandiri"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 msgid "Home"
-msgstr ""
+msgstr "Beranda"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
@@ -421,6 +510,13 @@ msgid ""
 "                                                feedback</strong> or if you don't get news from me\n"
 "                                                quickly enough."
 msgstr ""
+"Saya biasanaya <strong>menjawab lamaran dalam 3 hari</strong>.\n"
+"                                                <br/><br/>\n"
+"                                                Langkah berikutnya adalah baik telepon atau meeting di kantor kami.\n"
+"                                                <br/><br/>\n"
+"                                                Silakan <strong>hubungi saya bila Anda ingin feedback yang lebih\n"
+"                                                cepat</strong> atau bila Anda merasa kabar dari saya\n"
+"                                                kurang cepat."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -428,13 +524,29 @@ msgid "I'm feeling lucky"
 msgstr "Saya merasa beruntung"
 
 #. module: website_hr_recruitment
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_applicant__id
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_department__id
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__id
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__id
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_website__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
+msgid ""
+"If checked, the record will be saved immediately when the field is modified."
+msgstr ""
+"Bila diperiksa, record akan langsung disimpan saat field dimodifikasi."
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "Insert a Job Description..."
-msgstr ""
+msgstr "Masukkan Job Description..."
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__is_published
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_form_website_published_button
 msgid "Is Published"
 msgstr "Dipublikasikan"
 
@@ -446,7 +558,7 @@ msgstr "Formulir Lamaran Pekerjaan"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__description
 msgid "Job Description"
-msgstr ""
+msgstr "Deskripsi Pekerjaan"
 
 #. module: website_hr_recruitment
 #: model:ir.actions.act_window,name:website_hr_recruitment.action_job_pages_list
@@ -456,23 +568,24 @@ msgstr "Halaman Pekerjaan"
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_hr_job
 msgid "Job Position"
-msgstr "Posisi Jabatan"
+msgstr "Jabatan Kerja"
 
 #. module: website_hr_recruitment
 #. odoo-python
 #: code:addons/website_hr_recruitment/controllers/main.py:0
 msgid "Job Title"
-msgstr "Judul Jabatan"
+msgstr "Jabatan"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "Job not found"
-msgstr ""
+msgstr "Pekerjaan tidak ditemukan"
 
 #. module: website_hr_recruitment
 #. odoo-python
 #: code:addons/website_hr_recruitment/models/website.py:0
 #: model:ir.ui.menu,name:website_hr_recruitment.menu_job_pages
+#: model:website.menu,name:website_hr_recruitment.website_menu_jobs
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.jobs_searchbar_input_snippet_options
 msgid "Jobs"
@@ -484,9 +597,26 @@ msgid "Jobs Page"
 msgstr "Halaman Pekerjaan"
 
 #. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
+msgid "Label"
+msgstr "Label"
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Lead the entire sales cycle"
 msgstr "Pimpin keseluruhan siklus sales"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
+msgid "LinkedIn"
+msgstr "LinkedIn"
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+msgid "LinkedIn Profile"
+msgstr "Profil LinkedIn"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -511,27 +641,27 @@ msgstr "Baik untuk dimiliki"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
 msgid "No address specified"
-msgstr ""
+msgstr "Tidak ada alamat yang ditentukan"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "No dumb managers, no stupid tools to use, no rigid working hours"
-msgstr "Tidak ada manajer bodoh, tidak ada alat yang mengesalkan untuk digunakan, tidak ada jam kerja yang kaku"
+msgstr ""
+"Tidak ada manajer bodoh, tidak ada alat yang mengesalkan untuk digunakan, "
+"tidak ada jam kerja yang kaku"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "No results found for '"
-msgstr ""
+msgstr "Tidak ada hasil yang ditemukan untuk '"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
-msgid "No waste of time in enterprise processes, real responsibilities and autonomy"
-msgstr "Tanpa membuang waktu di proses enterprise, tanggung jawab nyata dan kemandirian"
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
-msgid "Not published"
-msgstr "Tidak dipublikasikan"
+msgid ""
+"No waste of time in enterprise processes, real responsibilities and autonomy"
+msgstr ""
+"Tanpa membuang waktu di proses enterprise, tanggung jawab nyata dan "
+"kemandirian"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
@@ -541,12 +671,14 @@ msgstr "Filter Kantor"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "Optional introduction, or any question you might have about the job…"
-msgstr "Pengantar opsional, atau pertanyaan apapun yang Anda mungkin miliki mengenai pekerjaan tersebut..."
+msgstr ""
+"Pengantar opsional, atau pertanyaan apapun yang Anda mungkin miliki mengenai"
+" pekerjaan tersebut..."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_departments
 msgid "Others"
-msgstr ""
+msgstr "Lainnya"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -574,31 +706,39 @@ msgid "Personal Evolution"
 msgstr "Evolusi Pribadi"
 
 #. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+msgid "Phone Number"
+msgstr "Nomor Telepon"
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Play any sport with colleagues, <br/>the bill is covered."
-msgstr "Olahraga apapun dengan rekan kerja, <br/>tagihan ditanggung perusahaan."
+msgstr ""
+"Olahraga apapun dengan rekan kerja, <br/>tagihan ditanggung perusahaan."
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__job_details
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_form_inherit
 msgid "Process Details"
 msgstr "Detail Proses"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 msgid "Products"
-msgstr ""
+msgstr "Produk"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_search_view_inherit
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_tree_inherit_website
 msgid "Published"
-msgstr "Dipublikasi"
+msgstr "Terpublikasi"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__published_date
 msgid "Published Date"
-msgstr ""
+msgstr "Tanggal Publikasi"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -608,13 +748,15 @@ msgstr "Memenuhi kebutuhan pelanggan"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Real responsibilities and challenges in a fast evolving company"
-msgstr "Tanggung jawab dan tantangan nyata di perusahaan yang cepat berevolusi"
+msgstr ""
+"Tanggung jawab dan tantangan nyata di perusahaan yang cepat berevolusi"
 
 #. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_countries
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
 msgid "Remote"
-msgstr ""
+msgstr "Remote"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -623,8 +765,8 @@ msgstr "Tanggung Jawab"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_id
-msgid "Restrict publishing to this website."
-msgstr "Batasi publikasi ke website ini."
+msgid "Restrict to a specific website."
+msgstr "Batasi ke website tertentu."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_pages_kanban_view
@@ -639,7 +781,7 @@ msgstr "Dioptimalkan SEO"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
 msgid "Search Bar"
-msgstr ""
+msgstr "Kolom Pencarian"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__seo_name
@@ -650,6 +792,18 @@ msgstr "Nama SEO"
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_published
 msgid "Set if the application is published on the website of the company."
 msgstr "Tetapkan bila aplikasi dipublikasi pada website perusahaan."
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js:0
+msgid "Share Job"
+msgstr "Bagikan Lowongan"
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+msgid "Short Introduction"
+msgstr "Perkenalan singkat"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
@@ -682,11 +836,43 @@ msgid "The full URL to access the document through the website."
 msgstr "URL lengkap untuk mengakses dokumen melalui website."
 
 #. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js:0
+msgid "The job link has been copied to the clipboard."
+msgstr "Link pekerjaan disalin ke papan klip."
+
+#. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
+msgid "The job offer has been closed."
+msgstr "Tawaran kerja ini telah ditutup."
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_applicant_form.js:0
+msgid "The profile that you gave us doesn't seems like a linkedin profile"
+msgstr ""
+"Profil yang Anda berikan ke kami sepertinya bukan merupakan profil linkedin"
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid ""
 "There are currently no open job opportunities,<br class=\"mb-2\"/>\n"
 "                                            but feel free to <span class=\"fw-bold\">contact us</span> for a spontaneous application."
 msgstr ""
+"Saat ini tidak ada kesempatan kerja yang terbuka,<br class=\"mb-2\"/>\n"
+"                                            tapi jangan ragu untuk <span class=\"fw-bold\">menghubungi kami</span> untuk lamaran mendadak."
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
+msgid "ToggleLabeled"
+msgstr "ToggleLabeled"
+
+#. module: website_hr_recruitment
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__url
+msgid "Tracker URL"
+msgstr "URL Tracker"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -696,12 +882,7 @@ msgstr "Training"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_employment_type
 msgid "Unspecified type"
-msgstr ""
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__url
-msgid "Url Parameters"
-msgstr "Parameter URL"
+msgstr "Tipe yang tidak ditentukan"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -723,6 +904,27 @@ msgstr ""
 "                                Kami membangun produk yang hebat untuk menyelesaikan masalah bisnis Anda."
 
 #. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
+msgid ""
+"We found a recent application with a similar name, email, phone number. You "
+"can continue if it's not a mistake."
+msgstr ""
+"Kami menemukan lamaran dengan nama, email, dan nomor telepon yang mirip "
+"belum lama ini. Anda dapat melanjutkan bila Anda merasa ini kesalahan."
+
+#. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
+msgid ""
+"We've found a previous closed application in our system within the last 6 "
+"months. Please consider before applying in order not to duplicate efforts."
+msgstr ""
+"Kami telah menemukan lamaran yang ditutup di sistem kami dalam 6 bulan "
+"terakhir. Mohon pertimbangkan ini sebelum melamar lagi agar tidak "
+"menggandakan upaya."
+
+#. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_website
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_id
 msgid "Website"
@@ -736,7 +938,7 @@ msgstr "Formulir Perekrutan Website"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_url
 msgid "Website URL"
-msgstr "URL Website"
+msgstr "URL Websi8te"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_description
@@ -746,17 +948,17 @@ msgstr "Keterangan Website"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_description
 msgid "Website meta description"
-msgstr "Keterangan meta website"
+msgstr "Keterangan website"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_keywords
 msgid "Website meta keywords"
-msgstr "Kata kunci meta website"
+msgstr "Situs meta kata kunci"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_title
 msgid "Website meta title"
-msgstr "Judus meta website"
+msgstr "Judul meta situs"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_og_img
@@ -774,22 +976,21 @@ msgid "What's great in the job?"
 msgstr "Apa yang hebat di pekerjaan ini?"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_description
-msgid ""
-"You can customize this sample job description with a short overview of\n"
-"        the job position, defining specific terms and benefits. Keep it simple\n"
-"        an clear."
-msgstr ""
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_form_inherit_website
-msgid "You can write here a short description of your Job Description that will be displayed on the main Jobs' list page."
-msgstr "Anda dapat menulis di sini keterangan singkat mengenai Lowongan Pekerjaan Anda yang akan ditampilkan di daftar halaman utama Pekerjaan."
-
-#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 msgid "Your <b>contact</b> information is:"
-msgstr ""
+msgstr "<b>Kontak</b> informasi Anda adalah:"
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+msgid "Your Email"
+msgstr "Email Anda"
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+msgid "Your Name"
+msgstr "Nama Anda"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
@@ -797,6 +998,8 @@ msgid ""
 "Your application has been posted successfully,<br class=\"mb-2\"/>\n"
 "                                    We usually respond within 3 days..."
 msgstr ""
+"Lamaran Anda berhasil dipost,<br class=\"mb-2\"/>\n"
+"                                    Kami biasanya menjawab dalam 3 hari..."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -804,19 +1007,33 @@ msgid "breadcrumb"
 msgstr "breadcrumb"
 
 #. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_form_inherit_website
+msgid ""
+"e.g. Summarize the position in one or two lines that will be displayed on "
+"the Jobs list page..."
+msgstr ""
+"contoh, Buat ringkasan lowongan kerja dalam satu atau dua baris yang akan "
+"ditampilkan di halaman daftar Lowongan Kerja..."
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
-msgid "e.g. https://www.linkedin.com/in/fpodoo/"
-msgstr "contohnya, https://www.linkedin.com/in/fpodoo/"
+msgid "e.g. https://www.linkedin.com/in/fpodoo"
+msgstr "contoh. https://www.linkedin.com/in/fpodoo"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
 msgid "info@yourcompany.example.com"
-msgstr ""
+msgstr "info@yourcompany.example.com"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_recruitment_source_kanban_inherit_website
-msgid "share it"
-msgstr "bagikan"
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__full_url
+msgid "job URL"
+msgstr "URL pekerjaan"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+msgid "open positions"
+msgstr "lowongan kosong"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index

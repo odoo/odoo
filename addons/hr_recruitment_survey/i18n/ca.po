@@ -1,28 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_recruitment_survey
-#
+# 
 # Translators:
-# RGB Consulting <odoo@rgbconsulting.com>, 2022
-# Martin Trigaux, 2022
-# Carles Antoli <carlesantoli@hotmail.com>, 2022
-# Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
-# marcescu, 2022
-# Ivan Espinola, 2022
-# martioodo hola, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: martioodo hola, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
-"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_recruitment_survey
@@ -53,6 +47,11 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_recruitment_survey_button_form_view
+msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Go to Recruitment"
+msgstr ""
+
+#. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid ""
 "<span class=\"o_stat_text\">Consult</span>\n"
@@ -72,6 +71,11 @@ msgid "Activities"
 msgstr "Activitats"
 
 #. module: hr_recruitment_survey
+#: model_terms:ir.actions.act_window,help:hr_recruitment_survey.survey_survey_action_recruitment
+msgid "Add a new survey"
+msgstr "Afegir una nova enquesta"
+
+#. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_applicant
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_invite__applicant_id
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__applicant_id
@@ -86,8 +90,13 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_job__survey_id
-msgid "Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"
-msgstr "Trieu un formulari d'entrevista per a aquesta posició de treball i podreu imprimir/obtenir aquesta entrevista de tots els sol·licitants que sol·licitin aquest treball"
+msgid ""
+"Choose an interview form for this job position and you will be able to "
+"print/answer this interview from all applicants who apply for this job"
+msgstr ""
+"Trieu un formulari d'entrevista per a aquesta posició de treball i podreu "
+"imprimir/obtenir aquesta entrevista de tots els sol·licitants que "
+"sol·licitin aquest treball"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
@@ -152,12 +161,15 @@ msgid "Interview Survey"
 msgstr "Enquesta sobre l'entrevista"
 
 #. module: hr_recruitment_survey
+#: model:ir.actions.act_window,name:hr_recruitment_survey.survey_survey_action_recruitment
+#: model:ir.ui.menu,name:hr_recruitment_survey.menu_hr_recruitment_config_surveys
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Interviews"
 msgstr "Entrevistes"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_job
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__hr_job_ids
 msgid "Job Position"
 msgstr "Lloc de treball"
 
@@ -193,8 +205,12 @@ msgstr "Experiències laborals anteriors"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.survey,description:hr_recruitment_survey.survey_recruitment_form
-msgid "Please answer those questions to help recruitment officers to preprocess your application."
-msgstr "Responeu aquestes preguntes per ajudar els funcionaris de reclutament a preprocessar la vostra sol·licitud."
+msgid ""
+"Please answer those questions to help recruitment officers to preprocess "
+"your application."
+msgstr ""
+"Responeu aquestes preguntes per ajudar els funcionaris de reclutament a "
+"preprocessar la vostra sol·licitud."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
@@ -202,6 +218,8 @@ msgid ""
 "Please fill information about you: who you are, what are your education, experience, and activities.\n"
 "    It will help us managing your application."
 msgstr ""
+"Ompliu informació sobre vosaltres: qui sou, quina és la vostra educació, experiència i activitats.\n"
+"    Ens ajudarà a gestionar la teva sol·licitud."
 
 #. module: hr_recruitment_survey
 #. odoo-python
@@ -212,13 +230,24 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q5
-msgid "Please summarize your education history: schools, location, diplomas, ..."
+msgid ""
+"Please summarize your education history: schools, location, diplomas, ..."
 msgstr ""
+"Si us plau, resumeixi el seu historial educatiu: escoles, ubicació, "
+"diplomes..."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
-msgid "Please tell us a bit more about yourself: what are your main activities, ..."
-msgstr "Si us plau, digui'ns una mica més sobre vostè: quines són les seves activitats principals, ..."
+msgid ""
+"Please tell us a bit more about yourself: what are your main activities, ..."
+msgstr ""
+"Si us plau, digui'ns una mica més sobre vostè: quines són les seves "
+"activitats principals, ..."
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields.selection,name:hr_recruitment_survey.selection__survey_survey__survey_type__recruitment
+msgid "Recruitment"
+msgstr "Procés de selecció"
 
 #. module: hr_recruitment_survey
 #: model:survey.survey,title:hr_recruitment_survey.survey_recruitment_form
@@ -228,7 +257,7 @@ msgstr "Formulari de reclutament"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_ids
 msgid "Responses"
-msgstr ""
+msgstr "Respostes"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -249,6 +278,7 @@ msgstr ""
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
+#: model:ir.model,name:hr_recruitment_survey.model_survey_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__survey_id
 msgid "Survey"
 msgstr "Enquesta"
@@ -257,6 +287,11 @@ msgstr "Enquesta"
 #: model:ir.model,name:hr_recruitment_survey.model_survey_invite
 msgid "Survey Invitation Wizard"
 msgstr "Assistent d'invitació a l'enquesta"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__survey_type
+msgid "Survey Type"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_survey_user_input
@@ -309,3 +344,10 @@ msgstr ""
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row4
 msgid "Working with state of the art technology"
 msgstr "Treballar amb l'estat de la tecnologia de l'art"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.actions.act_window,help:hr_recruitment_survey.survey_survey_action_recruitment
+msgid ""
+"You can create surveys used for recruitments. Design easily your interview,\n"
+"                send invitations and analyze answers."
+msgstr ""

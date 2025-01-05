@@ -1,20 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* loyalty
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# Ilya Rozhkov, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Ilya Rozhkov, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: loyalty
@@ -103,6 +106,12 @@ msgid "(tax excluded)"
 msgstr "(без учета налогов)"
 
 #. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
+msgid "-> View History"
+msgstr ""
+
+#. module: loyalty
 #: model:loyalty.program,name:loyalty.10_percent_coupon
 msgid "10% Discount Coupons"
 msgstr "купоны на скидку 10%"
@@ -133,19 +142,6 @@ msgstr "2023-08-20"
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
 msgid "2023-12-31"
 msgstr "2023-12-31"
-
-#. module: loyalty
-#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
-msgid ""
-"<br/>\n"
-"                                        <br/>\n"
-"\n"
-"                                        <span class=\"fw-bold text-decoration-underline\">Applied to:</span>"
-msgstr ""
-"<br/>\n"
-"                                        <br/>\n"
-"\n"
-"                                        <span class=\"fw-bold text-decoration-underline\">Применяется для:</span>"
 
 #. module: loyalty
 #: model:mail.template,body_html:loyalty.mail_template_gift_card
@@ -241,44 +237,6 @@ msgid "<i class=\"fa fa-tags fa-fw\" title=\"Product Tags\"/>"
 msgstr "<i class=\"fa fa-tags fa-fw\" title=\"Product Tags\"/>"
 
 #. module: loyalty
-#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
-msgid ""
-"<span class=\"fw-bold text-decoration-underline\">Among:</span>\n"
-"                                    <br/>"
-msgstr ""
-"<span class=\"fw-bold text-decoration-underline\">Среди:</span>\n"
-"                                    <br/>"
-
-#. module: loyalty
-#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
-msgid ""
-"<span class=\"fw-bold text-decoration-underline\">Grant</span>\n"
-"                                    <br/>"
-msgstr ""
-"<span class=\"fw-bold text-decoration-underline\">Грант</span>\n"
-"                                    <br/>"
-
-#. module: loyalty
-#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
-msgid ""
-"<span class=\"fw-bold text-decoration-underline\">Grant</span>\n"
-"                                    <br/>\n"
-"                                    the value of the coupon"
-msgstr ""
-"<span class=\"fw-bold text-decoration-underline\">Грант</span>\n"
-"                                   <br/>\n"
-"                                    стоимость купона"
-
-#. module: loyalty
-#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
-msgid ""
-"<span class=\"fw-bold text-decoration-underline\">In exchange of</span>\n"
-"                                    <br/>"
-msgstr ""
-"<span class=\"fw-bold text-decoration-underline\">В обмен на</span>\n"
-"                                    <br/>"
-
-#. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid ""
 "<span class=\"o_stat_text\" invisible=\"program_type not in ('coupons', 'next_order_coupons')\">Coupons</span>\n"
@@ -306,8 +264,12 @@ msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
-msgid "<span colspan=\"2\" invisible=\"program_type != 'coupons'\">Grant the amount of coupon points defined as the coupon value</span>"
-msgstr "<span colspan=\"2\" invisible=\"program_type != 'coupons'\">Предоставить сумму купонных баллов, определяемую как стоимость купона</span>"
+msgid ""
+"<span colspan=\"2\" invisible=\"program_type != 'coupons'\">Grant the amount"
+" of coupon points defined as the coupon value</span>"
+msgstr ""
+"<span colspan=\"2\" invisible=\"program_type != 'coupons'\">Предоставить "
+"сумму купонных баллов, определяемую как стоимость купона</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
@@ -332,9 +294,9 @@ msgstr ""
 "                        </span>"
 
 #. module: loyalty
-#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
-msgid "<span> x </span>"
-msgstr "<span> x </span>"
+#: model_terms:ir.ui.view,arch_db:loyalty.portal_loyalty_history_breadcrumbs
+msgid "<span>History</span>"
+msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -355,11 +317,6 @@ msgstr "<span>на</span>"
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "<span>products</span>"
 msgstr "<span>продукция</span>"
-
-#. module: loyalty
-#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
-msgid "<span>tax</span>"
-msgstr "<span>налог</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
@@ -485,10 +442,22 @@ msgid "A program must have at least one reward."
 msgstr "В программе должно быть хотя бы одно вознаграждение."
 
 #. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_buttons
+msgid "A reward is waiting for you"
+msgstr ""
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_reward.py:0
+msgid "A reward product can't be of type \"combo\"."
+msgstr ""
+
+#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_card.py:0
 msgid "A trigger with the same code as one of your coupon already exists."
-msgstr "Триггер с таким же кодом, как у одного из ваших купонов, уже существует."
+msgstr ""
+"Триггер с таким же кодом, как у одного из ваших купонов, уже существует."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
@@ -502,6 +471,7 @@ msgid "Action Needed"
 msgstr "Требуются действия"
 
 #. module: loyalty
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_card__active
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__active
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__active
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__active
@@ -544,6 +514,11 @@ msgid "Among"
 msgstr "Среди"
 
 #. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
+msgid "Among:"
+msgstr ""
+
+#. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_generate_wizard__mode__anonymous
 msgid "Anonymous Customers"
 msgstr "Анонимные покупатели"
@@ -552,6 +527,11 @@ msgstr "Анонимные покупатели"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__mode
 msgid "Application"
 msgstr "Приложение"
+
+#. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
+msgid "Applied to:"
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__applies_on
@@ -590,7 +570,7 @@ msgstr "Автоматическая акция: 10% off на заказы св�
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__available_on
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Available On"
-msgstr "Доступно на"
+msgstr "Доступно в"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_form
@@ -634,9 +614,16 @@ msgid "Can not generate coupon, no program is set."
 msgstr "Невозможно сгенерировать купон, не установлена программа."
 
 #. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_update_balance_form
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Cancel"
 msgstr "Отменить"
+
+#. module: loyalty
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_card_update_balance__card_id
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_history__card_id
+msgid "Card"
+msgstr "Карта"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
@@ -685,6 +672,7 @@ msgstr "Общение"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__company_id
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_history__company_id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__company_id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__company_id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__company_id
@@ -708,9 +696,14 @@ msgid "Conditions"
 msgstr "Условия"
 
 #. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_update_balance_form
+msgid "Confirm"
+msgstr "Подтвердить"
+
+#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__confirmation_message
 msgid "Confirmation Message"
-msgstr "Подтверждающее сообщение"
+msgstr "Сообщение для подтверждения"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -778,7 +771,9 @@ msgstr "Купоны"
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_gift_ewallet_action
 msgid "Create a new one from scratch, or use one of the templates below."
-msgstr "Создайте новый с нуля или воспользуйтесь одним из шаблонов, приведенных ниже."
+msgstr ""
+"Создайте новый с нуля или воспользуйтесь одним из шаблонов, приведенных "
+"ниже."
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_discount_loyalty_action
@@ -793,7 +788,9 @@ msgstr "Создать запись"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__create_uid
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_card_update_balance__create_uid
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__create_uid
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_history__create_uid
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__create_uid
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__create_uid
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__create_uid
@@ -803,7 +800,9 @@ msgstr "Создано"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__create_date
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_card_update_balance__create_date
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__create_date
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_history__create_date
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__create_date
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__create_date
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__create_date
@@ -862,12 +861,31 @@ msgid "DEMO_TEXT"
 msgstr "DEMO_TEXT"
 
 #. module: loyalty
-#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
-msgid "Define Discount codes on conditional rules then share it with your customers for rewards."
-msgstr "Определите коды скидок по условным правилам, а затем поделитесь ими со своими клиентами, чтобы получить вознаграждение."
+#. odoo-python
+#: code:addons/loyalty/controllers/portal.py:0
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_form
+msgid "Date"
+msgstr "Дата"
 
 #. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
+msgid ""
+"Define Discount codes on conditional rules then share it with your customers"
+" for rewards."
+msgstr ""
+"Определите коды скидок по условным правилам, а затем поделитесь ими со "
+"своими клиентами, чтобы получить вознаграждение."
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/controllers/portal.py:0
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_card_update_balance__description
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__description
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_history__description
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__description
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Description"
 msgstr "Описание"
 
@@ -962,7 +980,9 @@ msgstr "Скидки"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__display_name
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_card_update_balance__display_name
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__display_name
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_history__display_name
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__display_name
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__display_name
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__display_name
@@ -977,13 +997,21 @@ msgstr "%s отображается"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
-msgid "Drive repeat purchases by sending a unique, single-use coupon code for the next purchase when a customer buys something in your store."
-msgstr "Стимулируйте повторные покупки, отправляя уникальный одноразовый код купона на следующую покупку, когда клиент приобретает что-то в вашем магазине."
+msgid ""
+"Drive repeat purchases by sending a unique, single-use coupon code for the "
+"next purchase when a customer buys something in your store."
+msgstr ""
+"Стимулируйте повторные покупки, отправляя уникальный одноразовый код купона "
+"на следующую покупку, когда клиент приобретает что-то в вашем магазине."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
-msgid "Each rule can grant points to the customer he will be able to exchange against rewards"
-msgstr "Каждое правило может давать очки клиенту, которые он сможет обменять на вознаграждения"
+msgid ""
+"Each rule can grant points to the customer he will be able to exchange "
+"against rewards"
+msgstr ""
+"Каждое правило может давать очки клиенту, которые он сможет обменять на "
+"вознаграждения"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__mail_template_id
@@ -1001,9 +1029,10 @@ msgid "End date"
 msgstr "Дата окончания"
 
 #. module: loyalty
-#: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__minimum_amount_tax_mode__excl
-msgid "Excluded"
-msgstr "Исключенный"
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_update_balance_form
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
+msgid "Example: Gift for customer"
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__expiration_date
@@ -1092,8 +1121,15 @@ msgstr "Генерировать"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
-msgid "Generate &amp; share coupon codes manually. It can be used in eCommerce, Point of Sale or regular orders to claim the Reward. You can define constraints on its usage through conditional rule."
-msgstr "Генерируйте и делитесь кодами купонов вручную. Его можно использовать в электронной коммерции, в точках продаж или в обычных заказах, чтобы получить вознаграждение. Вы можете задать ограничения на его использование с помощью условного правила."
+msgid ""
+"Generate &amp; share coupon codes manually. It can be used in eCommerce, "
+"Point of Sale or regular orders to claim the Reward. You can define "
+"constraints on its usage through conditional rule."
+msgstr ""
+"Генерируйте и делитесь кодами купонов вручную. Его можно использовать в "
+"электронной коммерции, в точках продаж или в обычных заказах, чтобы получить"
+" вознаграждение. Вы можете задать ограничения на его использование с помощью"
+" условного правила."
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_generate_wizard
@@ -1116,6 +1152,12 @@ msgstr "Создавайте уникальные купоны и делитес
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Generate eWallet"
 msgstr "Создайте электронный кошелек"
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+msgid "Generate {{props.context.program_item_name}}"
+msgstr "Сгенерировать {{props.context.program_item_name}}"
 
 #. module: loyalty
 #. odoo-python
@@ -1173,20 +1215,37 @@ msgstr ""
 "                                    Затем подарочные карты можно использовать для оплаты заказов."
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/wizard/loyalty_generate_wizard.py:0
+msgid "Gift For Customer"
+msgstr ""
+
+#. module: loyalty
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_gift_ewallet_action
 msgid "Gift cards & eWallet"
 msgstr "Подарочные карты и электронный кошелек"
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/wizard/loyalty_card_update_balance.py:0
+msgid "Gift for customer"
+msgstr ""
+
+#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__points_granted
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "Grant"
 msgstr "Разрешить"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
-msgid "Grant 1 credit for each item bought then reward the customer with Y items in exchange of X credits."
-msgstr "Выдавайте по 1 кредиту за каждый купленный товар, а затем наградите покупателя Y товарами в обмен на X кредитов."
+msgid ""
+"Grant 1 credit for each item bought then reward the customer with Y items in"
+" exchange of X credits."
+msgstr ""
+"Выдавайте по 1 кредиту за каждый купленный товар, а затем наградите "
+"покупателя Y товарами в обмен на X кредитов."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__has_message
@@ -1204,8 +1263,25 @@ msgid "Here is your reward from"
 msgstr "Вот ваше вознаграждение от"
 
 #. module: loyalty
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_card__history_ids
+msgid "History"
+msgstr "История"
+
+#. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_form
+msgid "History Lines"
+msgstr ""
+
+#. module: loyalty
+#: model:ir.model,name:loyalty.model_loyalty_history
+msgid "History for Loyalty cards and Ewallets"
+msgstr ""
+
+#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__id
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_card_update_balance__id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__id
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_history__id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__id
@@ -1216,10 +1292,12 @@ msgstr "ID"
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Если флажок установлен, значит, новые сообщения требуют вашего внимания."
+msgstr ""
+"Если флажок установлен, значит, новые сообщения требуют вашего внимания."
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_has_error
+#: model:ir.model.fields,help:loyalty.field_loyalty_card__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Если отмечено, некоторые сообщения имеют ошибку доставки."
 
@@ -1230,6 +1308,7 @@ msgstr "Минимальная сумма пожертвования соста�
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 msgid "In exchange of"
 msgstr "В обмен на"
 
@@ -1237,11 +1316,6 @@ msgstr "В обмен на"
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_search
 msgid "Inactive"
 msgstr "Неактивный"
-
-#. module: loyalty
-#: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__minimum_amount_tax_mode__incl
-msgid "Included"
-msgstr "Включено"
 
 #. module: loyalty
 #. odoo-python
@@ -1270,6 +1344,14 @@ msgid "Is Payment Program"
 msgstr "Программа оплаты"
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/controllers/portal.py:0
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_history__issued
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
+msgid "Issued"
+msgstr ""
+
+#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__coupon_count_display
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_tree
 msgid "Items"
@@ -1281,8 +1363,16 @@ msgid "John Doe"
 msgstr "Иван Иванов"
 
 #. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
+msgid "Last Transactions"
+msgstr ""
+
+#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__write_uid
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_card_update_balance__write_uid
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__write_uid
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_history__write_uid
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__write_uid
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__write_uid
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__write_uid
@@ -1292,7 +1382,9 @@ msgstr "Последнее обновление"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__write_date
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_card_update_balance__write_date
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__write_date
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_history__write_date
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__write_date
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__write_date
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__write_date
@@ -1355,6 +1447,11 @@ msgid "Loyalty Rule"
 msgstr "Правило лояльности"
 
 #. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
+msgid "Loyalty Transaction"
+msgstr ""
+
+#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Loyalty point(s)"
@@ -1373,7 +1470,14 @@ msgstr "Максимальное использование"
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_program_check_max_usage
 msgid "Max usage must be strictly positive if a limit is used."
-msgstr "Максимальное использование должно быть строго положительным, если используется ограничение."
+msgstr ""
+"Максимальное использование должно быть строго положительным, если "
+"используется ограничение."
+
+#. module: loyalty
+#: model:ir.model,name:loyalty.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Мастер слияния партнеров"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_has_error
@@ -1404,6 +1508,17 @@ msgstr "Минимальное количество"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__multi_product
 msgid "Multi Product"
 msgstr "Мультипродукт"
+
+#. module: loyalty
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_card_update_balance__new_balance
+msgid "New Balance"
+msgstr ""
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/wizard/loyalty_card_update_balance.py:0
+msgid "New Balance should be positive and different then old balance."
+msgstr ""
 
 #. module: loyalty
 #. odoo-python
@@ -1459,9 +1574,16 @@ msgid "Odoo"
 msgstr "Odoo"
 
 #. module: loyalty
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_history__order_id
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__order
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
 msgid "Order"
 msgstr "Заказ"
+
+#. module: loyalty
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_history__order_model
+msgid "Order Model"
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__partner_id
@@ -1475,6 +1597,7 @@ msgstr "Бал(ы)"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__points
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_card_update_balance__old_balance
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__points
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Points"
@@ -1543,8 +1666,12 @@ msgstr "Продукт, используемый в заказе на прода
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_reward__discount_line_product_id
-msgid "Product used in the sales order to apply the discount. Each reward has its own product for reporting purpose"
-msgstr "Продукт, используемый в заказе на продажу для применения скидки. Каждое вознаграждение имеет свой собственный продукт для целей отчетности"
+msgid ""
+"Product used in the sales order to apply the discount. Each reward has its "
+"own product for reporting purpose"
+msgstr ""
+"Продукт, используемый в заказе на продажу для применения скидки. Каждое "
+"вознаграждение имеет свой собственный продукт для целей отчетности"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__trigger_product_ids
@@ -1668,6 +1795,7 @@ msgstr "Тип вознаграждения"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Rewards"
 msgstr "Награды"
 
@@ -1680,6 +1808,11 @@ msgstr "Вознаграждение по пунктам правил должн
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Rules & Rewards"
 msgstr "Правила и награды"
+
+#. module: loyalty
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Ошибка доставки SMS"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_generate_wizard__mode__selected
@@ -1720,8 +1853,12 @@ msgstr "Последовательность"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
-msgid "Set up conditional rules on the order that will give access to rewards for customers"
-msgstr "Настройте условные правила в заказе, которые дадут доступ к вознаграждениям для клиентов"
+msgid ""
+"Set up conditional rules on the order that will give access to rewards for "
+"customers"
+msgstr ""
+"Настройте условные правила в заказе, которые дадут доступ к вознаграждениям "
+"для клиентов"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1742,7 +1879,9 @@ msgstr "Разделение на единицы"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 msgid "Split per unit is not allowed for Loyalty and eWallet programs."
-msgstr "Разделение на единицы не допускается для программ лояльности и электронного кошелька."
+msgstr ""
+"Разделение на единицы не допускается для программ лояльности и электронного "
+"кошелька."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__date_from
@@ -1753,6 +1892,16 @@ msgstr "Дата начала"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__currency_symbol
 msgid "Symbol"
 msgstr "Символ"
+
+#. module: loyalty
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__tax_ids
+msgid "Taxes"
+msgstr "Налоги"
+
+#. module: loyalty
+#: model:ir.model.fields,help:loyalty.field_loyalty_reward__tax_ids
+msgid "Taxes to add on the discount line."
+msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -1772,8 +1921,11 @@ msgstr "Дата окончания включена в срок действи�
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
-msgid "The loyalty program's currency must be the same as all it's pricelists ones."
-msgstr "Валюта программы лояльности должна быть такой же, как и валюта всех ее прейскурантов."
+msgid ""
+"The loyalty program's currency must be the same as all it's pricelists ones."
+msgstr ""
+"Валюта программы лояльности должна быть такой же, как и валюта всех ее "
+"прейскурантов."
 
 #. module: loyalty
 #. odoo-python
@@ -1784,7 +1936,9 @@ msgstr "Промокод должен быть уникальным."
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_required_points_positive
 msgid "The required points for a reward must be strictly positive."
-msgstr "Количество баллов, необходимых для получения награды, должно быть строго положительным."
+msgstr ""
+"Количество баллов, необходимых для получения награды, должно быть строго "
+"положительным."
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_product_qty_positive
@@ -1799,8 +1953,17 @@ msgstr "Дата начала включена в срок действия да
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
-msgid "The validity period's start date must be anterior or equal to its end date."
-msgstr "Дата начала срока действия должна быть раньше или равна дате его окончания."
+msgid ""
+"The validity period's start date must be anterior or equal to its end date."
+msgstr ""
+"Дата начала срока действия должна быть раньше или равна дате его окончания."
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
+msgid "There are currently no transaction lines for this card."
+msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_card_action
@@ -1810,18 +1973,31 @@ msgstr "Пока не было создано ни одного купона."
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_reward__reward_product_ids
 msgid "These are the products that can be claimed with this rule."
-msgstr "Вот продукты, которые могут быть заявлены в соответствии с этим правилом."
+msgstr ""
+"Вот продукты, которые могут быть заявлены в соответствии с этим правилом."
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_reward__discount_max_amount
-msgid "This is the max amount this reward may discount, leave to 0 for no limit."
-msgstr "Это максимальная сумма, на которую может быть скинута данная награда; оставьте значение 0, чтобы не ограничивать."
+msgid ""
+"This is the max amount this reward may discount, leave to 0 for no limit."
+msgstr ""
+"Это максимальная сумма, на которую может быть скинута данная награда; "
+"оставьте значение 0, чтобы не ограничивать."
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/product_product.py:0
-msgid "This product may not be archived. It is being used for an active promotion program."
-msgstr "Этот продукт не подлежит архивированию. Он используется для активной программы продвижения."
+msgid ""
+"This product may not be archived. It is being used for an active promotion "
+"program."
+msgstr ""
+"Этот продукт не подлежит архивированию. Он используется для активной "
+"программы продвижения."
+
+#. module: loyalty
+#: model:ir.model.fields,help:loyalty.field_loyalty_program__pricelist_ids
+msgid "This program is specific to this pricelist set."
+msgstr ""
 
 #. module: loyalty
 #: model:product.template,name:loyalty.ewallet_product_50_product_template
@@ -1837,6 +2013,23 @@ msgstr "Общее количество заказов"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__trigger
 msgid "Trigger"
 msgstr "Триггер"
+
+#. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
+msgid "Untaxed discount"
+msgstr ""
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_card.py:0
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_update_balance_form
+msgid "Update Balance"
+msgstr ""
+
+#. module: loyalty
+#: model:ir.model,name:loyalty.model_loyalty_card_update_balance
+msgid "Update Loyalty Card Points"
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__use_count
@@ -1859,6 +2052,14 @@ msgid "Use this promo code before"
 msgstr "Используйте этот промокод до"
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/controllers/portal.py:0
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_history__used
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
+msgid "Used"
+msgstr "Используемый"
+
+#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__user_has_debug
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__user_has_debug
 msgid "User Has Debug"
@@ -1868,6 +2069,22 @@ msgstr "Пользователь имеет отладку"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__valid_until
 msgid "Valid Until"
 msgstr "Действует до"
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
+msgid "Valid until"
+msgstr ""
+
+#. module: loyalty
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_card__website_message_ids
+msgid "Website Messages"
+msgstr "Веб-сайт сообщения"
+
+#. module: loyalty
+#: model:ir.model.fields,help:loyalty.field_loyalty_card__website_message_ids
+msgid "Website communication history"
+msgstr "История общений с сайта"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__trigger
@@ -1881,18 +2098,31 @@ msgstr "При достижении"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
-msgid "When customers make an order, they accumulate points they can exchange for rewards on the current order or on a future one."
-msgstr "Когда покупатели делают заказ, они накапливают баллы, которые можно обменять на вознаграждение за текущий или будущий заказ."
+msgid ""
+"When customers make an order, they accumulate points they can exchange for "
+"rewards on the current order or on a future one."
+msgstr ""
+"Когда покупатели делают заказ, они накапливают баллы, которые можно обменять"
+" на вознаграждение за текущий или будущий заказ."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
-msgid "When generating coupon, you can define a specific points value that can be exchanged for rewards."
-msgstr "При генерации купонов вы можете определить конкретную стоимость баллов, которые можно обменять на вознаграждения."
+msgid ""
+"When generating coupon, you can define a specific points value that can be "
+"exchanged for rewards."
+msgstr ""
+"При генерации купонов вы можете определить конкретную стоимость баллов, "
+"которые можно обменять на вознаграждения."
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_rule__reward_point_split
-msgid "Whether to separate reward coupons per matched unit, only applies to 'future' programs and trigger mode per money spent or unit paid.."
-msgstr "Нужно ли отделять купоны вознаграждения на единицу совпадения, только для \"будущих\" программ и режима срабатывания на потраченные деньги или оплаченную единицу."
+msgid ""
+"Whether to separate reward coupons per matched unit, only applies to "
+"'future' programs and trigger mode per money spent or unit paid.."
+msgstr ""
+"Нужно ли отделять купоны вознаграждения на единицу совпадения, только для "
+"\"будущих\" программ и режима срабатывания на потраченные деньги или "
+"оплаченную единицу."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__will_send_mail
@@ -1911,6 +2141,11 @@ msgid "With a promotion code"
 msgstr "С промокодом"
 
 #. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_update_balance_form
+msgid "You are about to change the balance of the card"
+msgstr ""
+
+#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "You can not delete a program in an active state"
@@ -1920,13 +2155,19 @@ msgstr "Вы не можете удалить программу, находящ
 #. odoo-python
 #: code:addons/loyalty/models/product_product.py:0
 #: code:addons/loyalty/models/product_template.py:0
-msgid "You cannot delete %(name)s as it is used in 'Coupons & Loyalty'. Please archive it instead."
-msgstr "Вы не можете удалить %(name)s, так как он используется в разделе 'Купоны и лояльность'. Пожалуйста, заархивируйте его вместо этого."
+msgid ""
+"You cannot delete %(name)s as it is used in 'Coupons & Loyalty'. Please "
+"archive it instead."
+msgstr ""
+"Вы не можете удалить %(name)s, так как он используется в разделе 'Купоны и "
+"лояльность'. Пожалуйста, заархивируйте его вместо этого."
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/wizard/loyalty_generate_wizard.py:0
-msgid "You're about to generate %(program_type)s with a value of %(value)s for %(customer_number)i customers"
+msgid ""
+"You're about to generate %(program_type)s with a value of %(value)s for "
+"%(customer_number)i customers"
 msgstr ""
 
 #. module: loyalty
@@ -1937,7 +2178,8 @@ msgstr "Ваша подарочная карта в {{ object.company_id.name }}
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_loyalty_card
 msgid "Your reward coupon from {{ object.program_id.company_id.name }} "
-msgstr "Ваш купон на вознаграждение от {{ object.program_id.company_id.name }}"
+msgstr ""
+"Ваш купон на вознаграждение от {{ object.program_id.company_id.name }}"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -2001,12 +2243,8 @@ msgstr "вознаграждение за лояльность"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
-msgid ""
-"on the cheapest product\n"
-"                                        <br/>"
+msgid "on the cheapest product"
 msgstr ""
-"на самый дешевый товар\n"
-"                                       <br/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -2015,12 +2253,8 @@ msgstr "на ваш следующий заказ"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
-msgid ""
-"on your order\n"
-"                                        <br/>"
+msgid "on your order"
 msgstr ""
-"по вашему заказу\n"
-"                                       <br/>"
 
 #. module: loyalty
 #. odoo-python
@@ -2052,10 +2286,25 @@ msgid "spent"
 msgstr "потрачено"
 
 #. module: loyalty
+#: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__minimum_amount_tax_mode__excl
+msgid "tax excluded"
+msgstr ""
+
+#. module: loyalty
+#: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__minimum_amount_tax_mode__incl
+msgid "tax included"
+msgstr ""
+
+#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "the cheapest product"
 msgstr "самый дешевый товар"
+
+#. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
+msgid "the value of the coupon"
+msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -2072,3 +2321,9 @@ msgstr "использования"
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "your order"
 msgstr "ваш заказ"
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+msgid "{{loyalty_el_title}}"
+msgstr "{{loyalty_el_title}}"

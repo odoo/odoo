@@ -1,30 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_check_printing
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
-"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
-msgid ": Check Number Sequence"
-msgstr ""
+msgid "%(journal)s: Check Number Sequence"
+msgstr "%(journal)s:  تسلسل رقم الشيك "
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
+msgid "<span>&amp;nbsp;</span>"
+msgstr "<span>&amp;nbsp;</span>"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -33,7 +37,9 @@ msgstr ""
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_left
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_right
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_top
-msgid "Adjust the margins of generated checks to make it fit your printer's settings."
+msgid ""
+"Adjust the margins of generated checks to make it fit your printer's "
+"settings."
 msgstr "قم بتعديل هوامش الشيكات التي تم إنشاؤها لجعلها تناسب إعدادات طابعتك. "
 
 #. module: account_check_printing
@@ -44,9 +50,10 @@ msgstr "المبلغ بالكلمات"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid "Cancel"
-msgstr "إلغاء "
+msgstr "إلغاء"
 
 #. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__bank_check_printing_layout
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid "Check Layout"
@@ -102,9 +109,11 @@ msgid "Check to print"
 msgstr "شيك بانتظار الطباعة"
 
 #. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
 #: model:account.payment.method,name:account_check_printing.account_payment_method_check
 msgid "Checks"
-msgstr "الشيكات "
+msgstr "الفحوصات "
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
@@ -126,17 +135,12 @@ msgstr "شيكات بانتظار الطباعة "
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_company
 msgid "Companies"
-msgstr "الشركات "
+msgstr "الشركات"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_config_settings
 msgid "Config Settings"
 msgstr "تهيئة الإعدادات "
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_res_partner
-msgid "Contact"
-msgstr "جهة الاتصال"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_uid
@@ -149,7 +153,17 @@ msgid "Created on"
 msgstr "أنشئ في"
 
 #. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
+msgid "Default"
+msgstr "الافتراضي "
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment_method__display_name
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "اسم العرض "
 
@@ -157,28 +171,37 @@ msgstr "اسم العرض "
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "Go to the configuration panel"
-msgstr "الذهاب إلى لوحة الإعدادات "
+msgstr "الذهاب للوحة التهيئة "
 
 #. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_layout_available
+msgid "Has Check Layout"
+msgstr ""
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__id
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__id
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment_method__id
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__id
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__id
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__id
 msgid "ID"
 msgstr "المُعرف"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "In order to print multiple checks at once, they must belong to the same bank journal."
-msgstr "لتتمكن من طباعة عدة شيكات دفعة واحدة، يجب أن تنتمي هذه الشيكات لدفتر يومية واحد."
+msgid ""
+"In order to print multiple checks at once, they must belong to the same bank"
+" journal."
+msgstr ""
+"لتتمكن من طباعة عدة شيكات دفعة واحدة، يجب أن تنتمي هذه الشيكات لدفتر يومية "
+"واحد."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
 msgid "Journal"
 msgstr "دفتر اليومية"
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_move
-msgid "Journal Entry"
-msgstr "قيد اليومية"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_uid
@@ -239,44 +262,36 @@ msgstr "لا شيء"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_line_id
-#: model:ir.model.fields,field_description:account_check_printing.field_res_partner__property_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_res_users__property_payment_method_id
 msgid "Payment Method"
-msgstr "طريقة السداد"
+msgstr "طريقة الدفع "
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment_method
 msgid "Payment Methods"
-msgstr "طرق السداد"
+msgstr "طرق الدفع "
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
 msgid "Payments"
-msgstr "المدفوعات"
+msgstr "الدفعات"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "Payments to print as a checks must have 'Check' selected as payment method and not have already been reconciled"
-msgstr "يجب اختيار 'شيك' كطريقة سداد للسداد بالشيكات ويجب ألا يكون قد تمت تسويته من قبل "
+msgid ""
+"Payments to print as a checks must have 'Check' selected as payment method "
+"and not have already been reconciled"
+msgstr ""
+"يجب اختيار 'شيك' كطريقة سداد للسداد بالشيكات ويجب ألا يكون قد تمت تسويته من "
+"قبل "
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid "Please enter the number of the first pre-printed check that you are about to print on."
-msgstr "الرجاء إدخال رقم الشيك المطبوع مسبقًا الأول الذي ترغب في الطباعة عليه. "
-
-#. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_bank_statement_line__preferred_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
-msgid "Preferred Payment Method"
-msgstr "طريقة الدفع المفضلة "
-
-#. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
-#: model:ir.model.fields,help:account_check_printing.field_res_users__property_payment_method_id
-msgid "Preferred payment method when paying this vendor. This is used to filter vendor bills by preferred payment method to register payments in mass. Use cases: create bank files for batch wires, check runs."
-msgstr "طريقة الدفع المفضلة عند الدفع لهذا لمورد. يُستخدَم ذلك لتصفية فواتير الموردين حسب طريقة الدفع المفضلة لتسجيل المدفوعات دفعة واحدة. حالات الاستخدام: إنشاء ملفات بنكية لشبكات الاتصال السلكية بين الوحدات المصرفية وطباعة الشيكات. "
+msgid ""
+"Please enter the number of the first pre-printed check that you are about to"
+" print on."
+msgstr ""
+"الرجاء إدخال رقم الشيك المطبوع مسبقًا الأول الذي ترغب في الطباعة عليه. "
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -306,11 +321,6 @@ msgstr "طباعة علامة التاريخ "
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid "Print Pre-numbered Checks"
 msgstr "طباعة شيكات مُرقمة مسبقًا"
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_payment_register
-msgid "Register Payment"
-msgstr "تسجيل دفعة"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
@@ -345,8 +355,12 @@ msgstr "إظهار رقم الشيك "
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "Something went wrong with Check Layout, please select another layout in Invoicing/Accounting Settings and try again."
-msgstr "لقد وقع خطأ في مخطط الشيك. الرجاء اختيار مخطط آخر في إعدادات الفوترة/المحاسبة ثم حاول مجدداً. "
+msgid ""
+"Something went wrong with Check Layout, please select another layout in "
+"Invoicing/Accounting Settings and try again."
+msgstr ""
+"لقد وقع خطأ في مخطط الشيك. الرجاء اختيار مخطط آخر في إعدادات "
+"الفوترة/المحاسبة ثم حاول مجدداً. "
 
 #. module: account_check_printing
 #. odoo-python
@@ -361,19 +375,32 @@ msgstr ""
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
-msgid "The last check number was %s. In order to avoid a check being rejected by the bank, you can only use a greater number."
-msgstr "رقم آخر شيك كان %s. لتجنب رفض الشيك من قبل البنك، يجب استخدام رقم أكبر."
+msgid ""
+"The last check number was %s. In order to avoid a check being rejected by "
+"the bank, you can only use a greater number."
+msgstr ""
+"رقم آخر شيك كان %s. لتجنب رفض الشيك من قبل البنك، يجب استخدام رقم أكبر."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
-msgid "The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers or if the current numbering is wrong, you can change it in the journal configuration page."
-msgstr "تمت تهيئة قيد اليومية المُختار لطباعة أرقام الشيكات. إذا كان لشيكاتك المطبوعة مسبقًا أرقام بالفعل أو إذا كان الترقيم الحالي خاطئًا، فيمكنك تغييره في صفحة تهيئة دفتر اليومية. "
+msgid ""
+"The selected journal is configured to print check numbers. If your pre-"
+"printed check paper already has numbers or if the current numbering is "
+"wrong, you can change it in the journal configuration page."
+msgstr ""
+"تمت تهيئة قيد اليومية المُختار لطباعة أرقام الشيكات. إذا كان لشيكاتك "
+"المطبوعة مسبقًا أرقام بالفعل أو إذا كان الترقيم الحالي خاطئًا، فيمكنك تغييره"
+" في صفحة تهيئة دفتر اليومية. "
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
-msgid "This option allows you to print check details (stub) on multiple pages if they don't fit on a single page."
-msgstr "يسمح لك هذا الخيار بطباعة تفاصيل الشيك (كعب الشيك) على عدة صفحات إن لم تكفيهم صفحة واحدة."
+msgid ""
+"This option allows you to print check details (stub) on multiple pages if "
+"they don't fit on a single page."
+msgstr ""
+"يسمح لك هذا الخيار بطباعة تفاصيل الشيك (كعب الشيك) على عدة صفحات إن لم "
+"تكفيهم صفحة واحدة."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -387,7 +414,8 @@ msgstr ""
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid "This will allow to save on payments the number of the corresponding check."
+msgid ""
+"This will allow to save on payments the number of the corresponding check."
 msgstr "سوف يتيح لك ذلك حفظ رقم الشيك المطابق في المدفوعات. "
 
 #. module: account_check_printing
@@ -403,5 +431,9 @@ msgstr "إبطال الشيك "
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "You have to choose a check layout. For this, go in Invoicing/Accounting Settings, search for 'Checks layout' and set one."
-msgstr "عليك اختيار مخطط للشيك. لفعل ذلك، اذهب إلى إعدادات الفوترة/المحاسبة، ثم ابحث عن 'مخططات الشيكات' وقم بتعيين واحد. "
+msgid ""
+"You have to choose a check layout. For this, go in Invoicing/Accounting "
+"Settings, search for 'Checks layout' and set one."
+msgstr ""
+"عليك اختيار مخطط للشيك. لفعل ذلك، اذهب إلى إعدادات الفوترة/المحاسبة، ثم ابحث"
+" عن 'مخططات الشيكات' وقم بتعيين واحد. "

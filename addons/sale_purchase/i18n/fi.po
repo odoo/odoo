@@ -1,29 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_purchase
-#
+# 
 # Translators:
-# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_purchase
@@ -35,11 +28,6 @@ msgid ""
 msgstr ""
 ".\n"
 "            Manuaalisia toimintoja saatetaan tarvita."
-
-#. module: sale_purchase
-#: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
-msgid "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Service to Purchase\"/>"
-msgstr "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Ostettava palvelu\"/>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
@@ -55,14 +43,14 @@ msgstr "<span class=\"o_stat_text\">Myynti</span>"
 #: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_cancel_view_form
 msgid ""
 "<span id=\"display_invoice_alert\" position=\"after\">\n"
-"                <span id=\"display_purchase_orders_alert\" attrs=\"{'invisible': [('display_purchase_orders_alert', '=', False)]}\">\n"
+"                <span id=\"display_purchase_orders_alert\" invisible=\"not display_purchase_orders_alert\" groups=\"purchase.group_purchase_user\">\n"
 "                    There are active purchase orders linked to this sale order that are not cancelled automatically! <br/>\n"
 "                </span>\n"
 "            </span>"
 msgstr ""
 "<span id=\"display_invoice_alert\" position=\"after\">\n"
-"                <span id=\"display_purchase_orders_alert\" attrs=\"{'invisible': [('display_purchase_orders_alert', '=', False)]}\">\n"
-"                    Tähän myyntitilaukseen liittyy aktiivisia ostotilauksia, joita ei peruuteta automaattisesti! <br/>\n"
+"                <span id=\"display_purchase_orders_alert\" invisible=\"not display_purchase_orders_alert\" groups=\"purchase.group_purchase_user\">\n"
+"                   Tähän ostotilaukseen liittyviä myyntitilauksia ei automaattisesti peruta. <br/>\n"
 "                </span>\n"
 "            </span>"
 
@@ -92,8 +80,14 @@ msgstr "Luodut ostorivit"
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_product_product__service_to_purchase
 #: model:ir.model.fields,help:sale_purchase.field_product_template__service_to_purchase
-msgid "If ticked, each time you sell this product through a SO, a RfQ is automatically created to buy the product. Tip: don't forget to set a vendor on the product."
-msgstr "Jos valintasi on, joka kerta kun myyt tätä tuotetta väitetiedoksiannon kautta, RfQ luodaan automaattisesti tuotteen ostamista varten. Vinkki: muista asettaa myyjä tuotteelle."
+msgid ""
+"If ticked, each time you sell this product through a SO, a RfQ is "
+"automatically created to buy the product. Tip: don't forget to set a vendor "
+"on the product."
+msgstr ""
+"Jos valintasi on, joka kerta kun myyt tätä tuotetta väitetiedoksiannon "
+"kautta, RfQ luodaan automaattisesti tuotteen ostamista varten. Vinkki: "
+"muista asettaa myyjä tuotteelle."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
@@ -116,6 +110,7 @@ msgid "Number of generated purchase items"
 msgstr "Luotujen ostoaineiden määrä"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/sale_order_line.py:0
 msgid "Ordered quantity decreased!"
 msgstr "Tilattu määrä väheni!"
@@ -126,8 +121,11 @@ msgid "Origin Sale Item"
 msgstr "Alkuperäinen myyntituote"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/product_template.py:0
-msgid "Please define the vendor from whom you would like to purchase this service automatically."
+msgid ""
+"Please define the vendor from whom you would like to purchase this service "
+"automatically."
 msgstr "Määrittele myyjä, jolta haluat ostaa tämän palvelun automaattisesti."
 
 #. module: sale_purchase
@@ -136,6 +134,7 @@ msgid "Product"
 msgstr "Tuote"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/product_template.py:0
 msgid "Product that is not a service can not create RFQ."
 msgstr "Tuote, joka ei ole palvelu, ei voi luoda RFQ: ta."
@@ -156,14 +155,19 @@ msgid "Purchase Order Line"
 msgstr "Ostotilausrivi"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/sale_order.py:0
 msgid "Purchase Order generated from %s"
 msgstr "Ostotilaus muodostettu lähteestä %s"
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_sale_order_line__purchase_line_ids
-msgid "Purchase line generated by this Sales item on order confirmation, or when the quantity was increased."
-msgstr "Tämän myyntituotteen luoma ostorivi tilausvahvistuksen yhteydessä tai kun määrää nostettiin."
+msgid ""
+"Purchase line generated by this Sales item on order confirmation, or when "
+"the quantity was increased."
+msgstr ""
+"Tämän myyntituotteen luoma ostorivi tilausvahvistuksen yhteydessä tai kun "
+"määrää nostettiin."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
@@ -191,6 +195,7 @@ msgid "Sales Order Line"
 msgstr "Myyntitilausrivi"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/purchase_order.py:0
 msgid "Sources Sale Orders %s"
 msgstr "Lähteet Myyntitilaukset %s"
@@ -202,14 +207,23 @@ msgid "Subcontract Service"
 msgstr "Alihankittu palvelu"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/sale_order_line.py:0
-msgid "There is no vendor associated to the product %s. Please define a vendor for this product."
-msgstr "Tuotteeseen %s ei ole liitetty toimittajaa. Määritä tämän tuotteen myyjä."
+msgid ""
+"There is no vendor associated to the product %s. Please define a vendor for "
+"this product."
+msgstr ""
+"Tuotteeseen %s ei ole liitetty toimittajaa. Määritä tämän tuotteen myyjä."
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/sale_order_line.py:0
-msgid "You are decreasing the ordered quantity! Do not forget to manually update the purchase order if needed."
-msgstr "Alennat tilattua määrää! Älä unohda päivittää tilausta manuaalisesti tarvittaessa."
+msgid ""
+"You are decreasing the ordered quantity! Do not forget to manually update "
+"the purchase order if needed."
+msgstr ""
+"Alennat tilattua määrää! Älä unohda päivittää tilausta manuaalisesti "
+"tarvittaessa."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
@@ -227,4 +241,4 @@ msgstr "of"
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "ordered instead of"
-msgstr "Tilattu sen sijasta"
+msgstr "tilattu sen sijasta"

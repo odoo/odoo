@@ -1,41 +1,52 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_links
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
-msgid " clicks"
-msgstr "bấm chuột"
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
-msgid " countries"
-msgstr "quốc gia"
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 msgid "# of clicks"
 msgstr "Số lần bấm chuột"
+
+#. module: website_links
+#. odoo-javascript
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
+msgid "%(clicks)s clicks"
+msgstr "%(clicks)s lượt nhấp"
+
+#. module: website_links
+#. odoo-javascript
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
+msgid "%(count)s countries"
+msgstr "%(count)s quốc gia"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+#: model_terms:ir.ui.view,arch_db:website_links.graphs
+msgid "<i class=\"fa fa-copy me-2\"/>Copy"
+msgstr "<i class=\"fa fa-copy me-2\"/>Sao chép"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "<span class=\"text-muted me-1\">Sort By:</span>"
+msgstr "<span class=\"text-muted me-1\">Lọc theo:</span>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -46,6 +57,11 @@ msgstr "<strong>Chiến dịch</strong>"
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Medium</strong>"
 msgstr "<strong>Trung bình</strong>"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.graphs
+msgid "<strong>Name</strong>"
+msgstr "<strong>Tên</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -74,49 +90,46 @@ msgstr "Tất cả thời gian"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid ""
-"Campaign <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the context of your link. It might be an event you want to promote or a "
-"special promotion.\"/>"
-msgstr ""
+msgid "Campaign"
+msgstr "Chiến dịch"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
-msgid "Copied"
-msgstr "Đã sao chép"
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 msgid "Copy"
-msgstr "sao chép"
+msgstr "Sao chép"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Create a Link tracker"
+msgstr "Tạo một trình theo dõi liên kết"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Create another Tracker"
+msgstr "Tạo một trình theo dõi khác"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
+#: code:addons/website_links/static/src/xml/website_links_tags_wrapper.xml:0
+msgid "Create option \""
+msgstr "Tạo tuỳ chọn \""
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Edit code"
 msgstr "Sửa mã"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
-msgid "Generating link..."
-msgstr "Tạo liên kết..."
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Generate Link Tracker"
+msgstr "Tạo trình theo dõi liên kết"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "Get tracked link"
-msgstr "Lấy liên kết theo dõi"
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
-msgid "Icon"
-msgstr "Biểu tượng"
+msgid "Last Clicks"
+msgstr "Lượt nhấp cuối cùng"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -129,26 +142,28 @@ msgid "Last Week"
 msgstr "Tuần trước"
 
 #. module: website_links
+#. odoo-javascript
+#: code:addons/website_links/static/src/js/website_links.js:0
+#: code:addons/website_links/static/src/js/website_links_code_editor.js:0
+msgid "Link Copied!"
+msgstr "Liên kết đã được sao chép!"
+
+#. module: website_links
 #: model:ir.model,name:website_links.model_link_tracker
 #: model:ir.ui.menu,name:website_links.menu_link_tracker
-#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Link Tracker"
-msgstr "Kiểm soát đường dẫn"
+msgstr "Trình theo dõi Liên kết"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid ""
-"Medium <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the medium used to share your link. It might be an email, or a Facebook Ads "
-"for instance.\"/>"
-msgstr ""
+msgid "Medium"
+msgstr "Phương tiện"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "Most Clicked"
-msgstr "Được bấm chuột nhiều nhất"
+msgid "Name"
+msgstr "Tên"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -163,8 +178,13 @@ msgstr "Không có dữ liệu"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "Recently Used"
-msgstr "Được sử dụng gần đây"
+msgid "Number of Clicks"
+msgstr "Số lượng Click"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Read More"
+msgstr "Tìm hiểu thêm"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -177,12 +197,8 @@ msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid ""
-"Source <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the source from which your traffic will come from, Facebook or Twitter for "
-"instance.\"/>"
-msgstr ""
+msgid "Source"
+msgstr "Nguồn"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -191,14 +207,12 @@ msgid "Statistics"
 msgstr "Thống kê"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
-msgid "Stats"
-msgstr "Thống kê"
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Target Link"
+msgstr "Liên kết đích"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
 #: code:addons/website_links/static/src/js/website_links_code_editor.js:0
 msgid "The code cannot be left empty"
 msgstr "Mã không thể bỏ trống"
@@ -211,7 +225,6 @@ msgstr "Ở đây không có dữ liệu để hiển thị"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
 #: code:addons/website_links/static/src/js/website_links_code_editor.js:0
 msgid "This code is already taken"
 msgstr "Mã này đã được sử dụng"
@@ -219,8 +232,8 @@ msgstr "Mã này đã được sử dụng"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Those trackers can be used in Google Analytics to track clicks and visitors, "
-"or in Odoo reports to track opportunities and related revenues."
+"Those trackers can be used in Google Analytics to track clicks and visitors,"
+" or in Odoo reports to track opportunities and related revenues."
 msgstr ""
 "Những trình theo dõi đó có thể được sử dụng trong Google Analytics để theo "
 "dõi số nhấp chuột và khách truy cập hoặc trong báo cáo của Hệ thống để theo "
@@ -228,8 +241,8 @@ msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "URL"
-msgstr "URL"
+msgid "Tracked Link"
+msgstr "Liên kết được theo dõi"
 
 #. module: website_links
 #. odoo-javascript
@@ -242,6 +255,12 @@ msgstr "Không thể tải các liên kết gần đây"
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 msgid "Undefined"
 msgstr "Không xác định"
+
+#. module: website_links
+#. odoo-javascript
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
+msgid "Visit Link"
+msgstr "Truy cập liên kết"
 
 #. module: website_links
 #. odoo-python
@@ -261,8 +280,7 @@ msgid "Your tracked links"
 msgstr "Liên kêt theo dõi của bạn"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "cancel"
 msgstr "hủy bỏ"
@@ -274,27 +292,27 @@ msgid "clicks"
 msgstr "bấm chuột"
 
 #. module: website_links
-#: model_terms:ir.ui.view,arch_db:website_links.graphs
-msgid "copy"
-msgstr "sao chép"
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "e.g. \"Black Friday Mailing Campaign\""
+msgstr "VD: \"Chiến dịch gửi thư Black Friday\""
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 msgid "e.g. InMails, Ads, Social, ..."
-msgstr ""
+msgstr "VD: Email, Quảng cáo, Mạng xã hội,..."
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 msgid "e.g. June Sale, Paris Roadshow, ..."
-msgstr ""
+msgstr "VD: Khuyến mại tháng 6, Paris Roadshow,..."
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 msgid "e.g. LinkedIn, Facebook, Leads, ..."
-msgstr ""
+msgstr "VD: LinkedIn, Facebook, Lead,..."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -302,15 +320,13 @@ msgid "e.g. https://www.odoo.com/contactus"
 msgstr "Ví dụ: https://www.odoo.com/contactus"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "ok"
 msgstr "đồng ý"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "or"
-msgstr "hoặc"
+msgstr "hay"

@@ -1,160 +1,296 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* web_tour
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_service.js:0
-msgid "<strong><b>Good job!</b> You went through all steps of this tour.</strong>"
-msgstr "<strong><b>Gut gemacht!</b> Sie haben alle Schritte dieser Tour absolviert.</strong>"
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+msgid "(recording keyboard)"
+msgstr "(Aufzeichnungstastatur)"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+msgid "(run:"
+msgstr "(Lauf:"
+
+#. module: web_tour
+#: model:ir.model.constraint,message:web_tour.constraint_web_tour_tour_uniq_name
+msgid "A tour already exists with this name . Tour's name must be unique!"
+msgstr ""
+"Es existiert bereits eine Tour mit diesem Namen. Der Name der Tour muss "
+"einzigartig sein!"
 
 #. module: web_tour
 #. odoo-javascript
 #: code:addons/web_tour/static/src/tour_service/tour_utils.js:0
-msgid "Click on the <i>Home icon</i> to navigate across apps."
-msgstr "Klicken Sie auf das <i>Home Icon</i>um durch die Apps zu navigieren."
+msgid "Click the top left corner to navigate across apps."
+msgstr ""
+"Klicken Sie auf die obere linke Ecke, um durch die Apps zu navigieren."
 
 #. module: web_tour
-#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__user_id
-msgid "Consumed by"
-msgstr "Verbraucht von"
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__content
+msgid "Content"
+msgstr "Inhalt"
+
+#. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__create_uid
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__create_uid
+msgid "Created by"
+msgstr "Erstellt von"
+
+#. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__create_date
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__create_date
+msgid "Created on"
+msgstr "Erstellt am"
+
+#. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__custom
+msgid "Custom"
+msgstr "Benutzerdefiniert"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/debug/debug_manager.js:0
-msgid "Disable Tours"
-msgstr "Tour deaktivieren"
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.js:0
+msgid "Custom tour '%s' couldn't be saved!"
+msgstr "Benutzerdefinierte Tour „%s“ konnte nicht gespeichert werden."
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.js:0
+msgid "Custom tour '%s' has been added."
+msgstr "Benutzerdefinierte Tour „%s“ wurde hinzugefügt."
 
 #. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__display_name
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
 
 #. module: web_tour
+#: model:ir.actions.server,name:web_tour.tour_export_js_action
+msgid "Export JS"
+msgstr "JS exportieren"
+
+#. module: web_tour
 #: model:ir.model,name:web_tour.model_ir_http
 msgid "HTTP Routing"
-msgstr "HTTP Routing"
+msgstr "HTTP-Routing"
 
 #. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__id
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__id
 msgid "ID"
 msgstr "ID"
 
 #. module: web_tour
-#: model_terms:ir.ui.view,arch_db:web_tour.edit_tour_list
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__write_uid
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__write_uid
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert von"
+
+#. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__write_date
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__write_date
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: web_tour
+#: model_terms:ir.ui.view,arch_db:web_tour.tour_list
 msgid "Menu"
 msgstr "Menü"
 
 #. module: web_tour
-#. odoo-javascript
-#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__name
 msgid "Name"
 msgstr "Name"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
-msgid "Onboarding tours"
-msgstr "Onboarding-Touren"
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+msgid "Name:"
+msgstr "Name:"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_utils.js:0
-msgid "Open bugger menu."
-msgstr "Fehlermenü öffnen."
+#: code:addons/web_tour/static/src/tour_service/tour_service.js:0
+#: code:addons/web_tour/static/src/widgets/tour_start.xml:0
+#: model:ir.model.fields,field_description:web_tour.field_res_users__tour_enabled
+msgid "Onboarding"
+msgstr "Einführungsphase"
+
+#. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__rainbow_man_message
+msgid "Rainbow Man Message"
+msgstr "Nachricht mit Regenbogengesicht"
+
+#. module: web_tour
+#: model_terms:ir.ui.view,arch_db:web_tour.tour_form
+msgid "Rainbow Man Message..."
+msgstr "Nachricht mit Regenbogengesicht ..."
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
-msgid "Path"
-msgstr "Pfad"
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+#: code:addons/web_tour/static/src/views/tour_controller.xml:0
+msgid "Record"
+msgstr "Datensatz"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/views/tour_controller.xml:0
+msgid "Record Tour"
+msgstr "Tour aufzeichnen"
+
+#. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__run
+msgid "Run"
+msgstr "Starten"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+msgid "Save"
+msgstr "Speichern"
 
 #. module: web_tour
 #. odoo-javascript
 #: code:addons/web_tour/static/src/tour_service/tour_pointer_state.js:0
 msgid "Scroll down to reach the next step."
-msgstr ""
+msgstr "Nach unten scrollen, um zum nächsten Schritt zu gelangen."
 
 #. module: web_tour
 #. odoo-javascript
 #: code:addons/web_tour/static/src/tour_service/tour_pointer_state.js:0
 msgid "Scroll up to reach the next step."
-msgstr ""
+msgstr "Nach oben scrollen, um zum nächsten Schritt zu gelangen."
 
 #. module: web_tour
-#. odoo-javascript
-#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__sequence
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__sequence
 msgid "Sequence"
-msgstr "Reihenfolge"
+msgstr "Sequenz"
+
+#. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__sharing_url
+msgid "Sharing URL"
+msgstr "Freigabe-URL"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
-msgid "Start"
-msgstr "Start"
-
-#. module: web_tour
-#. odoo-javascript
-#: code:addons/web_tour/static/src/debug/debug_manager.js:0
+#: code:addons/web_tour/static/src/widgets/tour_start.xml:0
 msgid "Start Tour"
 msgstr "Tour starten"
 
 #. module: web_tour
-#. odoo-javascript
-#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
-msgid "Start tour"
-msgstr "Tour starten"
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__url
+msgid "Starting URL"
+msgstr "Start-URL"
+
+#. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__step_ids
+msgid "Step"
+msgstr "Schritt"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
-msgid "Test"
-msgstr "Testbetrieb"
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+#: model_terms:ir.ui.view,arch_db:web_tour.tour_form
+msgid "Steps"
+msgstr "Schritte"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
-msgid "Test tour"
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+msgid "Steps:"
+msgstr "Schritte:"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/widgets/tour_start.xml:0
+msgid "Test Tour"
 msgstr "Testtour"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
-msgid "Testing tours"
-msgstr "Testtouren"
+#: code:addons/web_tour/static/src/widgets/tour_start.xml:0
+msgid "Testing"
+msgstr "Testen"
 
 #. module: web_tour
-#: model_terms:ir.ui.view,arch_db:web_tour.edit_tour_search
+#: model_terms:ir.ui.view,arch_db:web_tour.tour_search
 msgid "Tip"
-msgstr "Trinkgeld"
+msgstr "Tipp"
 
 #. module: web_tour
-#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__name
-msgid "Tour name"
-msgstr "Bezeichnung der Tour"
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__tour_id
+msgid "Tour"
+msgstr "Tour"
 
 #. module: web_tour
-#. odoo-javascript
-#: code:addons/web_tour/static/src/debug/tour_dialog_component.js:0
-#: model:ir.actions.act_window,name:web_tour.edit_tour_action
+#: model:ir.model,name:web_tour.model_web_tour_tour_step
+msgid "Tour's step"
+msgstr "Schritt der Tour"
+
+#. module: web_tour
+#: model:ir.actions.act_window,name:web_tour.tour_action
 #: model:ir.model,name:web_tour.model_web_tour_tour
 #: model:ir.ui.menu,name:web_tour.menu_tour_action
 msgid "Tours"
 msgstr "Touren"
+
+#. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__trigger
+msgid "Trigger"
+msgstr "Auslöser"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+msgid "Url:"
+msgstr "URL:"
+
+#. module: web_tour
+#: model:ir.model,name:web_tour.model_res_users
+msgid "User"
+msgstr "Benutzer"
+
+#. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__user_consumed_ids
+msgid "User Consumed"
+msgstr "Benutzer verbraucht"
+
+#. module: web_tour
+#: model_terms:ir.ui.view,arch_db:web_tour.tour_form
+msgid "e.g. My_Tour"
+msgstr "z. B. Meine_Tour"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+msgid "name_of_the_tour"
+msgstr "Name_der_Tour"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+msgid "trigger"
+msgstr "Auslöser"

@@ -1,54 +1,43 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_recruitment
-#
+# 
 # Translators:
-# Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2022
-# Kari Lindgren <karisatu@gmail.com>, 2022
-# Sanna Edelman <direct@generare.com>, 2022
-# Jukka Paulin <jukka.paulin@gmail.com>, 2022
-# Jussi Lehto <jussi@gulfeo.com>, 2022
-# Sari Mäyrä <sari.mayra@sv-oy.fi>, 2022
-# Kimmo Lehtonen <leban@netzionale.com>, 2022
-# Miku Laitinen <miku.laitinen@gmail.com>, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Joakim Weckman, 2022
-# Johanna Valkonen <miujohanna@gmail.com>, 2022
-# Miika Nissi <miika.nissi@tawasta.fi>, 2022
-# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
-# Melina Mäntylä <melina.mantyla@web-veistamo.fi>, 2022
-# Pekka Ikonen, 2022
-# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2022
-# Svante Suominen <svante.suominen@web-veistamo.fi>, 2022
-# Simo Suurla <simo@suurla.fi>, 2022
-# Iipponen <erno@web-veistamo.fi>, 2022
-# Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2022
-# Henri Komulainen <henri.komulainen@web-veistamo.fi>, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Martin Trigaux, 2022
-# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2022
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
-# Konsta Aavaranta, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__accepted_applications_count
+msgid "# Accepted Offers"
+msgstr "# Hyväksytyt tarjoukset"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__applications_count
+msgid "# Offers"
+msgstr "# Lähetetyt tarjoukset"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__refused_applications_count
+msgid "# Refused Offers"
+msgstr "# Hylättyjä tarjouksia"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
+#: code:addons/hr_recruitment/models/hr_candidate.py:0
 msgid "1 Meeting"
 msgstr "1 kokous"
 
@@ -56,31 +45,251 @@ msgstr "1 kokous"
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "<b>Click to view</b> the application."
-msgstr ""
+msgstr "<b>Klikkaa nähdäksesi</b> hakemuksen."
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "<b>Did you apply by sending an email?</b> Check incoming applications."
 msgstr ""
+"<b>Haitko lähettämällä sähköpostia?</b> Tarkista saapuneet hakemukset."
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "<b>Drag this card</b>, to qualify him for a first interview."
 msgstr ""
+"<b>Vedä tätä korttia</b>, jotta hakija hyväksytään ensimmäiseen "
+"haastatteluun."
 
 #. module: hr_recruitment
-#. odoo-javascript
-#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
-msgid "<div><b>Try to send an email</b> to the applicant.</div><div><i>Tips: All emails sent or received are saved in the history here</i>"
+#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_congratulations
+msgid ""
+"<div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"    Hello,\n"
+"    <br/><br/>\n"
+"    We confirm we successfully received your application for the job\n"
+"    \"<a t-att-href=\"hasattr(object.job_id, 'website_url') and object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong t-out=\"object.job_id.name or ''\">Experienced Developer</strong></a>\" at <strong t-out=\"object.company_id.name or ''\">YourCompany</strong>.\n"
+"    <br/><br/>\n"
+"    We will come back to you shortly.\n"
+"\n"
+"    <div t-if=\"'website_url' in object.job_id and object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
+"        <a t-att-href=\"object.job_id.website_url\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Job Description</a>\n"
+"    </div>\n"
+"\n"
+"    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"    <t t-if=\"object.user_id\">\n"
+"        <h3 style=\"color:#9A6C8E;\"><strong>Your Contact:</strong></h3>\n"
+"        <p>\n"
+"            <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br/>\n"
+"            <span>Email: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t></span><br/>\n"
+"            <span>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t></span>\n"
+"        </p>\n"
+"        <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"    </t>\n"
+"\n"
+"    <h3 style=\"color:#9A6C8E;\"><strong>What is the next step?</strong></h3>\n"
+"    We usually <strong>answer applications within a few days.</strong><br/><br/>\n"
+"    Feel free to <strong>contact us if you want a faster\n"
+"    feedback</strong> or if you don't get news from us\n"
+"    quickly enough (just reply to this email).\n"
+"\n"
+"    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
+"    <t t-set=\"location\" t-value=\"''\"/>\n"
+"    <t t-if=\"object.job_id.address_id.name\">\n"
+"        <strong t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</strong><br/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.street\">\n"
+"        <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero 9710</t><br/>\n"
+"        <t t-set=\"location\" t-value=\"object.job_id.address_id.street\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.street2\">\n"
+"        <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, Santiago (RM)</t><br/>\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.street2)\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.city\">\n"
+"        <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.city)\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.state_id.name\">\n"
+"        <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>,\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.state_id.name)\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.zip\">\n"
+"        <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.zip)\"/>\n"
+"    </t>\n"
+"    <br/>\n"
+"    <t t-if=\"object.job_id.address_id.country_id.name\">\n"
+"        <t t-out=\"object.job_id.address_id.country_id.name or ''\">Argentina</t><br/>\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.country_id.name)\"/>\n"
+"    </t>\n"
+"    <br/>\n"
+"</div>\n"
+"        "
+msgstr ""
+
+#. module: hr_recruitment
+#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_refuse
+msgid ""
+"<div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"    Hello,<br/><br/>\n"
+"    Thank you for your interest in joining the\n"
+"    <b><t t-out=\"object.company_id.name or ''\">YourCompany</t></b> team.  We\n"
+"    wanted to let you know that, although your resume is\n"
+"    competitive, our hiring team reviewed your application\n"
+"    and <b>did not select it for further consideration</b>.\n"
+"    <br/><br/>\n"
+"    Please note that recruiting is hard, and we can make\n"
+"    mistakes. Do not hesitate to reply to this email if you\n"
+"    think we made a mistake, or if you want more information\n"
+"    about our decision.\n"
+"    <br/><br/>\n"
+"    We will, however, keep your resume on record and get in\n"
+"    touch with you about future opportunities that may be a\n"
+"    better fit for your skills and experience.\n"
+"    <br/><br/>\n"
+"    We wish you all the best in your job search and hope we\n"
+"    will have the chance to consider you for another role\n"
+"    in the future.\n"
+"    <br/><br/>\n"
+"    Thank you,\n"
+"    <div style=\"font-size: 11px; color: grey;\">\n"
+"        <t t-if=\"object.user_id\">\n"
+"            -- <br/>\n"
+"            <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br/>\n"
+"            Email: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t><br/>\n"
+"            Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            -- <br/>\n"
+"            <t t-out=\"object.company_id.name or ''\">YourCompany</t><br/>\n"
+"            The HR Team\n"
+"        </t>\n"
+"    </div>\n"
+"</div>\n"
+"        "
+msgstr ""
+
+#. module: hr_recruitment
+#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_not_interested
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"        Dear,<br/><br/>\n"
+"        We would like to thank you for your interest and your time.<br/>\n"
+"        We wish you all the best in your future endeavors.\n"
+"        <br/><br/>\n"
+"        Best<br/>\n"
+"        <div style=\"font-size: 11px; color: grey;\">\n"
+"            <t t-if=\"object.user_id\">\n"
+"                -- <br/>\n"
+"                <strong t-out=\"object.user_id.name or ''\">Marc Demo</strong><br/>\n"
+"                Email: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t><br/>\n"
+"                Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                -- <br/>\n"
+"                <t t-out=\"object.company_id.name or ''\">YourCompany</t><br/>\n"
+"                The HR Team<br/>\n"
+"            </t>\n"
+"        </div>\n"
+"    </div>\n"
+"</div>\n"
+"        "
+msgstr ""
+
+#. module: hr_recruitment
+#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <div style=\"text-align: center\">\n"
+"        <h2>Congratulations!</h2>\n"
+"        <div style=\"color:grey;\">Your resume has been positively reviewed.</div>\n"
+"    </div>\n"
+"    <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"        We just reviewed your resume, and it caught our\n"
+"        attention. As we think you might be great for the\n"
+"        position, your application has been short listed for a\n"
+"        call or an interview.\n"
+"        <br/><br/>\n"
+"        <div t-if=\"'website_url' in object.job_id and object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
+"            <a t-att-href=\"object.job_id.website_url\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Job Description</a>\n"
+"        </div>\n"
+"\n"
+"        <t t-if=\"object.user_id\">\n"
+"            You will soon be contacted by:<br/>\n"
+"            <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br/>\n"
+"            <span>Email: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t></span><br/>\n"
+"            <span>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t></span>\n"
+"            <br/><br/>\n"
+"        </t>\n"
+"        See you soon,\n"
+"        <div style=\"font-size: 11px; color: grey;\">\n"
+"            -- <br/>\n"
+"            The HR Team\n"
+"            <t t-if=\"'website_url' in object.job_id and hasattr(object.job_id, 'website_url') and object.job_id.website_url\">\n"
+"                Discover <a href=\"/jobs\" style=\"text-decoration:none;color:#717188;\">all our jobs</a>.<br/>\n"
+"            </t>\n"
+"        </div>\n"
+"\n"
+"        <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"        <h3 style=\"color:#9A6C8E;\"><strong>What is the next step?</strong></h3>\n"
+"        We usually <strong>answer applications within a few days</strong>.\n"
+"        <br/><br/>\n"
+"        The next step is either a call or a meeting in our offices.\n"
+"        <br/>\n"
+"        Feel free to <strong>contact us if you want a faster\n"
+"        feedback</strong> or if you don't get news from us\n"
+"        quickly enough (just reply to this email).\n"
+"        <br/>\n"
+"\n"
+"        <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
+"        <t t-set=\"location\" t-value=\"''\"/>\n"
+"        <t t-if=\"object.job_id.address_id.name\">\n"
+"            <strong t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</strong><br/>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.street\">\n"
+"            <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero 9710</t><br/>\n"
+"            <t t-set=\"location\" t-value=\"object.job_id.address_id.street\"/>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.street2\">\n"
+"            <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, Santiago (RM)</t><br/>\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.street2)\"/>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.city\">\n"
+"            <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.city)\"/>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.state_id.name\">\n"
+"            <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>,\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.state_id.name)\"/>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.zip\">\n"
+"            <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.zip)\"/>\n"
+"        </t>\n"
+"        <br/>\n"
+"        <t t-if=\"object.job_id.address_id.country_id.name\">\n"
+"            <t t-out=\"object.job_id.address_id.country_id.name or ''\">Argentina</t><br/>\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.country_id.name)\"/>\n"
+"        </t>\n"
+"        <br/>\n"
+"    </div>\n"
+"</div>\n"
+"        "
 msgstr ""
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
-msgid "<div>Great job! You hired a new colleague!</div><div>Try the Website app to publish job offers online.</div>"
+msgid ""
+"<div><b>Try to send an email</b> to the applicant.</div><div><i>Tips: All "
+"emails sent or received are saved in the history here</i>"
 msgstr ""
+"<div><b>Yritä lähettää</b> "
+"hakijalle<b>sähköpostia</b>.</div><div><i>Vinkkejä: Kaikki lähetetyt tai "
+"vastaanotetut sähköpostiviestit tallentuvat historiaan</i>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -93,24 +302,40 @@ msgid "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"A
 msgstr "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
-msgid "<i class=\"fa fa-mobile mr4\" role=\"img\" aria-label=\"Mobile\" title=\"Mobile\"/>"
-msgstr ""
-
-#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Documents\"/>"
 msgstr "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Documents\"/>"
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
-msgid "<span attrs=\"{'invisible': [('address_id', '!=', False)]}\" class=\"oe_read_only\">Remote</span>"
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+msgid ""
+"<span class=\"mx-2\" style=\"padding-top: 1px; padding-bottom: "
+"1px;\">to</span>"
 msgstr ""
+"<span class=\"mx-2\" style=\"padding-top: 1px; padding-bottom: "
+"1px;\">osoitteeseen</span>"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_form
+msgid "<span class=\"o_stat_text\">Employee</span>"
+msgstr "<span class=\"o_stat_text\">Työntekijä</span>"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+msgid "<span class=\"o_stat_text\">Trackers</span>"
+msgstr "<span class=\"o_stat_text\">Seurannat</span>"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+msgid "<span invisible=\"address_id\" class=\"oe_read_only\">Remote</span>"
+msgstr "<span invisible=\"address_id\" class=\"oe_read_only\">Etätyö</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid ""
-"<span attrs=\"{'invisible': [('is_warning_visible', '=', False)]}\">\n"
+"<span invisible=\"not is_warning_visible\">\n"
 "                                <span class=\"fa fa-exclamation-triangle text-danger ps-3\">\n"
 "                                </span>\n"
 "                                <span class=\"text-danger\">\n"
@@ -118,43 +343,23 @@ msgid ""
 "                                </span>\n"
 "                            </span>"
 msgstr ""
+"<span invisible=\"not is_warning_visible\">\n"
+"                                <span class=\"fa fa-exclamation-triangle text-danger ps-3\">\n"
+"                                </span>\n"
+"                                <span class=\"text-danger\">\n"
+"                                    Kaikki hakemukset menettävät palkkauspäivämääränsä ja palkatun asemansa.\n"
+"                                </span>\n"
+"                            </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
-msgid "<span attrs=\"{'invisible':[('salary_expected_extra','=',False)]}\"> + </span>"
-msgstr ""
+msgid "<span invisible=\"not salary_expected_extra\"> + </span>"
+msgstr "<span invisible=\"not salary_expected_extra\"> + </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
-msgid "<span attrs=\"{'invisible':[('salary_proposed_extra','=',False)]}\"> + </span>"
-msgstr ""
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
-msgid ""
-"<span class=\"badge rounded-pill text-bg-danger float-end me-4\" attrs=\"{'invisible': [('application_status', '!=', 'refused')]}\">Refused</span>\n"
-"                            <span class=\"badge rounded-pill text-bg-secondary float-end me-4\" attrs=\"{'invisible': [('application_status', '!=', 'archived')]}\">Archived</span>"
-msgstr ""
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
-msgid "<span class=\"o_stat_text\">Employee</span>"
-msgstr ""
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
-msgid "<span class=\"o_stat_text\">Trackers</span>"
-msgstr ""
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
-msgid "<span class=\"text-bg-success\">Hired</span>"
-msgstr ""
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
-msgid "<span>Folded in Recruitment Pipe: </span>"
-msgstr ""
+msgid "<span invisible=\"not salary_proposed_extra\"> + </span>"
+msgstr "<span invisible=\"not salary_proposed_extra\"> + </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -172,259 +377,31 @@ msgid "<span>View</span>"
 msgstr "<span>Katso</span>"
 
 #. module: hr_recruitment
-#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_congratulations
-msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"background-color: white; border-collapse: collapse; margin-left: 20px;\">\n"
-"    <tr>\n"
-"        <td valign=\"top\" style=\"padding: 0px 10px;\">\n"
-"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
-"                Hello,\n"
-"                <br><br>\n"
-"                We confirm we successfully received your application for the job\n"
-"                \"<a t-att-href=\"hasattr(object.job_id, 'website_url') and object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong t-out=\"object.job_id.name or ''\">Experienced Developer</strong></a>\" at <strong t-out=\"object.company_id.name or ''\">YourCompany</strong>.\n"
-"                <br><br>\n"
-"                We will come back to you shortly.\n"
-"\n"
-"                <div t-if=\"'website_url' in object.job_id and object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
-"                    <a t-att-href=\"object.job_id.website_url\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Job Description</a>\n"
-"                </div>\n"
-"\n"
-"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\">\n"
-"                <t t-if=\"object.user_id\">\n"
-"                    <h3 style=\"color:#9A6C8E;\"><strong>Your Contact:</strong></h3>\n"
-"                    <p>\n"
-"                        <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br>\n"
-"                        <span>Email: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t></span><br>\n"
-"                        <span>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t></span>\n"
-"                    </p>\n"
-"                    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\">\n"
-"                </t>\n"
-"\n"
-"                <h3 style=\"color:#9A6C8E;\"><strong>What is the next step?</strong></h3>\n"
-"                We usually <strong>answer applications within a few days.</strong><br><br>\n"
-"                Feel free to <strong>contact us if you want a faster\n"
-"                feedback</strong> or if you don't get news from us\n"
-"                quickly enough (just reply to this email).\n"
-"\n"
-"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\">\n"
-"                <t t-set=\"location\" t-value=\"''\"></t>\n"
-"                <t t-if=\"object.job_id.address_id.name\">\n"
-"                    <strong t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</strong><br>\n"
-"                </t>\n"
-"                <t t-if=\"object.job_id.address_id.street\">\n"
-"                    <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero 9710</t><br>\n"
-"                    <t t-set=\"location\" t-value=\"object.job_id.address_id.street\"></t>\n"
-"                </t>\n"
-"                <t t-if=\"object.job_id.address_id.street2\">\n"
-"                    <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, Santiago (RM)</t><br>\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.street2)\"></t>\n"
-"                </t>\n"
-"                <t t-if=\"object.job_id.address_id.city\">\n"
-"                    <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.city)\"></t>\n"
-"                </t>\n"
-"                <t t-if=\"object.job_id.address_id.state_id.name\">\n"
-"                    <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>,\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.state_id.name)\"></t>\n"
-"                </t>\n"
-"                <t t-if=\"object.job_id.address_id.zip\">\n"
-"                    <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.zip)\"></t>\n"
-"                </t>\n"
-"                <br>\n"
-"                <t t-if=\"object.job_id.address_id.country_id.name\">\n"
-"                    <t t-out=\"object.job_id.address_id.country_id.name or ''\">Argentina</t><br>\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.country_id.name)\"></t>\n"
-"                </t>\n"
-"                <br>\n"
-"            </div>\n"
-"        </td>\n"
-"    </tr>\n"
-"</table>"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
-msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"background-color: white; border-collapse: collapse; margin-left: 20px;\">\n"
-"    <tr>\n"
-"        <td valign=\"top\" style=\"padding: 0px 10px;\">\n"
-"            <div style=\"text-align: center\">\n"
-"                <h2>Congratulations!</h2>\n"
-"                <div style=\"color:grey;\">Your resume has been positively reviewed.</div>\n"
-"            </div>\n"
-"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
-"                We just reviewed your resume, and it caught our\n"
-"                attention. As we think you might be great for the\n"
-"                position, your application has been short listed for a\n"
-"                call or an interview.\n"
-"                <br><br>\n"
-"                <div t-if=\"'website_url' in object.job_id and object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
-"                    <a t-att-href=\"object.job_id.website_url\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Job Description</a>\n"
-"                </div>\n"
-"\n"
-"                <t t-if=\"object.user_id\">\n"
-"                    You will soon be contacted by:<br>\n"
-"                    <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br>\n"
-"                    <span>Email: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t></span><br>\n"
-"                    <span>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t></span>\n"
-"                    <br><br>\n"
-"                </t>\n"
-"                See you soon,\n"
-"                <div style=\"font-size: 11px; color: grey;\">\n"
-"                    -- <br>\n"
-"                    The HR Team\n"
-"                    <t t-if=\"'website_url' in object.job_id and hasattr(object.job_id, 'website_url') and object.job_id.website_url\">\n"
-"                        Discover <a href=\"/jobs\" style=\"text-decoration:none;color:#717188;\">all our jobs</a>.<br>\n"
-"                    </t>\n"
-"                </div>\n"
-"\n"
-"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\">\n"
-"                <h3 style=\"color:#9A6C8E;\"><strong>What is the next step?</strong></h3>\n"
-"                We usually <strong>answer applications within a few days</strong>.\n"
-"                <br><br>\n"
-"                The next step is either a call or a meeting in our offices.\n"
-"                <br>\n"
-"                Feel free to <strong>contact us if you want a faster\n"
-"                feedback</strong> or if you don't get news from us\n"
-"                quickly enough (just reply to this email).\n"
-"                <br>\n"
-"\n"
-"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\">\n"
-"                <t t-set=\"location\" t-value=\"''\"></t>\n"
-"                <t t-if=\"object.job_id.address_id.name\">\n"
-"                    <strong t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</strong><br>\n"
-"                </t>\n"
-"                <t t-if=\"object.job_id.address_id.street\">\n"
-"                    <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero 9710</t><br>\n"
-"                    <t t-set=\"location\" t-value=\"object.job_id.address_id.street\"></t>\n"
-"                </t>\n"
-"                <t t-if=\"object.job_id.address_id.street2\">\n"
-"                    <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, Santiago (RM)</t><br>\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.street2)\"></t>\n"
-"                </t>\n"
-"                <t t-if=\"object.job_id.address_id.city\">\n"
-"                    <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.city)\"></t>\n"
-"                </t>\n"
-"                <t t-if=\"object.job_id.address_id.state_id.name\">\n"
-"                    <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>,\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.state_id.name)\"></t>\n"
-"                </t>\n"
-"                <t t-if=\"object.job_id.address_id.zip\">\n"
-"                    <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.zip)\"></t>\n"
-"                </t>\n"
-"                <br>\n"
-"                <t t-if=\"object.job_id.address_id.country_id.name\">\n"
-"                    <t t-out=\"object.job_id.address_id.country_id.name or ''\">Argentina</t><br>\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.country_id.name)\"></t>\n"
-"                </t>\n"
-"                <br>\n"
-"            </div>\n"
-"        </td>\n"
-"    </tr>\n"
-"</table>"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_not_interested
-msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"    <tr>\n"
-"        <td valign=\"top\">\n"
-"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
-"                Dear,<br><br>\n"
-"                We would like to thank you for your interest and your time.<br>\n"
-"                We wish you all the best in your future endeavors.\n"
-"                <br><br>\n"
-"                Best<br>\n"
-"                <div style=\"font-size: 11px; color: grey;\">\n"
-"                    <t t-if=\"object.user_id\">\n"
-"                        -- <br>\n"
-"                        <strong t-out=\"object.user_id.name or ''\">Marc Demo</strong><br>\n"
-"                        Email: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t><br>\n"
-"                        Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
-"                    </t>\n"
-"                    <t t-else=\"\">\n"
-"                        -- <br>\n"
-"                        <t t-out=\"object.company_id.name or ''\">YourCompany</t><br>\n"
-"                        The HR Team<br>\n"
-"                    </t>\n"
-"                </div>\n"
-"            </div>\n"
-"        </td>\n"
-"    </tr>\n"
-"</table>\n"
-"        "
-msgstr ""
-
-#. module: hr_recruitment
-#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_refuse
-msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"    <tr>\n"
-"        <td valign=\"top\">\n"
-"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
-"                Hello,<br><br>\n"
-"                Thank you for your interest in joining the\n"
-"                <b><t t-out=\"object.company_id.name or ''\">YourCompany</t></b> team.  We\n"
-"                wanted to let you know that, although your resume is\n"
-"                competitive, our hiring team reviewed your application\n"
-"                and <b>did not select it for further consideration</b>.\n"
-"                <br><br>\n"
-"                Please note that recruiting is hard, and we can make\n"
-"                mistakes. Do not hesitate to reply to this email if you\n"
-"                think we made a mistake, or if you want more information\n"
-"                about our decision.\n"
-"                <br><br>\n"
-"                We will, however, keep your resume on record and get in\n"
-"                touch with you about future opportunities that may be a\n"
-"                better fit for your skills and experience.\n"
-"                <br><br>\n"
-"                We wish you all the best in your job search and hope we\n"
-"                will have the chance to consider you for another role\n"
-"                in the future.\n"
-"                <br><br>\n"
-"                Thank you,\n"
-"                <div style=\"font-size: 11px; color: grey;\">\n"
-"                    <t t-if=\"object.user_id\">\n"
-"                        -- <br>\n"
-"                        <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br>\n"
-"                        Email: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t><br>\n"
-"                        Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
-"                    </t>\n"
-"                    <t t-else=\"\">\n"
-"                        -- <br>\n"
-"                        <t t-out=\"object.company_id.name or ''\">YourCompany</t><br>\n"
-"                        The HR Team\n"
-"                    </t>\n"
-"                </div>\n"
-"            </div>\n"
-"        </td>\n"
-"    </tr>\n"
-"</table>\n"
-"        "
-msgstr ""
-
-#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_defaults
-msgid "A Python dictionary that will be evaluated to provide default values when creating new records for this alias."
-msgstr "Python-kirjasto, joka evaluoidaan oletusarvoja varten, kun tätä aliasta varten luodaan uusia tietueita."
+msgid ""
+"A Python dictionary that will be evaluated to provide default values when "
+"creating new records for this alias."
+msgstr ""
+"Python-kirjasto, joka evaluoidaan oletusarvoja varten, kun tätä aliasta "
+"varten luodaan uusia tietueita."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_needaction
 msgid "Action Needed"
 msgstr "Vaatii toimenpiteitä"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__active
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__active
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__active
 msgid "Active"
 msgstr "Aktiivinen"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__activity_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_ids
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_config_activities
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Activities"
@@ -433,26 +410,42 @@ msgstr "Toimenpiteet"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activities_overdue
 msgid "Activities Overdue"
-msgstr ""
+msgstr "Erääntyneet toimet"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activities_today
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Activities Today"
-msgstr ""
+msgstr "Toimintaa tänään"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_decoration
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__activity_exception_decoration
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_exception_decoration
 msgid "Activity Exception Decoration"
 msgstr "Toimenpiteen poikkeuksen tyyli"
 
 #. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_mail_activity_plan
+msgid "Activity Plan"
+msgstr "Toimintasuunnitelma"
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.hr_recruitment_menu_config_activity_plan
+msgid "Activity Plans"
+msgstr "Toimintasuunnitelmat"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_state
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__activity_state
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_state
 msgid "Activity State"
 msgstr "Toimenpiteen tila"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_type_icon
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__activity_type_icon
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_type_icon
 msgid "Activity Type Icon"
 msgstr "Toimenpiteen ikoni"
 
@@ -463,20 +456,29 @@ msgid "Activity Types"
 msgstr "Toimenpiteiden tyypit"
 
 #. module: hr_recruitment
+#: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_plan_action_config_hr_applicant
+msgid ""
+"Activity plans are used to assign a list of activities in just a few clicks\n"
+"                    (e.g. \"Language Test\", \"Prepare Offer\", ...)"
+msgstr ""
+"Toimintasuunnitelmien avulla voidaan määrittää luettelo toiminnoista vain muutamalla napsautuksella\n"
+"                    (esim. \"Kielikoe\", \"Tarjouksen valmistelu\", ...)"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_mail_activity_schedule
+msgid "Activity schedule plan Wizard"
+msgstr "Toiminta-aikataulun suunnittelun ohjattu toiminto"
+
+#. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
 msgid "Add a new stage in the recruitment process"
-msgstr ""
+msgstr "Lisää uusi vaihe rekrytointiprosessiin"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
 msgid "Add a new tag"
 msgstr "Lisää uusi tunniste"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_job__address_id
-msgid "Address where employees are working"
-msgstr "Työpaikan osoite"
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_manager
@@ -494,9 +496,24 @@ msgid "Alias Contact Security"
 msgstr "Aliaksen kontaktien tietoturva"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_domain_id
+msgid "Alias Domain"
+msgstr "Alias Domain"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_domain
+msgid "Alias Domain Name"
+msgstr "Alias Verkkotunnus"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_full_name
+msgid "Alias Email"
+msgstr "Alias Email"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__alias_id
 msgid "Alias ID"
-msgstr ""
+msgstr "Alias ID"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_name
@@ -506,17 +523,12 @@ msgstr "Aliaksen nimi"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_status
 msgid "Alias Status"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_domain
-msgid "Alias domain"
-msgstr "Alias domain"
+msgstr "Alias Status"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "Aliaksen tila arvioituna viimeksi vastaanotetun viestin perusteella."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_model_id
@@ -526,12 +538,12 @@ msgstr "Aliasmalli"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__all_application_count
 msgid "All Application Count"
-msgstr ""
+msgstr "Kaikkien hakemusten määrä"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ_all_app
 msgid "All Applications"
-msgstr ""
+msgstr "Kaikki hakemukset"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -543,7 +555,8 @@ msgstr "Analyysi"
 #: model:ir.model,name:hr_recruitment.model_hr_applicant
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_calendar_event__applicant_id
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee__applicant_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__applicant_ids
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.ir_attachment_hr_recruitment_list_view
 msgid "Applicant"
@@ -552,13 +565,28 @@ msgstr "Hakija"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
 msgid "Applicant Degree"
-msgstr ""
+msgstr "Hakijan tutkinto"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_emails
+msgid "Applicant Emails"
+msgstr "Hakijan sähköpostit"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_hired
 msgid "Applicant Hired"
 msgstr "Hakija palkattu"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__applicant_notes
+msgid "Applicant Notes"
+msgstr "Hakijan huomautukset"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__applicant_properties_definition
+msgid "Applicant Properties"
+msgstr "Hakijan ominaisuudet"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_stage_changed
@@ -571,14 +599,9 @@ msgid "Applicant created"
 msgstr "Hakija luotu"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_name
-msgid "Applicant's Name"
-msgstr "Hakijan nimi"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_without_email
 msgid "Applicant(s) not having email"
-msgstr ""
+msgstr "Hakijat, joilla ei ole sähköpostia"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
@@ -590,21 +613,19 @@ msgstr "Hakijat"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__applicant_hired
 msgid "Applicants Hired"
-msgstr ""
+msgstr "Palkatut hakijat"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
 #: model_terms:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid ""
-"Applicants and their attached CV are created automatically when an email is sent.\n"
+"Applicants and their attached résumé are created automatically when an email is sent.\n"
 "                If you install the document management modules, all resumes are indexed automatically,\n"
 "                so that you can easily search through their content."
 msgstr ""
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
-msgid "Applicants can send resume to this email address,<br/>it will create an application automatically"
-msgstr ""
+"Hakijat ja heidän liitteenä oleva ansioluettelonsa luodaan automaattisesti, kun sähköposti lähetetään.\n"
+"                Jos asennat asiakirjojen hallintamoduulit, kaikki ansioluettelot indeksoidaan automaattisesti,\n"
+"                jotta voit helposti etsiä niiden sisällöstä."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -612,48 +633,63 @@ msgid "Application"
 msgstr "Hakemus"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__application_count
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_report_menu
+msgid "Application Analysis"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__application_count
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__application_count
 msgid "Application Count"
-msgstr ""
+msgstr "Hakemusten määrä"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__application_status
 msgid "Application Status"
-msgstr ""
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
-msgid "Application Summary"
-msgstr "Hakemuksen yhteenveto"
+msgstr "Hakemuksen tila"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Application email"
-msgstr ""
+msgstr "Hakemuksen sähköpostiosoite"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
+msgid "Application in Progress"
+msgstr "Käynnissä oleva hakemus"
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_candidate.py:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_applications
 #: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__applicant_ids
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_config_applications
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_view_tree_inherit
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Applications"
 msgstr "Hakemukset"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__application_count
-msgid "Applications with the same email or phone or mobile"
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_platform__email
+msgid ""
+"Applications received from this Email won't be linked to a contact.There "
+"will be no email address set on the Applicant either."
 msgstr ""
+"Tästä sähköpostista vastaanotettuja hakemuksia ei yhdistetä yhteystietoon. "
+"Hakijalle ei myöskään määritetä sähköpostiosoitetta."
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__job_id
-msgid "Applied Job"
-msgstr "Haettu työ"
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__create_date
+msgid "Applied on"
+msgstr "Haettu"
 
 #. module: hr_recruitment
+#. odoo-javascript
+#: code:addons/hr_recruitment/static/src/views/recruitment_kanban_view.js:0
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Archive"
@@ -664,8 +700,17 @@ msgstr "Arkistoi"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Archived"
 msgstr "Arkistoitu"
+
+#. module: hr_recruitment
+#. odoo-javascript
+#: code:addons/hr_recruitment/static/src/views/recruitment_form_controller.js:0
+msgid "Are you sure that you want to archive this job position?"
+msgstr "Oletko varma, että haluat arkistoida tämän työpaikan?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_open
@@ -673,22 +718,44 @@ msgid "Assigned"
 msgstr "Annettu tehtäväksi"
 
 #. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
+msgid ""
+"At least one applicant doesn't have a email; you can't use send email "
+"option."
+msgstr ""
+"Ainakin yhdellä hakijalla ei ole sähköpostia, joten et voi käyttää Lähetä "
+"sähköpostia -vaihtoehtoa."
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.candidate_send_mail_view_form
+msgid "Attach a file"
+msgstr "Liitä tiedosto"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_attachment_count
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_attachment_count
 msgid "Attachment Count"
 msgstr "Liitteiden määrä"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__attachment_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__attachment_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__attachment_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__attachment_ids
 msgid "Attachments"
 msgstr "Liitteet"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__author_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__author_id
 msgid "Author"
 msgstr "Tekijä"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__availability
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__availability
 msgid "Availability"
 msgstr "Saatavuus"
 
@@ -698,8 +765,24 @@ msgid "Bachelor Degree"
 msgstr "Kandidaatin tutkinto"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__is_blacklisted
+msgid "Blacklist"
+msgstr "Markkinointikielto"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__mobile_blacklisted
+msgid "Blacklisted Phone Is Mobile"
+msgstr "Markkinointikiellossa oleva puhelin on matkapuhelin"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__phone_blacklisted
+msgid "Blacklisted Phone is Phone"
+msgstr "Markkinointikiellossa oleva puhelin on muu puhelin"
+
+#. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment_stage.py:0
+#: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job0
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job3
@@ -711,29 +794,33 @@ msgstr "Estetty"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__body_has_template_value
-msgid "Body content is the same as tmeplate"
-msgstr ""
+#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__body_has_template_value
+msgid "Body content is the same as the template"
+msgstr "Rungon sisältö on sama kuin mallissa"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_bounce
+msgid "Bounce"
+msgstr "Viestin palautus"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_position
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_position_interviewer
 msgid "By Job Positions"
-msgstr ""
+msgstr "Työtehtävien mukaan"
 
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
-msgid "By setting an alias to a job position, emails sent to this address create applications automatically. You can even use multiple trackers to get statistics according to the source of the application: LinkedIn, Monster, Indeed, etc."
+msgid ""
+"By setting an alias to a job position, emails sent to this address create "
+"applications automatically. You can even use multiple trackers to get "
+"statistics according to the source of the application: LinkedIn, Monster, "
+"Indeed, etc."
 msgstr ""
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
-msgid "CV Digitization (OCR)"
-msgstr ""
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
-msgid "CV Display"
-msgstr ""
+"Asettamalla aliaksen työpaikalle, tähän osoitteeseen lähetetyt sähköpostit "
+"luovat hakemuksia automaattisesti. Voit jopa käyttää useita seurantoja "
+"saadaksesi tilastoja hakemuksen lähteen mukaan: LinkedIn, Monster, Indeed "
+"jne."
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_calendar_event
@@ -747,14 +834,60 @@ msgstr "Kampanja"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__can_edit_body
+#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__can_edit_body
 msgid "Can Edit Body"
 msgstr "Voi muokata runkoa"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.candidate_send_mail_view_form
 msgid "Cancel"
 msgstr "Peruuta"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_candidate
+#: model:ir.model.fields,field_description:hr_recruitment.field_calendar_event__candidate_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__candidate_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee__candidate_id
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
+msgid "Candidate"
+msgstr "Ehdokas"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__user_id
+msgid "Candidate Manager"
+msgstr "Hakijan päällikkö"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_company__candidate_properties_definition
+msgid "Candidate Properties"
+msgstr "Ehdokkaan ominaisuudet"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_form
+msgid "Candidate's Name"
+msgstr "Ehdokkaan nimi"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_candidate
+#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__candidate_ids
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_candidate
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_calendar
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_tree
+msgid "Candidates"
+msgstr "Ehdokkaat"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__similar_candidates_count
+msgid "Candidates with the same email or phone or mobile"
+msgstr "Ehdokkaat, joilla on sama sähköpostiosoite, puhelin tai matkapuhelin"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__partner_name
+msgid "Candidates's Name"
+msgstr "Ehdokkaan nimi"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_graph_view_job
@@ -770,18 +903,26 @@ msgstr "Hakijan ryhmä"
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "Choose an application email."
-msgstr ""
+msgstr "Valitse hakemuksen sähköposti."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__color
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__color
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__color
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__color
 msgid "Color Index"
 msgstr "Väri-indeksi"
 
 #. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_res_company
+msgid "Companies"
+msgstr "Yritykset"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__company_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__company_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Company"
 msgstr "Yritys"
 
@@ -799,12 +940,13 @@ msgstr "Asetukset"
 #. module: hr_recruitment
 #: model:mail.template,description:hr_recruitment.email_template_data_applicant_congratulations
 msgid "Confirmation email sent to all new job applications"
-msgstr ""
+msgstr "Kaikille uusille työhakemuksille lähetetään vahvistussähköposti"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__partner_id
 msgid "Contact"
 msgstr "Kontakti"
 
@@ -821,13 +963,9 @@ msgstr "Sisältö"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__body
+#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__body
 msgid "Contents"
 msgstr "Sisältö"
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
-msgid "Contract"
-msgstr "Sopimus"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
@@ -844,6 +982,12 @@ msgstr "Työsopimus allekirjoitettu"
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "Copy this email address, to paste it in your email composer, to apply."
 msgstr ""
+"Kopioi tämä sähköpostiosoite, liitä sen sähköpostimuokkaimeen, ja hae."
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__message_bounce
+msgid "Counter of the number of bounced emails for this contact"
+msgstr "Tämän yhteystiedon bounced-tilassa olevien sähköpostien laskuri"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -852,6 +996,7 @@ msgstr "Luo"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_form
 msgid "Create Employee"
 msgstr "Luo työntekijä"
 
@@ -862,23 +1007,31 @@ msgid "Create a Job Position"
 msgstr "Luo tehtävänimike"
 
 #. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/models/hr_applicant.py:0
-msgid "Create new applications by sending an email to"
+#: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_plan_action_config_hr_applicant
+msgid "Create a Recruitment Activity Plan"
+msgstr "Luo rekrytointisuunnitelma"
+
+#. module: hr_recruitment
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
+msgid "Create a new rule to process emails from specific job boards."
 msgstr ""
+"Luo uusi sääntö, joka käsittelee tiettyjen työpaikkataulujen sähköposteja."
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "Create your first Job Position."
-msgstr ""
+msgstr "Luo ensimmäinen työpaikka."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__create_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__create_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__create_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__create_uid
@@ -888,8 +1041,11 @@ msgstr "Luonut"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__create_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__create_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__create_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__create_date
@@ -897,9 +1053,9 @@ msgid "Created on"
 msgstr "Luotu"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__create_date
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
 msgid "Creation Date"
 msgstr "Luontipäivä"
 
@@ -907,6 +1063,16 @@ msgstr "Luontipäivä"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_bounced_content
 msgid "Custom Bounced Message"
 msgstr "Mukautettu palautettu viesti"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__date_from
+msgid "Date From"
+msgstr "Alkupäivä"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__date_to
+msgid "Date To"
+msgstr "Päättymispäivä"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__day_close
@@ -924,10 +1090,23 @@ msgid "Default Values"
 msgstr "Oletusarvot"
 
 #. module: hr_recruitment
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
+msgid ""
+"Define a regex: Extract the applicant's name from the email's subject or "
+"body."
+msgstr "Määritä regex: Poimi hakijan nimi sähköpostin otsikosta tai rungosta."
+
+#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
-msgid "Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"
-msgstr "Määrittele erillinen kontaktointiosoite tälle työtehtävälle. Jos tämä tietue jätetään tyhjäksi, käytetään henkilöstöhallinnon asetuksista löytyvää oletussähköpostiosoitetta."
+msgid ""
+"Define a specific contact address for this job position. If you keep it "
+"empty, the default email address will be used which is in human resources "
+"settings"
+msgstr ""
+"Määrittele erillinen kontaktointiosoite tälle työtehtävälle. Jos tämä tietue"
+" jätetään tyhjäksi, käytetään henkilöstöhallinnon asetuksista löytyvää "
+"oletussähköpostiosoitetta."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -936,12 +1115,13 @@ msgid ""
 "                    qualification call, first interview, second interview, refused,\n"
 "                    hired."
 msgstr ""
+"Määrittele tässä esimerkiksi rekrytointiprosessin vaiheet:\n"
+"                    karsintakutsu, ensimmäinen haastattelu, toinen haastattelu, kieltäytyminen,\n"
+"                    työsopimus."
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__type_id
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__type_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_degree_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_degree_tree
 msgid "Degree"
@@ -950,9 +1130,10 @@ msgstr "Tutkintotaso"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__name
 msgid "Degree Name"
-msgstr ""
+msgstr "Tutkinnon nimi"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_degree
 msgid "Degrees"
 msgstr "Tutkintotasot"
@@ -963,6 +1144,7 @@ msgid "Delay to Close"
 msgstr "Sulkemisen viive"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Delete"
 msgstr "Poista"
@@ -986,10 +1168,14 @@ msgid "Departments"
 msgstr "Osastot"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__description
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__name
 msgid "Description"
 msgstr "Kuvaus"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+msgid "Details"
+msgstr "Tiedot"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_digest_digest
@@ -998,8 +1184,20 @@ msgstr "Yhteenveto"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
-msgid "Digitize your CV to extract name and email automatically."
+msgid "Digitize your résumé to extract name and email automatically."
 msgstr ""
+"Digitoi ansioluettelosi ja poimi nimi ja sähköpostiosoite automaattisesti."
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+msgid "Directly"
+msgstr "Suoraan"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
+msgid "Directly Available"
+msgstr "Suoraan saatavilla"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -1008,27 +1206,49 @@ msgstr "Hylkää"
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_applicant_cv_display
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Display CV on application form"
-msgstr ""
+msgstr "Näytä ansioluettelo hakemuslomakkeessa"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_calendar_event__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_ir_ui_menu__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_mail_activity_plan__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_mail_activity_schedule__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_company__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_users__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_utm_campaign__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_utm_source__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+msgid "Display résumé on application form"
+msgstr "Näytä ansioluettelo hakemuslomakkeessa"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/digest.py:0
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "Sinulla ei ole oikeutta tähän toimintoon. Et voi käyttää tätä tietoa käyttäjien  yhteenvetopostissa"
+msgstr ""
+"Sinulla ei ole oikeutta tähän toimintoon. Et voi käyttää tätä tietoa "
+"käyttäjien  yhteenvetopostissa"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
@@ -1043,17 +1263,17 @@ msgstr "Asiakirjojen määrä"
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
+#: code:addons/hr_recruitment/models/hr_candidate.py:0
 #: code:addons/hr_recruitment/models/hr_job.py:0
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__document_ids
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Documents"
 msgstr "Dokumentit"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_1
-msgid "Doesn't fit the job requirements"
-msgstr ""
+msgid "Does not fit the job requirements"
+msgstr "Ei vastaa työn vaatimuksia"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
@@ -1061,15 +1281,35 @@ msgid ""
 "Don't forget to specify the department if your recruitment process\n"
 "                is different according to the job position."
 msgstr ""
+"Älä unohda määritellä osastoa, jos rekrytointiprosessisi\n"
+"                on erilainen työtehtävän mukaan."
+
+#. module: hr_recruitment
+#: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_6
+msgid "Duplicate"
+msgstr "Kopioi"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicates
+msgid "Duplicates"
+msgstr "Kaksoiskappaleet"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicates_count
+msgid "Duplicates Count"
+msgstr "Kaksoiskappaleiden määrä"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_from
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__email_from
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__email
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__email
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Email"
 msgstr "Sähköposti"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_email
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Email Alias"
@@ -1084,53 +1324,68 @@ msgstr "Sähköpostin mallipohja"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_id
-msgid "Email alias for this job position. New emails will automatically create new applicants for this job position."
-msgstr "Sähköpostialias tälle työtehtävälle. Uudet sähköpostit luovat automaattisesti uuden hakijan tähän työtehtävään."
+msgid ""
+"Email alias for this job position. New emails will automatically create new "
+"applicants for this job position."
+msgstr ""
+"Sähköpostialias tälle työtehtävälle. Uudet sähköpostit luovat "
+"automaattisesti uuden hakijan tähän työtehtävään."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_cc
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__email_cc
 msgid "Email cc"
 msgstr "Sähköpostin kopio"
 
 #. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
-msgid "Email of the applicant is not set, email won't be sent."
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
 msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__name
-msgid "Email subject for applications sent via email"
-msgstr ""
+"Sähköpostin verkkotunnus esim. 'example.com' kohdassa 'odoo@example.com'"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 msgid "Email template must be selected to send a mail"
-msgstr ""
+msgstr "Sähköpostimallin on oltava valittuna sähköpostin lähettämistä varten"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_platforms
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_emails
+msgid "Emails"
+msgstr "Sähköpostit"
 
 #. module: hr_recruitment
 #. odoo-python
-#: code:addons/hr_recruitment/models/hr_applicant.py:0
+#: code:addons/hr_recruitment/models/hr_candidate.py:0
 #: model:ir.model,name:hr_recruitment.model_hr_employee
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__emp_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__employee_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__employee_id
 msgid "Employee"
 msgstr "Työntekijä"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__emp_is_active
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__emp_is_active
+msgid "Employee Active"
+msgstr "Työntekijä aktiivinen"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__employee_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__employee_name
 msgid "Employee Name"
 msgstr "Employee Name"
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_hired_template
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.candidate_hired_template
 msgid "Employee created:"
-msgstr ""
+msgstr "Työntekijä luotu:"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__emp_id
-msgid "Employee linked to the applicant."
-msgstr "Hakijaan kytkeytyvä työntekijä"
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__employee_id
+#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__employee_id
+msgid "Employee linked to the candidate."
+msgstr "Ehdokkaaseen liittyvä työntekijä."
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_config_employees
@@ -1144,23 +1399,26 @@ msgstr "Työsuhdetyypit"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__priority
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__priority
 msgid "Evaluation"
-msgstr ""
+msgstr "Arviointi"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__3
+#: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_candidate__priority__3
 msgid "Excellent"
 msgstr "Erinomainen"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__expected_employee
-msgid "Expected Employee"
-msgstr ""
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_expected
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+msgid "Expected"
+msgstr "Odotettu"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_expected
-msgid "Expected Salary"
-msgstr "Odotettu palkka"
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__expected_employee
+msgid "Expected Employee"
+msgstr "Odotettu työntekijä"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_expected_extra
@@ -1175,17 +1433,21 @@ msgstr "Laajennetut suodattimet"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__extended_interviewer_ids
 msgid "Extended Interviewer"
-msgstr ""
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
-msgid "Extra advantages..."
-msgstr "Muut edut"
+msgstr "Laajennettu haastattelija"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__favorite_user_ids
 msgid "Favorite User"
+msgstr "Suosikkikäyttäjä"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__phone_sanitized
+msgid ""
+"Field used to store sanitized phone number. Helps speeding up searches and "
+"comparisons."
 msgstr ""
+"Kenttä, jota käytetään puhdistetun puhelinnumeron tallentamiseen. Auttaa "
+"nopeuttamaan hakuja ja vertailuja."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.ir_attachment_hr_recruitment_list_view
@@ -1203,17 +1465,26 @@ msgid "Folded in Kanban"
 msgstr "Laskostettu Kanbanisa"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
+msgid "Folded in Recruitment Pipe:"
+msgstr "Taitettu rekrytointiputkessa:"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_follower_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_follower_ids
 msgid "Followers"
 msgstr "Seuraajat"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_partner_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Seuraajat (kumppanit)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_type_icon
+#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__activity_type_icon
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr "Font awesome -ikoni esim.. fa-tasks"
 
@@ -1223,18 +1494,18 @@ msgid "Future Activities"
 msgstr "Tulevat toimenpiteet"
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_kanban
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Generate Email"
-msgstr ""
+msgstr "Luo sähköposti"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_get_refuse_reason
 msgid "Get Refuse Reason"
-msgstr ""
+msgstr "Hae hylkäämisen syy"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__1
+#: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_candidate__priority__1
 msgid "Good"
 msgstr "Hyvä"
 
@@ -1242,6 +1513,11 @@ msgstr "Hyvä"
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_graduate
 msgid "Graduate"
 msgstr "Valmistunut"
+
+#. module: hr_recruitment
+#: model_terms:web_tour.tour,rainbow_man_message:hr_recruitment.hr_recruitment_tour
+msgid "Great job! You hired a new colleague!"
+msgstr "Hienoa! Palkkasit uuden kollegan!"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__kanban_state__done
@@ -1266,113 +1542,241 @@ msgstr "Harmaa kanban otsikko"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__group_applicant_cv_display
 msgid "Group Applicant Cv Display"
-msgstr ""
+msgstr "Hakijaryhmän ansioluetteloiden näyttö"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
 msgid "Group By"
 msgstr "Ryhmittely"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__hr_responsible_id
-msgid "HR Responsible"
-msgstr ""
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__has_domain
 msgid "Has Domain"
-msgstr ""
+msgstr "Sisältää tunnusalueen"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__has_message
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__has_message
 msgid "Has Message"
 msgstr "Sisältää viestin"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_closed
-msgid "Hire Date"
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
+msgid ""
+"Have you tried to <a>add skills to your job position</a> and search into the"
+" Reserve ?"
 msgstr ""
+"Oletko yrittänyt <a>lisätä osaamista työtehtävään</a> ja hakea varalla "
+"olevista ?"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_closed
+msgid "Hire Date"
+msgstr "Palkkauspäivä"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__no_of_hired_employee
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__application_status__hired
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Hired"
 msgstr "Palkattu"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__hired_stage
 msgid "Hired Stage"
-msgstr ""
+msgstr "Palkkausvaihe"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
+msgid "Hiring Date"
+msgstr "Palkkaamispäivä"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_calendar_event__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_ir_ui_menu__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_mail_activity_plan__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_mail_activity_schedule__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_company__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_users__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_utm_campaign__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_utm_source__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_parent_thread_id
-msgid "ID of the parent record holding the alias (example: project holding the task creation alias)"
-msgstr "Ylätason aliastietueen id (esim. tehtävien luontiin käytettävän aliaksen sisältävä projekti)"
+msgid ""
+"ID of the parent record holding the alias (example: project holding the task"
+" creation alias)"
+msgstr ""
+"Ylätason aliastietueen id (esim. tehtävien luontiin käytettävän aliaksen "
+"sisältävä projekti)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_icon
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__activity_exception_icon
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_exception_icon
 msgid "Icon"
 msgstr "Kuvake"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_exception_icon
+#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__activity_exception_icon
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Ikoni joka kertoo poikkeustoiminnosta."
+msgstr "Kuvake joka kertoo poikkeustoiminnosta."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_needaction
+#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "Jos valittu, uudet viestit vaativat huomiotasi."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_has_error
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_has_sms_error
+#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__message_has_error
+#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Jos valittu, joitakin viestejä ei ole toimitettu."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__hired_stage
-msgid "If checked, this stage is used to determine the hire date of an applicant"
+msgid ""
+"If checked, this stage is used to determine the hire date of an applicant"
 msgstr ""
+"Jos valittu, vaihetta käytetään hakijan palkkaamispäivän määrittämiseen"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__template_id
-msgid "If set, a message is posted on the applicant using the template when the applicant is set to the stage."
-msgstr "Jos asetettu, hakijalle lähetetään viesti viestipohjaa käyttäen kun hakija siirtyy tähän vaiheeseen."
+msgid ""
+"If set, a message is posted on the applicant using the template when the "
+"applicant is set to the stage."
+msgstr ""
+"Jos asetettu, hakijalle lähetetään viesti viestipohjaa käyttäen kun hakija "
+"siirtyy tähän vaiheeseen."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_bounced_content
-msgid "If set, this content will automatically be sent out to unauthorized users instead of the default message."
-msgstr "Jos asetettu, lähetetään automaattisesti luvattomille käyttäjille oletusviestin sijasta."
+msgid ""
+"If set, this content will automatically be sent out to unauthorized users "
+"instead of the default message."
+msgstr ""
+"Jos asetettu, lähetetään automaattisesti luvattomille käyttäjille "
+"oletusviestin sijasta."
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__emp_is_active
+#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__emp_is_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr ""
+"Jos aktiivisen kentän arvo on epätosi (false), voit piilottaa resurssin "
+"poistamatta sitä."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__active
-msgid "If the active field is set to false, it will allow you to hide the case without removing it."
-msgstr "Jos \"aktiivinen\"-kentän arvoksi asetetaan epätosi (false), tietueen voi piilottaa poistamatta sitä. "
+msgid ""
+"If the active field is set to false, it will allow you to hide the case "
+"without removing it."
+msgstr ""
+"Jos \"aktiivinen\"-kentän arvoksi asetetaan epätosi (false), tietueen voi "
+"piilottaa poistamatta sitä. "
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__is_blacklisted
+msgid ""
+"If the email address is on the blacklist, the contact won't receive mass "
+"mailing anymore, from any list"
+msgstr ""
+"Jos sähköpostiosoite on markkinointikiellossa, yhteystieto ei vastaanota "
+"postituksia miltään postituslistalta."
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__phone_sanitized_blacklisted
+msgid ""
+"If the sanitized phone number is on the blacklist, the contact won't receive"
+" mass mailing sms anymore, from any list"
+msgstr ""
+"Jos puhdistettu puhelinnumero on mustalla listalla, yhteyshenkilö ei enää "
+"saa massatekstiviestejä miltään listalta"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment_stage.py:0
+#: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job0
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job3
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job4
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job5
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "In Progress"
 msgstr "Käynnissä"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+msgid "In-App Purchases"
+msgstr "Sovellusten sisäiset ostot"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid ""
+"Incoming emails create applications automatically. Use it for direct "
+"applications or when posting job offers on LinkedIn, Monster, etc."
+msgstr ""
+"Saapuvat sähköpostit luovat hakemuksia automaattisesti. Käytä sitä suoriin "
+"hakemuksiin tai kun julkaiset työtarjouksia LinkedInissä, Monsterissa jne."
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__mobile_blacklisted
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Ilmaisee, onko mustalle listalle joutunut puhdistettu puhelinnumero "
+"matkapuhelinnumero. Auttaa erottamaan, mikä numero on mustalla listalla, kun"
+" mallissa on sekä matkapuhelin- että puhelinkenttä."
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__phone_blacklisted
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a phone number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Ilmaisee, onko mustalle listalle merkitty puhdistettu puhelinnumero "
+"puhelinnumero. Auttaa erottamaan, mikä numero on mustalla listalla, kun "
+"mallissa on sekä matkapuhelin- että puhelinkenttä."
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__industry_id
+msgid "Industry"
+msgstr "Toimiala"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
@@ -1380,39 +1784,63 @@ msgid "Initial Qualification"
 msgstr "Alustava valinta"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+msgid "Internal notes..."
+msgstr "Sisäiset muistiinpanot..."
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__module_hr_recruitment_survey
 msgid "Interview Forms"
 msgstr "Haastattelulomakkeet"
 
 #. module: hr_recruitment
+#: model:res.groups,name:hr_recruitment.group_hr_recruitment_interviewer
+msgid "Interviewer"
+msgstr "Haastattelija"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__interviewer_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__interviewer_ids
 msgid "Interviewers"
-msgstr ""
+msgstr "Haastattelijat"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__is_mail_template_editor
+#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__is_mail_template_editor
 msgid "Is Editor"
 msgstr "On muokkaaja"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__is_favorite
 msgid "Is Favorite"
-msgstr ""
+msgstr "On suosikki"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_is_follower
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_is_follower
 msgid "Is Follower"
 msgstr "On seuraaja"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__is_warning_visible
 msgid "Is Warning Visible"
-msgstr ""
+msgstr "Onko varoitus näkyvissä"
 
 #. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/models/hr_job.py:0
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__date_from
+msgid ""
+"Is set, update candidates availability once hired for that specific mission."
+msgstr ""
+"On asetettu, päivitä ehdokkaiden saatavuus, kun heidät on palkattu kyseiseen"
+" tehtävään."
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__duration_tracking
+msgid "JSON that maps ids from a many2one field to seconds spent"
+msgstr ""
+"JSON, joka kartoittaa many2one-kentän tunnukset käytetyiksi sekunneiksi"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__job_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -1420,18 +1848,21 @@ msgid "Job"
 msgstr "Tehtävä"
 
 #. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/models/hr_applicant.py:0
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__application_ids
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_pivot_view_job
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Job Applications"
-msgstr ""
+msgstr "Työhakemukset"
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_boards
+msgid "Job Boards"
+msgstr "Työpaikkataulut"
 
 #. module: hr_recruitment
 #: model:utm.campaign,title:hr_recruitment.utm_campaign_job
 msgid "Job Campaign"
-msgstr ""
+msgstr "Työpaikkakampanja"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__address_id
@@ -1439,19 +1870,26 @@ msgid "Job Location"
 msgstr "Työn sijainti"
 
 #. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_job_platform
+msgid "Job Platforms"
+msgstr "Työfoorumit"
+
+#. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__job_id
 msgid "Job Position"
 msgstr "Tehtävänimike"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_department_new
 msgid "Job Position Created"
-msgstr ""
+msgstr "Työpaikka Luotu"
 
 #. module: hr_recruitment
+#: model:mail.message.subtype,description:hr_recruitment.mt_job_new
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_new
 msgid "Job Position created"
-msgstr ""
+msgstr "Työpaikka luotu"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job
@@ -1464,12 +1902,22 @@ msgstr "Työtehtävät"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Job Posting"
-msgstr ""
+msgstr "Työpaikkailmoitus"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_company__job_properties_definition
+msgid "Job Properties"
+msgstr "Työn ominaisuudet"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__job_ids
 msgid "Job Specific"
-msgstr ""
+msgstr "Työpaikkakohtainen"
+
+#. module: hr_recruitment
+#: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_5
+msgid "Job already fulfilled"
+msgstr "Työ on jo täytetty"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1478,23 +1926,19 @@ msgstr "Tehtävät"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_form
 msgid "Jobs - Recruitment Form"
 msgstr "Työtehtävät - työnhakulomake"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_sources
-msgid "Jobs Sources"
-msgstr ""
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_blocked
 msgid "Kanban Blocked"
-msgstr ""
+msgstr "Kanban estetty"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_normal
 msgid "Kanban Ongoing"
-msgstr ""
+msgstr "Kanban käynnissä"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__kanban_state
@@ -1504,21 +1948,23 @@ msgstr "Kanban-tila"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_done
 msgid "Kanban Valid"
-msgstr ""
+msgstr "Kanban voimassa"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__kpi_hr_recruitment_new_colleagues_value
 msgid "Kpi Hr Recruitment New Colleagues Value"
-msgstr ""
+msgstr "KPI HR Rekrytointi Uuden kollegan arvo"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__lang
+#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__lang
 msgid "Language"
 msgstr "Kieli"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
+#: code:addons/hr_recruitment/models/hr_candidate.py:0
 msgid "Last Meeting"
 msgstr "Viimeisin kokous"
 
@@ -1536,9 +1982,12 @@ msgstr "Vaihe päivittynyt viimeksi"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__write_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__write_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__write_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__write_uid
@@ -1548,9 +1997,12 @@ msgstr "Viimeksi päivittänyt"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__write_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__write_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__write_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__write_date
@@ -1564,7 +2016,8 @@ msgid "Late Activities"
 msgstr "Myöhässä olevat toimenpiteet"
 
 #. module: hr_recruitment
-#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job
+#. odoo-javascript
+#: code:addons/hr_recruitment/static/src/views/recruitment_helper_view.xml:0
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Let's create a job position."
 msgstr "Luodaan työpaikka."
@@ -1572,26 +2025,25 @@ msgstr "Luodaan työpaikka."
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
-msgid "Let's create the position. An email will be setup for applications, and a public job description, if you use the Website app."
+msgid ""
+"Let's create the position. An email will be setup for applications, and a "
+"public job description, if you use the Website app."
 msgstr ""
+"Luodaan asema. Hakemuksia varten perustetaan sähköposti ja julkinen "
+"työnkuvaus, jos käytät verkkosivustosovellusta."
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "Let's have a look at how to <b>improve</b> your <b>hiring process</b>."
 msgstr ""
-
-#. module: hr_recruitment
-#. odoo-javascript
-#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
-msgid "Let's have a look at the applications pipeline."
-msgstr ""
+"Katsotaanpa, miten voit <b>parantaa</b> <b>rekrytointiprosessiasi</b>."
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "Let’s create this new employee now."
-msgstr ""
+msgstr "Luodaan uusi työntekijä nyt."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -1600,19 +2052,60 @@ msgid "Let’s go back to the dashboard."
 msgstr "Mennään takaisin työpöydälle."
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__linkedin_profile
-msgid "LinkedIn Profile"
+#: model:ir.model.fields,help:hr_recruitment.field_calendar_event__applicant_id
+msgid ""
+"Link an applicant to the appointment invite created.\n"
+"Used when creating an invitation from the Meeting action in the applicant form view."
 msgstr ""
+"Linkitä hakija luotuun tapaamiskutsuun.\n"
+"Käytetään, kun luodaan kutsu kokous-toiminnolla hakijalomakkeen näkymässä."
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__linkedin_profile
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__linkedin_profile
+msgid "LinkedIn Profile"
+msgstr "LinkedIn-profiili"
+
+#. module: hr_recruitment
+#: model:ir.actions.server,name:hr_recruitment.action_load_demo_data
+msgid "Load demo data"
+msgstr "Lataa Demodata"
+
+#. module: hr_recruitment
+#. odoo-javascript
+#: code:addons/hr_recruitment/static/src/views/recruitment_helper_view.xml:0
+msgid "Load sample data"
+msgstr "Lataa näytetiedot"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.candidate_send_mail_view_form
+msgid "Load template"
+msgstr "Lataa malli"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_incoming_local
+msgid "Local-part based incoming detection"
+msgstr "Paikallisiin osiin perustuva saapuvien lähetysten havaitseminen"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__template_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__template_id
 msgid "Mail Template"
 msgstr "Viestipohja"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_main_attachment_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "Pääliitetiedosto"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_tree
+msgid "Manager"
+msgstr "Päällikkö"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
@@ -1632,16 +2125,19 @@ msgstr "Mediat"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_display_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__meeting_display_date
 msgid "Meeting Display Date"
-msgstr ""
+msgstr "Kokouksen näyttöpäivämäärä"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_display_text
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__meeting_display_text
 msgid "Meeting Display Text"
-msgstr ""
+msgstr "Kokousnäytön teksti"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__meeting_ids
 msgid "Meetings"
 msgstr "Tapaamiset"
 
@@ -1652,33 +2148,37 @@ msgstr "Valikko"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_error
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_has_error
 msgid "Message Delivery error"
 msgstr "Ongelma viestin toimituksessa"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_ids
 msgid "Messages"
 msgstr "Viestit"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_mobile
-msgid "Mobile"
-msgstr "Matkapuhelin"
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
-msgid "Motivations..."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+msgid "Mission Dates"
+msgstr "Operaation päivämäärät"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__my_activity_date_deadline
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__my_activity_date_deadline
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr "Toimenpiteeni määräaika"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "My Applications"
-msgstr ""
+msgstr "Omat hakemukset"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
+msgid "My Candidates"
+msgstr "Omat ehdokkaani"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
@@ -1688,14 +2188,17 @@ msgstr "Omat suosikkini"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_search_view
 msgid "My Job Positions"
-msgstr ""
+msgstr "Omat työpaikkani"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__name
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_tree
 msgid "Name"
 msgstr "Nimi"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job0
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "New"
 msgstr "Uusi"
@@ -1727,27 +2230,12 @@ msgstr "Uudet hakemukset"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__kpi_hr_recruitment_new_colleagues
 msgid "New Employees"
-msgstr ""
+msgstr "Uudet työntekijät"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__new_hired_employee
 msgid "New Hired Employee"
-msgstr ""
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_employee_view_search
-msgid "Newly Hired"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.hr_employee_action_from_department
-msgid "Newly Hired Employees"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee__newly_hired_employee
-msgid "Newly hired employee"
-msgstr ""
+msgstr "Uusi palkattu työntekijä"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_tree_activity
@@ -1756,53 +2244,67 @@ msgstr "Seuraavat toimenpiteet"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_calendar_event_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__activity_calendar_event_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
 msgstr "Seuraavan toimenpiteen kalenterimerkintä"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_date_deadline
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__activity_date_deadline
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Seuraavan toimenpiteen eräpäivä"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_summary
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__activity_summary
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_summary
 msgid "Next Activity Summary"
 msgstr "Seuraavan toimenpiteen kuvaus"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_type_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__activity_type_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_type_id
 msgid "Next Activity Type"
 msgstr "Seuraavan toimenpiteen tyyppi"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
+#: code:addons/hr_recruitment/models/hr_candidate.py:0
 msgid "Next Meeting"
 msgstr "Seuraava kokous"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
+#: code:addons/hr_recruitment/models/hr_candidate.py:0
 msgid "No Meeting"
 msgstr "Ei kokousta"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
-msgid "No Subject"
-msgstr "Ei aihetta"
-
-#. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "No application found. Let's create one !"
-msgstr ""
+msgstr "Hakemusta ei löytynyt. Luodaan sellainen !"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
 #: model_terms:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid "No applications yet"
-msgstr ""
+msgstr "Ei vielä hakemuksia"
+
+#. module: hr_recruitment
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_candidate
+msgid "No candidates yet"
+msgstr "Ei vielä ehdokkaita"
+
+#. module: hr_recruitment
+#: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_type_action_config_hr_applicant
+msgid "No data to display"
+msgstr "Ei näytettävää dataa"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_recruitment_report_filtered_department
@@ -1812,42 +2314,73 @@ msgid "No data yet!"
 msgstr "Ei vielä tietoja!"
 
 #. module: hr_recruitment
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
+msgid "No rules have been defined."
+msgstr "Sääntöjä ei ole määritelty."
+
+#. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__0
+#: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_candidate__priority__0
 msgid "Normal"
 msgstr "Normaali"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_normalized
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__email_normalized
+msgid "Normalized Email"
+msgstr "Normalisoitu sähköposti"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+msgid "Note"
+msgstr "Muistiinpano"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction_counter
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Toimenpiteiden määrä"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__attachment_number
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__attachment_count
 msgid "Number of Attachments"
 msgstr "Liitteiden lukumäärä"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__new_application_count
-msgid "Number of applications that are new in the flow (typically at first step of the flow)"
-msgstr ""
+msgid ""
+"Number of applications that are new in the flow (typically at first step of "
+"the flow)"
+msgstr "Uusien hakemusten määrä ketjussa (yleensä ensimmäisessä vaiheessa)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__delay_close
 msgid "Number of days to close"
-msgstr ""
+msgstr "Sulkemiseen tarvittavien päivien määrä"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_error_counter
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_has_error_counter
 msgid "Number of errors"
 msgstr "Virheiden määrä"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__no_of_hired_employee
+msgid ""
+"Number of hired employees for this job position during recruitment phase."
+msgstr ""
+"Tähän työtehtävään palkattujen työntekijöiden määrä rekrytointivaiheessa."
+
+#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_needaction_counter
-msgid "Number of messages which requires an action"
+#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__message_needaction_counter
+msgid "Number of messages requiring action"
 msgstr "Toimenpiteitä vaativien viestien määrä"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_has_error_counter
+#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Toimitusvirheellisten viestien määrä"
 
@@ -1858,16 +2391,18 @@ msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "                process and follow up all operations: meetings, interviews, etc."
 msgstr ""
+"Odoo auttaa sinua seuraamaan hakijoita rekrytoinnissa\n"
+"                ja organisoimaan kaikkia tähän liittyviä toimintoja: tapaamisia, haastatteluja jne."
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
 msgid "Officer: Manage all applicants"
-msgstr ""
+msgstr "Esimies: Hallinnoi kaikkia hakijoita"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__old_application_count
 msgid "Old Application"
-msgstr ""
+msgstr "Vanha hakemus"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__application_status__ongoing
@@ -1879,33 +2414,65 @@ msgstr "Jatkuva"
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__module_website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Online Posting"
-msgstr ""
+msgstr "Verkkoilmoitus"
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
+msgid "Operation not supported"
+msgstr "Toiminto ei ole tuettu"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_force_thread_id
-msgid "Optional ID of a thread (record) to which all incoming messages will be attached, even if they did not reply to it. If set, this will disable the creation of new records completely."
-msgstr "Valinnainen sen viestiketjun (tietueen) ID, johon kaikki saapuvat viestit liitetään, vaikka niihin ei vastattaisikaan. Jos tämä asetetaan, uusien tietueiden luominen estetään kokonaan."
+msgid ""
+"Optional ID of a thread (record) to which all incoming messages will be "
+"attached, even if they did not reply to it. If set, this will disable the "
+"creation of new records completely."
+msgstr ""
+"Valinnainen sen viestiketjun (tietueen) ID, johon kaikki saapuvat viestit "
+"liitetään, vaikka niihin ei vastattaisikaan. Jos tämä asetetaan, uusien "
+"tietueiden luominen estetään kokonaan."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_applicant_send_mail__lang
-msgid "Optional translation language (ISO code) to select when sending out an email. If not set, the english version will be used. This should usually be a placeholder expression that provides the appropriate language, e.g. {{ object.partner_id.lang }}."
-msgstr "Valinnainen käännöskieli (ISO-koodi), joka valitaan sähköpostia lähetettäessä. Jos sitä ei ole asetettu, käytetään englanninkielistä versiota. Tämän pitäisi yleensä olla sijoitusilmaus, joka antaa sopivan kielen, esim. {{ object.partner_id.lang }}."
+#: model:ir.model.fields,help:hr_recruitment.field_candidate_send_mail__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+"Valinnainen käännöskieli (ISO-koodi), joka valitaan sähköpostia "
+"lähetettäessä. Jos sitä ei ole asetettu, käytetään englanninkielistä "
+"versiota. Tämän pitäisi yleensä olla sijoitusilmaus, joka antaa sopivan "
+"kielen, esim. {{ object.partner_id.lang }}."
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "Or talk about this applicant privately with your colleagues."
-msgstr ""
+msgstr "Tai puhu tästä hakijasta yksityisesti kollegojesi kanssa."
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
+msgid "Other Applications"
+msgstr "Muut hakemukset"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__other_applications_count
+msgid "Other Applications Count"
+msgstr "Muiden hakemusten määrä"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Other applications"
-msgstr ""
+msgstr "Muut hakemukset"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_user_id
-msgid "Owner"
-msgstr "Omistaja"
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+msgid "Other benefits"
+msgstr "Muut edut"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_parent_model_id
@@ -1919,30 +2486,41 @@ msgstr "Ylätason keskustelun ID"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_parent_model_id
-msgid "Parent model holding the alias. The model holding the alias reference is not necessarily the model given by alias_model_id (example: project (parent_model) and task (model))"
-msgstr "Aliaksen hallussa oleva emomalli. Alias-viittauksen sisältävä malli ei välttämättä ole alias_model_id:llä annettu malli (esimerkki: project (parent_model) ja task (model))"
+msgid ""
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
+"(parent_model) and task (model))"
+msgstr ""
+"Aliaksen hallussa oleva emomalli. Alias-viittauksen sisältävä malli ei "
+"välttämättä ole alias_model_id:llä annettu malli (esimerkki: project "
+"(parent_model) ja task (model))"
 
 #. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/models/hr_applicant.py:0
-msgid "People can also apply by email to save time."
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_job__hr_responsible_id
-msgid "Person responsible of validating the employee's contracts."
-msgstr ""
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_name
+msgid "Partner Name"
+msgstr "Kumppanin nimi"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_phone
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__partner_phone
 msgid "Phone"
 msgstr "Puhelin"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__phone_sanitized_blacklisted
+msgid "Phone Blacklisted"
+msgstr "Puhelin on markkinointikiellossa"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__phone_mobile_search
+msgid "Phone/Mobile"
+msgstr "Puhelin / matkapuhelin"
+
+#. module: hr_recruitment
 #. odoo-python
-#: code:addons/hr_recruitment/models/hr_applicant.py:0
-msgid "Please provide an applicant name."
-msgstr ""
+#: code:addons/hr_recruitment/models/hr_candidate.py:0
+msgid "Please provide an candidate name."
+msgstr "Anna ehdokkaan nimi."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_contact
@@ -1963,9 +2541,21 @@ msgid "Probability"
 msgstr "Todennäköisyys"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+msgid "Process"
+msgstr "Käsittele"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__applicant_properties
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__candidate_properties
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__job_properties
+msgid "Properties"
+msgstr "Ominaisuudet"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_proposed
-msgid "Proposed Salary"
-msgstr "Ehdotettu palkka"
+msgid "Proposed"
+msgstr "Ehdotettu"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_proposed_extra
@@ -1973,18 +2563,25 @@ msgid "Proposed Salary Extra"
 msgstr "Ehdotettu palkan lisä"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+msgid "Provide an email"
+msgstr "Anna sähköpostiosoite"
+
+#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
-msgid "Publish available jobs on your website"
-msgstr ""
+msgid "Publish job offers on your website"
+msgstr "Julkaise työtarjouksia verkkosivustollasi"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__rating_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Arviointi"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment_stage.py:0
+#: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job0
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job3
@@ -1995,10 +2592,16 @@ msgid "Ready for Next Stage"
 msgstr "Valmis seuraavaan vaiheeseen"
 
 #. module: hr_recruitment
-#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job
+#. odoo-javascript
+#: code:addons/hr_recruitment/static/src/views/recruitment_helper_view.xml:0
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Ready to recruit more efficiently?"
 msgstr "Oletko valmis rekrytoimaan tehokkaammin?"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+msgid "Reason"
+msgstr "Syy"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_force_thread_id
@@ -2014,6 +2617,7 @@ msgstr "Rekrytoija"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_root
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.digest_digest_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Recruitment"
 msgstr "Rekrytointi"
@@ -2027,7 +2631,6 @@ msgstr "Rekrytointi / Hakijoiden vaiheet"
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_report_filtered_department
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_report_filtered_job
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_action_analysis
-#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_report_menu
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_graph
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_pivot
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -2035,44 +2638,34 @@ msgid "Recruitment Analysis"
 msgstr "Rekrytoinnin analyysi"
 
 #. module: hr_recruitment
-#: model:res.groups,name:hr_recruitment.group_hr_recruitment_interviewer
-msgid "Recruitment Interviewer"
-msgstr ""
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
-msgid "Recruitment Process"
-msgstr "Rekrytointiprosessi"
+#: model:ir.actions.act_window,name:hr_recruitment.mail_activity_plan_action_config_hr_applicant
+msgid "Recruitment Plans"
+msgstr "Rekrytointisuunnitelmat"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
 msgid "Recruitment Stages"
-msgstr ""
+msgstr "Rekrytointivaiheet"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_congratulations
 msgid "Recruitment: Application Acknowledgement"
-msgstr ""
+msgstr "Rekrytointi: Hakemuksen kuittaus"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_interest
 msgid "Recruitment: Interest"
-msgstr ""
+msgstr "Rekrytointi: kiinnostunut"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_not_interested
 msgid "Recruitment: Not interested anymore"
-msgstr ""
+msgstr "Rekrytointi: ei enää kiinnostunut"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_refuse
 msgid "Recruitment: Refuse"
-msgstr ""
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
-msgid "Recruitments"
-msgstr ""
+msgstr "Rekrytointi: Hylätty"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__kanban_state__blocked
@@ -2085,11 +2678,17 @@ msgid "Red Kanban Label"
 msgstr "Punainen kanban otsikko"
 
 #. module: hr_recruitment
+#: model:ir.actions.server,name:hr_recruitment.ir_actions_server_refuse_applicant
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Refuse"
 msgstr "Hylkää"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__refuse_date
+msgid "Refuse Date"
+msgstr "Hylkääminen päivä"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2102,34 +2701,67 @@ msgstr "Hylkää"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_refuse_reason_view_tree
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Refuse Reason"
-msgstr ""
+msgstr "Kieltäytyminen syy"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_refuse_reason
 msgid "Refuse Reason of Applicant"
-msgstr ""
+msgstr "Hakijan kieltäytymisen syy"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_refuse_reason_action
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_applicant_refuse_reason
 msgid "Refuse Reasons"
-msgstr ""
+msgstr "Kieltäytyminen syyt"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+msgid "Refuse the"
+msgstr "Kieltäydy"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__application_status__refused
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Refused"
 msgstr "Hylätty"
 
 #. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
+msgid ""
+"Refused automatically because this application has been identified as a "
+"duplicate of %(link)s"
+msgstr ""
+"Hylätään automaattisesti, koska tämä hakemus on tunnistettu "
+"kaksoiskappaleeksi hakemuksesta %(link)s"
+
+#. module: hr_recruitment
+#: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_2
+msgid "Refused by applicant: job fit"
+msgstr "Hakija on hylännyt hakemuksen: työhön sopivuus"
+
+#. module: hr_recruitment
+#: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_8
+msgid "Refused by applicant: salary"
+msgstr "Hakija on kieltäytynyt: palkka"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__regex
+msgid "Regex"
+msgstr "Säännöllinen lauseke"
+
+#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Remote"
-msgstr ""
+msgstr "Etänä"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__render_model
+#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__render_model
 msgid "Rendering Model"
 msgstr "Renderöintimalli"
 
@@ -2147,17 +2779,13 @@ msgstr "Vaatimukset"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
-msgid "Reserve"
-msgstr "Varaa"
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Responsible"
 msgstr "Vastuuhenkilö"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_user_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__activity_user_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_user_id
 msgid "Responsible User"
 msgstr "Vastuuhenkilö"
 
@@ -2169,15 +2797,26 @@ msgstr "Palauta"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Resume's content"
-msgstr ""
+msgstr "Ansioluettelon sisältö"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Running Applicants"
-msgstr ""
+msgstr "Käynnissä olevat hakijat"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+msgid "Résumé Digitization (OCR)"
+msgstr "Ansioluettelon digitointi (OCR)"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+msgid "Résumé Display"
+msgstr "Ansioluettelon näyttö"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_sms_error
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "Tekstiviestin toimitusvirhe"
 
@@ -2192,6 +2831,11 @@ msgid "Salary Expected by Applicant, extra advantages"
 msgstr "Hakijan odottama palkka, myös muut edut"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+msgid "Salary Package"
+msgstr "Palkkapaketti"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_proposed
 msgid "Salary Proposed by the Organisation"
 msgstr "Organisaation ehdottama palkka"
@@ -2202,12 +2846,24 @@ msgid "Salary Proposed by the Organisation, extra advantages"
 msgstr "Organisaation ehdottama palkka, myös muut hyödyt"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__phone_sanitized
+msgid "Sanitized Number"
+msgstr "Puhdistettu numero"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_phone_sanitized
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__partner_phone_sanitized
+msgid "Sanitized Phone Number"
+msgstr "Puhdistettu puhelinnumero"
+
+#. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "Save it!"
-msgstr ""
+msgstr "Tallenna se!"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Schedule Interview"
 msgstr "Ajoita haastattelu"
@@ -2220,7 +2876,7 @@ msgstr "Etsi hakijoita"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_view_search
 msgid "Search Source"
-msgstr ""
+msgstr "Etsi lähde"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
@@ -2228,19 +2884,31 @@ msgid "Second Interview"
 msgstr "Toinen haastattelu"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__address_id
+msgid ""
+"Select the location where the applicant will work. Addresses listed here are"
+" defined on the company's contact information."
+msgstr ""
+"Valitse paikka, jossa hakija työskentelee. Tässä luetellut osoitteet "
+"määritellään yrityksen yhteystiedoissa."
+
+#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.candidate_send_mail_view_form
 msgid "Send"
 msgstr "Lähetä"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__module_hr_recruitment_extract
 msgid "Send CV to OCR to fill applications"
-msgstr ""
+msgstr "Lähetä CV OCR:lle hakemusten täyttämiseksi"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
+#: code:addons/hr_recruitment/models/hr_candidate.py:0
 #: model:ir.actions.server,name:hr_recruitment.action_applicant_send_mail
+#: model:ir.actions.server,name:hr_recruitment.action_candidate_send_mail
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__send_mail
 msgid "Send Email"
 msgstr "Lähetä sähköposti"
@@ -2248,22 +2916,30 @@ msgstr "Lähetä sähköposti"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Send Interview Survey"
-msgstr ""
+msgstr "Lähetä haastattelukysely"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_applicant_mass_sms
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_candidate_mass_sms
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Send SMS"
 msgstr "Lähetä tekstiviesti"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
-msgid "Send an Interview Survey to the applicant during the recruitment process"
-msgstr ""
+msgid ""
+"Send an Interview Survey to the applicant during the recruitment process"
+msgstr "Lähetä hakijalle haastattelukysely rekrytointiprosessin aikana"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_send_mail
 msgid "Send mails to applicants"
-msgstr ""
+msgstr "Lähetä sähköpostia hakijoille"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_candidate_send_mail
+msgid "Send mails to candidates"
+msgstr "Lähetä sähköpostia ehdokkaille"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2274,9 +2950,10 @@ msgstr "Lähetä teksti kontakteillesi"
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "Send your email. Followers will get a copy of the communication."
-msgstr ""
+msgstr "Lähetä sähköpostia. Seuraajat saavat kopion viestistä."
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__sequence
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__sequence
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__sequence
 msgid "Sequence"
@@ -2284,8 +2961,12 @@ msgstr "Järjestys"
 
 #. module: hr_recruitment
 #: model:mail.template,description:hr_recruitment.email_template_data_applicant_interest
-msgid "Set this template to a recruitment stage to send it when applications reach that stage"
+msgid ""
+"Set this template to a recruitment stage to send it when applications reach "
+"that stage"
 msgstr ""
+"Aseta tämä malli rekrytointivaiheeseen ja lähetä se, kun hakemukset "
+"saavuttavat kyseisen vaiheen"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_configuration
@@ -2296,7 +2977,30 @@ msgstr "Asetukset"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Show all records which has next action date is before today"
-msgstr "Näytä kaikki tietueet joissa on toimenpide myöhässä."
+msgstr "Näytä kaikki tietueet joissa on toimenpide myöhässä"
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_candidate.py:0
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_form
+msgid "Similar Candidates"
+msgstr "Vastaavat ehdokkaat"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__similar_candidates_count
+msgid "Similar Candidates Count"
+msgstr "Samankaltaisten ehdokkaiden määrä"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__single_applicant_email
+msgid "Single Applicant Email"
+msgstr "Yhden hakijan sähköpostiosoite"
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
+msgid "Some values do not exist in the application status"
+msgstr "Joitakin arvoja ei ole sovelluksen tilassa"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__source_id
@@ -2320,9 +3024,20 @@ msgid "Sources of Applicants"
 msgstr "Hakemusten lähteet"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+msgid "Sourcing"
+msgstr "Hankinta"
+
+#. module: hr_recruitment
+#: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_7
+msgid "Spam"
+msgstr "Roskaposti"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__job_ids
-msgid "Specific jobs that uses this stage. Other jobs will not use this stage."
+msgid "Specific jobs that use this stage. Other jobs will not use this stage."
 msgstr ""
+"Tätä vaihetta käyttävät erityistyöt. Muut työt eivät käytä tätä vaihetta."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__stage_id
@@ -2354,8 +3069,12 @@ msgstr "Vaihe muutettu"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__last_stage_id
-msgid "Stage of the applicant before being in the current stage. Used for lost cases analysis."
-msgstr "Hakijan edeltävä vaihe ennen nykyistä vaihetta. Käytetään analysoidessa hävittyjä hakemuksia."
+msgid ""
+"Stage of the applicant before being in the current stage. Used for lost "
+"cases analysis."
+msgstr ""
+"Hakijan edeltävä vaihe ennen nykyistä vaihetta. Käytetään analysoidessa "
+"hävittyjä hakemuksia."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
@@ -2366,6 +3085,8 @@ msgstr "Vaiheet"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_state
+#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__activity_state
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__activity_state
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
@@ -2375,17 +3096,18 @@ msgstr ""
 "Tila aktiviteetin perusteella\n"
 "Myöhässä: Eräpäivä on menneisyydessä\n"
 "Tänään: Eräpäivä on tänään\n"
-"Suunniteltu: Tulevaisuudessa"
+"Suunniteltu: Tulevaisuudessa."
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__duration_tracking
+msgid "Status time"
+msgstr "Tila-aika"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__subject
+#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__subject
 msgid "Subject"
 msgstr "Aihe"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__name
-msgid "Subject / Application"
-msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__name
@@ -2395,67 +3117,100 @@ msgstr "Tunnisteen nimi"
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_applicant_category_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Tunniste on jo olemassa!"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_category_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__categ_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__categ_ids
 #: model:ir.ui.menu,name:hr_recruitment.hr_applicant_category_menu
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_tree
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Tags"
 msgstr "Tunnisteet"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_job__interviewer_ids
-msgid "The Interviewers set on the job position can see all Applicants in it. They have access to the information, the attachments, the meeting management and they can refuse him. You don't need to have Recruitment rights to be set as an interviewer."
+#: model:ir.model.constraint,message:hr_recruitment.constraint_hr_job_platform_email_uniq
+msgid ""
+"The Email must be unique, this one already corresponds to another Job "
+"Platform."
 msgstr ""
+"Sähköpostin on oltava yksilöllinen, tämä vastaa jo toista "
+"rekrytointialustaa."
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__interviewer_ids
+msgid ""
+"The Interviewers set on the job position can see all Applicants in it. They "
+"have access to the information, the attachments, the meeting management and "
+"they can refuse him. You don't need to have Recruitment rights to be set as "
+"an interviewer."
+msgstr ""
+"Työpaikan haastattelijoille asetetut hakijat näkevät kaikki siinä olevat "
+"hakijat. Heillä on pääsy tietoihin, liitteisiin, kokouksen hallintaan ja he "
+"voivat kieltäytyä hakijasta. Sinulla ei tarvitse olla rekrytointioikeuksia "
+"ollaksesi asetettu haastattelijaksi."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__user_id
-msgid "The Recruiter will be the default value for all Applicants Recruiter's field in this job position. The Recruiter is automatically added to all meetings with the Applicant."
+msgid ""
+"The Recruiter will be the default value for all Applicants in this job"
+"             position. The Recruiter is automatically added to all meetings "
+"with the Applicant."
 msgstr ""
+"Rekrytoija on oletusarvo kaikille tämän työpaikan hakijoille. Rekrytoija "
+"lisätään automaattisesti kaikkiin tapaamisiin hakijan kanssa."
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/utm_campaign.py:0
-msgid "The UTM campaign '%s' cannot be deleted as it is used in the recruitment process."
+msgid ""
+"The UTM campaign '%s' cannot be deleted as it is used in the recruitment "
+"process."
 msgstr ""
-
-#. module: hr_recruitment
-#: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_3
-msgid "The applicant gets a better offer"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_2
-msgid "The applicant is not interested anymore"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__availability
-msgid "The date at which the applicant will be available to start working"
-msgstr ""
+"UTM-kampanjaa \"%s\" ei voi poistaa, koska sitä käytetään "
+"rekrytointiprosessissa."
 
 #. module: hr_recruitment
 #. odoo-python
-#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
-msgid "The email will not be sent to the following applicant(s) as they don't have email address."
+#: code:addons/hr_recruitment/models/hr_candidate.py:0
+msgid ""
+"The candidate is linked to an employee, to avoid losing information, archive"
+" it instead."
 msgstr ""
+"Ehdokas on sidoksissa työntekijään, arkistoi se sen sijaan, jotta tietoja ei"
+" menetettäisi."
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__availability
+#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__availability
+msgid "The date at which the applicant will be available to start working"
+msgstr "Päivämäärä, jolloin hakija on käytettävissä työn aloittamiseen"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_send_mail.py:0
 msgid "The following applicants are missing an email address: %s."
-msgstr ""
+msgstr "Seuraavilta hakijoilta puuttuu sähköpostiosoite: %s."
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/wizard/candidate_send_mail.py:0
+msgid "The following candidates are missing an email address: %s."
+msgstr "Seuraavilta ehdokkailta puuttuu sähköpostiosoite: %s."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_model_id
-msgid "The model (Odoo Document Kind) to which this alias corresponds. Any incoming email that does not reply to an existing record will cause the creation of a new record of this model (e.g. a Project Task)"
-msgstr "Malli (Odoo Document Kind), jota tämä alias vastaa. Kaikki saapuvat sähköpostiviestit, jotka eivät vastaa olemassa olevaan tietueeseen, aiheuttavat uuden tietueen luomisen tähän malliin (esim. projektitehtävä)"
+msgid ""
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
+" email that does not reply to an existing record will cause the creation of "
+"a new record of this model (e.g. a Project Task)"
+msgstr ""
+"Malli (Odoo Document Kind), jota tämä alias vastaa. Kaikki saapuvat "
+"sähköpostiviestit, jotka eivät vastaa olemassa olevaan tietueeseen, "
+"aiheuttavat uuden tietueen luomisen tähän malliin (esim. projektitehtävä)"
 
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_recruitment_degree_name_uniq
@@ -2464,44 +3219,98 @@ msgstr "Tutkinnon nimen pitää olla yksilöllinen!"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_name
-msgid "The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>"
-msgstr "Sähköpostin aliaksen nimi, esim. 'jobs', jos haluat saada sähköposteja osoitteeseen <jobs@example.odoo.com>"
+msgid ""
+"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
+"<jobs@example.odoo.com>"
+msgstr ""
+"Sähköpostin aliaksen nimi, esim. 'jobs', jos haluat saada sähköposteja "
+"osoitteeseen <jobs@example.odoo.com>"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_user_id
-msgid "The owner of records created upon receiving emails on this alias. If this field is not set the system will attempt to find the right owner based on the sender (From) address, or will use the Administrator account if no system user is found for that address."
-msgstr "Tämän aliaksen sähköpostiviestien vastaanottamisen yhteydessä luotujen tietueiden omistaja. Jos tätä kenttää ei ole asetettu, järjestelmä yrittää löytää oikean omistajan lähettäjän (From) -osoitteen perusteella tai käyttää järjestelmänvalvojan tiliä, jos kyseisestä osoitteesta ei löydy järjestelmän käyttäjää."
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_platform__regex
+msgid ""
+"The regex facilitates to extract information from the subject or body of the"
+" received email to autopopulate the Applicant's name field"
+msgstr ""
+"Regex helpottaa tietojen poimimista vastaanotetun sähköpostiviestin aiheesta"
+" tai rungosta hakijan nimikentän automaattista täyttämistä varten"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__campaign_id
-msgid "This is a name that helps you keep track of your different campaign efforts, e.g. Fall_Drive, Christmas_Special"
-msgstr "Nimi, joka auttaa luokittelemaan erilaiset kampanjatoimet esim. joulutervehdys, kesäkampanja"
+#. odoo-javascript
+#: code:addons/hr_recruitment/static/src/views/recruitment_list_controller.js:0
+msgid ""
+"These job positions and all related applicants will be archived. Are you "
+"sure?"
+msgstr ""
+"Nämä työpaikat ja kaikki niihin liittyvät hakijat arkistoidaan. Oletko "
+"varma?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__medium_id
-msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr "Toimitustapa, esim. postitus, sähköposti tai mainosbanneri."
+msgid ""
+"This displays how the applicant has reached out, e.g. via Email, LinkedIn, "
+"Website, etc."
+msgstr ""
+"Tässä näytetään, miten hakija on ottanut yhteyttä, esimerkiksi "
+"sähköpostitse, LinkedInissä, verkkosivustolla jne."
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_normalized
+#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__email_normalized
+msgid ""
+"This field is used to search on email address as the primary email field can"
+" contain more than strictly an email address."
+msgstr ""
+"Tätä kenttää käytetään sähköpostiosoitteiden hakuun, koska ensisijainen "
+"sähköpostiosoite voi sisältää muutakin kuin vain sähköpostiosoitteen."
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__campaign_id
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
+msgstr ""
+"Nimi, joka auttaa luokittelemaan erilaiset kampanjatoimet esim. "
+"joulutervehdys, kesäkampanja"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__source_id
-msgid "This is the source of the link, e.g. Search Engine, another domain, or name of email list"
-msgstr "Linkin lähde, esim. hakukone, toinen verkkotunnus tai sähköpostilistan nimi"
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
+msgstr ""
+"Linkin lähde, esim. hakukone, toinen verkkotunnus tai sähköpostilistan nimi"
+
+#. module: hr_recruitment
+#. odoo-javascript
+#: code:addons/hr_recruitment/static/src/views/recruitment_form_controller.js:0
+#: code:addons/hr_recruitment/static/src/views/recruitment_kanban_view.js:0
+#: code:addons/hr_recruitment/static/src/views/recruitment_list_controller.js:0
+msgid ""
+"This job position and all related applicants will be archived. Are you sure?"
+msgstr ""
+"Tämä työpaikka ja kaikki siihen liittyvät hakijat arkistoidaan. Oletko "
+"varma?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__fold
-msgid "This stage is folded in the kanban view when there are no records in that stage to display."
-msgstr "Tämä vaihe on laskostettuna kanban-näkymässä, kun vaiheessa ei ole yhtään näytettävää tietuetta."
+msgid ""
+"This stage is folded in the kanban view when there are no records in that "
+"stage to display."
+msgstr ""
+"Tämä vaihe on laskostettuna kanban-näkymässä, kun vaiheessa ei ole yhtään "
+"näytettävää tietuetta."
 
 #. module: hr_recruitment
 #: model:digest.tip,name:hr_recruitment.digest_tip_hr_recruitment_0
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
 msgid "Tip: Let candidates apply by email"
-msgstr ""
+msgstr "Vinkki: Anna ehdokkaiden hakea sähköpostitse"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "To Recruit"
-msgstr ""
+msgstr "Rekrytointi"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -2511,12 +3320,19 @@ msgstr "Tämän päivän toimenpiteet"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "Tooltips"
-msgstr ""
+msgstr "Työkaluvihjeet"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_sources
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Trackers"
-msgstr ""
+msgstr "Seurannat"
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
+msgid "Try creating an application by sending an email to"
+msgstr "Yritä luoda hakemus lähettämällä sähköpostia osoitteeseen"
 
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
@@ -2524,9 +3340,26 @@ msgid "Try sending an email"
 msgstr "Kokeile lähettää sähköpostia"
 
 #. module: hr_recruitment
+#: model_terms:web_tour.tour,rainbow_man_message:hr_recruitment.hr_recruitment_tour
+msgid "Try the Website app to publish job offers online."
+msgstr ""
+"Kokeile verkkosivusovellusta, jolla voit julkaista työtarjouksia verkossa."
+
+#. module: hr_recruitment
+#: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_type_action_config_hr_applicant
+msgid ""
+"Try to add some records, or make sure that there is no active filter in the "
+"search bar."
+msgstr ""
+"Yritä lisätä joitakin tietueita tai varmista, että hakupalkissa ei ole "
+"aktiivista suodatinta."
+
+#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_exception_decoration
+#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__activity_exception_decoration
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Poikkeusaktiviteetin tyyppi tietueella"
+msgstr "Poikkeusaktiviteetin tyyppi tietueella."
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_utm_campaign
@@ -2544,13 +3377,17 @@ msgid "UTMs"
 msgstr "UTM:t"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Unarchive"
 msgstr "Palauta arkistosta"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
 msgid "Unassigned"
 msgstr "Vastuuttamaton"
 
@@ -2561,18 +3398,25 @@ msgstr "Lukemattomat viestit"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
-msgid "Use OCR to fill data from a picture of the CV or the file itself"
+msgid "Use OCR to fill data from a picture of the Résumr or the file itself"
 msgstr ""
+"Käytä OCR:ää tietojen täyttämiseen Résumrin kuvasta tai itse tiedostosta"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid "Use emails and links trackers"
-msgstr ""
+msgstr "Käytä sähköposteja ja linkkien seurantoja"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
-msgid "Use interview forms tailored to each job position during the recruitment process. Select the form to use in the job position detail form. This relies on the Survey app."
+msgid ""
+"Use interview forms tailored to each job position during the recruitment "
+"process. Select the form to use in the job position detail form. This relies"
+" on the Survey app."
 msgstr ""
+"Käytä rekrytointiprosessin aikana kuhunkin työtehtävään räätälöityjä "
+"haastattelulomakkeita. Valitse käytettävä lomake työtehtävien tarkentavassa "
+"lomakkeessa. Tämä perustuu Survey-sovellukseen."
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_res_users
@@ -2586,21 +3430,29 @@ msgstr "Käyttäjän sähköposti"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__2
+#: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_candidate__priority__2
 msgid "Very Good"
 msgstr "Erittäin hyvä"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
+msgid "Waiting"
+msgstr "Odottaa"
+
+#. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid "Want to analyse where applications come from ?"
-msgstr ""
+msgstr "Haluatko analysoida, mistä hakemukset tulevat?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__website_message_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__website_message_ids
 msgid "Website Messages"
 msgstr "Verkkosivun ilmoitukset"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__website_message_ids
+#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__website_message_ids
 msgid "Website communication history"
 msgstr "Verkkosivun viestihistoria"
 
@@ -2608,24 +3460,35 @@ msgstr "Verkkosivun viestihistoria"
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "What do you want to recruit today? Choose a job title..."
-msgstr ""
+msgstr "Mitä haluatte rekrytoida tänään? Valitse työnimike..."
 
 #. module: hr_recruitment
 #: model:mail.template,description:hr_recruitment.email_template_data_applicant_not_interested
 #: model:mail.template,description:hr_recruitment.email_template_data_applicant_refuse
 msgid "When you refuse an application, you can choose this template"
-msgstr ""
+msgstr "Kun hylkäät hakemuksen, voit valita tämän mallin"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+msgid "Who can access candidates"
+msgstr "Kuka voi käyttää ehdokkaita"
+
+#. module: hr_recruitment
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
+msgid "Without a regex: The applicant's name will be the email's subject."
+msgstr "Ilman regexiä: Hakijan nimi on sähköpostin aiheena."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.candidate_send_mail_view_form
 msgid "Write your message here..."
 msgstr "Kirjoita viestisi tähän..."
 
 #. module: hr_recruitment
 #. odoo-python
-#: code:addons/hr_recruitment/models/hr_applicant.py:0
+#: code:addons/hr_recruitment/models/hr_candidate.py:0
 msgid "You are not allowed to perform this action."
-msgstr ""
+msgstr "Sinulla ei ole oikeutta suorittaa tätä toimintoa."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -2633,12 +3496,34 @@ msgid ""
 "You can define here the labels that will be displayed for the kanban state instead\n"
 "                            of the default labels."
 msgstr ""
+"Voit määrittää tässä kanban-tilalle näytettävät tunnisteet\n"
+"                            oletustunnisteiden sijaan."
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
+msgid ""
+"You can define the requirements here. They will be displayed when you hover "
+"over the stage title."
+msgstr ""
+"Voit määritellä vaatimukset tässä. Ne näytetään, kun viet hiiren kursorin "
+"otsikon päälle."
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
+msgid ""
+"You can't select Send email option.\n"
+"The email will not be sent to the following applicant(s) as they don't have an email address:"
+msgstr ""
+"Et voi valita Lähetä sähköpostia -vaihtoehtoa.\n"
+"Sähköpostia ei lähetetä seuraavalle hakijalle (seuraaville hakijoille), koska heillä ei ole sähköpostiosoitetta:"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
-msgid "You can search into attachment's content, like resumes, with the searchbar."
-msgstr ""
+msgid ""
+"You cannot create an applicant in a different company than the candidate"
+msgstr "Hakijaa ei voi luoda eri yritykseen kuin ehdokasta"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2647,12 +3532,32 @@ msgid ""
 "You cannot delete these UTM Sources as they are linked to the following recruitment sources in Recruitment:\n"
 "%(recruitment_sources)s"
 msgstr ""
+"Et voi poistaa näitä UTM-lähteitä, koska ne on linkitetty rekrytointilähteisiin Rekrytointi-kohdassa:\n"
+"%(recruitment_sources)s"
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
+msgid "You have been assigned as an interviewer for %s"
+msgstr "Sinut on määrätty haastattelijaksi %s"
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
+msgid "You have been assigned as an interviewer for the Applicant %s"
+msgstr "Sinut on nimetty hakijan haastattelijaksi %s"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "You must define a Contact Name for this applicant."
-msgstr ""
+msgstr "Hakijalle on määriteltävä yhteyshenkilön nimi."
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_candidate.py:0
+msgid "You must define a Contact Name for this candidate."
+msgstr "Ehdokkaalle on määriteltävä yhteyshenkilön nimi."
 
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_congratulations
@@ -2660,10 +3565,9 @@ msgstr ""
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_not_interested
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
 msgid "Your Job Application: {{ object.job_id.name }}"
-msgstr ""
+msgstr "Työhakemuksesi: {{ object.job_id.name }}"
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.quick_create_applicant_form
 msgid "e.g. John Doe"
 msgstr "esim. Matti Meikäläinen"
@@ -2671,7 +3575,17 @@ msgstr "esim. Matti Meikäläinen"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "e.g. LinkedIn"
-msgstr ""
+msgstr "esim. LinkedIn"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_platform_form
+msgid "e.g. Linkedin"
+msgstr "esim. Linkedin"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+msgid "e.g. Masters"
+msgstr "esim. Masters"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -2679,11 +3593,52 @@ msgid "e.g. Sales Manager"
 msgstr "esim. Myyntipäällikkö"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_platform_form
+msgid "e.g. ^New application:.*from (.*)"
+msgstr "esim. ^Uusi sovellus:.*from (.*)"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+msgid "e.g. domain.com"
+msgstr "esim. domain.com"
+
+#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
-msgid "e.g. Sales Manager 2 year experience"
-msgstr ""
+msgid "e.g. https://www.linkedin.com/in/..."
+msgstr "esim. https://www.linkedin.com/in/..."
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+msgid "e.g. jobs"
+msgstr "esim. työpaikat"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_platform_form
+msgid "e.g. jobs-listings@linkedin.com"
+msgstr "esim. jobs-listings@linkedin.com"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+msgid "e.g. john.doe@example.com"
+msgstr "esim. john.doe@example.com"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "e.g. mycompany.com"
+msgstr "esim. mycompany.com"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. sales-manager"
-msgstr ""
+msgstr "esim. myyntipäällikkö"
+
+#. module: hr_recruitment
+#. odoo-javascript
+#: code:addons/hr_recruitment/static/src/views/recruitment_helper_view.xml:0
+msgid "or"
+msgstr "tai"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+msgid "other application(s)"
+msgstr "muu(t) hakemus(t)"

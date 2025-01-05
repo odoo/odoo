@@ -1,29 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_address_extended
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Wichanon Jamwutthipreecha, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.2\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
-"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_city_extended_form
 msgid "<span class=\"o_stat_text\">Cities</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">เมือง</span>"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
@@ -34,13 +33,18 @@ msgstr "<span> - </span>"
 #: model:ir.model.fields,help:base_address_extended.field_res_country__enforce_cities
 #: model:ir.model.fields,help:base_address_extended.field_res_partner__country_enforce_cities
 #: model:ir.model.fields,help:base_address_extended.field_res_users__country_enforce_cities
-msgid "Check this box to ensure every address created in that country has a 'City' chosen in the list of the country's cities."
+msgid ""
+"Check this box to ensure every address created in that country has a 'City' "
+"chosen in the list of the country's cities."
 msgstr ""
+"ทำเครื่องหมายในช่องนี้เพื่อให้แน่ใจว่าที่อยู่ทุกแห่งที่สร้างขึ้นในประเทศนั้นมี"
+" 'เมือง' ที่เลือกไว้ในรายชื่อเมืองของประเทศ"
 
 #. module: base_address_extended
 #: model:ir.actions.act_window,name:base_address_extended.action_res_city_tree
+#: model:ir.ui.menu,name:base_address_extended.menu_res_city
 msgid "Cities"
-msgstr ""
+msgstr "เมือง"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_city
@@ -55,7 +59,7 @@ msgstr "เมือง"
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__city_id
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__city_id
 msgid "City ID"
-msgstr ""
+msgstr "รหัสเมือง"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_partner
@@ -81,6 +85,8 @@ msgstr "สร้างเมื่อ"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__display_name
 msgid "Display Name"
 msgstr "แสดงชื่อ"
 
@@ -91,38 +97,43 @@ msgid ""
 "                your partner records. Note that an option can be set on each country separately\n"
 "                to enforce any address of it to have a city in this list."
 msgstr ""
+"แสดงและจัดการรายชื่อเมืองทั้งหมดที่สามารถกำหนดให้กับบันทึกของ\n"
+"               พาร์ทเนอร์ของคุณได้ โปรดทราบว่าสามารถตั้งค่าตัวเลือกในแต่ละประเทศแยกกัน\n"
+"               เพื่อบังคับใช้ที่อยู่ของประเทศนั้นให้มีเมืองอยู่ในรายการนี้"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_number2
 msgid "Door"
-msgstr ""
+msgstr "ประตู"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "Door #"
-msgstr ""
+msgstr "ประตู #"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_country__enforce_cities
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__country_enforce_cities
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__country_enforce_cities
 msgid "Enforce Cities"
-msgstr ""
+msgstr "บังคับใช้เมือง"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_number
 msgid "House"
-msgstr ""
+msgstr "บ้าน"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "House #"
-msgstr ""
+msgstr "บ้าน #"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__id
 msgid "ID"
 msgstr "ไอดี"
 
@@ -144,7 +155,7 @@ msgstr "ชื่อ"
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_city_filter
 msgid "Search City"
-msgstr ""
+msgstr "ค้นหาเมือง"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__state_id
@@ -166,7 +177,7 @@ msgstr "ถนน 2..."
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_name
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_name
 msgid "Street Name"
-msgstr ""
+msgstr "ชื่อถนน"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form

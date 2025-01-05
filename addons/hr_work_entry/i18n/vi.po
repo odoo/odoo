@@ -1,31 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_work_entry
-#
+# 
 # Translators:
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2023
-# Thi Huong Nguyen, 2023
-# Martin Trigaux, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_employee.py:0
 msgid "%s work entries"
-msgstr "%s mục công việc"
+msgstr "%s công"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_employee_view_form
@@ -34,6 +32,9 @@ msgid ""
 "                            Work Entries\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Công\n"
+"                            </span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
@@ -52,17 +53,17 @@ msgstr "Đang hoạt động"
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Archived"
-msgstr "Đã lưu"
+msgstr "Đã lưu trữ"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance
 msgid "Attendance"
-msgstr "Chuyên cần"
+msgstr "Chấm công"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_tree
 msgid "Beginning"
-msgstr "Beginning"
+msgstr "Bắt đầu"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__cancelled
@@ -72,8 +73,12 @@ msgstr "Đã hủy"
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__code
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__code
-msgid "Careful, the Code is used in many references, changing it could lead to unwanted changes."
-msgstr "Hãy cẩn thận, Quy tắc được sử dụng trong nhiều tài liệu tham khảo, việc thay đổi nó có thể dẫn đến những thay đổi không mong muốn."
+msgid ""
+"Careful, the Code is used in many references, changing it could lead to "
+"unwanted changes."
+msgstr ""
+"Hãy cẩn thận, Quy tắc được sử dụng trong nhiều tài liệu tham khảo, việc thay"
+" đổi nó có thể dẫn đến những thay đổi không mong muốn."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__color
@@ -94,12 +99,28 @@ msgstr "Xung đột"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Conflicting"
-msgstr "Conflicting"
+msgstr "Xung đột"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__conflict
 msgid "Conflicts"
 msgstr "Xung đột"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__country_id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_id
+msgid "Country"
+msgstr "Quốc gia"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_code
+msgid "Country Code"
+msgstr "Mã Quốc gia"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_type_action
+msgid "Create a new work entry type"
+msgstr "Tạo một loại công mới"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_uid
@@ -118,7 +139,7 @@ msgstr "Được tạo vào"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Current Month"
-msgstr "Tháng hiện hành"
+msgstr "Tháng này"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -129,7 +150,7 @@ msgstr "Ngày"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__department_id
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Department"
-msgstr "Phòng/Ban"
+msgstr "Phòng ban"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
@@ -137,16 +158,20 @@ msgid "Description"
 msgstr "Mô tả"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__draft
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Draft"
-msgstr "Dự thảo"
+msgstr "Nháp"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__duration
@@ -170,7 +195,7 @@ msgstr "Kết thúc"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__external_code
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__external_code
 msgid "External Code"
-msgstr ""
+msgstr "Mã bên ngoài"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date_start
@@ -180,36 +205,43 @@ msgstr "Từ"
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_work_entry
 msgid "HR Work Entry"
-msgstr "HR Work Entry"
+msgstr "HR Công"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_work_entry_type
 msgid "HR Work Entry Type"
-msgstr "Loại công việc HR"
+msgstr "HR Loại công"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__has_work_entries
 msgid "Has Work Entries"
-msgstr ""
+msgstr "Có công"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__active
-msgid "If the active field is set to false, it will allow you to hide the work entry type without removing it."
-msgstr "If the active field is set to false, it will allow you to hide the work entry type without removing it."
+msgid ""
+"If the active field is set to false, it will allow you to hide the work "
+"entry type without removing it."
+msgstr ""
+"Nếu trường hoạt động được đặt là sai, bạn sẽ được phép ẩn loại công mà không"
+" cần xóa nó."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_uid
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__write_uid
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_date
@@ -230,20 +262,25 @@ msgid "Name"
 msgstr "Tên"
 
 #. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
+msgid "No data to display"
+msgstr "Không có dữ liệu để hiển thị"
+
+#. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "Note: Validated work entries cannot be modified."
-msgstr "Ghi chú: Mục công việc đã xác nhận không thể sửa đổi."
+msgstr "Ghi chú: Không thể sửa đổi công đã xác nhận."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.overtime_work_entry_type
 msgid "Overtime Hours"
-msgstr ""
+msgstr "Giờ làm thêm"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__code
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__code
 msgid "Payroll Code"
-msgstr ""
+msgstr "Mã lương"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_leaves
@@ -253,12 +290,12 @@ msgstr "Chi tiết nguồn lực nghỉ phép"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Search Work Entry"
-msgstr "Search Work Entry"
+msgstr "Tìm kiếm công"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 msgid "Search Work Entry Type"
-msgstr "Search Work Entry Type"
+msgstr "Tìm kiếm loại công"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__sequence
@@ -269,7 +306,7 @@ msgstr "Trình tự"
 #. odoo-javascript
 #: code:addons/hr_work_entry/static/src/xml/work_entry_templates.xml:0
 msgid "Solve conflicts first"
-msgstr "Solve conflicts first"
+msgstr "Trước tiên hãy xử lý xung đột"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -277,9 +314,9 @@ msgid "Start Date"
 msgstr "Ngày bắt đầu"
 
 #. module: hr_work_entry
-#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entry_start_before_end
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_work_entry_start_before_end
 msgid "Starting time should be before end time."
-msgstr "Starting time should be before end time."
+msgstr "Thời gian bắt đầu phải trước thời gian kết thúc."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__state
@@ -287,9 +324,25 @@ msgid "State"
 msgstr "Trạng thái"
 
 #. module: hr_work_entry
-#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_type_unique_work_entry_code
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"Mã quốc gia ISO với hai ký tự.\n"
+"Bạn có thể sử dụng trường này để tìm kiếm nhanh."
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
 msgid "The same code cannot be associated to multiple work entry types."
-msgstr "The same code cannot be associated to multiple work entry types."
+msgstr "Không thể liên kết cùng một mã với nhiều loại công."
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "This work entry is validated. You can't delete it."
+msgstr "Công này đã được xác thực, nên bạn không thể xóa."
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -300,6 +353,15 @@ msgstr "Tùy chọn nghỉ phép"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date_stop
 msgid "To"
 msgstr "Đến"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
+msgid ""
+"Try to add some records, or make sure that there is no active filter in the "
+"search bar."
+msgstr ""
+"Hãy thử thêm một số bản ghi hoặc đảm bảo rằng không có bộ lọc đang hoạt động"
+" nào trên thanh tìm kiếm."
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -322,17 +384,18 @@ msgstr "Loại không xác định"
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__external_code
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__external_code
 msgid "Use this code to export your data to a third party"
-msgstr ""
+msgstr "Sử dụng mã này để xuất dữ liệu của bạn cho bên thứ ba"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__validated
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Validated"
 msgstr "Đã xác nhận"
 
 #. module: hr_work_entry
-#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entries_no_validated_conflict
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_work_entries_no_validated_conflict
 msgid "Validated work entries cannot overlap"
-msgstr "Mục công việc đã xác nhận không thể trùng lặp"
+msgstr "Công đã xác nhận không thể trùng lặp"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_attendance
@@ -342,12 +405,12 @@ msgstr "Chi tiết Công việc"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_pivot
 msgid "Work Entries"
-msgstr "Quản lý các mục công việc"
+msgstr "Công"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_user_work_entry_employee
 msgid "Work Entries Employees"
-msgstr "Work Entries Employees"
+msgstr "Công Nhân viên"
 
 #. module: hr_work_entry
 #: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_action
@@ -355,12 +418,12 @@ msgstr "Work Entries Employees"
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "Work Entry"
-msgstr "Work Entry"
+msgstr "Công"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "Work Entry Name"
-msgstr "Work Entry Name"
+msgstr "Tên công"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__work_entry_type_id
@@ -369,24 +432,41 @@ msgstr "Work Entry Name"
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.resource_calendar_leaves_view_search_inherit
 msgid "Work Entry Type"
-msgstr "Work Entry Type"
+msgstr "Loại công"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Work Entry Type Name"
-msgstr "Work Entry Type Name"
+msgstr "Tên loại công"
 
 #. module: hr_work_entry
 #: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_type_action
 msgid "Work Entry Types"
-msgstr "Work Entry Types"
+msgstr "Loại công"
 
 #. module: hr_work_entry
-#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entry_has_end
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_work_entry_has_end
 msgid "Work entry must end. Please define an end date or a duration."
-msgstr "Work entry must end. Please define an end date or a duration."
+msgstr ""
+"Công có ngày kết thúc. Hãy xác định ngày kết thúc hoặc tổng thời gian."
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid ""
+"You can't change the Country of this work entry type cause it's currently "
+"used by the system. You need to delete related working entries first."
+msgstr ""
+"Bạn không thể thay đổi Quốc gia của loại công này vì nó hiện đang được hệ "
+"thống sử dụng. Trước tiên, bạn cần xóa các công liên quan."
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "You can't change the country of this specific work entry type."
+msgstr "Bạn không thể thay đổi quốc gia của loại công cụ thể này."
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique
 msgid "You cannot have the same employee twice."
-msgstr "You cannot have the same employee twice."
+msgstr "Bạn không thể tạo một nhân viên hai lần."

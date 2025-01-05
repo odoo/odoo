@@ -1,31 +1,40 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_password_policy
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
-# Sebastiano Picchi, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Sebastiano Picchi, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
-"1 : 2;\n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_config_settings
 msgid "Config Settings"
 msgstr "Impostazioni di configurazione"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_users__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_users__id
+msgid "ID"
+msgstr "ID"
 
 #. module: auth_password_policy
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
@@ -47,29 +56,31 @@ msgid "Password"
 msgstr "Password"
 
 #. module: auth_password_policy
-#. odoo-python
-#: code:addons/auth_password_policy/models/res_users.py:0
-msgid "Passwords must have at least %d characters, got %d."
-msgstr "La password deve avere almeno %d caratteri, ne sono stati usati%d."
-
-#. module: auth_password_policy
 #. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_meter.js:0
 msgid ""
 "Required: %s\n"
 "\n"
-"Hint: to increase password strength, increase length, use multiple words, "
-"and use non-letter characters."
+"Hint: to increase password strength, increase length, use multiple words, and use non-letter characters."
 msgstr ""
 "Richiesto: %s\n"
 "\n"
-"Suggerimento: per aumentare la robustezza della password, aumenta la "
-"lunghezza, usa più parole, e usa caratteri non alfabetici."
+"Suggerimento: per aumentare la robustezza della password, aumenta la lunghezza, usa più parole, e usa caratteri non alfabetici."
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_users
 msgid "User"
 msgstr "Utente"
+
+#. module: auth_password_policy
+#. odoo-python
+#: code:addons/auth_password_policy/models/res_users.py:0
+msgid ""
+"Your password must contain at least %(minimal_length)d characters and only "
+"has %(current_count)d."
+msgstr ""
+"La password deve contenere almeno %(minimal_length)d caratteri e ne ha solo "
+"%(current_count)d."
 
 #. module: auth_password_policy
 #. odoo-javascript

@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_crm
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_crm
@@ -27,7 +27,7 @@ msgstr "<span class=\"o_stat_text\"> Aufträge</span>"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__lead_id
 msgid "Associated Lead"
-msgstr "Verbundenes Lead"
+msgstr "Verknüpfter Lead"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_quotation_partner_view_form
@@ -47,7 +47,8 @@ msgstr "Neuen Kunden anlegen"
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_quotation_partner
 msgid "Create new or use existing Customer on new Quotation"
-msgstr "Neuen Kunden anlegen oder vorhandenen Kunden für neues Angebot verwenden"
+msgstr ""
+"Neuen Kunden anlegen oder vorhandenen Kunden für neues Angebot verwenden"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
@@ -80,6 +81,14 @@ msgid "Do not link to a customer"
 msgstr "Nicht mit einem Kunden verknüpfen"
 
 #. module: sale_crm
+#. odoo-python
+#: code:addons/sale_crm/models/crm_lead.py:0
+msgid "Expected revenue has been updated based on the linked Sales Orders."
+msgstr ""
+"Der erwartete Umsatz wurde basierend auf den verknüpften Verkaufsaufträge "
+"aktualisiert."
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
 msgid "ID"
 msgstr "ID"
@@ -87,12 +96,7 @@ msgstr "ID"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users__target_sales_invoiced
 msgid "Invoiced in Sales Orders Target"
-msgstr "Fakturiert im Kaufauftragsziel"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner____last_update
-msgid "Last Modified on"
-msgstr "Letzte Änderung am"
+msgstr "Abgerechnet im Verkaufsauftragsziel"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_uid
@@ -107,17 +111,12 @@ msgstr "Zuletzt aktualisiert am"
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "Interessent / Chance"
+msgstr "Lead/Verkaufschance"
 
 #. module: sale_crm
 #: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__exist
 msgid "Link to an existing customer"
-msgstr "Verknüpfe mit Bestandskunde"
-
-#. module: sale_crm
-#: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
-msgid "Log in the chatter from which opportunity the order originates"
-msgstr "Melden Sie sich im Chatter an, aus dessen Chance der Auftrag stammt"
+msgstr "Mit bestehendem Kunden verknüpfen"
 
 #. module: sale_crm
 #: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
@@ -144,7 +143,7 @@ msgstr "Anzahl der Verkaufsaufträge"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order__opportunity_id
 msgid "Opportunity"
-msgstr "Chance"
+msgstr "Verkaufschance"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead__order_ids
@@ -159,7 +158,7 @@ msgstr "Angebot"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__action
 msgid "Quotation Customer"
-msgstr "Angebot Kunde"
+msgstr "Kunde des Angebots"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
@@ -169,17 +168,18 @@ msgstr "Angebote"
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_lead_merge_summary_inherit_sale_crm
 msgid "Sale Orders"
-msgstr "Aufträge"
+msgstr "Verkaufsaufträge"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/models/crm_team.py:0
 msgid "Sales Analysis"
-msgstr "Statistik Verkaufsaufträge"
+msgstr "Verkaufsanalyse"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
 msgid "Sales Order"
-msgstr "Verkaufsauftrag "
+msgstr "Verkaufsauftrag"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_team
@@ -187,9 +187,10 @@ msgid "Sales Team"
 msgstr "Verkaufsteam"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/models/crm_team.py:0
 msgid "Sales: Untaxed Total"
-msgstr "Umsatz: Unversteuerte Summe"
+msgstr "Verkäufe: gesamter Nettobetrag"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_amount_total
@@ -199,7 +200,7 @@ msgstr "Summe der Aufträge"
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_crm_lead__sale_amount_total
 msgid "Untaxed Total of Confirmed Orders"
-msgstr "Unversteuerter Gesamtbetrag der bestätigten Aufträge"
+msgstr "Gesamter Nettobetrag der bestätigten Aufträge"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_res_users
@@ -207,6 +208,7 @@ msgid "User"
 msgstr "Benutzer"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/wizard/crm_opportunity_to_quotation.py:0
 msgid "You can only apply this action from a lead."
 msgstr "Sie können diese Aktion nur von einem Lead aus anwenden."

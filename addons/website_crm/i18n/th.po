@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_crm
-#
+# 
 # Translators:
-# Wichanon Jamwutthipreecha, 2022
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
-"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_crm
@@ -34,18 +33,19 @@ msgstr "# ยอดเข้าชมเพจ"
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Assign leads/opportunities to a sales team."
-msgstr "มอบหมายลูกค้าเป้าหมาย/โอกาสให้กับทีมขาย"
+msgstr "มอบหมายลูกค้าเป้าหมาย/ผู้ที่มีโอกาสจะซื้อให้กับทีมขาย"
 
 #. module: website_crm
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Assign leads/opportunities to a salesperson."
-msgstr "มอบหมายลูกค้าเป้าหมาย/โอกาสให้กับพนักงานขาย"
+msgstr "มอบหมายลูกค้าเป้าหมาย/ผู้ที่มีโอกาสจะซื้อให้กับทีมขาย"
 
 #. module: website_crm
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
 msgid "Default Sales Team for new leads created through the Contact Us form."
-msgstr "ค่าเริ่มต้นสำหรับลูกค้าเป้าหมายใหม่ที่สร้างขึ้นผ่านแบบฟอร์มติดต่อของเรา"
+msgstr ""
+"ค่าเริ่มต้นสำหรับลูกค้าเป้าหมายใหม่ที่สร้างขึ้นผ่านแบบฟอร์มติดต่อของเรา"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_team_id
@@ -60,12 +60,27 @@ msgstr "ค่าเริ่มต้นพนักงานขาย"
 #. module: website_crm
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_user_id
 msgid "Default salesperson for new leads created through the Contact Us form."
-msgstr "ค่าเริ่มต้นพนักงานขายสำหรับลูกค้าเป้าหมายใหม่ที่สร้างขึ้นผ่านแบบฟอร์มติดต่อของเรา"
+msgstr ""
+"ค่าเริ่มต้นพนักงานขายสำหรับลูกค้าเป้าหมายใหม่ที่สร้างขึ้นผ่านแบบฟอร์มติดต่อของเรา"
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__display_name
+#: model:ir.model.fields,field_description:website_crm.field_website__display_name
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__id
+#: model:ir.model.fields,field_description:website_crm.field_website__id
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__id
+msgid "ID"
+msgstr "ไอดี"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "ลูกค้าเป้าหมาย / โอกาส"
+msgid "Lead"
+msgstr "ลูกค้าเป้าหมาย"
 
 #. module: website_crm
 #: model:ir.actions.act_window,name:website_crm.crm_lead_action_from_visitor
@@ -78,7 +93,7 @@ msgstr "ลูกค้าเป้าหมาย"
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_kanban
 msgid "Leads / Opportunities"
-msgstr ""
+msgstr "ลูกค้าเป้าหมาย/ผู้ที่มีโอกาสจะซื้อ"
 
 #. module: website_crm
 #: model_terms:ir.actions.act_window,help:website_crm.crm_lead_action_from_visitor
@@ -94,7 +109,7 @@ msgstr "ยอดเข้าชมเพจ"
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Phone Number"
-msgstr ""
+msgstr "หมายเลขโทรศัพท์"
 
 #. module: website_crm
 #. odoo-javascript
@@ -112,7 +127,7 @@ msgstr "พนักงานขาย"
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Subject"
-msgstr ""
+msgstr "หัวเรื่อง"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_ids
@@ -122,7 +137,7 @@ msgstr "ผู้เข้าชมเว็บ"
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.crm_lead_merge_summary_inherit_website
 msgid "Web Visitors:"
-msgstr ""
+msgstr "ผู้เยี่ยมชมเว็บ:"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website
@@ -143,22 +158,22 @@ msgstr "ผู้เยี่ยมชมเว็บไซต์"
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Your Company"
-msgstr ""
+msgstr "บริษัทของคุณ"
 
 #. module: website_crm
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Your Email"
-msgstr ""
+msgstr "อีเมลของคุณ"
 
 #. module: website_crm
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Your Name"
-msgstr ""
+msgstr "ชื่อของคุณ"
 
 #. module: website_crm
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Your Question"
-msgstr ""
+msgstr "คำถามของคุณ"

@@ -1,30 +1,50 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import_module
-#
+# 
 # Translators:
-# marcescu, 2022
-# jabelchi, 2022
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 18.1alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-11-19 15:37+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
-"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid ""
+"\n"
+"You may need the Enterprise version to install the data module. Please visit https://www.odoo.com/pricing-plan for more information.\n"
+"If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
+msgstr ""
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
+msgid "Activate"
+msgstr "Activar"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_module_filter_apps_inherit
+msgid "Apps"
+msgstr "Aplicacions"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Cancel"
-msgstr "Cancel·lar"
+msgstr "Cancel·la"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -32,6 +52,20 @@ msgid "Close"
 msgstr "Tancar"
 
 #. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid ""
+"Connection to %(url)s failed, the module %(module)s cannot be downloaded."
+msgstr ""
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid "Connection to %s failed The list of industry modules cannot be fetched"
+msgstr ""
+
+#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/controllers/main.py:0
 msgid "Could not select database '%s'"
 msgstr "No s'ha pogut seleccionar la base de dades '%s'"
@@ -48,10 +82,24 @@ msgstr "Creat el"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
+#: model:ir.model.fields,field_description:base_import_module.field_base_module_uninstall__display_name
+#: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__display_name
+#: model:ir.model.fields,field_description:base_import_module.field_ir_ui_view__display_name
 msgid "Display Name"
-msgstr "Nom a mostrar"
+msgstr "Nom mostrat"
 
 #. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid ""
+"Error while importing module '%(module)s'.\n"
+"\n"
+" %(error_message)s \n"
+"\n"
+msgstr ""
+
+#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "File '%s' exceed maximum allowed file size"
 msgstr "El fitxer '%s' excedeix la mida màxima permesa"
@@ -63,18 +111,19 @@ msgstr "Forçar inicialització"
 
 #. module: base_import_module
 #: model:ir.model.fields,help:base_import_module.field_base_import_module__force
-msgid "Force init mode even if installed. (will update `noupdate='1'` records)"
-msgstr "Forçar el mode d'inicializació fins i tot si està instal·lat (actualitzarà els registres `noupdate='1'`)"
+msgid ""
+"Force init mode even if installed. (will update `noupdate='1'` records)"
+msgstr ""
+"Forçar el mode d'inicializació fins i tot si està instal·lat (actualitzarà "
+"els registres `noupdate='1'`)"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__id
+#: model:ir.model.fields,field_description:base_import_module.field_base_module_uninstall__id
+#: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__id
+#: model:ir.model.fields,field_description:base_import_module.field_ir_ui_view__id
 msgid "ID"
 msgstr "ID"
-
-#. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Import App"
-msgstr "Importar aplicació"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__import_message
@@ -85,14 +134,13 @@ msgstr "Importa un missatge"
 #: model:ir.actions.act_window,name:base_import_module.action_view_base_module_import
 #: model:ir.model,name:base_import_module.model_base_import_module
 #: model:ir.ui.menu,name:base_import_module.menu_view_base_module_import
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import Module"
 msgstr "Importa mòdul"
 
 #. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Import module"
-msgstr "Importa mòdul"
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__with_demo
+msgid "Import demo data of module"
+msgstr ""
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__imported
@@ -100,9 +148,25 @@ msgid "Imported Module"
 msgstr "Mòdul importat"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module____last_update
-msgid "Last Modified on"
-msgstr "Última modificació el "
+#: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__industries
+msgid "Industries"
+msgstr "Indústries"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Install"
+msgstr "Instal·lar "
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid "Install an Industry"
+msgstr ""
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Install the application"
+msgstr ""
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_uid
@@ -115,6 +179,19 @@ msgid "Last Updated on"
 msgstr "Última actualització el"
 
 #. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Load demo data"
+msgstr "Carregar dades de prova"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid ""
+"Load demo data to test the industry's features with sample records. Do not "
+"load them if this is your production database."
+msgstr ""
+
+#. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
 msgid "Module"
 msgstr "Mòdul"
@@ -125,6 +202,27 @@ msgid "Module .ZIP file"
 msgstr "Fitxer .ZIP del mòdul"
 
 #. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__module_type
+msgid "Module Type"
+msgstr ""
+
+#. module: base_import_module
+#: model:ir.model,name:base_import_module.model_base_module_uninstall
+msgid "Module Uninstall"
+msgstr "Desinstal· la el mòdul"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Module file (.zip)"
+msgstr "Fitxer del mòdul (.zip)"
+
+#. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__modules_dependencies
+msgid "Modules Dependencies"
+msgstr ""
+
+#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "No file sent."
 msgstr "No s'ha enviat cap arxiu."
@@ -132,27 +230,32 @@ msgstr "No s'ha enviat cap arxiu."
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Note: you can only import data modules (.xml files and static assets)"
-msgstr "Nota: només es poden importar mòduls de dades (fitxers XML i actius estàtics)"
+msgstr ""
+"Nota: només es poden importar mòduls de dades (fitxers XML i actius "
+"estàtics)"
 
 #. module: base_import_module
+#: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__official
+msgid "Official Apps"
+msgstr ""
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid "Only administrators can install data modules."
+msgstr ""
+
+#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/controllers/main.py:0
 msgid "Only administrators can upload a module"
 msgstr "Només els administradors poden pujar un mòdul"
 
 #. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "Only zip files are supported."
 msgstr "Només s'admeten fitxers zip."
-
-#. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Open Modules"
-msgstr "Obrir mòduls"
-
-#. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Select module package to import (.zip file):"
-msgstr "Seleccioneu el paquet del mòdul que voleu importar (arxiu. zip):"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__state
@@ -160,25 +263,44 @@ msgid "Status"
 msgstr "Estat"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:0
-msgid "Studio customizations require Studio"
-msgstr "Les personalitzacions en l'estudi requereixen de Studio"
-
-#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "Studio customizations require the Odoo Studio app."
-msgstr "Les personalitzacions dels estudis requereixen l'aplicació Odoo Studio."
+msgstr ""
+"Les personalitzacions dels estudis requereixen l'aplicació Odoo Studio."
 
 #. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid ""
-"Unmet module dependencies: \n"
-"\n"
-" - %s"
+"The installation of the data module would fail as the following dependencies"
+" can't be found in the addons-path:\n"
 msgstr ""
-"Dependències del mòdul Unmet: \n"
-"\n"
-" - %s"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid ""
+"The list of industry applications cannot be fetched. Please try again later"
+msgstr ""
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid "The module %s cannot be downloaded"
+msgstr ""
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid "Unknown module dependencies:"
+msgstr ""
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
+msgid "Upgrade"
+msgstr "Actualitzar"
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_ui_view

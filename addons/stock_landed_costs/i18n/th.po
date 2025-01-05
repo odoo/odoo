@@ -1,53 +1,39 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_landed_costs
-#
+# 
 # Translators:
-# monchai7 <montchye@gmail.com>, 2022
-# Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Wichanon Jamwutthipreecha, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
-"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
-msgid " already out"
+msgid "%(product)s: %(quantity)s already out"
 msgstr ""
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
 msgid "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\" title=\"วันที่\" role=\"รูปภาพ\" aria-label=\"วันที่\"/>"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "<span class=\"o_stat_text\">Valuation</span>"
-msgstr ""
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_account_move_line__product_type
-msgid ""
-"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
-"A consumable product is a product for which stock is not managed.\n"
-"A service is a non-material product you provide."
-msgstr ""
-"สินค้าที่จัดเก็บได้คือสินค้าที่ทคุณจัดการสต๊อก จำเป็นต้องติดตั้งแอปคลังสินค้า\n"
-"สินค้าบริโภคคือสินค้าที่ไม่มีการจัดการสต๊อก\n"
-"บริการคือสินค้าที่ไม่ใช่วัตถุที่คุณจัดหา"
+msgstr "<span class=\"o_stat_text\">การประเมินมูลค่า</span>"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__account_id
@@ -87,12 +73,12 @@ msgstr "ไอคอนประเภทกิจกรรม"
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Additional Costs"
-msgstr ""
+msgstr "ค่าใช้จ่ายเพิ่มเติม"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__additional_landed_cost
 msgid "Additional Landed Cost"
-msgstr ""
+msgstr "ต้นทุนแฝงเพิ่มเตม"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__target_model
@@ -141,17 +127,12 @@ msgstr "ยกเลิก"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_res_company
 msgid "Companies"
-msgstr "หลายบริษัท"
+msgstr "บริษัท"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__company_id
 msgid "Company"
-msgstr "บริษัทเดียว"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__company_id
-msgid "Company related to this journal"
-msgstr "บริษัทที่เกี่ยวข้องกับสมุดรายวันนี้"
+msgstr "บริษัท"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -171,29 +152,31 @@ msgstr "ต้นทุน"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__cost_line_id
 msgid "Cost Line"
-msgstr ""
+msgstr "รายการต้นทุน"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__cost_lines
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Cost Lines"
-msgstr ""
+msgstr "รายการต้นทุนแฝง"
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
-msgid "Cost and adjustments lines do not match. You should maybe recompute the landed costs."
-msgstr ""
+msgid ""
+"Cost and adjustments lines do not match. You should maybe recompute the "
+"landed costs."
+msgstr "รายการต้นทุนและการปรับไม่ตรงกัน คุณควรคำนวณต้นทุนแฝงใหม่"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
 msgid "Create Landed Costs"
-msgstr ""
+msgstr "สร้างต้นทุนแฝง"
 
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Create a new landed cost"
-msgstr ""
+msgstr "สร้างต้นทุนแฝงใหม่"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__create_uid
@@ -226,19 +209,19 @@ msgstr "วันที่"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__lc_journal_id
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
 msgid "Default Journal"
-msgstr ""
+msgstr "สมุดรายวันเริ่มต้น"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method"
-msgstr ""
+msgstr "วิธีการแบ่งเริ่มต้น"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method when used for Landed Cost"
-msgstr ""
+msgstr "วิธีการแบ่งเริ่มต้นเมื่อใช้กับต้นทุนแฝง"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
@@ -247,9 +230,17 @@ msgid "Description"
 msgstr "คำอธิบาย"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_purchase_order_line__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_move__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_layer__display_name
 msgid "Display Name"
 msgstr "แสดงชื่อ"
 
@@ -280,6 +271,11 @@ msgid ""
 "By Weight: Cost will be divided depending on its weight.\n"
 "By Volume: Cost will be divided depending on its volume."
 msgstr ""
+"แบ่งเท่ากัน: ต้นทุนจะถูกแบ่งเท่าๆกัน\n"
+"แบ่งตามจำนวน: ต้นทุนจะถูกแบ่งตามจำนวนของสินค้า\n"
+"แบ่งตามต้นทุนปัจจุบัน: ต้นทุนจะถูกหารตามต้นทุนปัจจุบันของสินค้า\n"
+"แบ่งตามน้ำหนัก: ราคาจะถูกแบ่งตามน้ำหนักของสินค้า\n"
+"แบ่งตามปริมาณ: ต้นทุนจะถูกแบ่งตามปริมาณของสินค้า"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_follower_ids
@@ -302,6 +298,15 @@ msgid "Future Activities"
 msgstr "กิจกรรมในอนาคต"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_account_move_line__product_type
+msgid ""
+"Goods are tangible materials and merchandise you provide.\n"
+"A service is a non-material product you provide."
+msgstr ""
+"สินค้าคือวัตถุที่จับต้องได้และสินค้าที่คุณจัดหา\n"
+"บริการคือผลิตภัณฑ์ที่ไม่ใช่วัตถุที่คุณจัดหา"
+
+#. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Group By"
 msgstr "กลุ่มโดย"
@@ -312,9 +317,17 @@ msgid "Has Message"
 msgstr "มีข้อความ"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_purchase_order_line__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_move__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_layer__id
 msgid "ID"
 msgstr "ไอดี"
 
@@ -342,8 +355,13 @@ msgstr "ถ้าเลือก ข้อความบางข้อคว�
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__landed_cost_ok
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__landed_cost_ok
-msgid "Indicates whether the product is a landed cost: when receiving a vendor bill, you can allocate this cost on preceding receipts."
+msgid ""
+"Indicates whether the product is a landed cost: when receiving a vendor "
+"bill, you can allocate this cost on preceding receipts."
 msgstr ""
+"ระบุว่าสินค้าเป็นต้นทุนแฝงรือไม่: "
+"เมื่อได้รับใบเรียกเก็บเงินของผู้จำหน่ายแล้ว "
+"คุณสามารถปันส่วนต้นทุนนี้ในใบเสร็จรับเงินก่อนหน้าได้"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
@@ -353,34 +371,34 @@ msgstr "เป็นผู้ติดตาม"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__is_landed_costs_line
 msgid "Is Landed Costs Line"
-msgstr ""
+msgstr "เป็นรายการต้นทุนแฝง"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__landed_cost_ok
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__landed_cost_ok
 msgid "Is a Landed Cost"
-msgstr ""
+msgstr "เป็นต้นทุนแฝง"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__description
 msgid "Item Description"
-msgstr ""
+msgstr "รายละเอียดสินค้า"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Journal"
-msgstr "สมุดบันทึก"
+msgstr "สมุดรายวัน"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_account_move
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__account_move_id
 msgid "Journal Entry"
-msgstr "รายการบันทึกประจำวัน"
+msgstr "รายการสมุดรายวัน"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_account_move_line
 msgid "Journal Item"
-msgstr "รายการบันทึก"
+msgstr "รายการสมุดรายวัน"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__cost_id
@@ -388,13 +406,12 @@ msgstr "รายการบันทึก"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_layer__stock_landed_cost_id
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed Cost"
-msgstr ""
+msgstr "ต้นทุนแฝง"
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_bank_statement_line__landed_costs_ids
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_ids
-#: model:ir.model.fields,field_description:stock_landed_costs.field_account_payment__landed_costs_ids
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -402,24 +419,27 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree2
 msgid "Landed Costs"
-msgstr "Landed Costs"
+msgstr "ต้นทุนแฝง"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_bank_statement_line__landed_costs_visible
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_visible
-#: model:ir.model.fields,field_description:stock_landed_costs.field_account_payment__landed_costs_visible
 msgid "Landed Costs Visible"
-msgstr ""
+msgstr "ต้นทุนแฝงที่มองเห็นได้"
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
 msgid "Landed cost validated"
-msgstr ""
+msgstr "ต้นทุนแฝงถูกตรวจสอบความถูกต้องแล้ว"
 
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
-msgid "Landed costs allow you to include additional costs (shipment, insurance, customs duties, etc) into the cost of the product."
+msgid ""
+"Landed costs allow you to include additional costs (shipment, insurance, "
+"customs duties, etc) into the cost of the product."
 msgstr ""
+"ต้นทุนแฝงช่วยให้คุณสามารถรวมค่าใช้จ่ายเพิ่มเติม (ค่าขนส่ง ค่าประกัน "
+"อากรศุลกากร ฯลฯ) ไว้ในต้นทุนของสินค้าได้"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__write_uid
@@ -443,7 +463,7 @@ msgstr "กิจกรรมล่าสุด"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__lc_journal_id
 msgid "Lc Journal"
-msgstr ""
+msgstr "สมุดรายวัน Lc"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error
@@ -475,7 +495,7 @@ msgstr "ใหม่"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__final_cost
 msgid "New Value"
-msgstr ""
+msgstr "มูลค่าใหม่"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_calendar_event_id
@@ -509,8 +529,8 @@ msgstr "จํานวนข้อผิดพลาด"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "จํานวนข้อความที่ต้องดําเนินการ"
+msgid "Number of messages requiring action"
+msgstr "จำนวนข้อความที่ต้องดำเนินการ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error_counter
@@ -521,29 +541,29 @@ msgstr "จํานวนข้อความที่มีข้อผิด
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 msgid "Only draft landed costs can be validated"
-msgstr ""
+msgstr "สามารถตรวจสอบความถูกต้องของต้นทุนแฝงแบบร่างได้เท่านั้น"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__former_cost
 msgid "Original Value"
-msgstr ""
+msgstr "มูลค่าเดิม"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Picking"
-msgstr "การรับ"
+msgstr "การเบิกสินค้า"
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 msgid "Please configure Stock Expense Account for product: %s."
-msgstr ""
+msgstr "กรุณากำหนดค่าบัญชีค่าใช้จ่ายสต็อกสำหรับสินค้า:%s"
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 msgid "Please define %s on which those additional costs should apply."
-msgstr ""
+msgstr "โปรดกำหนด %s ว่าควรใช้ค่าใช้จ่ายเพิ่มเติมใด"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
@@ -565,7 +585,7 @@ msgstr "ประเภทสินค้า"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr "ไลน์คำสั่งซื้อ"
+msgstr "รายการคำสั่งซื้อ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__quantity
@@ -575,7 +595,7 @@ msgstr "ปริมาณ"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "การให้คะแนน"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_user_id
@@ -623,23 +643,24 @@ msgstr ""
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost
 msgid "Stock Landed Cost"
-msgstr "ต้นทุนแฝงสต๊อก"
+msgstr "ต้นทุนแฝงสต็อก"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
 msgid "Stock Landed Cost Line"
-msgstr ""
+msgstr "รายการต้นทุนแฝงของสต็อก"
 
 #. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_move
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__move_id
 msgid "Stock Move"
-msgstr "ย้ายสต๊อก"
+msgstr "ย้ายสต็อก"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_layer
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__stock_valuation_layer_ids
 msgid "Stock Valuation Layer"
-msgstr ""
+msgstr "ชั้นการประเมินมูลค่าสต็อก"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -655,7 +676,7 @@ msgstr "รวม"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__picking_ids
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__target_model__picking
 msgid "Transfers"
-msgstr "โอน"
+msgstr "โอนย้าย"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_exception_decoration
@@ -670,19 +691,23 @@ msgstr "ตรวจสอบ"
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
-msgid "Validated landed costs cannot be cancelled, but you could create negative landed costs to reverse them"
+msgid ""
+"Validated landed costs cannot be cancelled, but you could create negative "
+"landed costs to reverse them"
 msgstr ""
+"ต้นทุนแฝงที่ตรวจสอบแล้วไม่สามารถยกเลิกได้ "
+"แต่คุณสามารถสร้างต้นทุนแฝงที่เป็นลบเพื่อทำการย้อนกลับได้"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
 msgid "Valuation Adjustment Lines"
-msgstr ""
+msgstr "รายการปรับการประเมินมูลค่า"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__valuation_adjustment_lines
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Valuation Adjustments"
-msgstr ""
+msgstr "ปรับการประเมินมูลค่า"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__vendor_bill_id
@@ -712,11 +737,18 @@ msgstr "น้ำหนัก"
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
-msgid "You cannot apply landed costs on the chosen %s(s). Landed costs can only be applied for products with FIFO or average costing method."
+msgid ""
+"You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
+"applied for products with FIFO or average costing method."
 msgstr ""
+"คุณไม่สามารถใช้ต้นทุนแฝงกับ %s ที่เลือกได้ "
+"ต้นทุนแฝงสามารถใช้ได้กับสินค้าที่มีวิธี FIFO หรือวิธีคิดต้นทุนเฉลี่ยเท่านั้น"
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/product.py:0
-msgid "You cannot change the product type or disable landed cost option because the product is used in an account move line."
+msgid ""
+"You cannot change the product type or disable landed cost option because the"
+" product is used in an account move line."
 msgstr ""
+"คุณไม่สามารถเปลี่ยนชนิดสินค้าหรือปิดใช้งานตัวเลือกต้นทุนแฝงได้เนื่องจากสินค้าถูกใช้ในบรรทัดการย้ายบัญชี"

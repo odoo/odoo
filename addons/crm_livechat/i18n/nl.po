@@ -1,25 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* crm_livechat
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2022
-# Jolien De Paepe, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.3\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: crm_livechat
@@ -44,12 +41,20 @@ msgid "Create Lead"
 msgstr "Een lead maken"
 
 #. module: crm_livechat
-#. odoo-python
 #. odoo-javascript
-#: code:addons/crm_livechat/models/discuss_channel.py:0
 #: code:addons/crm_livechat/static/src/core/channel_commands.js:0
 msgid "Create a new lead (/lead lead title)"
 msgstr "Maak een nieuwe lead (/lead lead titel)"
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/discuss_channel.py:0
+msgid ""
+"Create a new lead: %(pre_start)s%(lead_command)s %(i_start)slead "
+"title%(i_end)s%(pre_end)s"
+msgstr ""
+"Maak een nieuwe lead: %(pre_start)s%(lead_command)s "
+"%(i_start)sleadtitel%(i_end)s%(pre_end)s"
 
 #. module: crm_livechat
 #. odoo-python
@@ -60,7 +65,7 @@ msgstr "Nieuwe lead aangemaakt: %s"
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_discuss_channel
 msgid "Discussion Channel"
-msgstr "Discussiekanaal"
+msgstr "Chatkanaal"
 
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script__lead_count
@@ -75,7 +80,7 @@ msgstr "Hallo, wat brengt je naar onze website vandaag? 👋"
 #. module: crm_livechat
 #: model:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_noone_available
 msgid "Hu-ho, it looks like none of our operators are available 🙁"
-msgstr "Hu-ho, het lijkt erop dat geen van onze operators beschikbaar is"
+msgstr "Hu-ho, het lijkt erop dat geen van onze operatoren beschikbaar is 🙁"
 
 #. module: crm_livechat
 #: model:chatbot.script,title:crm_livechat.chatbot_script_lead_generation_bot
@@ -108,8 +113,8 @@ msgid ""
 "Used in combination with 'create_lead' step type in order to automatically "
 "assign the created lead/opportunity to the defined team"
 msgstr ""
-"Gebruikt in combinatie met het staptype 'create_lead' om de gecreëerde lead/"
-"verkoopkans automatisch toe te wijzen aan het gedefinieerde team"
+"Gebruikt in combinatie met het staptype 'create_lead' om de aangemaakte "
+"lead/verkoopkans automatisch toe te wijzen aan het gedefinieerde team"
 
 #. module: crm_livechat
 #: model:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_pricing_email

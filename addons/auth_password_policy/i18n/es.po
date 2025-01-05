@@ -1,29 +1,40 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_password_policy
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
-"1 : 2;\n"
+"Language: es\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_config_settings
 msgid "Config Settings"
-msgstr "Opciones de configuración"
+msgstr "Ajustes de configuración"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_users__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_users__id
+msgid "ID"
+msgstr "ID"
 
 #. module: auth_password_policy
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
@@ -35,8 +46,8 @@ msgstr "Longitud mínima de contraseña"
 msgid ""
 "Minimum number of characters passwords must contain, set to 0 to disable."
 msgstr ""
-"El número mínimo de caracteres que deben de contener las contraseñas, cambia "
-"a 0 para deshabilitar."
+"El número mínimo de caracteres que deben de contener las contraseñas, cambia"
+" a 0 para deshabilitar."
 
 #. module: auth_password_policy
 #. odoo-javascript
@@ -45,20 +56,16 @@ msgid "Password"
 msgstr "Contraseña"
 
 #. module: auth_password_policy
-#. odoo-python
-#: code:addons/auth_password_policy/models/res_users.py:0
-msgid "Passwords must have at least %d characters, got %d."
-msgstr "Las contraseñas deben tener por lo menos %dcaracteres, pero tiene %d."
-
-#. module: auth_password_policy
 #. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_meter.js:0
 msgid ""
 "Required: %s\n"
 "\n"
-"Hint: to increase password strength, increase length, use multiple words, "
-"and use non-letter characters."
+"Hint: to increase password strength, increase length, use multiple words, and use non-letter characters."
 msgstr ""
+"Necesario: %s\n"
+"\n"
+"Consejo: para aumentar la seguridad de las contraseñas, aumente su longitud, utilice varias palabras y use caracteres que no sean letras."
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_users
@@ -66,19 +73,29 @@ msgid "User"
 msgstr "Usuario"
 
 #. module: auth_password_policy
+#. odoo-python
+#: code:addons/auth_password_policy/models/res_users.py:0
+msgid ""
+"Your password must contain at least %(minimal_length)d characters and only "
+"has %(current_count)d."
+msgstr ""
+"Su contraseña debe tener al menos %(minimal_length)d caracteres, pero por "
+"ahora solo tiene %(current_count)d."
+
+#. module: auth_password_policy
 #. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 msgid "at least %s character classes"
-msgstr ""
+msgstr "por lo menos %s tipos de caracteres"
 
 #. module: auth_password_policy
 #. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 msgid "at least %s characters"
-msgstr ""
+msgstr "por lo menos %s caracteres"
 
 #. module: auth_password_policy
 #. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 msgid "at least %s words"
-msgstr ""
+msgstr "por lo menos %s palabras"

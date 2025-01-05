@@ -1,24 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* lunch
-#
+# 
 # Translators:
-# Thin Tran <trvathin@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Vo Thanh Thuy, 2022
-#
+# Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Vo Thanh Thuy, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: lunch
@@ -48,8 +47,12 @@ msgstr "6 maki cá hồi - 6 maki cá ngừ - 6 maki tôm/bơ"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
-msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" title=\"Receive button\"/>"
-msgstr "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" title=\"Nút nhận\"/>"
+msgid ""
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" "
+"title=\"Receive button\"/>"
+msgstr ""
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" "
+"title=\"Nút nhận\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -60,8 +63,12 @@ msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Ngà
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
-msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Send notification\" title=\"Send notification\"/>"
+msgid ""
+"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Send notification\" "
+"title=\"Send notification\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Gửi thông báo\" "
+"title=\"Gửi thông báo\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_kanban
@@ -76,18 +83,28 @@ msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Money\" title=\"Tiề
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
-msgid "<i class=\"fa fa-paper-plane\" role=\"img\" aria-label=\"Send button\" title=\"Send button\"/>"
+msgid ""
+"<i class=\"fa fa-paper-plane\" role=\"img\" aria-label=\"Send button\" "
+"title=\"Send button\"/>"
 msgstr ""
+"<i class=\"fa fa-paper-plane\" role=\"img\" aria-label=\"Nút gửi\" "
+"title=\"Nút gửi\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
-msgid "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Order button\" title=\"Order button\"/>"
+msgid ""
+"<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Order button\" "
+"title=\"Order button\"/>"
 msgstr "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Order button\" title=\"Nút Đặt\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
-msgid "<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" title=\"Cancel button\"/>"
-msgstr "<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" title=\"Nút Hủy\"/>"
+msgid ""
+"<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
+"title=\"Cancel button\"/>"
+msgstr ""
+"<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
+"title=\"Nút Hủy\"/>"
 
 #. module: lunch
 #: model:mail.template,body_html:lunch.lunch_order_mail_supplier
@@ -100,12 +117,12 @@ msgid ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Lunch Order</span><br>\n"
+"                    <span style=\"font-size: 10px;\">Lunch Order</span><br/>\n"
 "                </td><td valign=\"middle\" align=\"right\" t-if=\"not user.company_id.uses_default_logo\">\n"
-"                    <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -117,9 +134,9 @@ msgid ""
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "    <div>\n"
-"        <t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"></t>\n"
-"        <t t-set=\"order\" t-value=\"ctx.get('order')\"></t>\n"
-"        <t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order.get('currency_id'))\"></t>\n"
+"        <t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
+"        <t t-set=\"order\" t-value=\"ctx.get('order')\"/>\n"
+"        <t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
 "        <p>\n"
 "        Dear <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
 "        </p><p>\n"
@@ -127,12 +144,12 @@ msgid ""
 "        </p>\n"
 "\n"
 "        <t t-if=\"sites\">\n"
-"            <br>\n"
+"            <br/>\n"
 "            <p>Location</p>\n"
 "            <t t-foreach=\"site\" t-as=\"site\">\n"
-"                <p><t t-out=\"site['name'] or ''\"></t> : <t t-out=\"site['address'] or ''\"></t></p>\n"
+"                <p><t t-out=\"site['name'] or ''\"/> : <t t-out=\"site['address'] or ''\"/></p>\n"
 "            </t>\n"
-"            <br>\n"
+"            <br/>\n"
 "        </t>\n"
 "\n"
 "        <table>\n"
@@ -163,10 +180,10 @@ msgid ""
 "                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" align=\"right\" t-out=\"format_amount(line['price'], currency) or ''\">$ 1.00</td>\n"
 "                </tr>\n"
 "                <tr>\n"
-"                    <td></td>\n"
-"                    <td></td>\n"
-"                    <td></td>\n"
-"                    <td></td>\n"
+"                    <td/>\n"
+"                    <td/>\n"
+"                    <td/>\n"
+"                    <td/>\n"
 "                    <td style=\"width: 100%; font-size: 13px; border-top: 1px solid black;\"><strong>Total</strong></td>\n"
 "                    <td style=\"width: 100%; font-size: 13px; border-top: 1px solid black;\" align=\"right\"><strong t-out=\"format_amount(order['amount_total'], currency) or ''\">$ 10.00</strong></td>\n"
 "                </tr>\n"
@@ -179,7 +196,7 @@ msgid ""
 "                </tr>\n"
 "                <tr>\n"
 "                    <td style=\"text-align:center;\">\n"
-"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                    </td>\n"
 "                </tr>\n"
 "            </table>\n"
@@ -220,6 +237,133 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Đặt hàng bữa trưa</span><br/>\n"
+"                </td><td valign=\"middle\" align=\"right\" t-if=\"not user.company_id.uses_default_logo\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"    <div>\n"
+"        <t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
+"        <t t-set=\"order\" t-value=\"ctx.get('order')\"/>\n"
+"        <t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
+"        <p>\n"
+"        Xin chào <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
+"        </p><p>\n"
+"        Đây là đơn đặt hàng hôm nay cho <t t-out=\"order.get('company_name', '')\">LunchCompany</t>:\n"
+"        </p>\n"
+"\n"
+"        <t t-if=\"sites\">\n"
+"            <br/>\n"
+"            <p>Địa điểm</p>\n"
+"            <t t-foreach=\"site\" t-as=\"site\">\n"
+"                <p><t t-out=\"site['name'] or ''\"/>: <t t-out=\"site['address'] or ''\"/></p>\n"
+"            </t>\n"
+"            <br/>\n"
+"        </t>\n"
+"\n"
+"        <table>\n"
+"            <thead>\n"
+"                <tr style=\"background-color:rgb(233,232,233);\">\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Sản phẩm</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Lời nhắn</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Người</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Vị trí</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\" align=\"center\"><strong>SL</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\" align=\"center\"><strong>Giá</strong></th>\n"
+"                </tr>\n"
+"            </thead>\n"
+"            <tbody>\n"
+"                <tr t-foreach=\"lines\" t-as=\"line\">\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['product'] or ''\">Sushi cá hồi</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\">\n"
+"                    <t t-if=\"line['toppings']\">\n"
+"                        <t t-out=\"line['toppings'] or ''\">Nước tương</t>\n"
+"                    </t>\n"
+"                    <t t-if=\"line['note']\">\n"
+"                        <div style=\"color: rgb(173,181,189);\" t-out=\"line['note'] or ''\">Với wasabi.</div>\n"
+"                    </t>\n"
+"                    </td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['username'] or ''\">lap</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['site'] or ''\">Văn phòng 1</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" align=\"right\" t-out=\"line['quantity'] or ''\">10</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" align=\"right\" t-out=\"format_amount(line['price'], currency) or ''\">$ 1,00</td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td/>\n"
+"                    <td/>\n"
+"                    <td/>\n"
+"                    <td/>\n"
+"                    <td style=\"width: 100%; font-size: 13px; border-top: 1px solid black;\"><strong>Tổng</strong></td>\n"
+"                    <td style=\"width: 100%; font-size: 13px; border-top: 1px solid black;\" align=\"right\"><strong t-out=\"format_amount(order['amount_total'], currency) or ''\">$ 10,00</strong></td>\n"
+"                </tr>\n"
+"            </tbody>\n"
+"        </table>\n"
+"\n"
+"        <p>Hãy liên hệ với chúng tôi nếu bạn có bất kỳ thắc mắc nào cần giải đáp.</p>\n"
+"    </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"user.company_id.name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"user.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"user.company_id.phone and (user.company_id.email or user.company_id.website)\">|</t>\n"
+"                    <t t-if=\"user.company_id.email\">\n"
+"                        <a t-attf-href=\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"user.company_id.email and user.company_id.website\">|</t>\n"
+"                    <t t-if=\"user.company_id.website\">\n"
+"                        <a t-attf-href=\"'%s' % {{ user.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Cung cấp bởi <a target=\"_blank\" href=\"https://www.odoo.com\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"        "
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_control_accounts
@@ -247,7 +391,7 @@ msgstr "AM"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Tác vụ cần thiết"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__active
@@ -262,12 +406,12 @@ msgstr "Đang hoạt động"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_ids
 msgid "Activities"
-msgstr "Các hoạt động"
+msgstr "Hoạt động"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Hành động ngoại lệ"
+msgstr "Hoạt động ngoại lệ"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_state
@@ -277,7 +421,7 @@ msgstr "Trạng thái hoạt động"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Biểu tượng kiểu hoạt động"
+msgstr "Biểu tượng loại hoạt động"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -293,7 +437,7 @@ msgstr "Địa chỉ"
 #. module: lunch
 #: model:res.groups,name:lunch.group_lunch_manager
 msgid "Administrator"
-msgstr "Người quản trị"
+msgstr "Quản trị viên"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__name
@@ -316,10 +460,16 @@ msgid "Alerts"
 msgstr "Cảnh báo"
 
 #. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+msgid "Already Paid"
+msgstr "Đã thanh toán"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__amount
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__amount
 msgid "Amount"
-msgstr "Tổng tiền"
+msgstr "Số tiền"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
@@ -330,7 +480,7 @@ msgstr "Tổng tiền"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_search
 msgid "Archived"
-msgstr "Đã lưu"
+msgstr "Đã lưu trữ"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_order__available_toppings_1
@@ -342,7 +492,7 @@ msgstr "Các bổ sung có sẵn cho sản phẩm này"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_attachment_count
 msgid "Attachment Count"
-msgstr "Số lượng tập tin đính kèm"
+msgstr "Số lượng tệp đính kèm"
 
 #. module: lunch
 #: model:ir.model.constraint,message:lunch.constraint_lunch_supplier_automatic_email_time_range
@@ -352,7 +502,12 @@ msgstr "Thời gian gửi email tự động phải từ 0 đến 12"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "Availability"
-msgstr "Khả dụng"
+msgstr "Tình trạng còn hàng"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__available_on_date
+msgid "Available On Date"
+msgstr "Có vào ngày"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
@@ -431,10 +586,16 @@ msgid "Cancelled"
 msgstr "Đã hủy"
 
 #. module: lunch
+#. odoo-python
+#: code:addons/lunch/models/lunch_supplier.py:0
+msgid "Cannot send an email to this supplier!"
+msgstr "Không thể gửi email đến nhà cung cấp này!"
+
+#. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_report_menu_payment
 msgid "Cash Moves"
-msgstr "Tiền chuyển"
+msgstr "Chuyển tiền"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_cashmove_report
@@ -444,7 +605,7 @@ msgstr "Báo cáo chuyển tiền"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Categories"
-msgstr "Phân loại"
+msgstr "Danh mục"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
@@ -528,7 +689,7 @@ msgstr "Công ty"
 #. module: lunch
 #: model:ir.model,name:lunch.model_res_config_settings
 msgid "Config Settings"
-msgstr "Cấu hình"
+msgstr "Cài đặt cấu hình"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_config
@@ -549,7 +710,7 @@ msgstr "Xác nhận"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Confirm Orders"
-msgstr ""
+msgstr "Xác nhận đơn hàng"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_control_accounts
@@ -667,6 +828,11 @@ msgid "Display"
 msgstr "Hiển thị"
 
 #. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__display_add_button
+msgid "Display Add Button"
+msgstr "Hiển thị nút thêm"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__display_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__display_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__display_name
@@ -676,6 +842,9 @@ msgstr "Hiển thị"
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__display_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__display_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__display_name
+#: model:ir.model.fields,field_description:lunch.field_res_company__display_name
+#: model:ir.model.fields,field_description:lunch.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:lunch.field_res_users__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
 
@@ -693,7 +862,7 @@ msgstr "Đồ uống"
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Edit order"
-msgstr ""
+msgstr "Chỉnh sửa đơn hàng"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__email
@@ -800,7 +969,7 @@ msgstr "Người theo dõi (Đối tác)"
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font biểu tượng ví dụ: fa-tasks"
+msgstr "Font biểu tượng, ví dụ: fa-tasks"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__email_formatted
@@ -810,7 +979,7 @@ msgstr "Định dạng địa chỉ email \"Name <email@domain>\""
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__email_formatted
 msgid "Formatted Email"
-msgstr "Định dạng email"
+msgstr "Email được Định dạng"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_italiana
@@ -826,7 +995,7 @@ msgstr "Thứ sáu"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Friday"
-msgstr "Thứ sáu"
+msgstr "Thứ Sáu"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_gouda
@@ -853,8 +1022,12 @@ msgstr "Có tin nhắn"
 
 #. module: lunch
 #: model:ir.module.category,description:lunch.module_lunch_category
-msgid "Helps you handle your lunch needs, if you are a manager you will be able to create new products, cashmoves and to confirm or cancel orders."
-msgstr "Giúp bạn giải quyết nhu cầu ăn trưa, nếu bạn là người quản lý, bạn sẽ có thểtạo ra món mới, chuyển tiền và xác nhận hoặc hủy bỏ đơn đặt hàng."
+msgid ""
+"Helps you handle your lunch needs, if you are a manager you will be able to "
+"create new products, cashmoves and to confirm or cancel orders."
+msgstr ""
+"Giúp bạn giải quyết nhu cầu ăn trưa, nếu bạn là người quản lý, bạn sẽ có "
+"thểtạo ra món mới, chuyển tiền và xác nhận hoặc hủy bỏ đơn đặt hàng."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_category_action
@@ -885,6 +1058,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__id
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__id
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__id
+#: model:ir.model.fields,field_description:lunch.field_res_company__id
+#: model:ir.model.fields,field_description:lunch.field_res_config_settings__id
+#: model:ir.model.fields,field_description:lunch.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -896,17 +1072,18 @@ msgstr "Biểu tượng"
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Biểu tượng để chỉ ra một hoạt động ngoại lệ."
+msgstr "Biểu tượng cho thấy một hoạt động ngoại lệ."
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Nếu chọn, các tin nhắn mới yêu cầu sự có mặt của bạn."
+msgstr "Nếu chọn, bạn cần chú ý tới các tin nhắn mới."
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__message_has_error
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Nếu đánh dấu thì một số thông điệp có lỗi."
+msgstr "Nếu chọn, một số tin nhắn sẽ có lỗi gửi."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__image_1920
@@ -918,14 +1095,14 @@ msgstr "Hình ảnh"
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__image_1024
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__image_1024
 msgid "Image 1024"
-msgstr "Hình 1024"
+msgstr "Hình ảnh 1024"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__image_128
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__image_128
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__image_128
 msgid "Image 128"
-msgstr "Ảnh 128"
+msgstr "Hình ảnh 128"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__image_1920
@@ -936,13 +1113,13 @@ msgstr "Ảnh 1920"
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__image_256
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__image_256
 msgid "Image 256"
-msgstr "Hình 256"
+msgstr "Hình ảnh 256"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__image_512
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__image_512
 msgid "Image 512"
-msgstr "Hình 512"
+msgstr "Hình ảnh 512"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -962,7 +1139,7 @@ msgstr "Is Favorite"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_is_follower
 msgid "Is Follower"
-msgstr "Trở thành người theo dõi"
+msgstr "Là người theo dõi"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__is_new
@@ -989,7 +1166,7 @@ msgstr "Ngày đặt cuối cùng"
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__write_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__write_date
@@ -1007,17 +1184,17 @@ msgstr "Cập nhật lần cuối vào"
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__location_ids
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__available_location_ids
 msgid "Location"
-msgstr "Địa điểm"
+msgstr "Vị trí"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_location__name
 msgid "Location Name"
-msgstr "Tên Địa điểm"
+msgstr "Tên vị trí"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_location_menu
 msgid "Locations"
-msgstr "Địa điểm"
+msgstr "Vị trí"
 
 #. module: lunch
 #: model:ir.module.category,name:lunch.module_lunch_category
@@ -1073,7 +1250,7 @@ msgstr "Ngưỡng tối thiểu cho bữa trưa"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_company__lunch_notify_message
 msgid "Lunch Notify Message"
-msgstr ""
+msgstr "Tin nhắn thông báo bữa trưa"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_order
@@ -1083,7 +1260,7 @@ msgstr "Đặt bữa trưa"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Lunch Overdraft"
-msgstr ""
+msgstr "Bội chi bữa trưa"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product
@@ -1114,12 +1291,12 @@ msgstr "Sushi Temaki 3 miếng"
 #. odoo-python
 #: code:addons/lunch/models/lunch_order.py:0
 msgid "Lunch notification"
-msgstr ""
+msgstr "Thông báo bữa trưa"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_config_settings__company_lunch_notify_message
 msgid "Lunch notification message"
-msgstr ""
+msgstr "Tin nhắn thông báo bữa trưa"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_action_cancel
@@ -1134,40 +1311,40 @@ msgstr "Bữa trưa: Nhận suất ăn"
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_action_notify
 msgid "Lunch: Send notifications"
-msgstr ""
+msgstr "Bữa trưa: Gửi thông báo"
 
 #. module: lunch
 #: model:mail.template,name:lunch.lunch_order_mail_supplier
 msgid "Lunch: Supplier Order"
-msgstr ""
+msgstr "Bữa trưa: Đơn hàng của nhà cung cấp"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_234
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_1824
 msgid "Lunch: alert chat notification (Alert for Office 3)"
 msgstr "Bữa trưa: cảnh báo thông báo chat (Cảnh báo cho Phòng 3)"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_235
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_1825
 msgid "Lunch: send automatic email to Coin gourmand"
 msgstr "Bữa trưa: tự động gửi email tới cửa hàng Coin Gourmand"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_230
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_1820
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr "Bữa trưa: tự động gửi email tới cửa hàng Lunch Supplier"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_236
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_1826
 msgid "Lunch: send automatic email to Pizza Inn"
 msgstr "Bữa trưa: tự động gửi email tới cửa hàng Pizza Inn"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_1828
 msgid "Lunch: send automatic email to Sushi Shop"
 msgstr "Bữa trưa: tự động gửi email tới cửa hàng Sushi Shop"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_237
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_1827
 msgid "Lunch: send automatic email to The Corner"
 msgstr "Bữa trưa: tự động gửi email tới cửa hàng The Corner"
 
@@ -1179,7 +1356,7 @@ msgstr "Tiền tệ chính của công ty."
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_admin
 msgid "Manager"
-msgstr "Người quản lý"
+msgstr "Quản lý"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_config_settings__company_lunch_minimum_threshold
@@ -1194,17 +1371,17 @@ msgstr "Thấu chi tối đa mà nhân viên của bạn có thể đạt đư�
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__message
 msgid "Message"
-msgstr "Thông báo"
+msgstr "Tin nhắn"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_has_error
 msgid "Message Delivery error"
-msgstr "Thông báo gửi đi gặp lỗi"
+msgstr "Lỗi gửi tin nhắn"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_ids
 msgid "Messages"
-msgstr "Thông báo"
+msgstr "Tin nhắn"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__moment
@@ -1251,7 +1428,7 @@ msgstr "Gom theo tài khoản của tôi"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Hạn chót hoạt động"
+msgstr "Hạn chót hoạt động của tôi"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_title
@@ -1288,7 +1465,7 @@ msgstr "Mới"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_form
 msgid "New Order"
-msgstr "Đơn mới"
+msgstr "Đơn hàng mới"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__new_until
@@ -1298,12 +1475,12 @@ msgstr "Mới cho đến khi"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Sự kiện lịch hoạt động tiếp theo"
+msgstr "Sự kiện trên lịch cho hoạt động tiếp theo"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Hạn chót cho hành động kế tiếp"
+msgstr "Hạn chót cho hoạt động tiếp theo"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_summary
@@ -1313,7 +1490,7 @@ msgstr "Tóm tắt hoạt động tiếp theo"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_type_id
 msgid "Next Activity Type"
-msgstr "Kiểu hoạt động kế tiếp"
+msgstr "Loại hoạt động tiếp theo"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__delivery__no_delivery
@@ -1324,6 +1501,18 @@ msgstr "Không giao hàng"
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_account
 msgid "No cash move yet"
 msgstr "Chưa có chuyển tiền"
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/views/no_content_helper.xml:0
+msgid "No location found"
+msgstr "Không tìm thấy địa điểm nào."
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+msgid "No lunch location available."
+msgstr "Không có địa điểm bữa trưa nào."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
@@ -1345,7 +1534,7 @@ msgstr "Không có hoặc nhiều hơn"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "Not Received"
-msgstr "Chưa nhận được"
+msgstr "Chưa nhận"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__note
@@ -1375,27 +1564,27 @@ msgstr "Thời gian thông báo phải từ 0 đến 12"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__notified
 msgid "Notified"
-msgstr ""
+msgstr "Đã thông báo"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng tác vụ"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_has_error_counter
 msgid "Number of errors"
-msgstr "Số lỗi"
+msgstr "Số lượng lỗi"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Số thông báo cần xử lý"
+msgid "Number of messages requiring action"
+msgstr "Số tin nhắn cần xử lý"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Số lượng tin gửi đi bị lỗi"
+msgstr "Số tin nhắn bị gửi lỗi"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_1__1_more
@@ -1414,7 +1603,7 @@ msgstr "Chỉ một"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
 msgid "Order"
-msgstr "Lệnh"
+msgstr "Đơn hàng"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__date
@@ -1426,7 +1615,7 @@ msgstr "Ngày đặt hàng"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__order_deadline_passed
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__order_deadline_passed
 msgid "Order Deadline Passed"
-msgstr ""
+msgstr "Hạn đặt hàng đã qua"
 
 #. module: lunch
 #. odoo-javascript
@@ -1446,8 +1635,8 @@ msgstr "Đơn đặt bữa ăn của bạn"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
-msgid "Order lines Tree"
-msgstr "Danh sách chi tiết đặt món"
+msgid "Order lines List"
+msgstr "Danh sách chi tiết đơn hàng"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_order__state__ordered
@@ -1487,8 +1676,13 @@ msgstr "Thanh toán"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
-msgid "Payments are used to register liquidity movements. You can process those payments by your own means or by using installed facilities."
-msgstr "Thanh toán được sử dụng để đăng ký chuyển động thanh khoản. Bạn có thể xử lý các khoản thanh toán đó bằng phương tiện của riêng bạn hoặc bằng cách sử dụng các phương tiện được cài đặt."
+msgid ""
+"Payments are used to register liquidity movements. You can process those "
+"payments by your own means or by using installed facilities."
+msgstr ""
+"Thanh toán được sử dụng để đăng ký chuyển động thanh khoản. Bạn có thể xử lý"
+" các khoản thanh toán đó bằng phương tiện của riêng bạn hoặc bằng cách sử "
+"dụng các phương tiện được cài đặt."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__phone
@@ -1523,6 +1717,12 @@ msgid "Pizza Vegetarian"
 msgstr "Pizza chay"
 
 #. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/views/no_content_helper.xml:0
+msgid "Please create a location to start ordering."
+msgstr "Vui lòng tạo một địa điểm để bắt đầu đặt hàng."
+
+#. module: lunch
 #: model_terms:lunch.alert,message:lunch.alert_office_3
 msgid "Please order"
 msgstr "Vui lòng đặt hàng"
@@ -1544,13 +1744,13 @@ msgstr "Sản phẩm"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__is_available_at
 msgid "Product Availability"
-msgstr "Sản phẩm hiện có"
+msgstr "Tình trạng còn hàng của sản phẩm"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_product_category_action
 #: model:ir.ui.menu,name:lunch.lunch_product_category_menu
 msgid "Product Categories"
-msgstr "Nhóm sản phẩm"
+msgstr "Danh mục sản phẩm"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
@@ -1572,8 +1772,9 @@ msgstr "Đếm sản phẩm"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__product_image
+#: model_terms:ir.ui.view,arch_db:lunch.view_lunch_product_kanban
 msgid "Product Image"
-msgstr "Ảnh sản phẩm"
+msgstr "Hình ảnh sản phẩm"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__name
@@ -1608,18 +1809,19 @@ msgstr "Thông tin món"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_tree
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_tree
 msgid "Products List"
 msgstr "Danh sách sản phẩm"
-
-#. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_tree
-msgid "Products Tree"
-msgstr "Danh sách món"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__quantity
 msgid "Quantity"
 msgstr "Số lượng"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__rating_ids
+msgid "Ratings"
+msgstr "Đánh giá"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
@@ -1641,7 +1843,7 @@ msgstr "Đã nhận"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Reception notification"
-msgstr ""
+msgstr "Thông báo nhận đơn hàng"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__recipients
@@ -1661,7 +1863,7 @@ msgstr "Đặt lại"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__responsible_id
 msgid "Responsible"
-msgstr "Phụ trách"
+msgstr "Người phụ trách"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_user_id
@@ -1669,9 +1871,14 @@ msgid "Responsible User"
 msgstr "Người phụ trách"
 
 #. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Lỗi gửi SMS"
+
+#. module: lunch
 #: model:lunch.product,name:lunch.product_chirashi
 msgid "Salmon and Avocado"
-msgstr "Cá hồi kèm quả bơ"
+msgstr "Cá hồi kèm bơ"
 
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_sandwich
@@ -1690,11 +1897,6 @@ msgid "Saturday"
 msgstr "Thứ Bảy"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
-msgid "Save"
-msgstr "Lưu"
-
-#. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "Search"
@@ -1709,7 +1911,7 @@ msgstr "Gửi"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Send Notification"
-msgstr ""
+msgstr "Gửi thông báo"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__send_by
@@ -1719,12 +1921,12 @@ msgstr "Gửi đơn hàng bằng"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Send Orders"
-msgstr ""
+msgstr "Gửi đơn hàng"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Send this message to your users when their order has been delivered."
-msgstr ""
+msgstr "Gửi tin nhắn này cho nhân viên khi đơn hàng của họ được giao đến."
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_order__state__sent
@@ -1734,23 +1936,23 @@ msgstr "Đã gửi"
 #. module: lunch
 #: model:mail.template,description:lunch.lunch_order_mail_supplier
 msgid "Sent to vendor with the order of the day"
-msgstr ""
+msgstr "Gửi cho nhà cung cấp kèm theo đơn hàng trong ngày"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_config_settings_action
 #: model:ir.ui.menu,name:lunch.lunch_settings_menu
 msgid "Settings"
-msgstr "Thiết lập"
+msgstr "Cài đặt"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__show_confirm_button
 msgid "Show Confirm Button"
-msgstr ""
+msgstr "Hiển thị nút Xác nhận"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__show_order_button
 msgid "Show Order Button"
-msgstr ""
+msgstr "Hiển thị nút Đặt hàng"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__until
@@ -1782,29 +1984,29 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Trạng thái dựa trên hoạt động\n"
-"Quá hạn: Ngày đến hạn phải được chuyển\n"
+"Quá hạn: Hạn chót hạn đã qua\n"
 "Hôm nay: Hôm nay là ngày phải thực hiện\n"
-"Kế hoạch: Các hoạt động trong tương lai."
+"Kế hoạch: Cần thực hiện trong tương lai."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__street
 msgid "Street"
-msgstr "Địa chỉ"
+msgstr "Đường"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "Street 2..."
-msgstr "Địa chỉ, đường..."
+msgstr "Đường 2..."
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "Street..."
-msgstr "Địa chỉ..."
+msgstr "Đường..."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__street2
 msgid "Street2"
-msgstr "Địa chỉ, đường"
+msgstr "Đường2"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
@@ -1870,24 +2072,36 @@ msgstr "Số lượng sản phẩm liên quan đến danh mục này"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "The orders for this vendor have already been sent."
-msgstr ""
+msgstr "Các đơn hàng tại nhà cung cấp này đã được gửi đi."
 
 #. module: lunch
 #. odoo-python
 #: code:addons/lunch/models/lunch_supplier.py:0
 msgid "The orders have been confirmed!"
-msgstr ""
+msgstr "Đơn hàng đã được xác nhận!"
 
 #. module: lunch
 #. odoo-python
 #: code:addons/lunch/models/lunch_supplier.py:0
 msgid "The orders have been sent!"
-msgstr ""
+msgstr "Đơn hàng đã được gửi đi!"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__responsible_id
-msgid "The responsible is the person that will order lunch for everyone. It will be used as the 'from' when sending the automatic email."
-msgstr "Người chịu trách nhiệm là người sẽ đặt bữa trưa cho mọi người. Nó sẽ được dùng làm 'from' khi gửi email tự động."
+msgid ""
+"The responsible is the person that will order lunch for everyone. It will be"
+" used as the 'from' when sending the automatic email."
+msgstr ""
+"Người chịu trách nhiệm là người sẽ đặt bữa trưa cho mọi người. Nó sẽ được "
+"dùng làm 'from' khi gửi email tự động."
+
+#. module: lunch
+#. odoo-python
+#: code:addons/lunch/models/lunch_order.py:0
+msgid ""
+"The vendor related to this order is not available at the selected date."
+msgstr ""
+"Nhà cung cấp liên quan tới đơn hàng này không mở cửa vào ngày đã chọn."
 
 #. module: lunch
 #. odoo-python
@@ -1897,8 +2111,12 @@ msgstr "Nhà cung cấp liên quan tới đơn hàng này không mở cửa vào
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action
-msgid "There is no previous order recorded. Click on \"My Lunch\" and then create a new lunch order."
-msgstr "There is no previous order recorded. Click on \"My Lunch\" and then create a new lunch order."
+msgid ""
+"There is no previous order recorded. Click on \"My Lunch\" and then create a"
+" new lunch order."
+msgstr ""
+"There is no previous order recorded. Click on \"My Lunch\" and then create a"
+" new lunch order."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_order
@@ -1936,12 +2154,20 @@ msgstr "Múi giờ"
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_order__state__new
 msgid "To Order"
-msgstr "Để đặt"
+msgstr "Cần đặt hàng"
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+msgid "To Pay"
+msgstr "Cần thanh toán"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_payment_dialog
 msgid "To add some money to your wallet, please contact your lunch manager."
-msgstr "Để thêm tiền vào ví của bạn, vui lòng liên hệ với người quản lý bữa trưa của bạn."
+msgstr ""
+"Để thêm tiền vào ví của bạn, vui lòng liên hệ với người quản lý bữa trưa của"
+" bạn."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_location_action
@@ -1950,10 +2176,16 @@ msgstr "Để xem một số vị trí, hãy tạo một vị trí bằng nút t
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_order
-msgid "To see some products, check if your vendors are available today and that you have configured some products"
-msgstr "Để xem một số sản phẩm, hãy kiểm tra xem nhà cung cấp của bạn có sẵn sàng hôm nay không và bạn đã cấu hình một số sản phẩm chưa"
+msgid ""
+"To see some products, check if your vendors are available today and that you"
+" have configured some products"
+msgstr ""
+"Để xem một số sản phẩm, hãy kiểm tra xem nhà cung cấp của bạn có sẵn sàng "
+"hôm nay không và bạn đã cấu hình một số sản phẩm chưa"
 
 #. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "Today"
 msgstr "Hôm nay"
@@ -1967,7 +2199,8 @@ msgstr "Đặt món hôm nay"
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_4formaggi
 msgid "Tomato sauce, Olive oil, Fresh Tomatoes, Onions, Vegetables, Parmesan"
-msgstr "Sốt cà chua, dầu ô liu, cà chua tươi, hành tây, rau củ, phô mai Parmesan"
+msgstr ""
+"Sốt cà chua, dầu ô liu, cà chua tươi, hành tây, rau củ, phô mai Parmesan"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_Napoli
@@ -2023,7 +2256,7 @@ msgstr "Tổng"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__price
 msgid "Total Price"
-msgstr "Giá tổng"
+msgstr "Tổng giá"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__tue
@@ -2049,7 +2282,7 @@ msgstr "Cá ngừ, sốt Mayonnaise"
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Loại hoạt động ngoại lệ trên hồ sơ."
+msgstr "Loại hoạt động ngoại lệ trong bản ghi."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__recurrency_end_date
@@ -2068,7 +2301,7 @@ msgstr "Người dùng"
 #. module: lunch
 #: model:res.groups,name:lunch.group_lunch_user
 msgid "User : Order your meal"
-msgstr ""
+msgstr "Người dùng: Đặt bữa ăn của bạn"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__supplier_id
@@ -2093,6 +2326,16 @@ msgid "Vendors"
 msgstr "Nhà cung cấp"
 
 #. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__website_message_ids
+msgid "Website Messages"
+msgstr "Thông báo trên trang web"
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__website_message_ids
+msgid "Website communication history"
+msgstr "Lịch sử trao đổi qua trang web"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__wed
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__wed
 msgid "Wed"
@@ -2106,8 +2349,12 @@ msgstr "Thứ Tư"
 #. module: lunch
 #. odoo-python
 #: code:addons/lunch/controllers/main.py:0
-msgid "You are trying to impersonate another user, but this can only be done by a lunch manager"
-msgstr "Bạn đang cố đại diễn cho một người dùng khác nhưng điều này chỉ có thể được thực hiện bởi người quản lý bữa trưa"
+msgid ""
+"You are trying to impersonate another user, but this can only be done by a "
+"lunch manager"
+msgstr ""
+"Bạn đang cố đại diễn cho một người dùng khác nhưng điều này chỉ có thể được "
+"thực hiện bởi người quản lý bữa trưa"
 
 #. module: lunch
 #. odoo-python
@@ -2131,30 +2378,35 @@ msgstr "Tài khoản của bạn"
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Your Cart ("
-msgstr ""
+msgstr "Giỏ hàng của bạn ("
 
 #. module: lunch
 #. odoo-python
 #: code:addons/lunch/models/lunch_alert.py:0
 msgid "Your Lunch Order"
-msgstr ""
+msgstr "Đơn đặt bữa trưa của bạn"
 
 #. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Your Order"
-msgstr ""
+msgstr "Đơn hàng của bạn"
 
 #. module: lunch
 #. odoo-python
 #: code:addons/lunch/models/lunch_order.py:0
-msgid "Your wallet does not contain enough money to order that. To add some money to your wallet, please contact your lunch manager."
-msgstr "Ví của bạn không chứa đủ tiền để đặt hàng. Để thêm tiền vào ví của bạn, vui lòng liên hệ với người quản lý bữa trưa của bạn."
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
+msgid ""
+"Your wallet does not contain enough money to order that. To add some money "
+"to your wallet, please contact your lunch manager."
+msgstr ""
+"Ví của bạn không chứa đủ tiền để đặt hàng. Để thêm tiền vào ví của bạn, vui "
+"lòng liên hệ với người quản lý bữa trưa của bạn."
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "ZIP"
-msgstr "Mã bưu điện"
+msgstr "Mã bưu chính"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__zip_code
@@ -2176,8 +2428,8 @@ msgstr "cashmove form"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_tree
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_tree_2
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree
-msgid "cashmove tree"
-msgstr "cashmove tree"
+msgid "cashmove list"
+msgstr "danh sách cashmove"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
@@ -2208,4 +2460,4 @@ msgstr "trên"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_kanban
 msgid "to"
-msgstr "tới"
+msgstr "đến"

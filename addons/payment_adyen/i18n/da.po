@@ -1,45 +1,43 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_adyen
-#
+# 
 # Translators:
-# jonas jensen <j.jensen@tcomp.dk>, 2019
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2019\n"
-"Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
-"Language: da\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
 msgid ""
-"<strong>Warning:</strong> To capture the amount manually, you also need to "
-"set\n"
-"                    the Capture Delay to manual on your Adyen account "
-"settings."
+"<strong>Warning:</strong> To capture the amount manually, you also need to set\n"
+"                    the Capture Delay to manual on your Adyen account settings."
 msgstr ""
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
-msgid "A request was sent to void the transaction with reference %s (%s)."
+msgid ""
+"A request was sent to void the transaction with reference %(reference)s "
+"(%(provider)s)."
 msgstr ""
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_key
 msgid "API Key"
-msgstr ""
+msgstr "API nøgle"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_url_prefix
@@ -72,7 +70,7 @@ msgstr ""
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__code
 msgid "Code"
-msgstr ""
+msgstr "Kode"
 
 #. module: payment_adyen
 #. odoo-python
@@ -99,7 +97,7 @@ msgstr ""
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
 msgid "Learn More"
-msgstr ""
+msgstr "Lær mere"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_merchant_account
@@ -120,12 +118,12 @@ msgstr ""
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Betalingsudbyder"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_token
 msgid "Payment Token"
-msgstr ""
+msgstr "Betalingstoken"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_transaction
@@ -136,7 +134,7 @@ msgstr "Betalingstransaktion"
 #. odoo-javascript
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
 msgid "Payment processing failed"
-msgstr ""
+msgstr "Behandlingen af betaling mislykkedes"
 
 #. module: payment_adyen
 #. odoo-python
@@ -213,8 +211,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid ""
-"The capture request of %(amount)s for the transaction with reference %(ref)s "
-"has been requested (%(provider_name)s)."
+"The capture request of %(amount)s for the transaction with reference %(ref)s"
+" has been requested (%(provider_name)s)."
 msgstr ""
 
 #. module: payment_adyen

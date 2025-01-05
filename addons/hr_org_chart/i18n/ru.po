@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_org_chart
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:51+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: hr_org_chart
@@ -75,6 +77,14 @@ msgid "In order to get an organigram, set a manager and save the record."
 msgstr "Чтобы получить оргструктуру, укажите руководителя и сохраните запись."
 
 #. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_controller.xml:0
+msgid ""
+"In the Organigram you will have a clear overview of the hierarchy of "
+"employees."
+msgstr ""
+
+#. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_all_count
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_all_count
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_all_count
@@ -98,6 +108,12 @@ msgstr "Является подчиненным"
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 msgid "More managers"
 msgstr "Больше руководителей"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_controller.xml:0
+msgid "No Data"
+msgstr ""
 
 #. module: hr_org_chart
 #. odoo-javascript
@@ -128,6 +144,13 @@ msgstr "Оргструктура"
 #: model:ir.model,name:hr_org_chart.model_hr_employee_public
 msgid "Public Employee"
 msgstr "Государственный служащий"
+
+#. module: hr_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
+msgid ""
+"Quickly find all the information you need for your employees such as contact"
+" data, job position, availability, etc."
+msgstr ""
 
 #. module: hr_org_chart
 #. odoo-javascript
@@ -164,17 +187,6 @@ msgstr "У этого сотрудника нет руководителя ил�
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 msgid "Total"
 msgstr "Всего"
-
-#. module: hr_org_chart
-#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
-msgid ""
-"With just a quick glance on the Odoo employee screen, you\n"
-"                can easily find all the information you need for each person;\n"
-"                contact data, job position, availability, etc."
-msgstr ""
-"Бросив лишь беглый взгляд на экран сотрудника Odoo, вы \n"
-"                можете легко найти все необходимую информацию по каждому человеку;\n"
-"                контактные данные, должность, доступность в офисе и т.д."
 
 #. module: hr_org_chart
 #. odoo-javascript

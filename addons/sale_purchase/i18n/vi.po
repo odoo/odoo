@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_purchase
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Thi Huong Nguyen, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_purchase
@@ -29,11 +28,6 @@ msgid ""
 msgstr ""
 ".\n"
 "            Có thể cần thao tác thủ công."
-
-#. module: sale_purchase
-#: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
-msgid "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Service to Purchase\"/>"
-msgstr "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Dịch vụ cần mua\"/>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
@@ -49,14 +43,14 @@ msgstr "<span class=\"o_stat_text\">Bán hàng</span>"
 #: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_cancel_view_form
 msgid ""
 "<span id=\"display_invoice_alert\" position=\"after\">\n"
-"                <span id=\"display_purchase_orders_alert\" attrs=\"{'invisible': [('display_purchase_orders_alert', '=', False)]}\">\n"
+"                <span id=\"display_purchase_orders_alert\" invisible=\"not display_purchase_orders_alert\" groups=\"purchase.group_purchase_user\">\n"
 "                    There are active purchase orders linked to this sale order that are not cancelled automatically! <br/>\n"
 "                </span>\n"
 "            </span>"
 msgstr ""
 "<span id=\"display_invoice_alert\" position=\"after\">\n"
-"                <span id=\"display_purchase_orders_alert\" attrs=\"{'invisible': [('display_purchase_orders_alert', '=', False)]}\">\n"
-"                    Có các đơn mua hàng đang hoạt động được liên kết với đơn bán hàng này và không bị hủy tự động!<br/>\n"
+"                <span id=\"display_purchase_orders_alert\" invisible=\"not display_purchase_orders_alert\" groups=\"purchase.group_purchase_user\">\n"
+"                    Có các đơn mua hàng đang hoạt động được liên kết với đơn bán hàng này và không bị hủy tự động! <br/>\n"
 "                </span>\n"
 "            </span>"
 
@@ -86,8 +80,14 @@ msgstr "Chi tiết mua hàng đã tạo"
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_product_product__service_to_purchase
 #: model:ir.model.fields,help:sale_purchase.field_product_template__service_to_purchase
-msgid "If ticked, each time you sell this product through a SO, a RfQ is automatically created to buy the product. Tip: don't forget to set a vendor on the product."
-msgstr "Nếu đánh dấu, mỗi lần bạn bán sản phẩm này thông qua Đơn bán hàng, YCBG sẽ tự động được tạo để mua sản phẩm. Mẹo: đừng quên đặt nhà cung cấp cho sản phẩm."
+msgid ""
+"If ticked, each time you sell this product through a SO, a RfQ is "
+"automatically created to buy the product. Tip: don't forget to set a vendor "
+"on the product."
+msgstr ""
+"Nếu đánh dấu, mỗi lần bạn bán sản phẩm này thông qua đơn bán hàng, YCBG sẽ "
+"tự động được tạo để mua sản phẩm. Mẹo: đừng quên đặt nhà cung cấp cho sản "
+"phẩm."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
@@ -97,7 +97,7 @@ msgstr "Có thể cần thao tác thủ công."
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order__purchase_order_count
 msgid "Number of Purchase Order Generated"
-msgstr "Số lượng Đơn mua hàng đã được tạo"
+msgstr "Số lượng đơn mua hàng đã được tạo"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__sale_order_count
@@ -110,9 +110,10 @@ msgid "Number of generated purchase items"
 msgstr "Số lượng hạng mục mua hàng đã tạo"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/sale_order_line.py:0
 msgid "Ordered quantity decreased!"
-msgstr "Số lượng hàng được đặt đã giảm!"
+msgstr "Số lượng hàng đã đặt đã giảm!"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_line_id
@@ -120,9 +121,13 @@ msgid "Origin Sale Item"
 msgstr "Hạng mục bán hàng gốc"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/product_template.py:0
-msgid "Please define the vendor from whom you would like to purchase this service automatically."
-msgstr "Vui lòng xác định nhà cung cấp mà bạn muốn tự động mua dịch vụ này."
+msgid ""
+"Please define the vendor from whom you would like to purchase this service "
+"automatically."
+msgstr ""
+"Vui lòng xác định nhà cung cấp mà bạn muốn tự động mua dịch vụ này từ họ."
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_product_template
@@ -130,6 +135,7 @@ msgid "Product"
 msgstr "Sản phẩm"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/product_template.py:0
 msgid "Product that is not a service can not create RFQ."
 msgstr "Sản phẩm không phải là một dịch vụ không thể tạo YCBG."
@@ -147,22 +153,27 @@ msgstr "Cảnh báo đơn mua hàng"
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr "Mục đơn mua hàng"
+msgstr "Dòng đơn mua hàng"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/sale_order.py:0
 msgid "Purchase Order generated from %s"
 msgstr "Đơn mua hàng được tạo từ %s"
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_sale_order_line__purchase_line_ids
-msgid "Purchase line generated by this Sales item on order confirmation, or when the quantity was increased."
-msgstr "Mục mua hàng được tạo bởi hạng mục bán hàng khi xác nhận đơn hàng, hoặc khi số lượng tăng lên. "
+msgid ""
+"Purchase line generated by this Sales item on order confirmation, or when "
+"the quantity was increased."
+msgstr ""
+"Dòng mua hàng được tạo bởi hạng dòng bán hàng khi xác nhận đơn hàng, hoặc "
+"khi số lượng tăng lên."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
 msgid "Reordering"
-msgstr "Đặt hàng lại"
+msgstr "Tái đặt hàng"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_order_id
@@ -177,14 +188,15 @@ msgstr "Đơn bán hàng"
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_sale_order_cancel
 msgid "Sales Order Cancel"
-msgstr "Hủy đơn bán hàng"
+msgstr "Huỷ đơn bán hàng"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Mục đơn bán hàng"
+msgstr "Dòng đơn bán hàng"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/purchase_order.py:0
 msgid "Sources Sale Orders %s"
 msgstr "Đơn bán hàng nguồn %s"
@@ -193,17 +205,27 @@ msgstr "Đơn bán hàng nguồn %s"
 #: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
 msgid "Subcontract Service"
-msgstr "Dịch vụ hợp đồng phụ"
+msgstr "Dịch vụ gia công"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/sale_order_line.py:0
-msgid "There is no vendor associated to the product %s. Please define a vendor for this product."
-msgstr "Không có nhà cung cấp liên kết với sản phẩm %s. Vui lòng xác định một nhà cung cấp cho sản phẩm này."
+msgid ""
+"There is no vendor associated to the product %s. Please define a vendor for "
+"this product."
+msgstr ""
+"Không có nhà cung cấp liên kết với sản phẩm %s. Vui lòng xác định một nhà "
+"cung cấp cho sản phẩm này."
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/sale_order_line.py:0
-msgid "You are decreasing the ordered quantity! Do not forget to manually update the purchase order if needed."
-msgstr "Bạn đang giảm số lượng đã được đặt hàng! Đừng quên cập nhật thủ công đơn mua hàng nếu cần."
+msgid ""
+"You are decreasing the ordered quantity! Do not forget to manually update "
+"the purchase order if needed."
+msgstr ""
+"Bạn đang giảm số lượng đã đặt! Đừng quên cập nhật thủ công đơn mua hàng nếu "
+"cần."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation

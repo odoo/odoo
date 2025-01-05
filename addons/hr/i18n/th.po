@@ -1,27 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr
-#
+# 
 # Translators:
-# Chatcha Mee, 2022
-# surapas haemaprasertsuk <surapas@gmail.com>, 2022
-# Odoo Thaidev <odoothaidev@gmail.com>, 2022
-# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
-# Wichanon Jamwutthipreecha, 2023
-# Martin Trigaux, 2023
-#
+# Wil Odoo, 2024
+# Rasareeyar Lappiam, 2025
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
-"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr
@@ -32,25 +28,14 @@ msgstr "# อีเมลที่ส่ง"
 
 #. module: hr
 #. odoo-python
-#: code:addons/hr/wizard/hr_plan_wizard.py:0
-msgid "%(activity)s, assigned to %(name)s, due on the %(deadline)s"
-msgstr ""
-
-#. module: hr
-#. odoo-python
 #: code:addons/hr/models/hr_job.py:0
 msgid "%s (copy)"
 msgstr "%s (สำเนา)"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
-msgid "&amp;nbsp;"
-msgstr "&amp;nbsp;"
-
-#. module: hr
 #: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
 msgid "'Badge - %s' % (object.name).replace('/', '')"
-msgstr ""
+msgstr "'เหรียญรางวัล - %s' % (object.name).replace('/', '')"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -61,7 +46,7 @@ msgstr ""
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "1 Onsite Interview"
-msgstr ""
+msgstr "1 สัมภาษณ์นอกสถานที่"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -72,7 +57,7 @@ msgstr ""
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "1 Phone Call"
-msgstr ""
+msgstr "1 สายเรียกเข้า"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -94,7 +79,7 @@ msgstr "12 วัน/ ปี รวมถึง <br>6 ของตัวเล�
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "2 open days"
-msgstr ""
+msgstr "2 วันเปิด"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -105,38 +90,42 @@ msgstr ""
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "4 Days after Interview"
-msgstr ""
+msgstr "4 วันหลังการสัมภาษณ์"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
-msgid "<b>Congratulations!</b> May I recommend you to setup an <a href=\"%s\">onboarding plan?</a>"
-msgstr "<b>ขอแสดงความยินดี!</b> ขอแนะนำให้คุณตั้งค่าและ<a href=\"%s\">แผนเริ่มต้นการทำงาน</a>"
+msgid ""
+"<b>Congratulations!</b> May I recommend you to setup an <a "
+"href=\"%s\">onboarding plan?</a>"
+msgstr ""
+"<b>ขอแสดงความยินดี!</b> ขอแนะนำให้คุณตั้งค่าและ<a "
+"href=\"%s\">แผนเริ่มต้นการทำงาน</a>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=\"Company\"/>"
 msgstr ""
+"<i class=\"fa fa-building-o\" role=\"รูปภาพ\" aria-label=\"บริษัท\" "
+"title=\"บริษัท\"/>"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "<small role=\"img\" class=\"fa fa-fw fa-circle text-success o_button_icon hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', 'presence_present')]}\" aria-label=\"Present\" title=\"Present\"/>"
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid "<i class=\"fa fa-fw me-2 fa-birthday-cake text-primary\" title=\"Birthday\"/>"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "<small role=\"img\" class=\"fa fa-fw fa-circle text-warning o_button_icon hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', 'presence_to_define')]}\" aria-label=\"To define\" title=\"To define\" name=\"presence_to_define\"/>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid "<i class=\"fa fa-fw me-2 fa-envelope text-primary\" title=\"Email\"/>"
+msgstr "<i class=\"fa fa-fw me-2 fa-envelope text-primary\" title=\"อีเมล\"/>"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "<small role=\"img\" class=\"fa fa-fw fa-circle-o text-muted o_button_icon hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', 'presence_absent')]}\" aria-label=\"Absent\" title=\"Absent\" name=\"presence_absent\"/>"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "<small role=\"img\" class=\"fa fa-fw fa-circle-o text-success o_button_icon hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', 'presence_absent_active')]}\" aria-label=\"Present but not active\" title=\"Present but not active\" name=\"presence_absent_active\"/>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid "<i class=\"fa fa-fw me-2 fa-phone text-primary\" title=\"Phone\"/>"
+msgstr "<i class=\"fa fa-fw me-2 fa-phone text-primary\" title=\"โทรศัพท์\"/>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -150,66 +139,38 @@ msgid "<small><b>READ</b></small>"
 msgstr "<small><b>อ่าน</b></small>"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
-#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-msgid ""
-"<span class=\"fa fa-circle text-success\" role=\"img\" aria-label=\"Present\" title=\"Present\" name=\"presence_present\">\n"
-"                                                    </span>"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
-#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-msgid ""
-"<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To define\" title=\"To define\" name=\"presence_to_define\">\n"
-"                                                    </span>"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
-#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-msgid ""
-"<span class=\"fa fa-circle-o text-muted\" role=\"img\" aria-label=\"Absent\" title=\"Absent\" name=\"presence_absent\">\n"
-"                                                    </span>"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
-#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-msgid ""
-"<span class=\"fa fa-circle-o text-success\" role=\"img\" aria-label=\"Present but not active\" title=\"Present but not active\" name=\"presence_absent_active\">\n"
-"                                                    </span>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "<span class=\"flex-shrink-0 ml8 me-2\">IP Addresses</span>"
+msgstr "<span class=\"flex-shrink-0 ml8 me-2\">ที่อยู่ IP</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
-msgid "<span class=\"flex-shrink-0 ml8 me-2\">IP Addresses (comma-separated)</span>"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
-msgid "<span class=\"flex-shrink-0 ml8 me-2\">Minimum number of emails to send</span>"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
-msgid "<span class=\"fw-bolder\">Reporting</span>"
-msgstr ""
+msgid "<span class=\"flex-shrink-0 ml8 me-2\">Sent Emails</span>"
+msgstr "<span class=\"flex-shrink-0 ml8 me-2\">ส่งอีเมลแล้ว</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
-msgid "<span class=\"o_form_label o_hr_form_label cursor-default\">Close Activities</span>"
+msgid ""
+"<span class=\"o_form_label o_hr_form_label cursor-default\">Close "
+"Activities</span>"
 msgstr ""
+"<span class=\"o_form_label o_hr_form_label cursor-"
+"default\">ปิดกิจกรรม</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
-msgid "<span class=\"o_form_label o_hr_form_label cursor-default\">Detailed Reason</span>"
+msgid ""
+"<span class=\"o_form_label o_hr_form_label cursor-default\">Detailed "
+"Reason</span>"
 msgstr ""
+"<span class=\"o_form_label o_hr_form_label cursor-"
+"default\">เหตุผลโดยละเอียด</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "<span class=\"o_form_label o_hr_form_label cursor-default\">HR Info</span>"
 msgstr ""
+"<span class=\"o_form_label o_hr_form_label cursor-default\">ข้อมูล HR</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -228,14 +189,19 @@ msgid "<span class=\"o_stat_text\">Connected Since</span>"
 msgstr "<span class=\"o_stat_text\">เชื่อมต่อตั้งแต่</span>"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form_smartbutton
-msgid "<span class=\"o_stat_text\">Contacts</span>"
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid "<span class=\"o_stat_text\">Contact</span>"
 msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form_smartbutton_inherited
+msgid "<span class=\"o_stat_text\">Contacts</span>"
+msgstr "<span class=\"o_stat_text\">รายชื่อผู้ติดต่อ</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
 msgid "<span class=\"o_stat_text\">Employee</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">พนักงาน</span>"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -246,7 +212,7 @@ msgstr ""
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "<span class=\"text-muted small\">Days to get an Offer</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small\">วันที่จะได้รับข้อเสนอ</span>"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -257,7 +223,7 @@ msgstr ""
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "<span class=\"text-muted small\">Process</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small\">กระบวนการ</span>"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -268,17 +234,22 @@ msgstr ""
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "<span class=\"text-muted small\">Time to Answer</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small\">เวลาที่จะตอบ</span>"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "<span>Km</span>"
-msgstr "<span>Km</span>"
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "<span>Reporting</span>"
+msgstr "<span>รายงาน</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "<span>View</span>"
+msgstr "<span>มุมมอง</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "<span>new Employees</span>"
-msgstr ""
+msgstr "<span>พนักงานใหม่</span>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -297,6 +268,8 @@ msgid "A user cannot be linked to multiple employees in the same company."
 msgstr "ผู้ใช้ไม่สามารถเชื่อมโยงกับพนักงานหลายคนในบริษัทเดียวกัน"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_absent
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__absent
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_absent
@@ -321,9 +294,14 @@ msgstr "บรรลุเป้าหมายยอดขายประจำ
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_needaction
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_needaction
 msgid "Action Needed"
 msgstr "จำเป็นต้องดำเนินการ"
+
+#. module: hr
+#: model_terms:digest.tip,tip_description:hr.digest_tip_hr_0
+msgid ""
+"Activate Remote Work to let Employees specify where they are working from."
+msgstr "เปิดใช้งานการทำงานระยะไกลเพื่อให้พนักงานระบุได้ว่าตนเองทำงานจากที่ใด"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
@@ -331,54 +309,37 @@ msgstr "จำเป็นต้องดำเนินการ"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__active
 #: model:ir.model.fields,field_description:hr.field_hr_job__active
-#: model:ir.model.fields,field_description:hr.field_hr_plan__active
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__active
 msgid "Active"
 msgstr "เปิดใช้งาน"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__activity_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_ids
-#: model:ir.model.fields,field_description:hr.field_hr_plan__plan_activity_type_ids
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_ids
-#: model_terms:ir.ui.view,arch_db:hr.hr_plan_activity_type_view_tree
 msgid "Activities"
 msgstr "กิจกรรม"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
-msgid "Activities To Generate"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_plan_activity_type_view_form
-msgid "Activity"
-msgstr "กิจกรรม"
-
-#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__activity_exception_decoration
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_decoration
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_exception_decoration
 msgid "Activity Exception Decoration"
 msgstr "การตกแต่งข้อยกเว้นกิจกรรม"
 
 #. module: hr
-#: model:ir.ui.menu,name:hr.menu_config_plan
-msgid "Activity Planning"
-msgstr "การวางแผนกิจกรรม"
+#: model:ir.model,name:hr.model_mail_activity_plan
+#: model:ir.ui.menu,name:hr.menu_config_plan_plan
+msgid "Activity Plan"
+msgstr "แผนกิจกรรม"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__activity_state
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_state
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_state
 msgid "Activity State"
 msgstr "สถานะกิจกรรม"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__activity_type_id
-msgid "Activity Type"
-msgstr "ประเภทกิจกรรม"
-
-#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__activity_type_icon
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_icon
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_type_icon
 msgid "Activity Type Icon"
 msgstr "ไอคอนประเภทกิจกรรม"
 
@@ -388,21 +349,29 @@ msgid "Activity by"
 msgstr "กิจกรรมโดย"
 
 #. module: hr
-#: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
+#: model:ir.model,name:hr.model_mail_activity_plan_template
+msgid "Activity plan template"
+msgstr "แบบฟอร์มแผนกิจกรรม"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.mail_activity_plan_action
+msgid ""
+"Activity plans are used to assign a list of activities in just a few clicks\n"
+"                    (e.g. \"Onboarding\", \"Offboarding\", ...)"
+msgstr ""
+"แผนกิจกรรมใช้เพื่อกำหนดรายการกิจกรรมด้วยการคลิกเพียงไม่กี่ครั้ง\n"
+"                    (เช่น \"การเริ่มต้นใช้งาน\", \"การเลิกใช้งาน\", ...)"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_activity_schedule
+msgid "Activity schedule plan Wizard"
+msgstr "โปรแกรมสร้างแผนกำหนดการกิจกรรม"
+
+#. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Add a new employee"
 msgstr "เพิ่มพนักงานใหม่"
-
-#. module: hr
-#: model_terms:ir.actions.act_window,help:hr.hr_plan_action
-msgid "Add a new plan"
-msgstr "เพิ่มแผนการใหม่"
-
-#. module: hr
-#: model_terms:ir.actions.act_window,help:hr.hr_plan_activity_type_action
-msgid "Add a new plan activity"
-msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_description
@@ -411,10 +380,20 @@ msgid "Additional Information"
 msgstr "ข้อมูลเพิ่มเติม"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"Additional Information: \n"
+" %(description)s"
+msgstr ""
+"ข้อมูลเพิ่มเติม:\n"
+" %(description)s"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
 #: model:ir.model.fields,field_description:hr.field_res_users__additional_note
 msgid "Additional Note"
-msgstr "โน๊ตเพิ่มเติม"
+msgstr "บันทึกภายในเพิ่มเติม"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -428,10 +407,9 @@ msgid "Additional languages"
 msgstr "ภาษาเพิ่มเติม"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__address_home_id
-#: model:ir.model.fields,field_description:hr.field_res_users__address_home_id
-msgid "Address"
-msgstr "ที่อยู่"
+#: model:hr.department,name:hr.dep_administration
+msgid "Administration"
+msgstr "ผู้ดูแลระบบ"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -460,25 +438,23 @@ msgid "Advanced presence of employees"
 msgstr "สถานะพนักงานขั้นสูง"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_crm_team__alias_contact
+#: model:ir.model.fields,field_description:hr.field_documents_document__alias_contact
+#: model:ir.model.fields,field_description:hr.field_helpdesk_team__alias_contact
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,field_description:hr.field_maintenance_equipment_category__alias_contact
 msgid "Alias Contact Security"
 msgstr "นามแฝงสำหรับติดต่อเพื่อความปลอดภัย"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee__lang
-#: model:ir.model.fields,help:hr.field_res_users__private_lang
-msgid "All the emails and documents sent to this contact will be translated in this language."
-msgstr "อีเมลและเอกสารทั้งหมดที่ส่งถึงผู้ติดต่อนี้จะได้รับการแปลเป็นภาษานี้"
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Allow employees to update Work Information on My Profile"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
-msgid "Allow employees to update their own data"
-msgstr "อนุญาตให้พนักงานอัปเดตข้อมูลของตนเอง"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
-msgid "Allow employees to update their own data."
-msgstr "อนุญาตให้พนักงานอัปเดตข้อมูลของตนเอง"
+msgid "Allow employees to update Work Information on My Profile."
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -491,6 +467,11 @@ msgid "Apply"
 msgstr "นำไปใช้"
 
 #. module: hr
+#: model:hr.contract.type,name:hr.contract_type_apprenticeship
+msgid "Apprenticeship"
+msgstr "การฝึกงาน"
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -498,15 +479,19 @@ msgid "Approvers"
 msgstr "ผู้อนุมัติ"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__archive_private_address
-msgid "Archive Private Address"
-msgstr "เก็บถาวรที่อยู่ส่วนตัว"
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "Archive"
+msgstr "เก็บถาวร"
 
 #. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_archive
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__archive
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_archive
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_presence_state__archive
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_archive
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__archive
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
-#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
-#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -542,10 +527,14 @@ msgstr ""
 "                              คุณจะต้องมีทักษะการแก้ปัญหาที่แข็งแกร่ง"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__responsible_type
+msgid "Assignment"
+msgstr "งานที่มอบหมาย"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_attachment_count
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_attachment_count
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_attachment_count
 msgid "Attachment Count"
 msgstr "จำนวนสิ่งที่แนบมา"
 
@@ -645,12 +634,17 @@ msgstr "ปริญญาตรีหรือสูงกว่า"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__barcode
 #: model:ir.model.fields,field_description:hr.field_res_users__barcode
 msgid "Badge ID"
-msgstr "ไอดีป้าย"
+msgstr "ไอดีเหรียญรางวัล"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
-msgid "Bank Account Number"
-msgstr "หมายเลขบัญชีธนาคาร"
+msgid "Bank Account"
+msgstr "บัญชีธนาคาร"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "บัญชีธนาคาร"
 
 #. module: hr
 #: model:ir.model,name:hr.model_base
@@ -658,21 +652,25 @@ msgid "Base"
 msgstr "ฐาน"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_ip
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_ip
 msgid "Based on IP Address"
 msgstr "อิงตามที่อยู่ IP"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_attendance
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_attendance
 msgid "Based on attendances"
 msgstr "อิงตามการเข้างาน"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_email
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_email
 msgid "Based on number of emails sent"
 msgstr "อิงตามจำนวนอีเมลที่ส่ง"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_login
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_login
 msgid "Based on user status in system"
 msgstr "อิงตามสถานะผู้ใช้ในระบบ"
@@ -686,6 +684,12 @@ msgstr "พนักงานทั่วไป"
 #. odoo-javascript
 #: code:addons/hr/static/src/components/background_image/background_image.xml:0
 msgid "Binary file"
+msgstr "ไฟล์ไบนารี่"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__birthday
+#: model:ir.model.fields,field_description:hr.field_res_users__birthday
+msgid "Birthday"
 msgstr ""
 
 #. module: hr
@@ -694,10 +698,19 @@ msgid "Can Edit"
 msgstr "สามารถแก้ไข"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.plan_wizard
 #: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form
 msgid "Cancel"
 msgstr "ยกเลิก"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__employee_type
+#: model:ir.model.fields,help:hr.field_res_users__employee_type
+msgid ""
+"Categorize your Employees by type. This field also has an impact on "
+"contracts. Only Employees, Students and Trainee will have contract history."
+msgstr ""
+"จัดหมวดหมู่พนักงานของคุณตามประเภท ฟิลด์นี้ยังมีผลต่อสัญญาด้วย เฉพาะพนักงาน "
+"นักศึกษา และผู้ฝึกงานเท่านั้นที่จะมีประวัติสัญญา"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
@@ -732,6 +745,11 @@ msgid "Child Departments"
 msgstr "แผนกย่อย"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "Child departments"
+msgstr "แผนกย่อย"
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Citizenship"
@@ -739,6 +757,7 @@ msgstr "สัญชาติ"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "City"
 msgstr "เมือง"
 
@@ -747,15 +766,26 @@ msgstr "เมือง"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__coach_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__coach_id
 #: model:ir.model.fields,field_description:hr.field_res_users__coach_id
-#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__coach
+#: model:ir.model.fields.selection,name:hr.selection__mail_activity_plan_template__responsible_type__coach
 msgid "Coach"
 msgstr "โค้ช"
 
 #. module: hr
 #. odoo-python
-#: code:addons/hr/models/hr_plan_activity_type.py:0
+#: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "Coach of employee %s is not set."
 msgstr "โค้ชของพนักงาน %sยังไม่ได้ตั้งค่า "
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_contract_type__code
+msgid "Code"
+msgstr "โค้ด"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_department_form
+#: model_terms:ir.ui.view,arch_db:hr.view_department_tree
+msgid "Color"
+msgstr "สี"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__color
@@ -770,7 +800,7 @@ msgstr "ดัชนีสี"
 #: model:ir.model,name:hr.model_res_company
 #: model_terms:ir.ui.view,arch_db:hr.view_department_tree
 msgid "Companies"
-msgstr "หลายบริษัท"
+msgstr "บริษัท"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__company_id
@@ -778,15 +808,11 @@ msgstr "หลายบริษัท"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__company_id
-#: model:ir.model.fields,field_description:hr.field_hr_plan__company_id
-#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__company_id
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__company_id
-#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__company_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Company"
-msgstr "บริษัทเดียว"
+msgstr "บริษัท"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_id
@@ -867,11 +893,15 @@ msgid "Contractor"
 msgstr "ผู้รับเหมา"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_contract_type__country_id
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__country_id
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Country"
 msgstr "ประเทศ"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__country_code
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_code
 msgid "Country Code"
 msgstr "รหัสประเทศ"
@@ -881,6 +911,11 @@ msgstr "รหัสประเทศ"
 #: model:ir.model.fields,field_description:hr.field_res_users__country_of_birth
 msgid "Country of Birth"
 msgstr "ประเทศที่เกิด"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__location_type
+msgid "Cover Image"
+msgstr "ภาพหน้าปก"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__create_date
@@ -895,7 +930,7 @@ msgstr "สร้างพนักงาน"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
-#: model:ir.actions.server,name:hr.action_hr_employee_create_user
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Create User"
 msgstr "สร้างผู้ใช้"
 
@@ -904,6 +939,21 @@ msgstr "สร้างผู้ใช้"
 #: model_terms:ir.actions.act_window,help:hr.hr_department_tree_action
 msgid "Create a new department"
 msgstr "สร้างแผนกใหม่"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_contract_type_action
+msgid "Create a new employment type"
+msgstr "สร้างประเภทการจ้างงานใหม่"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
+msgid "Create a new work location"
+msgstr "สร้างสถานที่ทำงานใหม่"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.mail_activity_plan_action
+msgid "Create an Activity Plan"
+msgstr "สร้างแผนกิจกรรม"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -930,10 +980,6 @@ msgstr "สร้างพนักงาน"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job__create_uid
-#: model:ir.model.fields,field_description:hr.field_hr_plan__create_uid
-#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__create_uid
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__create_uid
-#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__create_uid
 msgid "Created by"
 msgstr "สร้างโดย"
@@ -946,10 +992,6 @@ msgstr "สร้างโดย"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_job__create_date
-#: model:ir.model.fields,field_description:hr.field_hr_plan__create_date
-#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__create_date
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__create_date
-#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__create_date
 msgid "Created on"
 msgstr "สร้างเมื่อ"
@@ -976,16 +1018,34 @@ msgid "Customer Relationship"
 msgstr "ความสัมพันธ์กับลูกค้า"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__birthday
-#: model:ir.model.fields,field_description:hr.field_res_users__birthday
-msgid "Date of Birth"
-msgstr "วันเกิด"
-
-#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_departure_reason.py:0
 msgid "Default departure reasons cannot be deleted."
-msgstr "สาเหตุการออกงานเริ่มต้นไม่สามารถลบได้"
+msgstr "สาเหตุการลาออกเริ่มต้นไม่สามารถลบได้"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid ""
+"Define the allowed IP to be displayed as Present. In case of multiple "
+"addresses, separate them by a coma."
+msgstr ""
+"กำหนด IP ที่อนุญาตให้แสดงเป็นปัจจุบัน ในกรณีที่มีหลายที่อยู่ "
+"ให้คั่นด้วยเครื่องหมายจุลภาค"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Define the minimum number of sent emails to be displayed as Present."
+msgstr "กำหนดจำนวนอีเมลที่ส่งขั้นต่ำที่จะแสดงเป็น \"ปัจจุบัน\""
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__resource_calendar_id
+#: model:ir.model.fields,help:hr.field_res_users__employee_resource_calendar_id
+msgid ""
+"Define the working schedule of the resource. If not set, the resource will "
+"have fully flexible working hours."
+msgstr ""
+"กำหนดตารางการทำงานของทรัพยากร หากไม่ได้กำหนดไว้ "
+"ทรัพยากรจะมีชั่วโมงการทำงานที่ยืดหยุ่นได้เต็มที่"
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_ceo
@@ -1000,23 +1060,40 @@ msgid ""
 "Building strong relationships with clients / customers for business growth profitability.\n"
 "Keep regular interaction with key clients for better extraction and expansion."
 msgstr ""
+"สาธิตการใช้งานบริการต่างๆของ Odoo สำหรับลูกค้าแต่ละราย และโน้มน้าวลูกค้าเกี่ยวกับประโยชน์ของฟังก์ชันต่อแอปพลิเคชันนั้นๆ\n"
+"ผู้สมัครควรมีทักษะในการสื่อสารที่ดีเยี่ยม\n"
+"การสร้างความสัมพันธ์และทักษะการโน้มน้าว\n"
+"ความเชี่ยวชาญในการหาลูกค้าใหม่ (NCA) และการจัดการความสัมพันธ์\n"
+"รวบรวมข้อมูลตลาดและลูกค้า\n"
+"ประสานงานกับทีมขายและสนับสนุนเพื่อใช้กลยุทธ์ต่างๆ\n"
+"ทบทวนความคืบหน้าและระบุโอกาสและพื้นที่ใหม่เพื่อการพัฒนา\n"
+"สร้างความสัมพันธ์ที่แน่นแฟ้นกับลูกค้าเพื่อการเติบโตของธุรกิจและทำกำไร\n"
+"มีปฏิสัมพันธ์กับลูกค้ารายสำคัญอย่างสม่ำเสมอ"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
+#: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 #: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__department_id
-#: model:ir.model.fields,field_description:hr.field_hr_plan__department_id
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__department_id
-#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__department_id
+#: model:ir.model.fields,field_description:hr.field_mail_activity_plan__department_id
+#: model:ir.model.fields,field_description:hr.field_mail_activity_schedule__department_id
 #: model:ir.model.fields,field_description:hr.field_res_users__department_id
+#: model:ir.model.fields,field_description:hr.field_resource_resource__department_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Department"
 msgstr "แผนก"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_mail_activity_plan__department_assignable
+msgid "Department Assignable"
+msgstr "แผนกที่ได้รับมอบหมาย"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__name
@@ -1027,13 +1104,12 @@ msgstr "ชื่อแผนก"
 #. odoo-javascript
 #: code:addons/hr/static/src/components/department_chart/department_chart.xml:0
 msgid "Department Organization"
-msgstr ""
+msgstr "องค์การแผนก"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_department_kanban_action
 #: model:ir.actions.act_window,name:hr.hr_department_tree_action
 #: model:ir.ui.menu,name:hr.menu_hr_department_kanban
-#: model:ir.ui.menu,name:hr.menu_hr_department_tree
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 msgid "Departments"
 msgstr "แผนก"
@@ -1054,13 +1130,13 @@ msgstr "วันที่ออกงาน"
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_reason_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_reason_id
 msgid "Departure Reason"
-msgstr "สาเหตุการออกงาน"
+msgstr "สาเหตุการลาออก"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_departure_reason_action
 #: model:ir.ui.menu,name:hr.menu_hr_departure_reason_tree
 msgid "Departure Reasons"
-msgstr "สาเหตุการออกงาน"
+msgstr "สาเหตุการลาออก"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_departure_wizard
@@ -1102,34 +1178,54 @@ msgstr "ค้นพบสินค้าของเรา"
 #. module: hr
 #: model:ir.model,name:hr.model_discuss_channel
 msgid "Discussion Channel"
-msgstr "ช่องการสนทนา"
+msgstr "ช่องแชท"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_discuss_channel__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_department__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job__display_name
-#: model:ir.model.fields,field_description:hr.field_hr_plan__display_name
-#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__display_name
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__display_name
-#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__display_name
+#: model:ir.model.fields,field_description:hr.field_ir_ui_menu__display_name
+#: model:ir.model.fields,field_description:hr.field_mail_activity_plan__display_name
+#: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__display_name
+#: model:ir.model.fields,field_description:hr.field_mail_activity_schedule__display_name
+#: model:ir.model.fields,field_description:hr.field_mail_alias__display_name
+#: model:ir.model.fields,field_description:hr.field_res_company__display_name
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:hr.field_res_partner__display_name
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank__display_name
+#: model:ir.model.fields,field_description:hr.field_res_users__display_name
+#: model:ir.model.fields,field_description:hr.field_resource_resource__display_name
 msgid "Display Name"
 msgstr "แสดงชื่อ"
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__divorced
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid ""
+"Display remote work settings for each employee and dedicated reports. "
+"Presence icons will be updated with remote work location."
+msgstr ""
+"แสดงการตั้งค่าการทำงานระยะไกลสำหรับพนักงานแต่ละคนและรายงานเฉพาะ "
+"ไอคอนการแสดงตัวตนจะได้รับการอัปเดตด้วยสถานที่ทำงานระยะไกล"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
 msgid "Divorced"
 msgstr "หย่าร้าง"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__doctor
 msgid "Doctor"
-msgstr "ปริญญาเอก"
+msgstr "ดอกเตอร์"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license
@@ -1146,16 +1242,16 @@ msgstr "ใบขับขี่"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid ""
 "Each employee has a chance to see the impact of his work.\n"
-"                        You can make a real contribution to the success of the company.\n"
-"                        <br>\n"
-"                        Several activities are often organized all over the year, such as weekly\n"
-"                        sports sessions, team building events, monthly drink, and much more"
+"                            You can make a real contribution to the success of the company.\n"
+"                            <br>\n"
+"                            Several activities are often organized all over the year, such as weekly\n"
+"                            sports sessions, team building events, monthly drink, and much more."
 msgstr ""
-"พนักงานแต่ละคนมีโอกาสที่จะเห็นผลกระทบจากการทำงานของเขา\n"
-"                        คุณสามารถมีส่วนร่วมอย่างแท้จริงต่อความสำเร็จของบริษัท\n"
-"                        <br>\n"
-"                        มีกิจกรรมต่าง ๆ ถูกจัดขึ้นตลอดทั้งปี เช่น รายสัปดาห์\n"
-"                       เซสชันกีฬา กิจกรรมสร้างทีม เครื่องดื่มรายเดือน และอื่น ๆ อีกมากมาย"
+"พนักงานแต่ละคนมีโอกาสที่จะเห็นผลผลิตจากการทำงานของพวกเขา\n"
+"                            คุณสามารถมีส่วนในการสนับสนุนความสำเร็จของบริษัทได้อย่างแท้จริง\n"
+"                            <br>\n"
+"                            กิจกรรมหลายอย่างมักจัดขึ้นตลอดทั้งปี เช่น การเล่นกีฬา\n"
+"                            รายสัปดาห์ กิจกรรมสำหรับทีม เครื่องดื่มรายเดือน และอื่นๆ อีกมากมาย"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1175,8 +1271,10 @@ msgid "Education"
 msgstr "การศึกษา"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__email
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__email
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__email
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Email"
 msgstr "อีเมล"
 
@@ -1194,19 +1292,21 @@ msgstr "ฉุกเฉิน"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/res_partner.py:0 code:addons/hr/models/res_users.py:0
+#: model:hr.contract.type,name:hr.contract_type_employee
 #: model:ir.model,name:hr.model_hr_employee
-#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__employee_id
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__employee_id
-#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__employee_ids
+#: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__employee_id
+#: model:ir.model.fields,field_description:hr.field_res_partner__employee
+#: model:ir.model.fields,field_description:hr.field_res_users__employee
 #: model:ir.model.fields,field_description:hr.field_resource_resource__employee_id
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__employee
-#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__employee
+#: model:ir.model.fields.selection,name:hr.selection__mail_activity_plan_template__responsible_type__employee
 #: model:ir.ui.menu,name:hr.menu_config_employee
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form_inherit_hr
 msgid "Employee"
 msgstr "พนักงาน"
 
@@ -1242,6 +1342,16 @@ msgid "Employee Name"
 msgstr "ชื่อพนักงาน"
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.mail_activity_plan_action
+msgid "Employee Plans"
+msgstr "แผนพนักงาน"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_company__employee_properties_definition
+msgid "Employee Properties"
+msgstr "คุณสมบัติของพนักงาน"
+
+#. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
 #: model:ir.model.fields,field_description:hr.field_res_users__category_ids
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_category_form
@@ -1269,7 +1379,7 @@ msgstr "การอัปเดตสิทธิ์พนักงาน"
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_id
 #: model:ir.model.fields,help:hr.field_res_users__employee_bank_account_id
 msgid "Employee bank account to pay salaries"
-msgstr ""
+msgstr "บัญชีธนาคารของพนักงานเพื่อจ่ายเงินเดือน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_id
@@ -1282,6 +1392,7 @@ msgid "Employee's Country"
 msgstr "ประเทศของพนักงาน"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1291,13 +1402,15 @@ msgstr "ชื่อพนักงาน"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_resource_calendar_id
 msgid "Employee's Working Hours"
-msgstr ""
+msgstr "ชั่วโมงการทำงานของพนักงาน"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.act_employee_from_department
+#. odoo-python
+#: code:addons/hr/models/hr_department.py:0
 #: model:ir.actions.act_window,name:hr.hr_employee_public_action
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
 #: model:ir.actions.act_window,name:hr.open_view_employee_list_my
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__employee_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__employee_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__employee_ids
 #: model:ir.model.fields,field_description:hr.field_res_partner__employee_ids
@@ -1305,10 +1418,12 @@ msgstr ""
 #: model:ir.ui.menu,name:hr.menu_hr_employee_user
 #: model:ir.ui.menu,name:hr.menu_hr_root
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_list_view
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_tree
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_activity
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_partner_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
 #: model_terms:ir.ui.view,arch_db:hr.view_department_tree
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1323,11 +1438,6 @@ msgid "Employees Count"
 msgstr "จำนวนพนักงาน"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_employee_tree
-msgid "Employees Structure"
-msgstr "โครงสร้างพนักงาน"
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_category_list
 msgid "Employees Tags"
 msgstr "แท็กพนักงาน"
@@ -1336,24 +1446,18 @@ msgstr "แท็กพนักงาน"
 #: model:ir.model.fields,field_description:hr.field_hr_job__contract_type_id
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Employment Type"
-msgstr ""
+msgstr "ประเภทการจ้างงาน"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_contract_type_action
 #: model:ir.ui.menu,name:hr.menu_view_hr_contract_type
 msgid "Employment Types"
-msgstr ""
+msgstr "ประเภทการจ้างงาน"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Enrich employee profiles with skills and resumes"
 msgstr "เพิ่มจำนวนโปรไฟล์พนักงานด้วยทักษะและประวัติย่อ"
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee__address_home_id
-#: model:ir.model.fields,help:hr.field_res_users__address_home_id
-msgid "Enter here the private address of the employee, not the one linked to your company."
-msgstr "ป้อนที่อยู่ส่วนตัวของพนักงานที่นี่ ที่ไม่ได้เชื่อมโยงกับบริษัทของคุณ"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1368,7 +1472,8 @@ msgstr "ขยายความรู้ของคุณในอุตสา
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__expected_employees
-msgid "Expected number of employees for this job position after new recruitment."
+msgid ""
+"Expected number of employees for this job position after new recruitment."
 msgstr "จำนวนที่คาดหวังของพนักงานสำหรับตำแหน่งงานนี้หลังจากการรับสมัครใหม่"
 
 #. module: hr
@@ -1388,9 +1493,20 @@ msgid "Experienced Developer"
 msgstr "นักพัฒนาที่มากประสบการณ์"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__share
+#: model:ir.model.fields,help:hr.field_hr_employee_base__share
+#: model:ir.model.fields,help:hr.field_hr_employee_public__share
+msgid ""
+"External user with limited access, created only for the purpose of sharing "
+"data."
+msgstr ""
+"ผู้ใช้ภายนอกที่มีการจำกัดการเข้าถึง "
+"สร้างขึ้นเพื่อวัตถุประสงค์ในการแบ่งปันข้อมูลเท่านั้น"
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Family Status"
-msgstr ""
+msgstr "สถานะครอบครัว"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__female
@@ -1412,7 +1528,6 @@ msgstr "ไล่ออก"
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_follower_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_follower_ids
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_follower_ids
 msgid "Followers"
 msgstr "ผู้ติดตาม"
 
@@ -1420,21 +1535,24 @@ msgstr "ผู้ติดตาม"
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_partner_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_partner_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_partner_ids
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "ผู้ติดตาม (พาร์ทเนอร์)"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__activity_type_icon
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_type_icon
-#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr "ไอคอนแบบฟอนต์ที่ยอดเยี่ยมเช่น fa-tasks"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/discuss_channel.py:0
-msgid "For %(channels)s, channel_type should be 'channel' to have the department auto-subscription."
+msgid ""
+"For %(channels)s, channel_type should be 'channel' to have the department "
+"auto-subscription."
 msgstr ""
+"สำหรับ %(channels)s channel_type ควรเป็น 'channel' "
+"เพื่อให้แผนกสมัครสมาชิกอัตโนมัติ"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__freelance
@@ -1451,6 +1569,11 @@ msgstr "พนักงานฟรีแลนซ์"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Fruit, coffee and <br>snacks provided."
 msgstr "มีผลไม้ กาแฟ และ<br>ของว่าง"
+
+#. module: hr
+#: model:hr.contract.type,name:hr.contract_type_full_time
+msgid "Full-Time"
+msgstr "เต็มเวลา"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1471,7 +1594,7 @@ msgstr "สร้าง"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "Give more details about the reason of archiving the employee."
-msgstr ""
+msgstr "ให้รายละเอียดเพิ่มเติมเกี่ยวกับเหตุผลในการเก็บถาวรพนักงาน"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1518,16 +1641,25 @@ msgid "HR Employee: check work permit validity"
 msgstr "พนักงาน HR : ตรวจสอบความถูกต้องของใบอนุญาตทำงาน"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/hr_presence_status/hr_presence_status.js:0
+msgid "HR Presence Status"
+msgstr "สถานะการแสดงตนของทรัพยากรบุคคล"
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "HR Settings"
 msgstr "ตั้งค่า HR"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__has_department_manager_access
+msgid "Has Department Manager Access"
+msgstr "มีสิทธิ์เข้าถึงผู้จัดการแผนก"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__has_message
 #: model:ir.model.fields,field_description:hr.field_hr_employee__has_message
 #: model:ir.model.fields,field_description:hr.field_hr_job__has_message
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__has_message
 msgid "Has Message"
 msgstr "มีข้อความ"
 
@@ -1543,27 +1675,43 @@ msgid "Highly creative and autonomous"
 msgstr "มีความคิดสร้างสรรค์สูงและเป็นอิสระ"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job__no_of_hired_employee
-msgid "Hired Employees"
-msgstr "จ้างพนักงาน"
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__home
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__work_location_type__home
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__work_location_type__home
+#: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__home
+msgid "Home"
+msgstr "หน้าแรก"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
-#: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
+#: model:ir.model.fields,field_description:hr.field_hr_employee__distance_home_work
+#: model:ir.model.fields,field_description:hr.field_res_users__distance_home_work
 msgid "Home-Work Distance"
 msgstr "ระยะห่างระหว่างบ้าน-ที่ทำงาน"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_homeworking
-msgid "Homeworking"
-msgstr ""
+#: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
+#: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
+msgid "Home-Work Distance in Km"
+msgstr "ระยะทางบ้าน-ที่ทำงาน กม."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__distance_home_work_unit
+#: model:ir.model.fields,field_description:hr.field_res_users__distance_home_work_unit
+msgid "Home-Work Distance unit"
+msgstr "หน่วยระยะทางบ้าน-ที่ทำงาน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_icon_display
+#: model:ir.model.fields,field_description:hr.field_resource_resource__hr_icon_display
 msgid "Hr Icon Display"
 msgstr "แสดงไอคอน Hr"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_manager_department_report
+msgid "Hr Manager Department Report"
+msgstr "รายงานฝ่ายผู้จัดการฝ่ายทรัพยากรบุคคล"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_presence_state
@@ -1584,19 +1732,29 @@ msgid "Human Resources Manager"
 msgstr "ผู้จัดการฝ่ายทรัพยากรบุคคล"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_discuss_channel__id
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__id
 #: model:ir.model.fields,field_description:hr.field_hr_department__id
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__id
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr.field_hr_job__id
-#: model:ir.model.fields,field_description:hr.field_hr_plan__id
-#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__id
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__id
-#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__id
+#: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__id
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__id
+#: model:ir.model.fields,field_description:hr.field_ir_ui_menu__id
+#: model:ir.model.fields,field_description:hr.field_mail_activity_plan__id
+#: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__id
+#: model:ir.model.fields,field_description:hr.field_mail_activity_schedule__id
+#: model:ir.model.fields,field_description:hr.field_mail_alias__id
+#: model:ir.model.fields,field_description:hr.field_res_company__id
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__id
+#: model:ir.model.fields,field_description:hr.field_res_partner__id
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank__id
+#: model:ir.model.fields,field_description:hr.field_res_users__id
+#: model:ir.model.fields,field_description:hr.field_resource_resource__id
 msgid "ID"
 msgstr "ไอดี"
 
@@ -1612,14 +1770,21 @@ msgid "ID used for employee identification."
 msgstr "ไอดีที่ใช้ในการระบุตัวตนของพนักงาน"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__im_status
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__im_status
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__im_status
+msgid "IM Status"
+msgstr "สถานะ IM"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__activity_exception_icon
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_icon
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_exception_icon
 msgid "Icon"
 msgstr "ไอคอน"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__activity_exception_icon
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_icon
-#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr "ไอคอนเพื่อระบุการยกเว้นกิจกรรม"
 
@@ -1633,27 +1798,32 @@ msgstr "หมายเลขประจำตัวประชาชน"
 #: model:ir.model.fields,help:hr.field_hr_department__message_needaction
 #: model:ir.model.fields,help:hr.field_hr_employee__message_needaction
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction
-#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error
+#: model:ir.model.fields,help:hr.field_hr_department__message_has_sms_error
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error
+#: model:ir.model.fields,help:hr.field_hr_employee__message_has_sms_error
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error
-#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__message_has_error
+#: model:ir.model.fields,help:hr.field_hr_job__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "ถ้าเลือก ข้อความบางข้อความมีข้อผิดพลาดในการส่ง"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__active
-msgid "If the active field is set to False, it will allow you to hide the resource record without removing it."
-msgstr "หากฟิลด์ที่ใช้งานอยู่ถูกตั้งค่าเป็น เท็จ ฟิลด์นี้จะอนุญาตให้คุณซ่อนการบันทึกทรัพยากรโดยไม่ต้องลบออก"
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr ""
+"หากฟิลด์ที่ใช้งานอยู่ถูกตั้งค่าเป็น เท็จ "
+"ฟิลด์นี้จะอนุญาตให้คุณซ่อนการบันทึกทรัพยากรโดยไม่ต้องลบออก"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__private_car_plate
 msgid "If you have more than one car, just separate the plates by a space."
-msgstr ""
+msgstr "หากคุณมีรถมากกว่าหนึ่งคัน ให้แยกป้ายทะเบียนด้วยช่องว่าง"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1920
@@ -1670,7 +1840,6 @@ msgstr "รูปภาพ 1024"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_128
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_128
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__image_128
 msgid "Image 128"
 msgstr "รูปภาพ 128"
 
@@ -1695,15 +1864,38 @@ msgstr "นำเข้าเทมเพลตสำหรับพนักง
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_interim
 msgid "Interim"
-msgstr ""
+msgstr "ชั่วคราว"
+
+#. module: hr
+#: model:hr.contract.type,name:hr.contract_type_part_time
+msgid "Intern"
+msgstr "นักศึกษาฝึกงาน"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__is_flexible
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__is_flexible
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_flexible
+msgid "Is Flexible"
+msgstr "มีความยืดหยุ่น"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_is_follower
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_is_follower
 msgid "Is Follower"
 msgstr "เป็นผู้ติดตาม"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__is_fully_flexible
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__is_fully_flexible
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_fully_flexible
+msgid "Is Fully Flexible"
+msgstr "มีความยืดหยุ่นแบบสมบูรณ์"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_manager
+msgid "Is Manager"
+msgstr "เป็นผู้จัดการ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__is_system
@@ -1711,7 +1903,6 @@ msgid "Is System"
 msgstr "เป็นระบบ"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_tree
 msgid "Job"
@@ -1729,7 +1920,7 @@ msgstr "รายละเอียดงาน"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__job_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__name
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Job Position"
 msgstr "ตำแหน่งงาน"
@@ -1743,14 +1934,16 @@ msgstr "ตำแหน่งงาน"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Job Summary"
-msgstr ""
+msgstr "สรุปตำแหน่งงาน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_title
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__job_title
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__job_title
 #: model:ir.model.fields,field_description:hr.field_res_users__job_title
+#: model:ir.model.fields,field_description:hr.field_resource_resource__job_title
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Job Title"
 msgstr "ชื่อตำแหน่งงาน"
 
@@ -1767,7 +1960,6 @@ msgstr "ภาษา"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Language"
 msgstr "ภาษา"
 
@@ -1796,10 +1988,6 @@ msgstr "เวลากิจกรรมล่าสุด"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job__write_uid
-#: model:ir.model.fields,field_description:hr.field_hr_plan__write_uid
-#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__write_uid
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__write_uid
-#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__write_uid
 msgid "Last Updated by"
 msgstr "อัปเดตครั้งล่าสุดโดย"
@@ -1813,10 +2001,6 @@ msgstr "อัปเดตครั้งล่าสุดโดย"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_job__write_date
-#: model:ir.model.fields,field_description:hr.field_hr_plan__write_date
-#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__write_date
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__write_date
-#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__write_date
 msgid "Last Updated on"
 msgstr "อัปเดตครั้งล่าสุดเมื่อ"
@@ -1828,17 +2012,10 @@ msgstr "กิจกรรมล่าสุด"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.plan_wizard_action
-#: model_terms:ir.ui.view,arch_db:hr.plan_wizard
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Launch Plan"
 msgstr "แผนเปิดตัว"
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/wizard/hr_plan_wizard.py:0
-msgid "Launch Plans"
-msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1852,7 +2029,8 @@ msgid "Lead the entire sales cycle"
 msgstr "เป็นผู้นำในด้านวงจรการขายทั้งหมด"
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__cohabitant
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
 msgid "Legal Cohabitant"
 msgstr "การอยู่กินฉันสามีภริยา"
 
@@ -1874,9 +2052,31 @@ msgid "Location Number"
 msgstr "หมายเลขที่ตั้ง"
 
 #. module: hr
+#: model:hr.department,name:hr.dep_rd_ltp
+msgid "Long Term Projects"
+msgstr "โปรเจ็กต์ระยะยาว"
+
+#. module: hr
 #: model_terms:hr.job,description:hr.job_hrm
-msgid "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+msgid ""
+"Lorem Ipsum is simply dummy text of the printing and typesetting industry. "
+"Lorem Ipsum has been the industry's standard dummy text ever since the "
+"1500s, when an unknown printer took a galley of type and scrambled it to "
+"make a type specimen book. It has survived not only five centuries, but also"
+" the leap into electronic typesetting, remaining essentially unchanged. It "
+"was popularised in the 1960s with the release of Letraset sheets containing "
+"Lorem Ipsum passages, and more recently with desktop publishing software "
+"like Aldus PageMaker including versions of Lorem Ipsum."
 msgstr ""
+"Lorem Ipsum เป็นเพียงข้อความจำลองของอุตสาหกรรมการพิมพ์และการเรียงพิมพ์ Lorem"
+" Ipsum เป็นข้อความจำลองมาตรฐานของอุตสาหกรรมนับตั้งแต่ช่วงปี 1500 "
+"เมื่อเครื่องพิมพ์ที่ไม่รู้จักเอาเครื่องพิมพ์ไปสับเปลี่ยนเพื่อสร้างหนังสือตัวอย่าง"
+" มันอยู่มาได้ไม่เพียงแค่ห้าศตวรรษเท่านั้น "
+"แต่ยังรวมถึงการก้าวกระโดดไปสู่การเรียงพิมพ์แบบอิเล็กทรอนิกส์ "
+"โดยยังคงไม่เปลี่ยนแปลง ได้รับความนิยมในช่วงทศวรรษปี 1960 ด้วยการเปิดตัวแผ่น "
+"Letraset ที่มีข้อความ Lorem Ipsum "
+"และล่าสุดกว่านั้นคือซอฟต์แวร์เผยแพร่บนเดสก์ท็อปอย่าง Aldus PageMaker รวมถึง "
+"Lorem Ipsum เวอร์ชันต่างๆ อีกด้วย"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
@@ -1889,12 +2089,17 @@ msgid "Male"
 msgstr "ชาย"
 
 #. module: hr
+#: model:hr.department,name:hr.dep_management
+msgid "Management"
+msgstr "การจัดการ"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__manager_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__parent_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__parent_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__parent_id
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_parent_id
-#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__manager
+#: model:ir.model.fields.selection,name:hr.selection__mail_activity_plan_template__responsible_type__manager
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Manager"
@@ -1902,7 +2107,7 @@ msgstr "ผู้จัดการ"
 
 #. module: hr
 #. odoo-python
-#: code:addons/hr/models/hr_plan_activity_type.py:0
+#: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "Manager of employee %s is not set."
 msgstr "ผู้จัดการของพนักงาน %s ยังไม่ได้ตั้งค่า"
 
@@ -1919,7 +2124,8 @@ msgid "Marketing and Community Manager"
 msgstr "ผู้จัดการฝ่ายการตลาดและชุมชน"
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__married
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
 msgid "Married"
 msgstr "แต่งงาน"
 
@@ -1931,7 +2137,7 @@ msgstr "ปริญญาโท"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__master_department_id
 msgid "Master Department"
-msgstr ""
+msgstr "สาขาวิชาปริญญาโท"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1949,7 +2155,7 @@ msgstr "การสาธิตหลักซอฟต์แวร์ของ
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__member_of_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__member_of_department
 msgid "Member of department"
-msgstr ""
+msgstr "สมาชิกของแผนก"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__member_ids
@@ -1965,7 +2171,6 @@ msgstr "เมนู"
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_has_error
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_has_error
 msgid "Message Delivery error"
 msgstr "เกิดข้อผิดพลาดในการส่งข้อความ"
 
@@ -1973,7 +2178,6 @@ msgstr "เกิดข้อผิดพลาดในการส่งข้
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_ids
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_ids
 msgid "Messages"
 msgstr "ข้อความ"
 
@@ -1989,8 +2193,8 @@ msgid "Must Have"
 msgstr "ต้องมี"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__my_activity_date_deadline
 #: model:ir.model.fields,field_description:hr.field_hr_employee__my_activity_date_deadline
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr "วันครบกำหนดกิจกรรมของฉัน"
 
@@ -2016,7 +2220,6 @@ msgstr "ทีมของฉัน"
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__name
-#: model:ir.model.fields,field_description:hr.field_hr_plan__name
 msgid "Name"
 msgstr "ชื่อ"
 
@@ -2037,33 +2240,43 @@ msgid "Negotiate and contract"
 msgstr "เจรจาและทำสัญญา"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_graph
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_pivot
+msgid "New Employees Over Time"
+msgstr "พนักงานใหม่ล่วงเวลา"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__newly_hired
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__newly_hired
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__newly_hired
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Newly Hired"
+msgstr "การจ้างใหม่"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__activity_calendar_event_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_calendar_event_id
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
 msgstr "ปฏิทินอีเวนต์กิจกรรมถัดไป"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__activity_date_deadline
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "วันครบกำหนดกิจกรรมถัดไป"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__activity_summary
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_summary
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_summary
 msgid "Next Activity Summary"
 msgstr "สรุปกิจกรรมถัดไป"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__activity_type_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_id
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_type_id
 msgid "Next Activity Type"
 msgstr "ประเภทกิจกรรมถัดไป"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_plan_employee_activity_kanban
-msgid "Next Activity:"
-msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2077,6 +2290,18 @@ msgid "Nice to have"
 msgstr "ควรจะมี"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/views/hr_graph_controller.xml:0
+#: code:addons/hr/static/src/views/hr_pivot_controller.xml:0
+msgid "No Data"
+msgstr "ไม่มีข้อมูล"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
+msgid "No Tags found ! Let's create one"
+msgstr "ไม่พบแท็ก ! มาสร้างกันเถอะ"
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2085,13 +2310,8 @@ msgstr "ควรจะมี"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "No dumb managers, no stupid tools to use, no rigid working hours"
-msgstr "ไม่มีผู้จัดการที่ไม่ฉลาด ไม่มีเครื่องมือโง่ ๆ ไม่มีเวลาทำงานที่เข้มงวด"
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_plan_activity_type.py:0
-msgid "No specific user given on activity %s."
-msgstr "ไม่มีการระบุผู้ใช้เฉพาะในกิจกรรม%s"
+msgstr ""
+"ไม่มีผู้จัดการที่ไม่ฉลาด ไม่มีเครื่องมือโง่ ๆ ไม่มีเวลาทำงานที่เข้มงวด"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2101,8 +2321,11 @@ msgstr "ไม่มีการระบุผู้ใช้เฉพาะใ
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
-msgid "No waste of time in enterprise processes, real responsibilities and autonomy"
-msgstr "ไม่ต้องเสียเวลาในกระบวนการต่าง ๆ ขององค์กร ที่มีความรับผิดชอบที่ชัดเจน และความเป็นอิสระ"
+msgid ""
+"No waste of time in enterprise processes, real responsibilities and autonomy"
+msgstr ""
+"ไม่ต้องเสียเวลาในกระบวนการต่าง ๆ ขององค์กร ที่มีความรับผิดชอบที่ชัดเจน "
+"และความเป็นอิสระ"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2111,7 +2334,6 @@ msgstr "ไม่พร้อม"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
-#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__note
 msgid "Note"
 msgstr "โน้ต"
 
@@ -2124,7 +2346,6 @@ msgstr "โน้ต"
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction_counter
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_needaction_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction_counter
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_needaction_counter
 msgid "Number of Actions"
 msgstr "จํานวนการดําเนินการ"
 
@@ -2132,7 +2353,12 @@ msgstr "จํานวนการดําเนินการ"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__children
 #: model:ir.model.fields,field_description:hr.field_res_users__children
 msgid "Number of Dependent Children"
-msgstr ""
+msgstr "จำนวนบุตรที่ต้องอยู่ในความอุปการะ"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_tree
+msgid "Number of Employees"
+msgstr "จำนวนพนักงาน"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_employee
@@ -2143,28 +2369,20 @@ msgstr "จำนวนพนักงานปัจจุบันที่ท
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_has_error_counter
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error_counter
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_has_error_counter
 msgid "Number of errors"
 msgstr "จํานวนข้อผิดพลาด"
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_job__no_of_hired_employee
-msgid "Number of hired employees for this job position during recruitment phase."
-msgstr "จำนวนพนักงานที่ได้รับการว่าจ้างสำหรับตำแหน่งงานนี้ ระหว่างกระบวนการสรรหา"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_needaction_counter
 #: model:ir.model.fields,help:hr.field_hr_employee__message_needaction_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction_counter
-#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "จํานวนข้อความที่ต้องดําเนินการ"
+msgid "Number of messages requiring action"
+msgstr "จำนวนข้อความที่ต้องดำเนินการ"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error_counter
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error_counter
-#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "จํานวนข้อความที่มีข้อผิดพลาดในการส่ง"
 
@@ -2174,43 +2392,37 @@ msgid "Number of new employees you expect to recruit."
 msgstr "จำนวนพนักงานใหม่ที่คุณคาดว่าจะรับสมัคร"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__related_contacts_count
-#: model:ir.model.fields,field_description:hr.field_hr_employee_base__related_contacts_count
-#: model:ir.model.fields,field_description:hr.field_hr_employee_public__related_contacts_count
-msgid "Number of related contacts"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.actions.act_window,help:hr.hr_department_tree_action
-msgid ""
-"Odoo's department structure is used to manage all documents\n"
-"                    related to employees by departments: expenses, timesheets,\n"
-"                    leaves, recruitments, etc."
-msgstr ""
-"โครงสร้างแผนกของ Odoo ใช้สำหรับจัดการเอกสารทั้งหมด\n"
-"                    ที่เกี่ยวข้องกับพนักงานตามแผนก เช่น ค่าใช้จ่าย ใบบันทึกเวลา\n"
-"                    การลา การรับสมัคร และอื่น ๆ "
-
-#. module: hr
-#: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
-msgid ""
-"Odoo's department structure is used to manage all documents\n"
-"                related to employees by departments: expenses, timesheets,\n"
-"                time off, recruitments, etc."
-msgstr ""
-"โครงสร้างแผนกของ Odoo ใช้สำหรับจัดการเอกสารทั้งหมด\n"
-"                ที่เกี่ยวข้องกับพนักงานตามแผนก เช่น ค่าใช้จ่าย ใบบันทึกเวลา,\n"
-"                การลา การรับสมัคร และอื่น ๆ "
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__office
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__work_location_type__office
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__work_location_type__office
+#: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__office
+msgid "Office"
+msgstr "สำนักงาน"
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
 msgid "Officer: Manage all employees"
-msgstr ""
+msgstr "เจ้าหน้าที่: จัดการพนักงานทั้งหมด"
 
 #. module: hr
-#: model:ir.ui.menu,name:hr.menu_config_plan_plan
-msgid "On/Offboarding Plans"
+#. odoo-python
+#: code:addons/hr/models/mail_activity_plan_template.py:0
+msgid ""
+"Oops! It seems there is a problem with your team structure."
+"                        We found a circular reporting loop and no one in "
+"that loop is linked to a user.                        Please double-check "
+"that everyone reports to the correct manager."
 msgstr ""
+"อุ๊ย! ดูเหมือนว่าโครงสร้างทีมของคุณมีปัญหา                        "
+"เราพบวงจรการรายงานแบบวงกลม และไม่มีใครในวงจรนั้นที่เชื่อมโยงกับผู้ใช้"
+"                        "
+"โปรดตรวจสอบซ้ำอีกครั้งว่าทุกคนรายงานต่อผู้จัดการที่ถูกต้อง"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/core/web/thread_actions.js:0
+msgid "Open Profile"
+msgstr "เปิดโปรไฟล์"
 
 #. module: hr
 #. odoo-python
@@ -2221,14 +2433,12 @@ msgstr "ไม่รองรับการทำงาน"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__other
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__other
-#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__other
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__other
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__work_location_type__other
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__work_location_type__other
+#: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__other
 msgid "Other"
 msgstr "อื่น ๆ"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__responsible_id
-msgid "Other Responsible"
-msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2240,6 +2450,22 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Our Product"
 msgstr "ผลิตภัณฑ์ของเรา"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
+msgid "Out of Working Hours"
+msgstr "นอกเวลาทำการ"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_out_of_working_hour
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__out_of_working_hour
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_out_of_working_hour
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_presence_state__out_of_working_hour
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_out_of_working_hour
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__out_of_working_hour
+msgid "Out of Working hours"
+msgstr "นอกเวลาทำการ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__pin
@@ -2255,8 +2481,14 @@ msgstr "โค้ด PIN"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__pin
 #: model:ir.model.fields,help:hr.field_res_users__pin
-msgid "PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if enabled in Configuration) and to change the cashier in the Point of Sale application."
-msgstr "PIN ที่ใช้ในการเช็คอิน/เช็คเอาท์ในโหมดคีออสก์ของแอปพลิเคชันการลงเวลาทำงาน (หากเปิดใช้งานในการกำหนดค่า) และเพื่อเปลี่ยนแคชเชียร์ในแอปพลิเคชันการขายหน้าร้าน"
+msgid ""
+"PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if"
+" enabled in Configuration) and to change the cashier in the Point of Sale "
+"application."
+msgstr ""
+"PIN ที่ใช้ในการเช็คอิน/เช็คเอาท์ในโหมดคีออสก์ของแอปพลิเคชันการลงเวลาทำงาน "
+"(หากเปิดใช้งานในการกำหนดค่า) "
+"และเพื่อเปลี่ยนแคชเชียร์ในแอปพลิเคชันการขายหน้าร้าน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
@@ -2292,11 +2524,6 @@ msgid "Passport No"
 msgstr "หมายเลขหนังสือเดินทาง"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Payroll"
-msgstr "เงินเดือน"
-
-#. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2321,7 +2548,7 @@ msgstr "ผลประโยชน์เพิ่มเติม"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_permanent
 msgid "Permanent"
-msgstr ""
+msgstr "ถาวร"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2338,11 +2565,13 @@ msgstr "วิวัฒนาการส่วนบุคคล"
 #. odoo-python
 #: code:addons/hr/models/res_users.py:0
 msgid "Personal information update."
-msgstr ""
+msgstr "การอัปเดตข้อมูลส่วนบุคคล"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__phone
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__phone
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__phone
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Phone"
 msgstr "โทรศัพท์"
 
@@ -2353,42 +2582,36 @@ msgid "Place of Birth"
 msgstr "สถานที่เกิด"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_plan_employee_activity
 #: model:ir.model.fields,field_description:hr.field_hr_department__plan_ids
-#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__plan_id
-#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__plan_id
-#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_search
 msgid "Plan"
 msgstr "แผน"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.hr_plan_activity_type_action
-msgid "Plan Activities"
+#. odoo-python
+#: code:addons/hr/models/mail_activity_plan.py:0
+msgid ""
+"Plan %(plan_names)s cannot use a department as it is used only for some HR "
+"plans."
 msgstr ""
+"แผน %(plan_names)s ไม่สามารถใช้แผนกได้ เนื่องจากใช้สำหรับแผน HR "
+"บางแผนเท่านั้น"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
-msgid "Plan Name"
-msgstr "ชื่อแผนการ"
+#: model:ir.model.fields,field_description:hr.field_mail_activity_schedule__plan_department_filterable
+msgid "Plan Department Filterable"
+msgstr "การกรองแผนกของการวางแผน"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_plan_wizard
-msgid "Plan Wizard"
-msgstr "ตัวช่วยแผน"
+#. odoo-python
+#: code:addons/hr/models/mail_activity_plan.py:0
+msgid ""
+"Plan activities %(template_names)s cannot use coach, manager or employee "
+"responsible as it is used only for employee plans."
+msgstr ""
+"กิจกรรมในแผน %(template_names)s ไม่สามารถใช้โค้ช ผู้จัดการ "
+"หรือพนักงานที่รับผิดชอบได้ เนื่องจากใช้สำหรับแผนพนักงานเท่านั้น"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_plan_activity_type
-msgid "Plan activity type"
-msgstr "ประเภทแผนกิจกรรม"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
-#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_tree
-msgid "Planning"
-msgstr "การวางแผน"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.hr_plan_action
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
 msgid "Plans"
 msgstr "แผน"
@@ -2396,7 +2619,7 @@ msgstr "แผน"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__plans_count
 msgid "Plans Count"
-msgstr ""
+msgstr "จำนวนแผน"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2410,7 +2633,11 @@ msgid "Play any sport with colleagues, <br>the bill is covered."
 msgstr "เล่นกีฬากับเพื่อนร่วมงาน <br>บิลได้ครอบคลุมแล้ว"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_crm_team__alias_contact
+#: model:ir.model.fields,help:hr.field_documents_document__alias_contact
+#: model:ir.model.fields,help:hr.field_helpdesk_team__alias_contact
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,help:hr.field_maintenance_equipment_category__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -2424,8 +2651,13 @@ msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
-msgid "Presence Control"
-msgstr ""
+msgid "Presence Condition"
+msgstr "เงื่อนไขการแสดงตัวตน"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Presence Display"
+msgstr "แสดงการแสดงตัวตน"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -2438,6 +2670,8 @@ msgid "Presence reporting screen, email and IP address control."
 msgstr "หน้าจอการรายงานสถานะ การควบคุมอีเมลและที่อยู่ IP"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_present
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__present
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_present
@@ -2448,29 +2682,24 @@ msgid "Present"
 msgstr "การมา"
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_absent_active
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_absent_active
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_absent_active
-msgid "Present but not active"
-msgstr "ปรากฎแต้ไม่ทำงาน"
-
-#. module: hr
 #: model:ir.actions.report,name:hr.hr_employee_print_badge
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Print Badge"
-msgstr "พิมพ์ป้าย"
+msgstr "พิมพ์เหรียญรางวัล"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Address"
 msgstr "ที่อยู่ส่วนตัว"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_car_plate
 msgid "Private Car Plate"
-msgstr ""
+msgstr "ป้ายทะเบียนรถส่วนตัว"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__private_city
 #: model:ir.model.fields,field_description:hr.field_res_users__private_city
 msgid "Private City"
 msgstr "เมืองส่วนตัว"
@@ -2481,6 +2710,7 @@ msgid "Private Contact"
 msgstr "ติดต่อส่วนตัว"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__private_country_id
 #: model:ir.model.fields,field_description:hr.field_res_users__private_country_id
 msgid "Private Country"
 msgstr "ประเทศส่วนตัว"
@@ -2498,30 +2728,50 @@ msgid "Private Information"
 msgstr "ข้อมูลส่วนตัว"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__phone
-#: model:ir.model.fields,field_description:hr.field_res_users__employee_phone
+#: model:ir.model.fields,field_description:hr.field_hr_employee__private_phone
+#: model:ir.model.fields,field_description:hr.field_res_users__private_phone
 msgid "Private Phone"
 msgstr "โทรศัพท์ส่วนตัว"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__private_state_id
 #: model:ir.model.fields,field_description:hr.field_res_users__private_state_id
 msgid "Private State"
 msgstr "รัฐส่วนตัว"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__private_street
 #: model:ir.model.fields,field_description:hr.field_res_users__private_street
 msgid "Private Street"
 msgstr "ถนนส่วนตัว"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__private_street2
 #: model:ir.model.fields,field_description:hr.field_res_users__private_street2
 msgid "Private Street2"
 msgstr "ถนนส่วนตัว2"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__private_zip
 #: model:ir.model.fields,field_description:hr.field_res_users__private_zip
 msgid "Private Zip"
 msgstr "รหัสไปรษณีย์ส่วนตัว"
+
+#. module: hr
+#: model:hr.department,name:hr.dep_ps
+msgid "Professional Services"
+msgstr "บริการระดับมืออาชีพ"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__employee_properties
+msgid "Properties"
+msgstr "คุณสมบัติ"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__birthday_public_display_string
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__birthday_public_display_string
+msgid "Public Date of Birth"
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_public
@@ -2538,6 +2788,28 @@ msgstr "ข้าราชการ"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Qualify the customer needs"
 msgstr "ตอบโจทย์ทุกความต้องการของลูกค้า"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
+#: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
+msgid ""
+"Quickly find all the information you need for your employees such as contact"
+" data, job position, availability, etc."
+msgstr ""
+"ค้นหาข้อมูลทั้งหมดที่คุณต้องการสำหรับพนักงานของคุณอย่างรวดเร็ว เช่น "
+"ข้อมูลติดต่อ ตำแหน่งงาน ความพร้อม ฯลฯ"
+
+#. module: hr
+#: model:hr.department,name:hr.dep_rd_be
+msgid "R&D USA"
+msgstr "R&D USA"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__rating_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__rating_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__rating_ids
+msgid "Ratings"
+msgstr "การให้คะแนน"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
@@ -2574,23 +2846,29 @@ msgid "Register Departure"
 msgstr "ลงทะเบียนการออก"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__related_contact_ids
-#: model:ir.model.fields,field_description:hr.field_hr_employee_base__related_contact_ids
-#: model:ir.model.fields,field_description:hr.field_hr_employee_public__related_contact_ids
+#. odoo-python
+#: code:addons/hr/models/res_users.py:0
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 msgid "Related Contact"
 msgstr ""
 
 #. module: hr
 #. odoo-python
-#: code:addons/hr/models/hr_employee_base.py:0
+#: code:addons/hr/models/hr_employee.py:0
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form_smartbutton_inherited
 msgid "Related Contacts"
-msgstr ""
+msgstr "ผู้ติดต่อที่เกี่ยวข้อง"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/res_partner.py:0 code:addons/hr/models/res_users.py:0
 msgid "Related Employees"
 msgstr "พนักงานที่เกี่ยวข้อง"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__related_partners_count
+msgid "Related Partners Count"
+msgstr "จำนวนพาร์ทเนอร์ที่เกี่ยวข้อง"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2608,11 +2886,14 @@ msgid "Related employees based on their private address"
 msgstr "พนักงานที่เกี่ยวข้องอิงตามที่อยู่ส่วนตัว"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee__user_id
-#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__user_id
 #: model:ir.model.fields,help:hr.field_resource_resource__user_id
 msgid "Related user name for the resource to manage its access."
 msgstr "ชื่อผู้ใช้ที่เกี่ยวข้องสำหรับทรัพยากรเพื่อจัดการการเข้าถึง"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_homeworking
+msgid "Remote Work"
+msgstr "การทำงานทางไกล"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.hr_menu_hr_reports
@@ -2624,6 +2905,11 @@ msgstr "การรายงาน"
 #: model:ir.model.fields,field_description:hr.field_hr_job__requirements
 msgid "Requirements"
 msgstr "ความต้องการ"
+
+#. module: hr
+#: model:hr.department,name:hr.dep_rd
+msgid "Research & Development"
+msgstr "การวิจัยและพัฒนา"
 
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_resigned
@@ -2660,13 +2946,8 @@ msgid "Responsibilities"
 msgstr "ความรับผิดชอบ"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__responsible
-msgid "Responsible"
-msgstr "รับผิดชอบ"
-
-#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__activity_user_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_user_id
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_user_id
 msgid "Responsible User"
 msgstr "ผู้ใช้ที่รับผิดชอบ"
 
@@ -2681,9 +2962,22 @@ msgid "SIN No"
 msgstr "หมายเลข SIN"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_has_sms_error
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_sms_error
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "ข้อผิดพลาดในการส่ง SMS"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__ssnid
+#: model:ir.model.fields,field_description:hr.field_res_users__ssnid
 msgid "SSN No"
 msgstr "หมายเลข SSN"
+
+#. module: hr
+#: model:hr.department,name:hr.dep_sales
+msgid "Sales"
+msgstr "การขาย"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form
@@ -2691,7 +2985,6 @@ msgid "Save"
 msgstr "บันทึก"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Schedule"
 msgstr "กำหนดเวลา"
@@ -2701,6 +2994,11 @@ msgstr "กำหนดเวลา"
 #: model:ir.model.fields,field_description:hr.field_res_users__study_school
 msgid "School"
 msgstr "โรงเรียน"
+
+#. module: hr
+#: model:hr.contract.type,name:hr.contract_type_seasonal
+msgid "Seasonal"
+msgstr "ตามฤดูกาล"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__coach_id
@@ -2729,24 +3027,40 @@ msgstr "ตั้งค่ากำหนดการเริ่มต้นข
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
 #: model:ir.ui.menu,name:hr.hr_menu_configuration
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Settings"
 msgstr "การตั้งค่า"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__share
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__share
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__share
+msgid "Share User"
+msgstr "แบ่งปันผู้ใช้"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__show_hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__show_hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__show_hr_icon_display
+#: model:ir.model.fields,field_description:hr.field_resource_resource__show_hr_icon_display
 msgid "Show Hr Icon Display"
-msgstr ""
+msgstr "แสดงไอคอนชั่วโมง"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/department_chart/department_chart.xml:0
 msgid "Show employees"
+msgstr "แสดงพนักงาน"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__birthday_public_display
+#: model:ir.model.fields,field_description:hr.field_res_users__birthday_public_display
+msgid "Show to all employees"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__single
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
 msgid "Single"
 msgstr "โสด"
 
@@ -2762,13 +3076,15 @@ msgstr "หมายเลขประกันสังคม"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__ssnid
+#: model:ir.model.fields,help:hr.field_res_users__ssnid
 msgid "Social Security Number"
 msgstr "หมายเลขประจำตัวผู้เสียภาษี"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_plan_activity_type__responsible_id
-msgid "Specific responsible of activity if not linked to the employee."
-msgstr "ความรับผิดชอบเฉพาะของกิจกรรมถ้าไม่เชื่อมโยงกับพนักงาน"
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
+msgid "Some employee already have a work contact"
+msgstr "พนักงานบางคนมีข้อมูลการติดต่องานอยู่แล้ว"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2794,7 +3110,13 @@ msgid "Spouse Complete Name"
 msgstr "ชื่อ-นามสกุล คู่สมรส"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Start Date"
+msgstr "วันที่เริ่ม"
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "State"
 msgstr "รัฐ"
 
@@ -2805,8 +3127,8 @@ msgid "Status"
 msgstr "สถานะ"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__activity_state
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_state
-#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__activity_state
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
@@ -2819,17 +3141,19 @@ msgstr ""
 "วางแผน: กิจกรรมในอนาคต"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_plan__steps_count
-msgid "Steps Count"
-msgstr ""
+#: model:hr.contract.type,name:hr.contract_type_statutaire
+msgid "Statutory"
+msgstr "ตามกฏหมาย"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Street 2..."
 msgstr "ถนน 2..."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Street..."
 msgstr "ถนน..."
 
@@ -2845,15 +3169,20 @@ msgid "Strong analytical skills"
 msgstr "ทักษะการวิเคราะห์ที่แข็งแกร่ง"
 
 #. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
+#: model_terms:ir.actions.act_window,help:hr.hr_department_tree_action
+msgid ""
+"Structure Employees per department and have an overview of e.g.\n"
+"                    expenses, timesheets, time off, recruitment, etc."
+msgstr ""
+"จัดโครงสร้างพนักงานในแต่ละแผนกและมีภาพรวม เช่น\n"
+"                    ค่าใช้จ่าย ตารางเวลา เวลาพัก การสรรหาบุคลากร ฯลฯ"
+
+#. module: hr
+#: model:hr.contract.type,name:hr.contract_type_student
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__student
 msgid "Student"
 msgstr "นักเรียน"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__summary
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__summary
-msgid "Summary"
-msgstr "สรุป"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__name
@@ -2863,7 +3192,7 @@ msgstr "ชื่อแท็ก"
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_category_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "มีชื่อแท็กแล้ว!"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__category_ids
@@ -2892,24 +3221,38 @@ msgstr "ผู้เชี่ยวชาญด้านเทคนิค"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__create_employee_id
 msgid "Technical field, bind user to this employee on create"
-msgstr ""
+msgstr "ทางเทคนิค ผูกผู้ใช้กับพนักงานคนนี้เมื่อสร้าง"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__create_employee
 msgid "Technical field, whether to create an employee"
-msgstr ""
+msgstr "ทางเทคนิคไม่ว่าจะเป็นการสร้างพนักงาน"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_temporary
 msgid "Temporary"
+msgstr "ชั่วคราว"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"The Badge ID must be alphanumeric without any accents and no longer than 18 "
+"characters."
 msgstr ""
+"ID ป้ายจะต้องเป็นตัวอักษรและตัวเลขโดยไม่มีเครื่องหมายกำกับเสียง "
+"และยาวไม่เกิน 18 ตัวอักษร"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
-msgid "The Badge ID must be unique, this one is already assigned to another employee."
-msgstr "ไอดีป้ายต้องไม่ซ้ำกัน ไอดีนี้ถูกมอบหมายให้กับพนักงานคนอื่นแล้ว"
+msgid ""
+"The Badge ID must be unique, this one is already assigned to another "
+"employee."
+msgstr ""
+"ไอดีเหรียญรางวัลต้องไม่ซ้ำกัน ไอดีนี้ถูกมอบหมายให้กับพนักงานคนอื่นแล้ว"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_departure_reason__country_code
 #: model:ir.model.fields,help:hr.field_hr_employee__company_country_code
 msgid ""
 "The ISO country code in two chars. \n"
@@ -2925,28 +3268,15 @@ msgid "The PIN must be a sequence of digits."
 msgstr "PIN ต้องเป็นลำดับของตัวเลข"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "The default working hours are set in configuration."
+msgstr "ชั่วโมงการทำงานเริ่มต้นจะถูกตั้งค่าไว้ในการกำหนดค่า"
+
+#. module: hr
 #. odoo-python
-#: code:addons/hr/models/hr_plan_activity_type.py:0
+#: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "The employee %s should be linked to a user."
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__is_address_home_a_company
-#: model:ir.model.fields,field_description:hr.field_res_users__is_address_home_a_company
-msgid "The employee address has a company linked"
-msgstr "ที่อยู่พนักงานมีบริษัทที่เชื่อมโยงอยู่"
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee__employee_type
-#: model:ir.model.fields,help:hr.field_res_users__employee_type
-msgid "The employee type. Although the primary purpose may seem to categorize employees, this field has also an impact in the Contract History. Only Employee type is supposed to be under contract and will have a Contract History."
-msgstr "ประเภทพนักงาน แม้ว่าวัตถุประสงค์หลักอาจดูเหมือนจัดหมวดหมู่พนักงาน แต่ฟิลด์นี้ก็มีผลกระทบต่อประวัติสัญญาด้วยเช่นกัน เฉพาะประเภทพนักงานเท่านั้นที่ควรอยู่ภายใต้สัญญาและจะมีประวัติสัญญา"
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/wizard/hr_plan_wizard.py:0
-msgid "The employees should belong to the same company."
-msgstr ""
+msgstr "พนักงาน %s ควรเชื่อมโยงกับผู้ใช้"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_no_of_recruitment_positive
@@ -2956,20 +3286,23 @@ msgstr "จำนวนพนักงานใหม่ที่คาดกา
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
-msgid "The fields \"%s\" you try to read is not available on the public employee profile."
-msgstr "ฟิลด์ \"%s\" ที่คุณพยายามอ่านยังไม่พร้อมใช้งานในโปรไฟล์พนักงานสาธารณะ"
+msgid ""
+"The fields “%s”, which you are trying to read, are not available for "
+"employee public profiles."
+msgstr ""
+"ฟิลด์ “%s” ที่คุณพยายามอ่านนั้นไม่พร้อมใช้งานสำหรับโปรไฟล์สาธารณะของพนักงาน"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/res_users.py:0
 msgid "The following fields were modified by %s"
-msgstr ""
+msgstr "ฟิลด์ต่อไปนี้ได้รับการแก้ไขโดย %s"
 
 #. module: hr
 #. odoo-python
-#: code:addons/hr/models/hr_plan_activity_type.py:0
+#: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "The manager of %s should be linked to a user."
-msgstr ""
+msgstr "ผู้จัดการของ %s ควรเชื่อมโยงกับผู้ใช้"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_name_company_uniq
@@ -2978,21 +3311,9 @@ msgstr "ชื่อของตำแหน่งงานจะต้องไ
 
 #. module: hr
 #. odoo-python
-#: code:addons/hr/wizard/hr_plan_wizard.py:0
-msgid "The plan %s cannot be launched: <br><ul>"
-msgstr ""
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/wizard/hr_plan_wizard.py:0
-msgid "The plan %s has been started"
-msgstr ""
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_plan_activity_type.py:0
+#: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "The user of %s's coach is not set."
-msgstr ""
+msgstr "ไม่ได้ตั้งค่าผู้ใช้โค้ชของ %s"
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user
@@ -3001,7 +3322,9 @@ msgstr "ผู้ใช้จะสามารถอนุมัติเอก
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_manager
-msgid "The user will have access to the human resources configuration as well as statistic reports."
+msgid ""
+"The user will have access to the human resources configuration as well as "
+"statistic reports."
 msgstr "ผู้ใช้จะมีสิทธิ์เข้าถึงการกำหนดค่าทรัพยากรบุคคลและรายงานสถิติ"
 
 #. module: hr
@@ -3011,17 +3334,44 @@ msgid "The work permit of %(employee)s expires at %(date)s."
 msgstr "ใบอนุญาตทำงานของ %(employee)s จะหมดอายุเมื่อ %(date)s"
 
 #. module: hr
+#: model:hr.contract.type,name:hr.contract_type_thesis
+msgid "Thesis"
+msgstr "วิทยานิพนธ์"
+
+#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "This employee already has an user."
-msgstr ""
+msgstr "พนักงานรายนี้มีผู้ใช้อยู่แล้ว"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
 #: model:ir.model.fields,help:hr.field_hr_employee_base__tz
 #: model:ir.model.fields,help:hr.field_hr_employee_public__tz
-msgid "This field is used in order to define in which timezone the resources will work."
-msgstr "ฟิลด์นี้ใช้เพื่อกำหนดเขตเวลาที่ทรัพยากรจะทำงาน"
+msgid ""
+"This field is used in order to define in which timezone the employee will "
+"work."
+msgstr "ฟิลด์นี้ใช้เพื่อกำหนดโซนเวลาที่พนักงานจะทำงาน"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/views/hr_graph_controller.xml:0
+#: code:addons/hr/static/src/views/hr_pivot_controller.xml:0
+msgid ""
+"This report gives you an overview of your employees based on the measures of"
+" your choice."
+msgstr "รายงานนี้ช่วยให้คุณเห็นภาพรวมของพนักงานของคุณตามมาตรการที่คุณเลือก"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "This setting block is utilized to manage the frontend design."
+msgstr "บล็อกการตั้งค่านี้ใช้ในการจัดการการออกแบบส่วนหน้า"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/mail_activity_plan_template.py:0
+msgid "Those responsible types are limited to Employee plans."
+msgstr "ประเภทความรับผิดชอบเหล่านั้นจำกัดอยู่ในแผนพนักงาน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tz
@@ -3031,34 +3381,26 @@ msgid "Timezone"
 msgstr "โซนเวลา"
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__to_define
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_presence_state__to_define
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__to_define
-msgid "To Define"
-msgstr "ระบุ"
+#: model:digest.tip,name:hr.digest_tip_hr_0
+#: model_terms:digest.tip,tip_description:hr.digest_tip_hr_0
+msgid "Tip: Where's Bryan?"
+msgstr "เคล็ดลับ: ไบรอันอยู่ไหน?"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
-msgid "To avoid multi company issues (losing the access to your previous contracts, leaves, ...), you should create another employee in the new company instead."
+msgid ""
+"To avoid multi company issues (losing the access to your previous contracts,"
+" leaves, ...), you should create another employee in the new company "
+"instead."
 msgstr ""
-
-#. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_to_define
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_to_define
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_to_define
-msgid "To define"
-msgstr "ระบุ"
+"เพื่อหลีกเลี่ยงปัญหาหลายบริษัท (สูญเสียสิทธิ์ในการเข้าถึงสัญญา การลาออก ...)"
+" ก่อนหน้านี้ คุณควรสร้างพนักงานอีกคนในบริษัทใหม่แทน"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Today Activities"
 msgstr "กิจกรรมวันนี้"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department__total_employee
-msgid "Total Employee"
-msgstr "พนักงานทั้งหมด"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
@@ -3083,10 +3425,15 @@ msgid "Trainings"
 msgstr "การฝึกอบรม"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__activity_exception_decoration
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_decoration
-#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "ประเภทกิจกรรมข้อยกเว้นบนบันทึก"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "Unarchive"
+msgstr "ยกเลิกการเก็บถาวร"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_undetermined
@@ -3103,11 +3450,15 @@ msgid "Unread Messages"
 msgstr "ข้อความที่ยังไม่ได้อ่าน"
 
 #. module: hr
+#: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
+msgid "Use tags to categorize your Employees."
+msgstr "ใช้แท็กเพื่อจัดหมวดหมู่พนักงานของคุณ"
+
+#. module: hr
 #: model:ir.model,name:hr.model_res_users
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__user_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_id
-#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__user_id
 #: model:ir.model.fields,field_description:hr.field_resource_resource__user_id
 msgid "User"
 msgstr "ผู้ใช้"
@@ -3121,7 +3472,7 @@ msgstr "พาร์ทเนอร์ของผู้ใช้"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "Vacancies:"
-msgstr ""
+msgstr "ตำแหน่งงานว่าง:"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_ip_list
@@ -3143,8 +3494,8 @@ msgstr "ใบอนุญาตทำงานที่ถูกต้องส
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
-msgid "Visa Expire Date"
-msgstr "วันหมดอายุวีซ่า"
+msgid "Visa Expiration Date"
+msgstr "วันหมดอายุของวีซ่า"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
@@ -3155,9 +3506,46 @@ msgstr "หมายเลขวีซ่า"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
-#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__warning
 msgid "Warning"
 msgstr "คำเตือน"
+
+#. module: hr
+#: model_terms:hr.job,description:hr.job_consultant
+msgid ""
+"We are looking for a Consultant to provide expert advice and strategic solutions,\n"
+"                driving business growth. Strong analytical skills and a proven track record in delivering results are\n"
+"                essential."
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,description:hr.job_marketing
+msgid ""
+"We are looking for a Marketing and Community manager to define the global mid- to long- term strategy,\n"
+"                develop and monitor the annual budget with Sales, and align product and customer portfolios with the\n"
+"                marketing plan. This role requires strong collaboration with Technical Service and Sales."
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,description:hr.job_developer
+msgid ""
+"We are looking for an experience developer to join our Web team.\n"
+"                Someone who can snap out of coding and perform analysis or meet clients to explain the technical\n"
+"                possibilities that can meet their needs."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__website_message_ids
+msgid "Website Messages"
+msgstr "ข้อความเว็บไซต์"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_job__website_message_ids
+msgid "Website communication history"
+msgstr "ประวัติการสื่อสารของเว็บไซต์"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3185,33 +3573,23 @@ msgstr "งานนี้มีอะไรดี?"
 #: model:ir.model.fields,help:hr.field_hr_employee__member_of_department
 #: model:ir.model.fields,help:hr.field_hr_employee_base__member_of_department
 #: model:ir.model.fields,help:hr.field_hr_employee_public__member_of_department
-msgid "Whether the employee is a member of the active user's department or one of it's child department."
+msgid ""
+"Whether the employee is a member of the active user's department or one of "
+"it's child department."
+msgstr ""
+"ไม่ว่าพนักงานจะเป็นสมาชิกของแผนกของผู้ใช้ที่ใช้งานอยู่หรือแผนกย่อยก็ตาม"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_res_partner__employee
+#: model:ir.model.fields,help:hr.field_res_users__employee
+msgid "Whether this contact is an Employee."
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__widower
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
 msgid "Widower"
 msgstr "หม้าย"
-
-#. module: hr
-#: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
-#: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
-msgid ""
-"With just a quick glance on the Odoo employee screen, you\n"
-"                    can easily find all the information you need for each person;\n"
-"                    contact data, job position, availability, etc."
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
-msgid ""
-"With just a quick glance on the Odoo employee screen, you\n"
-"                can easily find all the information you need for each person;\n"
-"                contact data, job position, availability, etc."
-msgstr ""
-"เพียงแค่ชั่วพริบตาบนหน้าจอพนักงานของ Odoo คุณก็จะ\n"
-"                สามารถค้นหาข้อมูลทั้งหมดที่คุณต้องการสำหรับแต่ละบุคคลได้อย่างง่ายดาย\n"
-"                ข้อมูลการติดต่อ ตำแหน่งงาน ความพร้อม และอื่น ๆ "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
@@ -3226,14 +3604,16 @@ msgstr "ที่อยู่งาน"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_contact_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_contact_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_contact_id
+#: model:ir.model.fields,field_description:hr.field_res_users__work_contact_id
 msgid "Work Contact"
-msgstr ""
+msgstr "ติดต่องาน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_email
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_email
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_email
 #: model:ir.model.fields,field_description:hr.field_res_users__work_email
+#: model:ir.model.fields,field_description:hr.field_resource_resource__work_email
 msgid "Work Email"
 msgstr "อีเมลที่ทำงาน"
 
@@ -3245,6 +3625,8 @@ msgid "Work Information"
 msgstr "ข้อมูลงาน"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #: model:ir.model,name:hr.model_hr_work_location
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_location_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_location_id
@@ -3255,6 +3637,22 @@ msgstr "ข้อมูลงาน"
 #: model_terms:ir.ui.view,arch_db:hr.hr_work_location_tree_view
 msgid "Work Location"
 msgstr "ที่อยู่ที่ทำงาน"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_location_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_location_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_location_name
+#: model:ir.model.fields,field_description:hr.field_res_users__work_location_name
+msgid "Work Location Name"
+msgstr "ชื่อสถานที่ทำงาน"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_location_type
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_location_type
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_location_type
+#: model:ir.model.fields,field_description:hr.field_res_users__work_location_type
+msgid "Work Location Type"
+msgstr "ประเภทสถานที่ทำงาน"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_work_location_action
@@ -3303,8 +3701,14 @@ msgstr "ใบอนุญาตทำงานตามกำหนดการ
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_phone
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_phone
 #: model:ir.model.fields,field_description:hr.field_res_users__work_phone
+#: model:ir.model.fields,field_description:hr.field_resource_resource__work_phone
 msgid "Work Phone"
 msgstr "โทรศัพท์ที่ทำงาน"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__worker
+msgid "Worker"
+msgstr "คนงาน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_calendar_id
@@ -3312,14 +3716,33 @@ msgid "Working Hours"
 msgstr "ชั่วโมงทำงาน"
 
 #. module: hr
+#: model:ir.ui.menu,name:hr.menu_resource_calendar_view
+msgid "Working Schedules"
+msgstr "ตารางการทำงาน"
+
+#. module: hr
 #. odoo-python
 #: code:addons/hr/models/res_users.py:0
-msgid "You are only allowed to update your preferences. Please contact a HR officer to update other information."
-msgstr "คุณได้รับอนุญาตให้อัปเดตการตั้งค่าของคุณเท่านั้น โปรดติดต่อเจ้าหน้าที่ฝ่ายทรัพยากรบุคคลเพื่ออัปเดตข้อมูลอื่น ๆ"
+msgid ""
+"You are not allowed to create an employee because the user does not have "
+"access rights for %s"
+msgstr ""
+"คุณไม่ได้รับอนุญาตให้สร้างพนักงานเนื่องจากผู้ใช้ไม่มีสิทธิ์การเข้าถึงสำหรับ "
+"%s"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/res_users.py:0
+msgid ""
+"You are only allowed to update your preferences. Please contact a HR officer"
+" to update other information."
+msgstr ""
+"คุณได้รับอนุญาตให้อัปเดตการตั้งค่าของคุณเท่านั้น "
+"โปรดติดต่อเจ้าหน้าที่ฝ่ายทรัพยากรบุคคลเพื่ออัปเดตข้อมูลอื่น ๆ"
 
 #. module: hr
 #. odoo-javascript
-#: code:addons/hr/static/src/thread_service_patch.js:0
+#: code:addons/hr/static/src/store_service_patch.js:0
 msgid "You can only chat with employees that have a dedicated user."
 msgstr "คุณสามารถพูดคุยกับพนักงานที่มีผู้ใช้เฉพาะเท่านั้น"
 
@@ -3333,7 +3756,7 @@ msgstr "คุณไม่สามารถสร้างแผนกแบบ
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "You do not have access to this document."
-msgstr ""
+msgstr "คุณไม่มีสิทธิ์เข้าถึงเอกสารนี้"
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_trainee
@@ -3351,12 +3774,18 @@ msgid ""
 "contributing to the set up of a new politic,\n"
 "being involved into satisfaction surveys in order to have a better knowledge of how the support given is seen by the customers."
 msgstr ""
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/res_config_settings.py:0
-msgid "You should select at least one Advanced Presence Control option."
-msgstr "คุณควรเลือกอย่างน้อยหนึ่งตัวเลือกการควบคุมสถานะขั้นสูง"
+"คุณเข้าร่วมในการอัปเดตเครื่องมือฝึกสอนและเครื่องมือก่อนการขายของเราหลังจากเปิดตัว Odoo เวอร์ชันใหม่ แท้จริงแล้วซอฟต์แวร์เวอร์ชันใหม่ใดๆ ก็ตามมีการปรับปรุงที่สำคัญในแง่ของฟังก์ชันการทำงาน การยศาสตร์ และการกำหนดค่า\n"
+"คุณจะต้องทำความคุ้นเคยกับเครื่องมือที่มีอยู่ (หนังสือ การสนับสนุนในชั้นเรียน สไลด์การนำเสนอของ Odoo เครื่องมือเชิงพาณิชย์)\n"
+"เพื่อเข้าร่วมการอัปเดตเครื่องมือเหล่านั้นเพื่อให้เหมาะสมกับซอฟต์แวร์เวอร์ชันใหม่และแน่นอน\n"
+"เพื่อแนะนำการปรับปรุงเพื่อให้ครอบคลุมโดเมนใหม่ของซอฟต์แวร์\n"
+"คุณเข้าร่วมแผนกช่วยเหลือการดำเนินงาน ทีม 3 คนนี้ทำงานร่วมกับลูกค้าของ Odoo ในการตั้งค่าซอฟต์แวร์ บทบาทของคุณจะเป็น\n"
+"เพื่อสร้างภาพเคลื่อนไหวการสัมมนาผ่านเว็บเพื่อแสดงฟังก์ชันการทำงานต่างๆ ของซอฟต์แวร์\n"
+"ที่จะมีส่วนร่วมในการสนับสนุนลูกค้าและ\n"
+"เพื่อตอบคำถามของพวกเขา\n"
+"คุณช่วยผู้จัดการฝ่ายสนับสนุนในการตั้งค่าบริการสนับสนุนใหม่โดย\n"
+"มีส่วนร่วมในการแก้ปัญหาให้กับลูกค้ารายใหม่\n"
+"มีส่วนร่วมในการจัดตั้งการเมืองแบบใหม่\n"
+"มีส่วนร่วมในการสำรวจความพึงพอใจเพื่อให้มีความรู้ที่ดีขึ้นว่าลูกค้าจะได้รับการสนับสนุนอย่างไร"
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_cto
@@ -3365,9 +3794,13 @@ msgid ""
 "\n"
 "The job is located in Grand-Rosière (1367), Belgium (between Louvain-La-Neuve and Namur)."
 msgstr ""
+"คุณจะมีส่วนร่วมในบริการให้คำปรึกษาที่เรามอบให้กับพาร์ทเนอร์และลูกค้าของเรา: การออกแบบ การวิเคราะห์ การพัฒนา การทดสอบ การจัดการโปรเจ็กต์ การสนับสนุน/การฝึกสอน คุณจะทำงานโดยอัตโนมัติตลอดจนประสานงานและดูแลทีมพัฒนาแบบกระจายขนาดเล็กสำหรับบางโปรเจ็กต์ คุณสามารถเลือกส่งมอบเซสชันการฝึกอบรม Odoo ให้กับพาร์ทเนอร์และลูกค้า (8-10 คน/เซสชัน) คุณจะรายงานตรงต่อหัวหน้าฝ่ายบริการระดับมืออาชีพและทำงานอย่างใกล้ชิดกับนักพัฒนาและที่ปรึกษาทุกคน\n"
+"\n"
+"ตำแหน่งงานนี้ตั้งอยู่ใน Grand-Rosière (1367) ประเทศเบลเยียม (ระหว่าง Louvain-La-Neuve และ Namur)"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "ZIP"
 msgstr "รหัสไปรษณีย์"
 
@@ -3383,27 +3816,53 @@ msgid "department"
 msgstr "แผนก"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "e.g. Building 2, Remote, etc."
+msgstr "เช่น อาคาร 2, ระยะไกล อื่นๆ"
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 msgid "e.g. John Doe"
 msgstr "เช่น John Doe"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
-msgid "e.g. Onboarding"
-msgstr "เช่น การเริ่มงาน"
-
-#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
 msgstr "เช่น ผู้จัดการฝ่ายขาย"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_plan
-msgid "plan"
-msgstr "แผน"
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "e.g. Summarize the position in one or two lines..."
+msgstr "เช่น สรุปตำแหน่งเป็นหนึ่งหรือสองบรรทัด..."
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "e.g. johndoe@example.com"
+msgstr "เช่น johndoe@example.com"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "e.g. myprivateemail@example.com"
+msgstr "เช่น myprivateemail@example.com"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__distance_home_work_unit__kilometers
+msgid "km"
+msgstr "กม."
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__distance_home_work_unit__miles
+msgid "mi"
+msgstr "ไมล์"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/models.py:0
 msgid "restricted to employees"
 msgstr "จำกัดเฉพาะพนักงาน"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
+msgid "work_permit_name"
+msgstr "work_permit_name"

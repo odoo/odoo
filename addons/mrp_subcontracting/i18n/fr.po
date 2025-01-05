@@ -1,26 +1,40 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mrp_subcontracting
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Malika Berardi, 2022
-# Cécile Collart <cco@odoo.com>, 2022
-# Jolien De Paepe, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fr\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
+msgid "%(name)s Sequence Resupply Subcontractor"
+msgstr "%(name)s Séquence réassort du sous-traitant"
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
+msgid "%(name)s Sequence subcontracting"
+msgstr "%(name)s Séquence de sous-traitance"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal
+msgid "/my/productions"
+msgstr "/my/productions"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -55,24 +69,28 @@ msgid "Bom Product"
 msgstr "Produit de la nomenclature"
 
 #. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_product_template_search_view
-msgid "Can be Subcontracted"
-msgstr "Peut être sous-traité "
-
-#. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_change_production_qty
 msgid "Change Production Qty"
 msgstr "Changer la quantité de fabrication"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_stock_location__is_subcontracting_location
-msgid "Check this box to create a new dedicated subcontracting location for this company. Note that standard subcontracting routes will be adapted so as to take these into account automatically."
-msgstr "Cochez cette case pour créer un nouvel emplacement de sous-traitance dédié pour cette entreprise. Notez que les routes de sous-traitance standards seront adaptées afin de les prendre automatiquement en considération."
+msgid ""
+"Check this box to create a new dedicated subcontracting location for this "
+"company. Note that standard subcontracting routes will be adapted so as to "
+"take these into account automatically."
+msgstr ""
+"Cochez cette case pour créer un nouvel emplacement de sous-traitance dédié "
+"pour cette entreprise. Notez que les routes de sous-traitance standards "
+"seront adaptées afin de les prendre automatiquement en considération."
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
-msgid "Choose a vendor of type subcontractor if you want to subcontract the product"
-msgstr "Choisissez un fournisseur de type sous-traitant si vous souhaitez sous-traiter le produit"
+msgid ""
+"Choose a vendor of type subcontractor if you want to subcontract the product"
+msgstr ""
+"Choisissez un fournisseur de type sous-traitant si vous souhaitez sous-"
+"traiter le produit"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_company
@@ -115,6 +133,7 @@ msgid "Detail Component"
 msgstr "Détail du composant"
 
 #. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Details"
 msgstr "Détails"
@@ -134,12 +153,17 @@ msgstr "Montrer l'action \"Enregistrer les composants\""
 #: code:addons/mrp_subcontracting/controllers/portal.py:0
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Done"
-msgstr "Fait"
+msgstr "Terminé"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__facultative
 msgid "Facultative"
 msgstr "Facultatif"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_home_productions
+msgid "Follow manufacturing orders you have to fulfill"
+msgstr "Suivre les ordres de facturations que vous devez exécuter"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__subcontracting_has_been_recorded
@@ -154,8 +178,12 @@ msgstr "Masquer"
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_location.py:0
-msgid "In order to manage stock accurately, subcontracting locations must be type Internal, linked to the appropriate company and not specific to a warehouse."
-msgstr "Afin de gérer le stock avec précision, les emplacements de sous-traitance doivent être de type Interne, liés à la société appropriée et non spécifiques à un entrepôt."
+msgid ""
+"In order to manage stock accurately, subcontracting locations must be type "
+"Internal, linked to the appropriate company."
+msgstr ""
+"Afin de gérer le stock avec exactitude, les emplacements de sous-traitance "
+"doivent être de type Interne et liés à l'entreprise adéquate."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_filter
@@ -165,7 +193,7 @@ msgstr "Transfert entrant"
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_location
 msgid "Inventory Locations"
-msgstr "Emplacements des stocks"
+msgstr "Emplacements de l'inventaire"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_quant__is_subcontract
@@ -179,20 +207,30 @@ msgstr "Est un emplacement de sous-traitance ?"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__bom_product_ids
-msgid "List of Products used in the BoM, used to filter the list of products in the subcontracting portal view"
-msgstr "Liste des produits utilisés dans la nomenclature afin de filtrer la liste des produites dans la vue du portail de sous-traitance"
+msgid ""
+"List of Products used in the BoM, used to filter the list of products in the"
+" subcontracting portal view"
+msgstr ""
+"Liste des produits utilisés dans la nomenclature afin de filtrer la liste "
+"des produites dans la vue du portail de sous-traitance"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__production_ids
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__production_ids
 msgid "MRP Productions for which the Partner is the subcontractor"
-msgstr "Les productions MRP pour lesquelles le partenaire est le sous-traitant"
+msgstr ""
+"Les productions MRP pour lesquelles le partenaire est le sous-traitant"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_move_line.py:0
-msgid "Make sure you validate or adapt the related resupply picking to your subcontractor in order to avoid inconsistencies in your stock."
-msgstr "Veillez à ce que vous validez ou adaptez le transfert de réassort correspondant de votre sous-traitant pour éviter des incohérences dans votre inventaire."
+msgid ""
+"Make sure you validate or adapt the related resupply picking to your "
+"subcontractor in order to avoid inconsistencies in your stock."
+msgstr ""
+"Veillez à ce que vous validez ou adaptez le transfert de réassort "
+"correspondant de votre sous-traitant pour éviter des incohérences dans votre"
+" inventaire."
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__mandatory
@@ -200,6 +238,12 @@ msgid "Mandatory"
 msgstr "Obligatoire"
 
 #. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Ordre de fabrication"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_home_productions
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Manufacturing Orders"
 msgstr "Ordres de fabrication"
@@ -208,11 +252,6 @@ msgstr "Ordres de fabrication"
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Manufacturing Reference"
 msgstr "Référence de fabrication"
-
-#. module: mrp_subcontracting
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__move_line_nosuggest_ids
-msgid "Move Line Nosuggest"
-msgstr "Ligne de mouvement sans suggestion"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -251,18 +290,27 @@ msgstr "Operations sans colis"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
 msgid "Order"
-msgstr "Commande"
+msgstr "Ordre"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
-msgid "Portal users cannot create a stock move with a state 'Done' or change the current state to 'Done'."
-msgstr "Les utilisateurs du portail ne peuvent pas créer un mouvement de stock avec un état 'Fait' ou changer le statut actuel en 'Fait'."
+msgid ""
+"Portal users cannot create a stock move with a state 'Done' or change the "
+"current state to 'Done'."
+msgstr ""
+"Les utilisateurs du portail ne peuvent pas créer un mouvement de stock avec "
+"un état 'Terminé' ou changer le statut actuel en 'Terminé'."
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Mouvements de produits (Ligne de mouvement de stock)"
+msgstr "Mouvements de produit (Ligne de mouvement de stock)"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_stock_replenish_mixin
+msgid "Product Replenish Mixin"
+msgstr "Mixin du réassort de produits"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_product
@@ -270,13 +318,7 @@ msgid "Product Variant"
 msgstr "Variante de produit"
 
 #. module: mrp_subcontracting
-#: model:ir.model,name:mrp_subcontracting.model_mrp_production
-msgid "Production Order"
-msgstr "Ordre de fabrication"
-
-#. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_home_menu_production
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_home_productions
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
 msgid "Productions"
 msgstr "Productions"
@@ -309,7 +351,6 @@ msgid "Record components"
 msgstr "Enregistrer les composants"
 
 #. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Register components for subcontracted product"
 msgstr "Enregistrer les composants pour les produits sous-traités"
@@ -318,12 +359,7 @@ msgstr "Enregistrer les composants pour les produits sous-traités"
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 msgid "Replenish on Order (MTO)"
-msgstr ""
-
-#. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_tree_view
-msgid "Reserved"
-msgstr "Réservé"
+msgstr "Réapprovisionner sur commande (MTO)"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -334,6 +370,7 @@ msgstr "Réapprovisionner le sous-traitant"
 
 #. module: mrp_subcontracting
 #. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_replenish_mixin.py:0
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:stock.route,name:mrp_subcontracting.route_resupply_subcontractor_mto
 msgid "Resupply Subcontractor on Order"
@@ -350,21 +387,14 @@ msgid "Return Picking"
 msgstr "Transfert de retour"
 
 #. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_stock_return_picking_line
+msgid "Return Picking Line"
+msgstr "Ligne de transfert de retour"
+
+#. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
 msgid "Scheduled Date"
-msgstr "Date prévue"
-
-#. module: mrp_subcontracting
-#. odoo-python
-#: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
-msgid "Sequence Resupply Subcontractor"
-msgstr "Séquence du réassort du sous-traitant"
-
-#. module: mrp_subcontracting
-#. odoo-python
-#: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
-msgid "Sequence subcontracting"
-msgstr "Séquence de sous-traitance"
+msgstr "Date planifiée"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__show_subcontracting_details_visible
@@ -404,11 +434,6 @@ msgid "Subcontract"
 msgstr "Sous-traiter"
 
 #. module: mrp_subcontracting
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking__subcontract_location_id
-msgid "Subcontract Location"
-msgstr "Emplacement de sous-traitance"
-
-#. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
 msgid "Subcontracted"
 msgstr "Sous-traité"
@@ -423,6 +448,7 @@ msgstr "Les ordres de fabrication sous-traités ne peuvent pas être fusionnés.
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__mrp_bom__type__subcontract
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 msgid "Subcontracting"
 msgstr "Sous-traitance"
 
@@ -508,8 +534,12 @@ msgstr "Le mouvement est une réception sous-contractée"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_res_partner__property_stock_subcontractor
 #: model:ir.model.fields,help:mrp_subcontracting.field_res_users__property_stock_subcontractor
-msgid "The stock location used as source and destination when sending        goods to this contact during a subcontracting process."
-msgstr "L'emplacement de stock utilisé comme source et destination lorsqu'on envoie les biens à ce contact durant le processus de sous-traitance."
+msgid ""
+"The stock location used as source and destination when sending        goods "
+"to this contact during a subcontracting process."
+msgstr ""
+"L'emplacement de stock utilisé comme source et destination lorsqu'on envoie "
+"les biens à ce contact durant le processus de sous-traitance."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
@@ -519,20 +549,18 @@ msgstr "Il n'y a actuellement aucune production pour votre compte."
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_picking.py:0
-msgid "There shouldn't be multiple productions to record for the same subcontracted move."
-msgstr "Il ne devrait pas y avoir plusieurs productions à enregistrer pour le même mouvement sous-traité."
+msgid ""
+"There shouldn't be multiple productions to record for the same subcontracted"
+" move."
+msgstr ""
+"Il ne devrait pas y avoir plusieurs productions à enregistrer pour le même "
+"mouvement sous-traité."
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 msgid "This MO isn't related to a subcontracted move"
 msgstr "Cet OF n'est pas lié à un mouvement de sous-traitance"
-
-#. module: mrp_subcontracting
-#. odoo-python
-#: code:addons/mrp_subcontracting/models/stock_move.py:0
-msgid "To subcontract, use a planned transfer."
-msgstr "Pour sous-traiter, utiliser un transfert planifié."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_form_view
@@ -548,7 +576,9 @@ msgstr "Transfert"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__subcontractor_id
 msgid "Used to restrict access to the portal user through Record Rules"
-msgstr "Utilisé pour restreindre l'accès à l'utilisateur du portail via les règles d'enregistrement"
+msgstr ""
+"Utilisé pour restreindre l'accès à l'utilisateur du portail via les règles "
+"d'enregistrement"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_warehouse
@@ -557,20 +587,29 @@ msgstr "Entrepôt"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_consumption_warning
-msgid "Wizard in case of consumption in warning/strict and more component has been used for a MO (related to the bom)"
-msgstr "Assistant en cas de consommation en alerte/stricte et si plus de composants ont été utilisés pour un OF (par rapport à la nomenclature)"
+msgid ""
+"Wizard in case of consumption in warning/strict and more component has been "
+"used for a MO (related to the bom)"
+msgstr ""
+"Assistant en cas de consommation en alerte/stricte et si plus de composants "
+"ont été utilisés pour un OF (par rapport à la nomenclature)"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_bom.py:0
-msgid "You can not set a Bill of Material with operations or by-product line as subcontracting."
-msgstr "Vous ne pouvez pas définir une nomenclature avec des opérations ou une ligne de sous-produits en sous-traitance."
+msgid ""
+"You can not set a Bill of Material with operations or by-product line as "
+"subcontracting."
+msgstr ""
+"Vous ne pouvez pas définir une nomenclature avec des opérations ou une ligne"
+" de sous-produits en sous-traitance."
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_location.py:0
 msgid "You cannot alter the company's subcontracting location"
-msgstr "Vous ne pouvez pas modifier l'emplacement de sous-traitance de l'entreprise"
+msgstr ""
+"Vous ne pouvez pas modifier l'emplacement de sous-traitance de l'entreprise"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -593,8 +632,12 @@ msgstr "Vous devez saisir un numéro pour chaque ligne de %s"
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
-msgid "You must indicate a non-zero amount consumed for at least one of your components"
-msgstr "Vous devez indiquer une quantité consommée différente de zéro pour au moins un de vos composants."
+msgid ""
+"You must indicate a non-zero amount consumed for at least one of your "
+"components"
+msgstr ""
+"Vous devez indiquer une quantité consommée différente de zéro pour au moins "
+"un de vos composants."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view

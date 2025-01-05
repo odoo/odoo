@@ -1,25 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_crm
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_crm
@@ -83,6 +80,12 @@ msgid "Do not link to a customer"
 msgstr "Älä liitä asiakkaaseen"
 
 #. module: sale_crm
+#. odoo-python
+#: code:addons/sale_crm/models/crm_lead.py:0
+msgid "Expected revenue has been updated based on the linked Sales Orders."
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
 msgid "ID"
 msgstr "ID"
@@ -91,11 +94,6 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:sale_crm.field_res_users__target_sales_invoiced
 msgid "Invoiced in Sales Orders Target"
 msgstr "Laskutettu myyntitilausten tavoitteesta"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner____last_update
-msgid "Last Modified on"
-msgstr "Viimeksi muokattu"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_uid
@@ -116,11 +114,6 @@ msgstr "Liidi/mahdollisuus"
 #: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__exist
 msgid "Link to an existing customer"
 msgstr "Yhdistetään olemassa olevaan asiakkaaseen"
-
-#. module: sale_crm
-#: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
-msgid "Log in the chatter from which opportunity the order originates"
-msgstr "Kirjaa viestiketjuun mihin myyntimahdollisuuteen tilaus perustuu"
 
 #. module: sale_crm
 #: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
@@ -175,6 +168,7 @@ msgid "Sale Orders"
 msgstr "Myyntitilaukset"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/models/crm_team.py:0
 msgid "Sales Analysis"
 msgstr "Myyntianalyysi"
@@ -190,6 +184,7 @@ msgid "Sales Team"
 msgstr "Myyntitiimi"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/models/crm_team.py:0
 msgid "Sales: Untaxed Total"
 msgstr "Myynti: verottomana yhteensä"
@@ -210,6 +205,7 @@ msgid "User"
 msgstr "Käyttäjä"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/wizard/crm_opportunity_to_quotation.py:0
 msgid "You can only apply this action from a lead."
 msgstr "Tämä toimenpide pitää tehdä liidiltä."

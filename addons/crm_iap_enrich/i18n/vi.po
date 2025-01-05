@@ -1,34 +1,40 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* crm_iap_enrich
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Thi Huong Nguyen, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.2\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-11 14:34+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_notfound
-msgid "<span> No company data found based on the email address or email address is one of an email provider. No credit was consumed. </span>"
-msgstr "<span> Không tìm thấy dữ liệu công ty dựa vào địa chỉ email hoặc địa chỉ email thuộc về nhà cung cấp email. Không có tín dụng được sử dụng.</span>"
+msgid ""
+"<span> No company data found based on the email address or email address is "
+"one of an email provider. No credit was consumed. </span>"
+msgstr ""
+"<span> Không tìm thấy dữ liệu công ty dựa vào địa chỉ email hoặc địa chỉ "
+"email thuộc về nhà cung cấp email. Không có tín dụng được sử dụng.</span>"
 
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_email
-msgid "<span>Enrichment could not be done because the email address does not look valid.</span>"
-msgstr "<span>Không thể tăng cường vì có vẻ như địa chỉ email không hợp lệ.</span>"
+msgid ""
+"<span>Enrichment could not be done because the email address does not look "
+"valid.</span>"
+msgstr ""
+"<span>Không thể tăng cường vì có vẻ như địa chỉ email không hợp lệ.</span>"
 
 #. module: crm_iap_enrich
 #: model:ir.model.fields,field_description:crm_iap_enrich.field_crm_lead__show_enrich_button
@@ -36,9 +42,13 @@ msgid "Allow manual enrich"
 msgstr "Cho phép tăng cường thủ công"
 
 #. module: crm_iap_enrich
+#. odoo-python
+#: code:addons/crm_iap_enrich/models/crm_lead.py:0
+msgid "An error occurred during lead enrichment"
+msgstr "Đã xảy ra lỗi trong quá trình tăng cường lead"
+
+#. module: crm_iap_enrich
 #: model:ir.actions.server,name:crm_iap_enrich.ir_cron_lead_enrichment_ir_actions_server
-#: model:ir.cron,cron_name:crm_iap_enrich.ir_cron_lead_enrichment
-#: model:ir.cron,name:crm_iap_enrich.ir_cron_lead_enrichment
 msgid "CRM: enrich leads (IAP)"
 msgstr "CRM: tăng cường lead (IAP)"
 
@@ -75,6 +85,7 @@ msgid "Lead Enrichment (based on email address)"
 msgstr "Tăng cường lead (dựa trên địa chỉ email)"
 
 #. module: crm_iap_enrich
+#. odoo-python
 #: code:addons/crm_iap_enrich/models/crm_lead.py:0
 msgid "Lead enriched based on email address"
 msgstr "Lead đã được tăng cường dựa trên địa chỉ email"
@@ -85,21 +96,22 @@ msgid "Lead/Opportunity"
 msgstr "Lead/Cơ hội"
 
 #. module: crm_iap_enrich
+#. odoo-python
 #: code:addons/crm_iap_enrich/models/crm_lead.py:0
 msgid "Not enough credits for Lead Enrichment"
 msgstr "Không đủ tín dụng để Tăng cường lead."
 
 #. module: crm_iap_enrich
-#: code:addons/crm_iap_enrich/models/crm_lead.py:0
-msgid "Sent batch %s enrich requests: failed with exception %s"
-msgstr "Gửi yêu cầu tăng cường hàng loạt %s: không thành công với ngoại lệ %s"
-
-#. module: crm_iap_enrich
+#. odoo-python
 #: code:addons/crm_iap_enrich/models/crm_lead.py:0
 msgid "The leads/opportunities have successfully been enriched"
 msgstr "Lead/cơ hội đã được tăng cường thành công"
 
 #. module: crm_iap_enrich
 #: model:ir.model.fields,help:crm_iap_enrich.field_crm_lead__iap_enrich_done
-msgid "Whether IAP service for lead enrichment based on email has been performed on this lead."
-msgstr "Liệu dịch vụ IAP cho tăng cường lead dựa trên email đã được thực hiện cho lead này chưa. "
+msgid ""
+"Whether IAP service for lead enrichment based on email has been performed on"
+" this lead."
+msgstr ""
+"Liệu dịch vụ IAP cho tăng cường lead dựa trên email đã được thực hiện cho "
+"lead này chưa. "

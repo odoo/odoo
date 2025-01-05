@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_livechat
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Jolien De Paepe, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_livechat
@@ -30,9 +28,11 @@ msgstr "# Sessies"
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
 msgid ""
-"%s started a conversation with %s.\n"
-"                        The chat request has been canceled."
+"%(visitor)s started a conversation with %(operator)s.\n"
+"The chat request has been cancelled"
 msgstr ""
+"%(visitor)s is een gesprek begonnen met %(operator)s.\n"
+"Het chatverzoek is geannuleerd"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -110,7 +110,7 @@ msgstr "Omschrijving van het kanaal dat getoond wordt op de website pagina"
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_discuss_channel
 msgid "Discussion Channel"
-msgstr "Discussiekanaal"
+msgstr "Chatkanaal"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -180,7 +180,7 @@ msgstr "Nieuw kanaal"
 #: code:addons/website_livechat/models/website_visitor.py:0
 msgid "No Livechat Channel allows you to send a chat request for website %s."
 msgstr ""
-"Geen live chat kanaal staat je toe om een chat verzoek te verzenden voor de "
+"Geen livechat kanaal staat je toe om een chat verzoek te verzenden voor de "
 "website %s."
 
 #. module: website_livechat
@@ -207,11 +207,11 @@ msgstr "Operator naam"
 #. odoo-python
 #: code:addons/website_livechat/models/website_visitor.py:0
 msgid ""
-"Recipients are not available. Please refresh the page to get latest visitors "
-"status."
+"Recipients are not available. Please refresh the page to get latest visitors"
+" status."
 msgstr ""
-"Ontvangers zijn niet beschikbaar. Vernieuw de pagina om de nieuwe status van "
-"bezoekers op te halen."
+"Ontvangers zijn niet beschikbaar. Vernieuw de pagina om de nieuwe status van"
+" bezoekers op te halen."
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -251,7 +251,7 @@ msgstr "Test"
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "The"
-msgstr "De"
+msgstr "Het"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -292,24 +292,34 @@ msgstr "Bezoeker"
 
 #. module: website_livechat
 #. odoo-python
-#: code:addons/website_livechat/controllers/main.py:0
-#: code:addons/website_livechat/models/website_visitor.py:0
-msgid "Visitor #%d"
-msgstr ""
-
-#. module: website_livechat
-#. odoo-python
-#. odoo-javascript
-#: code:addons/website_livechat/controllers/main.py:0
-#: code:addons/website_livechat/static/src/web/persona_model_patch.js:0
-msgid "Visitor #%s"
-msgstr ""
+#: code:addons/website_livechat/models/discuss_channel.py:0
+msgid "Visitor #%(id)d left the conversation."
+msgstr "Bezoeker #%(id)d heeft het gesprek verlaten."
 
 #. module: website_livechat
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
-msgid "Visitor %s left the conversation."
-msgstr ""
+msgid "Visitor #%(id)d."
+msgstr "Bezoeker #%(id)d."
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/controllers/main.py:0
+#: code:addons/website_livechat/models/website_visitor.py:0
+msgid "Visitor #%d"
+msgstr "Bezoeker #%d"
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/controllers/main.py:0
+msgid "Visitor #%s"
+msgstr "Bezoeker #%s"
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/models/discuss_channel.py:0
+msgid "Visitor left the conversation."
+msgstr "De bezoeker heeft de conversatie verlaten."
 
 #. module: website_livechat
 #: model:ir.actions.act_window,name:website_livechat.website_visitor_livechat_session_action
@@ -319,7 +329,7 @@ msgstr "Bezoeker sessies"
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website_visitor__discuss_channel_ids
 msgid "Visitor's livechat channels"
-msgstr "Bezoekers live chat kanalen"
+msgstr "Bezoekers livechat kanalen"
 
 #. module: website_livechat
 #: model:ir.ui.menu,name:website_livechat.website_livechat_visitor_menu
@@ -341,7 +351,7 @@ msgstr "Website live kanaal"
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website__channel_id
 msgid "Website Live Chat Channel"
-msgstr "Website live chat kanaal"
+msgstr "Website livechat kanaal"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_url
@@ -369,4 +379,4 @@ msgstr "een operator"
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "last feedbacks"
-msgstr "Laatste feedback"
+msgstr "laatste feedback"

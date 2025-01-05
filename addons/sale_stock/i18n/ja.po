@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_stock
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Andy Yiu, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_stock
@@ -32,58 +30,71 @@ msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Preparation</b>"
-msgstr ""
+msgid "<i class=\"fa fa-fw fa-clock-o\"/> Awaiting arrival"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/>到着待ち "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid "<i class=\"fa fa-fw fa-times\"/> <b>Cancelled</b>"
-msgstr ""
+msgid "<i class=\"fa fa-fw fa-clock-o\"/>Preparation"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/>準備"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid "<i class=\"fa fa-fw fa-truck\"/> <b>Shipped</b>"
-msgstr ""
+msgid "<i class=\"fa fa-fw fa-times\"/> Cancelled"
+msgstr "<i class=\"fa fa-fw fa-times\"/>キャンセル済 "
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
-msgid ""
-"<span attrs=\"{'invisible': [('display_delivery_alert', '=', False)]}\">\n"
-"                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
-"                </span>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<i class=\"fa fa-fw fa-times\"/>Cancelled"
+msgstr "<i class=\"fa fa-fw fa-times\"/>キャンセル済"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<i class=\"fa fa-fw fa-truck\"/> Received"
+msgstr "<i class=\"fa fa-fw fa-truck\"/> 受取済"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Sales</span>"
-msgstr ""
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_product_catalog_kanban_view_inherit
-msgid "<span>On Hand: </span>"
-msgstr ""
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
-msgid "<strong>Customer Reference:</strong>"
-msgstr "<strong>顧客参照:</strong>"
+msgstr "<span class=\"o_stat_text\">販売</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid "<strong>Delivery Orders</strong>"
-msgstr "<strong>配送</strong>"
+msgid ""
+"<span class=\"small badge rounded-pill text-bg-success orders_label_text_align\">\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> Shipped\n"
+"                                    </span>"
+msgstr ""
+"<span class=\"small badge rounded-pill text-bg-success orders_label_text_align\">\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> 配送済\n"
+"                                    </span>"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid "<strong>Incoterm: </strong>"
-msgstr "<strong>貿易条件: </strong>"
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
+msgid ""
+"<span invisible=\"not display_delivery_alert\">\n"
+"                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
+"                </span>"
+msgstr ""
+"<span invisible=\"not display_delivery_alert\">\n"
+"                    一部の配送はすでに完了しています。返品は配送オーダから作成できます。\n"
+"                </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
+msgid "<strong>Customer Reference</strong>"
+msgstr "<strong>顧客参照番号</strong>"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
-msgid "<strong>Incoterm:</strong>"
-msgstr "<strong>貿易条件:</strong>"
+msgid "<strong>Incoterm</strong>"
+msgstr "<strong>インコタームズ</strong>"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order_line__is_storable
+msgid "A storable product is a product for which you manage stock."
+msgstr "在庫可能プロダクトは、在庫を管理するプロダクトです。"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
@@ -94,17 +105,22 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"プロダクト構成に応じて、配送済数量はメカニズムによって自動的に計算されます：\n"
+"  - 手動: 数量を明細上で手動で設定します\n"
+"  - 費用からの分析: 数量は計上された費用からの合計数量です\n"
+"  - タイムシート: 数量は、この売上明細にリンクされたタスクに記録された時間の合計です\n"
+"  - 在庫移動: 数量は確定したピッキングに由来します\n"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "All planned operations included"
-msgstr ""
+msgstr "全ての計画済オペレーションを含む"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Apply specific routes"
-msgstr ""
+msgstr "特定のルートを適用する"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__direct
@@ -127,12 +143,23 @@ msgstr "処理可能"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "Available in stock"
+msgstr "利用可能な在庫"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order__delivery_status
+msgid ""
+"Blue: Not Delivered/Started\n"
+"            Orange: Partially Delivered\n"
+"            Green: Fully Delivered"
 msgstr ""
+"青: 配送/開始待ち\n"
+"            オレンジ: 一部配送済\n"
+"            緑: 全配送済"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Choose to apply SO lines specific routes."
-msgstr ""
+msgstr "販売オーダ明細に特定のルートを適用する選択をする"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -148,6 +175,11 @@ msgstr "最初の配送オーダの完了日"
 #: model:ir.model,name:sale_stock.model_res_config_settings
 msgid "Config Settings"
 msgstr "コンフィグ設定"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
+msgid "Customer reference"
+msgstr "顧客参照"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -167,7 +199,7 @@ msgstr "配送"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__display_delivery_alert
 msgid "Delivery Alert"
-msgstr ""
+msgstr "配送アラート"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
@@ -177,33 +209,29 @@ msgstr "配送"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_status
 msgid "Delivery Status"
-msgstr ""
+msgstr "配送ステータス"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__expected_date
-msgid "Delivery date you can promise to the customer, computed from the minimum lead time of the order lines in case of Service products. In case of shipping, the shipping policy of the order will be taken into account to either use the minimum or maximum lead time of the order lines."
-msgstr "サービス製品の場合、注文ラインの最小リードタイムから計算された、顧客に約束できる納期。配送の場合、注文の配送ポリシーが考慮され、注文ラインの最小または最大のリードタイムが使用されます。"
+msgid ""
+"Delivery date you can promise to the customer, computed from the minimum "
+"lead time of the order lines in case of Service products. In case of "
+"shipping, the shipping policy of the order will be taken into account to "
+"either use the minimum or maximum lead time of the order lines."
+msgstr ""
+"サービスプロダクトの場合、オーダ明細の最小リードタイムから計算された、顧客に約束できる納期。配送の場合、オーダの配送ポリシーが考慮され、オーダ明細の最小または最大のリードタイムが使用されます。"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
 msgid "Display Qty Widget"
-msgstr ""
-
-#. module: sale_stock
-#: model:res.groups,name:sale_stock.group_display_incoterm
-msgid "Display incoterms on Sales Order and related invoices"
-msgstr "販売オーダと関連請求書にインコタームズを表示"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
-msgid "Display incoterms on orders & invoices"
-msgstr ""
+msgstr "配送数量ウィジェット"
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
-msgid "Do not forget to change the partner on the following delivery orders: %s"
-msgstr ""
+msgid ""
+"Do not forget to change the partner on the following delivery orders: %s"
+msgstr "以下の配達オーダの際には、取引先の変更をお忘れなく：%s"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
@@ -245,7 +273,7 @@ msgstr "予想:"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__forecast_expected_date
 msgid "Forecast Expected Date"
-msgstr ""
+msgstr "予定日を予測する"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -256,27 +284,31 @@ msgstr "予測在庫"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
 msgid "Free Qty Today"
-msgstr ""
+msgstr "本日の無料数量"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__full
 msgid "Fully Delivered"
-msgstr ""
+msgstr "配送完了"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
 msgid "Has late picking"
-msgstr ""
+msgstr "遅延しているピッキングがあります"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
-msgid "If you deliver all products at once, the delivery order will be scheduled based on the greatest product lead time. Otherwise, it will be based on the shortest."
+msgid ""
+"If you deliver all products at once, the delivery order will be scheduled "
+"based on the greatest product lead time. Otherwise, it will be based on the "
+"shortest."
 msgstr ""
+"全てのプロダクトを一度に配送する場合、配送オーダはプロダクトのリードタイムが最も長い順序で予定されます。それ以外の場合は、最短のものを基準とします。"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Impacted Transfer(s):"
-msgstr ""
+msgstr "影響を受けた転送："
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
@@ -289,20 +321,26 @@ msgid "Incoterm Location"
 msgstr "インコタームズロケーション"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_display_incoterm
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
-msgid "Incoterms"
-msgstr "インコタームズ"
+#: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
+msgid "Incoterm details"
+msgstr "イコターム詳細"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "Incoterm:"
+msgstr "インコターム"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm
-msgid "International Commercial Terms are a series of predefined commercial terms used in international transactions."
+msgid ""
+"International Commercial Terms are a series of predefined commercial terms "
+"used in international transactions."
 msgstr "国際取引条件は国際間の取り引きで使用する、事前に定義された取引条件をまとめたものです。"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_users_view_form
 msgid "Inventory"
-msgstr "在庫"
+msgstr "在庫管理"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_route
@@ -312,7 +350,7 @@ msgstr "在庫ルート"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_mto
 msgid "Is Mto"
-msgstr ""
+msgstr "MTO（受注生産）か"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__json_popover
@@ -327,7 +365,12 @@ msgstr "仕訳"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move_line
 msgid "Journal Item"
-msgstr "仕訳明細"
+msgstr "仕訳項目"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "Last Delivery Orders"
+msgstr "最終配送オーダ"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__customer_lead
@@ -346,14 +389,21 @@ msgstr "マニュアルでのフォローが必要かもしれません。"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
-msgid "Margin of error for dates promised to customers. Products will be scheduled for delivery that many days earlier than the actual promised date, to cope with unexpected delays in the supply chain."
+msgid ""
+"Margin of error for dates promised to customers. Products will be scheduled "
+"for delivery that many days earlier than the actual promised date, to cope "
+"with unexpected delays in the supply chain."
 msgstr ""
+"顧客に約束した日付の誤差。サプライチェーンにおける予期せぬ遅延に対処するため、プロダクトは実際の約束日より何日か早く納品されるよう予定されます。"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings__security_lead
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
-msgid "Margin of error for dates promised to customers. Products will be scheduled for procurement and delivery that many days earlier than the actual promised date, to cope with unexpected delays in the supply chain."
+msgid ""
+"Margin of error for dates promised to customers. Products will be scheduled "
+"for procurement and delivery that many days earlier than the actual promised"
+" date, to cope with unexpected delays in the supply chain."
 msgstr "顧客に約束した日付の許容誤差。サプライチェーンの予想外の遅延に対処するため、製品は実際に約束した日より何日も前にスケジュールされます。"
 
 #. module: sale_stock
@@ -367,25 +417,32 @@ msgid "Move forward expected delivery dates by"
 msgstr "配送予定を早める日数"
 
 #. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
+msgid "No delivery yet! Automate them with sales orders."
+msgstr "配送がまだありません!購買オーダで自動化しましょう。"
+
+#. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "No future availability"
-msgstr ""
+msgstr "利用可能予定なし"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__pending
 msgid "Not Delivered"
-msgstr ""
+msgstr "配送されていません"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "Not enough future availability"
-msgstr ""
+msgstr "十分な利用可能予定なし"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__customer_lead
-msgid "Number of days between the order confirmation and the shipping of the products to the customer"
+msgid ""
+"Number of days between the order confirmation and the shipping of the "
+"products to the customer"
 msgstr "注文確認と顧客への製品の出荷までの日数"
 
 #. module: sale_stock
@@ -397,7 +454,7 @@ msgstr "On"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__partial
 msgid "Partially Delivered"
-msgstr ""
+msgstr "一部配送済み"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
@@ -416,9 +473,14 @@ msgid "Product"
 msgstr "プロダクト"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "プロダクトの移動(在庫移動ライン)"
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
 msgid "Qty Available Today"
-msgstr ""
+msgstr "本日利用可能な数量"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
@@ -432,22 +494,41 @@ msgid "Quotations"
 msgstr "見積"
 
 #. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "RETURN"
+msgstr "返却"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
+msgid ""
+"Reduce back orders with reservations, locations management, smart\n"
+"                replenishment propositions, shipping connectors, barcode scanner, etc."
+msgstr ""
+"予約、ロケーション管理、スマート補充提案、出荷コネクタ、\n"
+"                バーコードスキャナーなどでバックオーダーを削減します。"
+
+#. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "Remaining demand available at"
-msgstr ""
+msgstr "残りの需要については以下で利用可能："
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/models/sale_order_line.py:0
 msgid "Replenish on Order (MTO)"
-msgstr ""
+msgstr "オーダ基準補充(MTO)"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "Reserved"
 msgstr "引当済"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "Returns"
+msgstr "返品"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_id
@@ -502,6 +583,7 @@ msgstr "販売オーダ明細"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_lot__sale_order_ids
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
 msgid "Sales Orders"
 msgstr "販売オーダ"
 
@@ -543,12 +625,17 @@ msgstr "全プロダクトを一括で出荷"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__direct
 msgid "Ship products as soon as available, with back orders"
-msgstr "プロダクトが利用可能になり次第出荷 (バック注文作成)"
+msgstr "製品が利用可能になり次第出荷 (バック注文作成)"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
 msgid "Shipping Policy"
 msgstr "配送方針"
+
+#. module: sale_stock
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__started
+msgid "Started"
+msgstr "開始済"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -585,38 +672,56 @@ msgstr "在庫規則レポート"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 msgid "The delivery"
-msgstr ""
+msgstr "配送"
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
 msgid ""
 "The delivery address has been changed on the Sales Order<br/>\n"
-"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
+"                        From <strong>\"%(old_address)s\"</strong> to <strong>\"%(new_address)s\"</strong>,\n"
 "                        You should probably update the partner on this document."
 msgstr ""
+"販売オーダ上で配送先住所が変更されました。<br/>\n"
+"                        変更前： <strong>\"%(old_address)s\"</strong> 変更後： <strong>\"%(new_address)s\"</strong>,\n"
+"                        このドキュメント上で取引先を更新する必要があるでしょう。"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js:0
+msgid ""
+"The ordered quantity cannot be decreased below the amount already delivered."
+" Instead, create a return in your inventory."
+msgstr "オーダ済数量をすでに納入された数量より減らすことはできません。代わりに、在庫に返品を作成して下さい。"
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/models/sale_order_line.py:0
-msgid "The ordered quantity cannot be decreased below the amount already delivered. Instead, create a return in your inventory."
-msgstr ""
+msgid ""
+"The ordered quantity of a sale order line cannot be decreased below the "
+"amount already delivered. Instead, create a return in your inventory."
+msgstr "販売オーダ明細のオーダ数量を、すでに納入された数量より減らすことはできません。代わりに、在庫に返品を作成して下さい。"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "This product is replenished on demand."
-msgstr ""
+msgstr "このプロダクトはオンデマンドで補充されます。"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_storable
+msgid "Track Inventory"
+msgstr "在庫追跡"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr "運送"
+msgstr "転送"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_ids
 msgid "Transfers"
-msgstr "運送"
+msgstr "転送"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_users
@@ -627,12 +732,12 @@ msgstr "ユーザ"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "View Forecast"
-msgstr "フォーキャスト照会"
+msgstr "予測照会"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__virtual_available_at_date
 msgid "Virtual Available At Date"
-msgstr ""
+msgstr "バーチャル利用可能日時"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
@@ -650,7 +755,7 @@ msgstr "警告！"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__one
 msgid "When all products are ready"
-msgstr "全プロダクトが準備できてから"
+msgstr "全製品が準備できてから"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -658,9 +763,22 @@ msgid "When to start shipping"
 msgstr "配送タイミング"
 
 #. module: sale_stock
+#. odoo-python
+#: code:addons/sale_stock/models/sale_order.py:0
+msgid ""
+"You must have a warehouse for line using a delivery in different company."
+msgstr "異なる会社での配送を利用する明細用の倉庫が必要です。"
+
+#. module: sale_stock
+#. odoo-python
+#: code:addons/sale_stock/models/sale_order.py:0
+msgid "You must set a warehouse on your sale order to proceed."
+msgstr "販売オーダに倉庫を設定しなければ先に進めません。"
+
+#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "cancelled"
-msgstr ""
+msgstr "キャンセル済"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -687,4 +805,4 @@ msgstr "代わりに処理"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 msgid "will be late."
-msgstr ""
+msgstr "が遅れます。"

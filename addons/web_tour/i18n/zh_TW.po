@@ -1,51 +1,91 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* web_tour
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
-"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_service.js:0
-msgid "<strong><b>Good job!</b> You went through all steps of this tour.</strong>"
-msgstr "<strong><b>做得好！</b>您已完成本次導覽的所有步驟。</strong>"
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+msgid "(recording keyboard)"
+msgstr "（正在錄取鍵盤按鍵）"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+msgid "(run:"
+msgstr "（運行："
+
+#. module: web_tour
+#: model:ir.model.constraint,message:web_tour.constraint_web_tour_tour_uniq_name
+msgid "A tour already exists with this name . Tour's name must be unique!"
+msgstr "已有相同名稱的導覽。導覽名稱必須獨一無二。"
 
 #. module: web_tour
 #. odoo-javascript
 #: code:addons/web_tour/static/src/tour_service/tour_utils.js:0
-msgid "Click on the <i>Home icon</i> to navigate across apps."
-msgstr "按一下 <i> 首頁圖示 </i> 可跨應用程式導航。"
+msgid "Click the top left corner to navigate across apps."
+msgstr "按一下左上角，以在不同應用程式之間導航。"
 
 #. module: web_tour
-#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__user_id
-msgid "Consumed by"
-msgstr "消耗由"
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__content
+msgid "Content"
+msgstr "內容"
+
+#. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__create_uid
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__create_uid
+msgid "Created by"
+msgstr "建立人員"
+
+#. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__create_date
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__create_date
+msgid "Created on"
+msgstr "建立於"
+
+#. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__custom
+msgid "Custom"
+msgstr "自訂"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/debug/debug_manager.js:0
-msgid "Disable Tours"
-msgstr "停用導覽"
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.js:0
+msgid "Custom tour '%s' couldn't be saved!"
+msgstr "未能儲存自訂導覽「%s」。"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.js:0
+msgid "Custom tour '%s' has been added."
+msgstr "已加入自訂導覽「%s」。"
 
 #. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__display_name
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
+
+#. module: web_tour
+#: model:ir.actions.server,name:web_tour.tour_export_js_action
+msgid "Export JS"
+msgstr "匯出 JS"
 
 #. module: web_tour
 #: model:ir.model,name:web_tour.model_ir_http
@@ -54,107 +94,200 @@ msgstr "HTTP 路由"
 
 #. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__id
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__id
 msgid "ID"
-msgstr "ID"
+msgstr "識別號"
 
 #. module: web_tour
-#: model_terms:ir.ui.view,arch_db:web_tour.edit_tour_list
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__write_uid
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__write_uid
+msgid "Last Updated by"
+msgstr "最後更新者"
+
+#. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__write_date
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__write_date
+msgid "Last Updated on"
+msgstr "最後更新於"
+
+#. module: web_tour
+#: model_terms:ir.ui.view,arch_db:web_tour.tour_list
 msgid "Menu"
-msgstr "選單"
+msgstr "功能表"
 
 #. module: web_tour
-#. odoo-javascript
-#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__name
 msgid "Name"
 msgstr "名稱"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
-msgid "Onboarding tours"
-msgstr "入職導覽"
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+msgid "Name:"
+msgstr "名稱:"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_utils.js:0
-msgid "Open bugger menu."
-msgstr "打開 bugger 選單"
+#: code:addons/web_tour/static/src/tour_service/tour_service.js:0
+#: code:addons/web_tour/static/src/widgets/tour_start.xml:0
+#: model:ir.model.fields,field_description:web_tour.field_res_users__tour_enabled
+msgid "Onboarding"
+msgstr "新手簡介"
+
+#. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__rainbow_man_message
+msgid "Rainbow Man Message"
+msgstr "彩虹小精靈訊息"
+
+#. module: web_tour
+#: model_terms:ir.ui.view,arch_db:web_tour.tour_form
+msgid "Rainbow Man Message..."
+msgstr "彩虹小精靈訊息⋯"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
-msgid "Path"
-msgstr "路徑"
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+#: code:addons/web_tour/static/src/views/tour_controller.xml:0
+msgid "Record"
+msgstr "記錄"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/views/tour_controller.xml:0
+msgid "Record Tour"
+msgstr "錄影導覽"
+
+#. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__run
+msgid "Run"
+msgstr "執行"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+msgid "Save"
+msgstr "儲存"
 
 #. module: web_tour
 #. odoo-javascript
 #: code:addons/web_tour/static/src/tour_service/tour_pointer_state.js:0
 msgid "Scroll down to reach the next step."
-msgstr ""
+msgstr "向下捲動，以進入下一步驟。"
 
 #. module: web_tour
 #. odoo-javascript
 #: code:addons/web_tour/static/src/tour_service/tour_pointer_state.js:0
 msgid "Scroll up to reach the next step."
-msgstr ""
+msgstr "向上捲動，以進入下一步驟。"
 
 #. module: web_tour
-#. odoo-javascript
-#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__sequence
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__sequence
 msgid "Sequence"
-msgstr "序號"
+msgstr "序列號"
+
+#. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__sharing_url
+msgid "Sharing URL"
+msgstr "正在分享網址"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
-msgid "Start"
-msgstr "開始"
-
-#. module: web_tour
-#. odoo-javascript
-#: code:addons/web_tour/static/src/debug/debug_manager.js:0
+#: code:addons/web_tour/static/src/widgets/tour_start.xml:0
 msgid "Start Tour"
 msgstr "開始導覽"
 
 #. module: web_tour
-#. odoo-javascript
-#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
-msgid "Start tour"
-msgstr "開始導覽"
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__url
+msgid "Starting URL"
+msgstr "起始網址"
+
+#. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__step_ids
+msgid "Step"
+msgstr "跳號"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
-msgid "Test"
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+#: model_terms:ir.ui.view,arch_db:web_tour.tour_form
+msgid "Steps"
+msgstr "步驟"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+msgid "Steps:"
+msgstr "步驟："
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/widgets/tour_start.xml:0
+msgid "Test Tour"
+msgstr "測試導覽"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/widgets/tour_start.xml:0
+msgid "Testing"
 msgstr "測試"
 
 #. module: web_tour
-#. odoo-javascript
-#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
-msgid "Test tour"
-msgstr "測試導覽"
-
-#. module: web_tour
-#. odoo-javascript
-#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
-msgid "Testing tours"
-msgstr "測試導覽"
-
-#. module: web_tour
-#: model_terms:ir.ui.view,arch_db:web_tour.edit_tour_search
+#: model_terms:ir.ui.view,arch_db:web_tour.tour_search
 msgid "Tip"
-msgstr "提示"
+msgstr "小費"
 
 #. module: web_tour
-#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__name
-msgid "Tour name"
-msgstr "導覽名稱"
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__tour_id
+msgid "Tour"
+msgstr "導覽"
 
 #. module: web_tour
-#. odoo-javascript
-#: code:addons/web_tour/static/src/debug/tour_dialog_component.js:0
-#: model:ir.actions.act_window,name:web_tour.edit_tour_action
+#: model:ir.model,name:web_tour.model_web_tour_tour_step
+msgid "Tour's step"
+msgstr "導覽步驟"
+
+#. module: web_tour
+#: model:ir.actions.act_window,name:web_tour.tour_action
 #: model:ir.model,name:web_tour.model_web_tour_tour
 #: model:ir.ui.menu,name:web_tour.menu_tour_action
 msgid "Tours"
-msgstr "導覽"
+msgstr "遊覽"
+
+#. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__trigger
+msgid "Trigger"
+msgstr "觸發"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+msgid "Url:"
+msgstr "網址："
+
+#. module: web_tour
+#: model:ir.model,name:web_tour.model_res_users
+msgid "User"
+msgstr "使用者"
+
+#. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__user_consumed_ids
+msgid "User Consumed"
+msgstr "使用者已消耗"
+
+#. module: web_tour
+#: model_terms:ir.ui.view,arch_db:web_tour.tour_form
+msgid "e.g. My_Tour"
+msgstr "例：我的導覽"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+msgid "name_of_the_tour"
+msgstr "name_of_the_tour"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+msgid "trigger"
+msgstr "觸發"

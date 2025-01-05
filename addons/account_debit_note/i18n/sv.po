@@ -1,0 +1,231 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_debit_note
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
+msgid "<span class=\"o_stat_text\">Debit Notes</span>"
+msgstr "<span class=\"o_stat_text\">Debitnoter</span>"
+
+#. module: account_debit_note
+#: model:ir.model,name:account_debit_note.model_account_debit_note
+msgid "Add Debit Note wizard"
+msgstr "Assistent för att Lägga till Debiteringsnota"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
+msgid "Cancel"
+msgstr "Avbryt"
+
+#. module: account_debit_note
+#: model:ir.model.fields,help:account_debit_note.field_account_journal__debit_sequence
+msgid ""
+"Check this box if you don't want to share the same sequence for invoices and"
+" debit notes made from this journal"
+msgstr ""
+"Markera den här rutan om du inte vill dela samma sekvens för fakturor och "
+"debetbetalningar gjorda från denna verifikation"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__copy_lines
+msgid "Copy Lines"
+msgstr "Kopiera rader"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__country_code
+msgid "Country Code"
+msgstr "Landskod"
+
+#. module: account_debit_note
+#: model:ir.actions.act_window,name:account_debit_note.action_view_account_move_debit
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
+msgid "Create Debit Note"
+msgstr "Skapa Debiteringsnota"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__create_uid
+msgid "Created by"
+msgstr "Skapad av"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__create_date
+msgid "Created on"
+msgstr "Skapad den"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_move_filter_debit
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_move_line_filter_debit
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
+msgid "Debit Note"
+msgstr "Skuldförbindelse"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__date
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
+msgid "Debit Note Date"
+msgstr "Debitnota Datum"
+
+#. module: account_debit_note
+#. odoo-python
+#: code:addons/account_debit_note/models/account_move.py:0
+#: code:addons/account_debit_note/wizard/account_debit_note.py:0
+#: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_note_ids
+#: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_note_ids
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_invoice_filter_debit
+msgid "Debit Notes"
+msgstr "Skuldebrev"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_journal__debit_sequence
+msgid "Dedicated Debit Note Sequence"
+msgstr "Utvald debetbetalningssekvens"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__display_name
+#: model:ir.model.fields,field_description:account_debit_note.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account_debit_note.field_account_move__display_name
+msgid "Display Name"
+msgstr "Visningsnamn"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__id
+#: model:ir.model.fields,field_description:account_debit_note.field_account_journal__id
+#: model:ir.model.fields,field_description:account_debit_note.field_account_move__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_debit_note
+#: model:ir.model.fields,help:account_debit_note.field_account_debit_note__journal_id
+msgid "If empty, uses the journal of the journal entry to be debited."
+msgstr "Om tom, används journalen för den verifikat som ska debiteras."
+
+#. module: account_debit_note
+#: model:ir.model.fields,help:account_debit_note.field_account_debit_note__copy_lines
+msgid ""
+"In case you need to do corrections for every line, it can be in handy to "
+"copy them.  We won't copy them for debit notes from credit notes. "
+msgstr ""
+"Om du behöver göra korrigeringar för varje rad kan det vara praktiskt att "
+"kopiera dem.  Vi kommer inte att kopiera dem för debetnoteringar från "
+"kreditnoteringar. "
+
+#. module: account_debit_note
+#: model:ir.model,name:account_debit_note.model_account_journal
+msgid "Journal"
+msgstr "Journal"
+
+#. module: account_debit_note
+#: model:ir.model,name:account_debit_note.model_account_move
+msgid "Journal Entry"
+msgstr "Verifikat"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_type
+msgid "Journal Type"
+msgstr "Bokföringstyp"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__write_uid
+msgid "Last Updated by"
+msgstr "Senast uppdaterad av"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__write_date
+msgid "Last Updated on"
+msgstr "Senast uppdaterad den"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__move_ids
+msgid "Move"
+msgstr "Verifikat"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__move_type
+msgid "Move Type"
+msgstr "Typ av flyttning"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_note_count
+#: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_note_count
+msgid "Number of Debit Notes"
+msgstr "Antal kreditnotor"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_origin_id
+#: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_origin_id
+msgid "Original Invoice Debited"
+msgstr "Ursprungliga fakturan debiterades"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__reason
+msgid "Reason"
+msgstr "Anledning"
+
+#. module: account_debit_note
+#: model:ir.model.fields,help:account_debit_note.field_account_debit_note__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"ISO-landskoden med två tecken.\n"
+"Du kan använda det här fältet för snabb sökning."
+
+#. module: account_debit_note
+#: model:ir.model.fields,help:account_debit_note.field_account_bank_statement_line__debit_note_ids
+#: model:ir.model.fields,help:account_debit_note.field_account_move__debit_note_ids
+msgid "The debit notes created for this invoice"
+msgstr "Kreditnotorna skapade för denna faktura"
+
+#. module: account_debit_note
+#. odoo-python
+#: code:addons/account_debit_note/wizard/account_debit_note.py:0
+msgid "This debit note was created from: %s"
+msgstr "Denna kreditnota skapades från: %s"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_id
+msgid "Use Specific Journal"
+msgstr "Använd specifik journal"
+
+#. module: account_debit_note
+#. odoo-python
+#: code:addons/account_debit_note/wizard/account_debit_note.py:0
+msgid ""
+"You can make a debit note only for a Customer Invoice, a Customer Credit "
+"Note, a Vendor Bill or a Vendor Credit Note."
+msgstr ""
+"Du kan bara göra en debetnota för en kundfaktura, en kundkreditnota, en "
+"leverantörsfaktura eller en leverantörskreditnota."
+
+#. module: account_debit_note
+#. odoo-python
+#: code:addons/account_debit_note/wizard/account_debit_note.py:0
+msgid "You can only debit posted moves."
+msgstr "Du kan endast debitera bokförda transaktioner."
+
+#. module: account_debit_note
+#. odoo-python
+#: code:addons/account_debit_note/wizard/account_debit_note.py:0
+msgid ""
+"You can't make a debit note for an invoice that is already linked to a debit"
+" note."
+msgstr ""
+"Du kan inte skapa en debetnota för en faktura som redan är kopplad till en "
+"debetnota."

@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_setup
-#
+# 
 # Translators:
-# 江口和志 <sandwhale1010@gmail.com>, 2022
-# Martin Trigaux, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_setup
@@ -29,66 +27,93 @@ msgstr "<span class=\"fa fa-lg fa-users\" aria-label=\"Number of active users\"/
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
-"<span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&gt;', '1')]}\">\n"
+"<span class=\"o_form_label\" invisible=\"active_user_count &gt; 1\">\n"
 "                                        Active User\n"
 "                                    </span>\n"
-"                                    <span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&lt;=', '1')]}\">\n"
+"                                    <span class=\"o_form_label\" invisible=\"active_user_count &lt;= 1\">\n"
 "                                        Active Users\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"active_user_count &gt; 1\">\n"
+"                                        アクティブユーザ\n"
+"                                    </span>\n"
+"                                    <span class=\"o_form_label\" invisible=\"active_user_count &lt;= 1\">\n"
+"                                        アクティブユーザ\n"
+"                                    </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
-"<span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&gt;', '1')]}\">\n"
+"<span class=\"o_form_label\" invisible=\"company_count &gt; 1\">\n"
 "                                        Company\n"
 "                                    </span>\n"
-"                                    <span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&lt;=', '1')]}\">\n"
+"                                    <span class=\"o_form_label\" invisible=\"company_count &lt;= 1\">\n"
 "                                        Companies\n"
 "                                    </span>\n"
 "                                    <br/>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"company_count &gt; 1\">\n"
+"                                        会社\n"
+"                                    </span>\n"
+"                                    <span class=\"o_form_label\" invisible=\"company_count &lt;= 1\">\n"
+"                                        会社\n"
+"                                    </span>\n"
+"                                    <br/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
-"<span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&gt;', '1')]}\">\n"
+"<span class=\"o_form_label\" invisible=\"language_count &gt; 1\">\n"
 "                                            Language\n"
 "                                        </span>\n"
-"                                        <span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&lt;=', '1')]}\">\n"
+"                                        <span class=\"o_form_label\" invisible=\"language_count &lt;= 1\">\n"
 "                                            Languages\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"language_count &gt; 1\">\n"
+"                                            言語\n"
+"                                        </span>\n"
+"                                        <span class=\"o_form_label\" invisible=\"language_count &lt;= 1\">\n"
+"                                            言語\n"
+"                                        </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "<strong>Save</strong> this page and come back here to choose your Geo Provider."
+msgid ""
+"<strong>Save</strong> this page and come back here to choose your Geo "
+"Provider."
 msgstr "Geo Providerを選択するには、一度このページを<strong>保存</strong>の上、ここに戻ってきてください。 "
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "<strong>Save</strong> this page and come back here to set up Cloudflare turnstile."
-msgstr ""
+msgid ""
+"<strong>Save</strong> this page and come back here to set up Cloudflare "
+"turnstile."
+msgstr "このページを<strong>保存</strong> してここに戻りCloudflare turnstileを設定して下さい。"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "<strong>Save</strong> this page and come back here to set up reCaptcha."
+msgid ""
+"<strong>Save</strong> this page and come back here to set up reCaptcha."
 msgstr "reCaptcha機能を設定するには、一度このページを<strong>保存</strong>の上、このページに戻ってきてください。"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "<strong>Save</strong> this page and come back here to set up the feature."
+msgid ""
+"<strong>Save</strong> this page and come back here to set up the feature."
 msgstr "機能を設定するには、一度このページを<strong>保存</strong>の上、ここに戻ってきてください。"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "API Keys"
-msgstr ""
+msgstr "APIキー"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "API Keys allow your users to access Odoo with external tools when multi-factor authentication is enabled."
-msgstr ""
+msgid ""
+"API Keys allow your users to access Odoo with external tools when multi-"
+"factor authentication is enabled."
+msgstr "APIキーを使用すると、多要素認証が有効な場合、ユーザは外部ツールからOdooにアクセスできます。"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -114,7 +139,7 @@ msgstr "面白いエフェクトを追加し、ユーザのモチベーション
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_mail_plugin
 msgid "Allow integration with the mail plugins"
-msgstr ""
+msgstr "メールプラグインとの統合を許可"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_calendar
@@ -130,7 +155,7 @@ msgstr "ユーザーがカレンダーをOutlookカレンダーと同期でき�
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_import
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
-msgstr "CSV/XLS/XLSX/ODSファイルからデータをインポート"
+msgstr "ユーザーはCSV/XLS/XLSX/ODSファイルからデータをインポートできるようにします"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__group_multi_currency
@@ -138,24 +163,22 @@ msgid "Allows to work in a multi currency environment"
 msgstr "多通貨環境で運用可能にする"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_voip
-msgid "Asterisk (VoIP)"
-msgstr "アスタリスク(VoIP)"
-
-#. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Automatically enrich your contact base with company data"
-msgstr "連絡先レコードに会社データを自動的に追加します"
+msgstr "連絡先レコードに会社データを自動的に追加"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Automatically generate counterpart documents for orders/invoices between companies"
-msgstr "会社間でオーダ/請求書の対応ドキュメントを自動生成"
+msgid "Automatically generate counterpart documents in recipient companies"
+msgstr "宛先企業の相手先ドキュメントを自動生成"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "By default, new users get highest access rights for all installed apps."
-msgstr "デフォルトでは、新規ユーザーはインストールされているすべてのアプリに対して最高のアクセス権を取得します。"
+msgid ""
+"By default, new users get highest access rights for all installed apps. If "
+"unchecked, new users will only have basic employee access."
+msgstr ""
+"デフォルトでは、新規ユーザはインストールされている全てのアプリに対して最高のアクセス権を得ます。チェックを外すと、新規ユーザは基本的な従業員アクセス権のみとなります。"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -165,7 +188,7 @@ msgstr "ドキュメントレイアウトを設定"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_website_cf_turnstile
 msgid "Cloudflare Turnstile"
-msgstr ""
+msgstr "Cloudflare Turnstile"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -180,7 +203,7 @@ msgstr "会社"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_country_code
 msgid "Company Country Code"
-msgstr ""
+msgstr "会社所在国コード"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_informations
@@ -204,8 +227,10 @@ msgstr "ドキュメントレイアウトを設定"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."
-msgstr "会社のルールを構成して、貴方の会社の1つが別の貴方の会社に販売/購入したときにSO/POを自動的に作成します。"
+msgid ""
+"Configure company rules to automatically create SO/PO when one of your "
+"company sells/buys to another of your company."
+msgstr "会社の規則を構成して、あなたの会社の1つが別のあなたの会社に販売/購入した時に販売/購買オーダを自動的に作成します。"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -232,7 +257,7 @@ msgstr "デフォルトのユーザーテンプレートが見つかりません
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Document Layout"
-msgstr ""
+msgstr "ドキュメントレイアウト"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_report_layout_id
@@ -241,17 +266,14 @@ msgstr "帳票テンプレート"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Documentation"
-msgstr "ドキュメント"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Edit Layout"
 msgstr "レイアウトの編集"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Enable the profiling tool. Profiling may impact performance while being active."
+msgid ""
+"Enable the profiling tool. Profiling may impact performance while being "
+"active."
 msgstr "プロファイリングツールを有効化します。プロファイリングを有効にすると、パフォーマンスに影響が出る場合があります。"
 
 #. module: base_setup
@@ -271,29 +293,24 @@ msgid "General Settings"
 msgstr "一般設定"
 
 #. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Geo Localization"
-msgstr "ジオローカリゼーション"
-
-#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_geolocalize
 msgid "GeoLocalize"
 msgstr "地図表示"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "GeoLocalize your partners"
-msgstr "連絡先をジオローカライズする"
+msgid "Geolocate your partners"
+msgstr "取引先をジオローカライズする"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Geolocation"
+msgstr "ジオロケーション"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_product_images
 msgid "Get product pictures using barcode"
-msgstr ""
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Google Calendar"
-msgstr "Googleカレンダ"
+msgstr "バーコードでプロダクト画像を取得"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_ir_http
@@ -319,6 +336,11 @@ msgstr "連携"
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Inter-Company Transactions"
 msgstr "会社間取引"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__is_root_company
+msgid "Is Root Company"
+msgstr "ルート会社"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_ldap
@@ -349,7 +371,7 @@ msgstr "APIキーを管理"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Companies"
-msgstr "マルチ会社管理"
+msgstr "複数会社管理"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_account_inter_company_rules
@@ -393,18 +415,8 @@ msgstr "OAuth認証"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "On Apple Store"
-msgstr "アップルストアにて"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "On Google Play"
-msgstr "Google Playにて"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Outlook Calendar"
-msgstr "Outlook カレンダー"
+msgid "Odoo"
+msgstr "Odoo"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_partner_autocomplete
@@ -419,7 +431,7 @@ msgstr "パフォーマンス"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Permissions"
-msgstr "許可"
+msgstr "権限"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -433,13 +445,23 @@ msgstr "プロファイリング有効期間"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Progressive Web App"
+msgstr "プログレッシブウェブアプリ"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Protect your forms from spam and abuse."
 msgstr "フォームをスパムや悪用から保護します。"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Protect your forms with CF Turnstile."
-msgstr ""
+msgstr "CF Turnstileでフォームを保護"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_sms
+msgid "SMS"
+msgstr "SMS"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -467,21 +489,20 @@ msgid "Show Effect"
 msgstr "エフェクト表示"
 
 #. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Synchronize your calendar with Google Calendar"
-msgstr "OdooカレンダをGoogleカレンダーと同期"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Synchronize your calendar with Outlook"
-msgstr "カレンダーをOutlookと同期"
-
-#. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__company_country_code
 msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"ISOの国別コードは2文字です。\n"
+"これを使ってクイックサーチできます。"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"This name will be used for the application when Odoo is installed through "
+"the browser."
+msgstr "この名前はブラウザからOdooをインストールする際に使用されます。"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_web_unsplash
@@ -492,11 +513,6 @@ msgstr "Unsplash 画像ライブラリ"
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Update Info"
 msgstr "会社情報更新"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_email_server_default
-msgid "Use Custom Email Servers"
-msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -511,7 +527,7 @@ msgstr "ログインに外部アカウント(Google、Facebook等)を使用"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_oauth
 msgid "Use external authentication providers (OAuth)"
-msgstr "外部認証プロバイダを使用する (OAuth)"
+msgstr "外部認証プロバイダーを使用する (OAuth)"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_res_users
@@ -530,11 +546,20 @@ msgid "VAT"
 msgstr "VAT（Value Added Tax）"
 
 #. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_voip
+msgid "VoIP"
+msgstr "VoIP"
+
+#. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "When populating your address book, Odoo provides a list of matching companies. When selecting one item, the company data and logo are auto-filled."
-msgstr "アドレス帳にデータを入力すると、Odooは一致する会社のリストを提供します。 1つのアイテムを選択すると、会社のデータとロゴが自動的に入力されます"
+msgid ""
+"When populating your address book, Odoo provides a list of matching "
+"companies. When selecting one item, the company data and logo are auto-"
+"filled."
+msgstr ""
+"アドレス帳にデータを入力すると、Odooは一致する会社のリストを提供します。 1つのアイテムを選択すると、会社のデータとロゴが自動的に入力されます"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_recaptcha
 msgid "reCAPTCHA"
-msgstr ""
+msgstr "reCAPTCHA"

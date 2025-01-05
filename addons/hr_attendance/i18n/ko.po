@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_attendance
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Sarah Park, 2023
-#
+# Wil Odoo, 2024
+# Daye Jeong, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
-"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_attendance
@@ -29,89 +29,119 @@ msgstr "\"퇴근\" 시간은 \"출근\" 시간보다 빠를 수 없습니다."
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
-msgid "%(empl_name)s from %(check_in)s"
-msgstr "%(empl_name)s %(check_in)s 출근"
-
-#. module: hr_attendance
-#. odoo-python
-#: code:addons/hr_attendance/models/hr_attendance.py:0
-msgid "%(empl_name)s from %(check_in)s to %(check_out)s"
-msgstr "%(empl_name)s %(check_in)s 출근 %(check_out)s 퇴근"
+msgid "%(worked_hours)s (%(check_in)s-%(check_out)s)"
+msgstr "%(worked_hours)s (%(check_in)s-%(check_out)s)"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "%(hours)s hours, %(minutes)s minutes"
-msgstr ""
-
-#. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/my_attendances/my_attendances.xml:0
-msgid ": Your user should be linked to an employee to use attendance."
-msgstr ""
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "'Documentation'"
+msgstr "'문서'"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
-msgid "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
-msgstr "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
+msgid "<i class=\"fa fa-calendar me-1\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
+msgstr "<i class=\"fa fa-calendar me-1\" aria-label=\"기간\" role=\"img\" title=\"기간\"/>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Installation Manual"
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>설치 가이드"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
+msgid ""
+"<span class=\"fa fa-circle text-success me-1\" role=\"img\" aria-"
+"label=\"Available\" title=\"Available\"/>"
+msgstr ""
+"<span class=\"fa fa-circle text-success me-1\" role=\"img\" aria-label=\"근무 "
+"가능\" title=\"근무 가능\"/>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
+msgid ""
+"<span class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
+"                                    </span>"
+msgstr ""
+"<span class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"근무 불가\" title=\"근무 불가\">\n"
+"                                    </span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span class=\"me-2\">Time Period </span>"
+msgstr "<span class=\"me-2\">기간 </span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span class=\"me-2\">Time Period</span>"
+msgstr "<span class=\"me-2\">기간</span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span class=\"me-2\">Tolerance</span>"
+msgstr "<span class=\"me-2\">허용 오차 범위</span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span class=\"ms-2\">Hours</span>"
+msgstr "<span class=\"ms-2\">시간</span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"<span class=\"ms-2\">Minutes</span>\n"
+"                                <br/>\n"
+"                                <br/>"
+msgstr ""
+"<span class=\"ms-2\">분</span>\n"
+"                                <br/>\n"
+"                                <br/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid ""
 "<span class=\"o_stat_text\">\n"
-"                            Last Month\n"
+"                            This Month\n"
 "                        </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                            지난 달\n"
+"                            이번 달\n"
 "                        </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Extra Hours</span>"
-msgstr ""
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
-msgid "<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-success me-1\" role=\"img\" aria-label=\"Available\" title=\"Available\"/>"
-msgstr ""
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
-msgid ""
-"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
-"                                    </span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">추가 시간</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span> Minutes</span>"
-msgstr ""
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-msgid ""
-"<span> Minutes</span>\n"
-"                                <br/>\n"
-"                                <br/>"
-msgstr ""
+msgstr "<span> 분</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span> seconds</span>"
-msgstr ""
+msgstr "<span> 초</span>"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__absence_management
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__absence_management
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-msgid "<span>Time Period </span>"
-msgstr ""
+msgid "Absence Management"
+msgstr "결근 관리"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-msgid "Activate the count of employees' extra hours."
-msgstr ""
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_needaction
+msgid "Action Needed"
+msgstr "조치 필요"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Active Employees"
+msgstr "현직 직원"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -133,68 +163,136 @@ msgid "Administrator"
 msgstr "관리자"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-msgid "Allow a period of time (around working hours) where extra time will not be counted, in benefit of the company"
-msgstr ""
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
+msgid "All"
+msgstr "전체"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.js:0
+msgid "All departments"
+msgstr "전체 부서"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-msgid "Allow a period of time (around working hours) where extra time will not be deducted, in benefit of the employee"
-msgstr ""
+msgid "Allow Users to Check in/out from Odoo."
+msgstr "사용자가 Odoo에서 체크인/체크아웃하도록 허용합니다."
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Allow a period of time (around working hours) where extra time will not be "
+"counted, in benefit of the company"
+msgstr "회사의 이익을 위해 추가 근무가 계산되지 않는 기간(근무 시간 전후)을 허용합니다."
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Allow a period of time (around working hours) where extra time will not be "
+"deducted, in benefit of the employee"
+msgstr "직원의 이익을 위해 추가 근무가 공제되지 않는 기간(근무 시간 전후)을 허용합니다."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 msgid "Amount of extra hours"
+msgstr "추가 근무 시간 금액"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
+msgid "Approve"
+msgstr "결재하기"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Approve Extra Hours"
+msgstr "연장 근무 승인"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__overtime_status__approved
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+msgid "Approved"
+msgstr "결재 완료"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_overtime_validation__by_manager
+msgid "Approved by Manager"
+msgstr "관리자 승인"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Archived Employees"
+msgstr "보관된 직원"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "At Work"
+msgstr "직장"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_attachment_count
+msgid "Attachment Count"
+msgstr "첨부 파일 수"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+#: model:ir.model,name:hr_attendance.model_hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_ids
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "Attendance"
+msgstr "출근"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_manager_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__attendance_manager_id
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__attendance_manager_id
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employee_search_view
+msgid "Attendance Approver"
 msgstr ""
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "An apple a day keeps the doctor away"
-msgstr "하루 사과 한 알이면 의사가 필요 없어요."
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_from_systray
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_from_systray
+msgid "Attendance From Systray"
+msgstr "Systray에서 출석"
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Another good day's work! See you soon!"
-msgstr "또 좋은 하루 되세요! 곧 뵙죠!"
-
-#. module: hr_attendance
-#: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
-#: model:ir.model,name:hr_attendance.model_hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_ids
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_pivot
-msgid "Attendance"
-msgstr "참석"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_report_action
-#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_report_action_filtered
-msgid "Attendance Analysis"
-msgstr "근태 분석"
+#: model:ir.actions.client,name:hr_attendance.hr_attendance_action_install_kiosk_pwa
+msgid "Attendance Kiosk"
+msgstr "근태 키오스크"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_delay
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_delay
 msgid "Attendance Kiosk Delay"
-msgstr ""
+msgstr "키오스크 출근 지연"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_key
+msgid "Attendance Kiosk Key"
+msgstr "키오스크 출근 키"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_url
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_url
+msgid "Attendance Kiosk Url"
+msgstr "키오스크 출근 Url"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_mode
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_mode
 msgid "Attendance Mode"
-msgstr ""
+msgstr "출근 모드"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_overtime
 msgid "Attendance Overtime"
-msgstr ""
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance_report
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_graph
-msgid "Attendance Statistics"
-msgstr ""
+msgstr "시간 외 근무 출석"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_state
@@ -204,102 +302,217 @@ msgid "Attendance Status"
 msgstr "근태 상황"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Attendance with barcode"
+msgstr "바코드를 사용한 출석"
+
+#. module: hr_attendance
+#: model:ir.actions.server,name:hr_attendance.hr_attendance_check_out_cron_ir_actions_server
+msgid "Attendance: Automatically check-out employees"
+msgstr "근태: 직원 자동 체크아웃"
+
+#. module: hr_attendance
+#: model:ir.actions.server,name:hr_attendance.hr_attendance_absence_cron_ir_actions_server
+msgid "Attendance: Detect Absences for employees"
+msgstr "근태: 직원 결근 파악"
+
+#. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
-#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_employee
-#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_overview
-#: model:ir.actions.client,name:hr_attendance.hr_attendance_action_kiosk_mode
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_attendances_overview
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_reporting
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_root
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_attendances
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_department_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Attendances"
 msgstr "근태 관리"
 
 #. module: hr_attendance
-#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__back
-msgid "Back Camera"
-msgstr ""
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_employee.py:0
+#: code:addons/hr_attendance/models/res_users.py:0
+msgid "Attendances This Month"
+msgstr "이번 달 출석"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Attendances from Backend"
+msgstr "백엔드에서 출석"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__auto_check_out_tolerance
+msgid "Auto Check Out Tolerance"
+msgstr "자동 체크아웃 허용 오차"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__auto_check_out
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__auto_check_out
+msgid "Automatic Check Out"
+msgstr "자동 체크 아웃"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__out_mode__auto_check_out
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Automatic Check-Out"
+msgstr "자동 체크 아웃"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_overtime_validation__no_validation
+msgid "Automatically Approved"
+msgstr "자동으로 승인"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Automatically Check-Out Employees based on their working schedule with an "
+"additional tolerance."
+msgstr "근무 일정에 따라 직원을 자동으로 체크 아웃하고 허용 시간을 추가합니다."
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Automatically Checked-Out"
+msgstr "자동으로 체크 아웃"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/kiosk_mode/kiosk_mode.xml:0
-msgid "Barcode"
-msgstr "바코드"
+#: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
+msgid "Back"
+msgstr "뒤로"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__back
+msgid "Back Camera"
+msgstr "후면 카메라"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Badge with Barcode"
+msgstr "바코드가 있는 배지"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Badge with Barcode on Tablet"
+msgstr "태블릿에 바코드가 있는 배지"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
+msgid "Balance"
+msgstr "잔액"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__barcode
 msgid "Barcode / RFID"
-msgstr ""
+msgstr "바코드 / RFID"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__barcode_manual
 msgid "Barcode / RFID and Manual Selection"
-msgstr ""
+msgstr "바코드 / RFID 및 수동 선택"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_barcode_source
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_barcode_source
 msgid "Barcode Source"
+msgstr "바코드 인식"
+
+#. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance__in_country_name
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance__out_country_name
+msgid "Based on IP Address"
+msgstr "IP 주소 기준"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "기본 직원"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
+msgid "Before"
+msgstr "이전"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_browser
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+msgid "Browser"
+msgstr "브라우저"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Can be converted as Time Off (cfr Time Off configuration)."
+msgstr "휴가로 전환할 수 있습니다 (휴가 설정 참조)."
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+msgid ""
+"Cannot create new attendance record for %(empl_name)s, the employee hasn't "
+"checked out since %(datetime)s"
 msgstr ""
+"%(empl_name)s에 대한 새 근태 기록을 작성할 수 없습니다. %(datetime)s 이후 직원이 퇴근하지 않았습니다."
 
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
-msgid "Cannot create new attendance record for %(empl_name)s, the employee hasn't checked out since %(datetime)s"
-msgstr "%(empl_name)s에 대한 새 근태 기록을 작성할 수 없습니다. %(datetime)s 이후 직원이 퇴근하지 않았습니다."
-
-#. module: hr_attendance
-#. odoo-python
-#: code:addons/hr_attendance/models/hr_attendance.py:0
-msgid "Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s"
+msgid ""
+"Cannot create new attendance record for %(empl_name)s, the employee was "
+"already checked in on %(datetime)s"
 msgstr "%(empl_name)s에 대한 새 근태 기록을 작성할 수 없습니다. 직원이 이미 %(datetime)s에 출근하였습니다."
 
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_employee.py:0
-msgid "Cannot perform check out on %(empl_name)s, could not find corresponding check in. Your attendances have probably been modified manually by human resources."
-msgstr "%(empl_name)s의 퇴근을 수행할 수 없습니다. 해당 직원의 출근을 찾을 수 없습니다. 참석자는 인사부서에서 수동으로 수정했을 수 있습니다."
+msgid ""
+"Cannot perform check out on %(empl_name)s, could not find corresponding "
+"check in. Your attendances have probably been modified manually by human "
+"resources."
+msgstr ""
+"%(empl_name)s의 퇴근을 수행할 수 없습니다. 해당 직원의 출근을 찾을 수 없습니다. 참석자는 인사부서에서 수동으로 수정했을 수"
+" 있습니다."
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/check_in_out/check_in_out.xml:0
 msgid "Check IN"
-msgstr ""
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_in
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__check_in
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_check_in
-#: model:ir.model.fields,field_description:hr_attendance.field_res_users__last_check_in
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
-msgid "Check In"
 msgstr "출근"
 
 #. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
-msgid "Check In / Check Out"
-msgstr "출근 / 퇴근"
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_in
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_check_in
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__last_check_in
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__last_check_in
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+msgid "Check In"
+msgstr "출근"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/check_in_out/check_in_out.xml:0
 msgid "Check OUT"
-msgstr ""
+msgstr "퇴근"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_out
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_check_out
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__last_check_out
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__last_check_out
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Check Out"
 msgstr "퇴근"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-msgid "Check-In/Out in Kiosk Mode"
-msgstr ""
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
+msgid "Check in"
+msgstr "체크인"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
+msgid "Check out"
+msgstr "체크아웃"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_in
@@ -307,14 +520,58 @@ msgid "Checked in"
 msgstr "출근함"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+msgid "Checked in at"
+msgstr "출근시간"
+
+#. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_out
 msgid "Checked out"
 msgstr "퇴근함"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+msgid "Checked out at"
+msgstr "퇴근시간"
+
+#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Choose how long the greeting message will be displayed."
-msgstr ""
+msgstr "인사말 메시지가 표시되는 시간을 선택합니다."
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Choose how to record attendances"
+msgstr "출석 기록 방법 선택하기"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_city
+msgid "City"
+msgstr "시/군/구"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "City (In)"
+msgstr "도시 (In)"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "City (Out)"
+msgstr "도시 (Out)"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Close"
+msgstr "닫기"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__color
+msgid "Color"
+msgstr "색상"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_company
@@ -323,46 +580,45 @@ msgstr "회사"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__company_id
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__company_id
 msgid "Company"
 msgstr "회사"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/kiosk_mode/kiosk_mode.xml:0
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Company Logo"
 msgstr "회사 로고"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-msgid "Compare attendance with working hours set on employee."
-msgstr ""
-
-#. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_config_settings
 msgid "Config Settings"
-msgstr "설정 구성"
+msgstr "환경설정"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_settings
 msgid "Configuration"
-msgstr "구성"
+msgstr "설정"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_res_company__hr_attendance_overtime
-#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__hr_attendance_overtime
-msgid "Count Extra Hours"
-msgstr ""
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Connect an RFID reader, and scan a token."
+msgstr "RFID 리더기를 연결하고 토큰을 스캔합니다."
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-msgid "Count of Extra Hours"
-msgstr ""
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_country_name
+msgid "Country"
+msgstr "국가"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-msgid "Count of extra hours is considered from this date. Potential extra hours prior to this date are not considered."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Country (In)"
+msgstr "국가 (In)"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Country (Out)"
+msgstr "국가 (Out)"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -382,6 +638,17 @@ msgid "Created on"
 msgstr "작성일자"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+msgid "Currently Working"
+msgstr "현재 작업 중"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_overtime_search
+msgid "Date"
+msgstr "날짜"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__date
 msgid "Day"
 msgstr "일"
@@ -389,68 +656,97 @@ msgstr "일"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Define the camera used for the barcode scan."
-msgstr ""
+msgstr "바코드 스캔에 사용될 카메라를 설정합니다."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Define the way the user will be identified by the application."
-msgstr ""
+msgstr "앱에서 사용자를 식별하는 방법을 정의합니다."
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Departement"
+msgstr "부서"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__department_id
 msgid "Department"
 msgstr "부서"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
+msgid "Difference"
+msgstr "차액"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__hr_attendance_display_overtime
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__hr_attendance_display_overtime
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__display_extra_hours
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Display Extra Hours"
+msgstr "추가 시간 표시"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Display Extra Hours in Kiosk mode and on User profile."
+msgstr "키오스크 모드와 사용자 프로필에 추가 근무 시간을 표시합니다."
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Display Extra Hours."
+msgstr "추가 근무 시간 표시."
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__display_name
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__display_name
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__display_name
 msgid "Display Name"
 msgstr "표시명"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Display Time"
-msgstr ""
+msgstr "디스플레이 시간"
 
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
-msgid "Do not have access, user cannot edit the attendances that are not his own."
-msgstr ""
-
-#. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Early to bed and early to rise, makes a man healthy, wealthy and wise"
-msgstr "일찍 일어나고 일찍 자는 것은 남자를 건강하게 하고, 부자로 만들고, 현명하게 합니다."
-
-#. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Eat breakfast as a king, lunch as a merchant and supper as a beggar"
-msgstr "아침은 왕으로, 점심은 상인으로, 저녁은 거지로 먹습니다."
+msgid ""
+"Do not have access, user cannot edit the attendances that are not his own."
+msgstr "액세스 권한이 없는 사용자는 다른 사람의 근태를 수정할 수 없습니다."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__employee_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__employee_id
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__employee_id
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_overtime_search
 msgid "Employee"
 msgstr "임직원"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__group_attendance_use_pin
-msgid "Employee PIN"
-msgstr "사원번호"
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
+msgid "Employee Avatar"
+msgstr "직원 아바타"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_use_pin
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_use_pin
+msgid "Employee PIN Identification"
+msgstr "직원 PIN 인증"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
 msgid "Employee attendances"
 msgstr "직원 근태"
 
@@ -460,109 +756,112 @@ msgid "Employees"
 msgstr "임직원 관리"
 
 #. module: hr_attendance
-#: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
-msgid "Enable PIN use"
-msgstr "사원번호 사용 활성화"
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
+msgid "Error: could not find corresponding employee."
+msgstr "오류 : 해당 직원을 찾을 수 없습니다."
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Errors"
+msgstr "오류"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__expected_hours
+msgid "Expected Hours"
+msgstr "예상 시간"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_overtime_action
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__validated_overtime_hours
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__duration
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__overtime_hours
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_validated_hours_employee_simple_tree_view
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
 msgid "Extra Hours"
-msgstr ""
+msgstr "추가 시간"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__duration_real
 msgid "Extra Hours (Real)"
-msgstr ""
+msgstr "추가 근무 시간 (실제)"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_start_date
-#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_start_date
-msgid "Extra Hours Starting Date"
-msgstr ""
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_overtime_validation
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_overtime_validation
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Extra Hours Validation"
+msgstr "추가 근무 시간 확인"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+msgid "Extra hours"
+msgstr "추가 시간"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime__duration_real
 msgid "Extra-hours including the threshold duration"
-msgstr ""
+msgstr "임계값 기간을 포함한 추가 근무"
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "First come, first served"
-msgstr "선착순 우선"
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_follower_ids
+msgid "Followers"
+msgstr "팔로워"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "팔로워 (협력사)"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+msgid "From %s"
+msgstr "%s에서"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__front
 msgid "Front Camera"
-msgstr ""
+msgstr "전면 카메라"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+msgid "GPS Coordinates"
+msgstr "GPS 좌표"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Generate new URL"
+msgstr "새 URL 만들기"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Glad to have you back, it's been a while!"
-msgstr "다시 오셔서 기뻐요, 오랜만이에요!"
+#: code:addons/hr_attendance/static/src/components/card_layout/card_layout.xml:0
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+#: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
+#: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
+msgid "Go back"
+msgstr "돌아가기"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Good afternoon"
-msgstr "좋은 오후예요."
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+msgid "Goodbye"
+msgstr "잘가요."
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Good evening"
-msgstr "안녕하세요."
-
-#. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Good morning"
-msgstr "좋은 아침이에요."
-
-#. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Good night"
-msgstr "안녕히 주무세요."
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_overtime_search
 msgid "Group By"
 msgstr "그룹별"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
-msgid "HR Attendance Search"
-msgstr ""
-
-#. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Have a good afternoon"
-msgstr "좋은 오후 되세요."
-
-#. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Have a good day!"
-msgstr "좋은 하루 보내세요!"
-
-#. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Have a good evening"
-msgstr "좋은 밤 되세요."
-
-#. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Have a nice lunch!"
-msgstr "점심 맛있게 드세요!"
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__has_message
+msgid "Has Message"
+msgstr "메시지 있음"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -583,15 +882,27 @@ msgid "Hours Last Month Display"
 msgstr "지난 달 표시된 시간"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_previously_today
+msgid "Hours Previously Today"
+msgstr "오늘 이전 시간"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+msgid "Hours Previously Today:"
+msgstr "오늘 이전 시간:"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_today
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_today
 msgid "Hours Today"
 msgstr "오늘 근무 시간"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__worked_hours
-msgid "Hours Worked"
-msgstr ""
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+msgid "Hours Today:"
+msgstr "오늘 근무 시간:"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -601,32 +912,108 @@ msgstr "인사 근태 검색"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__id
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__id
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__id
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__id
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_ip_address
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+msgid "IP Address"
+msgstr "IP 주소"
+
+#. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/kiosk_mode/kiosk_mode.xml:0
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Identify Manually"
-msgstr ""
+msgstr "수동으로 확인"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"If checked, days not covered by an attendance will be visible in the Report."
+msgstr "이 옵션을 선택하면 출근으로 처리되지 않은 날짜가 보고서에 표시됩니다."
+
+#. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "선택할 경우, 새로운 메시지에 주의를 기울여야 합니다."
+
+#. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance__message_has_error
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "이 옵션을 선택하면 일부 메시지가 잘못 전달될 수 있습니다."
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Input Mode (In)"
+msgstr "입력 모드 (In)"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Input Mode (Out)"
+msgstr "입력 모드 (Out)"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "If a job is worth doing, it is worth doing well!"
-msgstr "만약 어떤 일이 할 가치가 있다면, 그것은 잘할 가치가 있어요!"
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+msgid "Invalid request"
+msgstr "잘못된 요청"
 
 #. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_no_user_mode
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_is_follower
+msgid "Is Follower"
+msgstr "팔로워입니다."
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__is_manager
+msgid "Is Manager"
+msgstr "관리자"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__in_mode__kiosk
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__out_mode__kiosk
+msgid "Kiosk"
+msgstr "키오스크"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_action_open_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Kiosk Mode"
 msgstr "키오스크 모드"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Kiosk Mode Adress"
+msgstr "키오스크 모드 주소"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Kiosk Settings"
+msgstr "키오스크 설정"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_overtime_search
+msgid "Last 3 Months"
+msgstr "최근 3개월"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_attendance_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__last_attendance_id
 msgid "Last Attendance"
 msgstr "최근 근태"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_attendance_worked_hours
+msgid "Last Attendance Worked Hours"
+msgstr "마지막 출근 근무 시간"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_uid
@@ -641,14 +1028,90 @@ msgid "Last Updated on"
 msgstr "최근 갱신 일자"
 
 #. module: hr_attendance
-#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__manual
-msgid "Manual Selection"
-msgstr ""
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_latitude
+msgid "Latitude"
+msgstr "위도"
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_ir_ui_menu
-msgid "Menu"
-msgstr "메뉴"
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Latitude (In)"
+msgstr "위도 (In)"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Latitude (Out)"
+msgstr "위도 (Out)"
+
+#. module: hr_attendance
+#: model:ir.actions.server,name:hr_attendance.action_load_demo_data
+msgid "Load demo data"
+msgstr "데모 데이터 불러오기"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+msgid "Load sample data"
+msgstr "샘플 데이터 불러오기"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+msgid "Localisation"
+msgstr "현지화"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_longitude
+msgid "Longitude"
+msgstr "경도"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Longitude (In)"
+msgstr "경도 (In)"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Longitude (Out)"
+msgstr "경도 (Out)"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_management_action
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_attendances_management
+msgid "Management"
+msgstr "관리"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Manager"
+msgstr "관리자"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__in_mode__manual
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__out_mode__manual
+msgid "Manual"
+msgstr "수동"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Manual Attendance"
+msgstr "수동 근태 관리"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Manual Attendance or with barcode"
+msgstr "수동 근무 확인 또는 바코드 사용"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__manual
+msgid "Manual Selection"
+msgstr "수동 선택"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Manually (optional PIN)"
+msgstr "수동 (비밀번호 옵션)"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
@@ -656,47 +1119,181 @@ msgid "Message"
 msgstr "메시지"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_has_error
+msgid "Message Delivery error"
+msgstr "메시지 전송 오류"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_ids
+msgid "Messages"
+msgstr "메시지"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Method"
+msgstr "방법"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_mode
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+msgid "Mode"
+msgstr "모드"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Modes"
+msgstr "모드"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "My Attendances"
 msgstr "나의 근태기록"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
-msgid "No Check Out"
-msgstr "퇴근 안함"
+msgid "My Team"
+msgstr "나의 팀"
 
 #. module: hr_attendance
-#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "No Badge defined on employees. Set one to test."
+msgstr "직원에게 지정되어 있는 배지가 없습니다. 테스트할 배지를 설정하세요."
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_management_action
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_reporting
 msgid "No attendance records found"
 msgstr "근태 기록을 찾을 수 없습니다."
 
 #. module: hr_attendance
-#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
-#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_overview
-msgid "No attendance records to display"
-msgstr "표시할 근태 기록이 없습니다."
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.js:0
+msgid "No employee corresponding to Badge ID '%(barcode)s.'"
+msgstr "배지 ID '%(barcode)s'에 해당하는 직원이 없습니다."
+
+#. module: hr_attendance
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_overtime_action
+msgid "No overtime records found"
+msgstr "초과 근무 기록이 없습니다."
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_needaction_counter
+msgid "Number of Actions"
+msgstr "작업 수"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_has_error_counter
+msgid "Number of errors"
+msgstr "오류 수"
+
+#. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "조치가 필요한 메시지 수입니다."
+
+#. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "전송 오류가 발생한 메시지 수입니다."
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+msgid "OK"
+msgstr "확인"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Odoo Logo"
+msgstr "Odoo 로고"
+
+#. module: hr_attendance
+#: model:res.groups,name:hr_attendance.group_hr_attendance_officer
+msgid "Officer: Manage attendances"
+msgstr "담당자: 근태 관리"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_browser
+msgid "Out Browser"
+msgstr "브라우저 종료"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_city
+msgid "Out City"
+msgstr "근무지 외"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_country_name
+msgid "Out Country Name"
+msgstr "출국 국가 이름"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_ip_address
+msgid "Out Ip Address"
+msgstr "외부 IP 주소"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_latitude
+msgid "Out Latitude"
+msgstr "외부 위도"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_longitude
+msgid "Out Longitude"
+msgstr "외부 경도"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_mode
+msgid "Out Mode"
+msgstr "외근 모드"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__overtime_hours
+msgid "Over Time"
+msgstr "추가 근무"
 
 #. module: hr_attendance
 #. odoo-python
-#: code:addons/hr_attendance/models/hr_employee.py:0
-msgid "No employee corresponding to Badge ID '%(barcode)s.'"
-msgstr ""
-
-#. module: hr_attendance
-#: model:res.groups,name:hr_attendance.group_hr_attendance_user
-msgid "Officer: Manage all attendances"
-msgstr ""
-
-#. module: hr_attendance
+#: code:addons/hr_attendance/models/res_users.py:0
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__overtime_ids
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_overtime_graph
 msgid "Overtime"
 msgstr "초과근무"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__overtime_status
+msgid "Overtime Status"
+msgstr "초과 근무 현황"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_attendances
+msgid "Overview"
+msgstr "전체보기"
+
+#. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/my_attendances/my_attendances.xml:0
-msgid "Please contact your administrator."
-msgstr ""
+#: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
+msgid "Please enter your PIN to"
+msgstr "사원번호를 입력해 주십시오."
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+#: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
+msgid "Please return to the main menu."
+msgstr "주 메뉴로 돌아가 주세요."
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Powered by"
+msgstr "Powered by"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee_public
@@ -704,13 +1301,58 @@ msgid "Public Employee"
 msgstr "일반 직원"
 
 #. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "RFID Token with reader"
+msgstr "리더기가 있는 RFID 토큰"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "RFID Token with reader on tablet"
+msgstr "태블릿에 리더기가 있는 RFID 토큰"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__rating_ids
+msgid "Ratings"
+msgstr "평가"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+msgid "Ready to track attendances ?"
+msgstr "근태 내역을 추적할 준비가 되셨나요?"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
+msgid "Refuse"
+msgstr "반려"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Refuse Extra Hours"
+msgstr "초과 근무 거부"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__overtime_status__refused
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+msgid "Refused"
+msgstr "반려됨"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_reporting
 msgid "Reporting"
 msgstr "보고"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS 전송 오류"
+
+#. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/kiosk_mode/kiosk_mode.xml:0
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Scan your badge"
 msgstr "배치 검색"
 
@@ -720,9 +1362,27 @@ msgid "Scanner"
 msgstr "스캐너"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
+msgid "Search..."
+msgstr "검색.."
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Select on Tablet"
+msgstr "태블릿에서 선택"
+
+#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
-msgstr "직원 상세 양식에서 사원번호 선택(인사 설정 탭에서)."
+msgstr "직원 서식에서 사원 번호를 설정합니다. (인사 관리 설정 탭에서 확인 가능)"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Set my badge"
+msgstr "내 배지 설정"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
@@ -730,139 +1390,297 @@ msgid "Settings"
 msgstr "설정"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-msgid "Start from"
-msgstr "다음에서 시작"
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
+msgid "Sign out"
+msgstr "로그아웃"
 
 #. module: hr_attendance
-#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
-#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
+msgid "Since"
+msgstr "다음 기간 이후"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__in_mode__systray
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__out_mode__systray
+msgid "Systray"
+msgstr "Systray"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__in_mode__technical
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__out_mode__technical
+msgid "Technical"
+msgstr "기술"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
 msgid "The attendance records of your employees will be displayed here."
 msgstr "직원들의 출석 기록이 여기에 표시됩니다."
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "The early bird catches the worm"
-msgstr "일찍 일어나는 새가 벌레를 잡아요."
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_management_action
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_reporting
+msgid "The attendance reporting of your employees will be displayed here."
+msgstr "직원들의 근태 기록이 여기에 표시됩니다."
 
 #. module: hr_attendance
-#: model:res.groups,comment:hr_attendance.group_hr_attendance_kiosk
-msgid "The user will be able to open the kiosk mode and validate the employee PIN."
-msgstr ""
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_overtime_action
+msgid "The overtime records of your employees will be displayed here."
+msgstr "This is where you can view the overtime records of your employees."
 
 #. module: hr_attendance
-#: model:res.groups,comment:hr_attendance.group_hr_attendance
-msgid "The user will gain access to the human resources attendance menu, enabling him to manage his own attendance."
-msgstr "사용자는 인사 담당자 출석 메뉴에 접근할 수 있으므로 자신의 참석 여부를 관리할 수 있습니다."
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance__attendance_manager_id
+#: model:ir.model.fields,help:hr_attendance.field_hr_employee__attendance_manager_id
+#: model:ir.model.fields,help:hr_attendance.field_hr_employee_public__attendance_manager_id
+#: model:ir.model.fields,help:hr_attendance.field_res_users__attendance_manager_id
+msgid ""
+"The user set in Attendance will access the attendance of the employee "
+"through the dedicated app and will be able to edit them."
+msgstr "출근 앱에 설정된 사용자는 전용 앱을 통해 직원의 출결 사항에 액세스하고 이를 편집할 수 있습니다."
 
 #. module: hr_attendance
-#: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
-msgid "The user will have to enter his PIN to check in and out manually at the company screen."
-msgstr "회사 화면에서 수동으로 출근하거나 퇴근하려면 사용자가 사원번호를 입력해야 합니다."
+#: model:res.groups,comment:hr_attendance.group_hr_attendance_own_reader
+msgid ""
+"The user will have access to his own attendances on his user / employee "
+"profile"
+msgstr "사용자는 사용자/직원 프로필에서 자신의 출결 사항에 액세스할 수 있습니다."
+
+#. module: hr_attendance
+#: model:res.groups,comment:hr_attendance.group_hr_attendance_officer
+msgid ""
+"The user will have access to the attendance records and reporting of "
+"employees where he's set as an attendance manager"
+msgstr "사용자는 자신이 출석 관리자로 설정된 직원의 출석 기록 및 보고에 액세스할 수 있습니다."
 
 #. module: hr_attendance
 #. odoo-python
-#: code:addons/hr_attendance/models/hr_employee.py:0
-msgid "To activate Kiosk mode without pin code, you must have access right as an Officer or above in the Attendance app. Please contact your administrator."
-msgstr ""
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+msgid ""
+"This attendance was automatically checked out because the employee exceeded "
+"the allowed time for their scheduled work hours."
+msgstr "직원이 허용된 근무 시간을 초과했기 때문에 이 출석이 자동으로 체크 아웃되었습니다. "
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+msgid ""
+"This attendance was automatically created to cover an unjustified absence on"
+" that day."
+msgstr "이 근태는 해당 날짜의 부당한 결근을 처리하기 위해 자동으로 생성되었습니다."
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__overtime_status__to_approve
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+msgid "To Approve"
+msgstr "결재 대기"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/my_attendances/my_attendances.xml:0
-msgid "Today's work hours:"
-msgstr "오늘 근무 시간"
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+msgid "Today"
+msgstr "오늘"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_company_threshold
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_company_threshold
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Tolerance Time In Favor Of Company"
-msgstr ""
+msgstr "회사에 유리한 허용 오차 시간"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_employee_threshold
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_employee_threshold
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Tolerance Time In Favor Of Employee"
-msgstr ""
+msgstr "직원에게 유리한 허용 오차 시간"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+msgid "Total"
+msgstr "합계"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__total_overtime
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__total_overtime
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__total_overtime
 msgid "Total Overtime"
-msgstr ""
+msgstr "총 초과 근무"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
+msgid "Total today"
+msgstr "금일 총계"
+
+#. module: hr_attendance
+#: model:ir.actions.server,name:hr_attendance.action_try_kiosk
+msgid "Try kiosk"
+msgstr "키오스크 사용해보기"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+msgid "Try the backend and reporting:"
+msgstr "백엔드 및 보고 기능을 사용해 보세요:"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+msgid "Try the kiosk"
+msgstr "키오스크 사용하기"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+msgid "Try the top"
+msgstr "상단의"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/controllers/main.py:0
+msgid "Unknown"
+msgstr "알 수 없음"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use PIN codes (defined on the Employee's profile) to check-in."
-msgstr ""
+msgstr "사원 번호(직원 프로필에 정의됨)를 사용하여 출퇴근을 확인합니다."
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Use this url to access your kiosk mode from any device."
+msgstr "이 URL을 사용하여 모든 기기에서 키오스크 모드에 액세스할 수 있습니다."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_users
-#: model:res.groups,name:hr_attendance.group_hr_attendance
 msgid "User"
 msgstr "사용자"
 
 #. module: hr_attendance
-#: model:res.groups,name:hr_attendance.group_hr_attendance_kiosk
-msgid "User: Only kiosk mode"
-msgstr ""
+#: model:res.groups,name:hr_attendance.group_hr_attendance_own_reader
+msgid "User: Read his own attendances"
+msgstr "사용자: 자신의 출석 확인"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+msgid "View on Maps"
+msgstr "지도에서 보기"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__website_message_ids
+msgid "Website Messages"
+msgstr "웹사이트 메시지"
+
+#. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance__website_message_ids
+msgid "Website communication history"
+msgstr "웹사이트 대화 기록"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/my_attendances/my_attendances.xml:0
-msgid "Want to check out?"
-msgstr "퇴근하실래요?"
-
-#. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/my_attendances/my_attendances.xml:0
-msgid "Warning"
-msgstr "경고"
-
-#. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/kiosk_mode/kiosk_mode.xml:0
-msgid "Welcome to"
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+msgid "Welcome"
 msgstr "환영합니다"
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/my_attendances/my_attendances.xml:0
-msgid "Welcome!"
-msgstr "환영합니다!"
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_employee_simple_tree_view
 msgid "Work Hours"
 msgstr "근무 시간"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
+msgid "Worked Extra Hours"
+msgstr "추가 근무 시간"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__worked_hours
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_view_pivot
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_validated_hours_employee_simple_tree_view
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_graph
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Worked Hours"
-msgstr "근무시간"
+msgstr "근무 시간"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
+msgid "Worked Time"
+msgstr "근무 시간"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
-msgid "Worked hours last month"
-msgstr "지난 달 업무 시간"
+msgid "Worked hours this month"
+msgstr "이번 달 업무 시간"
 
 #. module: hr_attendance
-#. odoo-python
-#: code:addons/hr_attendance/models/hr_employee.py:0
-msgid "Wrong PIN"
-msgstr "사원번호가 잘못되었습니다."
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.js:0
+msgid "Wrong Pin"
+msgstr "사원 번호가 잘못되었습니다."
 
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 msgid "You cannot duplicate an attendance."
-msgstr "근태는 복제할 수 없습니다."
+msgstr "근태 내역은 복사할 수 없습니다."
 
 #. module: hr_attendance
-#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_overview
-msgid "Your attendance records will be displayed here."
-msgstr ""
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+msgid "You don't have the rights to execute that action."
+msgstr "해당 작업을 실행할 수 있는 권한이 없습니다."
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.js:0
+msgid "Your badge Id is now set, you can scan your badge."
+msgstr "이제 배지 ID가 설정되었으며 배지를 스캔할 수 있습니다."
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.js:0
+msgid "Your badge has already been set."
+msgstr "배지가 이미 설정되어 있습니다."
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
+msgid "check in"
+msgstr "출근"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
+msgid "check out"
+msgstr "퇴근"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "e.g. 1102021021"
+msgstr "예: 1102021021"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+msgid "icon (e.g for work from home)"
+msgstr "아이콘 (예: 재택근무용)"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+msgid "or"
+msgstr "또는"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "with optional PIN code"
+msgstr "선택 사항으로 PIN 코드 포함"

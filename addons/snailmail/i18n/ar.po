@@ -1,30 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* snailmail
-#
+# 
 # Translators:
-# Mustafa J. Kadhem <safi2266@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Malaz Abuidris <msea@odoo.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
-"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__attachment_error
 msgid "ATTACHMENT_ERROR"
-msgstr ""
+msgstr "ATTACHMENT_ERROR"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_cover
@@ -41,7 +39,7 @@ msgstr "العنوان"
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/core/notification_group_model_patch.js:0
+#: code:addons/snailmail/static/src/core/failure_model_patch.js:0
 msgid "An error occurred when sending a letter with Snailmail."
 msgstr "حدث خطأ ما عند إرسال رسالة البريد العادي. "
 
@@ -103,7 +101,7 @@ msgstr "CREDIT_ERROR"
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
 msgid "Cancel"
-msgstr "إلغاء "
+msgstr "إلغاء"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
@@ -126,7 +124,7 @@ msgstr "إلغاء الإشعار بالفشل"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__canceled
-msgid "Canceled"
+msgid "Cancelled"
 msgstr "تم الإلغاء "
 
 #. module: snailmail
@@ -142,10 +140,9 @@ msgstr "المدينة"
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "Close"
-msgstr "إغلاق "
+msgstr "إغلاق"
 
 #. module: snailmail
-#: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__color
 msgid "Color"
 msgstr "اللون"
@@ -153,7 +150,7 @@ msgstr "اللون"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_res_company
 msgid "Companies"
-msgstr "الشركات "
+msgstr "الشركات"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__company_id
@@ -234,7 +231,7 @@ msgstr "FORMAT_ERROR"
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/core_ui/snailmail_error.js:0
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_missing_required_fields_action
 msgid "Failed letter"
 msgstr "الرسالة الفاشلة "
@@ -318,7 +315,7 @@ msgstr "MISSING_REQUIRED_FIELDS"
 #: model:ir.model,name:snailmail.model_mail_message
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__message_id
 msgid "Message"
-msgstr "رسالة "
+msgstr "الرسالة"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_mail_notification
@@ -326,15 +323,9 @@ msgid "Message Notifications"
 msgstr "إشعارات الرسائل "
 
 #. module: snailmail
-#: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
-#: model:ir.model.fields,help:snailmail.field_mail_message__message_type
-msgid "Message type: email for email message, notification for system message, comment for other messages such as user replies"
-msgstr "نوع الرسالة: خيار بريد إلكتروني يعني وجود رسالة بريد إلكتروني، إشعار يعني وجود رسالة من النظام، تعليق يعني رسائل أخرى مثل ردود المستخدمين "
-
-#. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
 msgid "Model"
-msgstr "الكائن"
+msgstr "النموذج "
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__no_price_available
@@ -427,6 +418,11 @@ msgid "Send Now"
 msgstr "إرسال الآن"
 
 #. module: snailmail
+#: model:iap.service,description:snailmail.iap_service_snailmail
+msgid "Send your customer invoices and follow-up reports by post, worldwide."
+msgstr ""
+
+#. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__sent
@@ -449,6 +445,16 @@ msgstr "تم إرسال البريد التقليدي بنجاح "
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__notification_type__snail
 msgid "Snailmail"
 msgstr "البريد التقليدي "
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
+msgid "Snailmail Color"
+msgstr "لون البريد العادي "
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_cover_readonly
+msgid "Snailmail Cover Readonly"
+msgstr "غلاف البريد العادي للقراءة فقط "
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
@@ -515,11 +521,16 @@ msgid "Snailmail: process letters queue"
 msgstr "البريد العادي: معالجة قائمة انتظار الرسائل "
 
 #. module: snailmail
+#: model:iap.service,unit_name:snailmail.iap_service_snailmail
+msgid "Stamps"
+msgstr "طوابع بريدية"
+
+#. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state_id
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__state_id
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "State"
-msgstr "الحالة "
+msgstr "الولاية "
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state
@@ -562,8 +573,12 @@ msgstr "عنوان المستلم غير مكتمل "
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-msgid "The attachment of the letter could not be sent. Please check its content and contact the support if the problem persists."
-msgstr "تعذّر إرسال مرفقات الرسالة. يرجى تفقد محتوى المرفقات والتواصل مع الدعم في حال استمرت المشكلة. "
+msgid ""
+"The attachment of the letter could not be sent. Please check its content and"
+" contact the support if the problem persists."
+msgstr ""
+"تعذّر إرسال مرفقات الرسالة. يرجى تفقد محتوى المرفقات والتواصل مع الدعم في "
+"حال استمرت المشكلة. "
 
 #. module: snailmail
 #. odoo-python
@@ -574,13 +589,18 @@ msgstr "دولة الشريك خارج نطاق البريد العادي."
 #. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
-msgid "The country to which you want to send the letter is not supported by our service."
+msgid ""
+"The country to which you want to send the letter is not supported by our "
+"service."
 msgstr "لا تدعم خدمتنا الدولة التي ترغب في إرسال هذه الرسالة إليها. "
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
-msgid "The customer address is not complete. Update the address here and re-send the letter."
-msgstr "عنوان العميل غير مكتمل. قم بتحديث العنوان هنا ثم إعادة إرسال الرسالة. "
+msgid ""
+"The customer address is not complete. Update the address here and re-send "
+"the letter."
+msgstr ""
+"عنوان العميل غير مكتمل. قم بتحديث العنوان هنا ثم إعادة إرسال الرسالة. "
 
 #. module: snailmail
 #. odoo-python
@@ -591,8 +611,12 @@ msgstr "تم إرسال المستند بشكل صحيح عن طريق البر�
 #. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
-msgid "The letter could not be sent due to insufficient credits on your IAP account."
-msgstr "تعذر إرسال الرسالة بعدم وجود الرصيد الكافي في حساب الوكيل المدرك للهوية الخاص بك. "
+msgid ""
+"The letter could not be sent due to insufficient credits on your IAP "
+"account."
+msgstr ""
+"تعذر إرسال الرسالة بعدم وجود الرصيد الكافي في حساب الوكيل المدرك للهوية "
+"الخاص بك. "
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__message_type
@@ -621,6 +645,26 @@ msgid "Update address of partner"
 msgstr "تحديث عنوان الشريك "
 
 #. module: snailmail
+#: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
+#: model:ir.model.fields,help:snailmail.field_mail_message__message_type
+msgid ""
+"Used to categorize message generator\n"
+"'email': generated by an incoming email e.g. mailgateway\n"
+"'comment': generated by user input e.g. through discuss or composer\n"
+"'email_outgoing': generated by a mailing\n"
+"'notification': generated by system e.g. tracking messages\n"
+"'auto_comment': generated by automated notification mechanism e.g. acknowledgment\n"
+"'user_notification': generated for a specific recipient"
+msgstr ""
+"يُستخدم لوضع الرسائل المنشأة في فئات\n"
+"'البريد الإلكتروني': يتم إنشاؤها عن طريق البريد الوارد. على سبيل المثال: بوابة البريد\n"
+"'تعليق': يتم إنشاؤه من خلال مدخلات المستخدمين. على سبيل المثال: من خلال تطبيق المناقشة أو الإنشاء\n"
+"'email_outgoing': يتم إنشاؤها عن طريق المراسلات\n"
+"'إشعار': يتم إنشاؤه عن طريق النظام. على سبيل المثال: رسائل التتبع\n"
+"'auto_comment': يتم إنشاؤه عن طريق آلية الإشعارات التلقائية. على سبيل المثال: الإقرار\n"
+"'user_notification': يتم إنشاؤها لمستلم محدد "
+
+#. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_snailmail_letter__state
 msgid ""
 "When a letter is created, the status is 'Pending'.\n"
@@ -634,14 +678,22 @@ msgstr ""
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-msgid "You don't have an IAP account registered for this service.<br>Please go to <a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
-msgstr "لا تملك حساب وكيل مدرك للهوية مسجل لهذه الخدمة.<br>يرجى الذهاب إلى <a href=%s target=\"new\">iap.odoo.com</a> للحصول على رصيدك المجاني. "
+msgid ""
+"You don't have an IAP account registered for this service.<br>Please go to "
+"<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
+msgstr ""
+"لا تملك حساب وكيل مدرك للهوية مسجل لهذه الخدمة.<br>يرجى الذهاب إلى <a "
+"href=%s target=\"new\">iap.odoo.com</a> للحصول على رصيدك المجاني. "
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-msgid "You don't have enough credits to perform this operation.<br>Please go to your <a href=%s target=\"new\">iap account</a>."
-msgstr "لا تملك الرصيد الكافي لإجراء هذه العملية.<br>يرجى الذهاب إلى <a href=%s target=\"new\">حساب الوكيل المدرك للهوية الخاص بك</a>. "
+msgid ""
+"You don't have enough credits to perform this operation.<br>Please go to "
+"your <a href=%s target=\"new\">iap account</a>."
+msgstr ""
+"لا تملك الرصيد الكافي لإجراء هذه العملية.<br>يرجى الذهاب إلى <a href=%s "
+"target=\"new\">حساب الوكيل المدرك للهوية الخاص بك</a>. "
 
 #. module: snailmail
 #. odoo-javascript

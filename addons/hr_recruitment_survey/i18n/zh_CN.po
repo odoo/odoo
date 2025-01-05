@@ -1,25 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_recruitment_survey
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
-"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_recruitment_survey
@@ -48,6 +45,33 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"         <t t-out=\"object.partner_id.name or 'applicant'\">[申请人姓名]</t>您好！<br><br>\n"
+"        <t>\n"
+"            您已通过招聘程序，我们希望您回答一些问题。\n"
+"        </t>\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                <t>\n"
+"                    开始笔试\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"        <t t-if=\"object.deadline\">\n"
+"            请于限期前完成面试问题 <t t-out=\"format_date(object.deadline)\">[截止日期]</t>.<br><br>\n"
+"        </t>\n"
+"        <t>\n"
+"            祝您好运！感谢您的参与。\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_recruitment_survey_button_form_view
+msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Go to Recruitment"
+msgstr "<i class=\"oi oi-fw oi-arrow-right\"/> 前往招聘"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -69,6 +93,11 @@ msgid "Activities"
 msgstr "活动"
 
 #. module: hr_recruitment_survey
+#: model_terms:ir.actions.act_window,help:hr_recruitment_survey.survey_survey_action_recruitment
+msgid "Add a new survey"
+msgstr "增加一个新调查"
+
+#. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_applicant
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_invite__applicant_id
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__applicant_id
@@ -78,12 +107,14 @@ msgstr "申请人"
 #. module: hr_recruitment_survey
 #: model:mail.template,name:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid "Applicant: Interview"
-msgstr ""
+msgstr "申请人： 面试"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_job__survey_id
-msgid "Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"
+msgid ""
+"Choose an interview form for this job position and you will be able to "
+"print/answer this interview from all applicants who apply for this job"
 msgstr "选择一个此岗位的面试表格，您可以把它打印出来让所有此岗位的应聘者回答这个表格的问题"
 
 #. module: hr_recruitment_survey
@@ -99,7 +130,7 @@ msgstr "教育"
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q2
 msgid "From which university did or will you graduate?"
-msgstr ""
+msgstr "您已经或将要从哪所大学毕业？"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row2
@@ -141,7 +172,7 @@ msgstr "面试表单"
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
 msgid "Interview Form: %s"
-msgstr ""
+msgstr "面试表单： %s"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
@@ -149,12 +180,15 @@ msgid "Interview Survey"
 msgstr "访谈调查"
 
 #. module: hr_recruitment_survey
+#: model:ir.actions.act_window,name:hr_recruitment_survey.survey_survey_action_recruitment
+#: model:ir.ui.menu,name:hr_recruitment_survey.menu_hr_recruitment_config_surveys
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Interviews"
 msgstr "面试"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_job
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__hr_job_ids
 msgid "Job Position"
 msgstr "工作岗位"
 
@@ -181,7 +215,7 @@ msgstr "办公地点"
 #. module: hr_recruitment_survey
 #: model:mail.template,subject:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid "Participate to {{ object.survey_id.display_name }} interview"
-msgstr ""
+msgstr "参与{{ object.survey_id.display_name }}面试"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q5
@@ -190,8 +224,10 @@ msgstr "过去的工作经历"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.survey,description:hr_recruitment_survey.survey_recruitment_form
-msgid "Please answer those questions to help recruitment officers to preprocess your application."
-msgstr ""
+msgid ""
+"Please answer those questions to help recruitment officers to preprocess "
+"your application."
+msgstr "请回答这些问题，以帮助招聘专员预先处理您的申请。"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
@@ -199,23 +235,32 @@ msgid ""
 "Please fill information about you: who you are, what are your education, experience, and activities.\n"
 "    It will help us managing your application."
 msgstr ""
+"请填写您的有关信息：姓名、教育背景、个人经历和活动。\n"
+"    这将有助于我们推进您的申请。"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 msgid "Please provide an applicant name."
-msgstr ""
+msgstr "请提供应用程序名称。"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q5
-msgid "Please summarize your education history: schools, location, diplomas, ..."
-msgstr ""
+msgid ""
+"Please summarize your education history: schools, location, diplomas, ..."
+msgstr "请概述您的教育经历：学校、地点、文凭......"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
-msgid "Please tell us a bit more about yourself: what are your main activities, ..."
-msgstr ""
+msgid ""
+"Please tell us a bit more about yourself: what are your main activities, ..."
+msgstr "请向我们介绍一下您自己：您的主要活动是什么？"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields.selection,name:hr_recruitment_survey.selection__survey_survey__survey_type__recruitment
+msgid "Recruitment"
+msgstr "招聘"
 
 #. module: hr_recruitment_survey
 #: model:survey.survey,title:hr_recruitment_survey.survey_recruitment_form
@@ -225,27 +270,28 @@ msgstr "招聘表单"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_ids
 msgid "Responses"
-msgstr ""
+msgstr "回应"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid "See interview report"
-msgstr "见面试报告"
+msgstr "见面试报表"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid "Send Interview"
-msgstr ""
+msgstr "发送面试"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 msgid "Send an interview"
-msgstr ""
+msgstr "发送面试"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
+#: model:ir.model,name:hr_recruitment_survey.model_survey_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__survey_id
 msgid "Survey"
 msgstr "调查"
@@ -254,6 +300,11 @@ msgstr "调查"
 #: model:ir.model,name:hr_recruitment_survey.model_survey_invite
 msgid "Survey Invitation Wizard"
 msgstr "调查邀请向导"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__survey_type
+msgid "Survey Type"
+msgstr "调查类型"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_survey_user_input
@@ -275,7 +326,7 @@ msgstr "申请人\"%s\"已完成调查。"
 #. odoo-python
 #: code:addons/hr_recruitment_survey/wizard/survey_invite.py:0
 msgid "The survey %(survey_link)s has been sent to %(partner_link)s"
-msgstr "调查报告%(survey_link)s已被发送到%(partner_link)s。"
+msgstr "调查%(survey_link)s已发送至%(partner_link)s"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col3
@@ -290,19 +341,28 @@ msgstr "您是由员工介绍的吗？"
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q6
 msgid "What are your main knowledge regarding the job you are applying to?"
-msgstr ""
+msgstr "您对所申请工作的有哪些了解？"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q8
 msgid "What is important for you?"
-msgstr ""
+msgstr "什么对您来说很重要？"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q1
 msgid "Which country are you from?"
-msgstr ""
+msgstr "您来自哪个国家？"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row4
 msgid "Working with state of the art technology"
 msgstr "使用最先进的技术工作"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.actions.act_window,help:hr_recruitment_survey.survey_survey_action_recruitment
+msgid ""
+"You can create surveys used for recruitments. Design easily your interview,\n"
+"                send invitations and analyze answers."
+msgstr ""
+"您可以创建用于招聘的调查问卷。轻松设计您的面试问题、\n"
+"                发送邀请，并分析答案。"

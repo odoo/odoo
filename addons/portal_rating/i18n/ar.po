@@ -1,26 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* portal_rating
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Niyas Raphy, 2022
-# Malaz Abuidris <msea@odoo.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
-"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: portal_rating
+#. odoo-javascript
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
+msgid "#{Math.round(val * 100) / 100} stars on 5"
+msgstr "#{Math.round(val * 100) / 100} يبدأ بـ 5 "
 
 #. module: portal_rating
 #. odoo-javascript
@@ -37,19 +40,13 @@ msgstr "متوسط"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
-msgid "Cancel"
-msgstr "إلغاء "
-
-#. module: portal_rating
-#. odoo-javascript
 #: code:addons/portal_rating/static/src/xml/portal_rating_composer.xml:0
 msgid "Close"
-msgstr "إغلاق "
+msgstr "إغلاق"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/chatter/frontend/message_patch.xml:0
 #: model_terms:ir.ui.view,arch_db:portal_rating.rating_rating_view_form
 msgid "Comment"
 msgstr "تعليق"
@@ -66,7 +63,7 @@ msgstr "تم التعليق في "
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/chatter/frontend/message_patch.xml:0
 msgid "Delete"
 msgstr "حذف"
 
@@ -78,7 +75,7 @@ msgstr "التفاصيل"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/chatter/frontend/message_patch.xml:0
 msgid "Edit"
 msgstr "تحرير"
 
@@ -90,13 +87,20 @@ msgid "Edit Review"
 msgstr "تحرير المراجعة"
 
 #. module: portal_rating
+#: model:ir.model,name:portal_rating.model_mail_thread
+msgid "Email Thread"
+msgstr "المحادثة البريدية"
+
+#. module: portal_rating
 #. odoo-javascript
+#: code:addons/portal_rating/static/src/chatter/frontend/composer_patch.xml:0
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 msgid "Empty star"
 msgstr "نجمة فارغة"
 
 #. module: portal_rating
 #. odoo-javascript
+#: code:addons/portal_rating/static/src/chatter/frontend/composer_patch.xml:0
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 msgid "Full star"
 msgstr "نجم كامل"
@@ -113,51 +117,15 @@ msgid "Half a star"
 msgstr "نصف نجمة"
 
 #. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_composer.js:0
-msgid "I don't like it"
-msgstr "لم يعجبني "
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_composer.js:0
-msgid "I hate it"
-msgstr "أكرهه "
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_composer.js:0
-msgid "I like it"
-msgstr "أعجبني "
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_composer.js:0
-msgid "I love it"
-msgstr "أحببته "
-
-#. module: portal_rating
 #. odoo-python
 #: code:addons/portal_rating/controllers/portal_rating.py:0
 msgid "Invalid rating"
 msgstr "التقييم غير صالح "
 
 #. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_composer.js:0
-msgid "It's okay"
-msgstr "لا بأس به "
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
-msgid "Loading..."
-msgstr "جار التحميل..."
-
-#. module: portal_rating
 #: model:ir.model,name:portal_rating.model_mail_message
 msgid "Message"
-msgstr "رسالة "
+msgstr "الرسالة"
 
 #. module: portal_rating
 #. odoo-javascript
@@ -167,13 +135,19 @@ msgstr "قم بتعديل تقييمك "
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
-msgid "Post comment"
-msgstr "نشر تعليق "
+#: code:addons/portal_rating/static/src/js/portal_rating_composer.js:0
+msgid "Post review"
+msgstr "نشر التقييم "
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
+msgid "Progress bar"
+msgstr "شريط التقدم "
+
+#. module: portal_rating
+#. odoo-javascript
+#: code:addons/portal_rating/static/src/chatter/frontend/message_patch.xml:0
 msgid "Published on"
 msgstr "تم النشر في "
 
@@ -210,33 +184,21 @@ msgstr "التقييم مطلوب. يرجى التأكد من تحديده قب�
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
-msgid "Update comment"
-msgstr "تحديث التعليق"
+#: code:addons/portal_rating/static/src/js/portal_rating_composer.js:0
+msgid "Update review"
+msgstr "تحديث التقييم "
 
 #. module: portal_rating
 #. odoo-python
 #: code:addons/portal_rating/models/rating_rating.py:0
 msgid "Updating rating comment require write access on related record"
-msgstr ""
+msgstr "يتطلب تحديث تقييم التعليق صلاحيات الكتابة في السجل ذي الصلة "
 
 #. module: portal_rating
 #. odoo-javascript
 #: code:addons/portal_rating/static/src/xml/portal_rating_composer.xml:0
 msgid "Write a review"
 msgstr "كتابة تقييم "
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_chatter.js:0
-msgid "Write your comment"
-msgstr "اكتب تعليقك"
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
-msgid "avatar"
-msgstr "الصورة الرمزية"
 
 #. module: portal_rating
 #. odoo-javascript

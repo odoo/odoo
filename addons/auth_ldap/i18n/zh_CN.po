@@ -1,27 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_ldap
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
-# guohuadeng <guohuadeng@hotmail.com>, 2019
-# kun zhang <re.z@qq.com>, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
-"Language: zh_CN\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: auth_ldap
@@ -40,10 +35,24 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"    用于在 LDAP 数据库中查找用户账户的筛选器。它是以字符串表示的任意 LDAP 过滤器。任何 `%s` 占位符都将被用户提供的登录名（标识符）替换，筛选器应至少包含一个这样的占位符。\n"
+"\n"
+"    过滤结果必须正好是一（1）个，否则登录将被视为无效。\n"
+"\n"
+"    示例（实际属性取决于 LDAP 服务器和设置）：\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    或\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
-msgid "Automatically create local user accounts for new users authenticating via LDAP"
+msgid ""
+"Automatically create local user accounts for new users authenticating via "
+"LDAP"
 msgstr "通过LDAP，为新用户自动创建本地用户账户。"
 
 #. module: auth_ldap
@@ -83,16 +92,24 @@ msgstr "创建时间"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_base
-msgid "DN of the user search scope: all descendants of this base will be searched for users."
-msgstr ""
+msgid ""
+"DN of the user search scope: all descendants of this base will be searched "
+"for users."
+msgstr "用户搜索范围的 DN：将搜索该数据库的所有子数据库的用户。"
 
 #. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__display_name
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_ldap.field_res_users__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
 #. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__id
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__id
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_ldap.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -144,11 +161,6 @@ msgid "LDAP password"
 msgstr "LDAP 密码"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap____last_update
-msgid "Last Modified on"
-msgstr "最后更改日"
-
-#. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
 msgid "Last Updated by"
 msgstr "最后更新者"
@@ -164,6 +176,7 @@ msgid "Login Information"
 msgstr "登录信息"
 
 #. module: auth_ldap
+#. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "No local user found for LDAP login and not configured to create one"
 msgstr "没有找到用于LDAP登录的本地用户，也没有配置为创建"
@@ -175,7 +188,10 @@ msgstr "处理参数"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
-msgid "Request secure TLS/SSL encryption when connecting to the LDAP server. This option requires a server with STARTTLS enabled, otherwise all authentication attempts will fail."
+msgid ""
+"Request secure TLS/SSL encryption when connecting to the LDAP server. This "
+"option requires a server with STARTTLS enabled, otherwise all authentication"
+" attempts will fail."
 msgstr "当连接 LDAP 服务器时请求服务器使用安全的 TLS/SSL 加密。该选项需要服务器启用 STARTTLS，否则所有用户验证都将失败。"
 
 #. module: auth_ldap
@@ -200,18 +216,27 @@ msgstr "模版用户"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
-msgid "The password of the user account on the LDAP server that is used to query the directory."
+msgid ""
+"The password of the user account on the LDAP server that is used to query "
+"the directory."
 msgstr "LDAP 服务器上的用户帐号密码，用于查询该目录服务。"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
-msgid "The user account on the LDAP server that is used to query the directory. Leave empty to connect anonymously."
+msgid ""
+"The user account on the LDAP server that is used to query the directory. "
+"Leave empty to connect anonymously."
 msgstr "用于查询 LDAP 服务器目录的用户帐号。如果要匿名连接请保持为空。"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
 msgid "Use TLS"
 msgstr "使用TLS传输层协议"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_users
+msgid "User"
+msgstr "用户"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -222,8 +247,3 @@ msgstr "用户信息"
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__user
 msgid "User to copy when creating new users"
 msgstr "当创建新用户时复制的用户"
-
-#. module: auth_ldap
-#: model:ir.model,name:auth_ldap.model_res_users
-msgid "Users"
-msgstr "用户"

@@ -1,30 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* barcodes
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Wichanon Jamwutthipreecha, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:32+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
-"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
-msgstr ""
+msgstr "'*' ไม่ใช่รูปแบบบาร์โค้ด Regex ที่ถูกต้อง คุณหมายถึง '.*' ใช่หรือไม่?"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -36,12 +35,14 @@ msgid ""
 msgstr ""
 "<i>การตีความบาร์โค้ด</i> กำหนดวิธีการจดจำและจัดหมวดหมู่บาร์โค้ด\n"
 "                                เมื่อสแกนบาร์โค้ดมันจะเชื่อมโยงกับกฎ <i>แรก</i> ด้วยการจับคู่\n"
-"                                รูปแบบ รูปแบบไวยากรณ์ที่ซึ่งเป็นนิพจน์ทั่วไป และบาร์โค้ดตรงกัน\n"
-"                               หากนิพจน์ทั่วไปตรงกับคำนำหน้าของบาร์โค้ด"
+"                                รูปแบบ รูปแบบไวยากรณ์ที่ซึ่งเป็นตัวสั่งงานทั่วไป และบาร์โค้ดตรงกัน\n"
+"                               หากตัวสั่งงานทั่วไปตรงกับคำนำหน้าของบาร์โค้ด"
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
-msgid "A barcode nomenclature defines how the point of sale identify and interprets barcodes"
+msgid ""
+"A barcode nomenclature defines how the point of sale identify and interprets"
+" barcodes"
 msgstr "ระบบการตีความบาร์โค้ดกำหนดวิธีที่จุดขายระบุและตีความบาร์โค้ด"
 
 #. module: barcodes
@@ -73,13 +74,19 @@ msgstr "การระบุภายในของระบบการตี
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__any
 msgid "Any"
-msgstr "ใด ๆ "
+msgstr "ใดๆ"
+
+#. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/components/manual_barcode.xml:0
+msgid "Apply"
+msgstr "นำไปใช้"
 
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 msgid "Barcode"
-msgstr ""
+msgstr "บาร์โค้ด"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
@@ -119,13 +126,13 @@ msgstr "สแกนบาร์โค้ดแล้ว"
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
-msgid "Barcode: "
-msgstr ""
+msgid "Barcode: %(barcode)s"
+msgstr "บาร์โค้ด: %(barcode)s"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_res_company
 msgid "Companies"
-msgstr "หลายบริษัท"
+msgstr "บริษัท"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_uid
@@ -142,6 +149,9 @@ msgstr "สร้างเมื่อ"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__display_name
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__display_name
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__display_name
+#: model:ir.model.fields,field_description:barcodes.field_ir_http__display_name
+#: model:ir.model.fields,field_description:barcodes.field_res_company__display_name
 msgid "Display Name"
 msgstr "แสดงชื่อ"
 
@@ -166,6 +176,12 @@ msgid "Encoding"
 msgstr "การเข้ารหัส"
 
 #. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/components/manual_barcode.js:0
+msgid "Enter a barcode..."
+msgstr ""
+
+#. module: barcodes
 #: model:ir.model,name:barcodes.model_ir_http
 msgid "HTTP Routing"
 msgstr "การกำหนด HTTP"
@@ -173,6 +189,9 @@ msgstr "การกำหนด HTTP"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__id
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__id
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__id
+#: model:ir.model.fields,field_description:barcodes.field_ir_http__id
+#: model:ir.model.fields,field_description:barcodes.field_res_company__id
 msgid "ID"
 msgstr "ไอดี"
 
@@ -208,12 +227,18 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
+"รูปแบบยังสามารถกำหนดวิธีการเข้ารหัสค่าตัวเลข เช่น น้ำหนักหรือราคา\n"
+"                                ลงในบาร์โค้ดได้ ระบุด้วย <code>{NNN}</code> โดยที่ N's\n"
+"                                กำหนดตำแหน่งที่เข้ารหัสตัวเลข นอกจากนี้ยังรองรับทศนิยม\n"
+"                                ด้วยทศนิยมที่ระบุด้วย D เช่น <code>{NNNDD}</code> ในกรณีเหล่านี้\n"
+"                                ข้อมูลของบาร์โค้ดในบันทึกที่เกี่ยวข้อง <i>จำเป็นต้อง</i> แสดงตัวเลขเหล่านี้เป็น\n"
+"                                ศูนย์"
 
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.js:0
 msgid "Please, Scan again!"
-msgstr ""
+msgstr "กรุณาสแกนอีกครั้ง!"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
@@ -239,12 +264,19 @@ msgstr "โต๊ะ"
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 msgid "Tap to scan"
-msgstr ""
+msgstr "แตะเพื่อสแกน"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
 msgid "The barcode matching pattern"
 msgstr "รูปแบบการจับคู่บาร์โค้ด"
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+msgid ""
+"The barcode pattern %(pattern)s does not lead to a valid regular expression."
+msgstr "รูปแบบบาร์โค้ด %(pattern)s ไม่นำไปสู่ตัวสั่งงานปกติที่ถูกต้อง"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
@@ -259,24 +291,36 @@ msgstr "รูปแบบที่ตรงกันจะใช้นามแ
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
-msgid "There is a syntax error in the barcode pattern %(pattern)s: a rule can only contain one pair of braces."
-msgstr "มีข้อผิดพลาดทางไวยากรณ์ในรูปแบบบาร์โค้ด %(pattern)s: กฎสามารถมีวงเล็บได้เพียงคู่เดียวเท่านั้น"
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
+"contain one pair of braces."
+msgstr ""
+"มีข้อผิดพลาดทางไวยากรณ์ในรูปแบบบาร์โค้ด %(pattern)s: "
+"กฎสามารถมีวงเล็บได้เพียงคู่เดียวเท่านั้น"
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
-msgid "There is a syntax error in the barcode pattern %(pattern)s: braces can only contain N's followed by D's."
-msgstr "มีข้อผิดพลาดทางไวยากรณ์ในรูปแบบบาร์โค้ด%(pattern)s: วงเล็บมีได้เฉพาะ N ตามด้วย D"
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: braces can only "
+"contain N's followed by D's."
+msgstr ""
+"มีข้อผิดพลาดทางไวยากรณ์ในรูปแบบบาร์โค้ด%(pattern)s: วงเล็บมีได้เฉพาะ N "
+"ตามด้วย D"
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
-msgid "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
-msgstr "มีข้อผิดพลาดทางไวยากรณ์ในรูปแบบบาร์โค้ด %(pattern)s: วงเล็บที่ว่างเปล่า"
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: empty braces."
+msgstr ""
+"มีข้อผิดพลาดทางไวยากรณ์ในรูปแบบบาร์โค้ด %(pattern)s: วงเล็บที่ว่างเปล่า"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
-msgid "This rule will apply only if the barcode is encoded with the specified encoding"
+msgid ""
+"This rule will apply only if the barcode is encoded with the specified "
+"encoding"
 msgstr "กฎนี้จะใช้ได้เฉพาะเมื่อบาร์โค้ดถูกเข้ารหัสด้วยการเข้ารหัสที่ระบุ"
 
 #. module: barcodes
@@ -286,8 +330,14 @@ msgstr "ประเภท"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
-msgid "UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding."
-msgstr "โค้ด UPC สามารถแปลงเป็น EAN ได้โดยนำหน้ามันด้วยศูนย์ การตั้งค่านี้กำหนดว่าควรแปลงบาร์โค้ด UPC/EAN โดยอัตโนมัติไม่ทางใดก็ทางหนึ่งเมื่อพยายามจับคู่กฎกับการเข้ารหัสอื่นหรือไม่"
+msgid ""
+"UPC Codes can be converted to EAN by prefixing them with a zero. This "
+"setting determines if a UPC/EAN barcode should be automatically converted in"
+" one way or another when trying to match a rule with the other encoding."
+msgstr ""
+"โค้ด UPC สามารถแปลงเป็น EAN ได้โดยนำหน้ามันด้วยศูนย์ "
+"การตั้งค่านี้กำหนดว่าควรแปลงบาร์โค้ด UPC/EAN "
+"โดยอัตโนมัติไม่ทางใดก็ทางหนึ่งเมื่อพยายามจับคู่กฎกับการเข้ารหัสอื่นหรือไม่"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
@@ -313,11 +363,12 @@ msgstr "หน่วยสินค้า"
 #. odoo-javascript
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 msgid "Unknown barcode command"
-msgstr ""
+msgstr "คำสั่งบาร์โค้ดที่ไม่รู้จัก"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
-msgid "Used to order rules such that rules with a smaller sequence match first"
+msgid ""
+"Used to order rules such that rules with a smaller sequence match first"
 msgstr "ใช้เพื่อสั่งกฎเพื่อให้กฎที่มีลำดับที่เล็กกว่าตรงกันก่อน"
 
 #. module: barcodes

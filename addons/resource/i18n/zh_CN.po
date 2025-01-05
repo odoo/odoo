@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* resource
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
-# Emily Jia <eji@odoo.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Emily Jia <eji@odoo.com>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
-"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: resource
@@ -26,23 +24,28 @@ msgstr ""
 #: code:addons/resource/models/resource_calendar.py:0
 #: code:addons/resource/models/resource_resource.py:0
 msgid "%s (copy)"
-msgstr "%s (副本)"
+msgstr "%s（副本）"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "<span class=\"o_stat_text\">Time Off</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">休息时间</span>"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "<span class=\"o_stat_text\">Work Resources</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">工作资源</span>"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "<span> hours/week</span>"
+msgstr "<span>小时/周</span>"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__active
 #: model:ir.model.fields,field_description:resource.field_resource_resource__active
 msgid "Active"
-msgstr "启用"
+msgstr "有效"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__afternoon
@@ -59,13 +62,17 @@ msgstr "已归档"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "Are you sure you want to switch this calendar to 1 week calendar? All entries will be lost"
-msgstr ""
+msgid ""
+"Are you sure you want to switch to a 1-week calendar? All work entries will "
+"be lost."
+msgstr "确定要切换到一周日历视图吗？所有工作记项都将丢失。"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "Are you sure you want to switch this calendar to 2 weeks calendar? All entries will be lost"
-msgstr ""
+msgid ""
+"Are you sure you want to switch to a 2-week calendar? All work entries will "
+"be lost."
+msgstr "确定要切换到两周日历视图吗？所有工作记项都将丢失。"
 
 #. module: resource
 #. odoo-python
@@ -74,14 +81,25 @@ msgid "Attendances can't overlap."
 msgstr "出勤不能重叠."
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource__avatar_128
+msgid "Avatar 128"
+msgstr "形象 128"
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
 msgid "Average Hour per Day"
 msgstr "每天平均小时数"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__hours_per_day
-msgid "Average hours per day a resource is supposed to work with this calendar."
+msgid ""
+"Average hours per day a resource is supposed to work with this calendar."
 msgstr "资产应该与此日历一起使用的平均每天小时数。"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__lunch
+msgid "Break"
+msgstr "断点"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_calendar
@@ -110,6 +128,11 @@ msgid "Company"
 msgstr "公司"
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__full_time_required_hours
+msgid "Company Full Time"
+msgstr "公司全职"
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__create_uid
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__create_uid
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__create_uid
@@ -123,7 +146,12 @@ msgstr "创建人"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__create_date
 #: model:ir.model.fields,field_description:resource.field_resource_resource__create_date
 msgid "Created on"
-msgstr "创建时间"
+msgstr "创建日期"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Date"
+msgstr "日期"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__day_period
@@ -142,8 +170,19 @@ msgid "Default Working Hours"
 msgstr "默认工作时间"
 
 #. module: resource
+#: model:ir.model.fields,help:resource.field_res_users__resource_calendar_id
+#: model:ir.model.fields,help:resource.field_resource_mixin__resource_calendar_id
+#: model:ir.model.fields,help:resource.field_resource_resource__calendar_id
+msgid ""
+"Define the working schedule of the resource. If not set, the resource will "
+"have fully flexible working hours."
+msgstr "定义资源的工作时间表。如果未设置，资源将具有完全灵活的工作时间。"
+
+#. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_calendar_form
-msgid "Define working hours and time table that could be scheduled to your project members"
+msgid ""
+"Define working hours and time table that could be scheduled to your project "
+"members"
 msgstr "定义您的项目成员可计划的工时和时间表"
 
 #. module: resource
@@ -160,9 +199,24 @@ msgid "Display Type"
 msgstr "显示类型"
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__duration_days
+msgid "Duration (days)"
+msgstr "持续时间 (天)"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__duration_hours
+msgid "Duration (hours)"
+msgstr "时长 (小时)"
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__time_efficiency
 msgid "Efficiency Factor"
 msgstr "效率因子"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource__email
+msgid "Email"
+msgstr "电子邮件"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__date_to
@@ -176,6 +230,13 @@ msgid "Explanation"
 msgstr "解释"
 
 #. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource__share
+msgid ""
+"External user with limited access, created only for the purpose of sharing "
+"data."
+msgstr "访问权限有限的外部用户，仅为共享数据而创建。"
+
+#. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__0
 msgid "First"
 msgstr "第一个"
@@ -185,6 +246,11 @@ msgstr "第一个"
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "First week"
 msgstr "第一周"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__flexible_hours
+msgid "Flexible Hours"
+msgstr "灵活时间"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
@@ -201,7 +267,7 @@ msgstr "周五下午"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Friday Lunch"
-msgstr ""
+msgstr "周五午餐"
 
 #. module: resource
 #. odoo-python
@@ -210,9 +276,14 @@ msgid "Friday Morning"
 msgstr "周五上午"
 
 #. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
+msgid "Fully Flexible"
+msgstr "完全灵活"
+
+#. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
 msgid "Gives the sequence of this line when displaying the resource calendar."
-msgstr "在资源日历里显示行序号"
+msgstr "在资源日历里显示行序号。"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
@@ -223,12 +294,17 @@ msgstr "公共休假"
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Group By"
-msgstr "分组"
+msgstr "分组方式"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
 msgid "Hours"
 msgstr "小时"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Hours per Week"
+msgstr "周小时／周"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__user
@@ -246,29 +322,30 @@ msgstr "ID"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__resource_id
-msgid "If empty, this is a generic time off for the company. If a resource is set, the time off is only for this resource"
-msgstr "如果为空，表示公司的一个通用假期，如果设置了一个资源，假期/休假只适用于该资源。"
+msgid ""
+"If empty, this is a generic time off for the company. If a resource is set, "
+"the time off is only for this resource"
+msgstr "如果为空，表示公司的一个通用假期，如果设置了一个资源，假期/休假只适用于该资源"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__active
-msgid "If the active field is set to False, it will allow you to hide the resource record without removing it."
-msgstr "如设置为未启用，不需删除就可以隐藏。"
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr "如设置为无效，不需删除就可以隐藏。"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__active
-msgid "If the active field is set to false, it will allow you to hide the Working Time without removing it."
-msgstr "如果启用字段设置为未启用，它将允许您隐藏工作时间而不将其删除."
+msgid ""
+"If the active field is set to false, it will allow you to hide the Working "
+"Time without removing it."
+msgstr "如果有效字段设置为无效，它将允许您隐藏工作时间而不将其删除."
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
-msgid "Impossible to switch calendar type for the default company schedule."
-msgstr "无法为默认公司日程切换日历类型。"
-
-#. module: resource
-#. odoo-python
-#: code:addons/resource/models/resource_calendar.py:0
-msgid "In a calendar with 2 weeks mode, all periods need to be in the sections."
+msgid ""
+"In a calendar with 2 weeks mode, all periods need to be in the sections."
 msgstr "在双周模式的日历中，所有时期都需要在分区中."
 
 #. module: resource
@@ -285,12 +362,7 @@ msgstr "最后更新人"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__write_date
 #: model:ir.model.fields,field_description:resource.field_resource_resource__write_date
 msgid "Last Updated on"
-msgstr "最后更新时间"
-
-#. module: resource
-#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__lunch
-msgid "Lunch"
-msgstr ""
+msgstr "上次更新日期"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__material
@@ -313,7 +385,7 @@ msgstr "周一下午"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Monday Lunch"
-msgstr ""
+msgstr "周一午餐"
 
 #. module: resource
 #. odoo-python
@@ -334,6 +406,13 @@ msgid "Name"
 msgstr "名称"
 
 #. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__full_time_required_hours
+msgid ""
+"Number of hours to work on the company schedule to be considered as "
+"fulltime."
+msgstr "按公司时间表工作的小时数被视为全职。"
+
+#. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__other
 msgid "Other"
 msgstr "其他"
@@ -342,6 +421,11 @@ msgstr "其他"
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Period"
 msgstr "期间"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource__phone
+msgid "Phone"
+msgstr "电话"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__name
@@ -411,7 +495,10 @@ msgstr "休息时间"
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
 #: model_terms:ir.actions.act_window,help:resource.resource_resource_action_from_calendar
-msgid "Resources allow you to create and manage resources that should be involved in a specific project phase. You can also set their efficiency level and workload based on their weekly working hours."
+msgid ""
+"Resources allow you to create and manage resources that should be involved "
+"in a specific project phase. You can also set their efficiency level and "
+"workload based on their weekly working hours."
 msgstr "资源允许您创建和管理资源参与的特定的计划阶段。您还能在其每周工作时间基础上设置其效率和工作量。"
 
 #. module: resource
@@ -448,12 +535,17 @@ msgstr "第二周"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__display_type__line_section
 msgid "Section"
-msgstr "节"
+msgstr "小节"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__sequence
 msgid "Sequence"
-msgstr "序号"
+msgstr "序列"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource__share
+msgid "Share User"
+msgstr "共享用户"
 
 #. module: resource
 #. odoo-python
@@ -483,7 +575,7 @@ msgstr "起始日期"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Time Off"
-msgstr ""
+msgstr "休假开始日期"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
@@ -508,8 +600,10 @@ msgstr "UX用途的技术领域。"
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
-msgid "The current week (from %s to %s) correspond to the  %s one."
-msgstr "当前一周（从 %s 到 %s）对应于 %s 一周。"
+msgid ""
+"The current week (from %(first_day)s to %(last_day)s) corresponds to week "
+"number %(number)s."
+msgstr "目前的星期（%(first_day)s 至 %(last_day)s）对应周数 %(number)s。"
 
 #. module: resource
 #. odoo-python
@@ -520,13 +614,22 @@ msgstr "休假的开始日期必须早于结束日期."
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__tz
 #: model:ir.model.fields,help:resource.field_resource_mixin__tz
-msgid "This field is used in order to define in which timezone the resources will work."
+msgid ""
+"This field is used in order to define in which timezone the resources will "
+"work."
 msgstr "此字段用于定义资源工作的时区。"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__time_efficiency
-msgid "This field is used to calculate the expected duration of a work order at this work center. For example, if a work order takes one hour and the efficiency factor is 100%, then the expected duration will be one hour. If the efficiency factor is 200%, however the expected duration will be 30 minutes."
-msgstr "该字段用于计算该工作中心的工单的预期工期。 例如，如果工单花费一小时且效率系数是100％，则预期持续时间将是一小时。 如果效率因子为200％，则预期持续时间将为30分钟。"
+msgid ""
+"This field is used to calculate the expected duration of a work order at "
+"this work center. For example, if a work order takes one hour and the "
+"efficiency factor is 100%, then the expected duration will be one hour. If "
+"the efficiency factor is 200%, however the expected duration will be 30 "
+"minutes."
+msgstr ""
+"该字段用于计算该工作中心的工单的预期工期。 例如，如果工单花费一小时且效率系数是100％，则预期持续时间将是一小时。 "
+"如果效率因子为200％，则预期持续时间将为30分钟。"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3
@@ -543,7 +646,7 @@ msgstr "周四下午"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Thursday Lunch"
-msgstr ""
+msgstr "周四午餐"
 
 #. module: resource
 #. odoo-python
@@ -558,15 +661,10 @@ msgid "Time Off"
 msgstr "休假"
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
-msgid "Time Off Date"
-msgstr ""
-
-#. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 msgid "Time Off Detail"
-msgstr ""
+msgstr "休假详情"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
@@ -605,7 +703,7 @@ msgstr "周二下午"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Tuesday Lunch"
-msgstr ""
+msgstr "周四午餐"
 
 #. module: resource
 #. odoo-python
@@ -641,7 +739,7 @@ msgstr "周三下午"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Wednesday Lunch"
-msgstr ""
+msgstr "周三午餐"
 
 #. module: resource
 #. odoo-python
@@ -655,8 +753,17 @@ msgid "Week Number"
 msgstr "周数"
 
 #. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__flexible_hours
+msgid ""
+"When enabled, it will allow employees to work flexibly, without relying on "
+"the company's working schedule (working hours)."
+msgstr "启用后，它将允许员工灵活工作，而不依赖于公司的工作时间表（工作时间）。"
+
+#. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
-msgid "Whether this should be computed as a time off or as work time (eg: formation)"
+msgid ""
+"Whether this should be computed as a time off or as work time (eg: "
+"formation)"
 msgstr "应该计算为休息时间还是工作时间"
 
 #. module: resource
@@ -689,6 +796,12 @@ msgid "Working Hours of %s"
 msgstr "%s的工作时间"
 
 #. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
+#: model:ir.ui.menu,name:resource.menu_resource_calendar
+msgid "Working Schedules"
+msgstr "工作时间表"
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__attendance_ids
 #: model:ir.model.fields,field_description:resource.field_resource_resource__calendar_id
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -699,12 +812,6 @@ msgstr "%s的工作时间"
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Working Time"
 msgstr "工时"
-
-#. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
-#: model:ir.ui.menu,name:resource.menu_resource_calendar
-msgid "Working Times"
-msgstr "工作时间"
 
 #. module: resource
 #. odoo-python

@@ -1,0 +1,256 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* barcodes_gs1_nomenclature
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-24 15:32+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
+msgid "Alpha-Numeric Name"
+msgstr "영숫자 이름"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
+msgid ""
+"Alternative regex delimiter for the FNC1. The separator must not match the "
+"begin/end of any related rules pattern."
+msgstr "FNC1의 대체 정규식 구분 기호입니다. 구분 기호는 관련 규칙 패턴의 시작/끝 부분과 일치해서는 안됩니다."
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__associated_uom_id
+msgid "Associated Uom"
+msgstr "관련된 측정 단위 (UOM)"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model,name:barcodes_gs1_nomenclature.model_barcode_nomenclature
+msgid "Barcode Nomenclature"
+msgstr "바코드 명칭"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model,name:barcodes_gs1_nomenclature.model_barcode_rule
+msgid "Barcode Rule"
+msgstr "바코드 규칙"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__use_date
+msgid "Best before Date"
+msgstr "유통기한"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__date
+msgid "Date"
+msgstr "날짜"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__gs1_decimal_usage
+msgid "Decimal"
+msgstr "소수점"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__location_dest
+msgid "Destination location"
+msgstr "목적지 위치"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__display_name
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__display_name
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_ir_http__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__encoding
+msgid "Encoding"
+msgstr "인코딩"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__expiration_date
+msgid "Expiration Date"
+msgstr "만료일"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
+msgid "FNC1 Separator"
+msgstr "FNC1 구분 기호"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
+msgid "GS1 Content Type"
+msgstr "GS1 내용 유형"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__encoding__gs1-128
+msgid "GS1-128"
+msgstr "GS1-128"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model,name:barcodes_gs1_nomenclature.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP 라우팅"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__id
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__id
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_ir_http__id
+msgid "ID"
+msgstr "ID"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_decimal_usage
+msgid ""
+"If True, use the last digit of AI to determine where the first decimal is"
+msgstr "참인 경우, AI의 마지막 숫자를 사용하여 첫 번째 소수점의 위치를 확인합니다."
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-javascript
+#: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
+msgid "Invalid barcode: can't be formated as date"
+msgstr "잘못된 바코드: 날짜 형식을 지정할 수 없음"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-javascript
+#: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
+msgid "Invalid barcode: the check digit is incorrect"
+msgstr "잘못된 바코드: 체크 숫자가 잘못됨"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__is_gs1_nomenclature
+msgid "Is GS1 Nomenclature"
+msgstr "GS1 명명법 여부"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__location
+msgid "Location"
+msgstr "위치"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__lot
+msgid "Lot"
+msgstr "LOT"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__measure
+msgid "Measure"
+msgstr "계산"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__identifier
+msgid "Numeric Identifier"
+msgstr "숫자 식별 기호"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__pack_date
+msgid "Pack Date"
+msgstr "포장 일자:"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__package
+msgid "Package"
+msgstr "패키지"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__package_type
+msgid "Package Type"
+msgstr "패키지 유형"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__quantity
+msgid "Quantity"
+msgstr "수량"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
+msgid "The FNC1 Separator Alternative is not a valid Regex: %(error)s"
+msgstr "FNC1 구분 기호 대안은 유효한 정규식이 아닙니다: %(error)s"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
+msgid ""
+"The GS1 content type defines what kind of data the rule will process the "
+"barcode as:        * Date: the barcode will be converted into a Odoo "
+"datetime;        * Measure: the barcode's value is related to a specific "
+"UoM;        * Numeric Identifier: fixed length barcode following a specific "
+"encoding;        * Alpha-Numeric Name: variable length barcode."
+msgstr ""
+"GS1 콘텐츠 유형은 규칙을 통해 바코드를 처리할 데이터 종류를 지정합니다:        * 일자: Odoo 일시로 바코드를 변환;"
+"        * 방법: 바코드 값이 특정한 측정 단위 (UoM)와 관련;        * 숫자 식별 기호: 특정한 인코딩을 따르는 "
+"고정된 길이의 바코드;        * 영숫자 이름: 가변 길이 바코드."
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
+msgid ""
+"The rule pattern \"%s\" is not valid, it needs two groups:\n"
+"\t- A first one for the Application Identifier (usually 2 to 4 digits);\n"
+"\t- A second one to catch the value."
+msgstr ""
+"규칙 패턴 \"%s\"이 잘못되었습니다, 두 개의 그룹이 있어야 합니다:\n"
+"\t- 첫번째 그룹에서 응용 프로그램 식별 기호를 두며 (보통 2 - 4 자리);\n"
+"\t- 두번째 그룹에서 값을 확인합니다."
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
+msgid "The rule pattern '%(rule)s' is not a valid Regex: %(error)s"
+msgstr "규칙 패턴 '%(rule)s'는 유효한 정규식이 아닙니다: %(error)s"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
+msgid ""
+"There is something wrong with the barcode rule \"%s\" pattern.\n"
+"If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
+"Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
+msgstr ""
+"바코드 규칙의 \"%s\" 패턴이 잘못되었습니다.\n"
+"규칙에서 10진법을 사용하는 경우, 응용 프로그램 식별 기호의 마지막 문자로 숫자 외에 다른 항목을 가져올 수 없는지 확인하십시오.\n"
+"일치하는 값도 숫자만 가능한지 확인하시되, 그렇지 않은 경우 해당 값은 측정용으로는 사용할 수 없습니다."
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__is_gs1_nomenclature
+msgid ""
+"This Nomenclature use the GS1 specification, only GS1-128 encoding rules is "
+"accepted is this kind of nomenclature."
+msgstr "명명법으로는 GS1 방식을 사용하며, 이러한 명명법에는 GS1-128 만 인코딩 규칙으로 허용됩니다. "
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-javascript
+#: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
+msgid "This barcode can't be parsed by any barcode rules."
+msgstr "이 바코드를 분석할 수 있는 바코드 규칙이 없습니다."
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-javascript
+#: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
+msgid "This barcode can't be partially or fully parsed."
+msgstr "이 바코드의 전부 혹은 일부를 분석할 수 없습니다."
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__encoding
+msgid ""
+"This rule will apply only if the barcode is encoded with the specified "
+"encoding"
+msgstr "이 규칙은 바코드가 지정된 인코딩으로 인코딩된 경우에만 적용됩니다."
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__type
+msgid "Type"
+msgstr "유형"

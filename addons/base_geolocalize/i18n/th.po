@@ -1,29 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_geolocalize
-#
+# 
 # Translators:
-# Wichanon Jamwutthipreecha, 2022
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
-"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_id
 msgid "API"
-msgstr ""
+msgstr "API"
 
 #. module: base_geolocalize
 #. odoo-python
@@ -32,21 +31,23 @@ msgid ""
 "API key for GeoCoding (Places) required.\n"
 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
 msgstr ""
+"ต้องใช้คีย์ API สำหรับ GeoCoding (สถานที่)\n"
+"เยี่ยมชม https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
 msgid "API:"
-msgstr ""
+msgstr "API:"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Compute Localization"
-msgstr ""
+msgstr "การประยุกต์ใช้ของการคำนวณ"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Compute based on address"
-msgstr ""
+msgstr "การคำนวณตามที่อยู่"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_config_settings
@@ -76,23 +77,23 @@ msgstr "แสดงชื่อ"
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
-msgid "Error with geolocation server:"
-msgstr ""
+msgid "Error with geolocation server: %s"
+msgstr "ข้อผิดพลาดกับเซิร์ฟเวอร์ระบุตำแหน่งทางภูมิศาสตร์: %s"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geocoder
 msgid "Geo Coder"
-msgstr ""
+msgstr "รหัสทางภูมิศาสตร์"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Geo Location"
-msgstr ""
+msgstr "ที่ตั้งทางภูมิศาสตร์"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geo_provider
 msgid "Geo Provider"
-msgstr ""
+msgstr "ผู้ให้บริการทางภูมิศาสตร์"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -103,7 +104,7 @@ msgstr "ตำแหน่งทางภูมิศาสตร์"
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__date_localization
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_users__date_localization
 msgid "Geolocation Date"
-msgstr ""
+msgstr "วันที่ระบุตำแหน่งทางภูมิศาสตร์"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
@@ -118,7 +119,7 @@ msgstr "ไอดี"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
 msgid "Key:"
-msgstr ""
+msgstr "Key:"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__write_uid
@@ -133,12 +134,12 @@ msgstr "อัปเดตครั้งล่าสุดเมื่อ"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Lat :"
-msgstr ""
+msgstr "Lat :"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Long:"
-msgstr ""
+msgstr "Long:"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__name
@@ -149,7 +150,7 @@ msgstr "ชื่อ"
 #. odoo-python
 #: code:addons/base_geolocalize/models/res_partner.py:0
 msgid "No match found for %(partner_names)s address(es)."
-msgstr ""
+msgstr "ไม่พบรายการที่ตรงกันสำหรับที่อยู่ %(partner_names)s"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -160,7 +161,7 @@ msgstr "การมอบหมายพาร์ทเนอร์"
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 msgid "Provider %s is not implemented for geolocation service."
-msgstr ""
+msgstr "ผู้ให้บริการ %s ไม่ได้ถูกนำมาใช้สำหรับบริการระบุตำแหน่ง"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -170,13 +171,13 @@ msgstr "รีเฟรช"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Refresh Localization"
-msgstr ""
+msgstr "รีเฟรชการประยุกต์ใช้"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_techname
 msgid "Technical Name"
-msgstr ""
+msgstr "ชื่อทางเทคนิค"
 
 #. module: base_geolocalize
 #. odoo-python
@@ -190,16 +191,27 @@ msgid ""
 "Then, go to Developer Console, and enable the APIs:\n"
 "Geocoding, Maps Static, Maps Javascript.\n"
 msgstr ""
+"ไม่สามารถระบุตำแหน่งทางภูมิศาสตร์ได้ เกิดข้อผิดพลาด:\n"
+"%s\n"
+"\n"
+"Google ทำให้ฟีเจอร์นี้เป็นฟีเจอร์ที่ต้องชำระเงิน\n"
+"คุณควรเปิดใช้งานการเรียกเก็บเงินในบัญชี Google ของคุณก่อน\n"
+"จากนั้นไปที่คอนโซลสำหรับนักพัฒนาซอฟต์แวร์และเปิดใช้งาน API:\n"
+"การระบุพิกัดทางภูมิศาสตร์, แผนที่แบบคงที่, แผนที่ Javascript\n"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Updated on:"
-msgstr ""
+msgstr "อัปเดตเมื่อ:"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
-msgid "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
+msgid ""
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key"
+" for more information."
 msgstr ""
+"เยี่ยมชม https://developers.google.com/maps/documentation/geocoding/get-api-"
+"key for more information."
 
 #. module: base_geolocalize
 #. odoo-python

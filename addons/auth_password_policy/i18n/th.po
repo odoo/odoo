@@ -1,28 +1,40 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_password_policy
-#
+# 
 # Translators:
-# Wichanon Jamwutthipreecha, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
-"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_config_settings
 msgid "Config Settings"
 msgstr "ตั้งค่าการกำหนดค่า"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_users__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_users__id
+msgid "ID"
+msgstr "ไอดี"
 
 #. module: auth_password_policy
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
@@ -33,7 +45,7 @@ msgstr "ความยาวรหัสผ่านขั้นต่ำ"
 #: model:ir.model.fields,help:auth_password_policy.field_res_config_settings__minlength
 msgid ""
 "Minimum number of characters passwords must contain, set to 0 to disable."
-msgstr "รหัสผ่านต้องมีจำนวนอักขระขั้นต่ำ ตั้งค่าเป็น 0 เพื่อปิดใช้งาน"
+msgstr "รหัสผ่านต้องมีจำนวนตัวอักษรขั้นต่ำ ตั้งค่าเป็น 0 เพื่อปิดใช้งาน"
 
 #. module: auth_password_policy
 #. odoo-javascript
@@ -42,20 +54,16 @@ msgid "Password"
 msgstr "ใส่รหัส"
 
 #. module: auth_password_policy
-#. odoo-python
-#: code:addons/auth_password_policy/models/res_users.py:0
-msgid "Passwords must have at least %d characters, got %d."
-msgstr "รหัสผ่านต้องมีอย่างน้อย%d ตัวอักษรมี %d"
-
-#. module: auth_password_policy
 #. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_meter.js:0
 msgid ""
 "Required: %s\n"
 "\n"
-"Hint: to increase password strength, increase length, use multiple words, "
-"and use non-letter characters."
+"Hint: to increase password strength, increase length, use multiple words, and use non-letter characters."
 msgstr ""
+"ต้องระบุ: %s\n"
+"\n"
+"คำแนะนำ: เพื่อเพิ่มความรัดกุมของรหัสผ่าน เพิ่มความยาว ใช้คำหลายคำ และใช้อักขระที่ไม่ใช่ตัวอักษร"
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_users
@@ -63,19 +71,29 @@ msgid "User"
 msgstr "ผู้ใช้"
 
 #. module: auth_password_policy
+#. odoo-python
+#: code:addons/auth_password_policy/models/res_users.py:0
+msgid ""
+"Your password must contain at least %(minimal_length)d characters and only "
+"has %(current_count)d."
+msgstr ""
+"รหัสผ่านของคุณต้องมีตัวอักษรอย่างน้อย %(minimal_length)d ตัว ตอนนี้มีเพียง "
+"%(current_count)d เท่านั้น"
+
+#. module: auth_password_policy
 #. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 msgid "at least %s character classes"
-msgstr ""
+msgstr "มีคลาสตัวอักษรอย่างน้อย %s"
 
 #. module: auth_password_policy
 #. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 msgid "at least %s characters"
-msgstr ""
+msgstr "มีตัวอักษรอย่างน้อย %s"
 
 #. module: auth_password_policy
 #. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 msgid "at least %s words"
-msgstr ""
+msgstr "มีคำอย่างน้อย %s"

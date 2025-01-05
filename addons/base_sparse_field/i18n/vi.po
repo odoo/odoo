@@ -1,28 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_sparse_field
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_base
 msgid "Base"
-msgstr "Cơ bản"
+msgstr "Cơ sở"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__boolean
@@ -30,14 +30,15 @@ msgid "Boolean"
 msgstr "Boolean"
 
 #. module: base_sparse_field
+#. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
 msgid "Changing the storing system for field \"%s\" is not allowed."
-msgstr "Changing the storing system for field \"%s\" is not allowed."
+msgstr "Không được phép thay đổi hệ thống lưu trữ cho trường \"%s\"."
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__char
 msgid "Char"
-msgstr "Char"
+msgstr "Ký tự"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__create_uid
@@ -62,7 +63,7 @@ msgstr "Tên hiển thị"
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__ttype
 msgid "Field Type"
-msgstr "Field Type"
+msgstr "Loại Trường"
 
 #. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_ir_model_fields
@@ -81,23 +82,24 @@ msgstr "ID"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,help:base_sparse_field.field_ir_model_fields__serialization_field_id
-msgid "If set, this field will be stored in the sparse structure of the serialization field, instead of having its own database column. This cannot be changed after creation."
-msgstr "If set, this field will be stored in the sparse structure of the serialization field, instead of having its own database column. This cannot be changed after creation."
+msgid ""
+"If set, this field will be stored in the sparse structure of the "
+"serialization field, instead of having its own database column. This cannot "
+"be changed after creation."
+msgstr ""
+"Nếu thiết lập, trường này sẽ được lưu trữ trong cấu trúc thưa thớt của "
+"trường tuần tự hóa, thay vì có cột cơ sở dữ liệu riêng. Điều này không thể "
+"thay đổi sau khi tạo."
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__integer
 msgid "Integer"
-msgstr "Integer"
-
-#. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test____last_update
-msgid "Last Modified on"
-msgstr "Sửa lần cuối vào"
+msgstr "Số nguyên"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__write_date
@@ -107,7 +109,7 @@ msgstr "Cập nhật lần cuối vào"
 #. module: base_sparse_field
 #: model:ir.model.fields.selection,name:base_sparse_field.selection__sparse_fields_test__selection__one
 msgid "One"
-msgstr "One"
+msgstr "Một"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__partner
@@ -115,9 +117,10 @@ msgid "Partner"
 msgstr "Đối tác"
 
 #. module: base_sparse_field
+#. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
 msgid "Renaming sparse field \"%s\" is not allowed"
-msgstr "Renaming sparse field \"%s\" is not allowed"
+msgstr "Không được phép đổi tên trường thưa thớt \"%s\""
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__selection
@@ -127,24 +130,29 @@ msgstr "Lựa chọn"
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__serialization_field_id
 msgid "Serialization Field"
-msgstr "Serialization Field"
+msgstr "Trường tuần tự hoá"
 
 #. module: base_sparse_field
+#. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
-msgid "Serialization field %r not found for sparse field %s!"
-msgstr "Serialization field %r not found for sparse field %s!"
+msgid ""
+"Serialization field \"%(serialization_field)s\" not found for sparse field "
+"%(sparse_field)s!"
+msgstr ""
+"Không tìm thấy trường tuần tự hóa \"%(serialization_field)s\" cho trường "
+"thưa thớt %(sparse_field)s!"
 
 #. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_sparse_fields_test
 msgid "Sparse fields Test"
-msgstr "Sparse fields Test"
+msgstr "Kiểm thử trường thưa thớt"
 
 #. module: base_sparse_field
 #: model:ir.model.fields.selection,name:base_sparse_field.selection__sparse_fields_test__selection__two
 msgid "Two"
-msgstr "Two"
+msgstr "Hai"
 
 #. module: base_sparse_field
 #: model:ir.model.fields.selection,name:base_sparse_field.selection__ir_model_fields__ttype__serialized
 msgid "serialized"
-msgstr "serialized"
+msgstr "tuần tự hoá"

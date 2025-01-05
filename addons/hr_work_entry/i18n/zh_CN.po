@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_work_entry
-#
+# 
 # Translators:
-# Raymond Yu <cl_yu@hotmail.com>, 2022
-# Martin Trigaux, 2023
-# Emily Jia <eji@odoo.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Emily Jia <eji@odoo.com>, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
-"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_work_entry
@@ -34,6 +32,9 @@ msgid ""
 "                            Work Entries\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            工作记录\n"
+"                            </span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
@@ -45,7 +46,7 @@ msgstr "<span>小时</span>"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__active
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__active
 msgid "Active"
-msgstr "启用"
+msgstr "有效"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -72,8 +73,10 @@ msgstr "已取消"
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__code
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__code
-msgid "Careful, the Code is used in many references, changing it could lead to unwanted changes."
-msgstr "小心，该代码在许多参考文献中引用，改变它可能会导致不必要的变化。"
+msgid ""
+"Careful, the Code is used in many references, changing it could lead to "
+"unwanted changes."
+msgstr "小心，该代码在许多参考文献中使用，改变它可能会导致不必要的变化。"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__color
@@ -102,6 +105,22 @@ msgid "Conflicts"
 msgstr "冲突"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__country_id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_id
+msgid "Country"
+msgstr "国家/地区"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_code
+msgid "Country Code"
+msgstr "国家/地区代码"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_type_action
+msgid "Create a new work entry type"
+msgstr "创建新的工作记录类型"
+
+#. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_uid
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__create_uid
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__create_uid
@@ -113,7 +132,7 @@ msgstr "创建人"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__create_date
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__create_date
 msgid "Created on"
-msgstr "创建时间"
+msgstr "创建日期"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -137,14 +156,18 @@ msgid "Description"
 msgstr "描述"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__draft
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Draft"
 msgstr "草稿"
 
@@ -170,12 +193,12 @@ msgstr "结束"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__external_code
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__external_code
 msgid "External Code"
-msgstr ""
+msgstr "外部代码"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date_start
 msgid "From"
-msgstr "从"
+msgstr "来自"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_work_entry
@@ -190,18 +213,23 @@ msgstr "人力资源工作类型"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__has_work_entries
 msgid "Has Work Entries"
-msgstr ""
+msgstr "有工作记录"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__active
-msgid "If the active field is set to false, it will allow you to hide the work entry type without removing it."
+msgid ""
+"If the active field is set to false, it will allow you to hide the work "
+"entry type without removing it."
 msgstr "如果 '有效' 字段设为否，将可以将其隐藏而不用删除。"
 
 #. module: hr_work_entry
@@ -216,7 +244,7 @@ msgstr "最后更新人"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__write_date
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__write_date
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr "上次更新日期"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__user_id
@@ -230,6 +258,11 @@ msgid "Name"
 msgstr "名称"
 
 #. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
+msgid "No data to display"
+msgstr "无数据显示"
+
+#. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "Note: Validated work entries cannot be modified."
 msgstr "注意：已验证的工作条目不能被修改。"
@@ -237,13 +270,13 @@ msgstr "注意：已验证的工作条目不能被修改。"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.overtime_work_entry_type
 msgid "Overtime Hours"
-msgstr ""
+msgstr "加班时间"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__code
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__code
 msgid "Payroll Code"
-msgstr ""
+msgstr "工资代码"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_leaves
@@ -263,7 +296,7 @@ msgstr "搜索工作条目类型"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__sequence
 msgid "Sequence"
-msgstr "序号"
+msgstr "序列"
 
 #. module: hr_work_entry
 #. odoo-javascript
@@ -277,7 +310,7 @@ msgid "Start Date"
 msgstr "开始日期"
 
 #. module: hr_work_entry
-#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entry_start_before_end
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_work_entry_start_before_end
 msgid "Starting time should be before end time."
 msgstr "开始时间应在结束时间之前。"
 
@@ -287,9 +320,25 @@ msgid "State"
 msgstr "状态"
 
 #. module: hr_work_entry
-#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_type_unique_work_entry_code
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"ISO国家/地区代码包含两个字符。\n"
+"可以使用该字段进行快速搜索。"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
 msgid "The same code cannot be associated to multiple work entry types."
 msgstr "同一代码不能与多个工作条目类型相关联。"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "This work entry is validated. You can't delete it."
+msgstr "此工作条目已验证。无法删除。"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -300,6 +349,13 @@ msgstr "休息时间的选择"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date_stop
 msgid "To"
 msgstr "至"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
+msgid ""
+"Try to add some records, or make sure that there is no active filter in the "
+"search bar."
+msgstr "尝试添加一些记录，或确保搜索栏中没有激活的筛选器。"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -322,15 +378,16 @@ msgstr "未定义的类型"
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__external_code
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__external_code
 msgid "Use this code to export your data to a third party"
-msgstr ""
+msgstr "使用此代码向第三方导出数据"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__validated
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Validated"
 msgstr "已验证"
 
 #. module: hr_work_entry
-#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entries_no_validated_conflict
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_work_entries_no_validated_conflict
 msgid "Validated work entries cannot overlap"
 msgstr "经过验证的工作条目不能重合"
 
@@ -382,9 +439,23 @@ msgid "Work Entry Types"
 msgstr "工作条目类型"
 
 #. module: hr_work_entry
-#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entry_has_end
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_work_entry_has_end
 msgid "Work entry must end. Please define an end date or a duration."
 msgstr "工作条目必须结束。请定义一个结束日期或期限。"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid ""
+"You can't change the Country of this work entry type cause it's currently "
+"used by the system. You need to delete related working entries first."
+msgstr "您无法更改此工作条目类型的国家/地区，因为系统当前正在使用它。您需要先删除相关的工作条目。"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "You can't change the country of this specific work entry type."
+msgstr "您无法更改此特定工作条目类型的国家/地区。"
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique

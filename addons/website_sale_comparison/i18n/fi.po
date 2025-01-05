@@ -1,30 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_comparison
-#
+# 
 # Translators:
-# Eppu Tuominen <eppu.tuominen@emsystems.fi>, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Miku Laitinen <miku.laitinen@gmail.com>, 2022
-# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
-# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Martin Trigaux, 2022
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_comparison
@@ -52,6 +44,9 @@ msgid ""
 "<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
 "role=\"img\" aria-label=\"Collapse\" title=\"Collapse\"/><span>Tags</span>"
 msgstr ""
+"<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
+"role=\"img\" aria-label=\"Supista\" "
+"title=\"Collapse\"/><span>Tunnisteet</span>"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
@@ -72,7 +67,7 @@ msgstr "<span class=\"fa fa-exchange me-2\"/>Vertaa"
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "<span>Tags</span>"
-msgstr ""
+msgstr "<span>Tunnisteet</span>"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
@@ -177,6 +172,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
+msgid "In accordion"
+msgstr ""
+
+#. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__write_uid
 msgid "Last Updated by"
 msgstr "Viimeksi päivittänyt"
@@ -190,6 +190,12 @@ msgstr "Viimeksi päivitetty"
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
 msgid "None"
 msgstr "Ei mitään"
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.accordion_specs_item
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.specifications_table
+msgid "Others"
+msgstr "Muut"
 
 #. module: website_sale_comparison
 #. odoo-javascript
@@ -245,6 +251,8 @@ msgid ""
 "Set a category to regroup similar attributes under the same section in the "
 "Comparison page of eCommerce."
 msgstr ""
+"Määritä luokka, jotta samankaltaiset ominaisuudet voidaan ryhmitellä samaan "
+"osioon verkkokaupan Vertailu-sivulla."
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
@@ -257,12 +265,12 @@ msgid "Specification"
 msgstr "Määrittelyt"
 
 #. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.accordion_specs_item
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 msgid "Specifications"
 msgstr "Määrittelyt"
 
 #. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "Uncategorized"
 msgstr "Luokittelemattomat"
@@ -287,9 +295,4 @@ msgstr "Voit vertailla enintään 4 tuotetta."
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute__category_id
 msgid "eCommerce Category"
-msgstr ""
-
-#. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
-msgid "or"
-msgstr "tai"
+msgstr "verkkokaupan kategoria"

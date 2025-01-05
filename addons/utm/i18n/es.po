@@ -1,30 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* utm
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: es\n"
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: utm
 #. odoo-python
 #: code:addons/utm/models/utm_source.py:0
 msgid "%(content)s (%(model_description)s created on %(create_date)s)"
-msgstr "%(content)s (%(model_description)s creado en %(create_date)s)"
+msgstr "%(content)s (%(model_description)s creado el %(create_date)s)"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__active
@@ -52,7 +51,7 @@ msgstr "Aprobado"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Archive"
-msgstr ""
+msgstr "Archivar"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
@@ -64,7 +63,8 @@ msgstr "Archivado"
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_tag
 msgid "Assign tags to your campaigns to organize, filter and track them."
-msgstr "Asignar etiquetas a sus campañas para organizar, filtrar y rastrearlas."
+msgstr ""
+"Asigne etiquetas a sus campañas para organizar, filtrar y rastrearlas."
 
 #. module: utm
 #. odoo-javascript
@@ -85,14 +85,14 @@ msgstr "Campaña"
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__name
 msgid "Campaign Identifier"
-msgstr "Identificador de campañas"
+msgstr "Identificador de la campaña"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__title
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form_quick_create
 msgid "Campaign Name"
-msgstr "Nombre de campaña"
+msgstr "Nombre de la campaña"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_stage
@@ -103,7 +103,7 @@ msgstr "Etapa de la campaña"
 #: model:ir.actions.act_window,name:utm.action_view_utm_tag
 #: model_terms:ir.ui.view,arch_db:utm.utm_tag_view_tree
 msgid "Campaign Tags"
-msgstr "Etiquetas de campaña"
+msgstr "Etiquetas de la campaña"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_campaign_action
@@ -114,13 +114,17 @@ msgstr "Campañas"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
-msgid "Campaigns are used to centralize your marketing efforts and track their results."
-msgstr "Las campañas se usan para centralizar sus esfuerzos de marketing y seguir sus resultados."
+msgid ""
+"Campaigns are used to centralize your marketing efforts and track their "
+"results."
+msgstr ""
+"Las campañas se usan para centralizar sus esfuerzos de marketing y seguir "
+"sus resultados."
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "Campaigns that are assigned to me"
-msgstr ""
+msgstr "Campañas que me han asignado"
 
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_christmas_special
@@ -131,7 +135,9 @@ msgstr "Especial de Navidad"
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Collect ideas, design creative content and publish it once reviewed."
-msgstr "Coleccione ideas, diseñe contenido creativo y publíquelo una vez que esté revisado."
+msgstr ""
+"Coleccione ideas, diseñe contenido creativo y publíquelo una vez que esté "
+"revisado."
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__color
@@ -143,7 +149,7 @@ msgstr "Índice de Colores"
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Copywriting"
-msgstr "Redacción de textos publicitarios"
+msgstr "Redacción"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_medium_action
@@ -192,7 +198,7 @@ msgstr "Flujo creativo"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Delete"
-msgstr "Suprimir"
+msgstr "Eliminar"
 
 #. module: utm
 #. odoo-javascript
@@ -236,12 +242,12 @@ msgstr "Editar"
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_email_campaign_products
 msgid "Email Campaign - Products"
-msgstr "Email de Campaña - Productos"
+msgstr "Campaña por correo - Productos"
 
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_email_campaign_services
 msgid "Email Campaign - Services"
-msgstr "Email de Campaña - Servicios"
+msgstr "Campaña por correo - Servicios"
 
 #. module: utm
 #. odoo-javascript
@@ -253,13 +259,17 @@ msgstr "Flujo centrado en el evento"
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Gather Data"
-msgstr "Juntar información"
+msgstr "Recopilar información"
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-msgid "Gather data, build a recipient list and write content based on your Marketing target."
-msgstr "Junte información, cree una lista de destinatarios y escriba contenido que se centre en su objetivo de marketing."
+msgid ""
+"Gather data, build a recipient list and write content based on your "
+"Marketing target."
+msgstr ""
+"Recopile información, cree una lista de destinatarios y escriba contenido "
+"que se centre en su objetivo de marketing."
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
@@ -269,7 +279,7 @@ msgstr "Agrupar por"
 #. module: utm
 #: model:ir.model,name:utm.model_ir_http
 msgid "HTTP Routing"
-msgstr "Ruta HTTP "
+msgstr "Enrutamiento HTTP "
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__id
@@ -313,7 +323,7 @@ msgstr "Más tarde"
 #. module: utm
 #: model:ir.ui.menu,name:utm.menu_link_tracker_root
 msgid "Link Tracker"
-msgstr "Rastr. enlaces"
+msgstr "Rastreador de enlaces"
 
 #. module: utm
 #. odoo-javascript
@@ -330,7 +340,7 @@ msgstr "Marketing"
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__medium_id
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_form
 msgid "Medium"
-msgstr "Media"
+msgstr "Medio"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium__name
@@ -347,7 +357,7 @@ msgstr "Medios"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "My Campaigns"
-msgstr ""
+msgstr "Mis campañas"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source_mixin__name
@@ -368,22 +378,37 @@ msgid "No Sources yet!"
 msgstr "¡Todavía no hay fuentes!"
 
 #. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_medium.py:0
+msgid ""
+"Oops, you can't delete the Medium '%s'.\n"
+"Doing so would be like tearing down a load-bearing wall — not the best idea."
+msgstr ""
+"No es posible eliminar el medio %s.\n"
+"Sería como derribar un muro de carga: no es precisamente la mejor idea."
+
+#. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Pre-Launch"
-msgstr "Pre lanzamiento"
+msgstr "Prelanzamiento"
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Prepare Campaigns and get them approved before making them go live."
-msgstr "Prepare campañas y consiga que las aprueben antes de que se usen en vivo."
+msgstr ""
+"Prepare campañas y consiga que las aprueben antes de que se usen en vivo."
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-msgid "Prepare your Campaign, test it with part of your audience and deploy it fully afterwards."
-msgstr "Prepare su campaña, pruébelo con parte de su audiencia y comience usarla después por completo."
+msgid ""
+"Prepare your Campaign, test it with part of your audience and deploy it "
+"fully afterwards."
+msgstr ""
+"Prepare su campaña, pruébelo con parte de su audiencia y comience usarla "
+"después por completo."
 
 #. module: utm
 #. odoo-javascript
@@ -400,7 +425,7 @@ msgstr "Responsable"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Restore"
-msgstr ""
+msgstr "Restaurar"
 
 #. module: utm
 #. odoo-javascript
@@ -412,22 +437,22 @@ msgstr "Revisión"
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Running"
-msgstr "En proceso"
+msgstr "En curso"
 
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_fall_drive
 msgid "Sale"
-msgstr "Oferta"
+msgstr "Rebajas"
 
 #. module: utm
 #: model:utm.stage,name:utm.campaign_stage_1
 msgid "Schedule"
-msgstr "Planificacion"
+msgstr "Programar"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_search
 msgid "Search UTM Medium"
-msgstr "Busque un medio UTM"
+msgstr "Buscar un medio UTM"
 
 #. module: utm
 #. odoo-javascript
@@ -451,13 +476,13 @@ msgstr "Secuencia"
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Soft-Launch"
-msgstr "Pre lanzamiento"
+msgstr "Prelanzamiento"
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Soft-Launch Flow"
-msgstr "Flujo del pre lanzamiento"
+msgstr "Flujo del prelanzamiento"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__source_id
@@ -465,7 +490,7 @@ msgstr "Flujo del pre lanzamiento"
 #: model_terms:ir.ui.view,arch_db:utm.utm_source_view_form
 #: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
 msgid "Source"
-msgstr "Origen"
+msgstr "Fuente"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source__name
@@ -493,30 +518,33 @@ msgstr "Etapas"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_stage
-msgid "Stages allow you to organize your workflow  (e.g. plan, design, in progress, done, …)."
+msgid ""
+"Stages allow you to organize your workflow  (e.g. plan, design, in progress,"
+" done, …)."
 msgstr ""
+"Las etapas le permiten organizar su flujo de trabajo (por ejemplo, "
+"planificación, diseño, en proceso, listo...)"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_tag__color
-msgid "Tag color. No color means no display in kanban to distinguish internal tags from public categorization tags."
-msgstr "Color de etiqueta. Si no tiene color significa que no se puede visualizar en kanban para distinguir las etiquetas internas de las etiquetas de categorización públicas. "
+msgid ""
+"Tag color. No color means no display in kanban to distinguish internal tags "
+"from public categorization tags."
+msgstr ""
+"Color de etiqueta. Si no tiene color significa que no se puede visualizar en"
+" kanban para distinguir las etiquetas internas de las etiquetas de "
+"categorización públicas. "
 
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "¡El nombre de la etiqueta ya existe!"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__tag_ids
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "Tags"
-msgstr "Categorías"
-
-#. module: utm
-#. odoo-python
-#: code:addons/utm/models/utm_medium.py:0
-msgid "The UTM medium '%s' cannot be deleted as it is used in some main functional flows, such as the recruitment and the mass mailing."
-msgstr "El medio UTM '%s' no se puede borrar ya que se usa en algunos flujos funcionales, como el reclutamiento y correos masivos,"
+msgstr "Etiquetas"
 
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_campaign_unique_name
@@ -539,36 +567,50 @@ msgstr "Esta semana"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__campaign_id
-msgid "This is a name that helps you keep track of your different campaign efforts, e.g. Fall_Drive, Christmas_Special"
-msgstr "Esto es un nombre que facilita el seguimiento de sus diferentes proyectos de campaña. Por ejemplo: Rebajas_de_otoño, Especial_de_Navidad"
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
+msgstr ""
+"Esto es un nombre que facilita el seguimiento de sus diferentes proyectos de"
+" campaña. Por ejemplo: Rebajas_de_otoño, Especial_de_Navidad"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr "Esto es el método de entrega. Por ejemplo: correo postal, correo electrónico, publicidad web"
+msgstr ""
+"Esto es el método de entrega. Por ejemplo: correo postal, correo "
+"electrónico, publicidad web"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__source_id
-msgid "This is the source of the link, e.g. Search Engine, another domain, or name of email list"
-msgstr "Esto es la fuente del enlace. Por ejemplo: motor de búsqueda, otro dominio o nombre en listado de correos electrónicos"
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
+msgstr ""
+"Esto es la fuente del enlace. Por ejemplo: motor de búsqueda, otro dominio o"
+" nombre en listado de correos electrónicos"
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "To be Approved"
-msgstr "Por aprobar"
+msgstr "A aprobar"
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-msgid "Track incoming events (e.g. Christmas, Black Friday, ...) and publish timely content."
+msgid ""
+"Track incoming events (e.g. Christmas, Black Friday, ...) and publish timely"
+" content."
 msgstr ""
+"Rastree los siguientes eventos (por ejemplo, Navidad, Black Friday, etc.) y "
+"publique el contenido correspondiente."
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_campaign
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
 msgid "UTM Campaign"
-msgstr "Campaña de UTM"
+msgstr "Campaña UTM"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_tree
@@ -579,22 +621,26 @@ msgstr "Campañas UTM"
 #. module: utm
 #: model:ir.model,name:utm.model_utm_medium
 msgid "UTM Medium"
-msgstr "UTM Medium"
+msgstr "Medio UTM"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_medium_action
-msgid "UTM Mediums track the mean that was used to attract traffic (e.g. \"Website\", \"Twitter\", ...)."
-msgstr "Los medios UTM rastrean el medio que se usó para atraer tráfico (p. ej. \"sitio web\", \"twitter\", ...)."
+msgid ""
+"UTM Mediums track the mean that was used to attract traffic (e.g. "
+"\"Website\", \"X\", ...)."
+msgstr ""
+"Los medios UTM rastrean el medio que se usó para atraer tráfico (p. ej. "
+"\"sitio web\", \"X\", ...)."
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_mixin
 msgid "UTM Mixin"
-msgstr "TM Mixin"
+msgstr "Mixin UTM"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source
 msgid "UTM Source"
-msgstr "UTM Source"
+msgstr "Fuente UTM"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source_mixin
@@ -603,8 +649,12 @@ msgstr "Mixin de la fuente UTM"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_source_action
-msgid "UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", \"\", ...)."
-msgstr "Los recursos UTM rastrean de dónde viene el tráfico (p. ej. \"newsletter de mayo\", ...)"
+msgid ""
+"UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", \"\", "
+"...)."
+msgstr ""
+"Las fuentes UTM rastrean de dónde viene el tráfico (por ejemplo, \"boletín "
+"de noticias de mayo\", ...)."
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.action_view_utm_stage
@@ -628,22 +678,32 @@ msgid "Use This For My Campaigns"
 msgstr "Use esto para Mis campañas"
 
 #. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_source.py:0
+msgid ""
+"You cannot update multiple records with the same name. The name should be "
+"unique!"
+msgstr ""
+"No puede actualizar varios registros con el mismo nombre, el nombre debe ser"
+" único."
+
+#. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_form
 msgid "e.g. \"Brainstorming\""
-msgstr ""
+msgstr "por ej. \"Lluvia de ideas\""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
 msgid "e.g. \"Christmas Mailing\""
-msgstr ""
+msgstr "por ej., \"Envíos navideños\""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
 msgid "e.g. \"Email\""
-msgstr ""
+msgstr "p. ej. \"Correo electrónico\""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form_quick_create
 msgid "e.g. Black Friday"
-msgstr "p. ej. Buen fin"
+msgstr "p. ej. Black Friday"

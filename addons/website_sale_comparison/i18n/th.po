@@ -1,26 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_comparison
-#
+# 
 # Translators:
-# Amin Cheloh <amincheloh@gmail.com>, 2022
-# Odoo Thaidev <odoothaidev@gmail.com>, 2022
-# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
-# Martin Trigaux, 2022
-# Wichanon Jamwutthipreecha, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
-"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_sale_comparison
@@ -48,11 +44,13 @@ msgid ""
 "<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
 "role=\"img\" aria-label=\"Collapse\" title=\"Collapse\"/><span>Tags</span>"
 msgstr ""
+"<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
+"role=\"รูปภาพ\" aria-label=\"ยุบ\" title=\"ยุบ\"/><span>แท็ก</span>"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "<i class=\"fa fa-shopping-cart me-2\"/>Add to Cart"
-msgstr ""
+msgstr "<i class=\"fa fa-shopping-cart me-2\"/>หยิบลงตะกร้า"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
@@ -62,13 +60,13 @@ msgstr "<i class=\"fa fa-trash\" role=\"img\" aria-label=\"ลบออก\"/>"
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
 msgid "<span class=\"fa fa-exchange me-2\"/>Compare"
-msgstr ""
+msgstr "<span class=\"fa fa-exchange me-2\"/>เปรียบเทียบ"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "<span>Tags</span>"
-msgstr ""
+msgstr "<span>แท็ก</span>"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
@@ -94,7 +92,7 @@ msgstr "หมวดหมู่คุณลักษณะ"
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
 msgid "Bottom of Page"
-msgstr ""
+msgstr "ด้านล่างของหน้า"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__name
@@ -125,7 +123,7 @@ msgstr "ติดต่อเรา"
 #. module: website_sale_comparison
 #: model_terms:ir.actions.act_window,help:website_sale_comparison.product_attribute_category_action
 msgid "Create a new attribute category"
-msgstr ""
+msgstr "สร้างหมวดหมู่แอตทริบิวต์ใหม่"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__create_uid
@@ -164,11 +162,18 @@ msgid ""
 "Group attributes by category that will appear in the specification\n"
 "                part of a product page."
 msgstr ""
+"จัดกลุ่มแอตทริบิวต์ตามหมวดหมู่ที่จะแสดงในส่วน\n"
+"                ข้อกำหนดของหน้าผลิตภัณฑ์"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__id
 msgid "ID"
 msgstr "ไอดี"
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
+msgid "In accordion"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__write_uid
@@ -184,6 +189,12 @@ msgstr "อัปเดตครั้งล่าสุดเมื่อ"
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
 msgid "None"
 msgstr "ไม่มี"
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.accordion_specs_item
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.specifications_table
+msgid "Others"
+msgstr "อื่น ๆ "
 
 #. module: website_sale_comparison
 #. odoo-javascript
@@ -205,7 +216,7 @@ msgstr "หมวดหมู่คุณลักษณะผลิตภัณ
 #. module: website_sale_comparison
 #: model:ir.model,name:website_sale_comparison.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr "ไลน์คุณลักษณะเทมเพลตสินค้า"
+msgstr "รายการคุณลักษณะเทมเพลตสินค้า"
 
 #. module: website_sale_comparison
 #: model:ir.model,name:website_sale_comparison.model_product_product
@@ -239,6 +250,7 @@ msgid ""
 "Set a category to regroup similar attributes under the same section in the "
 "Comparison page of eCommerce."
 msgstr ""
+"ตั้งค่าหมวดหมู่เพื่อจัดกลุ่มแอตทริบิวต์ที่คล้ายกันใหม่ภายใต้ส่วนเดียวกันในหน้าการเปรียบเทียบของอีคอมเมิร์ซ"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
@@ -248,15 +260,15 @@ msgstr "ตัวเปรียบเทียบร้านค้า"
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
 msgid "Specification"
-msgstr ""
+msgstr "ข้อมูลจำเพาะ"
 
 #. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.accordion_specs_item
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 msgid "Specifications"
 msgstr "ข้อมูลจำเพาะ"
 
 #. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "Uncategorized"
 msgstr "ไม่ถูกจัดหมวด"
@@ -281,9 +293,4 @@ msgstr "คุณสามารถเปรียบเทียบผลิต
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute__category_id
 msgid "eCommerce Category"
-msgstr ""
-
-#. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
-msgid "or"
-msgstr "หรือ"
+msgstr "หมวดหมู่อีคอมเมิร์ซ"

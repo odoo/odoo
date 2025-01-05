@@ -1,33 +1,40 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_password_policy
-#
+# 
 # Translators:
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2022
-# Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2022
-# Maksym <ms@myodoo.pl>, 2022
-# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
-"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
-"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_config_settings
 msgid "Config Settings"
 msgstr "Ustawienia konfiguracji"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_users__display_name
+msgid "Display Name"
+msgstr "Nazwa wyświetlana"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_users__id
+msgid "ID"
+msgstr "ID"
 
 #. module: auth_password_policy
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
@@ -38,7 +45,8 @@ msgstr "Minimalna długość hasła"
 #: model:ir.model.fields,help:auth_password_policy.field_res_config_settings__minlength
 msgid ""
 "Minimum number of characters passwords must contain, set to 0 to disable."
-msgstr "Minimalna liczba znaków jaką musi posiadać hasło, ustaw 0 aby wyłączyć"
+msgstr ""
+"Minimalna liczba znaków jaką musi posiadać hasło, ustaw 0 aby wyłączyć"
 
 #. module: auth_password_policy
 #. odoo-javascript
@@ -47,29 +55,31 @@ msgid "Password"
 msgstr "Hasło"
 
 #. module: auth_password_policy
-#. odoo-python
-#: code:addons/auth_password_policy/models/res_users.py:0
-msgid "Passwords must have at least %d characters, got %d."
-msgstr "Hasła muszą posiadać przynajmniej %dznaków, obecne ma %d."
-
-#. module: auth_password_policy
 #. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_meter.js:0
 msgid ""
 "Required: %s\n"
 "\n"
-"Hint: to increase password strength, increase length, use multiple words, "
-"and use non-letter characters."
+"Hint: to increase password strength, increase length, use multiple words, and use non-letter characters."
 msgstr ""
 "Wymagane: %s\n"
 "\n"
-"Podpowiedź: aby zwiększyć siłę hasła, zwiększ jego długość, użyj wielu słów "
-"i użyj znaków specjalnych lub cyfr."
+"Podpowiedź: aby zwiększyć siłę hasła, zwiększ jego długość, użyj wielu słów i użyj znaków specjalnych lub cyfr."
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_users
 msgid "User"
 msgstr "Użytkownik"
+
+#. module: auth_password_policy
+#. odoo-python
+#: code:addons/auth_password_policy/models/res_users.py:0
+msgid ""
+"Your password must contain at least %(minimal_length)d characters and only "
+"has %(current_count)d."
+msgstr ""
+"Twoje hasło musi zawierać co najmniej %(minimal_length)d znaków, a ma "
+"jedynie %(current_count)d."
 
 #. module: auth_password_policy
 #. odoo-javascript

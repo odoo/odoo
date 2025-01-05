@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_ldap
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
-# Vasiliy Korobatov <korobatov@gmail.com>, 2019
-# Aidos Kakimzhanov <aidos.kakimzhan@gmail.com>, 2019
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Aidos Kakimzhanov <aidos.kakimzhan@gmail.com>, 2019\n"
-"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: auth_ldap
@@ -37,11 +35,25 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"Фильтр, используемый для поиска учетных записей пользователей в базе данных LDAP. Это произвольный фильтр LDAP в строковом представлении. Любой `%s` заполнитель будет заменен логином (идентификатором), предоставленным пользователем, фильтр должен содержать хотя бы один такой заполнитель. \n"
+"\n"
+"   Фильтр должен дать ровно один (1) результат, иначе логин будет считаться недействительным. \n"
+"\n"
+"   Пример (фактические атрибуты зависят от сервера LDAP и настроек): \n"
+"\n"
+"(&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"   или\n"
+" (|(mail=%s)(uid=%s))"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
-msgid "Automatically create local user accounts for new users authenticating via LDAP"
-msgstr "Автоматически создавать локальную учётную запись для новых пользователей прошедших проверку подлинности LDAP"
+msgid ""
+"Automatically create local user accounts for new users authenticating via "
+"LDAP"
+msgstr ""
+"Автоматически создавать локальную учётную запись для новых пользователей "
+"прошедших проверку подлинности LDAP"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -61,12 +73,12 @@ msgstr "Конфигурирование LDAP компании"
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings
 msgid "Config Settings"
-msgstr "Настройки конфигурации"
+msgstr "Параметры конфигурации"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
 msgid "Create User"
-msgstr "Создайте пользователя"
+msgstr "Создать пользователя"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_uid
@@ -76,22 +88,32 @@ msgstr "Создано"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_date
 msgid "Created on"
-msgstr "Создан"
+msgstr "Создано"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_base
-msgid "DN of the user search scope: all descendants of this base will be searched for users."
+msgid ""
+"DN of the user search scope: all descendants of this base will be searched "
+"for users."
 msgstr ""
+"DN области поиска пользователей: все потомки этой базы будут искать "
+"пользователей. "
 
 #. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__display_name
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_ldap.field_res_users__display_name
 msgid "Display Name"
-msgstr "Отображаемое Имя"
+msgstr "Отображаемое имя"
 
 #. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__id
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__id
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_ldap.field_res_users__id
 msgid "ID"
-msgstr "Номер"
+msgstr "ID"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
@@ -141,14 +163,9 @@ msgid "LDAP password"
 msgstr "Пароль LDAP"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap____last_update
-msgid "Last Modified on"
-msgstr "Последнее изменение"
-
-#. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновил"
+msgstr "Последнее обновление"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_date
@@ -158,12 +175,15 @@ msgstr "Последнее обновление"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Login Information"
-msgstr "Информация входа"
+msgstr "Регистрационная инфо"
 
 #. module: auth_ldap
+#. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "No local user found for LDAP login and not configured to create one"
-msgstr "Не найден локальный пользователь для входа в LDAP и не настроен для его создания"
+msgstr ""
+"Не найден локальный пользователь для входа в LDAP и не настроен для его "
+"создания"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -172,18 +192,24 @@ msgstr "Параметры подключения"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
-msgid "Request secure TLS/SSL encryption when connecting to the LDAP server. This option requires a server with STARTTLS enabled, otherwise all authentication attempts will fail."
-msgstr "Запросить поддержку TLS/SSL шифрования при подключении к LDAP серверу. Для подключения требуется LDAP сервер с поддержкой параметра STARTTLS, в противном случае все попытки проверки подлинности потерпят неудачу."
+msgid ""
+"Request secure TLS/SSL encryption when connecting to the LDAP server. This "
+"option requires a server with STARTTLS enabled, otherwise all authentication"
+" attempts will fail."
+msgstr ""
+"Запросить поддержку TLS/SSL шифрования при подключении к LDAP серверу. Для "
+"подключения требуется LDAP сервер с поддержкой параметра STARTTLS, в "
+"противном случае все попытки проверки подлинности потерпят неудачу."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
 msgid "Sequence"
-msgstr "Нумерация"
+msgstr "Последовательность"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Server Information"
-msgstr "Сведения о сервере"
+msgstr "Информация о сервере"
 
 #. module: auth_ldap
 #: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
@@ -197,18 +223,31 @@ msgstr "Шаблон пользователя"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
-msgid "The password of the user account on the LDAP server that is used to query the directory."
-msgstr "Пароль пользователя LDAP, который будет использован при запросах в LDAP каталог."
+msgid ""
+"The password of the user account on the LDAP server that is used to query "
+"the directory."
+msgstr ""
+"Пароль пользователя LDAP, который будет использован при запросах в LDAP "
+"каталог."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
-msgid "The user account on the LDAP server that is used to query the directory. Leave empty to connect anonymously."
-msgstr "Учетная запись пользователя LDAP, которая будет использована при запросах в LDAP каталог. Оставьте пустым для анонимного подключения."
+msgid ""
+"The user account on the LDAP server that is used to query the directory. "
+"Leave empty to connect anonymously."
+msgstr ""
+"Учетная запись пользователя LDAP, которая будет использована при запросах в "
+"LDAP каталог. Оставьте пустым для анонимного подключения."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
 msgid "Use TLS"
 msgstr "Использовать TLS"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_users
+msgid "User"
+msgstr "Пользователь"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -219,8 +258,3 @@ msgstr "Сведения о пользователе"
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__user
 msgid "User to copy when creating new users"
 msgstr "Шаблон локального пользователя для создания новых учетных записей"
-
-#. module: auth_ldap
-#: model:ir.model,name:auth_ldap.model_res_users
-msgid "Users"
-msgstr "Пользователи"

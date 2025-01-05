@@ -1,38 +1,38 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* product
-#
+# 
 # Translators:
-# 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2022
-# lasch a <bmail440@gmail.com>, 2022
-# Robin Chatfield <robin.chatfield@gmail.com>, 2022
-# Martin Wilderoth <martin.wilderoth@linserv.se>, 2022
-# Robert Frykelius <robert.frykelius@linserv.se>, 2022
-# lynnliuying <lynn.liu1971@gmail.com>, 2022
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
-# Kristoffer Grundström <lovaren@gmail.com>, 2022
-# Kim Asplund <kim.asplund@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Simon S, 2022
-# Lasse L, 2022
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2022\n"
+"POT-Creation-Date: 2024-09-27 08:16+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
-"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid ""
+"\n"
+"\n"
+"Note: products that you don't have access to will not be shown above."
+msgstr ""
+"\n"
+"\n"
+"Observera: Produkter som du inte har tillgång till visas inte ovan."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_variant_count
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
 #: model:ir.model.fields,field_description:product.field_product_template__product_variant_count
 msgid "# Product Variants"
@@ -44,53 +44,100 @@ msgid "# Products"
 msgstr "# Produkter"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
+msgid "$14.00"
+msgstr "$14.00"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
+msgid "$15.00"
+msgstr "$15.00"
+
+#. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid ""
-"%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"
+"%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra fee\n"
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 msgstr ""
+"%(base)s med %(discount)s %% %(discount_type)s och %(surcharge)s extra avgift\n"
+"Exempel: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
-msgid "%(percentage)s %% discount and %(price)s surcharge"
+msgid ""
+"%(item_name)s: end date (%(end_date)s) should be after start date "
+"(%(start_date)s)"
 msgstr ""
+"%(item_name)s: slutdatum (%(end_date)s) ska vara efter startdatum "
+"(%(start_date)s)"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
-msgid "%s %% discount"
-msgstr "%s %% rabatt"
+msgid "%(percentage)s %% %(discount_type)s on %(base)s %(extra)s"
+msgstr "%(percentage)s %% %(discount_type)s på %(base)s %(extra)s"
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid "%(percentage)s %% discount on %(pricelist)s"
+msgstr "%(percentage)s %% rabbat på %(pricelist)s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid "%(percentage)s %% discount on sales price"
+msgstr "%(percentage)s %% rabatt på försäljningspriset"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist.py:0
+#: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
 msgid "%s (copy)"
 msgstr "%s (kopia)"
 
 #. module: product
-#. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid "%s: end date (%s) should be greater than start date (%s)"
-msgstr ""
-
-#. module: product
-#: model:ir.actions.report,print_report_name:product.report_product_template_label
+#: model:ir.actions.report,print_report_name:product.report_product_template_label_2x7
+#: model:ir.actions.report,print_report_name:product.report_product_template_label_4x12
+#: model:ir.actions.report,print_report_name:product.report_product_template_label_4x12_noprice
+#: model:ir.actions.report,print_report_name:product.report_product_template_label_4x7
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_dymo
 msgid "'Products Labels - %s' % (object.name)"
-msgstr ""
+msgstr "'Etiketter för produkter - %s' % (object.name)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_packaging
 msgid "'Products packaging - %s' % (object.name)"
-msgstr ""
+msgstr "'Produktförpackning - %s' % (object.name)"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+msgid "(e.g: product description, ebook, legal notice, ...)."
+msgstr "(t.ex.: produktbeskrivning, e-bok, juridiskt meddelande, ...)."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid "+ %(amount)s extra fee"
+msgstr "+ %(amount)s extra avgift"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid "- %(amount)s rebate"
+msgstr "- %(amount)s rabatt"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
-msgid "- Barcode \"%s\" already assigned to product(s): %s"
+msgid "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
 msgstr ""
+"- Streckkod \"%(barcode)s\" redan tilldelad till produkt(er): "
+"%(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -98,13 +145,37 @@ msgid ""
 "- Instantly: All possible variants are created as soon as the attribute and its values are added to a product.\n"
 "        - Dynamically: Each variant is created only when its corresponding attributes and values are added to a sales order.\n"
 "        - Never: Variants are never created for the attribute.\n"
-"        Note: the variants creation mode cannot be changed once the attribute is used on at least one product."
+"        Note: this cannot be changed once the attribute is used on a product."
 msgstr ""
+"- Omedelbart: Alla möjliga varianter skapas så snart attributet och dess värden läggs till i en produkt.\n"
+"        - Dynamiskt: Varje variant skapas först när dess motsvarande attribut och värden läggs till på en försäljningsorder.\n"
+"        - Aldrig: Varianter skapas aldrig för attributet.\n"
+"        Obs: detta kan inte ändras när attributet väl har använts på en produkt."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
 msgid "1 year"
 msgstr "1 år"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_warranty
+msgid "1 year warranty extension"
+msgstr "1 års garantiförlängning"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
+msgid "10"
+msgstr "10"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
+msgid "10 Units"
+msgstr "10 enheter"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
+msgid "123456789012"
+msgstr "123456789012"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
@@ -114,7 +185,7 @@ msgstr "160x80cm, med stora ben."
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7xprice
 msgid "2 x 7 with price"
-msgstr ""
+msgstr "2 x 7 med pris"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_6
@@ -124,38 +195,70 @@ msgstr "2 år"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12
 msgid "4 x 12"
-msgstr ""
+msgstr "4 x 12"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12xprice
 msgid "4 x 12 with price"
-msgstr ""
+msgstr "4 x 12 med pris"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x7xprice
 msgid "4 x 7 with price"
-msgstr ""
+msgstr "4 x 7 med pris"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>"
+msgid "<b>Tip: want to round at 9.99?</b>"
+msgstr "<b>Tips: vill du runda av vid 9,99?</b>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
+"icon\" title=\"Arrow\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Pil "
+"ikon\" title=\"Pil\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Valuta\" title=\"Valuta\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('pricelist_item_count', '=', 1)]}\">\n"
-"                                        Extra Prices\n"
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                            Rules\n"
+"                                        </span>\n"
+"                                        <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                            Rule\n"
+"                                        </span>"
+msgstr ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                            Regler\n"
+"                                        </span>\n"
+"                                        <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                            Regel\n"
+"                                        </span> "
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                        Pricelists\n"
 "                                    </span>\n"
-"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('pricelist_item_count', '!=', 1)]}\">\n"
-"                                        Extra Price\n"
+"                                    <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                        Pricelist\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                        Prislistor\n"
+"                                    </span>\n"
+"                                    <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                        Prislista\n"
+"                                    </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -164,18 +267,28 @@ msgstr "<span class=\"o_stat_text\"> Produkter</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
-msgid "<span class=\"o_stat_text\">Related Products</span>"
-msgstr "<span class=\"o_stat_text\">Relaterade Produkter</span>"
+msgid "<span class=\"o_stat_text\">Products</span>"
+msgstr "<span class=\"o_stat_text\">Produkter</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "<span>%</span>"
+msgstr "<span>%</span>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid ""
+"<span>%</span>\n"
+"                                <span>on</span>"
 msgstr ""
+"<span>%</span>\n"
+"                                <span>på</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>All general settings about this product are managed on</span>"
-msgstr "<span>Alla generella inställningar för denna produkt hanteras av</span>"
+msgstr ""
+"<span>Alla generella inställningar för denna produkt hanteras av</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -188,6 +301,8 @@ msgid ""
 "<strong>Save</strong> this page and come back\n"
 "                                here to set up the feature."
 msgstr ""
+"<strong>Spara</strong> den här sidan och kom tillbaka\n"
+"                                hit för att ställa in funktionen."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -203,19 +318,49 @@ msgstr ""
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_barcode_uniq
 msgid "A barcode can only be assigned to one packaging."
-msgstr ""
+msgstr "En streckkod kan endast tilldelas en förpackning."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_combo.py:0
+msgid "A combo choice can't contain duplicate products."
+msgstr "Ett kombinationsval kan inte innehålla duplicerade produkter."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_combo_item.py:0
+msgid "A combo choice can't contain products of type \"combo\"."
+msgstr "Ett combo-val kan inte innehålla produkter av typen \"combo\"."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_combo.py:0
+msgid "A combo choice must contain at least 1 product."
+msgstr "Ett kombinationsval måste innehålla minst 1 produkt."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+msgid "A combo product must contain at least 1 combo choice."
+msgstr "En kombinationsprodukt måste innehålla minst 1 kombinationsval."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
 #: model:ir.model.fields,help:product.field_product_template__description_sale
-msgid "A description of the Product that you want to communicate to your customers. This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note"
-msgstr "En beskrivning av produkten som du vill kommunicera till dina kunder. Den här beskrivningen kopieras på alla Försäljnings, Leverans ordrar och på kund faktura och krediterings dokument."
+msgid ""
+"A description of the Product that you want to communicate to your customers."
+" This description will be copied to every Sales Order, Delivery Order and "
+"Customer Invoice/Credit Note"
+msgstr ""
+"En beskrivning av produkten som du vill kommunicera till dina kunder. Den "
+"här beskrivningen kopieras på alla Försäljnings, Leverans ordrar och på kund"
+" faktura och krediterings dokument"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "A packaging already uses the barcode"
-msgstr ""
+msgstr "En förpackning använder redan streckkoden"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -223,37 +368,54 @@ msgid ""
 "A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
 "            This is the perfect tool to handle several pricings, seasonal discounts, etc."
 msgstr ""
+"Ett pris är en uppsättning försäljningspriser eller regler för att beräkna priset på försäljningsorderrader baserat på produkter, produktkategorier, datum och beställda kvantiteter.\n"
+"            Detta är det perfekta verktyget för att hantera flera prissättningar, säsongsrabatter etc."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_packaging.py:0
 msgid "A product already uses the barcode"
-msgstr ""
+msgstr "En produkt använder redan streckkoden"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product__detailed_type
-#: model:ir.model.fields,help:product.field_product_template__detailed_type
-msgid ""
-"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
-"A consumable product is a product for which stock is not managed.\n"
-"A service is a non-material product you provide."
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+msgid "A sellable combo product can only contain sellable products."
 msgstr ""
-"En lagerförd produkt är en produkt som du hanterar lager för. Appen Lager måste installeras.\n"
-"En förbrukningsvara är en produkt för vilken lager inte hanteras.\n"
-"En tjänst är en icke-materiell produkt du tillhandahåller."
+"En säljbar kombinationsprodukt kan endast innehålla säljbara produkter."
 
 #. module: product
-#: model:product.template,name:product.product_product_25_product_template
+#: model:ir.model.fields,field_description:product.field_product_document__access_token
+msgid "Access Token"
+msgstr "Åtkomsttecken"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
+msgid "Acme Widget"
+msgstr "Acme Widget"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
+msgid "Acme Widget - Blue"
+msgstr "Acme Widget - Blå"
+
+#. module: product
+#: model:product.template,name:product.product_template_acoustic_bloc_screens
 msgid "Acoustic Bloc Screens"
 msgstr "Akustiska blockskärmar"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__message_needaction
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_needaction
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction
 #: model:ir.model.fields,field_description:product.field_product_template__message_needaction
 msgid "Action Needed"
-msgstr "Åtgärd krävs"
+msgstr "Åtgärd Krävs"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__active
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__active
+#: model:ir.model.fields,field_description:product.field_product_document__active
 #: model:ir.model.fields,field_description:product.field_product_pricelist__active
 #: model:ir.model.fields,field_description:product.field_product_product__active
 #: model:ir.model.fields,field_description:product.field_product_template__active
@@ -271,24 +433,28 @@ msgid "Active Products"
 msgstr "Aktiva produkter"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_ids
 #: model:ir.model.fields,field_description:product.field_product_product__activity_ids
 #: model:ir.model.fields,field_description:product.field_product_template__activity_ids
 msgid "Activities"
 msgstr "Aktiviteter"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_exception_decoration
 #: model:ir.model.fields,field_description:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,field_description:product.field_product_template__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Dekoration för aktivitetsundantag"
+msgstr "Aktivitet undantaget dekoration"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_state
 #: model:ir.model.fields,field_description:product.field_product_product__activity_state
 #: model:ir.model.fields,field_description:product.field_product_template__activity_state
 msgid "Activity State"
 msgstr "Aktivitetstillstånd"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_type_icon
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_icon
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_icon
 msgid "Activity Type Icon"
@@ -296,55 +462,117 @@ msgstr "Ikon för aktivitetstyp"
 
 #. module: product
 #. odoo-javascript
+#: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
+msgid "Add"
+msgstr "Lägg till"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
+msgid "Add Products"
+msgstr "Lägg till produkter"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
+msgid "Add Products to pricelist report"
+msgstr "Lägg till produkter i prislistans rapport"
+
+#. module: product
+#. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Add a quantity"
+msgstr "Lägg till en kvantitet"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
+msgid ""
+"Add products using the \"Add Products\" button at the top right to\n"
+"                                include them in the report."
 msgstr ""
+"Lägg till produkter med hjälp av knappen \"Lägg till produkter\" längst upp till höger för att\n"
+"                                inkludera dem i rapporten."
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__additional_product_tag_ids
-msgid "Additional Product Tag"
-msgstr ""
+#. odoo-python
+#: code:addons/product/models/product_attribute_value.py:0
+msgid "Add to all products"
+msgstr "Lägg till i alla produkter"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
-#: model:res.groups,name:product.group_sale_pricelist
-msgid "Advanced Pricelists"
-msgstr "Avancerad prislista"
+#: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__add
+msgid "Add to existing products"
+msgstr "Lägg till i befintliga produkter"
 
 #. module: product
-#: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__advanced
-msgid "Advanced price rules (discounts, formulas)"
-msgstr "Avancerade prisregler (rabatter, formler)"
+#: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
+msgid "Add to products"
+msgstr "Lägg till bland produkter"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__all_product_tag_ids
-msgid "All Product Tag"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_tag__product_ids
-msgid "All Product Variants using this Tag"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:product.product_document_search
+msgid "All"
+msgstr "Alla"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
+msgid "All Categories"
+msgstr "Alla kategorier"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__all_product_tag_ids
+msgid "All Product Tag"
+msgstr "Alla produkter Tagg"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_tag__product_ids
+msgid "All Product Variants using this Tag"
+msgstr "Alla produktvarianter som använder denna tagg"
+
+#. module: product
+#. odoo-javascript
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__3_global
+#: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 msgid "All Products"
 msgstr "Alla produkter"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_attribute_value__is_custom
-#: model:ir.model.fields,help:product.field_product_template_attribute_value__is_custom
-msgid "Allow users to input custom values for this attribute value"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "All categories"
+msgstr "Alla kategorier"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_res_config_settings__group_sale_pricelist
-msgid ""
-"Allows to manage different prices based on rules per category of customers.\n"
-"                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_tree
+msgid "All countries"
+msgstr "Alla länder"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/controllers/product_document.py:0
+msgid "All files uploaded"
+msgstr "Alla filer har laddats upp"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "All products"
+msgstr "Alla produkter"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
+msgid "All variants"
+msgstr "Alla varianter"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_attribute_value__is_custom
+#: model:ir.model.fields,help:product.field_product_template_attribute_value__is_custom
+msgid "Allow customers to set their own value"
+msgstr "Låt kunderna sätta sitt eget värde"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
@@ -352,15 +580,9 @@ msgid "Aluminium"
 msgstr "Aluminium"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
-msgid "Applicable On"
-msgstr "Applicerbar på"
-
-#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 msgid "Applied On"
-msgstr ""
+msgstr "Tillämpad på"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__applied_on
@@ -368,6 +590,19 @@ msgid "Apply On"
 msgstr "Applicera på"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Apply To"
+msgstr "Ansök till"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+msgid "Apply on"
+msgstr "Ansök på"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
+#: model_terms:ir.ui.view,arch_db:product.product_document_kanban
+#: model_terms:ir.ui.view,arch_db:product.product_document_search
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
@@ -380,19 +615,40 @@ msgstr "Arkiverad"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__sequence
 msgid "Assigns the priority to the list of product vendor."
-msgstr ""
+msgstr "Tilldelar prioritet till listan över produktleverantörer."
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
-msgid "At most %s quantities can be displayed simultaneously. Remove a selected quantity to add others."
+msgid ""
+"At most %s quantities can be displayed simultaneously. Remove a selected "
+"quantity to add others."
 msgstr ""
+"Högst %s kvantiteter kan visas samtidigt. Ta bort en vald kvantitet för att "
+"lägga till andra."
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_form
+msgid "Attached To"
+msgstr "Bifogad"
+
+#. module: product
+#: model:ir.model,name:product.model_ir_attachment
+msgid "Attachment"
+msgstr "Bilaga"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__message_attachment_count
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_attachment_count
 #: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
 #: model:ir.model.fields,field_description:product.field_product_template__message_attachment_count
 msgid "Attachment Count"
-msgstr "Antal bilagor"
+msgstr "Antal Bilagor"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__local_url
+msgid "Attachment URL"
+msgstr "Bilage-URL"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__name
@@ -405,7 +661,7 @@ msgstr "Attribut"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_line_id
 msgid "Attribute Line"
-msgstr ""
+msgstr "Attributlinje"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -418,12 +674,14 @@ msgstr "Attribut namn"
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__custom_product_template_attribute_value_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__product_template_attribute_value_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__product_attribute_value_id
+#: model:ir.model.fields,field_description:product.field_update_product_attribute_value__attribute_value_id
 msgid "Attribute Value"
-msgstr ""
+msgstr "Atributvärden"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_template_attribute_value_ids
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__value_ids
+#: model_terms:ir.ui.view,arch_db:product.product_attribute_value_list
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Values"
 msgstr "Attributvärden"
@@ -432,6 +690,7 @@ msgstr "Attributvärden"
 #: model:ir.actions.act_window,name:product.attribute_action
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_tree
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Attributes"
 msgstr "Attribut"
 
@@ -441,9 +700,16 @@ msgid "Attributes & Variants"
 msgstr "Attribut & Varianter"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
-msgid "Availability"
-msgstr "Tillgänglighet"
+#. odoo-javascript
+#: code:addons/product/static/src/product_catalog/kanban_controller.js:0
+msgid "Back to Order"
+msgstr "Tillbaka till ordern"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/product_catalog/kanban_controller.js:0
+msgid "Back to Quotation"
+msgstr "Tillbaka till offert"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__barcode
@@ -454,8 +720,13 @@ msgstr "Streckkod"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__barcode
-msgid "Barcode used for packaging identification. Scan this packaging barcode from a transfer in the Barcode app to move all the contained units"
+msgid ""
+"Barcode used for packaging identification. Scan this packaging barcode from "
+"a transfer in the Barcode app to move all the contained units"
 msgstr ""
+"Streckkod som används för identifiering av förpackningar. Skanna denna "
+"förpackningsstreckkod från en överföring i Barcode-appen för att flytta alla"
+" inneslutna enheter"
 
 #. module: product
 #. odoo-python
@@ -465,6 +736,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Streckkod(er) redan tilldelad(e):\n"
+"\n"
+"%s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__base
@@ -474,11 +748,20 @@ msgid ""
 "Cost Price: The base price will be the cost price.\n"
 "Other Pricelist: Computation of the base price based on another Pricelist."
 msgstr ""
+"Baspris för beräkning.\n"
+"Försäljningspris: Baspriset kommer att vara försäljningspriset.\n"
+"Kostnadspris: Baspriset kommer att vara kostnadspriset.\n"
+"Annan prislista: Beräkning av baspriset baserat på en annan prislista."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
 msgid "Based on"
 msgstr "Baserad på"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Based price"
+msgstr "Baserat pris"
 
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
@@ -489,6 +772,12 @@ msgstr "Grundläggande prislistor"
 #: model:product.attribute.value,name:product.product_attribute_value_4
 msgid "Black"
 msgstr "Svart"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_attribute_value_list.js:0
+msgid "Bye-bye, record!"
+msgstr "Hejdå, rekord!"
 
 #. module: product
 #: model:product.template,name:product.product_product_10_product_template
@@ -504,24 +793,18 @@ msgstr "Kan bilden 1024 förstoras"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_variant_1024_be_zoomed
 msgid "Can Variant Image 1024 be zoomed"
-msgstr ""
+msgstr "Kan Variant Image 1024 zoomas"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__purchase_ok
-#: model:ir.model.fields,field_description:product.field_product_template__purchase_ok
-#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
-msgid "Can be Purchased"
-msgstr "Kan köpas"
+#: model_terms:ir.ui.view,arch_db:product.update_product_attribute_value_form
+msgid "Cancel"
+msgstr "Avbryt"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__sale_ok
-#: model:ir.model.fields,field_description:product.field_product_template__sale_ok
-#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
-msgid "Can be Sold"
-msgstr "Kan säljas"
-
-#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__categ_id
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__display_applied_on__2_product_category
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Category"
 msgstr "Kategori"
 
@@ -530,6 +813,11 @@ msgstr "Kategori"
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "Category: %s"
 msgstr "Kategori: %s"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__checksum
+msgid "Checksum/SHA1"
+msgstr "Kontrollsumma/SHA1"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__child_id
@@ -544,7 +832,12 @@ msgstr "Välj Etikett Layout"
 #. module: product
 #: model:ir.model,name:product.model_product_label_layout
 msgid "Choose the sheet layout to print the labels"
-msgstr ""
+msgstr "Välj arklayout för att skriva ut etiketterna"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_cleaning_kit
+msgid "Cleaning kit"
+msgstr "Rengöringssats"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -575,7 +868,53 @@ msgstr "Kolumner"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__combination_indices
 msgid "Combination Indices"
+msgstr "Kombinerade index"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_combo_item__combo_id
+#: model:ir.model.fields.selection,name:product.selection__product_template__type__combo
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Combo"
+msgstr "Kombination"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
+msgid "Combo Choice"
+msgstr "Kombinationsval"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_combo_action
+#: model:ir.model.fields,field_description:product.field_product_product__combo_ids
+#: model:ir.model.fields,field_description:product.field_product_template__combo_ids
+#: model_terms:ir.ui.view,arch_db:product.product_combo_view_tree
+msgid "Combo Choices"
+msgstr "Kombinationsval"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_combo__combo_item_ids
+msgid "Combo Item"
+msgstr "Kombinationsobjekt"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_combo__base_price
+msgid "Combo Price"
+msgstr "Kombinerat pris"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+msgid "Combo products can't have attributes"
+msgstr "Kombinerade produkter kan inte ha attribut"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+msgid ""
+"Combos allow to choose one product amongst a selection of choices per "
+"category."
 msgstr ""
+"Kombinationer gör det möjligt att välja en produkt bland ett urval av val "
+"per kategori."
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -583,6 +922,9 @@ msgid "Companies"
 msgstr "Bolag"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_combo__company_id
+#: model:ir.model.fields,field_description:product.field_product_combo_item__company_id
+#: model:ir.model.fields,field_description:product.field_product_document__company_id
 #: model:ir.model.fields,field_description:product.field_product_packaging__company_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist__company_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__company_id
@@ -593,14 +935,14 @@ msgid "Company"
 msgstr "Bolag"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Company Settings"
+msgstr "Företagsinställningar"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__complete_name
 msgid "Complete Name"
 msgstr "Fullständigt namn"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Computation"
-msgstr "Beräkning"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__compute_price
@@ -608,29 +950,19 @@ msgid "Compute Price"
 msgstr "Beräkna pris"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Conditions"
-msgstr "Villkor"
-
-#. module: product
 #: model:product.template,name:product.product_product_11_product_template
 msgid "Conference Chair"
-msgstr ""
+msgstr "Ordförande för konferensen"
 
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_02_product_template
 msgid "Conference room table"
-msgstr ""
+msgstr "Bord för konferensrum"
 
 #. module: product
 #: model:ir.model,name:product.model_res_config_settings
 msgid "Config Settings"
 msgstr "Inställningar"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
-msgid "Configuration"
-msgstr "Konfiguration"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -639,20 +971,9 @@ msgstr "Ställ in"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
+#: model_terms:ir.ui.view,arch_db:product.update_product_attribute_value_form
 msgid "Confirm"
 msgstr "Bekräfta"
-
-#. module: product
-#: model:ir.model.fields.selection,name:product.selection__product_template__detailed_type__consu
-#: model:ir.model.fields.selection,name:product.selection__product_template__type__consu
-msgid "Consumable"
-msgstr "Förbrukningsvara"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_template.py:0
-msgid "Consumables are physical products for which you don't manage the inventory level: they are always available."
-msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_res_partner
@@ -672,7 +993,7 @@ msgstr "Innehållen kvantitet"
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_positive_qty
 msgid "Contained Quantity should be positive."
-msgstr ""
+msgstr "Innesluten kvantitet bör vara positiv."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
@@ -731,10 +1052,25 @@ msgid "Create a new product variant"
 msgstr "Skapa en ny produktvariant"
 
 #. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
+msgid "Create a product"
+msgstr "Skapa en produkt"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__service_tracking
+#: model:ir.model.fields,field_description:product.field_product_template__service_tracking
+msgid "Create on Order"
+msgstr "Skapa på order"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__create_uid
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__create_uid
 #: model:ir.model.fields,field_description:product.field_product_category__create_uid
+#: model:ir.model.fields,field_description:product.field_product_combo__create_uid
+#: model:ir.model.fields,field_description:product.field_product_combo_item__create_uid
+#: model:ir.model.fields,field_description:product.field_product_document__create_uid
 #: model:ir.model.fields,field_description:product.field_product_label_layout__create_uid
 #: model:ir.model.fields,field_description:product.field_product_packaging__create_uid
 #: model:ir.model.fields,field_description:product.field_product_pricelist__create_uid
@@ -746,6 +1082,7 @@ msgstr "Skapa en ny produktvariant"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__create_uid
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__create_uid
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__create_uid
+#: model:ir.model.fields,field_description:product.field_update_product_attribute_value__create_uid
 msgid "Created by"
 msgstr "Skapad av"
 
@@ -754,6 +1091,9 @@ msgstr "Skapad av"
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__create_date
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__create_date
 #: model:ir.model.fields,field_description:product.field_product_category__create_date
+#: model:ir.model.fields,field_description:product.field_product_combo__create_date
+#: model:ir.model.fields,field_description:product.field_product_combo_item__create_date
+#: model:ir.model.fields,field_description:product.field_product_document__create_date
 #: model:ir.model.fields,field_description:product.field_product_label_layout__create_date
 #: model:ir.model.fields,field_description:product.field_product_packaging__create_date
 #: model:ir.model.fields,field_description:product.field_product_pricelist__create_date
@@ -765,8 +1105,14 @@ msgstr "Skapad av"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__create_date
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__create_date
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__create_date
+#: model:ir.model.fields,field_description:product.field_update_product_attribute_value__create_date
 msgid "Created on"
-msgstr "Skapad"
+msgstr "Skapad den"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_form
+msgid "Creation"
+msgstr "Skapa"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_volume_volume_in_cubic_feet__1
@@ -780,6 +1126,8 @@ msgstr "Kubikmeter"
 
 #. module: product
 #: model:ir.model,name:product.model_res_currency
+#: model:ir.model.fields,field_description:product.field_product_combo__currency_id
+#: model:ir.model.fields,field_description:product.field_product_combo_item__currency_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist__currency_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__currency_id
 #: model:ir.model.fields,field_description:product.field_product_product__currency_id
@@ -790,9 +1138,14 @@ msgid "Currency"
 msgstr "Valuta"
 
 #. module: product
+#: model:product.attribute.value,name:product.fabric_attribute_custom
+msgid "Custom"
+msgstr "Anpassad"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__custom_value
 msgid "Custom Value"
-msgstr ""
+msgstr "Anpassat värde"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__partner_ref
@@ -802,7 +1155,12 @@ msgstr "Kund Ref"
 #. module: product
 #: model:product.template,name:product.product_product_4_product_template
 msgid "Customizable Desk"
-msgstr ""
+msgstr "Anpassningsbart skrivbord"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__db_datas
+msgid "Database Data"
+msgstr "Data i databas"
 
 #. module: product
 #: model:ir.model,name:product.model_decimal_precision
@@ -812,8 +1170,18 @@ msgstr "Decimalprecision"
 #. module: product
 #. odoo-python
 #: code:addons/product/models/res_company.py:0
-msgid "Default %s pricelist"
-msgstr ""
+msgid "Default"
+msgstr "Standard"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price
+msgid "Default Extra Price"
+msgstr "Standard Extrapris"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price_changed
+msgid "Default Extra Price Changed"
+msgstr "Standard Extrapris Ändrat"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -826,13 +1194,17 @@ msgstr "Standardmåttenhet som används för alla lageroperationer."
 #: model:ir.model.fields,help:product.field_product_product__uom_po_id
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_uom
 #: model:ir.model.fields,help:product.field_product_template__uom_po_id
-msgid "Default unit of measure used for purchase orders. It must be in the same category as the default unit of measure."
-msgstr "Standardmåttenhet som används för inköpsordrar. Den måste vara i samma kategori som standardmåttenheten."
+msgid ""
+"Default unit of measure used for purchase orders. It must be in the same "
+"category as the default unit of measure."
+msgstr ""
+"Standardmåttenhet som används för inköpsordrar. Den måste vara i samma "
+"kategori som standardmåttenheten."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Define a new tag"
-msgstr ""
+msgstr "Definiera en ny tagg"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -845,11 +1217,19 @@ msgid "Define your weight unit of measure"
 msgstr "Definiera er måttenhet för vikt"
 
 #. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_attribute_value_list.js:0
+#: model_terms:ir.ui.view,arch_db:product.product_document_kanban
+msgid "Delete"
+msgstr "Ta bort"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
 msgid "Delivery Lead Time"
 msgstr "Leveranstid"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__description
 #: model:ir.model.fields,field_description:product.field_product_product__description
 #: model:ir.model.fields,field_description:product.field_product_template__description
 msgid "Description"
@@ -859,6 +1239,16 @@ msgstr "Beskrivning"
 #: model:product.template,name:product.product_product_3_product_template
 msgid "Desk Combination"
 msgstr "Skrivbordskombination"
+
+#. module: product
+#: model:product.template,name:product.desk_organizer_product_template
+msgid "Desk Organizer"
+msgstr "Skrivbordsorganisatör"
+
+#. module: product
+#: model:product.template,name:product.desk_pad_product_template
+msgid "Desk Pad"
+msgstr "Skrivbordsunderlägg"
 
 #. module: product
 #: model:product.template,name:product.product_product_22_product_template
@@ -874,7 +1264,7 @@ msgstr "Skrivbordskombination, svart-brun: stol + skrivbord + förvaringslåda."
 #: model:ir.model.fields,help:product.field_product_attribute__sequence
 #: model:ir.model.fields,help:product.field_product_attribute_value__sequence
 msgid "Determine the display order"
-msgstr ""
+msgstr "Bestäm visningsordningen"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
@@ -888,31 +1278,28 @@ msgid "Discount"
 msgstr "Rabatt"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist__discount_policy
-msgid "Discount Policy"
-msgstr "Rabattpolicy"
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__discount
+msgid "Discount (%)"
+msgstr "Rabatt (%)"
 
 #. module: product
-#: model:ir.model.fields.selection,name:product.selection__product_pricelist__discount_policy__with_discount
-msgid "Discount included in the price"
-msgstr "Rabatt inkluderat i priset"
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__price_discounted
+msgid "Discounted Price"
+msgstr "Rabatterat pris"
 
 #. module: product
-#: model:res.groups,name:product.group_discount_per_so_line
-msgid "Discount on lines"
-msgstr "Rabatt på rader"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_res_config_settings__group_discount_per_so_line
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
-msgid "Discounts"
-msgstr "Rabatter"
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__display_applied_on
+msgid "Display Applied On"
+msgstr "Display applicerad på"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__display_name
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__display_name
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__display_name
 #: model:ir.model.fields,field_description:product.field_product_category__display_name
+#: model:ir.model.fields,field_description:product.field_product_combo__display_name
+#: model:ir.model.fields,field_description:product.field_product_combo_item__display_name
+#: model:ir.model.fields,field_description:product.field_product_document__display_name
 #: model:ir.model.fields,field_description:product.field_product_label_layout__display_name
 #: model:ir.model.fields,field_description:product.field_product_packaging__display_name
 #: model:ir.model.fields,field_description:product.field_product_pricelist__display_name
@@ -924,14 +1311,9 @@ msgstr "Rabatter"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__display_name
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__display_name
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__display_name
+#: model:ir.model.fields,field_description:product.field_update_product_attribute_value__display_name
 msgid "Display Name"
 msgstr "Visningsnamn"
-
-#. module: product
-#. odoo-javascript
-#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
-msgid "Display Pricelist"
-msgstr "Visa Prislista"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__display_type
@@ -939,6 +1321,42 @@ msgstr "Visa Prislista"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__display_type
 msgid "Display Type"
 msgstr "Visningstyp"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_kanban
+msgid "Document"
+msgstr "Dokument"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#: model:ir.model.fields,field_description:product.field_product_product__product_document_ids
+#: model:ir.model.fields,field_description:product.field_product_template__product_document_ids
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Documents"
+msgstr "Dokument"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__product_document_count
+#: model:ir.model.fields,field_description:product.field_product_template__product_document_count
+msgid "Documents Count"
+msgstr "Antal dokument"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_search
+msgid "Documents of this variant"
+msgstr "Dokument för denna variant"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_kanban
+msgid "Download"
+msgstr "Ladda ner"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+msgid "Download examples"
+msgstr "Ladda ner exempel"
 
 #. module: product
 #: model:product.template,name:product.product_product_27_product_template
@@ -953,7 +1371,7 @@ msgstr "Låda Svart"
 #. module: product
 #: model_terms:product.template,description:product.product_product_27_product_template
 msgid "Drawer with two routing possiblities."
-msgstr ""
+msgstr "Låda med två utdragsmöjligheter."
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_3
@@ -963,7 +1381,7 @@ msgstr "Varaktighet"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__dymo
 msgid "Dymo"
-msgstr ""
+msgstr "Dymo"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
@@ -973,7 +1391,18 @@ msgstr "Dynamisk"
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
 msgid "Each value should be defined only once per attribute per product."
-msgstr ""
+msgstr "Varje värde får endast definieras en gång per attribut per produkt."
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
+msgid "Eco-friendly Wooden Chair"
+msgstr "Miljövänlig stol i trä"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_kanban
+#: model_terms:ir.ui.view,arch_db:product.product_view_kanban_catalog
+msgid "Edit"
+msgstr "Redigera"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_end
@@ -984,7 +1413,7 @@ msgstr "Slutdatum"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__date_end
 msgid "End date for this vendor price"
-msgstr ""
+msgstr "Slutdatum för detta leverantörspris"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__date_end
@@ -992,16 +1421,24 @@ msgid ""
 "Ending datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
+"Slutdatum för validering av prislista\n"
+"Det visade värdet beror på den tidszon som ställts in i dina preferenser."
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Ergonomic"
-msgstr ""
+msgstr "Ergonomisk"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
+msgid "Error exporting file. Please try again."
+msgstr "Fel vid export av fil. Vänligen försök igen."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
 msgid "Exclude for"
-msgstr ""
+msgstr "Undanta för"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__name
@@ -1012,29 +1449,69 @@ msgstr "Uttryckligt regelnamn för denna prislisterad."
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__extra_html
 msgid "Extra Content"
-msgstr ""
+msgstr "Extra innehåll"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_surcharge
 msgid "Extra Fee"
 msgstr "Extra Kostnad"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
-msgid "Extra price for the variant with this attribute value on sale price. eg. 200 price extra, 1000 + 200 = 1200."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Extra Info"
+msgstr "Extra information"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__priority
-#: model:ir.model.fields,field_description:product.field_product_template__priority
-#: model:ir.model.fields.selection,name:product.selection__product_template__priority__1
+#: model:product.attribute,name:product.pa_extra_options
+msgid "Extra Options"
+msgstr "Extra alternativ"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_combo_item__extra_price
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
+msgid "Extra Price"
+msgstr "Extra pris"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
+msgid ""
+"Extra price for the variant with this attribute value on sale price. eg. 200"
+" price extra, 1000 + 200 = 1200."
+msgstr ""
+"Extrapris för varianten med detta attributvärde på försäljningspriset. t.ex."
+" 200 pris extra, 1000 + 200 = 1200."
+
+#. module: product
+#: model:product.attribute,name:product.fabric_attribute
+msgid "Fabric"
+msgstr "Tyg"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__is_favorite
+#: model:ir.model.fields,field_description:product.field_product_template__is_favorite
 msgid "Favorite"
 msgstr "Favorit"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Favorites"
 msgstr "Favoriter"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__datas
+msgid "File Content (base64)"
+msgstr "Filinnehåll (base64)"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__raw
+msgid "File Content (raw)"
+msgstr "Filinnehåll (rå)"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__file_size
+msgid "File Size"
+msgstr "Filstorlek"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__fixed_price
@@ -1048,18 +1525,23 @@ msgid "Flipover"
 msgstr "Blädderblock"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__message_follower_ids
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_follower_ids
 #: model:ir.model.fields,field_description:product.field_product_product__message_follower_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_follower_ids
 msgid "Followers"
 msgstr "Följare"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__message_partner_ids
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_partner_ids
 #: model:ir.model.fields,field_description:product.field_product_product__message_partner_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Följare (partners)"
+msgstr "Följare (kontakter)"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__activity_type_icon
 #: model:ir.model.fields,help:product.field_product_product__activity_type_icon
 #: model:ir.model.fields,help:product.field_product_template__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
@@ -1071,6 +1553,8 @@ msgid ""
 "For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
 msgstr ""
+"För att regeln ska gälla måste köpt/såld kvantitet vara större än eller lika med den minsta kvantitet som anges i detta fält.\n"
+"Uttryckt i produktens förvalda måttenhet."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__print_format
@@ -1090,23 +1574,28 @@ msgstr "Skrivbord för fyra personer"
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_03_product_template
 msgid "Four person modern office workstation"
-msgstr ""
+msgstr "Modern kontorsarbetsplats för fyra personer"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__is_custom
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__is_custom
+msgid "Free text"
+msgstr "Fri text"
+
+#. module: product
+#: model:product.template,name:product.product_product_furniture_product_template
+msgid "Furniture Assembly"
+msgstr "Montering av möbler"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Future Activities"
-msgstr "Kommande aktiviteter"
+msgstr "Framtida aktiviteter"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "General Information"
 msgstr "Generell information"
-
-#. module: product
-#: model:ir.actions.server,name:product.action_product_price_list_report
-#: model:ir.actions.server,name:product.action_product_template_price_list_report
-msgid "Generate Pricelist Report"
-msgstr "Generera Prislists Rapport"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -1117,23 +1606,46 @@ msgstr "Hämta produkt med streckkod"
 #: model:ir.model.fields,help:product.field_product_product__packaging_ids
 #: model:ir.model.fields,help:product.field_product_template__packaging_ids
 msgid "Gives the different ways to package the same product."
-msgstr ""
+msgstr "Ger olika sätt att förpacka samma produkt."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__sequence
 #: model:ir.model.fields,help:product.field_product_template__sequence
 msgid "Gives the sequence order when displaying a product list"
+msgstr "Ger ordningsföljden vid visning av en produktlista"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
+msgid "Gold Member Pricelist"
+msgstr "Prislista för guldmedlemmar"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_template__type__consu
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
+msgid "Goods"
+msgstr "Varor"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__type
+#: model:ir.model.fields,help:product.field_product_template__type
+msgid ""
+"Goods are tangible materials and merchandise you provide.\n"
+"A service is a non-material product you provide."
 msgstr ""
+"Varor är materiella material och handelsvaror som du tillhandahåller.\n"
+"En tjänst är en icke-materiell produkt som du tillhandahåller."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Google Images"
-msgstr ""
+msgstr "Google bilder"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Group By"
 msgstr "Gruppera efter"
 
@@ -1143,6 +1655,8 @@ msgid "HTML Color Index"
 msgstr "HTML-färgindex"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__has_message
+#: model:ir.model.fields,field_description:product.field_product_pricelist__has_message
 #: model:ir.model.fields,field_description:product.field_product_product__has_message
 #: model:ir.model.fields,field_description:product.field_product_template__has_message
 msgid "Has Message"
@@ -1151,8 +1665,17 @@ msgstr "Har meddelande"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__html_color
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__html_color
-msgid "Here you can set a specific HTML color index (e.g. #ff0000) to display the color if the attribute type is 'Color'."
+msgid ""
+"Here you can set a specific HTML color index (e.g. #ff0000) to display the "
+"color if the attribute type is 'Color'."
 msgstr ""
+"Här kan du ange ett specifikt HTML-färgindex (t.ex. #ff0000) för att visa "
+"färgen om attributtypen är \"Färg\"."
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_form
+msgid "History"
+msgstr "Historik"
 
 #. module: product
 #: model:product.template,name:product.expense_hotel_product_template
@@ -1164,6 +1687,9 @@ msgstr "Hotellboende"
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__id
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__id
 #: model:ir.model.fields,field_description:product.field_product_category__id
+#: model:ir.model.fields,field_description:product.field_product_combo__id
+#: model:ir.model.fields,field_description:product.field_product_combo_item__id
+#: model:ir.model.fields,field_description:product.field_product_document__id
 #: model:ir.model.fields,field_description:product.field_product_label_layout__id
 #: model:ir.model.fields,field_description:product.field_product_packaging__id
 #: model:ir.model.fields,field_description:product.field_product_pricelist__id
@@ -1175,52 +1701,74 @@ msgstr "Hotellboende"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__id
+#: model:ir.model.fields,field_description:product.field_update_product_attribute_value__id
 msgid "ID"
 msgstr "ID"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_exception_icon
 #: model:ir.model.fields,field_description:product.field_product_product__activity_exception_icon
 #: model:ir.model.fields,field_description:product.field_product_template__activity_exception_icon
 msgid "Icon"
 msgstr "Ikon"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__activity_exception_icon
 #: model:ir.model.fields,help:product.field_product_product__activity_exception_icon
 #: model:ir.model.fields,help:product.field_product_template__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr "Ikon för att indikera en undantagsaktivitet."
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_category__message_needaction
+#: model:ir.model.fields,help:product.field_product_pricelist__message_needaction
 #: model:ir.model.fields,help:product.field_product_product__message_needaction
 #: model:ir.model.fields,help:product.field_product_template__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "Om markerad så finns det meddelanden som kräver din uppmärksamhet."
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_category__message_has_error
+#: model:ir.model.fields,help:product.field_product_pricelist__message_has_error
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
 #: model:ir.model.fields,help:product.field_product_template__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Om markerad har det uppstått leveransfel för vissa meddelanden."
+msgstr "Om markerad, en del meddelanden har leveransfel."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_id
-msgid "If not set, the vendor price will apply to all variants of this product."
-msgstr "Om ej vald kommer leverantörspriset att ställas in för alla varianter av denna produkt. "
+msgid ""
+"If not set, the vendor price will apply to all variants of this product."
+msgstr ""
+"Om ej vald kommer leverantörspriset att ställas in för alla varianter av "
+"denna produkt."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_attribute__active
+msgid ""
+"If unchecked, it will allow you to hide the attribute without removing it."
+msgstr "Om den inte är markerad kan du dölja attributet utan att ta bort det."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
-msgid "If unchecked, it will allow you to hide the pricelist without removing it."
-msgstr "Om icke ikryssat, tillåter dig att gömma prislistan utan att radera den."
+msgid ""
+"If unchecked, it will allow you to hide the pricelist without removing it."
+msgstr ""
+"Om icke ikryssat, tillåter dig att gömma prislistan utan att radera den."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__active
 #: model:ir.model.fields,help:product.field_product_template__active
-msgid "If unchecked, it will allow you to hide the product without removing it."
-msgstr "Om icke ikryssat, tillåter dig att gömma produkten utan att radera den."
+msgid ""
+"If unchecked, it will allow you to hide the product without removing it."
+msgstr ""
+"Om icke ikryssat, tillåter dig att gömma produkten utan att radera den."
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__image
 #: model:ir.model.fields,field_description:product.field_product_product__image_1920
 #: model:ir.model.fields,field_description:product.field_product_template__image_1920
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__image
 msgid "Image"
 msgstr "Bild"
 
@@ -1249,6 +1797,26 @@ msgid "Image 512"
 msgstr "Bild 512"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__image_height
+msgid "Image Height"
+msgstr "Bildhöjd"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__image_src
+msgid "Image Src"
+msgstr "Bild Src"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__image_width
+msgid "Image Width"
+msgstr "Bild brädd"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_kanban
+msgid "Image is a link"
+msgstr "Bilden är en länk"
+
+#. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 msgid "Import Template for Pricelists"
@@ -1264,12 +1832,18 @@ msgstr "Importmall för produkter"
 #. odoo-python
 #: code:addons/product/models/product_supplierinfo.py:0
 msgid "Import Template for Vendor Pricelists"
-msgstr ""
+msgstr "Importmall för prislistor för leverantörer"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_attribute_search
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
 msgid "Inactive"
 msgstr "Inaktiv"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__index_content
+msgid "Indexed Content"
+msgstr "Indexerat innehåll"
 
 #. module: product
 #: model:product.template,name:product.product_product_24_product_template
@@ -1295,7 +1869,14 @@ msgstr "Intern referens"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__barcode
 msgid "International Article Number used for product identification."
-msgstr "European Article Number eller EAN som används för produktidentifiering."
+msgstr ""
+"European Article Number eller EAN som används för produktidentifiering."
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_attribute_value_list.js:0
+msgid "Invalid Operation"
+msgstr "Ogiltig operation"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1303,10 +1884,12 @@ msgid "Inventory"
 msgstr "Lager"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__message_is_follower
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_is_follower
 #: model:ir.model.fields,field_description:product.field_product_product__message_is_follower
 #: model:ir.model.fields,field_description:product.field_product_template__message_is_follower
 msgid "Is Follower"
-msgstr "Är följare"
+msgstr "Är Följare"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_product_variant
@@ -1317,7 +1900,7 @@ msgstr "Är Produkt Variant"
 #: model:ir.model.fields,field_description:product.field_product_product__has_configurable_attributes
 #: model:ir.model.fields,field_description:product.field_product_template__has_configurable_attributes
 msgid "Is a configurable product"
-msgstr ""
+msgstr "Är en konfigurerbar produkt"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template__is_product_variant
@@ -1325,10 +1908,9 @@ msgid "Is a product variant"
 msgstr "Är en produktvariant"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_value__is_custom
-#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__is_custom
-msgid "Is custom value"
-msgstr ""
+#: model:ir.model.fields,field_description:product.field_product_document__public
+msgid "Is public document"
+msgstr "Är en offentlig handling"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__0
@@ -1355,6 +1937,9 @@ msgstr "Stort mötesbord"
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__write_uid
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__write_uid
 #: model:ir.model.fields,field_description:product.field_product_category__write_uid
+#: model:ir.model.fields,field_description:product.field_product_combo__write_uid
+#: model:ir.model.fields,field_description:product.field_product_combo_item__write_uid
+#: model:ir.model.fields,field_description:product.field_product_document__write_uid
 #: model:ir.model.fields,field_description:product.field_product_label_layout__write_uid
 #: model:ir.model.fields,field_description:product.field_product_packaging__write_uid
 #: model:ir.model.fields,field_description:product.field_product_pricelist__write_uid
@@ -1366,6 +1951,7 @@ msgstr "Stort mötesbord"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__write_uid
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__write_uid
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__write_uid
+#: model:ir.model.fields,field_description:product.field_update_product_attribute_value__write_uid
 msgid "Last Updated by"
 msgstr "Senast uppdaterad av"
 
@@ -1374,6 +1960,9 @@ msgstr "Senast uppdaterad av"
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__write_date
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__write_date
 #: model:ir.model.fields,field_description:product.field_product_category__write_date
+#: model:ir.model.fields,field_description:product.field_product_combo__write_date
+#: model:ir.model.fields,field_description:product.field_product_combo_item__write_date
+#: model:ir.model.fields,field_description:product.field_product_document__write_date
 #: model:ir.model.fields,field_description:product.field_product_label_layout__write_date
 #: model:ir.model.fields,field_description:product.field_product_packaging__write_date
 #: model:ir.model.fields,field_description:product.field_product_pricelist__write_date
@@ -1384,18 +1973,30 @@ msgstr "Senast uppdaterad av"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__write_date
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__write_date
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__write_date
+#: model:ir.model.fields,field_description:product.field_update_product_attribute_value__write_date
 msgid "Last Updated on"
-msgstr "Senast uppdaterad på"
+msgstr "Senast uppdaterad den"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Late Activities"
-msgstr "Försenade aktiviteter"
+msgstr "Sena aktiviteter"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__delay
-msgid "Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."
+msgid ""
+"Lead time in days between the confirmation of the purchase order and the "
+"receipt of the products in your warehouse. Used by the scheduler for "
+"automatic computation of the purchase order planning."
 msgstr ""
+"Ledtid i dagar mellan bekräftelsen av inköpsordern och mottagandet av "
+"produkterna på ditt lager. Används av schemaläggaren för automatisk "
+"beräkning av inköpsorderplaneringen."
+
+#. module: product
+#: model:product.attribute.value,name:product.fabric_attribute_leather
+msgid "Leather"
+msgstr "Läder"
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
@@ -1409,9 +2010,14 @@ msgid "Lines"
 msgstr "Rader"
 
 #. module: product
+#: model:product.template,name:product.product_product_local_delivery_product_template
+msgid "Local Delivery"
+msgstr "Lokal leverans"
+
+#. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Locally handmade"
-msgstr ""
+msgstr "Lokalt handgjorda"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1421,13 +2027,21 @@ msgstr "Logistik"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
-msgid "Looking for a custom bamboo stain to match existing furniture? Contact us for a quote."
+msgid ""
+"Looking for a custom bamboo stain to match existing furniture? Contact us "
+"for a quote."
 msgstr ""
+"Letar du efter en anpassad bets för bambu som matchar befintliga möbler? "
+"Kontakta oss för en offert."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
-msgid "Make this attribute value not compatible with other values of the product or some attribute values of optional and accessory products."
+msgid ""
+"Make this attribute value not compatible with other values of the product or"
+" some attribute values of optional and accessory products."
 msgstr ""
+"Gör detta attributvärde inte kompatibelt med andra värden för produkten "
+"eller vissa attributvärden för valfria produkter och tillbehörsprodukter."
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
@@ -1445,6 +2059,12 @@ msgid "Margins"
 msgstr "Marginaler"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_markup
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Markup"
+msgstr "Markup"
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Max. Margin"
 msgstr "Största marginal"
@@ -1455,16 +2075,35 @@ msgid "Max. Price Margin"
 msgstr "Största prismarginal"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_update_product_attribute_value__message
+msgid "Message"
+msgstr "Meddelande"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__message_has_error
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_has_error
 #: model:ir.model.fields,field_description:product.field_product_product__message_has_error
 #: model:ir.model.fields,field_description:product.field_product_template__message_has_error
 msgid "Message Delivery error"
-msgstr "Fel vid leverans av meddelande"
+msgstr "Fel vid leverans meddelande"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__message_ids
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_ids
 #: model:ir.model.fields,field_description:product.field_product_product__message_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_ids
 msgid "Messages"
 msgstr "Meddelanden"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__mimetype
+msgid "Mime Type"
+msgstr "Mime-typ"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Min Qty"
+msgstr "Min Antal"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -1482,58 +2121,81 @@ msgid "Min. Quantity"
 msgstr "Minsta kvantitet"
 
 #. module: product
-#: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__basic
-msgid "Multiple prices per product"
-msgstr "Flera priser per produkt"
+#: model:ir.model.fields,field_description:product.field_update_product_attribute_value__mode
+msgid "Mode"
+msgstr "Läge"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_res_config_settings__product_pricelist_setting
+#: model:product.template,name:product.monitor_stand_product_template
+msgid "Monitor Stand"
+msgstr "Monitorstativ"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__multi
+msgid "Multi-checkbox"
+msgstr "Multi-checkbox"
+
+#. module: product
+#: model:ir.model.constraint,message:product.constraint_product_attribute_check_multi_checkbox_no_variant
 msgid ""
-"Multiple prices: Pricelists with fixed price rules by product,\n"
-"Advanced rules: enables advanced price rules for pricelists."
+"Multi-checkbox display type is not compatible with the creation of variants"
 msgstr ""
-"Flera priser: Prislistor med fasta prisregler per produkt,\n"
-"Avancerade regler: möjliggör avancerade prisregler för prislistor."
+"Visningstypen med flera kryssrutor är inte kompatibel med skapandet av "
+"varianter"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__my_activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_product__my_activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_template__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Mina aktiviteters deadline"
+msgstr "Mina aktiviteters sluttid"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__name
 #: model:ir.model.fields,field_description:product.field_product_category__name
+#: model:ir.model.fields,field_description:product.field_product_combo__name
+#: model:ir.model.fields,field_description:product.field_product_document__name
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__name
 #: model:ir.model.fields,field_description:product.field_product_product__name
+#: model:ir.model.fields,field_description:product.field_product_tag__name
 #: model:ir.model.fields,field_description:product.field_product_template__name
 msgid "Name"
 msgstr "Namn"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__no_variant
-msgid "Never (option)"
-msgstr ""
+msgid "Never"
+msgstr "Aldrig"
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist.py:0
+msgid "New"
+msgstr "Nya"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_calendar_event_id
 #: model:ir.model.fields,field_description:product.field_product_product__activity_calendar_event_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Nästa kalenderhändelse för aktivitet"
+msgstr "Nästa Kalenderhändelse för Aktivitet"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_product__activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_template__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Nästa slutdatum för aktivitet"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_summary
 #: model:ir.model.fields,field_description:product.field_product_product__activity_summary
 #: model:ir.model.fields,field_description:product.field_product_template__activity_summary
 msgid "Next Activity Summary"
-msgstr "Nästa aktivitetssummering"
+msgstr "Nästa aktivitetssammanställning"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_type_id
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_id
 msgid "Next Activity Type"
@@ -1542,8 +2204,24 @@ msgstr "Nästa aktivitetstyp"
 #. module: product
 #. odoo-python
 #: code:addons/product/wizard/product_label_layout.py:0
-msgid "No product to print, if the product is archived please unarchive it before printing its label."
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
 msgstr ""
+"Ingen produkt att skriva ut, om produkten är arkiverad ber vi dig att ta "
+"bort arkiveringen innan du skriver ut etiketten."
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
+msgid "No products could be found."
+msgstr "Inga produkter kunde hittas."
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
+msgid "No products found in the report"
+msgstr "Inga produkter hittades i rapporten"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -1551,41 +2229,55 @@ msgid "No vendor pricelist found"
 msgstr "Ingen leverantörsprislista hittad"
 
 #. module: product
-#: model:ir.model.fields.selection,name:product.selection__product_template__priority__0
-msgid "Normal"
-msgstr "Normal"
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_attribute_value_list.js:0
+msgid "No, keep it"
+msgstr "Nej, behåll den"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 msgid "Note:"
-msgstr ""
+msgstr "Notera:"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_template__service_tracking__no
+msgid "Nothing"
+msgstr "Ingenting"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__number_related_products
 msgid "Number Related Products"
-msgstr ""
+msgstr "Antal Relaterade produkter"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__message_needaction_counter
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_needaction_counter
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,field_description:product.field_product_template__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Antal åtgärder"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__message_has_error_counter
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_has_error_counter
 #: model:ir.model.fields,field_description:product.field_product_product__message_has_error_counter
 #: model:ir.model.fields,field_description:product.field_product_template__message_has_error_counter
 msgid "Number of errors"
 msgstr "Antal fel"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_category__message_needaction_counter
+#: model:ir.model.fields,help:product.field_product_pricelist__message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Antal meddelanden som kräver en åtgärd"
+msgid "Number of messages requiring action"
+msgstr "Antal meddelanden som kräver åtgärd"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_category__message_has_error_counter
+#: model:ir.model.fields,help:product.field_product_pricelist__message_has_error_counter
 #: model:ir.model.fields,help:product.field_product_product__message_has_error_counter
 #: model:ir.model.fields,help:product.field_product_template__message_has_error_counter
 msgid "Number of messages with delivery error"
@@ -1595,7 +2287,7 @@ msgstr "Antal meddelanden med leveransfel"
 #: model:ir.model.fields,field_description:product.field_product_product__pricelist_item_count
 #: model:ir.model.fields,field_description:product.field_product_template__pricelist_item_count
 msgid "Number of price rules"
-msgstr ""
+msgstr "Antal prisregler"
 
 #. module: product
 #: model:product.template,name:product.product_delivery_01_product_template
@@ -1606,6 +2298,11 @@ msgstr "Kontorsstol"
 #: model:product.template,name:product.product_product_12_product_template
 msgid "Office Chair Black"
 msgstr "Kontorsstol svart"
+
+#. module: product
+#: model:product.template,name:product.office_combo_product_template
+msgid "Office Combo"
+msgstr "Kontor Combo"
 
 #. module: product
 #: model:product.template,name:product.product_order_01_product_template
@@ -1620,20 +2317,57 @@ msgstr "Kontorslampa"
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
-msgid "On the product %(product)s you cannot associate the value %(value)s with the attribute %(attribute)s because they do not match."
+msgid ""
+"On the product %(product)s you cannot associate the value %(value)s with the"
+" attribute %(attribute)s because they do not match."
 msgstr ""
+"På produkten %(product)s kan du inte associera värdet %(value)s med "
+"attributet %(attribute)s eftersom de inte matchar."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
-msgid "On the product %(product)s you cannot transform the attribute %(attribute_src)s into the attribute %(attribute_dest)s."
+msgid ""
+"On the product %(product)s you cannot transform the attribute "
+"%(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
+"På produkten %(product)s kan du inte omvandla attributet %(attribute_src)s "
+"till attributet %(attribute_dest)s."
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
+msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
+msgstr ""
+"Oops! '%(fileName)s' laddades inte upp eftersom dess format inte är "
+"tillåtet."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__original_id
+msgid "Original (unoptimized, unresized) attachment"
+msgstr "Originalbilaga (ej optimerad, ej storleksanpassad)"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_combo_item__lst_price
+msgid "Original Price"
+msgstr "Ursprungligt pris"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base_pricelist_id
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__base__pricelist
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Other Pricelist"
 msgstr "Övrig prislista"
+
+#. module: product
+#: model:product.template,name:product.product_template_dining_table
+msgid "Outdoor dining table"
+msgstr "Matbord för utomhusbruk"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
+msgid "Package Type A"
+msgstr "Förpackningstyp A"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
@@ -1666,31 +2400,57 @@ msgstr "Procent Pris"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__pills
 msgid "Pills"
-msgstr ""
+msgstr "Flikar"
+
+#. module: product
+#: model:product.attribute.value,name:product.fabric_attribute_plastic
+msgid "Plastic"
+msgstr "Plast"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Please enter a positive whole number."
+msgstr "Ange ett positivt heltal."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_document.py:0
+msgid ""
+"Please enter a valid URL.\n"
+"Example: https://www.odoo.com\n"
+"\n"
+"Invalid URL: %s"
 msgstr ""
+"Ange en giltig URL.\n"
+"Exempel: https://www.odoo.com\n"
+"\n"
+"Ogiltig URL: %s"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
+msgid "Please select some products first."
+msgstr "Vänligen välj några produkter först."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "Please specify the category for which this rule should be applied"
-msgstr ""
+msgstr "Ange den kategori för vilken denna regel ska tillämpas"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "Please specify the product for which this rule should be applied"
-msgstr ""
+msgstr "Vänligen ange den produkt för vilken denna regel ska tillämpas"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
-msgid "Please specify the product variant for which this rule should be applied"
-msgstr ""
+msgid ""
+"Please specify the product variant for which this rule should be applied"
+msgstr "Ange den produktvariant för vilken denna regel ska tillämpas"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__1
@@ -1699,8 +2459,12 @@ msgstr "Pund"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
-msgid "Press a button and watch your desk glide effortlessly from sitting to standing height in seconds."
+msgid ""
+"Press a button and watch your desk glide effortlessly from sitting to "
+"standing height in seconds."
 msgstr ""
+"Tryck på en knapp och se hur skrivbordet enkelt glider från sittande till "
+"stående höjd på några sekunder."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
@@ -1710,11 +2474,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 msgid "Price"
 msgstr "Pris"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Price Computation"
-msgstr "Prisberäkning"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_discount
@@ -1737,9 +2496,9 @@ msgid "Price Rules"
 msgstr "Pris Regler"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_surcharge
-msgid "Price Surcharge"
-msgstr "Pristillägg"
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Price Type"
+msgstr "Pris Typ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__list_price
@@ -1758,19 +2517,22 @@ msgstr "Pris:"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 #: model:ir.actions.report,name:product.action_report_pricelist
 #: model:ir.model,name:product.model_product_pricelist
+#: model:ir.model.fields,field_description:product.field_product_label_layout__pricelist_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__pricelist_id
 #: model:ir.model.fields,field_description:product.field_res_partner__property_product_pricelist
 #: model:ir.model.fields,field_description:product.field_res_users__property_product_pricelist
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Pricelist"
 msgstr "Prislista"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__applied_on
+#: model:ir.model.fields,help:product.field_product_pricelist_item__display_applied_on
 msgid "Pricelist Item applicable on selected option"
-msgstr ""
+msgstr "Prislista Artikel tillämplig på valt alternativ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__name
@@ -1780,9 +2542,17 @@ msgstr "Prislistenamn"
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
+#: model:ir.actions.server,name:product.action_product_price_list_report
+#: model:ir.actions.server,name:product.action_product_template_price_list_report
 #: model:ir.model,name:product.model_report_product_report_pricelist
 msgid "Pricelist Report"
-msgstr ""
+msgstr "Rapport om prislista"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist.py:0
+msgid "Pricelist Report Preview"
+msgstr "Förhandsgranskning av prislistans rapport"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -1798,21 +2568,11 @@ msgid "Pricelist Rules"
 msgstr "Prislists Regler"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
-msgid "Pricelist:"
-msgstr "Prislista:"
-
-#. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_pricelist
 #: model:ir.model.fields,field_description:product.field_res_country_group__pricelist_ids
 msgid "Pricelists"
 msgstr "Prislistor"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_res_config_settings__product_pricelist_setting
-msgid "Pricelists Method"
-msgstr "Prislists Metod"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.view_partner_property_form
@@ -1827,6 +2587,7 @@ msgstr "Priser"
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Print"
 msgstr "Skriv ut"
 
@@ -1839,23 +2600,31 @@ msgid "Print Labels"
 msgstr "Printa Etikett"
 
 #. module: product
+#. odoo-python
+#: code:addons/product/controllers/pricelist_report.py:0
 #: model:ir.model,name:product.model_product_template
+#: model:ir.model.fields,field_description:product.field_product_combo_item__product_id
 #: model:ir.model.fields,field_description:product.field_product_label_layout__product_ids
 #: model:ir.model.fields,field_description:product.field_product_packaging__product_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_tmpl_id
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_id
 #: model:ir.model.fields,field_description:product.field_product_template__product_variant_id
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__1_product
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__display_applied_on__1_product
 #: model_terms:ir.ui.view,arch_db:product.product_kanban_view
+#: model_terms:ir.ui.view,arch_db:product.product_packaging_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 #: model_terms:ir.ui.view,arch_db:product.product_search_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_tree
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_view_kanban_catalog
+#: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Product"
 msgstr "Produkt"
 
@@ -1888,6 +2657,11 @@ msgid "Product Attributes"
 msgstr "Produktattribut"
 
 #. module: product
+#: model:ir.model,name:product.model_product_catalog_mixin
+msgid "Product Catalog Mixin"
+msgstr "Produktkatalog Mixin"
+
+#. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
 #: model_terms:ir.ui.view,arch_db:product.product_category_list_view
 #: model_terms:ir.ui.view,arch_db:product.product_category_search_view
@@ -1896,30 +2670,93 @@ msgstr "Produktkategorier"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item__categ_id
 #: model:ir.model.fields,field_description:product.field_product_product__categ_id
 #: model:ir.model.fields,field_description:product.field_product_template__categ_id
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__2_product_category
 #: model_terms:ir.ui.view,arch_db:product.product_category_list_view
-#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Product Category"
 msgstr "Produktkategori"
 
 #. module: product
-#: model:ir.actions.report,name:product.report_product_template_label
+#: model:ir.model,name:product.model_product_combo
+msgid "Product Combo"
+msgstr "Produktkombination"
+
+#. module: product
+#: model:ir.model,name:product.model_product_combo_item
+msgid "Product Combo Item"
+msgstr "Produkt Combo Artikel"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_combo__combo_item_count
+#: model:ir.model.fields,field_description:product.field_update_product_attribute_value__product_count
+msgid "Product Count"
+msgstr "Produkträkning"
+
+#. module: product
+#: model:res.groups,name:product.group_product_manager
+msgid "Product Creation"
+msgstr "Skapande av produkter"
+
+#. module: product
+#: model:ir.model,name:product.model_product_document
+msgid "Product Document"
+msgstr "Produktdokument"
+
+#. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_dymo
 msgid "Product Label (PDF)"
 msgstr "Produkt Etikett (PDF)"
 
 #. module: product
-#: model:ir.model,name:product.model_report_product_report_producttemplatelabel
+#: model:ir.actions.report,name:product.report_product_template_label_2x7
+msgid "Product Label 2x7 (PDF)"
+msgstr "Produktetikett 2x7 (PDF)"
+
+#. module: product
+#: model:ir.actions.report,name:product.report_product_template_label_4x12
+msgid "Product Label 4x12 (PDF)"
+msgstr "Produktetikett 4x12 (PDF)"
+
+#. module: product
+#: model:ir.actions.report,name:product.report_product_template_label_4x12_noprice
+msgid "Product Label 4x12 No Price (PDF)"
+msgstr "Produktetikett 4x12 Utan pris (PDF)"
+
+#. module: product
+#: model:ir.actions.report,name:product.report_product_template_label_4x7
+msgid "Product Label 4x7 (PDF)"
+msgstr "Produktetikett 4x7 (PDF)"
+
+#. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel_dymo
 msgid "Product Label Report"
 msgstr "Produkt Etikett Rapport"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#: model:ir.model,name:product.model_report_product_report_producttemplatelabel2x7
+msgid "Product Label Report 2x7"
+msgstr "Rapport om produktmärkning 2x7"
+
+#. module: product
+#: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x12
+msgid "Product Label Report 4x12"
+msgstr "Rapport om produktetiketter 4x12"
+
+#. module: product
+#: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x12noprice
+msgid "Product Label Report 4x12 No Price"
+msgstr "Rapport för produktetiketter 4x12 Inget pris"
+
+#. module: product
+#: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x7
+msgid "Product Label Report 4x7"
+msgstr "Rapport om produktmärkning 4x7"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Product Name"
@@ -1929,7 +2766,7 @@ msgstr "Produktnamn"
 #: model:ir.model.fields,field_description:product.field_product_product__packaging_ids
 #: model:ir.model.fields,field_description:product.field_product_template__packaging_ids
 msgid "Product Packages"
-msgstr ""
+msgstr "Produktpaket"
 
 #. module: product
 #: model:ir.model,name:product.model_product_packaging
@@ -1941,30 +2778,29 @@ msgstr "Produktförpackning"
 #. module: product
 #: model:ir.actions.report,name:product.report_product_packaging
 msgid "Product Packaging (PDF)"
-msgstr ""
+msgstr "Produktförpackningar (PDF)"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_stock_packaging
+#: model_terms:ir.ui.view,arch_db:product.product_packaging_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_tree_view
 msgid "Product Packagings"
 msgstr "Produktförpackning"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_tag__product_product_ids
-msgid "Product Product"
-msgstr ""
+#: model:ir.model.fields,field_description:product.field_product_category__product_properties_definition
+msgid "Product Properties"
+msgstr "Produktens egenskaper"
 
 #. module: product
 #: model:ir.model,name:product.model_product_tag
 #: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 msgid "Product Tag"
-msgstr ""
+msgstr "Produktmärkning"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_tag_action
-#: model:ir.model.fields,field_description:product.field_product_product__product_tag_ids
-#: model:ir.model.fields,field_description:product.field_product_template__product_tag_ids
 #: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
 msgid "Product Tags"
 msgstr "Produktetiketter"
@@ -1972,18 +2808,18 @@ msgstr "Produktetiketter"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_tmpl_id
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_tmpl_id
-#: model:ir.model.fields,field_description:product.field_product_tag__product_template_ids
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__product_tmpl_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_tmpl_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__product_tmpl_id
 #: model_terms:ir.ui.view,arch_db:product.product_search_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Product Template"
 msgstr "Produktmall"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_exclusion
 msgid "Product Template Attribute Exclusion"
-msgstr ""
+msgstr "Uteslutning av attribut i produktmall"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_line
@@ -1993,12 +2829,14 @@ msgstr "Produktmallens Attributrad"
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_value
 msgid "Product Template Attribute Value"
-msgstr ""
+msgstr "Attributvärde för produktmall"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
-msgid "Product Template Tags"
-msgstr ""
+#: model:ir.model.fields,field_description:product.field_product_tag__product_template_ids
+#: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_view_tree_tag
+msgid "Product Templates"
+msgstr "Produktmallar"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__product_tmpl_ids
@@ -2009,12 +2847,13 @@ msgstr "Produkt Tmpl"
 #: model:ir.model.fields,field_description:product.field_product_product__product_tooltip
 #: model:ir.model.fields,field_description:product.field_product_template__product_tooltip
 msgid "Product Tooltip"
-msgstr ""
+msgstr "Verktygstips för produkt"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__detailed_type
-#: model:ir.model.fields,field_description:product.field_product_template__detailed_type
+#: model:ir.model.fields,field_description:product.field_product_product__type
+#: model:ir.model.fields,field_description:product.field_product_template__type
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Product Type"
 msgstr "Produkttyp"
 
@@ -2025,10 +2864,11 @@ msgstr "Produktens måttenhet"
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_id
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_id
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__0_product_variant
+#: model_terms:ir.ui.view,arch_db:product.product_document_form
 #: model_terms:ir.ui.view,arch_db:product.product_normal_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
 msgid "Product Variant"
 msgstr "Produktvariant"
 
@@ -2042,8 +2882,11 @@ msgstr "Värden på produktvarianter"
 #: model:ir.actions.act_window,name:product.product_normal_action
 #: model:ir.actions.act_window,name:product.product_normal_action_sell
 #: model:ir.actions.act_window,name:product.product_variant_action
+#: model:ir.model.fields,field_description:product.field_product_tag__product_product_ids
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_activity
+#: model_terms:ir.ui.view,arch_db:product.product_product_view_tree_tag
+#: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 msgid "Product Variants"
 msgstr "Produktvarianter"
 
@@ -2051,21 +2894,16 @@ msgstr "Produktvarianter"
 #. odoo-python
 #: code:addons/product/report/product_label_report.py:0
 msgid "Product model not defined, Please contact your administrator."
-msgstr ""
+msgstr "Produktmodell ej definierad, vänligen kontakta din administratör."
 
 #. module: product
 #. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid "Product: %s"
-msgstr "Produkt: %s"
-
-#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#: code:addons/product/models/product_catalog_mixin.py:0
 #: model:ir.actions.act_window,name:product.product_template_action
 #: model:ir.actions.act_window,name:product.product_template_action_all
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_ids
 #: model:ir.model.fields,field_description:product.field_product_template__product_variant_ids
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
-#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_view_activity
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Products"
@@ -2085,7 +2923,7 @@ msgstr "Produktprislista"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 msgid "Products Price Rules Search"
-msgstr ""
+msgstr "Produkter Pris Regler Sök"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
@@ -2101,10 +2939,24 @@ msgstr "Produkter: %(category)s"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_loyalty
 msgid "Promotions, Coupons, Gift Card & Loyalty Program"
-msgstr ""
+msgstr "Kampanjer, kuponger, presentkort och lojalitetsprogram"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__product_properties
+#: model:ir.model.fields,field_description:product.field_product_template__product_properties
+msgid "Properties"
+msgstr "Egenskaper"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_protection_kit
+msgid "Protection kit"
+msgstr "Skyddssats"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__purchase_ok
+#: model:ir.model.fields,field_description:product.field_product_template__purchase_ok
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Purchase"
 msgstr "Inköp"
 
@@ -2117,19 +2969,19 @@ msgstr "Inköpsbeskrivning"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
 #: model:ir.model.fields,field_description:product.field_product_template__uom_po_id
-msgid "Purchase UoM"
-msgstr "Inköps Måttenhet"
+msgid "Purchase Unit"
+msgstr "Inköpsenhet"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Quantities"
-msgstr ""
+msgstr "Kvantiteter"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Quantities (Price)"
-msgstr ""
+msgstr "Kvantiteter (pris)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__custom_quantity
@@ -2138,15 +2990,26 @@ msgid "Quantity"
 msgstr "Antal"
 
 #. module: product
+#. odoo-python
+#: code:addons/product/controllers/pricelist_report.py:0
+msgid "Quantity (%s UoM)"
+msgstr "Kvantitet (%s UoM)"
+
+#. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Quantity already present (%s)."
-msgstr ""
+msgstr "Kvantitet finns redan (%s)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
 msgid "Quantity of products contained in the packaging."
 msgstr "Antalet produkter som finns i förpackningen."
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Quotation Description"
+msgstr "Beskrivning av offerten"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
@@ -2155,25 +3018,39 @@ msgstr "Radio"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__code
+#: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Reference"
 msgstr "Referens"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
-msgid "Register the prices requested by your vendors for each product, based on the quantity and the period."
-msgstr "Registrera priserna som efterfrågas av era leverantörer för varje produkt, baserat på kvantitet och period."
+msgid ""
+"Register the prices requested by your vendors for each product, based on the"
+" quantity and the period."
+msgstr ""
+"Registrera priserna som efterfrågas av era leverantörer för varje produkt, "
+"baserat på kvantitet och period."
 
 #. module: product
-#. odoo-python
-#: code:addons/product/models/product_attribute.py:0
 #: model:ir.model.fields,field_description:product.field_product_attribute__product_tmpl_ids
 msgid "Related Products"
-msgstr ""
+msgstr "Relaterade produkter"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__ptav_product_variant_ids
 msgid "Related Variants"
 msgstr "Relaterade varianter"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__ir_attachment_id
+msgid "Related attachment"
+msgstr "Relaterad bilaga"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
+msgid "Remove"
+msgstr "Ta bort"
 
 #. module: product
 #. odoo-javascript
@@ -2182,6 +3059,27 @@ msgid "Remove quantity"
 msgstr "Avlägsna antal"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__res_field
+msgid "Resource Field"
+msgstr "Resursfält"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__res_id
+msgid "Resource ID"
+msgstr "Resurs ID"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__res_model
+msgid "Resource Model"
+msgstr "Resursmodell"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__res_name
+msgid "Resource Name"
+msgstr "Resursnamn"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_user_id
 #: model:ir.model.fields,field_description:product.field_product_product__activity_user_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_user_id
 msgid "Responsible User"
@@ -2194,8 +3092,8 @@ msgstr "Restaurangkostnader"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Rounding Method"
-msgstr "Avrundningsmetod"
+msgid "Round off to"
+msgstr "Avrunda till"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__rows
@@ -2205,24 +3103,22 @@ msgstr "Rader"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__rule_tip
 msgid "Rule Tip"
-msgstr ""
+msgstr "Regel Tips"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__sale_ok
+#: model:ir.model.fields,field_description:product.field_product_template__sale_ok
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Sales"
 msgstr "Försäljning"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__description_sale
 #: model:ir.model.fields,field_description:product.field_product_template__description_sale
-#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Sales Description"
 msgstr "Försäljningsbeskrivning"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_res_config_settings__module_sale_product_matrix
-msgid "Sales Grid Entry"
-msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__list_price
@@ -2237,7 +3133,7 @@ msgstr "Försäljningspris"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__lst_price
 msgid "Sales Price"
-msgstr ""
+msgstr "Försäljningspris"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__select
@@ -2247,22 +3143,26 @@ msgstr "Välj"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__sequence
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__sequence
+#: model:ir.model.fields,field_description:product.field_product_combo__sequence
+#: model:ir.model.fields,field_description:product.field_product_document__sequence
 #: model:ir.model.fields,field_description:product.field_product_packaging__sequence
 #: model:ir.model.fields,field_description:product.field_product_pricelist__sequence
 #: model:ir.model.fields,field_description:product.field_product_product__sequence
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__sequence
+#: model:ir.model.fields,field_description:product.field_product_tag__sequence
 #: model:ir.model.fields,field_description:product.field_product_template__sequence
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__sequence
 msgid "Sequence"
 msgstr "Sekvens"
 
 #. module: product
-#: model:ir.model.fields.selection,name:product.selection__product_template__detailed_type__service
 #: model:ir.model.fields.selection,name:product.selection__product_template__type__service
 msgid "Service"
 msgstr "Tjänst"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Services"
 msgstr "Tjänster"
 
@@ -2271,11 +3171,17 @@ msgstr "Tjänster"
 msgid ""
 "Sets the price so that it is a multiple of this value.\n"
 "Rounding is applied after the discount and before the surcharge.\n"
-"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
+"To have prices that end in 9.99, round off to 10.00 and set an extra at -0.01"
 msgstr ""
-"Sätter priset så att det är en multipel av detta värde.\n"
-"Avrundning görs efter att rabatten dras och innan avgifter.\n"
-"Att ha priser som slutar på 9,99, som avrundning 10, tilläggsavgift -0,01"
+"Ställer in priset så att det är en multipel av detta värde.\n"
+"Avrundningen görs efter rabatten och före tilläggsavgiften.\n"
+"Om du vill ha priser som slutar på 9,99 avrundar du till 10,00 och anger ett tillägg på -0,01"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
+msgid "Show Name"
+msgstr "Visningsnamn"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -2283,29 +3189,51 @@ msgid "Show all records which has next action date is before today"
 msgstr "Visa alla poster som har nästa händelse före idag"
 
 #. module: product
-#: model:ir.model.fields.selection,name:product.selection__product_pricelist__discount_policy__without_discount
-msgid "Show public price & discount to the customer"
-msgstr ""
+#: model:product.attribute,name:product.size_attribute
+msgid "Size"
+msgstr "Storlek"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_partner__specific_property_product_pricelist
+#: model:ir.model.fields,field_description:product.field_res_users__specific_property_product_pricelist
+msgid "Specific Property Product Pricelist"
+msgstr "Specifik egenskap Produkt Prislista"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__categ_id
-msgid "Specify a product category if this rule only applies to products belonging to this category or its children categories. Keep empty otherwise."
+msgid ""
+"Specify a product category if this rule only applies to products belonging "
+"to this category or its children categories. Keep empty otherwise."
 msgstr ""
+"Ange en produktkategori om denna regel endast gäller för produkter som "
+"tillhör denna kategori eller dess underkategorier. Behåll den tom annars."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_id
-msgid "Specify a product if this rule only applies to one product. Keep empty otherwise."
+msgid ""
+"Specify a product if this rule only applies to one product. Keep empty "
+"otherwise."
 msgstr ""
+"Ange en produkt om denna regel endast gäller för en produkt. Håll tom "
+"annars."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_tmpl_id
-msgid "Specify a template if this rule only applies to one product template. Keep empty otherwise."
+msgid ""
+"Specify a template if this rule only applies to one product template. Keep "
+"empty otherwise."
 msgstr ""
+"Ange en mall om denna regel endast gäller för en produktmall. Behåll tom "
+"annars."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
-msgid "Specify the fixed amount to add or subtract (if negative) to the amount calculated with the discount."
+msgid ""
+"Specify the fixed amount to add or subtract (if negative) to the amount "
+"calculated with the discount."
 msgstr ""
+"Ange det fasta belopp som ska adderas eller subtraheras (om negativt) till "
+"det belopp som beräknats med rabatten."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2326,7 +3254,7 @@ msgstr "Startdatum"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__date_start
 msgid "Start date for this vendor price"
-msgstr ""
+msgstr "Startdatum för detta leverantörspris"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__date_start
@@ -2334,8 +3262,11 @@ msgid ""
 "Starting datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
+"Startdatum för validering av prislisteobjekt\n"
+"Det visade värdet beror på den tidszon som ställts in i dina preferenser."
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__activity_state
 #: model:ir.model.fields,help:product.field_product_product__activity_state
 #: model:ir.model.fields,help:product.field_product_template__activity_state
 msgid ""
@@ -2352,7 +3283,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_1
 msgid "Steel"
-msgstr ""
+msgstr "Stål"
 
 #. module: product
 #: model:product.template,name:product.product_product_7_product_template
@@ -2360,149 +3291,227 @@ msgid "Storage Box"
 msgstr "Förvaringslåda"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__store_fname
+msgid "Stored Filename"
+msgstr "Sparat filnamn"
+
+#. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
 msgid "Supplier Pricelist"
 msgstr "Leverantörsprislista"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_tag__name
-msgid "Tag Name"
-msgstr "Etikettnamn"
-
-#. module: product
 #: model:ir.model.constraint,message:product.constraint_product_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Tagnamnet finns redan!"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+#: model:ir.model.fields,field_description:product.field_product_product__product_tag_ids
+#: model:ir.model.fields,field_description:product.field_product_template__product_tag_ids
+#: model_terms:ir.ui.view,arch_db:product.product_search_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Tags"
 msgstr "Etiketter"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Tags are used to search product for a given theme."
-msgstr ""
+msgstr "Taggar används för att söka efter produkter för ett visst tema."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__template_value_ids
+msgid "Template Values"
+msgstr "Värden för mallar"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+msgid "The Internal Reference '%s' already exists."
+msgstr "Den interna referensen '%s' finns redan."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
-#: code:addons/product/models/product_template.py:0
-msgid "The Internal Reference '%s' already exists."
-msgstr ""
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_template.py:0
-msgid "The Type of this product doesn't match the Detailed Type"
-msgstr ""
+msgid "The Reference '%s' already exists."
+msgstr "Referensen '%s' finns redan."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
-msgid "The attribute %(attribute)s must have at least one value for the product %(product)s."
+msgid ""
+"The attribute %(attribute)s must have at least one value for the product "
+"%(product)s."
 msgstr ""
+"Attributet %(attribute)s måste ha minst ett värde för produkten %(product)s."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
-msgid "The attribute cannot be changed once the value is used on at least one product."
+msgid ""
+"The attribute cannot be changed once the value is used on at least one "
+"product."
 msgstr ""
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "The computed price is expressed in the default Unit of Measure of the product."
-msgstr "Det beräknade priset är uttryckt i standardenheten för produkten."
+"Attributet kan inte ändras när värdet har använts på minst en produkt."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
-msgid "The default Unit of Measure and the purchase Unit of Measure must be in the same category."
+msgid ""
+"The default Unit of Measure and the purchase Unit of Measure must be in the "
+"same category."
 msgstr ""
+"Standardmåttenheten och inköpsmåttenheten måste vara i samma kategori."
+
+#. module: product
+#: model:product.template,description_sale:product.desk_organizer_product_template
+msgid ""
+"The desk organiser is perfect for storing all kinds of small things and "
+"since the 5 boxes are loose, you can move and place them in the way that "
+"suits you and your things best."
+msgstr ""
+"Skrivbordsarrangören är perfekt för förvaring av alla slags småsaker och "
+"eftersom de 5 lådorna är lösa kan du flytta och placera dem på det sätt som "
+"passar dig och dina saker bäst."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__display_type
 #: model:ir.model.fields,help:product.field_product_attribute_value__display_type
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__display_type
 msgid "The display type used in the Product Configurator."
-msgstr ""
+msgstr "Den displaytyp som används i produktkonfiguratorn."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__sequence
 msgid "The first in the sequence is the default one."
-msgstr ""
+msgstr "Den första i sekvensen är standard."
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
-msgid "The minimum height is 65 cm, and for standing work the maximum height position is 125 cm."
+msgid ""
+"The minimum height is 65 cm, and for standing work the maximum height "
+"position is 125 cm."
 msgstr ""
+"Minsta höjd är 65 cm, och för stående arbete är den maximala höjden 125 cm."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "The minimum margin should be lower than the maximum margin."
+msgstr "Minimimarginalen bör vara lägre än maximimarginalen."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_combo__base_price
+msgid ""
+"The minimum price among the products in this combo. This value will be used "
+"to prorate the price of this combo with respect to the other combos in a "
+"combo product. This heuristic ensures that whatever product the user chooses"
+" in a combo, it will always be the same price."
 msgstr ""
+"Det lägsta priset bland produkterna i den här kombinationen. Detta värde "
+"kommer att användas för att proportionera priset för den här kombinationen i"
+" förhållande till de andra kombinationerna i en kombinationsprodukt. Denna "
+"heuristik säkerställer att oavsett vilken produkt användaren väljer i en "
+"kombination, kommer den alltid att ha samma pris."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
-msgid "The number of products under this category (Does not consider the children categories)"
+msgid ""
+"The number of products under this category (Does not consider the children "
+"categories)"
 msgstr ""
+"Antalet produkter under denna kategori (tar inte hänsyn till barnkategorier)"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
-msgid "The number of variants to generate is too high. You should either not generate variants for each combination or generate them on demand from the sales order. To do so, open the form view of attributes and change the mode of *Create Variants*."
+msgid ""
+"The number of variants to generate is above allowed limit. You should either"
+" not generate variants for each combination or generate them on demand from "
+"the sales order. To do so, open the form view of attributes and change the "
+"mode of *Create Variants*."
 msgstr ""
+"Antalet varianter som ska genereras är över den tillåtna gränsen. Du bör "
+"antingen inte generera varianter för varje kombination eller generera dem på"
+" begäran från försäljningsordern. För att göra detta, öppna formulärvyn för "
+"attribut och ändra läget till *Create Variants*."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
 msgid "The price to purchase a product"
-msgstr ""
+msgstr "Priset för att köpa en produkt"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "The product template is archived so no combination is possible."
-msgstr ""
+msgstr "Produktmallen är arkiverad så ingen kombination är möjlig."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
-msgid "The quantity to purchase from this vendor to benefit from the price, expressed in the vendor Product Unit of Measure if not any, in the default unit of measure of the product otherwise."
+msgid ""
+"The quantity to purchase from this vendor to benefit from the price, "
+"expressed in the vendor Product Unit of Measure if not any, in the default "
+"unit of measure of the product otherwise."
 msgstr ""
+"Den kvantitet som ska köpas från denna leverantör för att dra nytta av "
+"priset, uttryckt i leverantörens produktmåttenhet om det inte finns någon, i"
+" produktens standardmåttenhet annars."
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid "The rounding method must be strictly positive."
+msgstr "Avrundningsmetoden måste vara strikt positiv."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_combo_item__lst_price
 #: model:ir.model.fields,help:product.field_product_product__lst_price
-msgid "The sale price is managed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices."
+msgid ""
+"The sale price is managed from the product template. Click on the 'Configure"
+" Variants' button to set the extra attribute prices."
 msgstr ""
+"Försäljningspriset hanteras från produktmallen. Klicka på knappen "
+"\"Konfigurera varianter\" för att ställa in priserna för de extra "
+"attributen."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
-msgid "The value %(value)s is not defined for the attribute %(attribute)s on the product %(product)s."
+msgid ""
+"The value %(value)s is not defined for the attribute %(attribute)s on the "
+"product %(product)s."
 msgstr ""
+"Värdet %(value)s är inte definierat för attributet %(attribute)s på "
+"produkten %(product)s."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "There are no possible combination."
-msgstr ""
+msgstr "Det finns inga möjliga kombinationer."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "There are no remaining closest combination."
-msgstr ""
+msgstr "Det finns inga kvarvarande närmaste kombinationer."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "There are no remaining possible combination."
-msgstr ""
+msgstr "Det finns inga återstående möjliga kombinationer."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
-msgid "This configuration of product attributes, values, and exclusions would lead to no possible variant. Please archive or delete your product directly if intended."
+msgid ""
+"This configuration of product attributes, values, and exclusions would lead "
+"to no possible variant. Please archive or delete your product directly if "
+"intended."
 msgstr ""
+"Denna konfiguration av produktattribut, värden och uteslutningar skulle inte"
+" leda till någon möjlig variant. Vänligen arkivera eller radera din produkt "
+"direkt om så önskas."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
@@ -2522,32 +3531,47 @@ msgstr "Den här anteckningen är endast för interna ändamål."
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner__property_product_pricelist
 #: model:ir.model.fields,help:product.field_res_users__property_product_pricelist
-msgid "This pricelist will be used, instead of the default one, for sales to the current partner"
-msgstr "Denna prislista kommer att användas, istället för den förvalda, för försäljning till nuvarande partner"
+msgid ""
+"This pricelist will be used, instead of the default one, for sales to the "
+"current partner"
+msgstr ""
+"Denna prislista kommer att användas, istället för den förvalda, för "
+"försäljning till nuvarande partner"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/uom_uom.py:0
 msgid ""
-"This rounding precision is higher than the Decimal Accuracy (%s digits).\n"
+"This rounding precision is higher than the Decimal Accuracy (%(digits)s digits).\n"
 "This may cause inconsistencies in computations.\n"
-"Please set a precision between %s and 1."
+"Please set a precision between %(min_precision)s and 1."
 msgstr ""
+"Denna avrundningsprecision är högre än decimalnoggrannheten (%(digits)s siffror).\n"
+"Detta kan orsaka inkonsekvenser i beräkningarna.\n"
+"Ange en precision mellan %(min_precision)s och 1."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
-msgid "This vendor's product code will be used when printing a request for quotation. Keep empty to use the internal one."
+msgid ""
+"This vendor's product code will be used when printing a request for "
+"quotation. Keep empty to use the internal one."
 msgstr ""
+"Denna leverantörs produktkod kommer att användas vid utskrift av en "
+"offertförfrågan. Håll tomt för att använda den interna."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_name
-msgid "This vendor's product name will be used when printing a request for quotation. Keep empty to use the internal one."
+msgid ""
+"This vendor's product name will be used when printing a request for "
+"quotation. Keep empty to use the internal one."
 msgstr ""
+"Denna leverantörs produktnamn kommer att användas vid utskrift av en "
+"offertförfrågan. Håll tomt för att använda det interna."
 
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_01_product_template
 msgid "Three Seater Sofa with Lounger in Steel Grey Colour"
-msgstr ""
+msgstr "Tresitsig soffa med solstol i stålgrå färg"
 
 #. module: product
 #: model:product.template,name:product.consu_delivery_01_product_template
@@ -2560,22 +3584,35 @@ msgid "Today Activities"
 msgstr "Dagens aktiviteter"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__type
-#: model:ir.model.fields,field_description:product.field_product_template__type
+#: model:ir.model.fields,field_description:product.field_product_document__type
 msgid "Type"
 msgstr "Typ"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__activity_exception_decoration
 #: model:ir.model.fields,help:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,help:product.field_product_template__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Typ av undantagsaktivitet i posten."
+msgstr "Typ av undantagsaktivitet som har registrerats."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/controllers/pricelist_report.py:0
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
+msgid "UOM"
+msgstr "UOM"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/wizard/product_label_layout.py:0
 msgid "Unable to find report template for %s format"
-msgstr ""
+msgstr "Kunde inte hitta rapportmall för %s-format"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
+msgid "Unit"
+msgstr "Enhet"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -2591,10 +3628,22 @@ msgid "Unit of Measure"
 msgstr "Måttenhet"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_uom
 #: model:ir.model.fields,field_description:product.field_product_product__uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__uom_name
 msgid "Unit of Measure Name"
-msgstr ""
+msgstr "Måttenhet Namn"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
+msgid "Unit price:"
+msgstr "Pris per enhet:"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
+msgid "Units"
+msgstr "Enheter"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
@@ -2603,14 +3652,65 @@ msgid "Units of Measure"
 msgstr "Måttenheter"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
-msgid "UoM"
-msgstr "Måttenhet"
+#: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
+msgid "Update extra prices"
+msgstr "Uppdatera extra priser"
+
+#. module: product
+#: model:ir.model,name:product.model_update_product_attribute_value
+msgid "Update product attribute value"
+msgstr "Uppdatera produktattributets värde"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute_value.py:0
+msgid "Update product extra prices"
+msgstr "Uppdatera extrapriser för produkter"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__update_extra_price
+msgid "Update the extra price on existing products"
+msgstr "Uppdatera extrapriset på befintliga produkter"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.xml:0
+msgid "Upload"
+msgstr "Ladda upp"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+msgid "Upload files to your product"
+msgstr "Ladda upp filer till din produkt"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Upsell & Cross-Sell"
+msgstr "Merförsäljning och korsförsäljning"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__url
+msgid "Url"
+msgstr "Url"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__compute_price
+msgid ""
+"Use the discount rules and activate the discount settings in order to show "
+"discount to customer."
 msgstr ""
+"Använd rabattreglerna och aktivera rabattinställningarna för att visa "
+"rabatten för kunden."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+msgid ""
+"Use this feature to store any files you would like to share with your "
+"customers"
+msgstr ""
+"Använd denna funktion för att lagra filer som du vill dela med dina kunder"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
@@ -2621,19 +3721,23 @@ msgstr "Används på Produkter"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Username"
-msgstr ""
+msgstr "Användarnamn"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_template__valid_product_template_attribute_line_ids
 msgid "Valid Product Attribute Lines"
-msgstr ""
+msgstr "Giltiga produktattributrader"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Validity"
 msgstr "Giltighet"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Validity Period"
+msgstr "Giltighetstid"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__name
@@ -2644,12 +3748,7 @@ msgstr "Värde"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__value_count
 msgid "Value Count"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
-msgid "Value Price Extra"
-msgstr ""
+msgstr "Värde Räkna"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__standard_price
@@ -2659,6 +3758,9 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"Produktens värde (beräknas automatiskt i AVCO).\n"
+"        Används för att värdera produkten när inköpskostnaden inte är känd (t.ex. lagerjustering).\n"
+"        Används för att beräkna marginaler på försäljningsorder."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
@@ -2669,6 +3771,8 @@ msgid "Values"
 msgstr "Värden"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_id
+#: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 msgid "Variant"
 msgstr "Variant"
@@ -2679,6 +3783,11 @@ msgid "Variant Count"
 msgstr "Variant Antal"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
+msgid "Variant Creation"
+msgstr "Skapande av varianter"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1920
 msgid "Variant Image"
 msgstr "Variantbild"
@@ -2686,22 +3795,22 @@ msgstr "Variantbild"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1024
 msgid "Variant Image 1024"
-msgstr ""
+msgstr "Variantbild 1024"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_128
 msgid "Variant Image 128"
-msgstr ""
+msgstr "Variant bild 128"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_256
 msgid "Variant Image 256"
-msgstr ""
+msgstr "Variantbild 256"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_512
 msgid "Variant Image 512"
-msgstr ""
+msgstr "Variantbild 512"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -2720,6 +3829,11 @@ msgid "Variant Seller"
 msgstr "Variant Försäljare"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__additional_product_tag_ids
+msgid "Variant Tags"
+msgstr "Variant taggar"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_template_variant_value_ids
 #: model_terms:ir.ui.view,arch_db:product.attribute_tree_view
 msgid "Variant Values"
@@ -2733,16 +3847,10 @@ msgstr "Variant: %s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Variants"
 msgstr "Varianter"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
-msgid "Variants Creation Mode"
-msgstr "Variantskaparläge"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__partner_id
@@ -2760,7 +3868,7 @@ msgstr "Leverantörsfakturor"
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 msgid "Vendor Information"
-msgstr ""
+msgstr "Säljarens information"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
@@ -2790,8 +3898,20 @@ msgstr "Virtuell heminredning"
 
 #. module: product
 #: model:product.template,name:product.product_product_1_product_template
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Virtual Interior Design"
 msgstr "Virtuell inredning"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Visible to all"
+msgstr "Synlig för alla"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__voice_ids
+msgid "Voice"
+msgstr "Röst"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__volume
@@ -2804,13 +3924,13 @@ msgstr "Volym"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_volume_volume_in_cubic_feet
 msgid "Volume unit of measure"
-msgstr ""
+msgstr "Måttenhet för volym"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__volume_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__volume_uom_name
 msgid "Volume unit of measure label"
-msgstr ""
+msgstr "Måttenhet för volym etikett"
 
 #. module: product
 #. odoo-python
@@ -2826,8 +3946,12 @@ msgstr "Varningar"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
-msgid "We pay special attention to detail, which is why our desks are of a superior quality."
+msgid ""
+"We pay special attention to detail, which is why our desks are of a superior"
+" quality."
 msgstr ""
+"Vi lägger stor vikt vid detaljerna och därför är våra skrivbord av högsta "
+"kvalitet."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
@@ -2839,13 +3963,13 @@ msgstr "Vikt"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_weight_in_lbs
 msgid "Weight unit of measure"
-msgstr ""
+msgstr "Måttenhet för vikt"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr ""
+msgstr "Vikt måttenhet etikett"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
@@ -2853,15 +3977,40 @@ msgid "White"
 msgstr "Vit"
 
 #. module: product
+#: model:product.attribute.value,name:product.product_attribute_value_color_wood
+msgid "Wood"
+msgstr "Trä"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__write_date
 msgid "Write Date"
+msgstr "Skriv datum"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/wizard/update_product_attribute_value.py:0
+msgid ""
+"You are about to add the value \"%(attribute_value)s\" to %(product_count)s "
+"products."
 msgstr ""
+"Du är på väg att lägga till värdet \"%(attribute_value)s\" till "
+"%(product_count)s produkter."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/wizard/update_product_attribute_value.py:0
+msgid "You are about to update the extra price of %s products."
+msgstr "Du är på väg att uppdatera extrapriset för %s produkter."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/res_config_settings.py:0
-msgid "You are deactivating the pricelist feature. Every active pricelist will be archived."
+msgid ""
+"You are deactivating the pricelist feature. Every active pricelist will be "
+"archived."
 msgstr ""
+"Du avaktiverar funktionen för prislistor. Alla aktiva prislistor kommer att "
+"arkiveras."
 
 #. module: product
 #. odoo-python
@@ -2872,23 +4021,72 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
 msgstr ""
+"Du ställer in en decimalnoggrannhet som är mindre exakt än UOMs:\n"
+"%s\n"
+"Detta kan orsaka inkonsekvenser i beräkningar.\n"
+"Öka avrundningen av dessa måttenheter, eller siffrorna i denna decimalnoggrannhet."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__percent_price
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_discount
 msgid "You can apply a mark-up by setting a negative discount."
-msgstr ""
+msgstr "Du kan tillämpa ett påslag genom att ange en negativ rabatt."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__price_markup
+msgid "You can apply a mark-up on the cost"
+msgstr "Du kan tillämpa ett påslag på kostnaden"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
-msgid "You can assign pricelists to your customers or select one when creating a new sales quotation."
+msgid ""
+"You can assign pricelists to your customers or select one when creating a "
+"new sales quotation."
 msgstr ""
+"Du kan tilldela prislistor till dina kunder eller välja en prislista när du "
+"skapar en ny offert."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_document__type
+msgid ""
+"You can either upload a file from your computer or copy/paste an internet "
+"link to your file."
+msgstr ""
+"Du kan antingen ladda upp en fil från din dator eller ange en URL till din "
+"fil."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_attribute_value__image
+#: model:ir.model.fields,help:product.field_product_template_attribute_value__image
+msgid ""
+"You can upload an image that will be used as the color of the attribute "
+"value."
+msgstr ""
+"Du kan ladda upp en bild som kommer att användas som färg för "
+"attributvärdet."
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
+msgid "You can't edit this product in the catalog."
+msgstr "Du kan inte redigera denna produkt i katalogen."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+msgid ""
+"You cannot archive this attribute as there are still products linked to it"
+msgstr ""
+"Du kan inte arkivera det här attributet eftersom det fortfarande finns "
+"produkter kopplade till det"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
-msgid "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
+msgid ""
+"You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
 msgstr ""
+"Du kan inte tilldela Huvudprislistan som Övrig prislista i Prislista-objekt"
 
 #. module: product
 #. odoo-python
@@ -2897,47 +4095,74 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"Du kan inte ändra skapandeläget för varianter för attributet %(attribute)s eftersom det används på följande produkter:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
-msgid "You cannot change the attribute of the value %(value)s because it is used on the following products: %(products)s"
+msgid ""
+"You cannot change the attribute of the value %(value)s because it is used on"
+" the following products: %(products)s"
 msgstr ""
+"Du kan inte ändra attributet för värdet %(value)s eftersom det används på "
+"följande produkter: %(products)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
-msgid "You cannot change the product of the value %(value)s set on product %(product)s."
+msgid ""
+"You cannot change the product of the value %(value)s set on product "
+"%(product)s."
 msgstr ""
+"Du kan inte ändra produkten för det värde %(value)s som anges på produkt "
+"%(product)s."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
-msgid "You cannot change the value of the value %(value)s set on product %(product)s."
+msgid ""
+"You cannot change the value of the value %(value)s set on product "
+"%(product)s."
 msgstr ""
+"Du kan inte ändra värdet på det värde %(value)s som anges på produkt "
+"%(product)s."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_category.py:0
 msgid "You cannot create recursive categories."
-msgstr ""
-
-#. module: product
-#: model:ir.model.constraint,message:product.constraint_product_attribute_value_value_company_uniq
-msgid "You cannot create two values with the same name for the same attribute."
-msgstr ""
+msgstr "Du kan inte skapa rekursiva kategorier."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/decimal_precision.py:0
-msgid "You cannot define the decimal precision of 'Account' as greater than the rounding factor of the company's main currency"
+msgid ""
+"You cannot define the decimal precision of 'Account' as greater than the "
+"rounding factor of the company's main currency"
 msgstr ""
+"Du kan inte definiera decimalprecisionen för \"Konto\" som större än "
+"avrundningsfaktorn för företagets huvudvaluta"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist.py:0
+msgid ""
+"You cannot delete pricelist(s):\n"
+"(%(pricelists)s)\n"
+"They are used within pricelist(s):\n"
+"%(other_pricelists)s"
+msgstr ""
+"Du kan inte ta bort prislista(or):\n"
+"(%(pricelists)s)\n"
+"De används inom prislista(or):\n"
+"%(other_pricelists)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_category.py:0
 msgid "You cannot delete the %s product category."
-msgstr ""
+msgstr "Du kan inte ta bort produktkategorin %s."
 
 #. module: product
 #. odoo-python
@@ -2946,6 +4171,8 @@ msgid ""
 "You cannot delete the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"Du kan inte ta bort attributet %(attribute)s eftersom det används på följande produkter:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -2953,42 +4180,48 @@ msgstr ""
 msgid ""
 "You cannot delete the value %(value)s because it is used on the following products:\n"
 "%(products)s\n"
-" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
+"Du kan inte ta bort värdet %(value)s eftersom det används på följande produkter:\n"
+"%(products)s\n"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_category.py:0
-msgid "You cannot delete this product category, it is the default generic category."
-msgstr ""
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_pricelist.py:0
 msgid ""
-"You cannot delete those pricelist(s):\n"
-"(%s)\n"
-", they are used in other pricelist(s):\n"
-"%s"
+"You cannot delete this product category, it is the default generic category."
 msgstr ""
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_attribute_value.py:0
-msgid "You cannot delete value %s because it was used in some products."
-msgstr ""
+"Du kan inte ta bort denna produktkategori, den är den generiska "
+"standardkategorin."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
-msgid "You cannot move the attribute %(attribute)s from the product %(product_src)s to the product %(product_dest)s."
+msgid ""
+"You cannot move the attribute %(attribute)s from the product %(product_src)s"
+" to the product %(product_dest)s."
 msgstr ""
+"Du kan inte flytta attributet %(attribute)s från produkten %(product_src)s "
+"till produkten %(product_dest)s."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
-msgid "You cannot update related variants from the values. Please update related values from the variants."
+msgid ""
+"You cannot update related variants from the values. Please update related "
+"values from the variants."
 msgstr ""
+"Du kan inte uppdatera relaterade varianter från värdena. Uppdatera "
+"relaterade värden från varianterna."
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
+msgid ""
+"You must define a product for everything you sell or purchase,\n"
+"                            whether it's a storable product, a consumable or a service."
+msgstr ""
+"Du måste definiera en produkt för allt du säljer eller köper,\n"
+"                            oavsett om det är en lagringsbar produkt, en förbrukningsvara eller en tjänst."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
@@ -2997,6 +4230,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
+"Du måste definiera en produkt för allt du säljer eller köper, oavsett\n"
+"om det är en lagringsbar produkt, en förbrukningsprodukt eller en tjänst."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
@@ -3006,6 +4241,10 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
+"Du måste definiera en produkt för allt du säljer eller köper,\n"
+"                oavsett om det är en lagringsbar produkt, en förbrukningsvara eller en tjänst.\n"
+"                Produktformuläret innehåller information för att förenkla försäljningsprocessen:\n"
+"                pris, noteringar i offerten, redovisningsdata, upphandlingsmetoder etc."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
@@ -3015,12 +4254,16 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
+"Du måste definiera en produkt för allt du säljer, oavsett om det är en fysisk produkt,\n"
+"                en förbrukningsvara eller en tjänst som du erbjuder kunderna.\n"
+"                Produktformuläret innehåller information för att förenkla försäljningsprocessen:\n"
+"                pris, noteringar i offerten, redovisningsdata, upphandlingsmetoder etc."
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "You must leave at least one quantity."
-msgstr ""
+msgstr "Du måste lämna minst en kvantitet."
 
 #. module: product
 #. odoo-python
@@ -3029,35 +4272,81 @@ msgid "You need to set a positive quantity."
 msgstr "Du behöver ange ett positivt antal."
 
 #. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
+msgid "csv"
+msgstr "csv"
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_view_kanban
 msgid "days"
 msgstr "dagar"
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid "discount"
+msgstr "rabatt"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
+msgid "e.g. 1234567890"
+msgstr "t.ex. 1234567890"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
+msgid "e.g. Burger Choice"
+msgstr "t.ex. Burger Choice"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "e.g. Cheese Burger"
-msgstr ""
+msgstr "t.ex. ostburgare"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "e.g. Lamps"
-msgstr ""
+msgstr "t.ex. lampor"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "e.g. Odoo Enterprise Subscription"
-msgstr ""
+msgstr "t.ex. Odoo Enterprise-abonnemang"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "e.g. Starter - Meal - Desert"
+msgstr "t.ex. Förrätt - Måltid - Efterrätt"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "e.g. USD Retailers"
-msgstr ""
+msgstr "t.ex. USD Återförsäljare"
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid "markup"
+msgstr "markup"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_form
+msgid "on"
+msgstr "på"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
+msgid "pdf"
+msgstr "pdf"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "per"
-msgstr ""
+msgstr "per"
 
 #. module: product
 #. odoo-python
@@ -3067,9 +4356,27 @@ msgid "product"
 msgstr "produkt"
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid "product cost"
+msgstr "produktkostnad"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "round off to 10.00 and set an extra at -0.01"
+msgstr "avrunda till 10,00 och sätt ett extra på -0,01"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "sales price"
+msgstr "försäljningspris"
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.view_partner_property_form
 msgid "the parent company"
-msgstr "Moderbolaget"
+msgstr "moderbolaget"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -3080,3 +4387,9 @@ msgstr "produktmallen."
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "to"
 msgstr "till"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
+msgid "xlsx"
+msgstr "xlsx"

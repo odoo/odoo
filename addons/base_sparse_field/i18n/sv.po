@@ -1,26 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_sparse_field
-#
+# 
 # Translators:
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
-# Simon S, 2022
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
-"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_sparse_field
@@ -34,14 +30,15 @@ msgid "Boolean"
 msgstr "Boolskt"
 
 #. module: base_sparse_field
+#. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
 msgid "Changing the storing system for field \"%s\" is not allowed."
-msgstr ""
+msgstr "Det är inte tillåtet att ändra lagringssystem för fält \"%s\"."
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__char
 msgid "Char"
-msgstr "Tecken"
+msgstr "Röding"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__create_uid
@@ -51,7 +48,7 @@ msgstr "Skapad av"
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__create_date
 msgid "Created on"
-msgstr "Skapad"
+msgstr "Skapad den"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__data
@@ -76,7 +73,7 @@ msgstr "Fält"
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__float
 msgid "Float"
-msgstr "Flyttal"
+msgstr "Flottör"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__id
@@ -85,18 +82,19 @@ msgstr "ID"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,help:base_sparse_field.field_ir_model_fields__serialization_field_id
-msgid "If set, this field will be stored in the sparse structure of the serialization field, instead of having its own database column. This cannot be changed after creation."
+msgid ""
+"If set, this field will be stored in the sparse structure of the "
+"serialization field, instead of having its own database column. This cannot "
+"be changed after creation."
 msgstr ""
+"Om detta anges kommer fältet att lagras i serialiseringsfältets glesa "
+"struktur, istället för att ha en egen kolumn i databasen. Detta kan inte "
+"ändras efter skapandet."
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__integer
 msgid "Integer"
 msgstr "Heltal"
-
-#. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test____last_update
-msgid "Last Modified on"
-msgstr "Senast redigerad den"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__write_uid
@@ -106,12 +104,12 @@ msgstr "Senast uppdaterad av"
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__write_date
 msgid "Last Updated on"
-msgstr "Senast uppdaterad på"
+msgstr "Senast uppdaterad den"
 
 #. module: base_sparse_field
 #: model:ir.model.fields.selection,name:base_sparse_field.selection__sparse_fields_test__selection__one
 msgid "One"
-msgstr ""
+msgstr "En"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__partner
@@ -119,9 +117,10 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: base_sparse_field
+#. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
 msgid "Renaming sparse field \"%s\" is not allowed"
-msgstr ""
+msgstr "Det är inte tillåtet att döpa om sparse-fältet \"%s\""
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__selection
@@ -131,24 +130,29 @@ msgstr "Urval"
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__serialization_field_id
 msgid "Serialization Field"
-msgstr ""
+msgstr "Fält för serialisering"
 
 #. module: base_sparse_field
+#. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
-msgid "Serialization field %r not found for sparse field %s!"
+msgid ""
+"Serialization field \"%(serialization_field)s\" not found for sparse field "
+"%(sparse_field)s!"
 msgstr ""
+"Serialiseringsfältet \"%(serialization_field)s\"  hittades inte för "
+"glesfältet  %(sparse_field)s!"
 
 #. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_sparse_fields_test
 msgid "Sparse fields Test"
-msgstr ""
+msgstr "Glesa fält Test"
 
 #. module: base_sparse_field
 #: model:ir.model.fields.selection,name:base_sparse_field.selection__sparse_fields_test__selection__two
 msgid "Two"
-msgstr ""
+msgstr "Två"
 
 #. module: base_sparse_field
 #: model:ir.model.fields.selection,name:base_sparse_field.selection__ir_model_fields__ttype__serialized
 msgid "serialized"
-msgstr ""
+msgstr "serialiserad"

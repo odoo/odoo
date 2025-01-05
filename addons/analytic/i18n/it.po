@@ -1,24 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* analytic
-#
+# 
 # Translators:
-# Friederike Fasterling-Nesselbosch, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
-# Martin Trigaux, 2023
-#
+# Wil Odoo, 2024
+# Marianna Ciofani, 2025
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: it\n"
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: analytic
@@ -28,20 +27,30 @@ msgid "%s (copy)"
 msgstr "%s (copia)"
 
 #. module: analytic
-#. odoo-javascript
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
-msgid "(no accounts)"
-msgstr ""
-
-#. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 msgid "<span class=\"o_stat_text\">Analytic Accounts</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Conti analitici</span>"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "<span class=\"o_stat_text\">Gross Margin</span>"
 msgstr "<span class=\"o_stat_text\">Margine Lordo</span>"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_plan.py:0
+msgid ""
+"A 'Project' plan needs to exist and its id needs to be set as "
+"`analytic.project_plan` in the system variables"
+msgstr ""
+"Un piano di 'Progetto' deve esistere e l'ID deve essere impostato su "
+"`analytic.project_plan` nella variabili di sistema"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Account field"
+msgstr "Campo conto"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__account_ids
@@ -59,10 +68,15 @@ msgid "Active"
 msgstr "Attivo"
 
 #. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_active_account
+msgid "Active account"
+msgstr "Conto attivo"
+
+#. module: analytic
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
-msgid "Add a line"
-msgstr "Aggiungi riga"
+msgid "Add a Line"
+msgstr "Aggiungi una Riga"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.action_account_analytic_account_form
@@ -78,13 +92,19 @@ msgstr "Amministrativo"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__all_account_count
 msgid "All Analytic Accounts Count"
-msgstr ""
+msgstr "Numero di tutti i conti analitici"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__amount
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Amount"
 msgstr "Importo"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Amount field"
+msgstr "Campo importo"
 
 #. module: analytic
 #. odoo-javascript
@@ -95,10 +115,10 @@ msgstr "Analitico"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_account
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__name
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__account_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__auto_account_id
+#: model:ir.model.fields,field_description:analytic.field_analytic_plan_fields_mixin__auto_account_id
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
-#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Analytic Account"
 msgstr "Conto analitico"
 
@@ -117,7 +137,7 @@ msgstr "Conti analitici"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__account_count
 msgid "Analytic Accounts Count"
-msgstr ""
+msgstr "Numero conti analitici"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
@@ -126,33 +146,23 @@ msgid "Analytic Distribution"
 msgstr "Distribuzione analitica"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #: model:ir.model,name:analytic.model_account_analytic_distribution_model
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_tree_view
 msgid "Analytic Distribution Model"
-msgstr ""
+msgstr "Modello di distribuzione analitico"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_distribution_model
 msgid "Analytic Distribution Models"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution_search
-#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution_search
-msgid "Analytic Distribution Search"
-msgstr ""
-
-#. module: analytic
-#. odoo-javascript
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
-msgid "Analytic Distribution Template"
-msgstr ""
+msgstr "Modelli di distribuzione analitici"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Item"
-msgstr ""
+msgstr "Elemento analitico"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
@@ -175,18 +185,22 @@ msgstr "Righe analitiche"
 #. module: analytic
 #: model:ir.model,name:analytic.model_analytic_mixin
 msgid "Analytic Mixin"
-msgstr ""
+msgstr "Mixin analitico"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__analytic_plan_id
-#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Analytic Plan"
-msgstr ""
+msgstr "Piano analitico"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_analytic_plan_fields_mixin
+msgid "Analytic Plan Fields"
+msgstr "Campi piano analitico"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr ""
+msgstr "Applicabilità del piano analitico"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_plan_action
@@ -194,25 +208,25 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_tree_view
 msgid "Analytic Plans"
-msgstr ""
+msgstr "Piani analitici"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_precision
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_precision
 msgid "Analytic Precision"
-msgstr ""
+msgstr "Precisione analitica"
 
 #. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_plan.py:0
 msgid "Analytical Accounts"
-msgstr ""
+msgstr "Conti analitici"
 
 #. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_plan.py:0
 msgid "Analytical Plans"
-msgstr ""
+msgstr "Piani analitici"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__applicability
@@ -235,7 +249,13 @@ msgstr "Partner collegato"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_asustek
 msgid "Asustek"
-msgstr ""
+msgstr "Asustek"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_line.py:0
+msgid "At least one analytic account must be set"
+msgstr "È necessario configurare almeno un conto analitico"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_attachment_count
@@ -254,14 +274,20 @@ msgid "Balance:"
 msgstr "Saldo:"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Business domain"
+msgstr "Ambito aziendale"
+
+#. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_partners_camp_to_camp
 msgid "Camp to Camp"
-msgstr ""
+msgstr "Camp to Camp"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_integration_c2c
 msgid "CampToCamp"
-msgstr ""
+msgstr "CampToCamp"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__category
@@ -276,7 +302,7 @@ msgstr "Piano dei conti analitico"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_count
 msgid "Children Plans Count"
-msgstr ""
+msgstr "Numero di piani figli"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_ids
@@ -286,7 +312,13 @@ msgstr "Figli"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_plan_action
 msgid "Click to add a new analytic account plan."
-msgstr ""
+msgstr "Fai clic per aggiungere un nuobo piano analitico."
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Close"
+msgstr "Chiudi"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__color
@@ -301,13 +333,13 @@ msgstr "Indice colore"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_commercial_marketing
 msgid "Commercial & Marketing"
-msgstr ""
+msgstr "Commerciale e marketing"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__company_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__company_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__company_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__company_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__company_id
 msgid "Company"
 msgstr "Azienda"
 
@@ -319,7 +351,7 @@ msgstr "Nome completo"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 msgid "Conditions to meet"
-msgstr ""
+msgstr "Condizioni da rispettare"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_res_config_settings
@@ -328,8 +360,13 @@ msgstr "Impostazioni di configurazione"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_line__product_uom_category_id
-msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
-msgstr "Conversioni tra diverse unità di misura sono permesse solo se appartengono alla stessa categoria. La conversione sarà effettuata utilizzando i rapporti di conversione delle unità di misura."
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Conversioni tra diverse unità di misura sono permesse solo se appartengono "
+"alla stessa categoria. La conversione sarà effettuata utilizzando i rapporti"
+" di conversione delle unità di misura."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -385,7 +422,7 @@ msgstr "Data"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__active
 msgid "Deactivate the account."
-msgstr ""
+msgstr "Disattiva il conto."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__debit
@@ -396,22 +433,22 @@ msgstr "Dare"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_agrolait
 msgid "Deco Addict"
-msgstr ""
+msgstr "Deco Addict"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__default_applicability
 msgid "Default Applicability"
-msgstr ""
+msgstr "Applicabilità predefinita"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_deltapc
 msgid "Delta PC"
-msgstr ""
+msgstr "PC Delta"
 
 #. module: analytic
 #: model:account.analytic.plan,name:analytic.analytic_plan_departments
 msgid "Departments"
-msgstr ""
+msgstr "Reparti"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__name
@@ -422,7 +459,13 @@ msgstr "Descrizione"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_desertic_hispafuentes
 msgid "Desertic - Hispafuentes"
-msgstr ""
+msgstr "Desertico - Hispafuentes"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Disable save"
+msgstr "Disabilita salva"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__display_name
@@ -430,13 +473,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__display_name
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__display_name
+#: model:ir.model.fields,field_description:analytic.field_analytic_plan_fields_mixin__display_name
+#: model:ir.model.fields,field_description:analytic.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Nome visualizzato"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Distribuzione conto analitico"
+
+#. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 msgid "Distribution to apply"
-msgstr ""
+msgstr "Distribuzione da applicare"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__business_domain
@@ -444,10 +496,9 @@ msgid "Domain"
 msgstr "Dominio"
 
 #. module: analytic
-#. odoo-javascript
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
-msgid "Editing"
-msgstr "Revisione"
+#: model:account.analytic.account,name:analytic.analytic_rd_finance
+msgid "Finance"
+msgstr "Finanza"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_follower_ids
@@ -458,6 +509,12 @@ msgstr "Seguito da"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Seguito da (partner)"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Force applicability"
+msgstr "Forza applicabilità"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action
@@ -476,11 +533,19 @@ msgid "Has Message"
 msgstr "Contiene messaggio"
 
 #. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_rd_hr
+msgid "Human Resources"
+msgstr "Risorse umane"
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__id
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__id
+#: model:ir.model.fields,field_description:analytic.field_analytic_plan_fields_mixin__id
+#: model:ir.model.fields,field_description:analytic.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
 
@@ -509,13 +574,7 @@ msgstr ""
 #. module: analytic
 #: model:account.analytic.plan,name:analytic.analytic_plan_internal
 msgid "Internal"
-msgstr ""
-
-#. module: analytic
-#. odoo-javascript
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
-msgid "Invalid"
-msgstr ""
+msgstr "Interno"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_is_follower
@@ -541,24 +600,21 @@ msgid "Last Updated on"
 msgstr "Ultimo aggiornamento il"
 
 #. module: analytic
-#. odoo-javascript
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
-msgid "Loading..."
-msgstr "Caricamento..."
+#: model:account.analytic.account,name:analytic.analytic_rd_legal
+msgid "Legal"
+msgstr "Legale"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_think_big_systems
 msgid "Lumber Inc"
-msgstr ""
+msgstr "Lumber Inc"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_luminous_technologies
 msgid "Luminous Technologies"
-msgstr ""
+msgstr "Tecnologie Luminous"
 
 #. module: analytic
-#. odoo-javascript
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__mandatory
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_plan__default_applicability__mandatory
 msgid "Mandatory"
@@ -577,7 +633,7 @@ msgstr "Messaggi"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_millennium_industries
 msgid "Millennium Industries"
-msgstr ""
+msgstr "Industrie Millenium"
 
 #. module: analytic
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__business_domain__general
@@ -593,13 +649,13 @@ msgstr "Nome"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_nebula
 msgid "Nebula"
-msgstr ""
+msgstr "Nebula"
 
 #. module: analytic
 #. odoo-javascript
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
-msgid "No Analytic Accounts for this plan"
-msgstr ""
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "New Model"
+msgstr "Nuovo modello"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
@@ -614,8 +670,8 @@ msgstr "Ancora nessuna attività su questo conto"
 #. module: analytic
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
-msgid "No plans available"
-msgstr ""
+msgid "No analytic plans found"
+msgstr "Nessun piano analitico trovato"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
@@ -629,7 +685,7 @@ msgstr "Numero di errori"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Numero di messaggi che richiedono un'azione"
 
 #. module: analytic
@@ -638,21 +694,15 @@ msgid "Number of messages with delivery error"
 msgstr "Numero di messaggi con errore di consegna"
 
 #. module: analytic
-#. odoo-javascript
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
-msgid "OK"
-msgstr "OK"
-
-#. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_mixin.py:0
 msgid "One or more lines require a 100% analytic distribution."
-msgstr ""
+msgstr "Una o più righe richiedono una distribuzione analitica al 100%·"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_internal
 msgid "Operating Costs"
-msgstr ""
+msgstr "Costi operativi"
 
 #. module: analytic
 #. odoo-python
@@ -661,8 +711,6 @@ msgid "Operation not supported"
 msgstr "Operazione non supportata"
 
 #. module: analytic
-#. odoo-javascript
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__optional
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_plan__default_applicability__optional
 msgid "Optional"
@@ -676,7 +724,7 @@ msgstr "Altro"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_our_super_product
 msgid "Our Super Product"
-msgstr ""
+msgstr "Il nostro super prodotto"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__parent_id
@@ -697,18 +745,40 @@ msgstr "Partner"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__partner_category_id
 msgid "Partner Category"
-msgstr ""
+msgstr "Categoria partner"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Percentage"
+msgstr "Percentuale"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__plan_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__plan_id
 msgid "Plan"
 msgstr "Pianificazione"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Product field"
+msgstr "Campo prodotto"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_rd_production
+msgid "Production"
+msgstr "Produzione"
+
+#. module: analytic
 #: model:account.analytic.plan,name:analytic.analytic_plan_projects
-msgid "Projects"
-msgstr ""
+msgid "Project"
+msgstr "Progetto"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__account_id
+#: model:ir.model.fields,field_description:analytic.field_analytic_plan_fields_mixin__account_id
+msgid "Project Account"
+msgstr "Conto progetto"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__unit_amount
@@ -741,14 +811,25 @@ msgstr ""
 "                spese (es. rifatturazione delle spese di viaggio)."
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__root_id
+msgid "Root"
+msgstr "Radice"
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__root_plan_id
 msgid "Root Plan"
-msgstr ""
+msgstr "Piano di base"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Save as new analytic distribution model"
+msgstr "Salva come nuovo modello di distribuzione analitica"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_seagate_p2
 msgid "Seagate P2"
-msgstr ""
+msgstr "Seagate P2"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
@@ -757,34 +838,55 @@ msgstr "Ricerca registraioni analitiche"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__company_id
-msgid "Select a company for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this company, it will automatically take this as an analytic account)"
+msgid ""
+"Select a company for which the analytic distribution will be used (e.g. "
+"create new customer invoice or Sales order if we select this company, it "
+"will automatically take this as an analytic account)"
 msgstr ""
+"Seleziona un'azienda per la quale verrà utilizzata la distribuzione "
+"analitica (ad es. crea una nuova fattura cliente oppure un ordine di vendita"
+" se quest'azienda viene selezionata, ciò verrà considerato automaticamente "
+"conto analitico)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
-msgid "Select a partner category for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this partner, it will automatically take this as an analytic account)"
+msgid ""
+"Select a partner category for which the analytic distribution will be used "
+"(e.g. create new customer invoice or Sales order if we select this partner, "
+"it will automatically take this as an analytic account)"
 msgstr ""
+"Seleziona una categoria partner per la quale verrà utilizzata la "
+"distribuzione analitica (ad es. crea una nuova fattura cliente oppure un "
+"ordine di vendita se questo partner viene selezionato, ciò verrà considerato"
+" automaticamente conto analitico)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
-msgid "Select a partner for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this partner, it will automatically take this as an analytic account)"
+msgid ""
+"Select a partner for which the analytic distribution will be used (e.g. "
+"create new customer invoice or Sales order if we select this partner, it "
+"will automatically take this as an analytic account)"
 msgstr ""
+"Seleziona un partner per il quale verrà utilizzata la distribuzione "
+"analitica (ad es. crea una una fattura cliente oppure un ordine di vendita "
+"se il partner viene selezionato, ciò verrà considerato automaticamente conto"
+" analitico)"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__sequence
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__sequence
+msgid "Sequence"
+msgstr "Sequenza"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_spark
 msgid "Spark Systems"
-msgstr ""
+msgstr "Spark Systems"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 msgid "Subplans"
-msgstr ""
-
-#. module: analytic
-#. odoo-python
-#: code:addons/analytic/models/analytic_line.py:0
-msgid "The selected account belongs to another company than the one you're trying to create an analytic item for"
-msgstr "Il conto selezionato appartiene a un'azienda diversa da quella per la quale si sta creando un movimento analitico"
+msgstr "Sottopiani"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_absences
@@ -818,21 +920,31 @@ msgid "User"
 msgstr "Utente"
 
 #. module: analytic
-#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_tree_view
-msgid "View"
-msgstr "Vista"
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+msgid ""
+"You can't set a different company on your analytic account since there are "
+"some analytic items linked to it."
+msgstr ""
+"Non è possibile configurare un'azienda diversa nel tuo conto analitico "
+"perché ci sono alcuni elementi analitici legati ad essa."
 
 #. module: analytic
 #. odoo-python
-#: code:addons/analytic/models/analytic_account.py:0
-msgid "You can't set a different company on your analytic account since there are some analytic items linked to it."
-msgstr ""
+#: code:addons/analytic/models/analytic_plan.py:0
+msgid "You cannot add a parent to the base plan '%s'"
+msgstr "Impossibile aggiungere al piano base '%s' un padre"
 
 #. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_distribution_model.py:0
-msgid "You defined a distribution with analytic account(s) belonging to a specific company but a model shared between companies or with a different company"
+msgid ""
+"You defined a distribution with analytic account(s) belonging to a specific "
+"company but a model shared between companies or with a different company"
 msgstr ""
+"È stata indicata una distribuzione con uno o più conti analitici che "
+"appartengono ad un'azienda specifica ma un modello condiviso tra più aziende"
+" o con un'azienda diversa"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form

@@ -1,34 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_discount
-#
+# 
 # Translators:
-# Silvija Butko <silvija.butko@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Linas Versada <linaskrisiukenas@gmail.com>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
-"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
-"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
-"1 : n % 1 != 0 ? 2: 3);\n"
+"Language: lt\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: pos_discount
 #. odoo-python
 #: code:addons/pos_discount/models/pos_config.py:0
 msgid ""
-"A discount product is needed to use the Global Discount feature. Go to Point "
-"of Sale > Configuration > Settings to set it."
+"A discount product is needed to use the Global Discount feature. Go to Point"
+" of Sale > Configuration > Settings to set it."
 msgstr ""
 
 #. module: pos_discount
@@ -43,7 +39,8 @@ msgstr "Konfigūracijos nustatymai"
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.xml:0
+#: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+#: model:product.template,name:pos_discount.product_product_consumable_product_template
 msgid "Discount"
 msgstr "Nuolaida"
 
@@ -54,7 +51,7 @@ msgstr "Nuolaida %"
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_pc
 msgid "Discount Percentage"
@@ -67,16 +64,24 @@ msgid "Discount Product"
 msgstr "Nuolaidinis produktas"
 
 #. module: pos_discount
-#. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
-msgid "No discount product found"
-msgstr "Nerasta nuolaidos produktas"
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_discount.field_product_template__display_name
+#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Rodomas pavadinimas"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_discount.field_product_template__id
+#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
-msgid "No tax"
-msgstr ""
+#: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
+msgid "No discount product found"
+msgstr "Nerasta nuolaidos produktas"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__iface_discount
@@ -89,20 +94,14 @@ msgid "Point of Sale Configuration"
 msgstr "Pardavimo taško konfigūracija"
 
 #. module: pos_discount
-#: model:ir.model,name:pos_discount.model_pos_session
-msgid "Point of Sale Session"
-msgstr "Pardavimo taško sesija"
-
-#. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_product_id
 msgid "Pos Discount Product"
 msgstr ""
 
 #. module: pos_discount
-#. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
-msgid "Tax: %s"
-msgstr ""
+#: model:ir.model,name:pos_discount.model_product_template
+msgid "Product"
+msgstr "Produktas"
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
@@ -112,10 +111,10 @@ msgstr ""
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid ""
-"The discount product seems misconfigured. Make sure it is flagged as 'Can be "
-"Sold' and 'Available in Point of Sale'."
+"The discount product seems misconfigured. Make sure it is flagged as 'Can be"
+" Sold' and 'Available in Point of Sale'."
 msgstr ""
 "Nuolaidinis produktas atrodo nustatytas neteisingai. Įsitikinkite kad jis "
 "pažymėtas kaip \"Gali būti parduodamas\" ir \"Galimas pardavimo taške\"."

@@ -1,0 +1,65 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_sms
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: pos_sms
+#: model:sms.template,body:pos_sms.sms_template_data_point_of_sale
+msgid ""
+"\n"
+"                {{ object.company_id.name }} : Your order with reference: {{ object.pos_reference }} was processed succesfully with amount {{  object.currency_id.format(object.amount_total) }}. Use {{ object.pos_reference }}  for further reference\n"
+"            "
+msgstr ""
+
+#. module: pos_sms
+#: model:ir.model,name:pos_sms.model_res_config_settings
+msgid "Config Settings"
+msgstr "Параметры конфигурации"
+
+#. module: pos_sms
+#: model:sms.template,name:pos_sms.sms_template_data_point_of_sale
+msgid "POS: Sent Order Confirmation via Text"
+msgstr ""
+
+#. module: pos_sms
+#: model:ir.model,name:pos_sms.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Конфигурация точки продаж"
+
+#. module: pos_sms
+#: model:ir.model,name:pos_sms.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Заказы в торговых точках"
+
+#. module: pos_sms
+#: model_terms:ir.ui.view,arch_db:pos_sms.pos_sms_res_config_settings_view_form
+msgid "Receipt template"
+msgstr "Шаблон квитанции"
+
+#. module: pos_sms
+#: model:ir.model.fields,help:pos_sms.field_pos_config__sms_receipt_template_id
+#: model:ir.model.fields,help:pos_sms.field_res_config_settings__pos_sms_receipt_template_id
+msgid "SMS will be sent to the customer based on this template"
+msgstr ""
+
+#. module: pos_sms
+#: model:ir.model.fields,field_description:pos_sms.field_pos_config__sms_receipt_template_id
+#: model:ir.model.fields,field_description:pos_sms.field_res_config_settings__pos_sms_receipt_template_id
+msgid "Sms Receipt template"
+msgstr ""

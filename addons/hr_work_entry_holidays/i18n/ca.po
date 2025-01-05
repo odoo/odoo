@@ -1,0 +1,98 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_work_entry_holidays
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ca\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_contract__display_name
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_leave__display_name
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_leave_type__display_name
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry__display_name
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry_type__display_name
+msgid "Display Name"
+msgstr "Nom mostrat"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model,name:hr_work_entry_holidays.model_hr_contract
+msgid "Employee Contract"
+msgstr "Contracte de l'empleat"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model,name:hr_work_entry_holidays.model_hr_work_entry
+msgid "HR Work Entry"
+msgstr "Prestació RH"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model,name:hr_work_entry_holidays.model_hr_work_entry_type
+msgid "HR Work Entry Type"
+msgstr "Tipus d'entrada de treball de RH"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_contract__id
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_leave__id
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_leave_type__id
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry__id
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry_type__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_work_entry_holidays
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_holidays.work_entry_type_leave_form_inherit
+msgid "Payroll"
+msgstr "Nòmina"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry__leave_state
+msgid "Status"
+msgstr "Estat"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model.fields,help:hr_work_entry_holidays.field_hr_work_entry__leave_state
+msgid ""
+"The status is set to 'To Submit', when a time off request is created.\n"
+"The status is 'To Approve', when time off request is confirmed by user.\n"
+"The status is 'Refused', when time off request is refused by manager.\n"
+"The status is 'Approved', when time off request is approved by manager."
+msgstr ""
+"L'estat s'estableix com a \"Per enviar\", quan es crea una sol·licitud de temps lliure.\n"
+"L'estat és \"Aprovar\", quan l'usuari confirma la sol·licitud de temps lliure.\n"
+"L'estat es \"Refused\", quan el gestor rebutja la sol·licitud de temps lliure.\n"
+"L'estat és \"aprovat\", quan el gestor aprova la sol·licitud de temps lliure."
+
+#. module: hr_work_entry_holidays
+#: model:ir.model,name:hr_work_entry_holidays.model_hr_leave
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry__leave_id
+msgid "Time Off"
+msgstr "Absències"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model,name:hr_work_entry_holidays.model_hr_leave_type
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry_type__leave_type_ids
+msgid "Time Off Type"
+msgstr "Tipus d'absència"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_leave_type__work_entry_type_id
+msgid "Work Entry Type"
+msgstr "Tipus d'entrada de treball"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model.fields,help:hr_work_entry_holidays.field_hr_work_entry_type__leave_type_ids
+msgid "Work entry used in the payslip."
+msgstr "Entrada de treball utilitzada en la nòmina."

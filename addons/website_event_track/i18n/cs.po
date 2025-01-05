@@ -1,61 +1,54 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_event_track
-#
+# 
 # Translators:
-# Damian Brencic <brencicdamian12313@gmail.com>, 2022
-# xlu <xlu@seznam.cz>, 2022
-# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2022
-# karolína schusterová <karolina.schusterova@vdp.sk>, 2022
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2022
-# Martin Trigaux, 2022
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
-# Michal Veselý <michal@veselyberanek.net>, 2022
-# Jiří Podhorecký, 2023
-#
+# Wil Odoo, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Jiří Podhorecký, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: cs\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/models/website.py:0
 msgid "\"Events App Name\" field is required."
-msgstr ""
+msgstr "Pole \"Events App Name\" je povinné."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_count
 #: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_count
 msgid "# Wishlisted"
-msgstr ""
+msgstr "# Seznam přání"
 
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 msgid "%(name)s from %(company)s"
-msgstr ""
+msgstr "%(name)s z %(company)s"
 
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 msgid "%(name)s, %(function)s at %(company)s"
-msgstr ""
+msgstr "%(name)s, %(function)s v %(company)s"
 
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/models/website.py:0
 msgid "%s Events"
-msgstr ""
+msgstr "%s Akce"
 
 #. module: website_event_track
 #. odoo-python
@@ -64,24 +57,20 @@ msgid "%s Online Events Application"
 msgstr ""
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
-msgid "&amp;bull;"
-msgstr "&amp;bull;"
+msgid "(timezone:"
+msgstr "(časové pásmo:"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_17
 msgid "10 DIY Furniture Ideas For Absolute Beginners"
-msgstr ""
+msgstr "10 nápadů na DIY nábytek pro úplné začátečníky"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_18
 msgid "6 Woodworking tips and tricks for beginners"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
-msgid "<b>Contact Information</b>"
-msgstr ""
+msgstr "6 tipů a triků pro začátečníky při práci se dřevem"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -101,17 +90,7 @@ msgstr "<b>Navrhl</b>:"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Speaker Biography</b>:"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "<b>Speaker Profile</b>"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "<b>Talk Intro</b>"
-msgstr ""
+msgstr "<b>Životopis řečníka</b>:"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -139,6 +118,23 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    Vážený <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandone Freemane</t><br>\n"
+"    S potěšením vám oznamujeme, že váš návrh <t t-out=\"object.name or ''\">O čem tato akce je</t> byl přijat a potvrzen pro událost <t t-out=\"object.event_id.name or ''\">Online odhalení kolekce OpenWood</t>.\n"
+"    <br>\n"
+"    Více podrobností najdete zde:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"            Zobrazit přednášku\n"
+"        </a>\n"
+"    </div>\n"
+"    <br><br>\n"
+"    Děkujeme\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
@@ -147,52 +143,55 @@ msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
-msgid "<i class=\"fa fa-bell me-2 text-muted\"/> Favorite Talks"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
-msgid "<i class=\"fa fa-folder-open\"/> Favorites"
-msgstr "<i class=\"fa fa-folder-open\"/> Oblíbené"
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
-msgid ""
-"<i class=\"oi oi-fw oi-arrow-right\"/>\n"
-"                        Write one."
+msgid "<i class=\"fa fa-bell mx-2 text-muted\"/> Favorite Talks"
 msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
-msgid "<span class=\"d-none d-md-block ms-2\">&amp;bull;</span>"
-msgstr ""
+msgid "<span class=\"d-none d-md-block\">&amp;bull;</span>"
+msgstr "<span class=\"d-none d-md-block\">&amp;bull;</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
-msgid "<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
-msgstr "<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
+msgid ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "<span class=\"fa fa-plus me-1\"/> Schedule Tracks"
+msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
-"                                        <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
-"                                        <span class=\"o_wetrack_proposal_error_message\"/>\n"
-"                                    </span>"
+"                                    <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                    <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                </span>"
 msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<span class=\"o_wetrack_proposal_label_content\">Talk Introduction</span>\n"
-"                                            <span>*</span>"
+"                                        <span>*</span>"
 msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<span class=\"o_wetrack_proposal_label_content\">Talk Title</span>\n"
-"                                            <span>*</span>"
+"                                        <span>*</span>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+msgid "<span class=\"text-muted\"> tracks</span>"
 msgstr ""
 
 #. module: website_event_track
@@ -205,7 +204,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
 msgid "<span id=\"search_number\" class=\"me-1\">0</span>Results"
-msgstr ""
+msgstr "<span id=\"search_number\" class=\"me-1\">0</span> výsledků"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
@@ -215,7 +214,7 @@ msgstr "<span> - </span>"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content_partner_info
 msgid "<span> at </span>"
-msgstr ""
+msgstr "<span> v </span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -223,23 +222,9 @@ msgid "<span>New track proposal</span>"
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid ""
-"<strong>Lightning Talks</strong>. These are 30 minutes talks on many\n"
-"                                    different topics. Most topics are accepted in lightning talks."
-msgstr ""
-
-#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "<strong>Location:</strong>"
 msgstr "<strong>Poloha:</strong>"
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid ""
-"<strong>Regular Talks</strong>. These are standard talks with slides,\n"
-"                                    alocated in slots of 60 minutes."
-msgstr ""
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track7
@@ -254,11 +239,15 @@ msgid ""
 " * Red indicates something is preventing the progress of this track\n"
 " * Green indicates the track is ready to be pulled to the next stage"
 msgstr ""
+"Stav kanban sledování označuje speciální situace, které ji ovlivňují:\n"
+" * Šedá je výchozí situace\n"
+" * Červená znamená, že něco brání postupu ve sledování\n"
+" * Zelená znamená, že sledování je připravené k přesunu do další fáze"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction
 msgid "Action Needed"
-msgstr "Vyžaduje akci"
+msgstr "Vyžadována akce"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__active
@@ -273,7 +262,7 @@ msgstr "Aktivity"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Dekorace výjimky aktivity"
+msgstr "Typ výjimečné aktivity"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_state
@@ -287,8 +276,12 @@ msgstr "Ikona typu aktivity"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
-msgid "Add a description to help your coworkers understand the meaning and purpose of the stage."
-msgstr "Přidejte popis, abyste svým spolupracovníkům pomohli pochopit význam a účel fáze."
+msgid ""
+"Add a description to help your coworkers understand the meaning and purpose "
+"of the stage."
+msgstr ""
+"Přidejte popis, abyste svým spolupracovníkům pomohli pochopit význam a účel "
+"fáze."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
@@ -302,7 +295,8 @@ msgstr "Přidejte novou fázi v ulohách obchodní nástenky"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
-msgid "Add tags to your tracks to help your attendees browse your event web pages."
+msgid ""
+"Add tags to your tracks to help your attendees browse your event web pages."
 msgstr ""
 
 #. module: website_event_track
@@ -318,18 +312,20 @@ msgstr "Pokročilé přehledy"
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/models/event_event.py:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
 msgid "Agenda"
 msgstr "Agenda"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__color
 msgid "Agenda Color"
-msgstr ""
+msgstr "Barva agendy"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_main
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
 msgid "All Talks"
-msgstr ""
+msgstr "Všechny rozhovory"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
@@ -340,20 +336,20 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 msgid "Allow push notifications?"
-msgstr ""
+msgstr "Povolit push oznámení?"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "Allow video and audio recording of their\n"
-"                                    presentation, for publishing on our website."
-msgstr "Umožnit video a audio záznam jejich prezentace, publikování na našich webových stránkách."
+"                            presentation, for publishing on our website."
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlisted_by_default
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Always Wishlisted"
-msgstr ""
+msgstr "Vždy na seznamu přání"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage2
@@ -374,7 +370,9 @@ msgstr "Archivováno"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_visitor__is_blacklisted
-msgid "As key track cannot be un-favorited, this field store the partner choice to remove the reminder for key tracks."
+msgid ""
+"As key track cannot be un-favorited, this field store the partner choice to "
+"remove the reminder for key tracks."
 msgstr ""
 
 #. module: website_event_track
@@ -399,6 +397,16 @@ msgstr "Publikum"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__allowed_track_tag_ids
 msgid "Available Track Tags"
+msgstr "Dostupné tagy sledování"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+msgid "Available on all event Agenda pages"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_main
+msgid "Back to All Talks"
 msgstr ""
 
 #. module: website_event_track
@@ -426,34 +434,35 @@ msgid "Blocked"
 msgstr "Blokováno"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
 msgid "Book your seats to the best talks"
-msgstr ""
+msgstr "Rezervujte si místa na nejlepší přednášky"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
 msgid "Book your talks"
-msgstr ""
+msgstr "Rezervujte si své přednášky"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_14
 msgid "Building a DIY cabin from the ground up"
-msgstr ""
+msgstr "Stavba chaty pro kutily od základů"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_url
 msgid "Button Target URL"
-msgstr ""
+msgstr "Cílová adresa URL tlačítka"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_title
 msgid "Button Title"
-msgstr ""
+msgstr "Název tlačítka"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__is_website_cta_live
 msgid "CTA button is available"
-msgstr ""
+msgstr "Tlačítko výzvy k akci je k dispozici"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -466,14 +475,14 @@ msgid "Can Publish"
 msgstr "Může publikovat"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_cancel
-msgid "Canceled Stage"
-msgstr ""
-
-#. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage5
 msgid "Cancelled"
 msgstr "Zrušeno"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_cancel
+msgid "Cancelled Stage"
+msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -488,7 +497,12 @@ msgstr "Kategorie"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_12
 msgid "Climate positive"
-msgstr ""
+msgstr "Klimaticky pozitivní"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "Close"
+msgstr "Zavřít"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__color
@@ -504,17 +518,17 @@ msgstr "Barevný index"
 #. odoo-python
 #: code:addons/website_event_track/controllers/event_track.py:0
 msgid "Coming soon"
-msgstr ""
+msgstr "Již brzy"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
 msgid "Coming soon ..."
-msgstr ""
+msgstr "Již brzy ..."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__company_id
 msgid "Company"
-msgstr "Firma"
+msgstr "Společnost"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_company_name
@@ -524,23 +538,29 @@ msgstr " Název společnosti "
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_res_config_settings
 msgid "Config Settings"
-msgstr "Nastavení konfigurace"
+msgstr "Konfigurační nastavení"
 
 #. module: website_event_track
 #: model:mail.template,subject:website_event_track.mail_template_data_track_confirmation
 msgid "Confirmation of {{ object.name }}"
-msgstr ""
+msgstr "Potvrzení o {{ object.name }}"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage1
 msgid "Confirmed"
-msgstr "Potvrzeno"
+msgstr "Potvrzený"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_13
 #: model_terms:event.track,description:website_event_track.event_7_track_3
-msgid "Considering to build a wooden house? Watch this video to find out more information about a construction process and final result. Step by step simple explanation! Interested?"
+msgid ""
+"Considering to build a wooden house? Watch this video to find out more "
+"information about a construction process and final result. Step by step "
+"simple explanation! Interested?"
 msgstr ""
+"Uvažujete o stavbě dřevěného domu? Podívejte se na toto video a zjistěte "
+"více informací o postupu výstavby a konečném výsledku. Jednoduché vysvětlení"
+" krok za krokem! Máte zájem?"
 
 #. module: website_event_track
 #. odoo-python
@@ -562,6 +582,11 @@ msgid "Contact Email"
 msgstr "Kontaktní mail:"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid "Contact Information"
+msgstr "Kontaktní informace"
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_phone
 msgid "Contact Phone"
 msgstr "Kontaktní telefon"
@@ -569,7 +594,7 @@ msgstr "Kontaktní telefon"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
 msgid "Contact me through a different email/phone"
-msgstr ""
+msgstr "Kontaktujte mě přes jiný e-mail/telefon"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
@@ -595,7 +620,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__create_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__create_uid
 msgid "Created by"
-msgstr "Vytvořeno od"
+msgstr "Vytvořeno uživatelem"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__create_date
@@ -605,7 +630,7 @@ msgstr "Vytvořeno od"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__create_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__create_date
 msgid "Created on"
-msgstr "Vytvořeno"
+msgstr "Vytvořeno dne"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
@@ -615,6 +640,13 @@ msgstr "Zákazník"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_19
 msgid "DIY Timber Cladding Project"
+msgstr "Projekt dřevěného obložení pro kutily"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PROPOSAL PAGES "
+"OF ALL EVENTS"
 msgstr ""
 
 #. module: website_event_track
@@ -625,22 +657,22 @@ msgstr "Datum"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_11
 msgid "Day 2 Wrapup"
-msgstr ""
+msgstr "Shrnutí 2. dne"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_8
 msgid "Dealing with OpenWood Furniture"
-msgstr ""
+msgstr "Nakládání s nábytkem OpenWood"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
 msgid "Define labels explaining kanban state management."
-msgstr ""
+msgstr "Definujte štítky vysvětlující řízení stavu kanbanu."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_location__sequence
 msgid "Define the order in which the location will appear on \"Agenda\" page"
-msgstr ""
+msgstr "Definujte pořadí, v jakém se umístění zobrazí na stránce \"Agenda\"."
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
@@ -650,6 +682,10 @@ msgid ""
 "            You will use these stages in order to track the progress in\n"
 "            solving an event track."
 msgstr ""
+"Definujte kroky, které budou použity v události od\n"
+"vytvoření stopy až po její uzavření.\n"
+"Tyto etapy budete používat ke sledování postupu v rámci\n"
+"řešení stopy události."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -666,7 +702,7 @@ msgstr "Popis"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__partner_tag_line
 msgid "Description of the partner (name, function and company name)"
-msgstr ""
+msgstr "Popis partnera (jméno, funkce a název společnosti)"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track25
@@ -696,12 +732,16 @@ msgstr "Objevte náš nový návrhářský tým"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__display_name
 msgid "Display Name"
-msgstr "Zobrazované jméno"
+msgstr "Zobrazovací název"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_cta
-msgid "Display a Call to Action button to your Attendees while they watch your Track."
+msgid ""
+"Display a Call to Action button to your Attendees while they watch your "
+"Track."
 msgstr ""
+"Zobrazení tlačítka s výzvou k akci pro účastníky během sledování vašeho "
+"vystoupení."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
@@ -721,24 +761,24 @@ msgstr "Trvání"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_3
 msgid "Easy Way To Build a Wooden House"
-msgstr ""
+msgstr "Jednoduchý způsob stavby dřevěného domu"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "Edit Track"
-msgstr ""
+msgstr "Upravit sledování"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_email
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
 msgid "Email"
-msgstr "E-mail "
+msgstr "Email "
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__mail_template_id
 msgid "Email Template"
-msgstr "Šablona e-mailu"
+msgstr "Emailová šablona"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -768,7 +808,7 @@ msgstr "Lokace Události"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
 msgid "Event Page"
-msgstr ""
+msgstr "Stránka Události"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_proposal_menu_ids
@@ -786,29 +826,29 @@ msgstr "Šablona události"
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tree
 msgid "Event Track"
-msgstr ""
+msgstr "Téma události"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_location
 msgid "Event Track Location"
-msgstr ""
+msgstr "Lokace tématu události"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_stage
 msgid "Event Track Stage"
-msgstr ""
+msgstr "Fáze tématu události"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_tag
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_tree
 msgid "Event Track Tag"
-msgstr ""
+msgstr "Štítek tématu události"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_tag_category
 msgid "Event Track Tag Category"
-msgstr ""
+msgstr "Kategorie štítků tématu události"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track
@@ -816,7 +856,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_calendar
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Event Tracks"
-msgstr ""
+msgstr "Sledování události"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_menu_ids
@@ -827,7 +867,7 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_21
 msgid "Event Wrapup"
-msgstr ""
+msgstr "Shrnutí události"
 
 #. module: website_event_track
 #: model:mail.template,name:website_event_track.mail_template_data_track_confirmation
@@ -859,13 +899,18 @@ msgstr "Oblíbené"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
-msgid "Filter Tracks..."
-msgstr "Filtrovat stopy..."
+msgid "Filter Tracks"
+msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
 msgid "Filter by Tags"
-msgstr ""
+msgstr "Filtrovat podle štítků"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "Filters"
+msgstr "Filtry"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
@@ -875,7 +920,7 @@ msgstr "Dokončeno"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_2
 msgid "First Day Wrapup"
-msgstr ""
+msgstr "Shrnutí prvního dne"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__fold
@@ -885,17 +930,17 @@ msgstr "Složený v kanbanu"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_follower_ids
 msgid "Followers"
-msgstr "Sledující"
+msgstr "Odběratelé"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Sledující (partneři)"
+msgstr "Odběratelé (partneři)"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Skvělá ikona písma, např. fa-úkoly"
+msgstr "Ikona v rámci awesome font, např. fa-tasks"
 
 #. module: website_event_track
 #: model:event.track.tag.category,name:website_event_track.event_track_tag_category_2
@@ -905,7 +950,7 @@ msgstr "Formát"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_fully_accessible
 msgid "Fully accessible"
-msgstr ""
+msgstr "Plně přístupné"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -913,9 +958,10 @@ msgid "Future Activities"
 msgstr "Budoucí činnosti"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
 msgid "Get prepared and"
-msgstr ""
+msgstr "Připravte se a"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -971,7 +1017,7 @@ msgstr "Nejvyšší"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
 msgid "Home page"
-msgstr ""
+msgstr "Domovská stránka"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track21
@@ -981,7 +1027,7 @@ msgstr "Dům světových kultur"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
 msgid "How can our team get in touch with you?"
-msgstr ""
+msgstr "Jak se s vámi může náš tým spojit?"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track18
@@ -1021,7 +1067,8 @@ msgstr "Jak integrovat hardwarové materiály do nábytku"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track8
 msgid "How to optimize your sales, from leads to sales orders"
-msgstr "Jak optimalizovat svůj prodej, od příležitostí k prodejním objednávkám"
+msgstr ""
+"Jak optimalizovat svůj prodej, od příležitostí k prodejním objednávkám"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__id
@@ -1041,38 +1088,51 @@ msgstr "Ikona"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Ikona označuje vyjímečnou aktivitu."
+msgstr "Ikona, která označuje výjimečnou aktivitu."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_fully_accessible
-msgid "If checked, automatically publish tracks so that access links to customers are provided."
+msgid ""
+"If checked, automatically publish tracks so that access links to customers "
+"are provided."
 msgstr ""
+"Pokud je zaškrtnuto, automaticky publikuje vystoupení tak, aby byly "
+"poskytnuty přístupové odkazy pro zákazníky."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
+msgstr "Pokud zaškrtnuto, nové zprávy vyžadují vaši pozornost."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Pokud je zaškrtnuto, některé zprávy mají chybu při doručení."
+msgstr "Pokud zaškrtnuto, některé zprávy mají chybu při doručení."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_visible_in_agenda
 msgid "If checked, the related tracks will be visible in the frontend."
 msgstr ""
+"Pokud je zaškrtnuto, budou související vystoupení viditelné ve frontendu."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__mail_template_id
-msgid "If set an email will be sent to the customer when the track reaches this step."
-msgstr "Pokud je nastaven e-mail, bude zákazníkovi zaslán e-mail, když trať dosáhne tohoto kroku."
+msgid ""
+"If set an email will be sent to the customer when the track reaches this "
+"step."
+msgstr ""
+"Pokud je nastaven e-mail, bude zákazníkovi zaslán e-mail, když trať dosáhne "
+"tohoto kroku."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__wishlisted_by_default
-msgid "If set, the talk will be set as favorite for each attendee registered to the event."
+msgid ""
+"If set, the talk will be set as favorite for each attendee registered to the"
+" event."
 msgstr ""
+"Pokud je nastaveno, bude přednáška nastavena jako oblíbená pro každého "
+"účastníka přihlášeného na akci."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image_url
@@ -1099,12 +1159,12 @@ msgstr "Probíhá"
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_15
 msgid "In this video we will see how lumber is made in a sawmill factory."
-msgstr ""
+msgstr "V tomto videu uvidíte, jak se vyrábí řezivo na pile."
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
 msgid "In this video, I covered 6 tips and tricks to help out beginners:"
-msgstr ""
+msgstr "V tomto videu jsem popsal 6 tipů a triků, které pomohou začátečníkům:"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -1116,12 +1176,12 @@ msgstr "Instalovat"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
 msgid "Install Application"
-msgstr ""
+msgstr "Nainstalovat aplikaci"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Interactivity"
-msgstr ""
+msgstr "Interaktivita"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1136,7 +1196,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_is_follower
 msgid "Is Follower"
-msgstr "Je sledující"
+msgstr "Je odběratel"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_published
@@ -1176,7 +1236,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_wishlisted
 msgid "Is Wishlisted"
-msgstr ""
+msgstr "Je na seznamu přání"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_blacklisted
@@ -1191,7 +1251,7 @@ msgstr "Pracovní pozice"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Job Title"
-msgstr "Pracovní pozice"
+msgstr "Název pozice"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__legend_blocked
@@ -1226,7 +1286,7 @@ msgstr "Klíčové faktory úspěchu při prodeji nábytku"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_9
 msgid "Kitchens for the Future"
-msgstr ""
+msgstr "Kuchyně pro budoucnost"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__write_uid
@@ -1236,7 +1296,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__write_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__write_uid
 msgid "Last Updated by"
-msgstr "Naposledy upraveno od"
+msgstr "Naposledy upraveno uživatelem"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__write_date
@@ -1246,12 +1306,12 @@ msgstr "Naposledy upraveno od"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__write_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__write_date
 msgid "Last Updated on"
-msgstr "Naposled upraveno"
+msgstr "Naposledy upraveno dne"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Late Activities"
-msgstr "Zpožděné činnosti"
+msgstr "Aktivity po termínu"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track12
@@ -1261,16 +1321,23 @@ msgstr "Nejnovější trendy"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_26
 msgid "Less Furniture is More Furniture"
-msgstr ""
+msgstr "Méně nábytku znamená víc."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_4
 msgid "Life at Home Around the World: William’s Story"
+msgstr "Život doma po celém světě: Příběh Williama"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Lightning Talks"
 msgstr ""
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_19
-msgid "Link to Q&amp;A here! The time has come to hide those old block walls. Love simple and transformation type projects like this! :)-"
+msgid ""
+"Link to Q&amp;A here! The time has come to hide those old block walls. Love "
+"simple and transformation type projects like this! :)-"
 msgstr ""
 
 #. module: website_event_track
@@ -1305,12 +1372,12 @@ msgstr "Místo"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_13
 msgid "Log House Building"
-msgstr ""
+msgstr "Stavba srubu"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_15
 msgid "Logs to lumber"
-msgstr ""
+msgstr "Klády na řezivo"
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__0
@@ -1320,12 +1387,12 @@ msgstr "Nízké"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track31
 msgid "Lunch"
-msgstr "Oběd"
+msgstr "Obědy"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta
 msgid "Magic Button"
-msgstr ""
+msgstr "Kouzelné tlačítko"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -1334,8 +1401,12 @@ msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_location
-msgid "Manage from here the places where you organize your tracks (e.g. Rooms, Channels, ...)."
+msgid ""
+"Manage from here the places where you organize your tracks (e.g. Rooms, "
+"Channels, ...)."
 msgstr ""
+"Zde můžete spravovat místa, ve kterých organizujete své vystoupení (např. "
+"Místnosti, Kanály, ...)."
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
@@ -1350,7 +1421,7 @@ msgstr "Typ nabídky"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error
 msgid "Message Delivery error"
-msgstr "Chyba při doručování zpráv"
+msgstr "Chyba při doručování zprávy"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_ids
@@ -1365,7 +1436,7 @@ msgstr "Minimální, ale efektivní design"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_start_remaining
 msgid "Minutes before CTA starts"
-msgstr ""
+msgstr "Minuty před zahájením Výzvy k akci"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_remaining
@@ -1380,12 +1451,12 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
 msgid "Miter saw tip"
-msgstr ""
+msgstr "Tip pro pokosovou pilu"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track30
 msgid "Morning break"
-msgstr ""
+msgstr "Dopolední pauza"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__my_activity_date_deadline
@@ -1395,7 +1466,7 @@ msgstr "Termín mé aktivity"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track27
 msgid "My Company global presentation"
-msgstr ""
+msgstr "Globální prezentace mé společnosti"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -1408,7 +1479,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 #: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
 msgid "Name"
-msgstr "Jméno"
+msgstr "Název"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
@@ -1428,7 +1499,7 @@ msgstr "Nová stopa"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Další událost z kalendáře aktivit"
+msgstr "Další aktivita z kalendáře"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_date_deadline
@@ -1438,12 +1509,12 @@ msgstr "Termín další aktivity"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_summary
 msgid "Next Activity Summary"
-msgstr "Souhrn další aktivity"
+msgstr "Popis další aktivity"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_type_id
 msgid "Next Activity Type"
-msgstr "Další typ aktivity"
+msgstr "Typ další aktivity"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
@@ -1451,15 +1522,9 @@ msgid "No Track Visitors yet!"
 msgstr ""
 
 #. module: website_event_track
-#. odoo-javascript
-#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form_tags.js:0
-msgid "No results found"
-msgstr ""
-
-#. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_action_from_visitor
 msgid "No track favorited by this visitor"
-msgstr ""
+msgstr "Žádné vystoupení, které by tento návštěvník měl v oblíbených"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
@@ -1471,6 +1536,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_event_track.field_event_track_tag__color
 msgid "Note that colorless tags won't be available on the website."
 msgstr ""
+"Všimněte si, že štítky bez barvy nebudou na webových stránkách k dispozici."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction_counter
@@ -1484,8 +1550,8 @@ msgstr "Počet chyb"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Počet zpráv, které vyžadují akci"
+msgid "Number of messages requiring action"
+msgstr "Počet zpráv vyžadujících akci"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error_counter
@@ -1495,12 +1561,12 @@ msgstr "Počet zpráv s chybou při doručení"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_24
 msgid "Old is New"
-msgstr ""
+msgstr "Staré znamená nové"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_20
 msgid "Our Last Day Together!"
-msgstr ""
+msgstr "Náš poslední společný den!"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__partner_id
@@ -1528,18 +1594,20 @@ msgstr "Obrázek"
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
 msgid "Plan your experience by adding your favorites talks to your wishlist"
 msgstr ""
+"Naplánujte si svůj zážitek přidáním oblíbených rozhovorů do seznamu přání"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
 msgid "Please enter either a contact email address or a contact phone number."
 msgstr ""
+"Zadejte prosím kontaktní e-mailovou adresu nebo kontaktní telefonní číslo."
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
 msgid "Please fill out the form correctly."
-msgstr ""
+msgstr "Vyplňte prosím formulář správně."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track3
@@ -1549,7 +1617,7 @@ msgstr "Prezentace portfolia"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_16
 msgid "Pretty. Ugly. Lovely."
-msgstr ""
+msgstr "Pěkně. Ošklivě. Půvabně."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
@@ -1563,8 +1631,14 @@ msgstr "Priorita"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_7
-msgid "Probably one of the most asked questions I've gotten is how I got started woodworking! In this video I share with you how/why I started building furniture!"
+msgid ""
+"Probably one of the most asked questions I've gotten is how I got started "
+"woodworking! In this video I share with you how/why I started building "
+"furniture!"
 msgstr ""
+"Asi jedna z nejčastějších otázek, které dostávám, je, jak jsem začal "
+"pracovat se dřevem! V tomto videu se s vámi podělím o to, jak/proč jsem "
+"začal stavět nábytek!"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage0
@@ -1573,8 +1647,8 @@ msgstr "Návrh"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "Proposals are closed!"
-msgstr "Návrhy jsou uzavřeny!"
+msgid "Proposals are closed."
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track_proposal
@@ -1595,7 +1669,7 @@ msgstr "Zvyšování kvality informací od vašich zákazníků"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Hodnocení"
 
 #. module: website_event_track
 #. odoo-python
@@ -1625,9 +1699,14 @@ msgid "Refused"
 msgstr "Odmítnuto"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Regular Talks"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__track_start_relative
 msgid "Relative time compared to track start (seconds)"
-msgstr ""
+msgstr "Relativní čas v porovnání se startem vystoupení (v sekundách)"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_cta_start_remaining
@@ -1653,17 +1732,17 @@ msgstr "Zodpovědný uživatel"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_23
 msgid "Restoring Old Woodworking Tools"
-msgstr ""
+msgstr "Restaurování starých dřevoobráběcích nástrojů"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_23
 msgid "Restoring old woodworking tools"
-msgstr ""
+msgstr "Obnova starých dřevoobráběcích nástrojů"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
 msgid "Right angle clamp jig"
-msgstr ""
+msgstr "Pravoúhlá svěrka"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_seo_optimized
@@ -1676,26 +1755,29 @@ msgid "SMS Delivery error"
 msgstr "Chyba doručení SMS"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
-#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
-msgid "Schedule some tracks to get started"
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "Search a talk ..."
 msgstr ""
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_6
 msgid "Securing your Lumber during transport"
-msgstr ""
+msgstr "Zabezpečení vašeho řeziva během přepravy"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form_tags.js:0
-msgid "Select categories"
+msgid "Select Categories"
 msgstr ""
 
 #. module: website_event_track
 #: model:mail.template,description:website_event_track.mail_template_data_track_confirmation
-msgid "Sent to speakers whose track proposal is accepted (set the template on the right stage)"
+msgid ""
+"Sent to speakers whose track proposal is accepted (set the template on the "
+"right stage)"
 msgstr ""
+"Odesláno přednášejícím, jejichž návrh vystoupení byl přijat (nastavte "
+"šablonu na odpovídající fázi)."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__seo_name
@@ -1708,7 +1790,7 @@ msgstr "SEO jméno"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__sequence
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__sequence
 msgid "Sequence"
-msgstr "Číselná řada"
+msgstr "Sekvence"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -1720,12 +1802,13 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_delay
 msgid "Show Button"
-msgstr ""
+msgstr "Zobrazit tlačítko"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Show all records which has next action date is before today"
-msgstr "Zobrazit všechny záznamy, které mají následující datum akce před dneškem"
+msgstr ""
+"Zobrazit všechny záznamy, které mají datum příští aktivity před dneškem"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
@@ -1734,13 +1817,14 @@ msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Speaker"
 msgstr "Mluvčí"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Speaker Bio"
-msgstr ""
+msgstr "Životopis přednášejícího"
 
 #. module: website_event_track
 #. odoo-python
@@ -1752,6 +1836,11 @@ msgstr "E-mail mluvčího"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__image
 msgid "Speaker Photo"
 msgstr "Fotografie mluvčího"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Speaker Profile"
+msgstr "Profil přednášejícího"
 
 #. module: website_event_track
 #. odoo-python
@@ -1778,7 +1867,7 @@ msgstr "Název fáze"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
 msgid "Starting now!"
-msgstr ""
+msgstr "Začínáme právě teď!"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track28
@@ -1794,7 +1883,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Stav na základě aktivit\n"
-"Vypršeno: Datum již uplynulo\n"
+"Po splatnosti: Datum již uplynul\n"
 "Dnes: Datum aktivity je dnes\n"
 "Plánováno: Budoucí aktivity."
 
@@ -1816,25 +1905,30 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__name
 msgid "Tag Name"
-msgstr "Název tagu"
+msgstr "Název štítku"
 
 #. module: website_event_track
 #: model:ir.model.constraint,message:website_event_track.constraint_event_track_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Název značky již existuje!"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__tag_ids
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__tag_ids
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
 msgid "Tags"
-msgstr "Tagy"
+msgstr "Štítky"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Talk Intro"
+msgstr ""
 
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/models/event_event.py:0
 msgid "Talk Proposals"
-msgstr ""
+msgstr "Návrhy rozhovorů"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -1858,13 +1952,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_event_track/models/event_event.py:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
 msgid "Talks"
 msgstr "Projevy"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Talks Types"
-msgstr ""
+msgstr "Typy rozhovorů"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
@@ -1900,8 +1995,12 @@ msgstr "Nový způsob propagace vašich výtvorů"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_17
-msgid "There are a lot of ideas worth exploring so start with the 10 DIY furniture ideas for absolute beginners."
+msgid ""
+"There are a lot of ideas worth exploring so start with the 10 DIY furniture "
+"ideas for absolute beginners."
 msgstr ""
+"Existuje mnoho nápadů, které stojí za to prozkoumat, takže začněte s 10 "
+"nápady na nábytek pro úplné začátečníky."
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5
@@ -1909,37 +2008,66 @@ msgid ""
 "There are several variants of wood is available in the world but we are talking about most expensive\n"
 "    ones in the world and keeping to the point we have arranged ten most expensive wood."
 msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
-msgid "They will be created automatically once attendees start browsing your events."
-msgstr ""
+"Existuje několik variant dřeva, které jsou na světě k dispozici, ale my "
+"mluvíme o těch nejdražších na světě a v souladu s tímto bodem jsme "
+"uspořádali deset nejdražších dřev."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "This event does not accept proposals."
-msgstr "Tato akce nepřijímá návrhy."
+msgid ""
+"These are 30 minutes talks on many different topics. Most topics are "
+"accepted in lightning talks."
+msgstr ""
+"Jedná se o 30minutové přednášky na různá témata. Většina témat je "
+"akceptována v rámci lightning talks."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "These are standard talks with slides, alocated in slots of 60 minutes."
+msgstr ""
+"Jedná se o standardní přednášky s prezentacemi, které jsou rozděleny do "
+"60minutových bloků."
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+msgid ""
+"They will be created automatically once attendees start browsing your "
+"events."
+msgstr ""
+"Vytvoří se automaticky, jakmile účastníci začnou procházet vaše události."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_website__app_icon
-msgid "This field holds the image used as mobile app icon on the website (PNG format)."
+msgid ""
+"This field holds the image used as mobile app icon on the website (PNG "
+"format)."
 msgstr ""
+"Toto pole obsahuje obrázek použitý jako ikona mobilní aplikace na webových "
+"stránkách (formát PNG)."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_res_config_settings__events_app_name
 #: model:ir.model.fields,help:website_event_track.field_website__events_app_name
 msgid "This fields holds the Event's Progressive Web App name."
-msgstr ""
+msgstr "Toto pole obsahuje název progresivní webové aplikace události."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
-msgid "This page hasn't been saved for offline reading yet.<br/>Please check your network connection."
+msgid ""
+"This page hasn't been saved for offline reading yet.<br/>Please check your "
+"network connection."
 msgstr ""
+"Tato stránka ještě nebyla uložena pro čtení offline.<br/>Zkontrolujte prosím"
+" své připojení k síti."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__fold
-msgid "This stage is folded in the kanban view when there are no records in that stage to display."
-msgstr "Tato fáze je v kanbanovém pohledu přeložena, pokud v této fázi nejsou žádné záznamy k zobrazení."
+msgid ""
+"This stage is folded in the kanban view when there are no records in that "
+"stage to display."
+msgstr ""
+"Tato fáze je v kanbanovém pohledu přeložena, pokud v této fázi nejsou žádné "
+"záznamy k zobrazení."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
@@ -1955,8 +2083,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "Timely release of presentation material (slides),\n"
-"                                    for publishing on our website."
+"                            for publishing on our website."
 msgstr ""
+"Včasné zveřejnění prezentačních materiálů (\"prezentací\"),\n"
+"ke zveřejnění na našich webových stránkách."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__name
@@ -1966,17 +2096,17 @@ msgstr "Název"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Today Activities"
-msgstr "Dnešní činnosti"
+msgstr "Dnešní aktivity"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_22
 msgid "Tools for the Woodworking Beginner"
-msgstr ""
+msgstr "Nářadí pro začátečníky v práci se dřevem"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_5
 msgid "Top 10 Most Expensive Wood in the World"
-msgstr ""
+msgstr "10 nejdražších dřev na světě"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5
@@ -1984,6 +2114,9 @@ msgid ""
 "Top most expensive wood in the world is quite interesting topic and several people may be surprised\n"
 "    that there are hundreds of wood types exist around the globe following different properties and use."
 msgstr ""
+"Nejdražší dřevo na světě je docela zajímavé téma a několik lidí možná "
+"překvapí, že na světě existují stovky druhů dřeva, které se liší svými "
+"vlastnostmi a použitím."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__track_id
@@ -1995,7 +2128,7 @@ msgstr "Track"
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_visitor
 msgid "Track / Visitor Link"
-msgstr ""
+msgstr "Vazba Téma / Návštěvník"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_blocked
@@ -2010,7 +2143,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__date
 msgid "Track Date"
-msgstr ""
+msgstr "Datum sledování"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__date_end
@@ -2020,7 +2153,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.ui.menu,name:website_event_track.menu_event_track_location
 msgid "Track Locations"
-msgstr ""
+msgstr "Lokace aktivit"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_type_view_form_inherit_track
@@ -2049,13 +2182,13 @@ msgstr ""
 #: model:ir.ui.menu,name:website_event_track.event_track_stage_menu
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
 msgid "Track Stages"
-msgstr ""
+msgstr "Fáze aktivit"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.event_track_tag_category_action
 #: model:ir.ui.menu,name:website_event_track.event_track_tag_category_menu
 msgid "Track Tag Categories"
-msgstr ""
+msgstr "Kategorie štítků aktivit"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
@@ -2067,7 +2200,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__tracks_tag_ids
 #: model:ir.ui.menu,name:website_event_track.menu_event_track_tag
 msgid "Track Tags"
-msgstr ""
+msgstr "Štítky aktivit"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_list
@@ -2087,11 +2220,13 @@ msgstr "Sledovat návštěvníka"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_list
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
 msgid "Track Visitors"
-msgstr ""
+msgstr "Návštěvníci aktivit"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
-msgid "Track Visitors store statistics on your events, including how many times tracks have been wishlisted."
+msgid ""
+"Track Visitors store statistics on your events, including how many times "
+"tracks have been wishlisted."
 msgstr ""
 
 #. module: website_event_track
@@ -2107,7 +2242,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_graph
 #: model_terms:ir.ui.view,arch_db:website_event_track.website_visitor_view_form
 msgid "Tracks"
-msgstr "Skladby"
+msgstr "Aktivity"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_type_view_form_inherit_track
@@ -2122,7 +2257,9 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
-msgid "Tracks define your event schedule. They can be talks, workshops or any similar activity."
+msgid ""
+"Tracks define your event schedule. They can be talks, workshops or any "
+"similar activity."
 msgstr ""
 
 #. module: website_event_track
@@ -2134,7 +2271,12 @@ msgstr "Skladby na webových stránkách"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Typ zaznamenané výjimečné aktivity."
+msgstr "Typ výjimečné aktivity na záznamu."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+msgid "Unknown"
+msgstr "Neznámá"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
@@ -2155,6 +2297,11 @@ msgid ""
 "    ingenuity along with a couple boards, a sturdy strap and a few screws are all I use to easily haul\n"
 "    long boards from the lumberyard to the Next Level Carpentry shop or jobsite."
 msgstr ""
+"Pomocí těchto jednoduchých kroků můžete snadno převážet dlouhé řezivo v "
+"krátkém skříňovém pickupu. Dávka tesařského důvtipu spolu s několika prkny, "
+"pevným popruhem a několika šrouby je vše, co používám ke snadnému převážení "
+"dlouhých prken ze skladu dřeva do dílny nebo na staveniště Next Level "
+"Carpentry."
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_6
@@ -2162,11 +2309,14 @@ msgid ""
 "Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) allows lumber to be\n"
 "    cinched securely WITHOUT the need to tie and untie tricky or complicated knots."
 msgstr ""
+"Použití jedinečného způsobu omotání vázacího popruhu (NE Bungee šňůr!!!) "
+"umožňuje bezpečné přichycení řeziva BEZ nutnosti vázat a rozvazovat složité "
+"nebo komplikované uzly."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "View Track"
-msgstr ""
+msgstr "Zobrazení sledování"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_visible_in_agenda
@@ -2187,17 +2337,17 @@ msgstr "Návštěvník"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_ids
 msgid "Visitor Wishlist"
-msgstr ""
+msgstr "Seznam přání návštěvníka"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.website_visitor_action_from_track
 msgid "Visitors Wishlist"
-msgstr ""
+msgstr "Seznam přání návštěvníků"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_1
 msgid "Voice from Customer"
-msgstr ""
+msgstr "Hlas od zákazníka"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.website_visitor_action_from_track
@@ -2207,7 +2357,13 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
-msgid "We did not find any track matching your"
+msgid "We could not find any track at this moment."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "We could not find any track matching your search for:"
 msgstr ""
 
 #. module: website_event_track
@@ -2219,12 +2375,12 @@ msgstr "Požadujeme od řečníků, aby přijali dohodu, ve které se zavazují:
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "We will accept a broad range of\n"
-"                            presentations, from reports on academic and\n"
-"                            commercial projects to tutorials and case\n"
-"                            studies. As long as the presentation is\n"
-"                            interesting and potentially useful to the\n"
-"                            audience, it will be considered for\n"
-"                            inclusion in the programme."
+"                                presentations, from reports on academic and\n"
+"                                commercial projects to tutorials and case\n"
+"                                studies. As long as the presentation is\n"
+"                                interesting and potentially useful to the\n"
+"                                audience, it will be considered for\n"
+"                                inclusion in the programme."
 msgstr ""
 
 #. module: website_event_track
@@ -2234,9 +2390,14 @@ msgid "We will evaluate your proposition and get back to you shortly."
 msgstr "Vyhodnotíme váš návrh a brzy se k vám vrátíme."
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "We're sorry, this event does not accept proposals anymore"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website
 msgid "Website"
-msgstr "Webstránka"
+msgstr "Webová stránka"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website__app_icon
@@ -2246,22 +2407,22 @@ msgstr "Ikona webové aplikace"
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_event_menu
 msgid "Website Event Menu"
-msgstr "Nabídka událostí na webu"
+msgstr "Menu událostí na webu"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image
 msgid "Website Image"
-msgstr ""
+msgstr "Obrázek webové stránky"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_menu
 msgid "Website Menu"
-msgstr "Menu webstránky"
+msgstr "Menu webu"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_message_ids
 msgid "Website Messages"
-msgstr "Zprávy webstránky"
+msgstr "Webové zprávy"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_url
@@ -2271,12 +2432,12 @@ msgstr "URL webové stránky"
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_visitor
 msgid "Website Visitor"
-msgstr "Návštěvník webstránky"
+msgstr "Návštěvník webu"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_message_ids
 msgid "Website communication history"
-msgstr "Historie komunikace webstránky"
+msgstr "Webová historie komunikace"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_description
@@ -2301,32 +2462,34 @@ msgstr "Opengraph obrázek webových stránek"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_10
 msgid "Welcome to Day 2"
-msgstr ""
+msgstr "Vítejte ve 2. dni"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_1
 msgid "What This Event Is All About"
-msgstr ""
+msgstr "O čem tato událost je"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "What is your talk about?"
-msgstr ""
+msgstr "O čem je řeč?"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "Who will give this talk? We will show this to attendees to showcase your talk."
+msgid ""
+"Who will give this talk? We will show this to attendees to showcase your "
+"talk."
 msgstr ""
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_2
 msgid "Who's OpenWood anyway?"
-msgstr ""
+msgstr "Kdo je vlastně OpenWood?"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Wishlisted By"
-msgstr ""
+msgstr "Na seznamu přání od"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.event_track_action_from_visitor
@@ -2342,55 +2505,57 @@ msgstr "Seznamy přání"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_7
 msgid "Woodworking: How I got started!"
-msgstr ""
+msgstr "Práce se dřevem: Jak jsem začínal!"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
 msgid "You cannot access this page."
-msgstr ""
+msgstr "Na tuto stránku nemáte přístup."
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
-msgid "You have to enable push notifications to get reminders for your favorite tracks."
+msgid ""
+"You have to enable push notifications to get reminders for your favorite "
+"tracks."
 msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
 msgid "You're offline!"
-msgstr ""
+msgstr "Jste offline!"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "a few seconds"
-msgstr ""
+msgstr "několik sekund"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
 msgid "ago"
-msgstr ""
+msgstr "před"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. \"John Doe was born in...\""
-msgstr ""
+msgstr "Např. \"Jan Novák se narodil v...\""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_tree
 msgid "e.g. \"Main Conference Room\""
-msgstr ""
+msgstr "Např. \"Hlavní konferenční místnost\""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. \"This talk will be about...\""
-msgstr ""
+msgstr "Např. \"Tato přednáška bude o...\""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. Get Yours Now!"
-msgstr ""
+msgstr "Např. Získejte svůj ihned!"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_view_form_quick_create
@@ -2401,7 +2566,7 @@ msgstr "např. Inspirující Business Talk"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. http://www.example.com"
-msgstr ""
+msgstr "Např. http://www.example.com"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -2409,19 +2574,20 @@ msgid "hours"
 msgstr "hodin"
 
 #. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_timer.js:0
+msgid "in %s"
+msgstr "v %s"
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "minutes after Track start"
 msgstr ""
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
 msgid "register to your favorites talks now."
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
-#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
-msgid "search."
 msgstr ""
 
 #. module: website_event_track
@@ -2432,9 +2598,4 @@ msgstr "začíná v"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "starts on"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
-msgid "tracks"
-msgstr ""
+msgstr "začíná v"

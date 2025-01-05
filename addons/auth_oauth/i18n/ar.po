@@ -1,34 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_oauth
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
-"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.providers
 msgid "- or -"
 msgstr "- أو -"
-
-#. module: auth_oauth
-#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
-msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Tutorial"
-msgstr ""
 
 #. module: auth_oauth
 #. odoo-python
@@ -94,6 +88,9 @@ msgstr "نقطة نهاية البيانات "
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__display_name
 msgid "Display Name"
 msgstr "اسم العرض "
 
@@ -104,6 +101,9 @@ msgstr "مصادقة Google "
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__id
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__id
 msgid "ID"
 msgstr "المُعرف"
 
@@ -141,6 +141,12 @@ msgstr "تسجيل الدخول بواسطة Odoo.com "
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
 msgid "Login button label"
 msgstr "بطاقة عنوان زر تسجيل الدخول "
+
+#. module: auth_oauth
+#. odoo-python
+#: code:addons/auth_oauth/models/res_users.py:0
+msgid "Missing subject identity"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_access_token
@@ -201,7 +207,7 @@ msgstr "النطاق "
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__sequence
 msgid "Sequence"
-msgstr "التسلسل "
+msgstr "تسلسل "
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__server_uri_google
@@ -220,6 +226,11 @@ msgid "System Parameter"
 msgstr "معيار النظام "
 
 #. module: auth_oauth
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+msgid "Tutorial"
+msgstr "درس توضيحي "
+
+#. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
 msgid "User"
 msgstr "المستخدم"
@@ -232,8 +243,14 @@ msgstr "رابط URL لمعلومات المستخدم "
 #. module: auth_oauth
 #. odoo-python
 #: code:addons/auth_oauth/controllers/main.py:0
-msgid "You do not have access to this database or your invitation has expired. Please ask for an invitation and be sure to follow the link in your invitation email."
-msgstr "لا تملك صلاحيات كافية للوصول إلى قاعدة البيانات هذه، أو أن صلاحية دعوتك قد انتهت. الرجاء طلب دعوة جديدة والتأكد من اتباعك للرابط الموجود في رسالة الدعوة. "
+msgid ""
+"You do not have access to this database or your invitation has expired. "
+"Please ask for an invitation and be sure to follow the link in your "
+"invitation email."
+msgstr ""
+"لا تملك صلاحيات كافية للوصول إلى قاعدة البيانات هذه، أو أن صلاحية دعوتك قد "
+"انتهت. الرجاء طلب دعوة جديدة والتأكد من اتباعك للرابط الموجود في رسالة "
+"الدعوة. "
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form

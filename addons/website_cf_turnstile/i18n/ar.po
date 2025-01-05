@@ -1,0 +1,94 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_cf_turnstile
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-08 06:52+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: website_cf_turnstile
+#: model_terms:ir.ui.view,arch_db:website_cf_turnstile.res_config_settings_view_form
+msgid "<i class=\"oi oi-arrow-right\"/> More info"
+msgstr "<i class=\"oi oi-arrow-right\"/> المزيد من المعلومات "
+
+#. module: website_cf_turnstile
+#: model_terms:ir.ui.view,arch_db:website_cf_turnstile.res_config_settings_view_form
+msgid "<span class=\"o_form_label\" for=\"\">Cloudflare Turnstile</span>"
+msgstr "<span class=\"o_form_label\" for=\"\">Cloudflare Turnstile</span>"
+
+#. module: website_cf_turnstile
+#: model:ir.model.fields,field_description:website_cf_turnstile.field_res_config_settings__turnstile_secret_key
+msgid "CF Secret Key"
+msgstr "مفتاح CF السري "
+
+#. module: website_cf_turnstile
+#: model:ir.model.fields,field_description:website_cf_turnstile.field_res_config_settings__turnstile_site_key
+msgid "CF Site Key"
+msgstr "مفتاح موقع CF "
+
+#. module: website_cf_turnstile
+#. odoo-javascript
+#: code:addons/website_cf_turnstile/static/src/js/error_handler.js:0
+msgid "Cloudflare Turnstile Error"
+msgstr "خطأ في Cloudflare Turnstile "
+
+#. module: website_cf_turnstile
+#: model:ir.model,name:website_cf_turnstile.model_res_config_settings
+msgid "Config Settings"
+msgstr "تهيئة الإعدادات "
+
+#. module: website_cf_turnstile
+#: model:ir.model,name:website_cf_turnstile.model_ir_http
+msgid "HTTP Routing"
+msgstr "مسار HTTP"
+
+#. module: website_cf_turnstile
+#. odoo-python
+#: code:addons/website_cf_turnstile/models/ir_http.py:0
+msgid "The CloudFlare human validation failed."
+msgstr "فشل تحقق CloudFlare البشري "
+
+#. module: website_cf_turnstile
+#. odoo-python
+#: code:addons/website_cf_turnstile/models/ir_http.py:0
+msgid "The Cloudflare turnstile private key is invalid."
+msgstr "مفتاح Cloudflare turnstile الخاص غير صالح. "
+
+#. module: website_cf_turnstile
+#. odoo-python
+#: code:addons/website_cf_turnstile/models/ir_http.py:0
+msgid "The request is invalid or malformed."
+msgstr "الطلب غير صالح أو مشوه."
+
+#. module: website_cf_turnstile
+#. odoo-javascript
+#: code:addons/website_cf_turnstile/static/src/js/error_handler.js:0
+msgid ""
+"There was an error with Cloudflare Turnstile, the captcha system.\n"
+"Please make sure your credentials for this service are properly set up.\n"
+"The error code is: %s.\n"
+"You can find more information about this error code here: https://developers.cloudflare.com/turnstile/reference/errors."
+msgstr ""
+"حدث خطأ في Cloudflare Turnstile، نظام captcha.\n"
+"يرجى التأكد من بيانات الاعتماد الخاصة بك لهذه الخدمة قد تم إعدادها بشكل صحيح.\n"
+"كود الخطأ هو: %s.\n"
+"ستجد المزيد من المعلومات حول كود الخطأ هذا هنا: https://developers.cloudflare.com/turnstile/reference/errors. "
+
+#. module: website_cf_turnstile
+#. odoo-python
+#: code:addons/website_cf_turnstile/models/ir_http.py:0
+msgid "Your request has timed out, please retry."
+msgstr "لقد انتهت مهلة طلبك، يرجى إعادة المحاولة. "

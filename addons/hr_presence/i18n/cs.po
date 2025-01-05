@@ -1,51 +1,55 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_presence
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
-# Jiří Podhorecký, 2022
-# karolína schusterová <karolina.schusterova@vdp.sk>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2022\n"
+"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: cs\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+msgid "%(name)s has been noted as %(state)s today"
+msgstr ""
 
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
 msgid ""
 "<div>\n"
 "                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
-"                    Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.<br>\n"
-"                    Please, take appropriate measures in order to carry out this work absence.<br>\n"
-"                    Do not hesitate to contact your manager or the human resource department.\n"
+"We hope this message finds you well. It has come to our attention that you are currently not present at work, and there is no record of a time off request from you. If this absence is due to an oversight on our part, we sincerely apologize for any confusion.\n"
+"Please take the necessary steps to address this unplanned absence. Should you have any questions or need assistance, do not hesitate to reach out to your manager or the HR department at your earliest convenience.\n"
+"Thank you for your prompt attention to this matter.\n"
 "                    <br>Best Regards,<br><br>\n"
 "                </div>\n"
 "            "
 msgstr ""
 
 #. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
-msgid "Absence/Presence"
-msgstr "Absence / přítomnost"
-
-#. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__absent
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__absent
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Absent"
 msgstr "Nepřítomný"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_log
+msgid "Add a log note"
+msgstr ""
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_hr_employee_base
@@ -58,20 +62,19 @@ msgid "Companies"
 msgstr "Společnosti"
 
 #. module: hr_presence
-#. odoo-python
-#: code:addons/hr_presence/models/hr_employee.py:0
-msgid "Compose Email"
-msgstr "Napsat e-mail"
-
-#. module: hr_presence
-#: model:ir.actions.server,name:hr_presence.ir_actions_server_action_open_presence_view
-msgid "Compute presence and open presence view"
-msgstr "Výpočet přítomnosti a otevřeného zobrazení přítomnosti"
+#: model:ir.model,name:hr_presence.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurační nastavení"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__create_uid
 msgid "Create Uid"
 msgstr "Vytvořit Uid"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_time_off
+msgid "Create a Time Off"
+msgstr ""
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__email_sent
@@ -81,42 +84,26 @@ msgid "Email Sent"
 msgstr "Email odeslán"
 
 #. module: hr_presence
-#. odoo-python
-#: code:addons/hr_presence/models/hr_employee.py:0
-msgid "Employee's Presence to Define"
-msgstr ""
-
-#. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
 msgid "Employee: Presence Reminder"
 msgstr "Zaměstnanec: připomenutí přítomnosti"
 
 #. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
-msgid "Employees"
-msgstr "Zaměstnanci"
-
-#. module: hr_presence
-#. odoo-python
-#: code:addons/hr_presence/models/hr_employee.py:0
-#: model:sms.template,body:hr_presence.sms_template_data_hr_presence
-msgid ""
-"Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.\n"
-"Please, take appropriate measures in order to carry out this work absence.\n"
-"Do not hesitate to contact your manager or the human resource department."
-msgstr ""
-"Pokud došlo k naší chybě, zdá se, že nejste ve své kanceláři a není od vás požadováno volno.\n"
-"Přijměte prosím příslušná opatření k provedení této pracovní nepřítomnosti.\n"
-"Neváhejte kontaktovat svého manažera nebo oddělení lidských zdrojů."
-
-#. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.ir_cron_presence_control_ir_actions_server
 msgid "HR Presence: cron"
-msgstr ""
+msgstr "Přítomnost HR: cron"
 
 #. module: hr_presence
 #: model:mail.template,name:hr_presence.mail_template_presence
 msgid "HR: Employee Absence email"
+msgstr "HR: E-mail o nepřítomnosti zaměstnance"
+
+#. module: hr_presence
+#: model:sms.template,body:hr_presence.sms_template_data_hr_presence
+msgid ""
+"Hi, we noticed you're not at work and no time-off was submitted. If this is "
+"an oversight from us, we apologize. Please contact your manager or HR ASAP. "
+"Thanks"
 msgstr ""
 
 #. module: hr_presence
@@ -144,9 +131,11 @@ msgid "Ip Connected"
 msgstr "IP připojeno"
 
 #. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
-msgid "Log"
-msgstr "Záznam"
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__manually_set_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_presence
+msgid "Manually Set Presence"
+msgstr ""
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_present
@@ -156,11 +145,28 @@ msgid "Manually Set Present"
 msgstr "Ručně nastavit"
 
 #. module: hr_presence
-#: model:ir.ui.menu,name:hr_presence.menu_hr_presence_view
-#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__out_of_working_hour
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__out_of_working_hour
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__out_of_working_hour
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
+msgid "Out of Working Hours"
+msgstr ""
+
+#. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_tree
 msgid "Presence"
 msgstr "Přítomnost"
+
+#. module: hr_presence
+#. odoo-javascript
+#: code:addons/hr_presence/static/src/search/hr_presence_cog_menu/hr_presence_cog_menu.xml:0
+msgid "Presence Control"
+msgstr "Kontrola přítomnosti"
+
+#. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
+msgid "Presence/Absence"
+msgstr ""
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__present
@@ -170,48 +176,34 @@ msgid "Present"
 msgstr "Přítomný"
 
 #. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
-msgid "SMS"
-msgstr "SMS"
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+msgid "Send SMS"
+msgstr "Odeslat SMS"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_sms
+msgid "Send a SMS"
+msgstr ""
 
 #. module: hr_presence
 #: model:mail.template,description:hr_presence.mail_template_presence
-msgid "Sent manually in presence module when an employee wasn't working despite not being off"
+msgid ""
+"Sent manually in presence module when an employee wasn't working despite not"
+" being off"
+msgstr ""
+"Odesláno ručně v modulu přítomnosti, když zaměstnanec nepracoval, přestože "
+"nebyl vypnutý"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_absent
+msgid "Set Absent"
 msgstr ""
 
 #. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
-msgid "Set as absent"
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_present
+msgid "Set Present"
 msgstr ""
-
-#. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
-msgid "Set as present"
-msgstr "Nastavit jako přítomný"
-
-#. module: hr_presence
-#. odoo-python
-#: code:addons/hr_presence/models/hr_employee.py:0
-msgid "There is no professional email address for this employee."
-msgstr "Pro tohoto zaměstnance neexistuje žádná profesionální e-mailová adresa."
-
-#. module: hr_presence
-#. odoo-python
-#: code:addons/hr_presence/models/hr_employee.py:0
-msgid "There is no professional mobile for this employee."
-msgstr "Pro tohoto zaměstnance neexistuje profesionální mobilní telefon."
-
-#. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
-msgid "Time Off"
-msgstr "Volné dny"
-
-#. module: hr_presence
-#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__to_define
-#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__to_define
-#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__to_define
-msgid "To Define"
-msgstr "Definovat"
 
 #. module: hr_presence
 #: model:mail.template,subject:hr_presence.mail_template_presence
@@ -221,7 +213,16 @@ msgstr "Neočekávaná absence"
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log
 msgid "Users Log"
-msgstr "Uživatelský protokol"
+msgstr "Historie uživatele"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+msgid ""
+"We hope this message finds you well. It has come to our attention that you are currently not present at work, and there is no record of a time off request from you. If this absence is due to an oversight on our part, we sincerely apologize for any confusion.\n"
+"Please take the necessary steps to address this unplanned absence. Should you have any questions or need assistance, do not hesitate to reach out to your manager or the HR department at your earliest convenience.\n"
+"Thank you for your prompt attention to this matter."
+msgstr ""
 
 #. module: hr_presence
 #. odoo-python
@@ -232,4 +233,4 @@ msgstr "Nemáte na to právo. Obraťte se na správce."
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_ir_websocket
 msgid "websocket message handling"
-msgstr ""
+msgstr "zpráva zpracování websocketu"

@@ -1,20 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_purchase
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# Ilya Rozhkov, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:37+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Ilya Rozhkov, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: sale_purchase
@@ -28,14 +31,9 @@ msgstr ""
 "            Возможно понадобится ручная действие."
 
 #. module: sale_purchase
-#: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
-msgid "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Service to Purchase\"/>"
-msgstr "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Service to Purchase\"/>"
-
-#. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
 msgid "<span class=\"o_stat_text\">Purchase</span>"
-msgstr "<span class=\"o_stat_text\">Приобрести</span>"
+msgstr "<span class=\"o_stat_text\">Закупка</span>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.purchase_order_inherited_form_sale
@@ -51,6 +49,11 @@ msgid ""
 "                </span>\n"
 "            </span>"
 msgstr ""
+"<span id=\"display_invoice_alert\" position=\"after\">\n"
+"                <span id=\"display_purchase_orders_alert\" invisible=\"not display_purchase_orders_alert\" groups=\"purchase.group_purchase_user\">\n"
+"                   К этому заказу на продажу привязаны активные заказы на закупку, которые не отменяются автоматически! <br/>\n"
+"                </span>\n"
+"            </span>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
@@ -78,8 +81,14 @@ msgstr "Сгенерированные строки закупок"
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_product_product__service_to_purchase
 #: model:ir.model.fields,help:sale_purchase.field_product_template__service_to_purchase
-msgid "If ticked, each time you sell this product through a SO, a RfQ is automatically created to buy the product. Tip: don't forget to set a vendor on the product."
-msgstr "Если флажок установлен, каждый раз, когда вы продаете этот продукт через СЦ, автоматически создается RfQ для покупки продукта. Совет: не забудьте установить продавца для продукта."
+msgid ""
+"If ticked, each time you sell this product through a SO, a RfQ is "
+"automatically created to buy the product. Tip: don't forget to set a vendor "
+"on the product."
+msgstr ""
+"Если флажок установлен, каждый раз, когда вы продаете этот продукт через СЦ,"
+" автоматически создается RfQ для покупки продукта. Совет: не забудьте "
+"установить продавца для продукта."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
@@ -115,8 +124,12 @@ msgstr "Происхождения Товаров"
 #. module: sale_purchase
 #. odoo-python
 #: code:addons/sale_purchase/models/product_template.py:0
-msgid "Please define the vendor from whom you would like to purchase this service automatically."
-msgstr "Укажите поставщика, у которого вы хотели бы приобретать эту услугу автоматически."
+msgid ""
+"Please define the vendor from whom you would like to purchase this service "
+"automatically."
+msgstr ""
+"Укажите поставщика, у которого вы хотели бы приобретать эту услугу "
+"автоматически."
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_product_template
@@ -132,7 +145,7 @@ msgstr "Продукт, который не является услугой, н�
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order
 msgid "Purchase Order"
-msgstr "Заказа на покупку"
+msgstr "Заказ на покупку"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_cancel__display_purchase_orders_alert
@@ -152,13 +165,17 @@ msgstr "Заказ на поставку, сформированный из %s"
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_sale_order_line__purchase_line_ids
-msgid "Purchase line generated by this Sales item on order confirmation, or when the quantity was increased."
-msgstr "Строка закупки, созданная для данного элемента продажи при подтверждении заказа или при увеличении количества."
+msgid ""
+"Purchase line generated by this Sales item on order confirmation, or when "
+"the quantity was increased."
+msgstr ""
+"Строка закупки, созданная для данного элемента продажи при подтверждении "
+"заказа или при увеличении количества."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
 msgid "Reordering"
-msgstr "Повторный заказ"
+msgstr "Восполнение"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_order_id
@@ -195,14 +212,22 @@ msgstr "Субподрядные услуги"
 #. module: sale_purchase
 #. odoo-python
 #: code:addons/sale_purchase/models/sale_order_line.py:0
-msgid "There is no vendor associated to the product %s. Please define a vendor for this product."
-msgstr "Нет поставщика, связанного с ТМЦ %s. Пожалуйста, определите поставщика для этого ТМЦ."
+msgid ""
+"There is no vendor associated to the product %s. Please define a vendor for "
+"this product."
+msgstr ""
+"Нет поставщика, связанного с ТМЦ %s. Пожалуйста, определите поставщика для "
+"этого ТМЦ."
 
 #. module: sale_purchase
 #. odoo-python
 #: code:addons/sale_purchase/models/sale_order_line.py:0
-msgid "You are decreasing the ordered quantity! Do not forget to manually update the purchase order if needed."
-msgstr "Вы уменьшаете заказанное количество! Не забудьте вручную обновить заказ на покупку, если это необходимо."
+msgid ""
+"You are decreasing the ordered quantity! Do not forget to manually update "
+"the purchase order if needed."
+msgstr ""
+"Вы уменьшаете заказанное количество! Не забудьте вручную обновить заказ на "
+"покупку, если это необходимо."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation

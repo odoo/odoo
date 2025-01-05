@@ -1,24 +1,37 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* product_matrix
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid ""
+"<small>Switch to the \"else\" condition of this block to view or edit the "
+"table.</small>"
+msgstr ""
+"<small>Schakel over naar de \"else\" voorwaarde van dit blok om de tabel te "
+"bekijken of te bewerken.</small>"
+
+#. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid "<strong>Product matrix block</strong>"
+msgstr "<strong>Productmatrix blok</strong>"
 
 #. module: product_matrix
 #: model:product.attribute.value,name:product_matrix.product_attribute_value_color_1
@@ -26,10 +39,20 @@ msgid "Blue"
 msgstr "Blauw"
 
 #. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid "Cell name"
+msgstr "Celnaam"
+
+#. module: product_matrix
 #. odoo-javascript
-#: code:addons/product_matrix/static/src/js/product_matrix_dialog.js:0
+#: code:addons/product_matrix/static/src/xml/product_matrix_dialog.xml:0
 msgid "Choose Product Variants"
-msgstr ""
+msgstr "Kies productvarianten"
+
+#. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid "Column name"
+msgstr "Kolomnaam"
 
 #. module: product_matrix
 #. odoo-javascript
@@ -41,7 +64,7 @@ msgstr "Bevestigen"
 #. odoo-javascript
 #: code:addons/product_matrix/static/src/xml/product_matrix_dialog.xml:0
 msgid "Discard"
-msgstr ""
+msgstr "Negeren"
 
 #. module: product_matrix
 #: model:product.attribute,name:product_matrix.product_attribute_gender
@@ -93,6 +116,20 @@ msgstr "Toon je bedrijfsliefde om je heen =)."
 #: model:product.attribute,name:product_matrix.product_attribute_size
 msgid "Size"
 msgstr "Grootte"
+
+#. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid ""
+"The matrix of product variants of this order will be displayed here, if "
+"there are any."
+msgstr ""
+"De matrix van productvarianten van deze order wordt hier weergegeven, als "
+"die er zijn."
+
+#. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.extra_price
+msgid "Variant price"
+msgstr "Prijs variant"
 
 #. module: product_matrix
 #: model:product.attribute.value,name:product_matrix.product_attribute_value_w

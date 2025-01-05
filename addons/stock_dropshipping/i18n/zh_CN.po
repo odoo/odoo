@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_dropshipping
-#
+# 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
-"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock_dropshipping
@@ -44,12 +43,17 @@ msgstr "代发货计数"
 #: model:ir.ui.menu,name:stock_dropshipping.dropship_picking
 #: model_terms:ir.ui.view,arch_db:stock_dropshipping.view_picking_internal_search_inherit_stock_dropshipping
 msgid "Dropships"
-msgstr ""
+msgstr "代发货"
 
 #. module: stock_dropshipping
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking__is_dropship
 msgid "Is a Dropship"
 msgstr "是代发货"
+
+#. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_stock_lot
+msgid "Lot/Serial"
+msgstr "批次/序列号"
 
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_stock_picking_type
@@ -62,14 +66,14 @@ msgid "Procurement Group"
 msgstr "补货组"
 
 #. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_stock_replenish_mixin
+msgid "Product Replenish Mixin"
+msgstr "产品补货混入程序"
+
+#. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_purchase_order
 msgid "Purchase Order"
 msgstr "采购订单"
-
-#. module: stock_dropshipping
-#: model:ir.model,name:stock_dropshipping.model_purchase_order_line
-msgid "Purchase Order Line"
-msgstr "采购订单明细"
 
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_sale_order
@@ -79,12 +83,17 @@ msgstr "销售订单"
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "销售订单行"
+msgstr "销售订单明细"
 
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_stock_rule
 msgid "Stock Rule"
 msgstr "库存规则"
+
+#. module: stock_dropshipping
+#: model_terms:ir.ui.view,arch_db:stock_dropshipping.stock_picking_type_kanban
+msgid "To Validate"
+msgstr "待验证"
 
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_stock_picking
@@ -94,4 +103,4 @@ msgstr "调拨"
 #. module: stock_dropshipping
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking_type__code
 msgid "Type of Operation"
-msgstr ""
+msgstr "作业类型"

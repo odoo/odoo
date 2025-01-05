@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_crm
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Sarah Park, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Sarah Park, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
-"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_crm
@@ -53,7 +52,7 @@ msgstr "신규 견적에서 새로 만들기 또는 기존 고객 사용"
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "Create new quotation"
-msgstr ""
+msgstr "새로운 견적서 생성"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__create_uid
@@ -81,6 +80,12 @@ msgid "Do not link to a customer"
 msgstr "고객과 연결하지 마십시오"
 
 #. module: sale_crm
+#. odoo-python
+#: code:addons/sale_crm/models/crm_lead.py:0
+msgid "Expected revenue has been updated based on the linked Sales Orders."
+msgstr "관련 판매 주문에 따라 예상 수익이 업데이트됩니다."
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
 msgid "ID"
 msgstr "ID"
@@ -88,12 +93,7 @@ msgstr "ID"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users__target_sales_invoiced
 msgid "Invoiced in Sales Orders Target"
-msgstr "판매 발주서 고객에게 인보이스 발행"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner____last_update
-msgid "Last Modified on"
-msgstr "최근 수정일"
+msgstr "판매발주 고객 대상 청구서"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_uid
@@ -116,11 +116,6 @@ msgid "Link to an existing customer"
 msgstr "기존 고객 연결"
 
 #. module: sale_crm
-#: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
-msgid "Log in the chatter from which opportunity the order originates"
-msgstr "주문이 시작되는 영업 기회에 대한 대화에 로그인"
-
-#. module: sale_crm
 #: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
 msgid "My Quotations"
 msgstr "내 견적"
@@ -140,7 +135,7 @@ msgstr "견적서의 수"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_order_count
 msgid "Number of Sale Orders"
-msgstr "판매 주문서 수"
+msgstr "판매주문서 수"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order__opportunity_id
@@ -173,6 +168,7 @@ msgid "Sale Orders"
 msgstr "판매 주문"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/models/crm_team.py:0
 msgid "Sales Analysis"
 msgstr "판매 분석"
@@ -188,6 +184,7 @@ msgid "Sales Team"
 msgstr "영업팀"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/models/crm_team.py:0
 msgid "Sales: Untaxed Total"
 msgstr "매출 : 공급가액 합계"
@@ -208,6 +205,7 @@ msgid "User"
 msgstr "사용자"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/wizard/crm_opportunity_to_quotation.py:0
 msgid "You can only apply this action from a lead."
 msgstr "영업제안 상태에서만 이 조치를 적용할 수 있습니다."

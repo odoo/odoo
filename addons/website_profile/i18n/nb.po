@@ -1,25 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_profile
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Jorunn D. Newth, 2022
-# Marius Stedjan <marius@stedjan.com>, 2022
-# Henning Fyllingsnes, 2023
-#
+# Wil Odoo, 2024
+# Ørjan Wean <orjan@wean.no>, 2024
+# Natalia Myronets, 2024
+# Henning Fyllingsnes, 2024
+# Rune Restad, 2024
+# Jorunn D. Newth, 2024
+# Martin Trigaux, 2024
+# Marius Stedjan <marius@stedjan.com>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Henning Fyllingsnes, 2023\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2024\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
-"Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nb\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_profile
@@ -36,13 +40,27 @@ msgstr "(ikke verifisert)"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
-msgid ". Collect points on the forum or on the eLearning platform. Those points will make you reach new ranks."
-msgstr ". Samle poeng på forumet eller på e-læringsplatformen. Poengene gjør at du kan nå nye grader."
+msgid ""
+". Collect points on the forum or on the eLearning platform. Those points "
+"will make you reach new ranks."
+msgstr ""
+". Samle poeng på forumet eller på e-læringsplatformen. Poengene gjør at du "
+"kan nå nye grader."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
 msgid ". Try another search."
 msgstr ". Prøv et annet søk."
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_badges
+msgid "<i class=\"fa fa-arrow-right\"/> Get Badges"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
+msgid "<i class=\"fa fa-close me-1\"/>Cancel"
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
@@ -53,6 +71,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
 msgid "<i class=\"fa fa-pencil me-1\"/>EDIT"
 msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
+msgid "<i class=\"fa fa-pencil me-1\"/>Edit"
+msgstr "Rediger"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
@@ -77,7 +100,7 @@ msgstr "<i class=\"text-muted\"> tildelte brukere</i>"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "<option value=\"\">Country...</option>"
-msgstr ""
+msgstr "<option value=\"\">Land...</option>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
@@ -121,7 +144,7 @@ msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"fw-bold\">Public profile</span>"
+msgid "<span class=\"fw-bold\">Public Profile</span>"
 msgstr ""
 
 #. module: website_profile
@@ -151,8 +174,12 @@ msgstr "<span class=\"text-muted\">XP</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
-msgid "<span id=\"email_validated_message\">Congratulations! Your email has just been validated.</span>"
-msgstr "<span id=\"email_validated_message\">Graulerer! E-postadressen din ble bekreftet.</span>"
+msgid ""
+"<span id=\"email_validated_message\">Congratulations! Your email has just "
+"been validated.</span>"
+msgstr ""
+"<span id=\"email_validated_message\">Graulerer! E-postadressen din ble "
+"bekreftet.</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
@@ -289,6 +316,11 @@ msgid "Badges"
 msgstr "Medaljer"
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_badges
+msgid "Badges are your collection of achievements. Wear them proudly! <br/>"
+msgstr ""
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
 msgid ""
 "Besides gaining reputation with your questions and answers,\n"
@@ -407,9 +439,19 @@ msgid "No user found for"
 msgstr "Ingen bruker funnet for"
 
 #. module: website_profile
+#. odoo-python
+#: code:addons/website_profile/controllers/main.py:0
+msgid "Not have enough karma to view other users' profile."
+msgstr ""
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "Please enter a valid email address in order to receive notifications from answers or comments."
-msgstr "Du må oppgi en gyldig e-postadresse for å motta varslinger om svar eller kommentarer."
+msgid ""
+"Please enter a valid email address in order to receive notifications from "
+"answers or comments."
+msgstr ""
+"Du må oppgi en gyldig e-postadresse for å motta varslinger om svar eller "
+"kommentarer."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -417,7 +459,7 @@ msgid "Ranks"
 msgstr "Grader"
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.private_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.profile_access_denied
 msgid "Return to the website."
 msgstr "Gå tilbake til nettsted."
 
@@ -425,11 +467,6 @@ msgstr "Gå tilbake til nettsted."
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Search"
 msgstr "Søk"
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
-msgid "Search courses"
-msgstr "Søk etter kurs"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
@@ -452,14 +489,15 @@ msgid "This month"
 msgstr "Denne måneden"
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.private_profile
+#. odoo-python
+#: code:addons/website_profile/controllers/main.py:0
 msgid "This profile is private!"
 msgstr "Denne profilen er privat!"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
 msgid "This week"
-msgstr ""
+msgstr "Denne uke"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
@@ -468,6 +506,7 @@ msgid "Unpublished"
 msgstr "Upublisert"
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_biography_editor
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "Update"
 msgstr "Oppdater"
@@ -510,7 +549,14 @@ msgstr "Nettsted-URL"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "When you finish a course or reach milestones, you're awarded badges."
-msgstr "Når du fullfører et kurs eller en milepæl, vil du få tildelt medaljer."
+msgstr ""
+"Når du fullfører et kurs eller en milepæl, vil du få tildelt medaljer."
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_biography_editor
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
+msgid "Write a few words about yourself..."
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
@@ -520,8 +566,14 @@ msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
-msgid "You can score more points by answering quizzes at the end of each course content. Points can also be earned on the forum. Follow this link to the guidelines of the forum."
-msgstr "Du kan tjene flere poeng ved å svare på quizer på slutten av hvert kurssegment. Poeng kan også tjenes på forumet. Følg denne linken for å se retningslinjene for forumet."
+msgid ""
+"You can score more points by answering quizzes at the end of each course "
+"content. Points can also be earned on the forum. Follow this link to the "
+"guidelines of the forum."
+msgstr ""
+"Du kan tjene flere poeng ved å svare på quizer på slutten av hvert "
+"kurssegment. Poeng kan også tjenes på forumet. Følg denne linken for å se "
+"retningslinjene for forumet."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -585,7 +637,9 @@ msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.profile_next_rank_card
-msgid "{{ '%s/%s xp' % (user.karma, next_rank_id.karma_min) if next_rank_id else ''}}"
+msgid ""
+"{{ '%s/%s xp' % (user.karma, next_rank_id.karma_min) if next_rank_id else "
+"''}}"
 msgstr ""
 
 #. module: website_profile

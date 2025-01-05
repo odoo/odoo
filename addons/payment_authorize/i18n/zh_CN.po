@@ -1,61 +1,58 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_authorize
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
-# keecome <7017511@qq.com>, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
-# John An <johnxan@163.com>, 2019
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: John An <johnxan@163.com>, 2019\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/"
-"zh_CN/)\n"
-"Language: zh_CN\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid ""
-"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-"
-"select\">\n"
-"                        <option value=\"checking\">Personal Checking</"
-"option>\n"
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">\n"
+"                        <option value=\"checking\">Personal Checking</option>\n"
 "                        <option value=\"savings\">Personal Savings</option>\n"
-"                        <option value=\"businessChecking\">Business "
-"Checking</option>\n"
+"                        <option value=\"businessChecking\">Business Checking</option>\n"
 "                    </select>"
 msgstr ""
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">\n"
+"                        <option value=\"checking\">个人支票</option>\n"
+"                        <option value=\"savings\">个人储蓄</option>\n"
+"                        <option value=\"businessChecking\">商业支票</option>\n"
+"                    </select>"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "ABA Routing Number"
-msgstr ""
+msgstr "ABA路由号码"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_client_key
 msgid "API Client Key"
-msgstr ""
+msgstr "API 客户端密钥"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_login
 msgid "API Login ID"
-msgstr ""
+msgstr "API 登入用户名"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_signature_key
 msgid "API Signature Key"
-msgstr ""
+msgstr "API 签名密钥"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_transaction_key
@@ -65,42 +62,42 @@ msgstr "API 事务密匙"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Account Number"
-msgstr ""
+msgstr "账号"
 
 #. module: payment_authorize
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_provider__code__authorize
 msgid "Authorize.Net"
-msgstr "授权.Net"
+msgstr "Authorize.Net"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
 msgid "Authorize.Net Profile ID"
-msgstr ""
+msgstr "Authorize.Net Profile ID"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Bank Account Type"
-msgstr ""
+msgstr "账户类型"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Bank Name"
-msgstr ""
+msgstr "银行名称"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Card Code"
-msgstr ""
+msgstr "卡代码"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Card Number"
-msgstr ""
+msgstr "卡号"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__code
 msgid "Code"
-msgstr ""
+msgstr "代码"
 
 #. module: payment_authorize
 #. odoo-python
@@ -109,19 +106,21 @@ msgid ""
 "Could not fetch merchant details:\n"
 "%s"
 msgstr ""
+"无法获取商家的详细信息:\n"
+"%s"
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 msgid ""
-"Could not retrieve the transaction details. (error code: %s; error_details: "
-"%s)"
-msgstr ""
+"Could not retrieve the transaction details. (error code: %(error_code)s; "
+"error_details: %(error_message)s)"
+msgstr "无法检索交易详情。（错误代码：%(error_code)s；error_details：%(error_message)s）"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Expiration"
-msgstr ""
+msgstr "到期"
 
 #. module: payment_authorize
 #. odoo-python
@@ -130,11 +129,13 @@ msgid ""
 "Failed to authenticate.\n"
 "%s"
 msgstr ""
+"认证失败。\n"
+"%s"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "Generate Client Key"
-msgstr ""
+msgstr "生成客户密钥"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
@@ -144,29 +145,29 @@ msgstr "如何使用 Authorize.Net 付款"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "MM"
-msgstr ""
+msgstr "月"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Name On Account"
-msgstr ""
+msgstr "帐户上的姓名"
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "没有发现与参考文献%s相匹配的交易。"
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_provider.py:0
 msgid "Only one currency can be selected by Authorize.Net account."
-msgstr ""
+msgstr "每个 Authorize.Net 账户只能选择一种币别。"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "支付提供商"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token
@@ -182,70 +183,70 @@ msgstr "付款交易"
 #. odoo-javascript
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 msgid "Payment processing failed"
-msgstr ""
+msgstr "付款处理失败"
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
-msgid ""
-"Received data with status code \"%(status)s\" and error code \"%(error)s\""
-msgstr ""
+msgid "Received data with status code \"%(status)s\" and error code \"%(error)s\""
+msgstr "收到了状态代码为\"%(status)s\"和错误代码为\"%(error)s\"的数据"
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/controllers/main.py:0
 msgid "Received tampered payment request data."
-msgstr ""
+msgstr "收到了被篡改的付款请求数据。"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "Set Account Currency"
-msgstr ""
+msgstr "设置账户币别"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_login
 msgid "The ID solely used to identify the account with Authorize.Net"
-msgstr ""
+msgstr "仅用于识别 Authorize.Net 账户的 ID"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_client_key
 msgid ""
 "The public client key. To generate directly from Odoo or from Authorize.Net "
 "backend."
-msgstr ""
+msgstr "公共客户密钥。直接从Odoo或从Authorize.Net后端生成。"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "该支付提供商的技术代码。"
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 msgid ""
-"The transaction is not in a status to be refunded. (status: %s, details: %s)"
-msgstr ""
+"The transaction is not in a status to be refunded. (status: %(status)s, "
+"details: %(message)s)"
+msgstr "交易并非处于可以退款的状态。（状态：%(status)s，详情：%(message)s）"
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 msgid "The transaction is not linked to a token."
-msgstr ""
+msgstr "该交易没有与令牌挂钩。"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
 msgid ""
 "The unique reference for the partner/token combination in the Authorize.net "
 "backend."
-msgstr ""
+msgstr "合作伙伴/令牌组合在Authorize.net后台的唯一参考。"
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_provider.py:0
 msgid "This action cannot be performed while the provider is disabled."
-msgstr ""
+msgstr "当提供商被禁用时，无法执行此操作。"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "YY"
-msgstr ""
+msgstr "YY"

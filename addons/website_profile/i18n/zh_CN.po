@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_profile
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
-"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_profile
@@ -37,13 +35,25 @@ msgstr "(未验证)"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
-msgid ". Collect points on the forum or on the eLearning platform. Those points will make you reach new ranks."
+msgid ""
+". Collect points on the forum or on the eLearning platform. Those points "
+"will make you reach new ranks."
 msgstr ".在论坛或在线学习平台上收集积分。这些点将使您达到新的等级。"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
 msgid ". Try another search."
 msgstr ".尝试其他搜索。"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_badges
+msgid "<i class=\"fa fa-arrow-right\"/> Get Badges"
+msgstr "<i class=\"fa fa-arrow-right\"/> 获取徽章"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
+msgid "<i class=\"fa fa-close me-1\"/>Cancel"
+msgstr "<i class=\"fa fa-close me-1\"/>取消"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
@@ -56,6 +66,11 @@ msgid "<i class=\"fa fa-pencil me-1\"/>EDIT"
 msgstr "<i class=\"fa fa-pencil me-1\"/>编辑"
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
+msgid "<i class=\"fa fa-pencil me-1\"/>Edit"
+msgstr "<i class=\"fa fa-pencil me-1\"/>编辑"
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
 msgid "<i class=\"fa fa-pencil me-2\"/>EDIT PROFILE"
 msgstr "<i class=\"fa fa-pencil me-2\"/>编辑个人资料"
@@ -63,12 +78,12 @@ msgstr "<i class=\"fa fa-pencil me-2\"/>编辑个人资料"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
 msgid "<i class=\"oi oi-arrow-right me-1\"/>All Badges"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>所有奖章"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
 msgid "<i class=\"oi oi-arrow-right\"/> All Badges"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right\"/>所有奖章"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
@@ -78,7 +93,7 @@ msgstr "<i class=\"text-muted\"> 授予用户</i>"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "<option value=\"\">Country...</option>"
-msgstr ""
+msgstr "<option value=\"\">国家...</option>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
@@ -122,8 +137,8 @@ msgstr "<span class=\"fw-bold\">名称</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"fw-bold\">Public profile</span>"
-msgstr "<span class=\"fw-bold\">公共资料</span>"
+msgid "<span class=\"fw-bold\">Public Profile</span>"
+msgstr "<span class=\"fw-bold\">公众简介</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
@@ -152,13 +167,15 @@ msgstr "<span class=\"text-muted\">XP</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
-msgid "<span id=\"email_validated_message\">Congratulations! Your email has just been validated.</span>"
+msgid ""
+"<span id=\"email_validated_message\">Congratulations! Your email has just "
+"been validated.</span>"
 msgstr "<span id=\"email_validated_message\">恭喜！您的电子邮件刚刚经过验证.</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
 msgid "<strong class=\"mb-3 text-white me-2\">Rank by:</strong>"
-msgstr ""
+msgstr "<strong class=\"mb-3 text-white me-2\">排名：</strong>"
 
 #. module: website_profile
 #: model:mail.template,body_html:website_profile.validation_email
@@ -250,6 +267,91 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\">\n"
+"                        <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                            <t t-out=\"object.company_id.name or ''\">YourCompany</t> 个人档案验证\n"
+"                        </span>\n"
+"                    </td>\n"
+"                    <td t-if=\"not user.company_id.uses_default_logo\" valign=\"middle\" align=\"right\">\n"
+"                        <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\">\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td colspan=\"2\" style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\">\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                            Marc Demo</t>您好！<br><br>\n"
+"                            验证您的电子邮件，以便访问 \"<t t-out=\"object.company_id.name or ''\">YourCompany</t>\" 网站。                           要验证您的电子邮件，请点击以下链接：\n"
+"                            <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                <a t-att-href=\"ctx.get('token_url')\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                    验证我的账户\n"
+"                                </a>\n"
+"                            </div>\n"
+"                            谢谢您的参与！\n"
+"                        </p>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\" font-family: 'Verdana Regular'; color: #454748; min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\" align=\"left\">\n"
+"                         <t t-out=\"user.company_id.name or ''\">YourCompany</t>\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\" style=\"opacity: 0.7;\">\n"
+"                        <t t-out=\"user.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                        <t t-if=\"user.company_id.email\">\n"
+"                            | <a t-attf-href=\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                        </t>\n"
+"                        <t t-if=\"user.company_id.website\">\n"
+"                            | <a t-attf-href=\"{{ user.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.website or ''\">http://www.example.com</a>\n"
+"                        </t>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"        <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"            由 <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=forum\" style=\"color: #875A7B;\">Odoo</a>驱动\n"
+"        </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -288,6 +390,11 @@ msgstr "整天"
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "Badges"
 msgstr "徽标"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_badges
+msgid "Badges are your collection of achievements. Wear them proudly! <br/>"
+msgstr "徽章是您的成就收藏。骄傲地佩戴它们吧！<br/>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
@@ -343,7 +450,7 @@ msgstr "游戏化徽标"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.profile_next_rank_card
 msgid "Get"
-msgstr ""
+msgstr "获得"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
@@ -411,8 +518,16 @@ msgid "No user found for"
 msgstr "找不到用户"
 
 #. module: website_profile
+#. odoo-python
+#: code:addons/website_profile/controllers/main.py:0
+msgid "Not have enough karma to view other users' profile."
+msgstr "没有足够的业力查看其他用户的个人资料。"
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "Please enter a valid email address in order to receive notifications from answers or comments."
+msgid ""
+"Please enter a valid email address in order to receive notifications from "
+"answers or comments."
 msgstr "为了接收回复通知，请输入正确的邮箱地址。"
 
 #. module: website_profile
@@ -421,7 +536,7 @@ msgid "Ranks"
 msgstr "等级"
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.private_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.profile_access_denied
 msgid "Return to the website."
 msgstr "返回网站。"
 
@@ -429,11 +544,6 @@ msgstr "返回网站。"
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Search"
 msgstr "搜索"
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
-msgid "Search courses"
-msgstr "搜索课程"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
@@ -456,7 +566,8 @@ msgid "This month"
 msgstr "本月"
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.private_profile
+#. odoo-python
+#: code:addons/website_profile/controllers/main.py:0
 msgid "This profile is private!"
 msgstr "此个人资料是私人的！"
 
@@ -472,6 +583,7 @@ msgid "Unpublished"
 msgstr "未发布"
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_biography_editor
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "Update"
 msgstr "更新"
@@ -517,6 +629,12 @@ msgid "When you finish a course or reach milestones, you're awarded badges."
 msgstr "当您完成课程或达到里程碑时，您将获得徽标。"
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_biography_editor
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
+msgid "Write a few words about yourself..."
+msgstr "写几句关于你自己的话..."
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
 msgid "XP"
@@ -524,7 +642,10 @@ msgstr "经验值"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
-msgid "You can score more points by answering quizzes at the end of each course content. Points can also be earned on the forum. Follow this link to the guidelines of the forum."
+msgid ""
+"You can score more points by answering quizzes at the end of each course "
+"content. Points can also be earned on the forum. Follow this link to the "
+"guidelines of the forum."
 msgstr "您可以通过在每个课程内容结束时回答测验来获得更多分数。也可以在论坛上获得积分。按照此链接访问论坛的指南。"
 
 #. module: website_profile
@@ -565,7 +686,7 @@ msgstr "本月"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
 msgid "this week"
-msgstr "本周"
+msgstr "本周<br>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -583,6 +704,8 @@ msgid ""
 "xp\n"
 "                        to level up!"
 msgstr ""
+"分\n"
+"                        即可升级！"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -591,8 +714,12 @@ msgstr "您的账户设置"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.profile_next_rank_card
-msgid "{{ '%s/%s xp' % (user.karma, next_rank_id.karma_min) if next_rank_id else ''}}"
+msgid ""
+"{{ '%s/%s xp' % (user.karma, next_rank_id.karma_min) if next_rank_id else "
+"''}}"
 msgstr ""
+"{{ '%s/%s 分' % (user.karma, next_rank_id.karma_min) if next_rank_id else "
+"''}}"
 
 #. module: website_profile
 #: model:mail.template,subject:website_profile.validation_email

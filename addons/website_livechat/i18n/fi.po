@@ -1,31 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_livechat
-#
+# 
 # Translators:
-# Tommi Rintala <tommi.rintala@gmail.com>, 2022
-# Iipponen <erno@web-veistamo.fi>, 2022
-# Miku Laitinen <miku.laitinen@gmail.com>, 2022
-# Jukka Paulin <jukka.paulin@gmail.com>, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_livechat
@@ -37,8 +28,8 @@ msgstr "# Istunnot"
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
 msgid ""
-"%s started a conversation with %s.\n"
-"                        The chat request has been canceled."
+"%(visitor)s started a conversation with %(operator)s.\n"
+"The chat request has been cancelled"
 msgstr ""
 
 #. module: website_livechat
@@ -214,8 +205,8 @@ msgstr "Operaattorin nimi"
 #. odoo-python
 #: code:addons/website_livechat/models/website_visitor.py:0
 msgid ""
-"Recipients are not available. Please refresh the page to get latest visitors "
-"status."
+"Recipients are not available. Please refresh the page to get latest visitors"
+" status."
 msgstr ""
 "Vastaanottajia ei ole saatavilla. Päivitä sivu saadaksesi uusimmat kävijät."
 
@@ -297,24 +288,34 @@ msgstr "Vierailija"
 
 #. module: website_livechat
 #. odoo-python
-#: code:addons/website_livechat/controllers/main.py:0
-#: code:addons/website_livechat/models/website_visitor.py:0
-msgid "Visitor #%d"
-msgstr ""
-
-#. module: website_livechat
-#. odoo-python
-#. odoo-javascript
-#: code:addons/website_livechat/controllers/main.py:0
-#: code:addons/website_livechat/static/src/web/persona_model_patch.js:0
-msgid "Visitor #%s"
+#: code:addons/website_livechat/models/discuss_channel.py:0
+msgid "Visitor #%(id)d left the conversation."
 msgstr ""
 
 #. module: website_livechat
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
-msgid "Visitor %s left the conversation."
+msgid "Visitor #%(id)d."
 msgstr ""
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/controllers/main.py:0
+#: code:addons/website_livechat/models/website_visitor.py:0
+msgid "Visitor #%d"
+msgstr "Vierailija #%d"
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/controllers/main.py:0
+msgid "Visitor #%s"
+msgstr "Vierailija #%s"
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/models/discuss_channel.py:0
+msgid "Visitor left the conversation."
+msgstr "Vierailija poistui keskustelusta."
 
 #. module: website_livechat
 #: model:ir.actions.act_window,name:website_livechat.website_visitor_livechat_session_action

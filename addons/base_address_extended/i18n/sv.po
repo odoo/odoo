@@ -1,50 +1,48 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_address_extended
-#
+# 
 # Translators:
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
-# Fredrik Arvas <fredrik.arvas@vertel.se>, 2022
-# Simon S, 2022
-# Kim Asplund <kim.asplund@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Kristoffer Grundström <lovaren@gmail.com>, 2022
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.2\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
-"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_city_extended_form
 msgid "<span class=\"o_stat_text\">Cities</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Städer</span>"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "<span> - </span>"
-msgstr ""
+msgstr "<span> - </span>"
 
 #. module: base_address_extended
 #: model:ir.model.fields,help:base_address_extended.field_res_country__enforce_cities
 #: model:ir.model.fields,help:base_address_extended.field_res_partner__country_enforce_cities
 #: model:ir.model.fields,help:base_address_extended.field_res_users__country_enforce_cities
-msgid "Check this box to ensure every address created in that country has a 'City' chosen in the list of the country's cities."
-msgstr "Markera den här rutan för att säkerställa att varje adress som skapas i det landet har en \"Stad\" som är vald i listan över landets städer."
+msgid ""
+"Check this box to ensure every address created in that country has a 'City' "
+"chosen in the list of the country's cities."
+msgstr ""
+"Markera den här rutan för att säkerställa att varje adress som skapas i det "
+"landet har en \"Stad\" som är vald i listan över landets städer."
 
 #. module: base_address_extended
 #: model:ir.actions.act_window,name:base_address_extended.action_res_city_tree
+#: model:ir.ui.menu,name:base_address_extended.menu_res_city
 msgid "Cities"
 msgstr "Städer"
 
@@ -61,7 +59,7 @@ msgstr "Stad"
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__city_id
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__city_id
 msgid "City ID"
-msgstr ""
+msgstr "Stads-ID"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_partner
@@ -83,10 +81,12 @@ msgstr "Skapad av"
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__create_date
 msgid "Created on"
-msgstr "Skapad"
+msgstr "Skapad den"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Visningsnamn"
 
@@ -96,7 +96,10 @@ msgid ""
 "Display and manage the list of all cities that can be assigned to\n"
 "                your partner records. Note that an option can be set on each country separately\n"
 "                to enforce any address of it to have a city in this list."
-msgstr "Visa och hantera listan av alla länder som kan tilldelas dina företagsuppgifter. Du kan skapa eller ta bort länder så att du är säker på att de som du arbetar med kommer underhållas."
+msgstr ""
+"Visa och hantera listan över alla städer som kan tilldelas till\n"
+"                dina partnerposter. Notera att ett alternativ kan ställas in för varje land separat\n"
+"                för att tvinga alla adresser i landet att ha en stad i denna lista."
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
@@ -107,7 +110,7 @@ msgstr "Dörr"
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "Door #"
-msgstr ""
+msgstr "Dörrnummer"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_country__enforce_cities
@@ -125,10 +128,12 @@ msgstr "Hus"
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "House #"
-msgstr ""
+msgstr "Husnummer"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -140,7 +145,7 @@ msgstr "Senast uppdaterad av"
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__write_date
 msgid "Last Updated on"
-msgstr "Senast uppdaterad på"
+msgstr "Senast uppdaterad den"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__name
@@ -156,7 +161,7 @@ msgstr "Sök stad"
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__state_id
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "State"
-msgstr "Status"
+msgstr "Läge"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form

@@ -1,96 +1,99 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_buckaroo
-#
+# 	* payment_buckaroo
+# 
 # Translators:
-# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:05+0000\n"
-"PO-Revision-Date: 2018-08-24 09:22+0000\n"
-"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018\n"
-"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
-"Language: th\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_buckaroo
+#. odoo-python
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
-msgid "An error occurred during processing of your payment (code %s). Please try again."
+msgid ""
+"An error occurred during processing of your payment (code %s). Please try "
+"again."
 msgstr ""
+"เกิดข้อผิดพลาดระหว่างการประมวลผลการชำระเงินของคุณ (รหัส %s) "
+"กรุณาลองใหม่อีกครั้ง"
 
 #. module: payment_buckaroo
-#: model:account.payment.method,name:payment_buckaroo.payment_method_buckaroo
-#: model:ir.model.fields.selection,name:payment_buckaroo.selection__payment_acquirer__provider__buckaroo
+#: model:ir.model.fields.selection,name:payment_buckaroo.selection__payment_provider__code__buckaroo
 msgid "Buckaroo"
-msgstr ""
+msgstr "Buckaroo"
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__buckaroo_secret_key
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__buckaroo_secret_key
 msgid "Buckaroo Secret Key"
-msgstr ""
+msgstr "รหัสลับ Buckaroo"
 
 #. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__code
+msgid "Code"
+msgstr "โค้ด"
+
+#. module: payment_buckaroo
+#. odoo-python
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "ไม่พบธุรกรรมที่ตรงกับการอ้างอิง %s"
 
 #. module: payment_buckaroo
-#: model:ir.model,name:payment_buckaroo.model_payment_acquirer
-msgid "Payment Acquirer"
-msgstr "ผู้รับชำระ"
-
-#. module: payment_buckaroo
-#: model:ir.model,name:payment_buckaroo.model_account_payment_method
-msgid "Payment Methods"
-msgstr ""
+#: model:ir.model,name:payment_buckaroo.model_payment_provider
+msgid "Payment Provider"
+msgstr "ผู้ให้บริการชำระเงิน"
 
 #. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "ธุรกรรมสำหรับการชำระเงิน"
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__provider
-msgid "Provider"
-msgstr "ผู้ให้บริการ"
-
-#. module: payment_buckaroo
+#. odoo-python
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
 msgid "Received data with missing transaction keys"
-msgstr ""
+msgstr "ได้รับข้อมูลโดยไม่มีรหัสธุรกรรม"
 
 #. module: payment_buckaroo
-#: model_terms:ir.ui.view,arch_db:payment_buckaroo.payment_acquirer_form
+#: model_terms:ir.ui.view,arch_db:payment_buckaroo.payment_provider_form
 msgid "Secret Key"
-msgstr ""
+msgstr "คีย์ลับ"
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,help:payment_buckaroo.field_payment_acquirer__provider
-msgid "The Payment Service Provider to use with this acquirer"
-msgstr ""
-
-#. module: payment_buckaroo
-#: model:ir.model.fields,help:payment_buckaroo.field_payment_acquirer__buckaroo_website_key
+#: model:ir.model.fields,help:payment_buckaroo.field_payment_provider__buckaroo_website_key
 msgid "The key solely used to identify the website with Buckaroo"
-msgstr ""
+msgstr "รหัสที่ใช้ในการระบุเว็บไซต์กับ Buckaroo แต่เพียงผู้เดียว"
 
 #. module: payment_buckaroo
+#: model:ir.model.fields,help:payment_buckaroo.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "รหัสทางเทคนิคของผู้ให้บริการชำระเงินรายนี้"
+
+#. module: payment_buckaroo
+#. odoo-python
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
 msgid "Unknown status code: %s"
-msgstr ""
+msgstr "ไม่ทราบรหัสสถานะ: %s"
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__buckaroo_website_key
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__buckaroo_website_key
 msgid "Website Key"
-msgstr ""
+msgstr "รหัสเว็บไซต์"
 
 #. module: payment_buckaroo
+#. odoo-python
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
 msgid "Your payment was refused (code %s). Please try again."
-msgstr ""
+msgstr "การชำระเงินของคุณถูกปฏิเสธ (รหัส %s) กรุณาลองใหม่อีกครั้ง"

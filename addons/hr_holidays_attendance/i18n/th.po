@@ -1,0 +1,198 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_holidays_attendance
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_holidays_attendance
+#. odoo-python
+#: code:addons/hr_holidays_attendance/models/hr_leave_type.py:0
+msgid "%s hours available"
+msgstr "มีอยู่ %s ชั่วโมง"
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_hr_leave_accrual_level
+msgid "Accrual Plan Level"
+msgstr "ระดับแผนการสะสม"
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_hr_attendance
+msgid "Attendance"
+msgstr "การเข้าร่วม"
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields.selection,name:hr_holidays_attendance.selection__hr_leave_accrual_level__frequency_hourly_source__attendance
+msgid "Attendances"
+msgstr "การลงเวลางาน"
+
+#. module: hr_holidays_attendance
+#. odoo-javascript
+#: code:addons/hr_holidays_attendance/static/src/xml/time_off_calendar.xml:0
+msgid "Available"
+msgstr "พร้อม"
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields.selection,name:hr_holidays_attendance.selection__hr_leave_accrual_level__frequency_hourly_source__calendar
+msgid "Calendar"
+msgstr "ปฏิทิน"
+
+#. module: hr_holidays_attendance
+#. odoo-javascript
+#: code:addons/hr_holidays_attendance/static/src/xml/time_off_calendar.xml:0
+msgid "Days"
+msgstr "วัน"
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_type__overtime_deductible
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_employee_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.res_users_view_form
+msgid "Deduct Extra Hours"
+msgstr "หักชั่วโมงพิเศษ"
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
+msgid "Discard"
+msgstr "ละทิ้ง"
+
+#. module: hr_holidays_attendance
+#: model:hr.leave.type,name:hr_holidays_attendance.holiday_status_extra_hours
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_id
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__overtime_id
+msgid "Extra Hours"
+msgstr "ชั่วโมงพิเศษ"
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_holidays_hr_leave_allocation_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_view_form
+msgid "Extra Hours Available"
+msgstr "ชั่วโมงพิเศษที่พร้อม"
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__frequency_hourly_source
+msgid "Frequency Hourly Source"
+msgstr "แหล่งที่มาความถี่รายชั่วโมง"
+
+#. module: hr_holidays_attendance
+#. odoo-javascript
+#: code:addons/hr_holidays_attendance/static/src/xml/time_off_calendar.xml:0
+msgid "Hours"
+msgstr "ชั่วโมง"
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_accrual_level__frequency_hourly_source
+msgid ""
+"If the source is set to \"Calendar\", the amount of worked hours will be "
+"computed based on the Employee's working schedule. Otherwise, the amount of "
+"worked hours will be based on Attendance records."
+msgstr ""
+"หากแหล่งที่มาถูกตั้งค่าเป็น \"ปฏิทิน\" "
+"จำนวนชั่วโมงทำงานจะถูกคำนวณตามตารางการทำงานของพนักงาน ไม่เช่นนั้น "
+"จำนวนชั่วโมงทำงานจะขึ้นอยู่กับบันทึกการเข้างาน"
+
+#. module: hr_holidays_attendance
+#: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_action
+#: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_manager_action
+msgid "New Allocation Request"
+msgstr "ร้องขอการจัดสรรใหม่"
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_type__overtime_deductible
+msgid ""
+"Once a time off of this type is approved, extra hours in attendances will be"
+" deducted."
+msgstr ""
+"เมื่อได้รับการอนุมัติการลาประเภทนี้แล้ว จะหักชั่วโมงพิเศษในการลงเวลางาน"
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_deductible
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__overtime_deductible
+msgid "Overtime Deductible"
+msgstr "หักค่าล่วงเวลา"
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_users__request_overtime
+msgid "Request Overtime"
+msgstr "คำร้องขอล่วงเวลา"
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
+msgid "Save"
+msgstr "บันทึก"
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_accrual_level_view_form
+msgid "Source"
+msgstr "แหล่งที่มา"
+
+#. module: hr_holidays_attendance
+#. odoo-python
+#: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
+msgid ""
+"The employee does not have enough extra hours to extend this allocation."
+msgstr "พนักงานไม่มีชั่วโมงพิเศษเพียงพอที่จะขยายเวลาการจัดสรรนี้"
+
+#. module: hr_holidays_attendance
+#. odoo-python
+#: code:addons/hr_holidays_attendance/models/hr_leave.py:0
+msgid "The employee does not have enough extra hours to extend this leave."
+msgstr "พนักงานไม่มีชั่วโมงพิเศษเพียงพอที่จะขยายเวลาการลานี้"
+
+#. module: hr_holidays_attendance
+#. odoo-python
+#: code:addons/hr_holidays_attendance/models/hr_leave.py:0
+msgid "The employee does not have enough extra hours to request this leave."
+msgstr "พนักงานไม่มีชั่วโมงพิเศษเพียงพอที่จะขอลานี้"
+
+#. module: hr_holidays_attendance
+#. odoo-python
+#: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
+msgid ""
+"The employee does not have enough overtime hours to request this leave."
+msgstr "พนักงานไม่มีชั่วโมงทำงานล่วงเวลาเพียงพอที่จะขอลาได้"
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_hr_leave
+msgid "Time Off"
+msgstr "การลา"
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_hr_leave_allocation
+msgid "Time Off Allocation"
+msgstr "การจัดสรรการลา"
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_hr_leave_type
+msgid "Time Off Type"
+msgstr "ประเภทการลา"
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__employee_overtime
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__employee_overtime
+msgid "Total Overtime"
+msgstr "การล่วงเวลาทั้งหมด"
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_res_users
+msgid "User"
+msgstr "ผู้ใช้"
+
+#. module: hr_holidays_attendance
+#. odoo-python
+#: code:addons/hr_holidays_attendance/models/hr_leave.py:0
+msgid "You do not have enough extra hours to request this leave"
+msgstr "คุณไม่มีชั่วโมงพิเศษเพียงพอที่จะขอลานี้"

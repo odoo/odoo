@@ -1,39 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* crm_iap_mine
-#
+# 
 # Translators:
-# Tugay Hatıl <tugayh@projetgrup.com>, 2022
-# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2022
-# abc Def <hdogan1974@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Ediz Duman <neps1192@gmail.com>, 2022
-# Murat Kaplan <muratk@projetgrup.com>, 2022
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2022
-# Levent Karakaş <levent@mektup.at>, 2022
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
-# Umur Akın <umura@projetgrup.com>, 2022
-# Halil, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Halil, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
-"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: crm_iap_mine
 #. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
-msgid "%d credits will be consumed to find %d companies."
-msgstr "%d kredileri %d şirketleri bulmak için kullanılacaktır."
+msgid ""
+"%(credit_count)d credits will be consumed to find %(company_count)d "
+"companies."
+msgstr ""
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
@@ -54,11 +46,6 @@ msgstr ""
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
-msgid "<span attrs=\"{'invisible': [('error_type', '!=', 'no_result')]}\">Your request did not return any result (no credits were used). Try removing some filters.</span>"
-msgstr "<span attrs=\"{'invisible': [('error_type', '!=', 'no_result')]}\">İsteğiniz herhangi bir sonuç vermedi (kredi kullanılmadı). Bazı filtreleri kaldırmayı deneyin.</span>"
-
-#. module: crm_iap_mine
-#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "<span class=\"col-md-6\">Extra contacts per Company</span>"
 msgstr "<span class=\"col-md-6\">Şirket başına ekstra kişiler</span>"
 
@@ -71,6 +58,13 @@ msgstr "<span class=\"o_stat_text\"> Adaylar </span>"
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "<span class=\"o_stat_text\">Opportunities</span>"
 msgstr "<span class=\"o_stat_text\"> Fırsatlar </span>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid ""
+"<span invisible=\"error_type != 'no_result'\">Your request did not return "
+"any result (no credits were used). Try removing some filters.</span>"
+msgstr ""
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_238
@@ -121,7 +115,7 @@ msgstr "Sermaye Malları"
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__color
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__color
 msgid "Color Index"
-msgstr "Renk İndeksi"
+msgstr "Renk"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_163
@@ -131,7 +125,7 @@ msgstr "Ticari & Profesyonel Servisler"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_2
 msgid "Communications"
-msgstr ""
+msgstr "İletişim"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__search_type__companies
@@ -156,7 +150,7 @@ msgstr "İnşaat Malzemeleri"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_3
 msgid "Consulting"
-msgstr ""
+msgstr "Danışmanlık"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_30_155
@@ -196,7 +190,7 @@ msgstr "Aday Madenciliği İsteği Oluşturma"
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__create_uid
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__create_uid
 msgid "Created by"
-msgstr "Oluşturan"
+msgstr "Tarafından oluşturuldu"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__create_date
@@ -205,22 +199,17 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__create_date
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__create_date
 msgid "Created on"
-msgstr "Oluşturulma"
+msgstr "Oluşturuldu"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_4
 msgid "Customer Service"
-msgstr ""
+msgstr "Müşteri Servisi"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "Default Tags"
 msgstr "Varsayılan Etiketler"
-
-#. module: crm_iap_mine
-#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__display_lead_label
-msgid "Display Lead Label"
-msgstr "Aday Etiketini Görüntüle"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__display_name
@@ -229,7 +218,7 @@ msgstr "Aday Etiketini Görüntüle"
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__display_name
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__display_name
 msgid "Display Name"
-msgstr "Görünüm Adı"
+msgstr "İsim Göster"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_158_159
@@ -240,7 +229,7 @@ msgstr "Çeşitlendirilmiş Finansallar ve Finansal Hizmetler"
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__done
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Done"
-msgstr "Biten"
+msgstr "Yapıldı"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__draft
@@ -251,7 +240,7 @@ msgstr "Taslak"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_5
 msgid "Education"
-msgstr ""
+msgstr "Eğitim"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
@@ -266,7 +255,7 @@ msgstr "Enerji ve Kamu Hizmetleri "
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_6
 msgid "Engineering"
-msgstr ""
+msgstr "mühendislik"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__error
@@ -292,7 +281,7 @@ msgstr "Boyuta Göre Filtrele"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_7
 msgid "Finance"
-msgstr ""
+msgstr "Finans"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_153_154
@@ -302,17 +291,16 @@ msgstr "Yiyecek, İçecek & Tütün"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_8
 msgid "Founder"
-msgstr ""
+msgstr "Kurucu"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "From"
-msgstr "Başlangıç"
+msgstr "Başlama"
 
 #. module: crm_iap_mine
 #. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
-#: code:addons/crm_iap_mine/models/crm_lead.py:0
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_case_kanban_view_leads
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_lead_view_tree_lead
@@ -325,7 +313,8 @@ msgstr "Generate Leads"
 #. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 msgid "Generate new leads based on their country, industry, size, etc."
-msgstr "Ülkelerine, sektörlerine, boyutlarına vs. dayalı yeni adaylar oluşturun."
+msgstr ""
+"Ülkelerine, sektörlerine, boyutlarına vs. dayalı yeni adaylar oluşturun."
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_ids
@@ -353,9 +342,14 @@ msgid "Helper methods for crm_iap_mine modules"
 msgstr "crm_iap_mine modüller için yardımcı yöntemler"
 
 #. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "How many leads would you like?"
+msgstr ""
+
+#. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_10
 msgid "Human Resources"
-msgstr ""
+msgstr "İnsan Kaynakları"
 
 #. module: crm_iap_mine
 #: model:mail.template,name:crm_iap_mine.lead_generation_no_credits
@@ -433,7 +427,7 @@ msgstr "Aday Kredileri"
 #. module: crm_iap_mine
 #: model:ir.ui.menu,name:crm_iap_mine.crm_menu_lead_generation
 msgid "Lead Generation"
-msgstr "Aday Üretme"
+msgstr "Adayı Oluşturma"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_lead__lead_mining_request_id
@@ -466,18 +460,19 @@ msgstr "Adaylar"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_12
 msgid "Legal"
-msgstr ""
+msgstr "Yasal"
 
 #. module: crm_iap_mine
 #. odoo-javascript
 #: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
-msgid "Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool."
+msgid ""
+"Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool."
 msgstr ""
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_13
 msgid "Marketing"
-msgstr ""
+msgstr "Pazarlama"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_148
@@ -499,6 +494,12 @@ msgstr "Adı"
 #: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_seniority_name_uniq
 msgid "Name already exists!"
 msgstr "İsim zaten mevcut!"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_lead.py:0
+msgid "Need help reaching your target?"
+msgstr ""
 
 #. module: crm_iap_mine
 #. odoo-python
@@ -536,7 +537,7 @@ msgstr "Adayların Sayısı"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_14
 msgid "Operations"
-msgstr ""
+msgstr "Operasyonlar"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__lead_type__opportunity
@@ -558,7 +559,7 @@ msgstr "Diğer Roller"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_15
 msgid "Owner"
-msgstr ""
+msgstr "Sahibi"
 
 #. module: crm_iap_mine
 #: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_role
@@ -598,7 +599,7 @@ msgstr ""
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_17
 msgid "Product"
-msgstr ""
+msgstr "Ürün"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_18
@@ -614,7 +615,7 @@ msgstr "Emlak"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_20
 msgid "Recruiting"
-msgstr ""
+msgstr "İşe Alım"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__name
@@ -624,7 +625,7 @@ msgstr "İstek Numarası"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_21
 msgid "Research"
-msgstr ""
+msgstr "Araştırma"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_152
@@ -661,7 +662,7 @@ msgstr "Rol adı zaten mevcut!"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_22
 msgid "Sale"
-msgstr ""
+msgstr "Satış"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__team_id
@@ -684,7 +685,7 @@ msgstr "Kıdem"
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__sequence
 msgid "Sequence"
-msgstr "Sıra"
+msgstr "Sıralama"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__company_size_min
@@ -746,17 +747,14 @@ msgstr "Ulaştırma"
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_type
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Type"
-msgstr "Tür"
+msgstr "Tip"
 
 #. module: crm_iap_mine
 #. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
-msgid "Up to %d additional credits will be consumed to identify %d contacts per company."
-msgstr "Şirket başına %d ilgili kişileri tanımlamak için %d adede kadar ek kredi tüketilir."
-
-#. module: crm_iap_mine
-#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
-msgid "What do you need?"
+msgid ""
+"Up to %(credit_count)d additional credits will be consumed to identify "
+"%(contact_count)d contacts per company."
 msgstr ""
 
 #. module: crm_iap_mine
@@ -799,4 +797,4 @@ msgstr "yönetici"
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "to"
-msgstr "kime"
+msgstr "den"

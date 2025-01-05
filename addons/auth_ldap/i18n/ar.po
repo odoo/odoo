@@ -1,28 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_ldap
-#
+# 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
-# Akram Alfusayal <akram_ma@hotmail.com>, 2019
-# amrnegm <amrnegm.01@gmail.com>, 2019
-# Martin Trigaux, 2019
-# hoxhe Aits <hoxhe0@gmail.com>, 2019
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2019
-# Ali Alrehawi <alrehawi@hotmail.com>, 2019
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Ali Alrehawi <alrehawi@hotmail.com>, 2019\n"
-"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
-"Language: ar\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: auth_ldap
@@ -41,11 +35,26 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"    عامل تصفية يُستخدم للبحث عن حسابات المستخدمين في قاعدة بيانات LDAP. إنه عامل تصفية LDAP عشوائي في تمثيل السلسلة. سوف يتم استبدال أي عنصر نائب `%s` بمعرف (تسجيل الدخول) المقدم من قِبَل المستخدِم، يجب أن يحتوي عامل التصفية على عنصر نائب واحد على الأقل.\n"
+"\n"
+"    يجب أن ينتج عن عامل التصفية نتيجة واحدة (1) على الأقل، وإلا فلن يعد تسجيل الدخول صالحاً.\n"
+"\n"
+"    مثال: (تعتمد الخواص الفعلية على خادم ونظام LDAP):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    أو\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
-msgid "Automatically create local user accounts for new users authenticating via LDAP"
-msgstr "إنشاء مستخدم محلي تلقائيًا للمستخدمين الجدد الذين يسجلون الدخول عبر LDAP"
+msgid ""
+"Automatically create local user accounts for new users authenticating via "
+"LDAP"
+msgstr ""
+"إنشاء مستخدم محلي تلقائيًا للمستخدمين الجدد الذين يسجلون الدخول عبر LDAP"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -84,16 +93,26 @@ msgstr "أنشئ في"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_base
-msgid "DN of the user search scope: all descendants of this base will be searched for users."
+msgid ""
+"DN of the user search scope: all descendants of this base will be searched "
+"for users."
 msgstr ""
+"تفرعات نطاق بحث المستخدِم: سوف يتم البحث في كافة تفرعات هذه القاعدة من أجل "
+"المستخدِمين. "
 
 #. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__display_name
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_ldap.field_res_users__display_name
 msgid "Display Name"
 msgstr "الاسم المعروض"
 
 #. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__id
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__id
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_ldap.field_res_users__id
 msgid "ID"
 msgstr "المُعرف"
 
@@ -145,11 +164,6 @@ msgid "LDAP password"
 msgstr "كلمة مرور LDAP"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap____last_update
-msgid "Last Modified on"
-msgstr "آخر تعديل في"
-
-#. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
 msgid "Last Updated by"
 msgstr "آخر تحديث بواسطة"
@@ -165,9 +179,12 @@ msgid "Login Information"
 msgstr "بيانات تسجيل الدخول"
 
 #. module: auth_ldap
+#. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "No local user found for LDAP login and not configured to create one"
-msgstr "لم نستطع إيجاد مستخدم محلي لتسجيل الدخول LDAP ولم يتم ضبط النظام لإنشاء مستخدم"
+msgstr ""
+"لم نستطع إيجاد مستخدم محلي لتسجيل الدخول LDAP ولم يتم ضبط النظام لإنشاء "
+"مستخدم"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -176,8 +193,13 @@ msgstr "باراميتر العملية"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
-msgid "Request secure TLS/SSL encryption when connecting to the LDAP server. This option requires a server with STARTTLS enabled, otherwise all authentication attempts will fail."
-msgstr "طلب تشفير TLS/SSL عند الاتصال بسيرفر LDAP. هذا الاختيار يتطلب أن يكون قد تم إعداد STATTLS، وإلا ستفشل محاولة المصادقة."
+msgid ""
+"Request secure TLS/SSL encryption when connecting to the LDAP server. This "
+"option requires a server with STARTTLS enabled, otherwise all authentication"
+" attempts will fail."
+msgstr ""
+"طلب تشفير TLS/SSL عند الاتصال بسيرفر LDAP. هذا الاختيار يتطلب أن يكون قد تم "
+"إعداد STATTLS، وإلا ستفشل محاولة المصادقة."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
@@ -201,18 +223,29 @@ msgstr "مستخدم القالب"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
-msgid "The password of the user account on the LDAP server that is used to query the directory."
+msgid ""
+"The password of the user account on the LDAP server that is used to query "
+"the directory."
 msgstr "كلمة مرور حساب المستخدم على سيرفر LDAP المستخدمة للاستعلام من الدليل."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
-msgid "The user account on the LDAP server that is used to query the directory. Leave empty to connect anonymously."
-msgstr "حساب المستخدم على سيرفر LDAP المُستخدم للاستعلام من الدليل. اتركه فارغًا ليتم الاتصال كمجهول."
+msgid ""
+"The user account on the LDAP server that is used to query the directory. "
+"Leave empty to connect anonymously."
+msgstr ""
+"حساب المستخدم على سيرفر LDAP المُستخدم للاستعلام من الدليل. اتركه فارغًا "
+"ليتم الاتصال كمجهول."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
 msgid "Use TLS"
 msgstr "استخدام TLS"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_users
+msgid "User"
+msgstr "المستخدم"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -223,8 +256,3 @@ msgstr "معلومات المستخدم"
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__user
 msgid "User to copy when creating new users"
 msgstr "قالب المستخدم لنسخه عند إنشاء مستخدمين جدد"
-
-#. module: auth_ldap
-#: model:ir.model,name:auth_ldap.model_res_users
-msgid "Users"
-msgstr "المستخدمون"

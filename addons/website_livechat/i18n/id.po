@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_livechat
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Abe Manyo, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
-"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_livechat
@@ -29,9 +28,11 @@ msgstr "# Sesi"
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
 msgid ""
-"%s started a conversation with %s.\n"
-"                        The chat request has been canceled."
+"%(visitor)s started a conversation with %(operator)s.\n"
+"The chat request has been cancelled"
 msgstr ""
+"%(visitor)s memulai percakapan dengan %(operator)s.\n"
+"Permintaan chat telah dibatalkan"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -57,7 +58,7 @@ msgstr "Avatar"
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "Bad"
-msgstr "Jelek"
+msgstr "Bad"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__can_publish
@@ -67,12 +68,12 @@ msgstr "Dapat Dipublikasikan"
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
 msgid "Channel"
-msgstr "Channel"
+msgstr "Saluran"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.im_livechat_channel_view_form_add
 msgid "Channel Name"
-msgstr "Nama Channel"
+msgstr "Channel Nama"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
@@ -109,7 +110,7 @@ msgstr "Keterangan channel ditampilkan pada halaman website"
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_discuss_channel
 msgid "Discussion Channel"
-msgstr "Channel Diskusi"
+msgstr "Saluran Diskusi"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -172,7 +173,7 @@ msgstr "Muka netral"
 #. module: website_livechat
 #: model:ir.actions.act_window,name:website_livechat.im_livechat_channel_action_add
 msgid "New Channel"
-msgstr "Channel Baru"
+msgstr "Saluran Baru"
 
 #. module: website_livechat
 #. odoo-python
@@ -206,8 +207,8 @@ msgstr "Nama Operator"
 #. odoo-python
 #: code:addons/website_livechat/models/website_visitor.py:0
 msgid ""
-"Recipients are not available. Please refresh the page to get latest visitors "
-"status."
+"Recipients are not available. Please refresh the page to get latest visitors"
+" status."
 msgstr ""
 "Penerima tidak tersedia. Mohon refresh halaman untuk mendapatkan status "
 "terbaru pengunjung."
@@ -290,24 +291,34 @@ msgstr "Pengunjung"
 
 #. module: website_livechat
 #. odoo-python
-#: code:addons/website_livechat/controllers/main.py:0
-#: code:addons/website_livechat/models/website_visitor.py:0
-msgid "Visitor #%d"
-msgstr ""
-
-#. module: website_livechat
-#. odoo-python
-#. odoo-javascript
-#: code:addons/website_livechat/controllers/main.py:0
-#: code:addons/website_livechat/static/src/web/persona_model_patch.js:0
-msgid "Visitor #%s"
-msgstr ""
+#: code:addons/website_livechat/models/discuss_channel.py:0
+msgid "Visitor #%(id)d left the conversation."
+msgstr "Pengunjung #%(id)d meninggalkan percakapan."
 
 #. module: website_livechat
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
-msgid "Visitor %s left the conversation."
-msgstr ""
+msgid "Visitor #%(id)d."
+msgstr "Pengunjung #%(id)d"
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/controllers/main.py:0
+#: code:addons/website_livechat/models/website_visitor.py:0
+msgid "Visitor #%d"
+msgstr "Pengunjung #%d"
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/controllers/main.py:0
+msgid "Visitor #%s"
+msgstr "Pengunjung #%s"
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/models/discuss_channel.py:0
+msgid "Visitor left the conversation."
+msgstr "Pengunjung meninggalkan percakapan."
 
 #. module: website_livechat
 #: model:ir.actions.act_window,name:website_livechat.website_visitor_livechat_session_action
@@ -344,7 +355,7 @@ msgstr "Channel Website Live Chat"
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_url
 msgid "Website URL"
-msgstr "URL Website"
+msgstr "URL Websi8te"
 
 #. module: website_livechat
 #. odoo-python
@@ -356,7 +367,7 @@ msgstr "Pengunjung Website"
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_description
 msgid "Website description"
-msgstr "Keterangan website"
+msgstr "Keterangan Website"
 
 #. module: website_livechat
 #. odoo-python

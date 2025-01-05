@@ -1,28 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_work_entry
-#
+# 
 # Translators:
-# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2022
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2022
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
-# karolína schusterová <karolina.schusterova@vdp.sk>, 2022
-# Jiří Podhorecký, 2022
-# Michal Veselý <michal@veselyberanek.net>, 2023
-# Martin Trigaux, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: cs\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: hr_work_entry
@@ -42,7 +36,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "<span>Hours</span>"
-msgstr ""
+msgstr "<span>Hodin</span>"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__active
@@ -76,8 +70,12 @@ msgstr "Zrušeno"
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__code
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__code
-msgid "Careful, the Code is used in many references, changing it could lead to unwanted changes."
+msgid ""
+"Careful, the Code is used in many references, changing it could lead to "
+"unwanted changes."
 msgstr ""
+"Pozor, kód se používá v mnoha odkazech, jeho změna by mohla vést k nechtěným"
+" změnám."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__color
@@ -88,7 +86,7 @@ msgstr "Barva"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__company_id
 msgid "Company"
-msgstr "Firma"
+msgstr "Společnost"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__conflict
@@ -106,18 +104,34 @@ msgid "Conflicts"
 msgstr "Konflikty"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__country_id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_id
+msgid "Country"
+msgstr "Země"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_code
+msgid "Country Code"
+msgstr "Kód země"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_type_action
+msgid "Create a new work entry type"
+msgstr "Vytvořit nový typ pracovního záznamu"
+
+#. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_uid
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__create_uid
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__create_uid
 msgid "Created by"
-msgstr "Vytvořeno od"
+msgstr "Vytvořeno uživatelem"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_date
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__create_date
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__create_date
 msgid "Created on"
-msgstr "Vytvořeno"
+msgstr "Vytvořeno dne"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -141,14 +155,18 @@ msgid "Description"
 msgstr "Popis"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__display_name
 msgid "Display Name"
-msgstr "Zobrazované jméno"
+msgstr "Zobrazovací název"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__draft
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Draft"
 msgstr "Návrh"
 
@@ -168,7 +186,7 @@ msgstr "Zaměstnanec"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_tree
 msgid "End"
-msgstr ""
+msgstr "Konec"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__external_code
@@ -184,12 +202,12 @@ msgstr "Od"
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_work_entry
 msgid "HR Work Entry"
-msgstr "Vstup do práce HR"
+msgstr "HR pracovní záznam"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_work_entry_type
 msgid "HR Work Entry Type"
-msgstr "Typ zadání HR práce"
+msgstr "HR typ pracovního záznamu"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__has_work_entries
@@ -197,30 +215,37 @@ msgid "Has Work Entries"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__active
-msgid "If the active field is set to false, it will allow you to hide the work entry type without removing it."
-msgstr "Pokud je aktivní pole nastaveno na false, umožní vám skrýt typ pracovního záznamu bez jeho odstranění."
+msgid ""
+"If the active field is set to false, it will allow you to hide the work "
+"entry type without removing it."
+msgstr ""
+"Pokud je aktivní pole nastaveno na false, umožní vám skrýt typ pracovního "
+"záznamu bez jeho odstranění."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_uid
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__write_uid
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__write_uid
 msgid "Last Updated by"
-msgstr "Naposledy upraveno od"
+msgstr "Naposledy upraveno uživatelem"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_date
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__write_date
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__write_date
 msgid "Last Updated on"
-msgstr "Naposled upraveno"
+msgstr "Naposledy upraveno dne"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__user_id
@@ -231,7 +256,12 @@ msgstr "Já"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__name
 msgid "Name"
-msgstr "Jméno"
+msgstr "Název"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
+msgid "No data to display"
+msgstr "Žádná data k zobrazení"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
@@ -247,12 +277,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__code
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__code
 msgid "Payroll Code"
-msgstr ""
+msgstr "Mzdový kód"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr "Zdroj podrobnosti volných dní"
+msgstr "Podrobnosti o volnu zdroje"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -267,7 +297,7 @@ msgstr "Vyhledat typ záznamu práce"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__sequence
 msgid "Sequence"
-msgstr "Číselná řada"
+msgstr "Sekvence"
 
 #. module: hr_work_entry
 #. odoo-javascript
@@ -281,29 +311,54 @@ msgid "Start Date"
 msgstr "Počáteční datum"
 
 #. module: hr_work_entry
-#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entry_start_before_end
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_work_entry_start_before_end
 msgid "Starting time should be before end time."
 msgstr "Počáteční čas by měl být před časem ukončení."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__state
 msgid "State"
-msgstr "Stav"
+msgstr "Stát"
 
 #. module: hr_work_entry
-#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_type_unique_work_entry_code
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"ISO kód země ve dvou znacích. Toto pole můžete použít pro rychlé "
+"vyhledávání."
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
 msgid "The same code cannot be associated to multiple work entry types."
 msgstr "Stejný kód nelze přidružit k více typům záznamů práce."
 
 #. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "This work entry is validated. You can't delete it."
+msgstr ""
+
+#. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Time Off Options"
-msgstr ""
+msgstr "Možnosti volna"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date_stop
 msgid "To"
-msgstr "Do"
+msgstr "Na"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
+msgid ""
+"Try to add some records, or make sure that there is no active filter in the "
+"search bar."
+msgstr ""
+"Zkuste přidat nějaké záznamy, nebo se ujistěte, že není žádný aktivní filtr "
+"ve vyhledávací liště."
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -320,7 +375,7 @@ msgstr "Nedefinováno"
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry.py:0
 msgid "Undefined Type"
-msgstr ""
+msgstr "Nedefinovaný typ"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__external_code
@@ -330,13 +385,14 @@ msgstr ""
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__validated
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Validated"
-msgstr "Ověřeno"
+msgstr "Potvrzeno"
 
 #. module: hr_work_entry
-#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entries_no_validated_conflict
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_work_entries_no_validated_conflict
 msgid "Validated work entries cannot overlap"
-msgstr ""
+msgstr "Ověřené pracovní záznamy se nesmí překrývat"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_attendance
@@ -351,7 +407,7 @@ msgstr "Pracovní záznamy"
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_user_work_entry_employee
 msgid "Work Entries Employees"
-msgstr "Zaměstnanci a zaměstnanci"
+msgstr "Pracovní záznamy zaměstnanců"
 
 #. module: hr_work_entry
 #: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_action
@@ -359,7 +415,7 @@ msgstr "Zaměstnanci a zaměstnanci"
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "Work Entry"
-msgstr "Vstup do práce"
+msgstr "Pracovní záznam"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
@@ -386,9 +442,25 @@ msgid "Work Entry Types"
 msgstr "Typy pracovních záznamů"
 
 #. module: hr_work_entry
-#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entry_has_end
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_work_entry_has_end
 msgid "Work entry must end. Please define an end date or a duration."
-msgstr "Vstup do práce musí skončit. Definujte prosím datum ukončení nebo dobu trvání."
+msgstr ""
+"Vstup do práce musí skončit. Definujte prosím datum ukončení nebo dobu "
+"trvání."
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid ""
+"You can't change the Country of this work entry type cause it's currently "
+"used by the system. You need to delete related working entries first."
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "You can't change the country of this specific work entry type."
+msgstr ""
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique

@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_mrp
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: es\n"
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: purchase_mrp
@@ -33,7 +32,7 @@ msgstr "<span class=\"o_stat_text\">Compras</span>"
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_report_mrp_report_bom_structure
 msgid "BOM Overview Report"
-msgstr "Reporte de resumen de LdM"
+msgstr "Informe de resumen de LdM"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_mrp_bom
@@ -43,28 +42,30 @@ msgstr "Lista de materiales"
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_mrp_bom_line
 msgid "Bill of Material Line"
-msgstr "Línea de Lista de Materiales"
+msgstr "Línea de lista de materiales"
 
 #. module: purchase_mrp
 #. odoo-python
 #: code:addons/purchase_mrp/models/mrp_bom.py:0
 msgid "Components cost share have to be positive or equals to zero."
 msgstr ""
+"El coste compartido de los componentes tiene que ser positivo o igual a "
+"cero."
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom_line__cost_share
 msgid "Cost Share (%)"
-msgstr "Reparto de costos (%)"
+msgstr "Reparto de costes (%)"
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order__mrp_production_count
 msgid "Count of MO Source"
-msgstr "Cuenta de MO fuente"
+msgstr "Número de fuentes de órdenes de fabricación"
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_mrp_production__purchase_order_count
 msgid "Count of generated PO"
-msgstr "Cuenta de órdenes de compra generadas"
+msgstr "Número de pedidos de compra generados"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_account_move_line
@@ -74,7 +75,12 @@ msgstr "Apunte contable"
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_report_mrp_report_mo_overview
 msgid "MO Overview Report"
-msgstr ""
+msgstr "Informe del resumen de la orden de fabricación"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Orden de fabricación"
 
 #. module: purchase_mrp
 #. odoo-python
@@ -85,13 +91,12 @@ msgstr "Fuente de fabricación de %s"
 #. module: purchase_mrp
 #. odoo-python
 #: code:addons/purchase_mrp/models/stock_move.py:0
-msgid "Odoo is not able to generate the anglo saxon entries. The total valuation of %s is zero."
-msgstr "Odoo no puede generar los asientos anglosajones. La valuación total de %s es cero."
-
-#. module: purchase_mrp
-#: model:ir.model,name:purchase_mrp.model_mrp_production
-msgid "Production Order"
-msgstr "Orden de producción"
+msgid ""
+"Odoo is not able to generate the anglo saxon entries. The total valuation of"
+" %s is zero."
+msgstr ""
+"Odoo no puede generar los asientos anglosajones. La valuación total de %s es"
+" cero."
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_purchase_order
@@ -107,20 +112,26 @@ msgstr "Línea de pedido de compra"
 #. odoo-python
 #: code:addons/purchase_mrp/models/mrp_production.py:0
 msgid "Purchase Order generated from %s"
-msgstr "Pedido de compra generada a partir de %s"
+msgstr "Pedido de compra generado a partir de %s"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_stock_move
 msgid "Stock Move"
-msgstr "Movimiento de existencias"
+msgstr "Movimiento de stock"
 
 #. module: purchase_mrp
 #: model:ir.model.fields,help:purchase_mrp.field_mrp_bom_line__cost_share
-msgid "The percentage of the component repartition cost when purchasing a kit.The total of all components' cost have to be equal to 100."
+msgid ""
+"The percentage of the component repartition cost when purchasing a kit.The "
+"total of all components' cost have to be equal to 100."
 msgstr ""
+"El porcentaje del coste de repartición del componente cuando se compra un "
+"kit. El total del coste de todos los componentes debe ser igual a 100."
 
 #. module: purchase_mrp
 #. odoo-python
 #: code:addons/purchase_mrp/models/mrp_bom.py:0
 msgid "The total cost share for a BoM's component have to be 100"
 msgstr ""
+"El total del reparto de costes para un componente de la lista de materiales "
+"debe ser 100"

@@ -1,42 +1,56 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Abe Manyo, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
-"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
+msgid "%(number)s file(s) selected"
+msgstr "%(number)s file dipilih"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "%(property_string)s (%(parent_name)s)"
+msgstr "%(property_string)s (%(parent_name)s)"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "%s at multiple rows"
-msgstr ""
+msgstr "%s pada lebih dari satu baris"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "%s records successfully imported"
-msgstr ""
+msgstr "%srecord sukses diimpor"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "A single column was found in the file, this often means the file separator is incorrect."
+msgid ""
+"A single column was found in the file, this often means the file separator "
+"is incorrect."
 msgstr ""
+"Kolom tunggal ditemukan di file, ini sering berarti separator file salah."
 
 #. module: base_import
 #. odoo-javascript
@@ -52,15 +66,32 @@ msgstr "Lanjutan"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid ""
+"After each batch import, this delay is applied to avoid unthrottled calls"
+msgstr ""
+"Setelah setiap impor batch, jeda ini akan diterapkan untuk menghindari call "
+"yang tidak di-throttle"
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Allow matching with subfields"
-msgstr ""
+msgstr "Izinkan pencocokkan dengan subfield"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "An unknown issue occurred during import (possibly lost connection, data limit exceeded or memory limits exceeded). Please retry in case the issue is transient. If the issue still occurs, try to split the file rather than import it at once."
-msgstr "Masalah yang tidak diketahui terjadi selama impor (mungkin kehilangan koneksi, melewati batasan data atau memori). Mohon coba lagi karena ada kemungkinan masalah hanya sementara. Bila masalah masih terjadi, coba pisahkan file daripada mengimpor file semuanya sekaligus."
+msgid ""
+"An unknown issue occurred during import (possibly lost connection, data "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is"
+" transient. If the issue still occurs, try to split the file rather than "
+"import it at once."
+msgstr ""
+"Masalah yang tidak diketahui terjadi selama impor (mungkin kehilangan "
+"koneksi, melewati batasan data atau memori). Mohon coba lagi karena ada "
+"kemungkinan masalah hanya sementara. Bila masalah masih terjadi, coba "
+"pisahkan file daripada mengimpor file semuanya sekaligus."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -70,30 +101,36 @@ msgstr "Base"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_import
 msgid "Base Import"
-msgstr ""
+msgstr "Base Import"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
 msgid "Base Import Mapping"
-msgstr ""
+msgstr "Base Import Mapping"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Batch"
-msgstr ""
+msgstr "Batch"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Batch Import"
-msgstr ""
+msgstr "Impor Batch"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Batch limit"
-msgstr ""
+msgstr "Batas batch"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "But, you can also use .csv files"
+msgstr "Tapi, Anda juga dapat menggunakan file .csv"
 
 #. module: base_import
 #. odoo-javascript
@@ -106,18 +143,23 @@ msgstr "Batal"
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Click 'Resume' to proceed with the import, resuming at line %s."
 msgstr ""
+"Klik 'Lanjutkan' untuk melanjutkan dengan impor, dilanjutkan pada baris %s."
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Column %s contains incorrect values (value: %s)"
-msgstr "Kolom %s memiliki nilai yang tidak tepat (nilai: %s)"
+msgid "Column %(column)s contains incorrect values (value: %(value)s)"
+msgstr "Kolom %(column)s memiliki value yang tidak tepat (value: %(value)s)"
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr "Kolom %s memiliki nilai yang tidak tepat. Eror pada baris %d: %s"
+msgid ""
+"Column %(column)s contains incorrect values. Error in line %(line)d: "
+"%(error)s"
+msgstr ""
+"Kolom %(column)s memiliki value yang tidak tepat. Error di baris %(line)d: "
+"%(error)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -139,14 +181,18 @@ msgstr "Komentar"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
+msgid ""
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 msgstr ""
+"Tidak dapat mengambil URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Create new values"
-msgstr ""
+msgstr "Buat value baru"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
@@ -159,6 +205,12 @@ msgstr "Dibuat oleh"
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__create_date
 msgid "Created on"
 msgstr "Dibuat pada"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Data to import"
+msgstr "Data untuk diimpor"
 
 #. module: base_import
 #. odoo-python
@@ -182,7 +234,21 @@ msgstr "Format Tanggal-waktu:"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Decimals Separator:"
+msgstr "Separator Desimal:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Defines how many megabytes can be imported in each batch import"
 msgstr ""
+"Mendefinisikan berapa banyak megabyte yang dapat diimpor di setiap impor "
+"batch"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Delay after each batch"
+msgstr "Jeda setelah setiap batch"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -205,6 +271,12 @@ msgstr "Unduh"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Drop or upload a file to import"
+msgstr "Taruh atau unggah file untuk diimpor"
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Encoding:"
 msgstr "Encoding:"
@@ -212,20 +284,40 @@ msgstr "Encoding:"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Error Parsing Date [%s:L%d]: %s"
-msgstr "Kesalahan Parsing Tanggal [%s:L%d]: %s"
+msgid "Error Parsing Date [%(field)s:L%(line)d]: %(error)s"
+msgstr "Error Parsing Tanggal [%(field)s:L%(line)d]: %(error)s"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Error at row %s: \"%s\""
+msgid "Error at row %(row)s: \"%(error)s\""
+msgstr "Error di baris %(row)s: \"%(error)s\""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
+msgstr "Error selagi mengimpor record: Text Delimiter harusnya satu karakter."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %(title_row_entries)d entries while the first row has "
+"%(first_row_entries)d. You may need to change the separator character."
 msgstr ""
+"Error selagi mengimpor record: semua baris seharusnya memiliki ukuran yang "
+"sama, tapi baris judul memiliki %(title_row_entries)d entri sementara baris "
+"pertama memiliki %(first_row_entries)d. Anda mungkin harus merubah pemisah "
+"karakter."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Estimated time left:"
-msgstr ""
+msgstr "Perkiraan waktu tersisa:"
 
 #. module: base_import
 #. odoo-javascript
@@ -237,7 +329,7 @@ msgstr "Segalanya tampak sah."
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Excel files are recommended as formatting is automatic."
-msgstr ""
+msgstr "File excel disarankan karena formatting otomatis."
 
 #. module: base_import
 #. odoo-python
@@ -259,7 +351,7 @@ msgstr "File"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "File Column"
-msgstr ""
+msgstr "Kolom File"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_name
@@ -275,7 +367,7 @@ msgstr "Tipe File"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "File size exceeds configured maximum (%s bytes)"
-msgstr ""
+msgstr "Ukuran file melampaui konfigurasi maksimum (%s byte)"
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
@@ -284,9 +376,15 @@ msgstr "File yang dimeriksa dan/atau diimpor, biner (bukan base64)"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Files to import"
+msgstr "File untuk diimpor"
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Finalizing current batch before interrupting..."
-msgstr ""
+msgstr "Menyelesaikan batch saat ini sebelum memberhentikan..."
 
 #. module: base_import
 #. odoo-javascript
@@ -298,25 +396,29 @@ msgstr "Untuk file CSV, Anda mungkin perlu memilih pemisah yang benar."
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Formatting"
-msgstr ""
+msgstr "Formatting"
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Found invalid image data, images should be imported as either URLs or base64-encoded data."
+msgid ""
+"Found invalid image data, images should be imported as either URLs or "
+"base64-encoded data."
 msgstr ""
+"Menemukan data gambar yang tidak valid, gambar harus diimpor sebagai URL "
+"atau data base64-encode."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Go to Import FAQ"
-msgstr ""
+msgstr "Pergi ke Tanya & Jawab Impor"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Help"
-msgstr "Bantuan"
+msgstr "Help"
 
 #. module: base_import
 #. odoo-javascript
@@ -345,10 +447,24 @@ msgstr ""
 "                    sederhana terutama ketika file memiliki banyak kolom."
 
 #. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid ""
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
+msgstr ""
+"Bila model menggunakan openchatter, sejarah pelacakan akan membuat langganan"
+" dan mengirimkan notifikasi selama impor, tapi ini akan berujung pada impor "
+"yang lebih lambat."
+
+#. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Image size excessive, imported images must be smaller than 42 million pixel"
+msgid ""
+"Image size excessive, imported images must be smaller than 42 million pixel"
 msgstr ""
+"Ukuran gambar terlalu besar, gambar yang diimpor harus lebih kecil dari 42 "
+"juta pixel"
 
 #. module: base_import
 #. odoo-javascript
@@ -360,7 +476,7 @@ msgstr "Impor"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Import FAQ"
-msgstr ""
+msgstr "Tanya Jawab Impor"
 
 #. module: base_import
 #. odoo-javascript
@@ -372,73 +488,85 @@ msgstr "Impor File"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Import file has no content or is corrupt"
-msgstr ""
+msgstr "File impor tidak memiliki konten atau corrupt"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Import preview failed due to: \""
-msgstr ""
+msgstr "Pratinjau impor gagal oleh karena: \""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_records/import_records.xml:0
 msgid "Import records"
-msgstr ""
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_model.js:0
-msgid "Import timed out. Please retry. If you still encounter this issue, the file may be too big for the system's configuration, try to split it (import less records per file)."
-msgstr ""
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Imported file"
-msgstr ""
+msgstr "Impor recor"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Importing"
+msgstr "Mengimpor"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
+"format: %(cell_format)s, as (%(format_type)s) formats are not supported."
 msgstr ""
+"Format cell tidak valid di baris %(row)s, kolom %(col)s: %(cell_value)s, "
+"dengan format: %(cell_format)s, karena format (%(format_type)s) tidak "
+"didukung."
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
 msgstr ""
+"Value cell tidak valid pada baris %(row)s, kolom %(col)s: %(cell_value)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__write_uid
 msgid "Last Updated by"
-msgstr "Terakhir diperbarui oleh"
+msgstr "Terakhir Diperbarui oleh"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__write_date
 msgid "Last Updated on"
-msgstr "Terakhir diperbarui pada"
+msgstr "Terakhir Diperbarui pada"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Load File"
-msgstr "Memuat File"
+msgid "Load Data File"
+msgstr "Muat File Data"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Loading file..."
-msgstr ""
+msgstr "Muat file..."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_block_ui.xml:0
 msgid "Loading..."
-msgstr ""
+msgstr "Memuat..."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Max size per batch"
+msgstr "Ukuran max per batch"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Mb"
+msgstr "Mb"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
@@ -449,7 +577,7 @@ msgstr "Model"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "Multiple errors occurred"
-msgstr ""
+msgstr "Lebih dari satu error terjadi"
 
 #. module: base_import
 #. odoo-javascript
@@ -461,25 +589,43 @@ msgstr "Butuh bantuan?"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "No Separator"
-msgstr ""
+msgstr "Tidak ada Separator"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
+msgid "No file selected"
+msgstr "Tidak ada file yang dipilih"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "No matching records found for the following name"
-msgstr ""
+msgstr "Tidak ada record cocok yang ditemukan untuk nama berikut"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Odoo Field"
-msgstr ""
+msgstr "Field Odoo"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Please upload a single file."
+msgstr "Silakan unggah satu file."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Please upload an Excel (.xls or .xlsx) or .csv file to import."
+msgstr "Silakan unggah file Excel (.xls atau .xlsx) atau .csv untuk diimpor."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Prevent import"
-msgstr ""
+msgstr "Cegah impor"
 
 #. module: base_import
 #. odoo-javascript
@@ -489,9 +635,15 @@ msgstr "Pratinjau"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Progress bar"
+msgstr "Progress bar"
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Reimport"
-msgstr ""
+msgstr "Impor ulang"
 
 #. module: base_import
 #. odoo-javascript
@@ -512,21 +664,21 @@ msgstr "Lanjutkan"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Search a field..."
-msgstr ""
+msgstr "Cari kolom..."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "See possible values"
-msgstr ""
+msgstr "Lihat kemungkinan value"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Selected Sheet:"
-msgstr ""
+msgstr "Sheet Terpilih:"
 
 #. module: base_import
 #. odoo-javascript
@@ -544,37 +696,37 @@ msgstr "Pemisah:"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Set to: %s"
-msgstr ""
+msgstr "Tetapkan ke: %s"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Set to: False"
-msgstr ""
+msgstr "Tetapkan sebagai: False"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Set to: True"
-msgstr ""
+msgstr "Tetapkan sebagai: True"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Set value as empty"
-msgstr ""
+msgstr "Tetapkan value sebagai kosong"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Sheet:"
-msgstr ""
+msgstr "Sheet:"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Skip record"
-msgstr ""
+msgstr "Lewati recor"
 
 #. module: base_import
 #. odoo-javascript
@@ -586,25 +738,25 @@ msgstr "Spasi"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 msgid "Standard Fields"
-msgstr ""
+msgstr "Field Standar"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Start at line"
-msgstr ""
+msgstr "Mulai pada bari"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Stop Import"
-msgstr ""
+msgstr "Stop Impor"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 msgid "Suggested Fields"
-msgstr ""
+msgstr "Field yang Disarankan"
 
 #. module: base_import
 #. odoo-javascript
@@ -634,19 +786,19 @@ msgstr "Pemisah Teks:"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "The file contains blocking errors (see below)"
-msgstr ""
+msgstr "File memiliki error blocking (lihat di bawah)"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "The file will be imported by batches"
-msgstr ""
+msgstr "File kaan diimpor secara batch"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "This column will be concatenated in field"
-msgstr ""
+msgstr "Kolom ini akan di-concat di field"
 
 #. module: base_import
 #. odoo-javascript
@@ -658,13 +810,13 @@ msgstr "Pemisah Ribuan:"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "To import multiple values, separate them by a comma."
-msgstr ""
+msgstr "Untuk mengimpor lebih dari satu value, pisahkan mereka dengan koma."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "To import, select a field..."
-msgstr ""
+msgstr "Untuk mengimpor, pilih field..."
 
 #. module: base_import
 #. odoo-javascript
@@ -681,8 +833,11 @@ msgstr "Tidak dapat memuat file \"{extension}\": requires Python module \"{modna
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
-msgstr "Format file tidak didukung \"{}\", impor hanya mendukung CSV, ODS, XLS dan XLSX"
+msgid ""
+"Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
+msgstr ""
+"Format file tidak didukung \"{}\", impor hanya mendukung CSV, ODS, XLS dan "
+"XLSX"
 
 #. module: base_import
 #. odoo-javascript
@@ -693,32 +848,47 @@ msgstr "Belum ada judul"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Upload File"
-msgstr ""
+msgid "Upload Data File"
+msgstr "Unggah File Data"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Upload an Excel or CSV file to import"
-msgstr ""
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_model.js:0
-msgid "Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h system. You can use a custom format in addition to the suggestions provided. Leave empty to let Odoo guess the format (recommended)"
-msgstr ""
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Upload your files"
+msgstr "Unggah file-file Anda"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Use YYYY to represent the year, MM for the month and DD for the day. Include separators such as a dot, forward slash or dash. You can use a custom format in addition to the suggestions provided. Leave empty to let Odoo guess the format (recommended)"
+msgid ""
+"Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
+"system. You can use a custom format in addition to the suggestions provided."
+" Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
+"Gunakan HH untuk jam dalam sistem 24j, gunakan II secara bersamaan dengan "
+"'p' untuk sistem 12j. Anda dapat menggunakan format custom di atas saran "
+"yang disediakan. Biarkan kosong untuk membiarkan Odoo memilih format "
+"(disarankan)"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid ""
+"Use YYYY to represent the year, MM for the month and DD for the day. Include"
+" separators such as a dot, forward slash or dash. You can use a custom "
+"format in addition to the suggestions provided. Leave empty to let Odoo "
+"guess the format (recommended)"
+msgstr ""
+"Gunakan YYYY untuk mewakili tahun, MM untuk bulan dan DD untuk hari. "
+"Termasuk separator sepeerti titik, garis miring atau garis. Anda dapat "
+"menggunakan format custom di atas saran yang disediakan. Biarkan kosong "
+"untuk membiarkan Odoo memilih format (disarankan)"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Use first row as header"
-msgstr ""
+msgstr "Gunakan baris pertama sebagai header"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_res_users
@@ -727,21 +897,37 @@ msgstr "Pengguna"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid ""
+"Warning: ignores the labels line, empty lines and lines composed only of "
+"empty cells"
+msgstr ""
+"Peringatan: mengabaikan baris label, baris kosong dan baris yang terdiri "
+"dari hanya cell kosong"
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.xml:0
 msgid "When a value cannot be matched:"
-msgstr ""
+msgstr "Saat value tidak dapat dicocokkan:"
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "You can not import images via URL, check with your administrator or support for the reason."
-msgstr "Anda tidak dapat mengimpor gambar melalui URL, silakan periksa dengan administrator atau bantuan untuk mendapatkan penjelasan kenapa Anda tidak bisa."
+msgid ""
+"You can not import images via URL, check with your administrator or support "
+"for the reason."
+msgstr ""
+"Anda tidak dapat mengimpor gambar melalui URL, silakan periksa dengan "
+"administrator atau bantuan untuk mendapatkan penjelasan kenapa Anda tidak "
+"bisa."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "You can test or reload your file before resuming the import."
 msgstr ""
+"Anda dapat mengetes atau memuat ulang file Anda sebelum melanjutkan impor."
 
 #. module: base_import
 #. odoo-python
@@ -753,19 +939,19 @@ msgstr "Anda harus mengkonfigurasi setidaknya satu kolom untuk diimpor"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "at multiple rows"
-msgstr ""
+msgstr "pada lebih dari satu baris"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "at row"
-msgstr ""
+msgstr "pada bari"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "in field"
-msgstr ""
+msgstr "di field"
 
 #. module: base_import
 #. odoo-javascript
@@ -777,22 +963,23 @@ msgstr "menit"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "more"
-msgstr ""
+msgstr "lainnya"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "out of"
-msgstr ""
+msgstr "dari"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "seconds"
-msgstr ""
+msgstr "detik"
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "unknown error code %s"
-msgstr ""
+msgstr "kode error %s tidak diketahui"

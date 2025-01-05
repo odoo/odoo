@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* resource
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Sarah Park, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
-"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: resource
@@ -30,18 +29,23 @@ msgstr "%s (사본)"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "<span class=\"o_stat_text\">Time Off</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">휴가</span>"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "<span class=\"o_stat_text\">Work Resources</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">작업 리소스</span>"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "<span> hours/week</span>"
+msgstr "<span> 시간/주</span>"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__active
 #: model:ir.model.fields,field_description:resource.field_resource_resource__active
 msgid "Active"
-msgstr "활성"
+msgstr "활성화"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__afternoon
@@ -58,13 +62,17 @@ msgstr "보관됨"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "Are you sure you want to switch this calendar to 1 week calendar? All entries will be lost"
-msgstr ""
+msgid ""
+"Are you sure you want to switch to a 1-week calendar? All work entries will "
+"be lost."
+msgstr "1주일 달력으로 변경하시겠습니까? 현재 작업 항목이 모두 삭제됩니다."
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "Are you sure you want to switch this calendar to 2 weeks calendar? All entries will be lost"
-msgstr ""
+msgid ""
+"Are you sure you want to switch to a 2-week calendar? All work entries will "
+"be lost."
+msgstr "2주일 달력으로 변경하시겠습니까? 현재 작업 항목이 모두 삭제됩니다."
 
 #. module: resource
 #. odoo-python
@@ -73,14 +81,25 @@ msgid "Attendances can't overlap."
 msgstr "출석은 중복될 수 없습니다."
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource__avatar_128
+msgid "Avatar 128"
+msgstr "아바타 128"
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
 msgid "Average Hour per Day"
 msgstr "일일 평균 시간"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__hours_per_day
-msgid "Average hours per day a resource is supposed to work with this calendar."
+msgid ""
+"Average hours per day a resource is supposed to work with this calendar."
 msgstr "자원이 이 일정표와 함께 작동하는 일일 평균 근무 시간입니다."
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__lunch
+msgid "Break"
+msgstr "나누기"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_calendar
@@ -109,6 +128,11 @@ msgid "Company"
 msgstr "회사"
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__full_time_required_hours
+msgid "Company Full Time"
+msgstr "회사 정규직"
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__create_uid
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__create_uid
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__create_uid
@@ -123,6 +147,11 @@ msgstr "작성자"
 #: model:ir.model.fields,field_description:resource.field_resource_resource__create_date
 msgid "Created on"
 msgstr "작성일자"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Date"
+msgstr "날짜"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__day_period
@@ -141,8 +170,19 @@ msgid "Default Working Hours"
 msgstr "기본 근무 시간"
 
 #. module: resource
+#: model:ir.model.fields,help:resource.field_res_users__resource_calendar_id
+#: model:ir.model.fields,help:resource.field_resource_mixin__resource_calendar_id
+#: model:ir.model.fields,help:resource.field_resource_resource__calendar_id
+msgid ""
+"Define the working schedule of the resource. If not set, the resource will "
+"have fully flexible working hours."
+msgstr "직원의 근무 일정을 설정합니다. 설정하지 않으면 해당 직원은 완전히 유연한 근무 시간을 갖게 됩니다."
+
+#. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_calendar_form
-msgid "Define working hours and time table that could be scheduled to your project members"
+msgid ""
+"Define working hours and time table that could be scheduled to your project "
+"members"
 msgstr "프로젝트 참여자가 예약할 수 있는 근무 시간 및 시간표 정의"
 
 #. module: resource
@@ -159,9 +199,24 @@ msgid "Display Type"
 msgstr "표시 유형"
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__duration_days
+msgid "Duration (days)"
+msgstr "기간 (일)"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__duration_hours
+msgid "Duration (hours)"
+msgstr "기간 (시간)"
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__time_efficiency
 msgid "Efficiency Factor"
 msgstr "효율 계수"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource__email
+msgid "Email"
+msgstr "이메일"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__date_to
@@ -175,6 +230,13 @@ msgid "Explanation"
 msgstr "설명"
 
 #. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource__share
+msgid ""
+"External user with limited access, created only for the purpose of sharing "
+"data."
+msgstr "제한된 사용 권한을 가진 외부 사용자. 데이터 공유 목적으로만 생성됩니다."
+
+#. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__0
 msgid "First"
 msgstr "첫 번째"
@@ -183,7 +245,12 @@ msgstr "첫 번째"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "First week"
-msgstr ""
+msgstr "첫 주"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__flexible_hours
+msgid "Flexible Hours"
+msgstr "유연 근무 시간"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
@@ -200,13 +267,18 @@ msgstr "금요일 오후"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Friday Lunch"
-msgstr ""
+msgstr "금요일 점심"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Friday Morning"
 msgstr "금요일 오전"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
+msgid "Fully Flexible"
+msgstr "완전 유연 근무"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
@@ -230,10 +302,15 @@ msgid "Hours"
 msgstr "시간"
 
 #. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Hours per Week"
+msgstr "주당 근로 시간"
+
+#. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__user
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Human"
-msgstr "사람"
+msgstr "인적"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__id
@@ -245,29 +322,30 @@ msgstr "ID"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__resource_id
-msgid "If empty, this is a generic time off for the company. If a resource is set, the time off is only for this resource"
+msgid ""
+"If empty, this is a generic time off for the company. If a resource is set, "
+"the time off is only for this resource"
 msgstr "비어 있는 경우, 이것은 회사의 일반적인 휴가입니다. 자원이 설정된 경우 이 자원 전용 휴가입니다."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__active
-msgid "If the active field is set to False, it will allow you to hide the resource record without removing it."
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
 msgstr "사용중인 필드를 아니오로 설정하면 제거하지 않고 자원 기록을 숨길 수 있습니다."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__active
-msgid "If the active field is set to false, it will allow you to hide the Working Time without removing it."
-msgstr ""
+msgid ""
+"If the active field is set to false, it will allow you to hide the Working "
+"Time without removing it."
+msgstr "활성 필드를 아니오로 설정하면 작업 시간을 삭제하지 않고도 숨길 수 있습니다."
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
-msgid "Impossible to switch calendar type for the default company schedule."
-msgstr ""
-
-#. module: resource
-#. odoo-python
-#: code:addons/resource/models/resource_calendar.py:0
-msgid "In a calendar with 2 weeks mode, all periods need to be in the sections."
+msgid ""
+"In a calendar with 2 weeks mode, all periods need to be in the sections."
 msgstr "2주 모드가 있는 달력에서는 모든 기간이 섹션에 있어야 합니다."
 
 #. module: resource
@@ -287,15 +365,10 @@ msgid "Last Updated on"
 msgstr "최근 갱신 일자"
 
 #. module: resource
-#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__lunch
-msgid "Lunch"
-msgstr ""
-
-#. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__material
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Material"
-msgstr "물건"
+msgstr "물적"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__0
@@ -312,7 +385,7 @@ msgstr "월요일 오후"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Monday Lunch"
-msgstr ""
+msgstr "월요일 점심"
 
 #. module: resource
 #. odoo-python
@@ -333,6 +406,13 @@ msgid "Name"
 msgstr "이름"
 
 #. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__full_time_required_hours
+msgid ""
+"Number of hours to work on the company schedule to be considered as "
+"fulltime."
+msgstr "회사 일정에 따라 근무해야 하는 풀타임 시간입니다."
+
+#. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__other
 msgid "Other"
 msgstr "기타"
@@ -341,6 +421,11 @@ msgstr "기타"
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Period"
 msgstr "기간"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource__phone
+msgid "Phone"
+msgstr "전화번호"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__name
@@ -352,7 +437,7 @@ msgstr "사유"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "접근 권한을 관리할 자원의 관련 사용자 이름."
+msgstr "리소스에 대한 접근 권한 관리자입니다."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__resource_id
@@ -410,8 +495,13 @@ msgstr "자원 휴가"
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
 #: model_terms:ir.actions.act_window,help:resource.resource_resource_action_from_calendar
-msgid "Resources allow you to create and manage resources that should be involved in a specific project phase. You can also set their efficiency level and workload based on their weekly working hours."
-msgstr "특정 프로젝트 단계에 참여해야 하는 자원 관리와 작성을 허용합니다. 또한 귀하는 자신의 주당 근로 시간을 기준으로 효율성 수준 및 업무 부하를 설정할 수 있습니다."
+msgid ""
+"Resources allow you to create and manage resources that should be involved "
+"in a specific project phase. You can also set their efficiency level and "
+"workload based on their weekly working hours."
+msgstr ""
+"특정 프로젝트 단계에 참여해야 하는 자원 관리와 작성을 허용합니다. 또한 귀하는 자신의 주당 근로 시간을 기준으로 효율성 수준 및 업무 "
+"부하를 설정할 수 있습니다."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__5
@@ -442,7 +532,7 @@ msgstr "보조"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "Second week"
-msgstr ""
+msgstr "두 번째 주"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__display_type__line_section
@@ -453,6 +543,11 @@ msgstr "구분"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__sequence
 msgid "Sequence"
 msgstr "순서"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource__share
+msgid "Share User"
+msgstr "공유 사용자"
 
 #. module: resource
 #. odoo-python
@@ -482,7 +577,7 @@ msgstr "시작일"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Time Off"
-msgstr ""
+msgstr "휴가 시작일"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
@@ -507,25 +602,36 @@ msgstr "UX용 기술 필드"
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
-msgid "The current week (from %s to %s) correspond to the  %s one."
-msgstr ""
+msgid ""
+"The current week (from %(first_day)s to %(last_day)s) corresponds to week "
+"number %(number)s."
+msgstr "이번 주 (%(first_day)s부터 %(last_day)s까지)는 %(number)s째 주에 해당합니다."
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_leaves.py:0
 msgid "The start date of the time off must be earlier than the end date."
-msgstr ""
+msgstr "휴가 시작일은 종료일보다 이전 날짜여야 합니다."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__tz
 #: model:ir.model.fields,help:resource.field_resource_mixin__tz
-msgid "This field is used in order to define in which timezone the resources will work."
+msgid ""
+"This field is used in order to define in which timezone the resources will "
+"work."
 msgstr "이 필드는 자원이 작동할 시간대를 정의하는 데 사용됩니다."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__time_efficiency
-msgid "This field is used to calculate the expected duration of a work order at this work center. For example, if a work order takes one hour and the efficiency factor is 100%, then the expected duration will be one hour. If the efficiency factor is 200%, however the expected duration will be 30 minutes."
+msgid ""
+"This field is used to calculate the expected duration of a work order at "
+"this work center. For example, if a work order takes one hour and the "
+"efficiency factor is 100%, then the expected duration will be one hour. If "
+"the efficiency factor is 200%, however the expected duration will be 30 "
+"minutes."
 msgstr ""
+"작업장에서 작업 지시에 대한 예상 소요 시간을 계산하는 데 사용되는 필드입니다. 작업 주문에 1시간이 걸리고 능률계수가 100%인 경우 "
+"예상 소요 시간은 1시간입니다. 반면 능률계수가 200%인 경우 예상 소요 시간은 30분이 됩니다."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3
@@ -542,7 +648,7 @@ msgstr "목요일 오후"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Thursday Lunch"
-msgstr ""
+msgstr "목요일 점심"
 
 #. module: resource
 #. odoo-python
@@ -557,15 +663,10 @@ msgid "Time Off"
 msgstr "휴가"
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
-msgid "Time Off Date"
-msgstr ""
-
-#. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 msgid "Time Off Detail"
-msgstr ""
+msgstr "휴가 세부 정보"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
@@ -604,7 +705,7 @@ msgstr "화요일 오후"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Tuesday Lunch"
-msgstr ""
+msgstr "화요일 점심"
 
 #. module: resource
 #. odoo-python
@@ -640,7 +741,7 @@ msgstr "수요일 오후"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Wednesday Lunch"
-msgstr ""
+msgstr "수요일 점심"
 
 #. module: resource
 #. odoo-python
@@ -651,12 +752,21 @@ msgstr "수요일 오전"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__week_type
 msgid "Week Number"
-msgstr ""
+msgstr "주차 달력 "
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__flexible_hours
+msgid ""
+"When enabled, it will allow employees to work flexibly, without relying on "
+"the company's working schedule (working hours)."
+msgstr "활성화하면 직원들이 회사의 근무 일정 (근무 시간)과 관계없이 유연하게 근무할 수 있습니다."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
-msgid "Whether this should be computed as a time off or as work time (eg: formation)"
-msgstr "이것이 근무 시간 또는 근무 시간으로 계산되어야 하는지 여부 (예 : 구성)"
+msgid ""
+"Whether this should be computed as a time off or as work time (eg: "
+"formation)"
+msgstr "이것이 근무 시간 또는 근무 시간으로 계산되어야 하는지 여부 (예: 구성)"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
@@ -688,6 +798,12 @@ msgid "Working Hours of %s"
 msgstr "%s의 근무 시간"
 
 #. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
+#: model:ir.ui.menu,name:resource.menu_resource_calendar
+msgid "Working Schedules"
+msgstr "근무 일정"
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__attendance_ids
 #: model:ir.model.fields,field_description:resource.field_resource_resource__calendar_id
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -700,12 +816,6 @@ msgid "Working Time"
 msgstr "근무 시간"
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
-#: model:ir.ui.menu,name:resource.menu_resource_calendar
-msgid "Working Times"
-msgstr "근무 시간"
-
-#. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "You can't delete section between weeks."
@@ -715,13 +825,13 @@ msgstr "몇 주에 걸친 구간은 삭제할 수 없습니다."
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "first"
-msgstr ""
+msgstr "첫 번째"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "other week"
-msgstr ""
+msgstr "다른 주"
 
 #. module: resource
 #. odoo-python
@@ -733,4 +843,4 @@ msgstr "초"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "this week"
-msgstr ""
+msgstr "이번 주"

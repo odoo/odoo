@@ -1,21 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* portal_rating
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# Ilya Rozhkov, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:37+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Ilya Rozhkov, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: portal_rating
+#. odoo-javascript
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
+msgid "#{Math.round(val * 100) / 100} stars on 5"
+msgstr "#{Math.round(val * 100) / 100} звёзд из 5"
 
 #. module: portal_rating
 #. odoo-javascript
@@ -32,19 +41,13 @@ msgstr "Средне"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
-msgid "Cancel"
-msgstr "Отменить"
-
-#. module: portal_rating
-#. odoo-javascript
 #: code:addons/portal_rating/static/src/xml/portal_rating_composer.xml:0
 msgid "Close"
 msgstr "Закрыть"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/chatter/frontend/message_patch.xml:0
 #: model_terms:ir.ui.view,arch_db:portal_rating.rating_rating_view_form
 msgid "Comment"
 msgstr "Комментарий"
@@ -61,7 +64,7 @@ msgstr "Прокомментировал"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/chatter/frontend/message_patch.xml:0
 msgid "Delete"
 msgstr "Удалить"
 
@@ -73,7 +76,7 @@ msgstr "Детали"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/chatter/frontend/message_patch.xml:0
 msgid "Edit"
 msgstr "Редактировать"
 
@@ -85,13 +88,20 @@ msgid "Edit Review"
 msgstr "Редактировать отзыв"
 
 #. module: portal_rating
+#: model:ir.model,name:portal_rating.model_mail_thread
+msgid "Email Thread"
+msgstr "Цепочка Email"
+
+#. module: portal_rating
 #. odoo-javascript
+#: code:addons/portal_rating/static/src/chatter/frontend/composer_patch.xml:0
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 msgid "Empty star"
 msgstr "Пустая звезда"
 
 #. module: portal_rating
 #. odoo-javascript
+#: code:addons/portal_rating/static/src/chatter/frontend/composer_patch.xml:0
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 msgid "Full star"
 msgstr "Полная звезда"
@@ -108,46 +118,10 @@ msgid "Half a star"
 msgstr "Половина звезды"
 
 #. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_composer.js:0
-msgid "I don't like it"
-msgstr "Мне это не нравится"
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_composer.js:0
-msgid "I hate it"
-msgstr "Я ненавижу это"
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_composer.js:0
-msgid "I like it"
-msgstr "Понравилось"
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_composer.js:0
-msgid "I love it"
-msgstr "Мне нравится"
-
-#. module: portal_rating
 #. odoo-python
 #: code:addons/portal_rating/controllers/portal_rating.py:0
 msgid "Invalid rating"
 msgstr "Неверный рейтинг"
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_composer.js:0
-msgid "It's okay"
-msgstr "Всё в порядке."
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
-msgid "Loading..."
-msgstr "Загрузка..."
 
 #. module: portal_rating
 #: model:ir.model,name:portal_rating.model_mail_message
@@ -162,19 +136,19 @@ msgstr "Измените свой отзыв"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
-msgid "Post comment"
-msgstr "Оставить комментарий"
-
-#. module: portal_rating
-#. odoo-javascript
 #: code:addons/portal_rating/static/src/js/portal_rating_composer.js:0
 msgid "Post review"
 msgstr ""
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
+msgid "Progress bar"
+msgstr "Прогресс-бар"
+
+#. module: portal_rating
+#. odoo-javascript
+#: code:addons/portal_rating/static/src/chatter/frontend/message_patch.xml:0
 msgid "Published on"
 msgstr "Опубликовано"
 
@@ -204,14 +178,12 @@ msgstr "Отзыв"
 #. module: portal_rating
 #. odoo-javascript
 #: code:addons/portal_rating/static/src/js/portal_composer.js:0
-msgid "The rating is required. Please make sure to select one before sending your review."
-msgstr "Оценка обязательна. Пожалуйста, убедитесь, что вы выбрали его перед отправкой отзыва."
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
-msgid "Update comment"
-msgstr "Обновить комментарий"
+msgid ""
+"The rating is required. Please make sure to select one before sending your "
+"review."
+msgstr ""
+"Оценка обязательна. Пожалуйста, убедитесь, что вы выбрали его перед "
+"отправкой отзыва."
 
 #. module: portal_rating
 #. odoo-javascript
@@ -223,25 +195,15 @@ msgstr ""
 #. odoo-python
 #: code:addons/portal_rating/models/rating_rating.py:0
 msgid "Updating rating comment require write access on related record"
-msgstr "Обновление комментария к рейтингу требует доступа на запись к связанной записи"
+msgstr ""
+"Обновление комментария к рейтингу требует доступа на запись к связанной "
+"записи"
 
 #. module: portal_rating
 #. odoo-javascript
 #: code:addons/portal_rating/static/src/xml/portal_rating_composer.xml:0
 msgid "Write a review"
 msgstr "Написать отзыв"
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_chatter.js:0
-msgid "Write your comment"
-msgstr "Напишите свой комментарий"
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
-msgid "avatar"
-msgstr "аватар"
 
 #. module: portal_rating
 #. odoo-javascript

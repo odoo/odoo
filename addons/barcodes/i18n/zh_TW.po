@@ -1,29 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* barcodes
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# Tony Ng, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:32+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
-"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
-msgstr ""
+msgstr "「*」不是有效的 regex 正規表達式條碼模式。你是想用「.*」嗎？"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -39,7 +40,9 @@ msgstr ""
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
-msgid "A barcode nomenclature defines how the point of sale identify and interprets barcodes"
+msgid ""
+"A barcode nomenclature defines how the point of sale identify and interprets"
+" barcodes"
 msgstr "一個條碼命名規則定義了POS如何識別和詮釋條碼"
 
 #. module: barcodes
@@ -75,14 +78,20 @@ msgstr "任何"
 
 #. module: barcodes
 #. odoo-javascript
+#: code:addons/barcodes/static/src/components/manual_barcode.xml:0
+msgid "Apply"
+msgstr "套用"
+
+#. module: barcodes
+#. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 msgid "Barcode"
-msgstr ""
+msgstr "條碼"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
 msgid "Barcode Event Mixin"
-msgstr "條碼事件混合"
+msgstr "條碼事件混入"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
@@ -117,8 +126,8 @@ msgstr "掃瞄到條碼"
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
-msgid "Barcode: "
-msgstr ""
+msgid "Barcode: %(barcode)s"
+msgstr "條碼：%(barcode)s"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_res_company
@@ -129,7 +138,7 @@ msgstr "公司"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_uid
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__create_uid
 msgid "Created by"
-msgstr "創立者"
+msgstr "建立人員"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_date
@@ -140,6 +149,9 @@ msgstr "建立於"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__display_name
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__display_name
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__display_name
+#: model:ir.model.fields,field_description:barcodes.field_ir_http__display_name
+#: model:ir.model.fields,field_description:barcodes.field_res_company__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
@@ -164,6 +176,12 @@ msgid "Encoding"
 msgstr "編碼"
 
 #. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/components/manual_barcode.js:0
+msgid "Enter a barcode..."
+msgstr "輸入條碼⋯"
+
+#. module: barcodes
 #: model:ir.model,name:barcodes.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP 路由"
@@ -171,8 +189,11 @@ msgstr "HTTP 路由"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__id
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__id
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__id
+#: model:ir.model.fields,field_description:barcodes.field_ir_http__id
+#: model:ir.model.fields,field_description:barcodes.field_res_company__id
 msgid "ID"
-msgstr "ID"
+msgstr "識別號"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
@@ -206,12 +227,18 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
+"模式還可以定義如何將重量或價格等數值\n"
+"                                編碼到條形碼中。它們用<code>{NNN}</code> 表示，其中 N\n"
+"                                代表數字的編碼位置。也支持浮點數，\n"
+"                                用 D 表示小數，如<code>{NNNDD}</code>。 在這種情況下，\n"
+"                                相關記錄上的條形碼字段<i>必須</i> 將這些數字顯示為\n"
+"                                零。"
 
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.js:0
 msgid "Please, Scan again!"
-msgstr ""
+msgstr "請再次掃描！"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
@@ -226,7 +253,7 @@ msgstr "規則"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__sequence
 msgid "Sequence"
-msgstr "條碼"
+msgstr "序列號"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -237,12 +264,19 @@ msgstr "表格"
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 msgid "Tap to scan"
-msgstr ""
+msgstr "點擊即可掃描"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
 msgid "The barcode matching pattern"
 msgstr "條碼匹配模式"
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+msgid ""
+"The barcode pattern %(pattern)s does not lead to a valid regular expression."
+msgstr "條碼格式 %(pattern)s 未能產生有效的正規表達式。"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
@@ -257,24 +291,31 @@ msgstr "匹配模式將別名加到該條碼"
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
-msgid "There is a syntax error in the barcode pattern %(pattern)s: a rule can only contain one pair of braces."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
+"contain one pair of braces."
 msgstr "條碼模式 %(pattern)s 中存在語法錯誤：a rule can only contain one pair of braces."
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
-msgid "There is a syntax error in the barcode pattern %(pattern)s: braces can only contain N's followed by D's."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: braces can only "
+"contain N's followed by D's."
 msgstr "條碼模式 %(pattern)s 中存在語法錯誤：braces can only contain N's followed by D's."
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
-msgid "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: empty braces."
 msgstr "條碼模式 %(pattern)s 中存在語法錯誤：empty braces."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
-msgid "This rule will apply only if the barcode is encoded with the specified encoding"
+msgid ""
+"This rule will apply only if the barcode is encoded with the specified "
+"encoding"
 msgstr "這條規則將只適用於特定編碼的條碼"
 
 #. module: barcodes
@@ -284,7 +325,10 @@ msgstr "類型"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
-msgid "UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding."
+msgid ""
+"UPC Codes can be converted to EAN by prefixing them with a zero. This "
+"setting determines if a UPC/EAN barcode should be automatically converted in"
+" one way or another when trying to match a rule with the other encoding."
 msgstr "UPC碼可以轉換為EAN，前綴加個零。此設定確定UPC / EAN條碼應以一種或另一種方式自動轉換當在與其他編碼規則匹配時。"
 
 #. module: barcodes
@@ -311,11 +355,12 @@ msgstr "單位產品"
 #. odoo-javascript
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 msgid "Unknown barcode command"
-msgstr ""
+msgstr "未知條碼指令"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
-msgid "Used to order rules such that rules with a smaller sequence match first"
+msgid ""
+"Used to order rules such that rules with a smaller sequence match first"
 msgstr "用於規則排序，這樣較小序列的規則最先匹配"
 
 #. module: barcodes

@@ -1,26 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_payment
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Mustafa Rawi <mustafa@cubexco.com>, 2022
-# Mustafa J. Kadhem <safi2266@gmail.com>, 2022
-# Niyas Raphy, 2022
-# Malaz Abuidris <msea@odoo.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
-"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: website_payment
@@ -69,18 +65,34 @@ msgid "<b>Payment Method:</b>"
 msgstr "<b>طريقة الدفع:</b> "
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "<option value=\"\">Country...</option>"
-msgstr ""
+msgstr "<option value=\"\">الدولة...</option>"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
-msgid ""
-"<strong>No suitable payment option could be found.</strong><br/>\n"
-"                                If you believe that it is an error, please contact the website administrator."
-msgstr ""
-"<strong>لم يتم العثور على خيار دفع مناسب.</strong><br/>\n"
-"                                إذا كنت تظن أنه هناك خطأ ما، رجاءً تواصل مع مدير الموقع الإلكتروني. "
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "<span class=\"s_donation_currency pe-1\">$</span>"
+msgstr "<span class=\"s_donation_currency pe-1\">$</span>"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "<span class=\"s_donation_currency pe-1\">$</span>10"
+msgstr "<span class=\"s_donation_currency pe-1\">$</span>10"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "<span class=\"s_donation_currency pe-1\">$</span>100"
+msgstr "<span class=\"s_donation_currency pe-1\">$</span>100"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "<span class=\"s_donation_currency pe-1\">$</span>25"
+msgstr "<span class=\"s_donation_currency pe-1\">$</span>25"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "<span class=\"s_donation_currency pe-1\">$</span>50"
+msgstr "<span class=\"s_donation_currency pe-1\">$</span>50"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -123,11 +135,12 @@ msgstr "إضافة خيار جديد معبأ مسبقاً "
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "Amount"
-msgstr "المبلغ "
+msgstr "مبلغ"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Amount ("
 msgstr "المبلغ ("
 
@@ -159,25 +172,19 @@ msgid "Configure %s"
 msgstr "تهيئة %s "
 
 #. module: website_payment
-#: model:ir.actions.server,name:website_payment.action_stripe_connect_account
-msgid "Connect to Stripe"
-msgstr "الاتصال بـ Stripe "
-
-#. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
-#: model:ir.model,name:website_payment.model_res_country
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 msgid "Country"
 msgstr "الدولة"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid ""
 "Country\n"
-"                            <span class=\"s_website_form_mark\"> *</span>"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
 "الدولة\n"
-"                            <span class=\"s_website_form_mark\"> *</span> "
+"                    <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_payment
 #. odoo-python
@@ -189,6 +196,7 @@ msgstr "الدولة مطلوبة. "
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_input
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Custom Amount"
 msgstr "المبلغ المخصص "
@@ -214,14 +222,19 @@ msgid "Display Options"
 msgstr "عرض الخيارات "
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#. odoo-python
+#: code:addons/website_payment/controllers/portal.py:0
+msgid "Donate"
+msgstr "تبرع "
+
+#. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "Donate Now"
 msgstr "تبرع الآن "
 
 #. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
 #: model_terms:ir.ui.view,arch_db:website_payment.snippets
 msgid "Donation"
 msgstr "تبرع "
@@ -250,22 +263,22 @@ msgstr "إشعار التبرع "
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 msgid "Email"
 msgstr "البريد الإلكتروني"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid ""
 "Email\n"
-"                            <span class=\"s_website_form_mark\"> *</span>"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
 "البريد الإلكتروني\n"
-"                            <span class=\"s_website_form_mark\"> *</span> "
+"                    <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 msgid "Email is invalid"
 msgstr "البريد الإلكتروني غير صالح "
 
@@ -277,7 +290,7 @@ msgstr "البريد الإلكتروني مطلوب. "
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 msgid "Field '%s' is mandatory"
 msgstr "الحقل '%s' إلزامي "
 
@@ -298,7 +311,6 @@ msgstr "تبرع "
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__is_stripe_supported_country
-#: model:ir.model.fields,field_description:website_payment.field_res_country__is_stripe_supported_country
 msgid "Is Stripe Supported Country"
 msgstr "الدول التي تدعم Stripe "
 
@@ -324,18 +336,18 @@ msgstr "الحد الأدنى"
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 msgid "Name"
 msgstr "الاسم"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid ""
 "Name\n"
-"                            <span class=\"s_website_form_mark\"> *</span>"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
 "الاسم\n"
-"                            <span class=\"s_website_form_mark\"> *</span> "
+"                    <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_payment
 #. odoo-python
@@ -365,7 +377,7 @@ msgid "Other than Paypal"
 msgstr "غير Paypal "
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Payment Details"
 msgstr "تفاصيل الدفع "
 
@@ -377,7 +389,13 @@ msgstr "مزود الدفع "
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "معاملة السداد"
+msgstr "معاملة الدفع "
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/payment_form.js:0
+msgid "Payment processing failed"
+msgstr "فشلت معالجة عملية الدفع "
 
 #. module: website_payment
 #. odoo-python
@@ -388,7 +406,7 @@ msgstr "تم استلام التبرع بالتفاصيل التالية: "
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_account_payment
 msgid "Payments"
-msgstr "المدفوعات"
+msgstr "الدفعات"
 
 #. module: website_payment
 #: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__paypal_only
@@ -417,12 +435,6 @@ msgid "Recipient Email"
 msgstr "بريد المستلم الإلكتروني "
 
 #. module: website_payment
-#. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
-msgid "Server Error"
-msgstr "خطأ في الخادم "
-
-#. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Shop - Payment"
 msgstr "المتجر - الدفع "
@@ -439,7 +451,7 @@ msgstr "مساهمتك تُحدث فرقاً مهما كانت صغيرة. "
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 msgid "Some information is missing to process your payment."
 msgstr "بعض المعلومات مفقودة لمعالجة عملية الدفع الخاصة بك. "
 
@@ -450,13 +462,19 @@ msgstr "خطوة"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
-msgid "Stripe Connect is not available in your country, please use another payment provider."
+msgid ""
+"Stripe Connect is not available in your country, please use another payment "
+"provider."
 msgstr "Stripe Connect غير متاح في دولتك. يرجى استخدام مزود دفع آخر. "
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
-msgid "Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple Pay, etc. as well as recurring charges."
-msgstr "يدعم معظم طرق الدفع؛ Visa، Mastercard، Maestro، Google Pay، Apple Pay، إلخ، بالإضافة إلى الرسوم المتكررة. "
+msgid ""
+"Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple "
+"Pay, etc. as well as recurring charges."
+msgstr ""
+"يدعم معظم طرق الدفع؛ Visa، Mastercard، Maestro، Google Pay، Apple Pay، إلخ، "
+"بالإضافة إلى الرسوم المتكررة. "
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -466,19 +484,13 @@ msgstr "شكراً لتبرعك بـ"
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_donation/000.js:0
-msgid "The minimum donation amount is %s%s%s"
-msgstr "الحد الأدنى للتبرع هو %s%s%s "
+msgid "The minimum donation amount is %(amount)s"
+msgstr "المبلغ الأدنى للتبرع هو %(amount)s "
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
 msgid "There is nothing to pay."
 msgstr "لا يوجد شيء لدفعه. "
-
-#. module: website_payment
-#. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
-msgid "Validation Error"
-msgstr "خطأ في التصديق "
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
@@ -491,12 +503,6 @@ msgid "View other providers"
 msgstr "عرض مزودي الدفع الآخرين "
 
 #. module: website_payment
-#. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
-msgid "We could not obtain payment fees."
-msgstr "لم نتمكن من الحصول على رسوم الدفع. "
-
-#. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_payment_provider__website_id
 msgid "Website"
 msgstr "الموقع الإلكتروني"
@@ -507,12 +513,12 @@ msgid "Website: Donation"
 msgstr "الموقع الإلكتروني: التبرع "
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Write us a comment"
 msgstr "اكتب تعليقاً "
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Your comment"
 msgstr "تعليقك "
 

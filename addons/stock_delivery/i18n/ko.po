@@ -1,0 +1,601 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_delivery
+# 
+# Translators:
+# Wil Odoo, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/sale_order.py:0
+msgid "%(name)s (Estimated Cost: %(cost)s)"
+msgstr "%(name)s (예상 비용: %(cost)s)"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_quant_package_weight_form
+msgid "(computed:"
+msgstr "(계산됨 :"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.stock_report_delivery_package_section_line_inherit_delivery
+msgid "<span> - Weight (estimated): </span>"
+msgstr "<span> - 중량 (예측치): </span>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_stock_report_delivery_no_package_section_line
+#: model_terms:ir.ui.view,arch_db:stock_delivery.stock_report_delivery_package_section_line_inherit_delivery
+msgid "<span> - Weight: </span>"
+msgstr "<span> - 중량: </span>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
+msgid "<span>Shipping Weight: </span>"
+msgstr "<span>선적 중량: </span>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
+msgid "<strong>Carrier</strong>"
+msgstr "<strong>운송업체</strong>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
+msgid "<strong>Shipping Method:</strong>"
+msgstr "<strong>배송 방법:</strong>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
+msgid "<strong>Shipping Weight: </strong>"
+msgstr "<strong>선적 중량: </strong>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
+msgid ""
+"<strong>Shipping Weight:</strong>\n"
+"                    <br/>"
+msgstr ""
+"<strong>선적 중량:</strong>\n"
+"                    <br/>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
+msgid "<strong>Total Weight</strong>"
+msgstr "<strong>총 중량</strong>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
+msgid "<strong>Tracking Number</strong>"
+msgstr "<strong>추적 번호</strong>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
+msgid "<strong>Weight: </strong>"
+msgstr "<strong>중량: </strong>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
+msgid "<strong>Weight</strong>"
+msgstr "<strong>무게</strong>"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
+msgid "Applicable on Shipping Methods"
+msgstr "배송 방법 적용"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid "Cancel"
+msgstr "취소"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid ""
+"Cancelling a delivery may not be undoable. Are you sure you want to "
+"continue?"
+msgstr "배송을 취소할 경우 이를 취소할 수 없습니다. 계속하시겠습니까?"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__carrier_id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__package_carrier_type
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_id
+#: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
+msgid "Carrier"
+msgstr "운송업체"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__shipper_package_code
+msgid "Carrier Code"
+msgstr "배송업체 코드"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
+msgid "Carrier name"
+msgstr "배송업체 이름"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__company_id
+msgid "Company"
+msgstr "회사"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+msgid "Cost: %(price).2f %(currency)s"
+msgstr "비용: %(price).2f%(currency)s"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_choose_delivery_carrier
+msgid "Delivery Carrier Selection Wizard"
+msgstr "배송업체 선택 마법사"
+
+#. module: stock_delivery
+#: model:ir.ui.menu,name:stock_delivery.menu_action_delivery_carrier_form
+msgid "Delivery Methods"
+msgstr "배송 방법"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_choose_delivery_package
+msgid "Delivery Package Selection Wizard"
+msgstr "꾸러미 상품 배송 선택 마법사"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__delivery_package_type_id
+msgid "Delivery Package Type"
+msgstr "배송 패키지 유형"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.vpicktree_view_tree
+msgid "Destination"
+msgstr "목적지"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__destination_country_code
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__destination_country_code
+msgid "Destination Country"
+msgstr "목적지 국가"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
+msgid "Discard"
+msgstr "취소"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: stock_delivery
+#: model:ir.actions.act_window,name:stock_delivery.act_delivery_trackers_url
+msgid "Display tracking links"
+msgstr "링크 추적 표시"
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
+msgid ""
+"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+msgstr ""
+"예상 비용: 고객에게 예상 배송 비용을 청구합니다.\n"
+"실제 비용: 고객에게 실제 배송 비용을 청구하며, 배송 비용은 배송 후 판매주문서에 업데이트됩니다."
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+msgid "Exception occurred with respect to carrier on the transfer"
+msgstr ""
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+msgid "Exception:"
+msgstr "예외:"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
+msgid "FedEx"
+msgstr "FedEx"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_product_product__hs_code
+#: model:ir.model.fields,field_description:stock_delivery.field_product_template__hs_code
+#: model_terms:ir.ui.view,arch_db:stock_delivery.product_template_hs_code
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
+msgid "HS Code"
+msgstr "HS 코드"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__id
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_route
+msgid "Inventory Routes"
+msgstr "재고 경로"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__invoice_policy
+msgid "Invoicing Policy"
+msgstr "청구서 발행 기준"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__is_return_picking
+msgid "Is Return Picking"
+msgstr "반송 선택 여부"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+msgid "Manual actions might be needed."
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
+msgid "No carrier integration"
+msgstr "통합 운송업체 없음"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
+msgid "OK"
+msgstr "확인"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_product_product__country_of_origin
+#: model:ir.model.fields,field_description:stock_delivery.field_product_template__country_of_origin
+msgid "Origin of Goods"
+msgstr "상품 원산지"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
+msgid "Package"
+msgstr "패키지"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+msgid "Package Details"
+msgstr "패키지 디테일"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/wizard/choose_delivery_package.py:0
+msgid "Package too heavy!"
+msgstr "꾸러미 상품이 너무 무겁습니다!"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_quant_package
+msgid "Packages"
+msgstr "패키지"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__picking_id
+msgid "Picking"
+msgstr "선별"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid "Print Return Label"
+msgstr "반송 라벨 인쇄"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_product_template
+msgid "Product"
+msgstr "품목"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "품목 이동 (재고 이동 상세)"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__delivery_type
+msgid "Provider"
+msgstr "공급업체"
+
+#. module: stock_delivery
+#: model:ir.model.fields.selection,name:stock_delivery.selection__delivery_carrier__invoice_policy__real
+msgid "Real cost"
+msgstr "실제 비용"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__return_label_ids
+msgid "Return Label"
+msgstr "반송 라벨"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_return_picking
+msgid "Return Picking"
+msgstr "반품 선별"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__route_ids
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_delivery_carrier_form_inherit_stock_delivery
+msgid "Routes"
+msgstr "경로"
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_product_product__country_of_origin
+#: model:ir.model.fields,help:stock_delivery.field_product_template__country_of_origin
+msgid ""
+"Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
+"As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
+msgstr ""
+"원산지 규정에 따라 상품의 원산지를 결정합니다. 원산지는 제품이 선적된 곳이 아니라 생산 또는 제조된 곳을 기준으로 합니다. \n"
+"상품의 '원산지'는 상거래에서 거래되는 상품의 '경제적인 출신 국가'를 의미합니다."
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__sale_price
+msgid "Sale Price"
+msgstr "판매 가격"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_sale_order
+msgid "Sales Order"
+msgstr "판매 주문"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "판매 주문 내역"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
+msgid "Save"
+msgstr "저장"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid "Send to Shipper"
+msgstr "선적업체에 보내기"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+msgid ""
+"Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
+"%(ref)s"
+msgstr "%(carrier_name)s 업체로 %(ref)s 추적번호 하에 배송되었습니다"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_price
+msgid "Shipping Cost"
+msgstr "선적 비용"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid "Shipping Information"
+msgstr "배송 정보"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_delivery_carrier
+#: model_terms:ir.ui.view,arch_db:stock_delivery.stock_location_route_view_form_inherit_stock_delivery
+msgid "Shipping Methods"
+msgstr "배송 방법"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__shipping_weight
+msgid "Shipping Weight"
+msgstr "선적 중량"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
+msgid "Shipping Weight:"
+msgstr "선적 중량 :"
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_product_product__hs_code
+#: model:ir.model.fields,help:stock_delivery.field_product_template__hs_code
+msgid "Standardized code for international shipping and goods declaration."
+msgstr "국제 배송 및 상품 신고를 위한 표준화된 코드입니다."
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_move
+msgid "Stock Move"
+msgstr "재고 이동"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_package_type
+msgid "Stock package type"
+msgstr "재고 포장 유형"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_rounding
+msgid "Technical field indicating weight's number of decimal places"
+msgstr "중량의 소수점 자리수를 나타내는 기술 필드"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_is_kg
+msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
+msgstr "중량 측정 단위로 킬로그램 (kg) 또는 다른 단위 (예: 파운드 lb) 사용 여부를 나타내는 기술 필드"
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_stock_move_line__destination_country_code
+#: model:ir.model.fields,help:stock_delivery.field_stock_picking__destination_country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"두 개의 문자로 된 ISO 국가 코드.\n"
+"이 필드는 빠른 검색을 위해 사용할 수 있습니다."
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/delivery_carrier.py:0
+msgid ""
+"The package cannot be created because the total weight of the products in "
+"the picking is 0.0 %s"
+msgstr "픽업 품목의 총 중량이 0.0 %s 이므로 패키지를 생성할 수 없습니다."
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/wizard/choose_delivery_carrier.py:0
+msgid "The shipping price will be set once the delivery is done."
+msgstr "선적료는 배송이 완료되면 설정됩니다."
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/wizard/choose_delivery_package.py:0
+msgid ""
+"The weight of your package is higher than the maximum weight authorized for "
+"this package type. Please choose another package type."
+msgstr "패키지의 무게가 이 패키지 유형에 허용되는 최대 중량을 초과합니다. 다른 패키지 유형을 선택하세요."
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/delivery_carrier.py:0
+msgid "There is no matching delivery rule."
+msgstr "일치하는 배송 규칙이 없습니다."
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_stock_quant_package__weight
+msgid "Total weight of all the products contained in the package."
+msgstr "패키지에 포함된 모든 제품의 총 무게입니다."
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight
+msgid "Total weight of the products in the picking."
+msgstr "피킹에 포함된 제품의 총 중량입니다."
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
+msgid "Trackers URL"
+msgstr "추적 URL"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid "Tracking"
+msgstr "추적"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_tracking_ref
+msgid "Tracking Reference"
+msgstr "추적 참조"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_tracking_url
+msgid "Tracking URL"
+msgstr "추적 URL"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+msgid "Tracking links for shipment:"
+msgstr "배송 추적 링크:"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
+msgid "Tracking:"
+msgstr "추적 :"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_picking
+msgid "Transfer"
+msgstr "전송"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move__weight
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid "Weight"
+msgstr "무게"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid "Weight for shipping"
+msgstr "선적 중량"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__weight_uom_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight_uom_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_name
+msgid "Weight unit of measure label"
+msgstr "무게 단위 꼬리표"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
+msgid "Weight:"
+msgstr "중량:"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+msgid ""
+"You cannot pack products into the same package when they have different "
+"carriers (i.e. check that all of their transfers have a carrier assigned and"
+" are using the same carrier)."
+msgstr ""
+"배송업체가 다른 경우 제품을 동일한 패키지에 포장할 수 없습니다. (모든 배송에 업체가 지정되어 있고 동일한 배송업체를 사용해야 합니다)"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
+msgid "You have multiple tracker links, they are available in the chatter."
+msgstr "추적기 링크가 여러 개 있으며 메시지 창에서 사용할 수 있습니다."
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
+msgstr "이 배송 방법은 이 주문을 추적하기 위해 택배 회사 웹 사이트로 연결되지 않습니다."
+
+#. module: stock_delivery
+#: model:ir.ui.menu,name:stock_delivery.menu_delivery_zip_prefix
+msgid "Zip Prefix"
+msgstr "우편번호 접두사"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
+msgid "^A0N,44,33^FDShipping Weight:"
+msgstr "^A0N,44,33^FD선적 중량:"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
+msgid "^A0N,44,33^FDWeight:"
+msgstr "^A0N,44,33^FD중량:"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
+msgid "^FO310,200"
+msgstr "^FO310,200"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
+msgid "^FS"
+msgstr "^FS"

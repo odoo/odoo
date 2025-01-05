@@ -1,28 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_expense
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:03+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
-"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_count
 msgid "# of Expenses"
-msgstr "# de Despesas"
+msgstr "Nº de despesas"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__can_be_reinvoiced
@@ -34,7 +34,7 @@ msgstr "Pode ser refaturado"
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__sale_order_id
 msgid "Customer to Reinvoice"
-msgstr "Clientes para Refaturar"
+msgstr "Cliente a refaturar"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense
@@ -45,17 +45,17 @@ msgstr "Despesa"
 #: model:ir.model.fields,field_description:sale_expense.field_product_product__expense_policy_tooltip
 #: model:ir.model.fields,field_description:sale_expense.field_product_template__expense_policy_tooltip
 msgid "Expense Policy Tooltip"
-msgstr ""
+msgstr "Dica de política de despesas"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense_sheet
 msgid "Expense Report"
-msgstr "Relatório de Despesas"
+msgstr "Relatório de despesas"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense_split
 msgid "Expense Split"
-msgstr ""
+msgstr "Despesa dividida"
 
 #. module: sale_expense
 #: model:ir.actions.act_window,name:sale_expense.hr_expense_action_from_sale_order
@@ -65,24 +65,39 @@ msgid "Expenses"
 msgstr "Despesas"
 
 #. module: sale_expense
+#. odoo-python
 #: code:addons/sale_expense/models/product_template.py:0
 msgid "Expenses of this category may not be added to a Sales Order."
 msgstr ""
+"Despesas desta categoria não podem ser adicionadas a um pedido de venda."
 
 #. module: sale_expense
+#. odoo-python
 #: code:addons/sale_expense/models/product_template.py:0
-msgid "Expenses will be added to the Sales Order at their actual cost when posted."
+msgid ""
+"Expenses will be added to the Sales Order at their actual cost when posted."
 msgstr ""
+"Despesas serão adicionadas ao pedido de venda com o custo efetivo de quando "
+"forem lançadas."
 
 #. module: sale_expense
+#. odoo-python
 #: code:addons/sale_expense/models/product_template.py:0
-msgid "Expenses will be added to the Sales Order at their sales price (product price, pricelist, etc.) when posted."
+msgid ""
+"Expenses will be added to the Sales Order at their sales price (product "
+"price, pricelist, etc.) when posted."
 msgstr ""
+"Despesas serão adicionadas ao pedido de venda com o preço de venda (preço do"
+" produto, lista de preços etc) de quando forem lançadas."
 
 #. module: sale_expense
 #: model:ir.model.fields,help:sale_expense.field_hr_expense__sale_order_id
-msgid "If the category has an expense policy, it will be reinvoiced on this sales order"
+msgid ""
+"If the category has an expense policy, it will be reinvoiced on this sales "
+"order"
 msgstr ""
+"Se essa categoria tem uma política de despesas, será refaturada nesse pedido"
+" de venda"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
@@ -90,9 +105,14 @@ msgid "Invoicing"
 msgstr "Faturamento"
 
 #. module: sale_expense
+#: model:ir.model,name:sale_expense.model_account_move
+msgid "Journal Entry"
+msgstr "Lançamento de diário"
+
+#. module: sale_expense
 #: model:ir.model,name:sale_expense.model_account_move_line
 msgid "Journal Item"
-msgstr "Item de Diário"
+msgstr "Item do diário"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_product_template
@@ -100,14 +120,15 @@ msgid "Product"
 msgstr "Produto"
 
 #. module: sale_expense
+#. odoo-python
 #: code:addons/sale_expense/models/hr_expense_sheet.py:0
 msgid "Reinvoiced Sales Orders"
-msgstr ""
+msgstr "Pedidos de venda refaturados"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense_sheet__sale_order_count
 msgid "Sale Order Count"
-msgstr "Contagem Pedido de Venda"
+msgstr "Contagem do pedido de venda"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_sale_order
@@ -117,4 +138,4 @@ msgstr "Pedido de venda"
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.hr_expense_sheet_view_form
 msgid "Sales Orders"
-msgstr "Ordens de Vendas"
+msgstr "Pedidos de vendas"

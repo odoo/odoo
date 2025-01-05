@@ -1,29 +1,39 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_payment
-#
+# 
 # Translators:
-# Alexandra Jubert, 2022
-# Malika Berardi, 2022
-# Cécile Collart <cco@odoo.com>, 2022
-# Loïc De Greef, 2022
-# Pierre Delacroix <pde@odoo.com>, 2022
-# Martin Trigaux, 2022
-# Jolien De Paepe, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fr\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/wizards/payment_link_wizard.py:0
+msgid ""
+"#%(number)s - Installment of <strong>%(amount)s</strong> due on <strong "
+"class=\"text-primary\">%(date)s</strong>"
+msgstr ""
+"#%(number)s - Versement de <strong>%(amount)s</strong> dû le <strong "
+"class=\"text-primary\">%(date)s</strong>"
+
+#. module: account_payment
+#. odoo-javascript
+#: code:addons/account_payment/static/src/js/portal_my_invoices_payment.js:0
+msgid "%s day(s) overdue"
+msgstr "%s jour(s) de retard"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
@@ -32,8 +42,12 @@ msgstr "<b>Communication : </b>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
-msgid "<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> Pay Now</span>"
-msgstr "<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> Payer maintenant</span>"
+msgid ""
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
+"Pay Now</span>"
+msgstr ""
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
+"Payer maintenant</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -46,6 +60,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\"/>\n"
 "                <span class=\"d-none d-md-inline\"> Authorized</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\"> Autorisé</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -53,6 +69,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\"/>\n"
 "                <span class=\"d-none d-md-inline\"> Paid</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\"> Payé</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -65,23 +83,28 @@ msgid "<i class=\"fa fa-fw fa-check-circle\"/> Pending"
 msgstr "<i class=\"fa fa-fw fa-check-circle\"/> En attente"
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
-msgid "<span class=\"d-none d-md-inline\"> Pending</span>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-fw fa-check-circle\"/> Processing Payment"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> Traitement du paiement"
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
-msgid "<span class=\"o_stat_text\">Payment Transaction</span>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid "<span class=\"d-none d-md-inline\"> Pending</span>"
+msgstr "<span class=\"d-none d-md-inline\"> En attente</span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "<strong>Full Amount</strong><br/>"
+msgstr "<strong>Montant total</strong><br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"<strong>No suitable payment option could be found.</strong><br/>\n"
-"                                If you believe that it is an error, please contact the website administrator."
+"<strong>Installment</strong>\n"
+"                                        <br/>"
 msgstr ""
-"<strong>Aucune option de paiement appropriée n'a pu être trouvée.</strong><br/>\n"
-"Si vous pensez qu'il s'agit d'une erreur, veuillez contacter l'administrateur du site web."
+"<strong>Versement</strong>\n"
+"                                        <br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
@@ -96,6 +119,22 @@ msgstr ""
 
 #. module: account_payment
 #. odoo-python
+#: code:addons/account_payment/wizards/payment_link_wizard.py:0
+msgid "A discount will be applied if the customer pays before %s included."
+msgstr ""
+"Une réduction sera appliquée si le client paie endéans, et y compris, %s."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid ""
+"A payment has already been made on this invoice, please make sure to not pay"
+" twice."
+msgstr ""
+"Un paiement a déjà été effectué pour cette facture, assurez-vous de ne pas "
+"payer deux fois."
+
+#. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 msgid "A payment transaction with reference %s already exists."
 msgstr "Une transaction financière avec la référence %s existe déjà."
@@ -107,9 +146,15 @@ msgid "A token is required to create a new payment transaction."
 msgstr "Un jeton est requis pour créer une nouvelle transaction de paiement."
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.payment_onboarding_step
+#: model:onboarding.onboarding.step,button_text:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Activate Stripe"
-msgstr ""
+msgstr "Activer Stripe"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_overdue_invoices_page
+msgid "Amount"
+msgstr "Montant"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_available_for_refund
@@ -117,21 +162,28 @@ msgid "Amount Available For Refund"
 msgstr "Montant disponible pour remboursement"
 
 #. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__invoice_amount_due
+msgid "Amount Due"
+msgstr "Montant dû"
+
+#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__amount_paid
 #: model:ir.model.fields,field_description:account_payment.field_account_move__amount_paid
-#: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_paid
 msgid "Amount paid"
 msgstr "Montant payé"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
-msgid "Are you sure you want to void the authorized transaction? This action can't be undone."
-msgstr "Êtes-vous sûr de vouloir annuler la transaction autorisée ? Cette action ne peut pas être annulée."
+msgid ""
+"Are you sure you want to void the authorized transaction? This action can't "
+"be undone."
+msgstr ""
+"Êtes-vous sûr de vouloir annuler la transaction autorisée ? Cette action ne "
+"peut pas être annulée."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__authorized_transaction_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_move__authorized_transaction_ids
-#: model:ir.model.fields,field_description:account_payment.field_account_payment__authorized_transaction_ids
 msgid "Authorized Transactions"
 msgstr "Transactions autorisées"
 
@@ -143,6 +195,7 @@ msgstr "Capturer la transaction"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
 msgid "Close"
 msgstr "Fermer"
 
@@ -152,14 +205,9 @@ msgid "Code"
 msgstr "Code"
 
 #. module: account_payment
-#: model:ir.model,name:account_payment.model_res_company
-msgid "Companies"
-msgstr ""
-
-#. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Paramètres de configuration"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__create_uid
@@ -177,19 +225,59 @@ msgid "Currency"
 msgstr "Devise"
 
 #. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__discount_date
+msgid "Discount Date"
+msgstr "Date de la remise"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_move__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__display_name
+#: model:ir.model.fields,field_description:account_payment.field_onboarding_onboarding_step__display_name
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__display_name
+#: model:ir.model.fields,field_description:account_payment.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__display_name
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:account_payment.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Nom d'affichage"
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
-msgid "Done, your online payment has been successfully processed. Thank you for your order."
-msgstr "Fait, votre paiement en ligne a été enregistré. Merci pour votre commande."
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__display_open_installments
+msgid "Display Open Installments"
+msgstr "Afficher les versements en cours"
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.payment_onboarding_step
-msgid "Enable credit &amp; debit card payments supported by Stripe"
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
+msgid ""
+"Done, your online payment has been successfully processed. Thank you for "
+"your order."
+msgstr "Votre paiement en ligne a été enregistré. Merci pour votre commande."
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__epd_info
+msgid "Early Payment Discount Information"
+msgstr "Information remise escompte"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "Early Payment Discount of"
+msgstr "Remise escompte de"
+
+#. module: account_payment
+#: model:onboarding.onboarding.step,description:account_payment.onboarding_onboarding_step_payment_provider
+msgid "Enable credit & debit card payments supported by Stripe."
 msgstr ""
+"Activer les paiements par carte de crédit et de débit pris en charge par "
+"Stripe."
+
+#. module: account_payment
+#: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__full_only
+msgid "Full Only"
+msgstr "Intégral uniquement"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_link_wizard
@@ -202,14 +290,40 @@ msgid "Generate a Payment Link"
 msgstr "Générer un lien de paiement"
 
 #. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__has_eligible_epd
+msgid "Has Eligible Epd"
+msgstr "Est éligible à l'EPD"
+
+#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__has_pending_refund
 msgid "Has a pending refund"
 msgstr "A un remboursement en attente"
 
 #. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_journal__id
+#: model:ir.model.fields,field_description:account_payment.field_account_move__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__id
+#: model:ir.model.fields,field_description:account_payment.field_onboarding_onboarding_step__id
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__id
+#: model:ir.model.fields,field_description:account_payment.field_payment_provider__id
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__id
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__id
+#: model:ir.model.fields,field_description:account_payment.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+msgid ""
+"Impossible to pay all the overdue invoices if they don't share the same "
+"currency."
+msgstr ""
+"Impossible de payer toutes les factures en souffrance si elles ne sont pas "
+"dans la même devise."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
@@ -223,7 +337,7 @@ msgstr ""
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.res_config_settings_view_form
 msgid "Invoice Online Payment"
-msgstr ""
+msgstr "Paiement des factures en ligne"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_transaction_form
@@ -238,9 +352,19 @@ msgid "Invoices"
 msgstr "Factures clients"
 
 #. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_overdue_invoice
+msgid "Invoices &amp; Bills"
+msgstr "Les factures clients & fournisseurs en retard"
+
+#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction__invoices_count
 msgid "Invoices Count"
 msgstr "Nombre de factures"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_account_payment
+msgid "Invoices to pay"
+msgstr "Factures à payer"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_journal
@@ -255,12 +379,12 @@ msgstr "Pièce comptable"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__write_uid
 msgid "Last Updated by"
-msgstr "Dernière mise à jour par"
+msgstr "Mis à jour par"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__write_date
 msgid "Last Updated on"
-msgstr "Dernière mise à jour le"
+msgstr "Mis à jour le"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_available_for_refund
@@ -268,31 +392,84 @@ msgid "Maximum Refund Allowed"
 msgstr "Remboursement maximum autorisé "
 
 #. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_link_wizard__form_inherit_account_payment
+msgid "Next Installments"
+msgstr "Versements suivants"
+
+#. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__payment_token_id
-msgid "Note that only tokens from providers allowing to capture the amount are available."
-msgstr "Notez que seuls les jetons des fournisseurs permettant de capturer le montant sont disponibles."
+msgid ""
+"Note that only tokens from providers allowing to capture the amount are "
+"available."
+msgstr ""
+"Notez que seuls les jetons des fournisseurs permettant de capturer le "
+"montant sont disponibles."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
-msgid "Note that tokens from providers set to only authorize transactions (instead of capturing the amount) are not available."
-msgstr "Notez que les jetons des fournisseurs configurés pour autoriser uniquement les transactions (au lieu de capturer le montant) ne sont pas disponibles."
+msgid ""
+"Note that tokens from providers set to only authorize transactions (instead "
+"of capturing the amount) are not available."
+msgstr ""
+"Notez que les jetons des fournisseurs configurés pour autoriser uniquement "
+"les transactions (au lieu de capturer le montant) ne sont pas disponibles."
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.payment_onboarding_step
+#: model:onboarding.onboarding.step,step_image_alt:account_payment.onboarding_onboarding_step_payment_provider
+msgid "Onboarding Online Payments"
+msgstr "Parcours d'intégration des paiements en ligne"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_onboarding_onboarding_step
+msgid "Onboarding Step"
+msgstr "Étape du parcours d'intégration"
+
+#. module: account_payment
+#: model:onboarding.onboarding.step,title:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Online Payments"
-msgstr ""
+msgstr "Paiements en ligne"
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.payment_onboarding_step
-msgid "Online payments enabled"
-msgstr ""
+#. odoo-python
+#: code:addons/account_payment/controllers/portal.py:0
+msgid "Overdue invoices should share the same company."
+msgstr "Les factures en souffrance doivent être rattachées à la même société."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/portal.py:0
+msgid "Overdue invoices should share the same currency."
+msgstr "Les factures en souffrance doivent être dans la même devise."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/portal.py:0
+msgid "Overdue invoices should share the same partner."
+msgstr "Les factures en souffrance doivent avoir le même partenaire."
+
+#. module: account_payment
+#: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__partial
+msgid "Partial"
+msgstr "Partiel"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_payment_register
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "Pay"
+msgstr "Payer"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
+msgid "Pay Invoice"
+msgstr "Payer la facture"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_res_config_settings__pay_invoices_online
 msgid "Pay Invoices Online"
-msgstr ""
+msgstr "Payer les factures en ligne"
 
 #. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_docs_entry
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "Pay Now"
 msgstr "Payer maintenant"
@@ -303,9 +480,9 @@ msgid "Pay now"
 msgstr "Payer maintenant"
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
-msgid "Pay with"
-msgstr "Payer avec"
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_overdue_invoice
+msgid "Pay overdue"
+msgstr "Payer"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_id
@@ -355,8 +532,9 @@ msgstr "Jetons de paiement"
 #: model:ir.model,name:account_payment.model_payment_transaction
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_transaction_id
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__transaction_id
+#: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Payment Transaction"
-msgstr "Transaction"
+msgstr "Transaction de paiement"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_transaction_menu
@@ -370,13 +548,26 @@ msgstr "Paiements"
 
 #. module: account_payment
 #. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+msgid "Please log in to pay your overdue invoices"
+msgstr "Veuillez vous connecter pour payer vos factures en retard"
+
+#. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid "Provider"
 msgstr "Fournisseur"
 
 #. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_overdue_invoices_page
+msgid "Reference"
+msgstr "Référence"
+
+#. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__support_refund
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
 msgid "Refund"
@@ -403,11 +594,6 @@ msgid "Refunds Count"
 msgstr "Nombre de remboursements"
 
 #. module: account_payment
-#: model:ir.model,name:account_payment.model_account_payment_register
-msgid "Register Payment"
-msgstr "Enregistrer un paiement"
-
-#. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_journal_form
 msgid "SETUP"
 msgstr "CONFIGURATION"
@@ -415,7 +601,7 @@ msgstr "CONFIGURATION"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_token_id
 msgid "Saved Payment Token"
-msgstr "Jeton de paiement sauvegardé"
+msgstr "Jeton de paiement enregistré"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_token_id
@@ -433,6 +619,11 @@ msgid "State"
 msgstr "Statut"
 
 #. module: account_payment
+#: model:onboarding.onboarding.step,done_text:account_payment.onboarding_onboarding_step_payment_provider
+msgid "Step Completed!"
+msgstr "Étape complétée !"
+
+#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
@@ -447,8 +638,10 @@ msgstr "Le jeton d'accès n'est pas valide."
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/wizards/payment_refund_wizard.py:0
-msgid "The amount to be refunded must be positive and cannot be superior to %s."
-msgstr "Le montant à rembourser doit être positif et ne peut être supérieur à %s."
+msgid ""
+"The amount to be refunded must be positive and cannot be superior to %s."
+msgstr ""
+"Le montant à rembourser doit être positif et ne peut être supérieur à %s."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
@@ -458,8 +651,12 @@ msgstr "Le journal dans lequel les transactions réussies sont enregistrées."
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/payment_transaction.py:0
-msgid "The payment related to the transaction with reference %(ref)s has been posted: %(link)s"
-msgstr "Le paiement lié à la transaction avec la référence %(ref)s a été comptabilisé : %(link)s"
+msgid ""
+"The payment related to the transaction with reference %(ref)s has been "
+"posted: %(link)s"
+msgstr ""
+"Le paiement lié à la transaction avec la référence %(ref)s a été "
+"comptabilisé : %(link)s"
 
 #. module: account_payment
 #. odoo-python
@@ -475,34 +672,54 @@ msgstr "Le paiement d'origine des remboursements associés"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice."
-msgstr "Une erreur s’est produite lors du traitement de votre paiement : facture non valide."
+msgstr ""
+"Une erreur s’est produite lors du traitement de votre paiement : facture non"
+" valide."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
-msgid "There was an error processing your payment: issue with credit card ID validation."
-msgstr "Une erreur s’est produite lors du traitement de votre paiement : problème avec la validation de l’identifiant de la carte de crédit."
+msgid ""
+"There was an error processing your payment: issue with credit card ID "
+"validation."
+msgstr ""
+"Une erreur s’est produite lors du traitement de votre paiement : problème "
+"avec la validation de l’identifiant de la carte de crédit."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
-msgstr "Une erreur s’est produite lors du traitement de votre paiement : échec de la transaction.<br/>"
+msgstr ""
+"Une erreur s’est produite lors du traitement de votre paiement : échec de la"
+" transaction.<br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
-msgstr "Une erreur s’est produite lors du traitement de votre paiement : identifiant de carte de crédit invalide."
+msgstr ""
+"Une erreur s’est produite lors du traitement de votre paiement : identifiant"
+" de carte de crédit invalide."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
+msgid "This invoice has already been paid."
+msgstr "Cette facture a déjà été payée."
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_count
+#: model:ir.model.fields,field_description:account_payment.field_account_move__transaction_count
+msgid "Transaction Count"
+msgstr "Nombre de transactions"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_move__transaction_ids
-#: model:ir.model.fields,field_description:account_payment.field_account_payment__transaction_ids
 msgid "Transactions"
 msgstr "Transactions"
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__support_refund
-msgid "Type of Refund Supported"
-msgstr "Type de remboursements pris en charge"
+#: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__none
+msgid "Unsupported"
+msgstr "Non supporté"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method
@@ -517,13 +734,23 @@ msgstr "Annuler la transaction"
 
 #. module: account_payment
 #. odoo-python
-#: code:addons/account_payment/models/account_journal.py:0
+#: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
-"Linked provider(s): %s"
+"Linked providers(s): %s"
 msgstr ""
-"Vous ne pouvez pas supprimer un mode de paiement associé à un fournisseur à l'état activé ou en test.\n"
+"Vous ne pouvez pas supprimer un mode de paiement qui est lié à un fournisseur dont le statut est activé ou test.\n"
 "Fournisseur(s) lié(s) : %s"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_provider.py:0
+msgid ""
+"You cannot uninstall this module as payments using this payment method "
+"already exist."
+msgstr ""
+"Vous ne pouvez pas désinstaller ce module, car il existe déjà des paiements "
+"qui utilisent ce mode de paiement."
 
 #. module: account_payment
 #. odoo-python
@@ -534,3 +761,25 @@ msgid ""
 msgstr ""
 "Vous devez d'abord désactiver un fournisseur de paiement avant de supprimer son journal. \n"
 "Fournisseurs associés : %s"
+
+#. module: account_payment
+#. odoo-javascript
+#: code:addons/account_payment/static/src/js/portal_my_invoices_payment.js:0
+msgid "due in %s day(s)"
+msgstr "dû dans %s jour(s)"
+
+#. module: account_payment
+#. odoo-javascript
+#: code:addons/account_payment/static/src/js/portal_my_invoices_payment.js:0
+msgid "due today"
+msgstr "dû aujourd'hui"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "has been applied."
+msgstr "a été appliqué."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid "overdue"
+msgstr "en retard"

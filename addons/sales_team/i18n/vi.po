@@ -1,25 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sales_team
-#
+# 
 # Translators:
-# Vo Thanh Thuy, 2022
-# Dung Nguyen Thi <dungnt@trobz.com>, 2022
-# Martin Trigaux, 2022
-# Thi Huong Nguyen, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sales_team
@@ -27,11 +24,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-
-#. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
-msgid "<span class=\"text-bg-danger\">Archived</span>"
-msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
@@ -52,7 +44,7 @@ msgstr "<span>Xem</span>"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Tác vụ cần thiết"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__active
@@ -68,30 +60,62 @@ msgstr "Loại hoạt động"
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
 msgid "Add a Team Member"
-msgstr "Thêm một Thành viên"
+msgstr "Thêm một thành viên"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__crm_team_member_ids
-msgid "Add members to automatically assign their documents to this sales team."
-msgstr "Thêm thành viên để tự động chuyển tài liệu của họ cho đội ngũ kinh doanh này. "
+msgid ""
+"Add members to automatically assign their documents to this sales team."
+msgstr ""
+"Thêm thành viên để tự động chuyển tài liệu của họ cho bộ phận sales này. "
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
-msgid "Adding %(user_name)s in this team would remove him/her from its current team %(team_name)s."
-msgstr "Việc thêm %(user_name)s vào đội ngũ này sẽ xóa anh ấy/cô ấy khỏi đội ngũ hiện tại %(team_name)s. "
+msgid ""
+"Adding %(user_name)s in this team would remove him/her from its current team"
+" %(team_name)s."
+msgstr ""
+"Việc thêm %(user_name)s vào đội ngũ này sẽ xóa anh ấy/cô ấy khỏi đội ngũ "
+"hiện tại %(team_name)s. "
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team_member.py:0
-msgid "Adding %(user_name)s in this team would remove him/her from its current teams %(team_names)s."
-msgstr "Việc thêm %(user_name)s vào đội ngũ này sẽ xóa anh ấy/cô ấy khỏi đội ngũ hiện tại %(team_names)s. "
+msgid ""
+"Adding %(user_name)s in this team would remove him/her from its current "
+"teams %(team_names)s."
+msgstr ""
+"Việc thêm %(user_name)s vào đội ngũ này sẽ xóa anh ấy/cô ấy khỏi đội ngũ "
+"hiện tại %(team_names)s. "
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
-msgid "Adding %(user_names)s in this team would remove them from their current teams (%(team_names)s)."
-msgstr "Việc thêm %(user_names)s vào đội ngũ này sẽ xóa họ khỏi đội ngũ hiện tại (%(team_names)s)."
+msgid ""
+"Adding %(user_names)s in this team would remove them from their current "
+"teams (%(team_names)s)."
+msgstr ""
+"Việc thêm %(user_names)s vào đội ngũ này sẽ xóa họ khỏi đội ngũ hiện tại "
+"(%(team_names)s)."
+
+#. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team_member.py:0
+msgid ""
+"Adding %(user_name)s in this team will remove them from %(team_names)s. "
+"Working in multiple teams? Activate the option under Configuration>Settings."
+msgstr ""
+"Việc thêm %(user_name)s vào bộ phận này sẽ xóa họ khỏi %(team_names)s. Người"
+" dùng làm việc trong nhiều nhóm? Kích hoạt tùy chọn trong Cấu hình>Cài đặt."
+
+#. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team.py:0
+msgid ""
+"Adding %(user_names)s in this team will remove them from %(team_names)s."
+msgstr ""
+"Việc thêm %(user_names)s vào bộ phận này sẽ xóa họ khỏi %(team_names)s."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
@@ -100,6 +124,7 @@ msgstr "Quản trị viên"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
@@ -110,7 +135,7 @@ msgstr "Đã lưu trữ"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_attachment_count
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_attachment_count
 msgid "Attachment Count"
-msgstr "Số lượng tệp đính kèm"
+msgstr "Số tệp đính kèm"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
@@ -133,7 +158,7 @@ msgstr "Thẻ CRM"
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 msgid "Cannot delete default team \"%s\""
-msgstr "Không thể xóa đội ngũ mặc định \"%s\""
+msgstr "Không thể xóa bộ phận mặc định \"%s\""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__color
@@ -163,11 +188,6 @@ msgid "Consulting"
 msgstr "Tư vấn"
 
 #. module: sales_team
-#: model:ir.model,name:sales_team.model_res_partner
-msgid "Contact"
-msgstr "Liên hệ"
-
-#. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
 msgid "Create CRM Tags"
 msgstr "Tạo thẻ CRM"
@@ -175,7 +195,7 @@ msgstr "Tạo thẻ CRM"
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
 msgid "Create a Sales Team"
-msgstr "Tạo một Đội ngũ kinh doanh"
+msgstr "Tạo một bộ phận sales"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
@@ -204,18 +224,18 @@ msgstr "Tiền tệ"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_button_name
 msgid "Dashboard Button"
-msgstr "Nút trang tổng quan"
+msgstr "Nút trang chủ"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_data
 msgid "Dashboard Graph Data"
-msgstr "Dữ liệu biểu đồ trang tổng quan"
+msgstr "Dữ liệu biểu đồ trang chủ"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
 msgid "Define a new sales team"
-msgstr "Xác định đội ngũ kinh doanh mới"
+msgstr "Xác định bộ phận sales mới"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor5
@@ -241,13 +261,11 @@ msgstr "Thành viên yêu thích"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
-msgid "Favorite teams to display them in the dashboard and access them easily."
-msgstr "Chọn đội ngũ yêu thích để hiển thị các đội đó trên trang tổng quan và truy cập dễ dàng."
-
-#. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "Follow this salesteam to automatically track the events associated to users of this team."
-msgstr "Theo dõi đội ngũ kinh doanh này để tự động cập nhật thông tin về các sự kiện gắn với người dùng của đội."
+msgid ""
+"Favorite teams to display them in the dashboard and access them easily."
+msgstr ""
+"Chọn bộ phận yêu thích để hiển thị các đội đó trên trang chủ và truy cập dễ "
+"dàng."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
@@ -287,8 +305,12 @@ msgstr "ID"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_membership_multi
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__is_membership_multi
-msgid "If True, users may belong to several sales teams. Otherwise membership is limited to a single sales team."
-msgstr "Nếu đúng, người dùng có thể thuộc về nhiều đội ngũ kinh doanh. Nếu không, tư cách thành viên sẽ chỉ giới hạn cho một đội ngũ kinh doanh duy nhất. "
+msgid ""
+"If True, users may belong to several sales teams. Otherwise membership is "
+"limited to a single sales team."
+msgstr ""
+"Nếu đúng, người dùng có thể thuộc về nhiều bộ phận sales. Nếu không, tư cách"
+" thành viên sẽ chỉ giới hạn cho một bộ phận sales duy nhất. "
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
@@ -303,15 +325,13 @@ msgid "If checked, some messages have a delivery error."
 msgstr "Nếu chọn, một số tin nhắn sẽ có lỗi gửi."
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_res_partner__team_id
-#: model:ir.model.fields,help:sales_team.field_res_users__team_id
-msgid "If set, this Sales Team will be used for sales and assignments related to this partner"
-msgstr "Nếu được cài đặt, Đội ngũ kinh doanh sẽ được sử dụng cho bán hàng và phân công liên quan tới đối tác này. "
-
-#. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
-msgid "If the active field is set to false, it will allow you to hide the Sales Team without removing it."
-msgstr "Nếu trường đang hoạt động được đặt là sai, bạn sẽ được phép ẩn Đội ngũ kinh doanh mà không cần xóa. "
+msgid ""
+"If the active field is set to false, it will allow you to hide the Sales "
+"Team without removing it."
+msgstr ""
+"Nếu trường đang hoạt động được đặt là sai, bạn sẽ được phép ẩn bộ phận sales"
+" mà không cần xóa. "
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_1920
@@ -350,8 +370,12 @@ msgstr "Cập nhật lần cuối vào"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_users__sale_team_id
-msgid "Main user sales team. Used notably for pipeline, or to set sales team in invoicing or subscription."
-msgstr "Đội ngũ kinh doanh của người dùng chính. Được sử dụng đặc biệt cho chu trình, hoặc thiết lập đội ngũ kinh doanh trong hóa đơn hoặc gói đăng ký. "
+msgid ""
+"Main user sales team. Used notably for pipeline, or to set sales team in "
+"invoicing or subscription."
+msgstr ""
+"Bộ phận sales của người dùng chính. Được sử dụng đặc biệt cho chu trình, "
+"hoặc thiết lập bộ phận sales trong hóa đơn hoặc gói đăng ký. "
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
@@ -405,7 +429,7 @@ msgstr "Tên"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction_counter
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng tác vụ"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error_counter
@@ -416,7 +440,7 @@ msgstr "Số lượng lỗi"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction_counter
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Số tin nhắn cần xử lý"
 
 #. module: sales_team
@@ -438,7 +462,7 @@ msgstr "Điện thoại"
 #. module: sales_team
 #: model:crm.team,name:sales_team.pos_sales_team
 msgid "Point of Sale"
-msgstr "Điểm bán lẻ"
+msgstr "Điểm bán hàng"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.crm_team_1
@@ -454,7 +478,7 @@ msgstr "Sản phẩm"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__rating_ids
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Đánh giá"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
@@ -476,51 +500,49 @@ msgstr "Nhân viên kinh doanh"
 #: model:ir.model,name:sales_team.model_crm_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__name
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__crm_team_id
-#: model:ir.model.fields,field_description:sales_team.field_res_partner__team_id
-#: model:ir.model.fields,field_description:sales_team.field_res_users__team_id
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_tree
 msgid "Sales Team"
-msgstr "Đội ngũ kinh doanh"
+msgstr "Bộ phận sales"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team_member
 msgid "Sales Team Member"
-msgstr "Thành viên đội ngũ kinh doanh"
+msgstr "Thành viên bộ phận sales"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_ids
 #: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_member_ids
 msgid "Sales Team Members"
-msgstr "Thành viên đội ngũ kinh doanh"
+msgstr "Thành viên bộ phận sales"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_all_ids
 msgid "Sales Team Members (incl. inactive)"
-msgstr "Thành viên đội ngũ kinh doanh (gồm không hoạt động)"
+msgstr "Thành viên bộ phận sales (cả không hoạt động)"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_config
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_sales
 #: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_ids
 msgid "Sales Teams"
-msgstr "Đội ngũ kinh doanh bán hàng"
+msgstr "Bộ phận sales"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_id
 msgid "Salesperson"
-msgstr "Nhân viên kinh doanh"
+msgstr "Chuyên viên sales"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_ids
 msgid "Salespersons"
-msgstr "Nhân viên kinh doanh"
+msgstr "Chuyên viên sales"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
 msgid "Salesteams Search"
-msgstr "Tìm kiếm đội ngũ kinh doanh bán hàng"
+msgstr "Tìm kiếm bộ phận sales"
 
 #. module: sales_team
 #. odoo-python
@@ -541,7 +563,7 @@ msgstr "Dịch vụ"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_favorite
 msgid "Show on dashboard"
-msgstr "Hiện trên trang tổng quan"
+msgstr "Hiện trên trang chủ"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor2
@@ -556,7 +578,7 @@ msgstr "Tên thẻ"
 #. module: sales_team
 #: model:ir.model.constraint,message:sales_team.constraint_crm_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Tên thẻ đã tồn tại!"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.sales_team_crm_tag_action
@@ -568,7 +590,7 @@ msgstr "Thẻ"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Details"
-msgstr "Chi tiết đội ngũ"
+msgstr "Chi tiết bộ phận"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
@@ -584,12 +606,13 @@ msgstr "Thành viên"
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
 msgid "Team Members are salespersons assigned to specific teams."
-msgstr "Thành viên là các nhân viên kinh doanh được phân chia vào những đội ngũ cụ thể."
+msgstr ""
+"Thành viên là các chuyên viên sales được phân chia vào những bộ phận cụ thể."
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_pipeline
 msgid "Teams"
-msgstr "Đội ngũ"
+msgstr "Bộ phận"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__color
@@ -603,14 +626,22 @@ msgstr "Công ty mặc định cho người dùng này."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
-msgid "Those represent the different categories of things you have to do (e.g. \"Call\" or \"Prepare meeting\")."
-msgstr "Loại hành động đại diện cho những danh mục việc bạn cần làm khác nhau (ví dụ: \"Gọi\" hoặc \"Chuẩn bị họp\"). "
+msgid ""
+"Those represent the different categories of things you have to do (e.g. "
+"\"Call\" or \"Prepare meeting\")."
+msgstr ""
+"Loại hành động đại diện cho những danh mục việc bạn cần làm khác nhau (ví "
+"dụ: \"Gọi\" hoặc \"Chuẩn bị họp\"). "
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
-msgid "To add a Salesperson into multiple Teams, activate the Multi-Team option in settings."
-msgstr "Để thêm một nhân viên kinh doanh vào nhiều đội ngũ, kích hoạt tùy chọn Nhiều đội ngũ trong cài đặt. "
+msgid ""
+"To add a Salesperson into multiple Teams, activate the Multi-Team option in "
+"settings."
+msgstr ""
+"Để thêm một nhân viên kinh doanh vào nhiều đội ngũ, kích hoạt tùy chọn Nhiều"
+" đội ngũ trong cài đặt. "
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor6
@@ -619,8 +650,9 @@ msgstr "Đào tạo"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_in_teams_ids
-msgid "UX: Give users not to add in the currently chosen team to avoid duplicates"
-msgstr "UX: Không thêm người dùng vào đội ngũ hiện đã chọn để tránh trùng lặp"
+msgid ""
+"UX: Give users not to add in the currently chosen team to avoid duplicates"
+msgstr "UX: Không thêm người dùng vào bộ phận hiện đã chọn để tránh trùng lặp"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
@@ -632,12 +664,13 @@ msgstr "UX: Giới hạn chỉ cho công ty của đội hoặc tất cả nếu
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 msgid "Undefined graph model for Sales Team: %s"
-msgstr "Model biểu đồ không xác định cho Đội ngũ kinh doanh: %s"
+msgstr "Mô hình biểu đồ không xác định cho bộ phận sales: %s"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
-msgid "Use Sales Teams to organize your sales departments and draw up reports."
-msgstr "Sử dụng Đội ngũ kinh doanh để tổ chức bộ phận kinh doanh và tạo báo cáo. "
+msgid ""
+"Use Sales Teams to organize your sales departments and draw up reports."
+msgstr "Sử dụng bộ phận sales để tổ chức phòng sales và tạo báo cáo. "
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
@@ -646,13 +679,17 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                Each team will work with a separate pipeline."
 msgstr ""
-"Sử dụng Đội ngũ kinh doanh để tổ chức bộ phận kinh doanh. \n"
+"Sử dụng bộ phận sales để tổ chức phòng sales. \n"
 "                Mỗi đội sẽ làm việc trong một chu trình riêng biệt."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
-msgid "Use Tags to manage and track your Opportunities (product structure, sales type, ...)"
-msgstr "Sử dụng Thẻ để quản lý và theo dõi Cơ hội (cơ cấu sản phẩm, loại bán hàng,...)"
+msgid ""
+"Use Tags to manage and track your Opportunities (product structure, sales "
+"type, ...)"
+msgstr ""
+"Sử dụng thẻ để quản lý và theo dõi cơ hội (cơ cấu sản phẩm, loại bán "
+"hàng,...)"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
@@ -667,12 +704,12 @@ msgstr "Công ty người dùng"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_in_teams_ids
 msgid "User In Teams"
-msgstr "Người dùng trong đội ngũ"
+msgstr "Người dùng trong bộ phận"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
 msgid "User Sales Team"
-msgstr "Đội ngũ kinh doanh của người dùng"
+msgstr "Bộ phận sales của người dùng"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
@@ -696,9 +733,22 @@ msgstr "Trang web"
 
 #. module: sales_team
 #. odoo-python
+#: code:addons/sales_team/models/crm_team.py:0
+msgid ""
+"Working in multiple teams? Activate the option under Configuration>Settings."
+msgstr ""
+"Người dùng làm việc trong nhiều nhóm? Kích hoạt tùy chọn trong Cấu hình>Cài "
+"đặt."
+
+#. module: sales_team
+#. odoo-python
 #: code:addons/sales_team/models/crm_team_member.py:0
-msgid "You are trying to create duplicate membership(s). We found that %(duplicates)s already exist(s)."
-msgstr "Bạn đang tạo (các) tư cách thành viên trùng lặp. Chúng tôi thấy %(duplicates)s đã tồn tại. "
+msgid ""
+"You are trying to create duplicate membership(s). We found that "
+"%(duplicates)s already exist(s)."
+msgstr ""
+"Bạn đang tạo (các) tư cách thành viên trùng lặp. Chúng tôi thấy "
+"%(duplicates)s đã tồn tại. "
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -711,21 +761,26 @@ msgid "e.g. Services"
 msgstr "Ví dụ: Dịch vụ"
 
 #. module: sales_team
-#: model:crm.team,name:sales_team.ebay_sales_team
-msgid "eBay"
-msgstr "eBay"
-
-#. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
-msgid "the user will have access to all records of everyone in the sales application."
-msgstr "người dùng sẽ có quyền truy cập tất cả dữ liệu của mọi người trong ứng dụng bán hàng."
+msgid ""
+"the user will have access to all records of everyone in the sales "
+"application."
+msgstr ""
+"người dùng sẽ có quyền truy cập tất cả dữ liệu của mọi người trong ứng dụng "
+"bán hàng."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman
 msgid "the user will have access to his own data in the sales application."
-msgstr "người dùng sẽ có quyền truy cập dữ liệu của chính mình trong ứng dụng bán hàng. "
+msgstr ""
+"người dùng sẽ có quyền truy cập dữ liệu của chính mình trong ứng dụng bán "
+"hàng. "
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager
-msgid "the user will have an access to the sales configuration as well as statistic reports."
-msgstr "người dùng sẽ có quyền truy cập tới cấu hình bán hàng cũng như báo cáo thống kê. "
+msgid ""
+"the user will have an access to the sales configuration as well as statistic"
+" reports."
+msgstr ""
+"người dùng sẽ có quyền truy cập tới cấu hình bán hàng cũng như báo cáo thống"
+" kê. "

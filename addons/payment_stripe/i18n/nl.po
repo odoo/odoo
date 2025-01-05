@@ -1,70 +1,110 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_stripe
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-31 14:10+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_stripe
-#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
+#. odoo-javascript
+#: code:addons/payment_stripe/static/src/js/payment_form.js:0
+msgid "Cannot display the payment form"
+msgstr "Kan het betaalformulier niet weergeven"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__code
+msgid "Code"
+msgstr "Code"
+
+#. module: payment_stripe
+#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Connect Stripe"
-msgstr ""
+msgstr "Connect met Stripe"
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
 msgid "Could not establish the connection to the API."
-msgstr ""
+msgstr "Kan geen verbinding maken met de API."
 
 #. module: payment_stripe
-#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
+#. odoo-javascript
+#: code:addons/payment_stripe/static/src/js/express_checkout_form.js:0
+msgid "Delivery"
+msgstr "Levering"
+
+#. module: payment_stripe
+#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
+msgid "Enable Apple Pay"
+msgstr "Apple Pay inschakelen"
+
+#. module: payment_stripe
+#. odoo-javascript
+#: code:addons/payment_stripe/static/src/js/express_checkout_form.js:0
+msgid "Free Shipping"
+msgstr "Gratis verzending"
+
+#. module: payment_stripe
+#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Generate your webhook"
-msgstr ""
+msgstr "Genereer je webhook"
 
 #. module: payment_stripe
-#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
+#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Get your Secret and Publishable keys"
-msgstr ""
+msgstr "Krijg je geheime en publiceerbare sleutels"
 
 #. module: payment_stripe
-#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_webhook_secret
-msgid "If a webhook is enabled on your Stripe account, this signing secret must be set to authenticate the messages sent from Stripe to Odoo."
+#: model:ir.model.fields,help:payment_stripe.field_payment_provider__stripe_webhook_secret
+msgid ""
+"If a webhook is enabled on your Stripe account, this signing secret must be "
+"set to authenticate the messages sent from Stripe to Odoo."
 msgstr ""
+"Als een webhook is ingeschakeld op je Stripe-account, moet dit signing "
+"secret  worden ingesteld om de berichten die van Stripe naar Odoo worden "
+"verzonden, te verifiëren."
 
 #. module: payment_stripe
+#. odoo-javascript
+#: code:addons/payment_stripe/static/src/js/payment_form.js:0
+msgid "Incorrect payment details"
+msgstr "Onjuiste betaalgegevens"
+
+#. module: payment_stripe
+#. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Geen transactie gevonden die overeenkomt met referentie %s."
 
 #. module: payment_stripe
-#: model:ir.model,name:payment_stripe.model_payment_acquirer
-msgid "Payment Acquirer"
-msgstr "Betalingsprovider"
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
+msgid "Other Payment Providers"
+msgstr "Andere betaalproviders"
 
 #. module: payment_stripe
-#: model:ir.actions.act_window,name:payment_stripe.action_payment_acquirer_onboarding
-msgid "Payment Acquirers"
-msgstr ""
+#: model:ir.model,name:payment_stripe.model_payment_provider
+msgid "Payment Provider"
+msgstr "Betaalprovider"
 
 #. module: payment_stripe
-#: model:ir.model,name:payment_stripe.model_account_payment_method
-msgid "Payment Methods"
-msgstr ""
+#: model:ir.actions.act_window,name:payment_stripe.action_payment_provider_onboarding
+msgid "Payment Providers"
+msgstr "Betaalproviders"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
@@ -77,126 +117,197 @@ msgid "Payment Transaction"
 msgstr "Betalingstransactie"
 
 #. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__provider
-msgid "Provider"
-msgstr "Provider"
+#. odoo-javascript
+#: code:addons/payment_stripe/static/src/js/payment_form.js:0
+msgid "Payment processing failed"
+msgstr "Betalingsverwerking mislukt"
 
 #. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
+msgid "Please use live credentials to enable Apple Pay."
+msgstr "Gebruik live identificatiegegevens om Apple Pay in te schakelen."
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_publishable_key
 msgid "Publishable Key"
-msgstr ""
+msgstr "Publiceerbare sleutel"
 
 #. module: payment_stripe
+#. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 msgid "Received data with invalid intent status: %s"
-msgstr ""
+msgstr "Gegevens ontvangen met ongeldige intentiestatus: %s"
 
 #. module: payment_stripe
+#. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 msgid "Received data with missing intent status."
-msgstr ""
+msgstr "Gegevens ontvangen met ontbrekende intentiestatus."
 
 #. module: payment_stripe
+#. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 msgid "Received data with missing merchant reference"
-msgstr ""
+msgstr "Gegevens ontvangen met ontbrekende verkopersreferentie"
 
 #. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_secret_key
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_secret_key
 msgid "Secret Key"
-msgstr ""
+msgstr "Geheime sleutel"
 
 #. module: payment_stripe
-#: model:account.payment.method,name:payment_stripe.payment_method_stripe
-#: model:ir.model.fields.selection,name:payment_stripe.selection__payment_acquirer__provider__stripe
+#: model:ir.model.fields.selection,name:payment_stripe.selection__payment_provider__code__stripe
 msgid "Stripe"
 msgstr "Stripe"
 
 #. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent
-msgid "Stripe Payment Intent ID"
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
+msgid ""
+"Stripe Connect is not available in your country, please use another payment "
+"provider."
 msgstr ""
+"Stripe Connect is niet beschikbaar in jouw land. Gebruik een andere "
+"betaalprovider."
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_mandate
+msgid "Stripe Mandate"
+msgstr "Mandaat Stripe"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
 msgid "Stripe Payment Method ID"
-msgstr ""
+msgstr "Stripe-betaalmethode-ID"
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
 msgid "Stripe Proxy error: %(error)s"
-msgstr ""
+msgstr "Stripe Proxy-fout: %(error)s"
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
 msgid "Stripe Proxy: An error occurred when communicating with the proxy."
 msgstr ""
+"Stripe Proxy: er is een fout opgetreden bij de communicatie met de proxy."
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
 msgid "Stripe Proxy: Could not establish the connection."
-msgstr ""
+msgstr "Stripe Proxy: kon de verbinding niet tot stand brengen."
 
 #. module: payment_stripe
-#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__provider
-msgid "The Payment Service Provider to use with this acquirer"
-msgstr ""
-
-#. module: payment_stripe
-#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 msgid ""
 "The communication with the API failed.\n"
 "Stripe gave us the following info about the problem:\n"
 "'%s'"
 msgstr ""
+"De communicatie met de API is mislukt.\n"
+"Stripe gaf ons de volgende informatie over het probleem:\n"
+"'%s'"
 
 #. module: payment_stripe
-#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_publishable_key
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_transaction.py:0
+msgid "The customer left the payment page."
+msgstr "De klant heeft de betaalpagina verlaten."
+
+#. module: payment_stripe
+#: model:ir.model.fields,help:payment_stripe.field_payment_provider__stripe_publishable_key
 msgid "The key solely used to identify the account with Stripe"
 msgstr ""
+"De sleutel die uitsluitend wordt gebruikt om het account bij Stripe te "
+"identificeren"
 
 #. module: payment_stripe
+#. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
-msgid "The refund did not go through. Please log into your Stripe Dashboard to get more information on that matter, and address any accounting discrepancies."
+msgid ""
+"The refund did not go through. Please log into your Stripe Dashboard to get "
+"more information on that matter, and address any accounting discrepancies."
 msgstr ""
+"De terugbetaling is mislukt. Log in op je Stripe Dashboard om meer "
+"informatie te verkrijgen over deze kwestie en om eventuele boekhoudkundige "
+"verschillen op te lossen."
 
 #. module: payment_stripe
+#: model:ir.model.fields,help:payment_stripe.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "De technische code van deze betaalprovider."
+
+#. module: payment_stripe
+#. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 msgid "The transaction is not linked to a token."
-msgstr ""
+msgstr "De transactie is niet gekoppeld aan een token."
 
 #. module: payment_stripe
+#. odoo-python
 #: code:addons/payment_stripe/models/payment_token.py:0
 msgid "Unable to convert payment token to new API."
-msgstr ""
+msgstr "Kan betalingstoken niet converteren naar nieuwe API."
 
 #. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_webhook_secret
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_webhook_secret
 msgid "Webhook Signing Secret"
-msgstr ""
+msgstr "Webhook Signing Secret"
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
 msgid "You Stripe Webhook was successfully set up!"
-msgstr ""
+msgstr "Je Stripe Webhook is succesvol ingesteld!"
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment_acquirer.py:0
-msgid "You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
+msgid ""
+"You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
 msgstr ""
+"Je kunt geen Stripe Webhook maken als je Stripe Secret Key niet is "
+"ingesteld."
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment_acquirer.py:0
-msgid "You cannot set the provider state to Enabled until your onboarding to Stripe is completed."
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
+msgid ""
+"You cannot set the provider state to Enabled until your onboarding to Stripe"
+" is completed."
 msgstr ""
+"Je kunt de status van de provider niet op geactiveerd instellen zolang je "
+"onboarding met Stripe niet voltooid is."
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment_acquirer.py:0
-msgid "You cannot set the acquirer to Test Mode while it is linked with your Stripe account."
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
+msgid ""
+"You cannot set the provider to Test Mode while it is linked with your Stripe"
+" account."
 msgstr ""
+"Je kunt de provider niet in de testmodus zetten terwijl deze is gekoppeld "
+"aan je Stripe-account."
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
 msgid "Your Stripe Webhook is already set up."
-msgstr ""
+msgstr "Je Stripe Webhook is al ingesteld."
+
+#. module: payment_stripe
+#. odoo-javascript
+#: code:addons/payment_stripe/static/src/js/express_checkout_form.js:0
+msgid "Your order"
+msgstr "Je bestelling"
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
+msgid "Your web domain was successfully verified."
+msgstr "Je webdomein is met succes geverifieerd."

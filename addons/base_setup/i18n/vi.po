@@ -1,93 +1,130 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_setup
-#
+# 
 # Translators:
-# Martin Trigaux, 2023
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2023
-#
+# Wil Odoo, 2024
+# Thi Huong Nguyen, 2025
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "<span class=\"fa fa-lg fa-users\" aria-label=\"Number of active users\"/>"
-msgstr "<span class=\"fa fa-lg fa-users\" aria-label=\"Số người dùng đang hoạt động\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-users\" aria-label=\"Số người dùng đang hoạt "
+"động\"/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
-"<span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&gt;', '1')]}\">\n"
+"<span class=\"o_form_label\" invisible=\"active_user_count &gt; 1\">\n"
 "                                        Active User\n"
 "                                    </span>\n"
-"                                    <span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&lt;=', '1')]}\">\n"
+"                                    <span class=\"o_form_label\" invisible=\"active_user_count &lt;= 1\">\n"
 "                                        Active Users\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"active_user_count &gt; 1\">\n"
+"                                        Người dùng hoạt động\n"
+"                                    </span>\n"
+"                                    <span class=\"o_form_label\" invisible=\"active_user_count &lt;= 1\">\n"
+"                                        Người dùng hoạt động\n"
+"                                    </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
-"<span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&gt;', '1')]}\">\n"
+"<span class=\"o_form_label\" invisible=\"company_count &gt; 1\">\n"
 "                                        Company\n"
 "                                    </span>\n"
-"                                    <span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&lt;=', '1')]}\">\n"
+"                                    <span class=\"o_form_label\" invisible=\"company_count &lt;= 1\">\n"
 "                                        Companies\n"
 "                                    </span>\n"
 "                                    <br/>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"company_count &gt; 1\">\n"
+"                                        Công ty\n"
+"                                    </span>\n"
+"                                    <span class=\"o_form_label\" invisible=\"company_count &lt;= 1\">\n"
+"                                        Công ty\n"
+"                                    </span>\n"
+"                                    <br/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
-"<span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&gt;', '1')]}\">\n"
+"<span class=\"o_form_label\" invisible=\"language_count &gt; 1\">\n"
 "                                            Language\n"
 "                                        </span>\n"
-"                                        <span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&lt;=', '1')]}\">\n"
+"                                        <span class=\"o_form_label\" invisible=\"language_count &lt;= 1\">\n"
 "                                            Languages\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"language_count &gt; 1\">\n"
+"                                            Ngôn ngữ\n"
+"                                        </span>\n"
+"                                        <span class=\"o_form_label\" invisible=\"language_count &lt;= 1\">\n"
+"                                            Ngôn ngữ\n"
+"                                        </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "<strong>Save</strong> this page and come back here to choose your Geo Provider."
-msgstr "<strong>Lưu</strong> trang này và quay lại đây để chọn Nhà cung cấp địa lý của bạn."
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "<strong>Save</strong> this page and come back here to set up Cloudflare turnstile."
+msgid ""
+"<strong>Save</strong> this page and come back here to choose your Geo "
+"Provider."
 msgstr ""
+"<strong>Lưu</strong> trang này và quay lại đây để chọn Nhà cung cấp địa lý "
+"của bạn."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "<strong>Save</strong> this page and come back here to set up reCaptcha."
-msgstr "<strong>Lưu</strong> trang này và quay lại đây để thiết lập reCaptcha."
+msgid ""
+"<strong>Save</strong> this page and come back here to set up Cloudflare "
+"turnstile."
+msgstr ""
+"<strong>Lưu</strong> trang này và quay lại đây để thiết lập Cloudflare "
+"Turnstile."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "<strong>Save</strong> this page and come back here to set up the feature."
-msgstr "<strong>Lưu</strong> trang này và quay lại đây để cài đặt tính năng này."
+msgid ""
+"<strong>Save</strong> this page and come back here to set up reCaptcha."
+msgstr ""
+"<strong>Lưu</strong> trang này và quay lại đây để thiết lập reCaptcha."
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<strong>Save</strong> this page and come back here to set up the feature."
+msgstr ""
+"<strong>Lưu</strong> trang này và quay lại đây để cài đặt tính năng này."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "API Keys"
-msgstr ""
+msgstr "Khóa API"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "API Keys allow your users to access Odoo with external tools when multi-factor authentication is enabled."
+msgid ""
+"API Keys allow your users to access Odoo with external tools when multi-"
+"factor authentication is enabled."
 msgstr ""
+"Mã khóa API cho phép người dùng của bạn truy cập Odoo bằng các công cụ bên "
+"ngoài khi đang bật xác thực đa yếu tố."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -137,34 +174,34 @@ msgid "Allows to work in a multi currency environment"
 msgstr "Cho phép làm việc trong môi trường đa tiền tệ"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_voip
-msgid "Asterisk (VoIP)"
-msgstr "Asterisk (VoIP)"
-
-#. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Automatically enrich your contact base with company data"
 msgstr "Tự động làm phong phú cơ sở liên hệ của bạn với dữ liệu công ty"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Automatically generate counterpart documents for orders/invoices between companies"
-msgstr "Tự động tạo chứng từ đối ứng cho đơn hàng/hóa đơn giữa các công ty"
+msgid "Automatically generate counterpart documents in recipient companies"
+msgstr "Tự động tạo chứng từ đối ứng trong công ty nhận"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "By default, new users get highest access rights for all installed apps."
-msgstr "Mặc định, người dùng mới sẽ có quyền truy cập cao nhất cho tất cả các ứng dụng."
+msgid ""
+"By default, new users get highest access rights for all installed apps. If "
+"unchecked, new users will only have basic employee access."
+msgstr ""
+"Theo mặc định, người dùng mới có quyền truy cập cao nhất đối với tất cả các "
+"ứng dụng đã cài đặt. Nếu bỏ chọn, người dùng mới sẽ chỉ có quyền truy cập cơ"
+" bản của nhân viên."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Choose the layout of your documents"
-msgstr "Choose the layout of your documents"
+msgstr "Chọn bố cục cho tài liệu của bạn"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_website_cf_turnstile
 msgid "Cloudflare Turnstile"
-msgstr ""
+msgstr "Cloudflare Turnstile"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -179,7 +216,7 @@ msgstr "Công ty"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_country_code
 msgid "Company Country Code"
-msgstr ""
+msgstr "Mã quốc gia của công ty"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_informations
@@ -189,12 +226,12 @@ msgstr "Thông tin công ty"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_name
 msgid "Company Name"
-msgstr "Tên Công ty"
+msgstr "Tên công ty"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_res_config_settings
 msgid "Config Settings"
-msgstr "Cấu hình"
+msgstr "Cài đặt cấu hình"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -203,8 +240,12 @@ msgstr "Cài đặt bố cục tài liệu"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."
-msgstr "Cấu hình các quy tắc công ty để tự động tạo các SO/PO khi một trong số các công ty bán/mua với một công ty khác của bạn."
+msgid ""
+"Configure company rules to automatically create SO/PO when one of your "
+"company sells/buys to another of your company."
+msgstr ""
+"Cấu hình các quy tắc công ty để tự động tạo các SO/PO khi một trong số các "
+"công ty bán/mua với một công ty khác của bạn."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -214,7 +255,7 @@ msgstr "Liên hệ"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__report_footer
 msgid "Custom Report Footer"
-msgstr "Chân Báo cáo Tuỳ chỉnh"
+msgstr "Footer báo cáo tuỳ chỉnh"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__user_default_rights
@@ -231,17 +272,12 @@ msgstr "Không tìm thấy mẫu người dùng mặc định."
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Document Layout"
-msgstr ""
+msgstr "Bố cục tài liệu"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_report_layout_id
 msgid "Document Template"
-msgstr "Mẫu tài liệu"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Documentation"
-msgstr "Tài liệu"
+msgstr "Mẫu Tài liệu"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -250,29 +286,28 @@ msgstr "Sửa Bố cục"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Enable the profiling tool. Profiling may impact performance while being active."
-msgstr "Bật công cụ lập hồ sơ. Lập hồ sơ có thể ảnh hưởng đến hiệu suất khi đang hoạt động."
+msgid ""
+"Enable the profiling tool. Profiling may impact performance while being "
+"active."
+msgstr ""
+"Bật công cụ lập hồ sơ. Lập hồ sơ có thể ảnh hưởng đến hiệu suất khi đang "
+"hoạt động."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Find free high-resolution images from Unsplash"
-msgstr "Tìm hình ảnh độ phân giải cao miễn phí từ Unsplash"
+msgstr "Tìm hình ảnh có độ phân giải cao miễn phí từ Unsplash"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__report_footer
 msgid "Footer text displayed at the bottom of all reports."
-msgstr "Nội dung lề dưới sẽ hiển thị ở tất cả các báo cáo."
+msgstr "Văn bản trong phần footer được hiển thị ở cuối tất cả báo cáo."
 
 #. module: base_setup
 #: model:ir.ui.menu,name:base_setup.menu_config
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "General Settings"
-msgstr "Thiết lập chung"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Geo Localization"
-msgstr "Bản địa hóa địa lý"
+msgstr "Thiết lập Chung"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_geolocalize
@@ -281,8 +316,13 @@ msgstr "Địa phương hóa"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "GeoLocalize your partners"
-msgstr "Địa phương hóa đối tác của bạn"
+msgid "Geolocate your partners"
+msgstr "Xác định vị trí địa lý đối tác của bạn"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Geolocation"
+msgstr "Vị trí Địa lý"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_product_images
@@ -290,14 +330,9 @@ msgid "Get product pictures using barcode"
 msgstr "Lấy ảnh sản phẩm bằng mã vạch"
 
 #. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Google Calendar"
-msgstr "Lịch Google"
-
-#. module: base_setup
 #: model:ir.model,name:base_setup.model_ir_http
 msgid "HTTP Routing"
-msgstr "HTTP Routing"
+msgstr "Định tuyến HTTP"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -318,6 +353,11 @@ msgstr "Tích hợp"
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Inter-Company Transactions"
 msgstr "Giao dịch liên Công ty"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__is_root_company
+msgid "Is Root Company"
+msgstr "Là công ty gốc"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_ldap
@@ -392,18 +432,8 @@ msgstr "Xác thực OAuth"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "On Apple Store"
-msgstr "Trên Apple Store"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "On Google Play"
-msgstr "Trên Google Play"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Outlook Calendar"
-msgstr "Lịch Outlook"
+msgid "Odoo"
+msgstr "Odoo"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_partner_autocomplete
@@ -432,13 +462,23 @@ msgstr "Bật lập hồ sơ cho đến khi"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Progressive Web App"
+msgstr "Ứng dụng web lũy tiến"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Protect your forms from spam and abuse."
 msgstr "Bảo vệ biểu mẫu khỏi spam và lạm dụng."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Protect your forms with CF Turnstile."
-msgstr ""
+msgstr "Bảo vệ biểu mẫu của bạn bằng CF Turnstile."
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_sms
+msgid "SMS"
+msgstr "SMS"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -458,7 +498,7 @@ msgstr "Thiết lập quyền truy cập tuỳ chỉnh cho người dùng mới"
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_general_configuration
 msgid "Settings"
-msgstr "Thiết lập"
+msgstr "Cài đặt"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__show_effect
@@ -466,21 +506,22 @@ msgid "Show Effect"
 msgstr "Hiển thị hiệu ứng"
 
 #. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Synchronize your calendar with Google Calendar"
-msgstr "Đồng bộ lịch của bạn trên Odoo với Lịch Google"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Synchronize your calendar with Outlook"
-msgstr "Đồng bộ lịch của bạn trên Odoo với Lịch Outlook"
-
-#. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__company_country_code
 msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"Mã quốc gia ISO với hai ký tự.\n"
+"Bạn có thể sử dụng trường này để tìm kiếm nhanh."
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"This name will be used for the application when Odoo is installed through "
+"the browser."
+msgstr ""
+"Tên này sẽ được sử dụng cho ứng dụng khi Odoo được cài đặt thông qua trình "
+"duyệt."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_web_unsplash
@@ -491,11 +532,6 @@ msgstr "Thư viện hình ảnh"
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Update Info"
 msgstr "Cập nhật thông tin"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_email_server_default
-msgid "Use Custom Email Servers"
-msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -510,7 +546,7 @@ msgstr "Sử dụng các tài khoản ngoài (Google, Facebook, v.v.) để đă
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_oauth
 msgid "Use external authentication providers (OAuth)"
-msgstr "Sử dụng các nhà cung cấp dịch vụ xác thực bên ngoài (OAuth)"
+msgstr "Sử dụng các nhà cung cấp dịch vụ xác thực ngoài (OAuth)"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_res_users
@@ -529,9 +565,20 @@ msgid "VAT"
 msgstr "Mã số thuế"
 
 #. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_voip
+msgid "VoIP"
+msgstr "VoIP"
+
+#. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "When populating your address book, Odoo provides a list of matching companies. When selecting one item, the company data and logo are auto-filled."
-msgstr "Khi điền vào sổ địa chỉ của bạn, Hệ thống cung cấp một danh sách các công ty phù hợp. Khi chọn một mục, dữ liệu và logo của công ty sẽ được tự động điền."
+msgid ""
+"When populating your address book, Odoo provides a list of matching "
+"companies. When selecting one item, the company data and logo are auto-"
+"filled."
+msgstr ""
+"Khi điền vào sổ địa chỉ của bạn, Hệ thống cung cấp một danh sách các công ty"
+" phù hợp. Khi chọn một mục, dữ liệu và logo của công ty sẽ được tự động "
+"điền."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_recaptcha

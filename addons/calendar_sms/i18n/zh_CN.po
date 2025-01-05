@@ -1,30 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* calendar_sms
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
-# Emily Jia <eji@odoo.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Emily Jia <eji@odoo.com>, 2023\n"
+"POT-Creation-Date: 2024-09-26 12:52+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
-"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_event
 msgid "Calendar Event"
-msgstr "日历事件"
+msgstr "日历活动"
 
 #. module: calendar_sms
 #: model:sms.template,name:calendar_sms.sms_template_data_calendar_reminder
@@ -45,19 +43,23 @@ msgstr "活动提醒管理"
 #. odoo-python
 #: code:addons/calendar_sms/models/calendar_event.py:0
 msgid "Event reminder: %(name)s, %(time)s."
-msgstr "‎事件提醒：‎%(name)s，%(time)s。"
+msgstr "活动提醒：‎%(name)s，%(time)s。"
 
 #. module: calendar_sms
 #: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
-msgid "Event reminder: {{ object.name }}, {{ object.get_display_time_tz(object.partner_id.tz) }}"
-msgstr "活动提醒：{{ object.name }}, {{ object.get_display_time_tz(object.partner_id.tz) }}"
+msgid ""
+"Event reminder: {{ object.name }}, {{ "
+"object.get_display_time_tz(object.partner_id.tz) }}"
+msgstr ""
+"活动提醒：{{ object.name }}, {{ object.get_display_time_tz(object.partner_id.tz) "
+"}}"
 
 #. module: calendar_sms
 #. odoo-python
 #: code:addons/calendar_sms/models/calendar_alarm.py:0
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__sms_notify_responsible
 msgid "Notify Responsible"
-msgstr ""
+msgstr "通知相关负责人"
 
 #. module: calendar_sms
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
@@ -75,15 +77,11 @@ msgid "SMS Text Message"
 msgstr "短信息"
 
 #. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_event.py:0
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_tree_inherited
 msgid "Send SMS"
 msgstr "发送短信息"
-
-#. module: calendar_sms
-#. odoo-python
-#: code:addons/calendar_sms/models/calendar_event.py:0
-msgid "Send SMS Text Message"
-msgstr "发送文本短信息"
 
 #. module: calendar_sms
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
@@ -99,7 +97,7 @@ msgstr "用来呈现短信息提醒内容的模板。"
 #. odoo-python
 #: code:addons/calendar_sms/models/calendar_event.py:0
 msgid "There are no attendees on these events"
-msgstr "这些活动中没有人参加"
+msgstr "这些活动没有参会者"
 
 #. module: calendar_sms
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__alarm_type

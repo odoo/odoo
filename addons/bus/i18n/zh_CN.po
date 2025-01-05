@@ -1,29 +1,43 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* bus
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
-"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: bus
+#: model:ir.model,name:bus.model_res_groups
+msgid "Access Groups"
+msgstr "访问组"
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_attachment
+msgid "Attachment"
+msgstr "附件"
 
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
 msgid "Away"
 msgstr "离开"
+
+#. module: bus
+#: model:ir.model,name:bus.model_bus_listener_mixin
+msgid "Can send messages via bus.bus"
+msgstr "可以通过 bus.bus 发送消息"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__channel
@@ -48,13 +62,18 @@ msgstr "创建人"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
 msgid "Created on"
-msgstr "创建时间"
+msgstr "创建日期"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
 #: model:ir.model.fields,field_description:bus.field_bus_presence__display_name
 msgid "Display Name"
 msgstr "显示名称"
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP 路由"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__id
@@ -87,7 +106,7 @@ msgstr "最后更新人"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__write_date
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr "上次更新日期"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__message
@@ -112,14 +131,29 @@ msgstr "线上"
 #. module: bus
 #. odoo-javascript
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
 msgid "Refresh"
 msgstr "刷新"
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid ""
+"Save your work and refresh to get the latest updates and avoid potential "
+"issues."
+msgstr "保存您的工作并刷新，以获得最新的更新，并避免出现潜在问题。"
 
 #. module: bus
 #. odoo-javascript
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
 msgid "The page appears to be out of date."
 msgstr "‎该页面似乎已过期。‎"
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid "The page is out of date"
+msgstr "该页面已过期"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
@@ -132,6 +166,11 @@ msgid "User Presence"
 msgstr "用户上线"
 
 #. module: bus
+#: model:ir.model,name:bus.model_res_users_settings
+msgid "User Settings"
+msgstr "用户设置"
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__user_id
 msgid "Users"
 msgstr "用户"
@@ -139,10 +178,13 @@ msgstr "用户"
 #. module: bus
 #. odoo-python
 #: code:addons/bus/controllers/home.py:0
-msgid "Your password is the default (admin)! If this system is exposed to untrusted users it is important to change it immediately for security reasons. I will keep nagging you about it!"
-msgstr ""
+msgid ""
+"Your password is the default (admin)! If this system is exposed to untrusted"
+" users it is important to change it immediately for security reasons. I will"
+" keep nagging you about it!"
+msgstr "您的密码是默认密码（admin）！ 如果此系统暴露给不受信任的用户，则出于安全原因立即更改它很重要。 我会继续唠叨您！"
 
 #. module: bus
 #: model:ir.model,name:bus.model_ir_websocket
 msgid "websocket message handling"
-msgstr "网页登录消息处理"
+msgstr "websocket消息处理"

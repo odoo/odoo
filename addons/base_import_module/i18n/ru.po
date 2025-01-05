@@ -1,20 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import_module
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# Ilya Rozhkov, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.1alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:37+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-11-19 15:37+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Ilya Rozhkov, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: base_import_module
@@ -30,6 +33,7 @@ msgstr ""
 "Если вам нужны темы для веб-сайта, их можно загрузить с сайта https://github.com/odoo/design-themes.\n"
 
 #. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
 msgid "Activate"
 msgstr "Активировать"
@@ -54,14 +58,16 @@ msgstr "Закрыть"
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
-msgid "Connection to %s failed The list of industry modules cannot be fetched"
-msgstr "Соединение с %s не удалось Список промышленных модулей не может быть получен"
+msgid ""
+"Connection to %(url)s failed, the module %(module)s cannot be downloaded."
+msgstr ""
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
-msgid "Connection to %s failed, the module %s cannot be downloaded."
-msgstr "Соединение с %s не удалось, модуль %s не может быть загружен."
+msgid "Connection to %s failed The list of industry modules cannot be fetched"
+msgstr ""
+"Соединение с %s не удалось Список промышленных модулей не может быть получен"
 
 #. module: base_import_module
 #. odoo-python
@@ -81,8 +87,25 @@ msgstr "Создано"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
+#: model:ir.model.fields,field_description:base_import_module.field_base_module_uninstall__display_name
+#: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__display_name
+#: model:ir.model.fields,field_description:base_import_module.field_ir_ui_view__display_name
 msgid "Display Name"
 msgstr "Отображаемое имя"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid ""
+"Error while importing module '%(module)s'.\n"
+"\n"
+" %(error_message)s \n"
+"\n"
+msgstr ""
+"Ошибка при импорте модуля '%(module)s'.\n"
+"\n"
+" %(error_message)s \n"
+"\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -97,11 +120,17 @@ msgstr "Принудительная инициация"
 
 #. module: base_import_module
 #: model:ir.model.fields,help:base_import_module.field_base_import_module__force
-msgid "Force init mode even if installed. (will update `noupdate='1'` records)"
-msgstr "Принудительный режим инициализации, даже если он установлен. (обновит записи `noupdate='1'`)"
+msgid ""
+"Force init mode even if installed. (will update `noupdate='1'` records)"
+msgstr ""
+"Принудительный режим инициализации, даже если он установлен. (обновит записи"
+" `noupdate='1'`)"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__id
+#: model:ir.model.fields,field_description:base_import_module.field_base_module_uninstall__id
+#: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__id
+#: model:ir.model.fields,field_description:base_import_module.field_ir_ui_view__id
 msgid "ID"
 msgstr "ID"
 
@@ -116,11 +145,6 @@ msgstr "Сообщение Импорта"
 #: model:ir.ui.menu,name:base_import_module.menu_view_base_module_import
 msgid "Import Module"
 msgstr "Модуль импорта"
-
-#. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Import demo data"
-msgstr "Импорт демо-данных"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__with_demo
@@ -143,6 +167,12 @@ msgid "Install"
 msgstr "Установить"
 
 #. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid "Install an Industry"
+msgstr "Установить отрасль"
+
+#. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Install the application"
 msgstr "Установите приложение"
@@ -158,6 +188,21 @@ msgid "Last Updated on"
 msgstr "Последнее обновление"
 
 #. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Load demo data"
+msgstr "Загрузка демонстрационных данных"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid ""
+"Load demo data to test the industry's features with sample records. Do not "
+"load them if this is your production database."
+msgstr ""
+"Загрузите демо-данные для проверки функций отрасли. Не загружайте их в "
+"рабочую базу данных."
+
+#. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
 msgid "Module"
 msgstr "Модуль"
@@ -171,6 +216,11 @@ msgstr "Модуль .ZIP-файл"
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__module_type
 msgid "Module Type"
 msgstr "Тип модуля"
+
+#. module: base_import_module
+#: model:ir.model,name:base_import_module.model_base_module_uninstall
+msgid "Module Uninstall"
+msgstr "Деинсталляция модуля"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -191,7 +241,9 @@ msgstr "Файл не отправлен."
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Note: you can only import data modules (.xml files and static assets)"
-msgstr "Примечание: вы можете импортировать только модули данных (файлы .xml и статические активы)"
+msgstr ""
+"Примечание: вы можете импортировать только модули данных (файлы .xml и "
+"статические активы)"
 
 #. module: base_import_module
 #: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__official
@@ -224,32 +276,27 @@ msgstr "Статус"
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
-msgid "Studio customizations require Studio"
-msgstr "Для настройки Studio требуется Studio"
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
 msgid "Studio customizations require the Odoo Studio app."
 msgstr "Для настройки студии требуется приложение Odoo Studio."
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
-msgid "The following modules will also be installed:\n"
-msgstr "Также будут установлены следующие модули:\n"
+msgid ""
+"The installation of the data module would fail as the following dependencies"
+" can't be found in the addons-path:\n"
+msgstr ""
+"Установка модуля данных завершится неудачей, поскольку следующие зависимости"
+" не могут быть найдены в addons-path:\n"
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
-msgid "The installation of the data module would fail as the following dependencies can't be found in the addons-path:\n"
-msgstr "Установка модуля данных завершится неудачей, поскольку следующие зависимости не могут быть найдены в addons-path:\n"
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
-msgid "The list of industry applications cannot be fetched. Please try again later"
-msgstr "Список отраслевых приложений не может быть получен. Пожалуйста, повторите попытку позже"
+msgid ""
+"The list of industry applications cannot be fetched. Please try again later"
+msgstr ""
+"Список отраслевых приложений не может быть получен. Пожалуйста, повторите "
+"попытку позже"
 
 #. module: base_import_module
 #. odoo-python
@@ -258,6 +305,13 @@ msgid "The module %s cannot be downloaded"
 msgstr "Модуль %s не может быть загружен"
 
 #. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid "Unknown module dependencies:"
+msgstr "Неизвестные зависимости модуля:"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
 msgid "Upgrade"
 msgstr "Обновить"

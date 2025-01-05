@@ -1,0 +1,250 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_presence
+# 
+# Translators:
+# Wil Odoo, 2024
+# Rasareeyar Lappiam, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+msgid "%(name)s has been noted as %(state)s today"
+msgstr "%(name)sได้รับการบันทึกเป็น %(state)s ในวันนี้"
+
+#. module: hr_presence
+#: model:mail.template,body_html:hr_presence.mail_template_presence
+msgid ""
+"<div>\n"
+"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
+"We hope this message finds you well. It has come to our attention that you are currently not present at work, and there is no record of a time off request from you. If this absence is due to an oversight on our part, we sincerely apologize for any confusion.\n"
+"Please take the necessary steps to address this unplanned absence. Should you have any questions or need assistance, do not hesitate to reach out to your manager or the HR department at your earliest convenience.\n"
+"Thank you for your prompt attention to this matter.\n"
+"                    <br>Best Regards,<br><br>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div>\n"
+"                    เรียน <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
+"เราทราบว่าขณะนี้คุณไม่ได้อยู่ที่ทำงาน และไม่มีบันทึกการขอลางานจากคุณ เราขออภัยหากการขาดงานครั้งนี้เกิดจากความผิดพลาดของเรา\n"
+"โปรดดำเนินการตามขั้นตอนที่จำเป็นเพื่อจัดการกับการลางานโดยไม่ได้วางแผนนี้ หากคุณมีคำถามหรือต้องการความช่วยเหลือ โปรดติดต่อผู้จัดการของคุณหรือฝ่ายทรัพยากรบุคคลโดยเร็วที่สุด\n"
+"ขอขอบคุณที่คุณได้ให้ความใส่ใจในเรื่องนี้อย่างรวดเร็ว\n"
+"                    <br>ขอแสดงความนับถือ<br><br>\n"
+"                </div>\n"
+"            "
+
+#. module: hr_presence
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__absent
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__absent
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
+msgid "Absent"
+msgstr "ขาด"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_log
+msgid "Add a log note"
+msgstr "เพิ่มหมายเหตุบันทึก"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "พนักงานทั่วไป"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_res_company
+msgid "Companies"
+msgstr "บริษัท"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_res_config_settings
+msgid "Config Settings"
+msgstr "ตั้งค่าการกำหนดค่า"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_res_users_log__create_uid
+msgid "Create Uid"
+msgstr "สร้าง Uid"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_time_off
+msgid "Create a Time Off"
+msgstr "สร้างการลาหยุด"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__email_sent
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__email_sent
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__email_sent
+msgid "Email Sent"
+msgstr "ส่งอีเมลแล้ว"
+
+#. module: hr_presence
+#: model:sms.template,name:hr_presence.sms_template_data_hr_presence
+msgid "Employee: Presence Reminder"
+msgstr "พนักงาน: แจ้งเตือนการเข้างาน"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.ir_cron_presence_control_ir_actions_server
+msgid "HR Presence: cron"
+msgstr "การเข้างานของ HR: cron"
+
+#. module: hr_presence
+#: model:mail.template,name:hr_presence.mail_template_presence
+msgid "HR: Employee Absence email"
+msgstr "HR: อีเมลการขาดงานของพนักงาน"
+
+#. module: hr_presence
+#: model:sms.template,body:hr_presence.sms_template_data_hr_presence
+msgid ""
+"Hi, we noticed you're not at work and no time-off was submitted. If this is "
+"an oversight from us, we apologize. Please contact your manager or HR ASAP. "
+"Thanks"
+msgstr ""
+"สวัสดี เราสังเกตว่าคุณไม่ได้ทำงานและไม่ได้ส่งใบลางานมา "
+"หากนี่เป็นการกำกับดูแลจากเรา เราต้องขออภัยด้วย "
+"โปรดติดต่อผู้จัดการของคุณหรือฝ่ายทรัพยากรบุคคลโดยเร็วที่สุด ขอบคุณค่ะ"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
+msgid "Hr Presence Last Compute Date"
+msgstr "การคำนวณวันที่เข้างานของ Hr"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__hr_presence_state_display
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__hr_presence_state_display
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__hr_presence_state_display
+msgid "Hr Presence State Display"
+msgstr "แสดงสถานะการเข้างานของ Hr"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_res_users_log__ip
+msgid "IP Address"
+msgstr "ที่อยู่ IP"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__ip_connected
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__ip_connected
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__ip_connected
+msgid "Ip Connected"
+msgstr "เชื่อมต่อ Ip"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__manually_set_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_presence
+msgid "Manually Set Presence"
+msgstr "ตั้งค่าการแสดงตนด้วยตนเอง"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_present
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__manually_set_present
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_present
+msgid "Manually Set Present"
+msgstr "ตั้งค่าปัจจุบันด้วยตนเอง"
+
+#. module: hr_presence
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__out_of_working_hour
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__out_of_working_hour
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__out_of_working_hour
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
+msgid "Out of Working Hours"
+msgstr "นอกเวลาทำการ"
+
+#. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_tree
+msgid "Presence"
+msgstr "การมา"
+
+#. module: hr_presence
+#. odoo-javascript
+#: code:addons/hr_presence/static/src/search/hr_presence_cog_menu/hr_presence_cog_menu.xml:0
+msgid "Presence Control"
+msgstr "การควบคุมการแสดงตัวตน"
+
+#. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
+msgid "Presence/Absence"
+msgstr "การแสดงตน/การขาดงาน"
+
+#. module: hr_presence
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__present
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__present
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__present
+msgid "Present"
+msgstr "การมา"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+msgid "Send SMS"
+msgstr "ส่ง SMS"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_sms
+msgid "Send a SMS"
+msgstr "ส่ง SMS"
+
+#. module: hr_presence
+#: model:mail.template,description:hr_presence.mail_template_presence
+msgid ""
+"Sent manually in presence module when an employee wasn't working despite not"
+" being off"
+msgstr ""
+"ส่งด้วยตนเองในโมดูลการแสดงตน เมื่อพนักงานไม่ได้ทำงานแม้จะไม่ได้ลางานก็ตาม"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_absent
+msgid "Set Absent"
+msgstr "ตั้งค่าว่าขาดงาน"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_present
+msgid "Set Present"
+msgstr "ตั้งค่าว่าเข้างาน"
+
+#. module: hr_presence
+#: model:mail.template,subject:hr_presence.mail_template_presence
+msgid "Unexpected Absence"
+msgstr "การขาดโดยไม่คาดคิด"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_res_users_log
+msgid "Users Log"
+msgstr "ลงชื่อผู้ใช้"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+msgid ""
+"We hope this message finds you well. It has come to our attention that you are currently not present at work, and there is no record of a time off request from you. If this absence is due to an oversight on our part, we sincerely apologize for any confusion.\n"
+"Please take the necessary steps to address this unplanned absence. Should you have any questions or need assistance, do not hesitate to reach out to your manager or the HR department at your earliest convenience.\n"
+"Thank you for your prompt attention to this matter."
+msgstr ""
+"เราทราบว่าขณะนี้คุณไม่ได้อยู่ที่ทำงาน และไม่มีบันทึกการขอลาจากคุณ เราขออภัยหากการขาดงานครั้งนี้เกิดจากความผิดพลาดของเรา\n"
+"โปรดดำเนินการตามขั้นตอนที่จำเป็นเพื่อจัดการกับการลางานโดยไม่ได้วางแผนนี้ หากคุณมีคำถามหรือต้องการความช่วยเหลือ โปรดติดต่อผู้จัดการของคุณหรือฝ่ายทรัพยากรบุคคลโดยเร็วที่สุด\n"
+"ขอบคุณที่ให้ความสนใจในเรื่องนี้โดยเร็ว"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+msgid "You don't have the right to do this. Please contact an Administrator."
+msgstr "คุณไม่มีสิทธิ์ทำเช่นนี้ โปรดติดต่อผู้ดูแลระบบ"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_ir_websocket
+msgid "websocket message handling"
+msgstr "การจัดการข้อความของ websocket"

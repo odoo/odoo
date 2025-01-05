@@ -1,42 +1,55 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_customer
-#
+# 
 # Translators:
-# Mikko Salmela <salmemik@gmail.com>, 2022
-# Jussi Lehto <jussi@gulfeo.com>, 2022
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
-# Miika Nissi <miika.nissi@tawasta.fi>, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Martin Trigaux, 2022
-# Miku Laitinen <miku.laitinen@gmail.com>, 2022
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.details
+msgid "<i class=\"fa fa-chevron-left me-2\"/>Back to references"
+msgstr "<i class=\"fa fa-chevron-left me-2\"/>Takaisin viitteisiin"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid ""
+"<i class=\"fa fa-info-circle me-2\"/>\n"
+"                        There are no matching customers found for the selected country. Displaying results across all countries instead."
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_country
+msgid ""
+"<i class=\"fa fa-map-marker\" role=\"img\" aria-label=\"Open map\" "
+"title=\"Open map\"/>"
+msgstr ""
+"<i class=\"fa fa-map-marker\" role=\"img\" aria-label=\"Avaa kartta\" "
+"title=\"Avaa kartta\"/>"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_tag_list
 msgid "<span class=\"fa fa-1x fa-tags\"/> All"
 msgstr "<span class=\"fa fa-1x fa-tags\"/> Kaikki"
 
 #. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.opt_country
-msgid "<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External link\" title=\"External link\"/>"
-msgstr "<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External link\" title=\"External link\"/>"
+#: model_terms:ir.ui.view,arch_db:website_customer.implemented_by_block
+msgid "<span class=\"small text-muted\">Implemented by</span>"
+msgstr "<span class=\"small text-muted\">Toteuttaja</span>"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__active
@@ -44,11 +57,13 @@ msgid "Active"
 msgstr "Aktiivinen"
 
 #. module: website_customer
+#. odoo-python
 #: code:addons/website_customer/controllers/main.py:0
 msgid "All Countries"
 msgstr "Kaikki maat"
 
 #. module: website_customer
+#. odoo-python
 #: code:addons/website_customer/controllers/main.py:0
 msgid "All Industries"
 msgstr "Kaikki toimialat"
@@ -57,6 +72,11 @@ msgstr "Kaikki toimialat"
 #: model_terms:ir.ui.view,arch_db:website_customer.res_partner_tag_view_search
 msgid "Archived"
 msgstr "Arkistoitu"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.details
+msgid "Back to references list"
+msgstr "Takaisin viiteluetteloon"
 
 #. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag__classname
@@ -79,6 +99,7 @@ msgid "Class"
 msgstr "Luokka"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_country
 msgid "Close"
 msgstr "Sulje"
@@ -109,19 +130,55 @@ msgid "Created on"
 msgstr "Luotu"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.details
+msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL CUSTOMERS"
+msgstr ""
+
+#. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Enter a short description"
+msgstr "Kirjoita lyhyt kuvaus"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Filter by Country"
+msgstr "Suodata maittain"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Filter by Industry"
+msgstr "Suodata toimialan mukaan"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Filter by Tags"
+msgstr "Suodata tunnisteiden mukaan"
+
+#. module: website_customer
+#: model:ir.model.fields,help:website_customer.field_res_partner__website_tag_ids
+#: model:ir.model.fields,help:website_customer.field_res_users__website_tag_ids
+msgid "Filter published customers on the .../customers website page"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Filters"
+msgstr "Suotimet"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Go to customer"
+msgstr "Siirry asiakkaaseen"
+
+#. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__id
 msgid "ID"
 msgstr "ID"
-
-#. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.implemented_by_block
-msgid "Implemented By"
-msgstr "Toteuttanut"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
@@ -132,11 +189,6 @@ msgstr "Toimialojen suodatin"
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__is_published
 msgid "Is Published"
 msgstr "On julkaistu"
-
-#. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag____last_update
-msgid "Last Modified on"
-msgstr "Viimeksi muokattu"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__write_uid
@@ -150,18 +202,31 @@ msgstr "Viimeksi päivitetty"
 
 #. module: website_customer
 #: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
-msgid "Manage contact tags to better classify them for tracking and analysis purposes."
-msgstr "Hallitse yhteystietojen tunnisteita luokitellaksesi niitä paremmin seuranta- ja analyysitarkoituksiin."
+msgid ""
+"Manage contact tags to better classify them for tracking and analysis "
+"purposes."
+msgstr ""
+"Hallitse yhteystietojen tunnisteita luokitellaksesi niitä paremmin seuranta-"
+" ja analyysitarkoituksiin."
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
-msgid "No result found"
-msgstr "Tuloksia ei löydetty"
+msgid "No results found for \""
+msgstr "Ei hakutuloksia hakusanalla \""
 
 #. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.details
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_country_list
+msgid "Open countries dropdown"
+msgstr "Avaa avattavat maat"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_industry_list
+msgid "Open industries dropdown"
+msgstr "Avaa toimialojen pudotusvalikko"
+
+#. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
-msgid "Our References"
+msgid "Our references"
 msgstr "Referenssimme"
 
 #. module: website_customer
@@ -171,8 +236,12 @@ msgstr "Kumppanin tunniste"
 
 #. module: website_customer
 #: model:ir.model,name:website_customer.model_res_partner_tag
-msgid "Partner Tags - These tags can be used on website to find customers by sector, or ..."
-msgstr "Kumppanien tunnisteet - Näitä voidaan käyttää verkkosivuilla löytämään asiakasryhmiä jne."
+msgid ""
+"Partner Tags - These tags can be used on website to find customers by "
+"sector, or ..."
+msgstr ""
+"Kumppanien tunnisteet - Näitä voidaan käyttää verkkosivuilla löytämään "
+"asiakasryhmiä jne."
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__partner_ids
@@ -180,6 +249,7 @@ msgid "Partners"
 msgstr "Kumppanit"
 
 #. module: website_customer
+#. odoo-python
 #: code:addons/website_customer/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_customer.references_block
 msgid "References"
@@ -191,21 +261,6 @@ msgid "References Page"
 msgstr "Asiakasreferenssien sivu"
 
 #. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.opt_country_list
-msgid "References by Country"
-msgstr "Referenssit maittain"
-
-#. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.opt_industry_list
-msgid "References by Industries"
-msgstr "Referenssit toimialoittain"
-
-#. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.opt_tag_list
-msgid "References by Tag"
-msgstr "Referenssit tunnisteittain"
-
-#. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
 msgid "Search"
 msgstr "Hae"
@@ -214,6 +269,21 @@ msgstr "Hae"
 #: model_terms:ir.ui.view,arch_db:website_customer.res_partner_tag_view_search
 msgid "Search Partner Tag"
 msgstr "Hae kumppanin tunniste"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "See all customers"
+msgstr "Katso kaikki asiakkaat"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "See countries filters"
+msgstr "Katso maasuodattimet"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "See industries filters"
+msgstr "Katso toimialojen suodattimet"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
@@ -229,11 +299,6 @@ msgstr "Tunnisteiden suodatin"
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag__website_url
 msgid "The full URL to access the document through the website."
 msgstr "Dokumentin URL-osoite verkkosivustolla."
-
-#. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.index
-msgid "Trusted by millions worldwide"
-msgstr "Kansainvälisesti miljoonien luottama"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_published
@@ -268,8 +333,3 @@ msgstr "Verkkosivun tunnisteet"
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_country
 msgid "World Map"
 msgstr "Maailman kartta"
-
-#. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.implemented_by_block
-msgid "reference(s))"
-msgstr "referenssi(ä))"

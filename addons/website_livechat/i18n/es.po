@@ -1,39 +1,38 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_livechat
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, "
-"2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
-"1 : 2;\n"
+"Language: es\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website_visitor__session_count
 msgid "# Sessions"
-msgstr "# de Sesiones"
+msgstr "# Sesiones"
 
 #. module: website_livechat
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
 msgid ""
-"%s started a conversation with %s.\n"
-"                        The chat request has been canceled."
+"%(visitor)s started a conversation with %(operator)s.\n"
+"The chat request has been cancelled"
 msgstr ""
+"%(visitor)s ha iniciado una conversación con %(operator)s.\n"
+"Se ha cancelado la solicitud de chat."
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -80,17 +79,17 @@ msgstr "Nombre del canal"
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_tree
 msgid "Chat"
-msgstr "Charla"
+msgstr "Chat"
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_chatbot_script
 msgid "Chatbot Script"
-msgstr "Script del bot de chat"
+msgstr "Guion del chatbot"
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_chatbot_script_step
 msgid "Chatbot Script Step"
-msgstr "Paso de script del bot de chat"
+msgstr "Paso de guion del chatbot"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_form
@@ -101,7 +100,7 @@ msgstr "Chats"
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_res_config_settings
 msgid "Config Settings"
-msgstr "Opciones de configuración"
+msgstr "Ajustes de configuración"
 
 #. module: website_livechat
 #: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_description
@@ -121,7 +120,7 @@ msgstr "¡Genial!"
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_ir_http
 msgid "HTTP Routing"
-msgstr "Ruta HTTP "
+msgstr "Enrutamiento HTTP "
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -181,8 +180,8 @@ msgstr "Nuevo canal"
 #: code:addons/website_livechat/models/website_visitor.py:0
 msgid "No Livechat Channel allows you to send a chat request for website %s."
 msgstr ""
-"Ningún canal de chat en vivo le permite enviar una solicitud de chat para el "
-"sitio web %s."
+"Ningún canal de chat en vivo le permite enviar una solicitud de chat para el"
+" sitio web %s."
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -192,7 +191,7 @@ msgstr "Todavía no calificado"
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "Okay"
-msgstr "OK"
+msgstr "Aceptar"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
@@ -202,14 +201,14 @@ msgstr "Avatar del operador"
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website_visitor__livechat_operator_name
 msgid "Operator Name"
-msgstr "Nombre del Operador"
+msgstr "Nombre del operador"
 
 #. module: website_livechat
 #. odoo-python
 #: code:addons/website_livechat/models/website_visitor.py:0
 msgid ""
-"Recipients are not available. Please refresh the page to get latest visitors "
-"status."
+"Recipients are not available. Please refresh the page to get latest visitors"
+" status."
 msgstr ""
 "Los destinatarios no están disponibles. Actualice la página para obtener el "
 "estado de los últimos visitantes."
@@ -222,7 +221,7 @@ msgstr "Cara triste"
 #. module: website_livechat
 #: model:ir.actions.server,name:website_livechat.website_livechat_send_chat_request_action_server
 msgid "Send Chat Requests"
-msgstr "Enviar una solicitud de chat"
+msgstr "Enviar solicitudes de chat"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_form
@@ -232,7 +231,7 @@ msgstr "Enviar una solicitud de chat"
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
 msgid "Speaking With"
-msgstr "Hablando Con"
+msgstr "Hablando con"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website_visitor__livechat_operator_id
@@ -247,12 +246,12 @@ msgstr "Estadísticas"
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.chatbot_script_view_form
 msgid "Test"
-msgstr "Test"
+msgstr "Prueba"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "The"
-msgstr "El"
+msgstr "Las"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -292,29 +291,39 @@ msgstr "Visitante"
 
 #. module: website_livechat
 #. odoo-python
-#: code:addons/website_livechat/controllers/main.py:0
-#: code:addons/website_livechat/models/website_visitor.py:0
-msgid "Visitor #%d"
-msgstr ""
-
-#. module: website_livechat
-#. odoo-python
-#. odoo-javascript
-#: code:addons/website_livechat/controllers/main.py:0
-#: code:addons/website_livechat/static/src/web/persona_model_patch.js:0
-msgid "Visitor #%s"
-msgstr ""
+#: code:addons/website_livechat/models/discuss_channel.py:0
+msgid "Visitor #%(id)d left the conversation."
+msgstr "El visitante #%(id)d abandonó la conversación."
 
 #. module: website_livechat
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
-msgid "Visitor %s left the conversation."
-msgstr ""
+msgid "Visitor #%(id)d."
+msgstr "Visitante n.° %(id)d."
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/controllers/main.py:0
+#: code:addons/website_livechat/models/website_visitor.py:0
+msgid "Visitor #%d"
+msgstr "Visitante #%d"
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/controllers/main.py:0
+msgid "Visitor #%s"
+msgstr "Visitante #%s"
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/models/discuss_channel.py:0
+msgid "Visitor left the conversation."
+msgstr "El visitante ha abandonado la conversación."
 
 #. module: website_livechat
 #: model:ir.actions.act_window,name:website_livechat.website_visitor_livechat_session_action
 msgid "Visitor's Sessions"
-msgstr "Sesiones de Visitantes"
+msgstr "Sesiones de visitantes"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website_visitor__discuss_channel_ids
@@ -341,7 +350,7 @@ msgstr "Canal en vivo del sitio web"
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website__channel_id
 msgid "Website Live Chat Channel"
-msgstr "Sitio web del canal de Chat en Vivo"
+msgstr "Canal de chat en vivo del sitio web"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_url
@@ -369,4 +378,4 @@ msgstr "un operador"
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "last feedbacks"
-msgstr "últimos comentarios"
+msgstr "últimas retroalimentaciones"

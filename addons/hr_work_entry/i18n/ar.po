@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_work_entry
-#
+# 
 # Translators:
-# Malaz Abuidris <msea@odoo.com>, 2023
-# Martin Trigaux, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
-"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: hr_work_entry
@@ -33,6 +32,9 @@ msgid ""
 "                            Work Entries\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            قيود العمل\n"
+"                            </span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
@@ -66,13 +68,17 @@ msgstr "البداية "
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__cancelled
 msgid "Cancelled"
-msgstr "ملغي"
+msgstr "تم الإلغاء "
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__code
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__code
-msgid "Careful, the Code is used in many references, changing it could lead to unwanted changes."
-msgstr "انتبه، الكود مستخدم في العديد من المراجع. قد يؤدي تغييره إلى حدوث تغييرات غير مرغوب بها. "
+msgid ""
+"Careful, the Code is used in many references, changing it could lead to "
+"unwanted changes."
+msgstr ""
+"انتبه، الكود مستخدم في العديد من المراجع. قد يؤدي تغييره إلى حدوث تغييرات "
+"غير مرغوب بها. "
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__color
@@ -99,6 +105,22 @@ msgstr "متعارض "
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__conflict
 msgid "Conflicts"
 msgstr "التعارضات "
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__country_id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_id
+msgid "Country"
+msgstr "الدولة"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_code
+msgid "Country Code"
+msgstr "رمز الدولة"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_type_action
+msgid "Create a new work entry type"
+msgstr "قم بإنشاء نوع قيد عمل جديد "
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_uid
@@ -136,14 +158,18 @@ msgid "Description"
 msgstr "الوصف"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__display_name
 msgid "Display Name"
 msgstr "اسم العرض "
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__draft
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Draft"
 msgstr "مسودة"
 
@@ -169,7 +195,7 @@ msgstr "النهاية "
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__external_code
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__external_code
 msgid "External Code"
-msgstr ""
+msgstr "كود خارجي "
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date_start
@@ -189,19 +215,26 @@ msgstr "نوع قيد عمل الموارد البشرية "
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__has_work_entries
 msgid "Has Work Entries"
-msgstr ""
+msgstr "يحتوي على قيود العمل "
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__id
 msgid "ID"
 msgstr "المُعرف"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__active
-msgid "If the active field is set to false, it will allow you to hide the work entry type without removing it."
-msgstr "إذا تم تحويل قيمة الحقل النشط إلى خطأ، يمكنك إخفاء نوع قيد العمل دون إزالته. "
+msgid ""
+"If the active field is set to false, it will allow you to hide the work "
+"entry type without removing it."
+msgstr ""
+"إذا تم تحويل قيمة الحقل النشط إلى خطأ، يمكنك إخفاء نوع قيد العمل دون إزالته."
+" "
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_uid
@@ -229,6 +262,11 @@ msgid "Name"
 msgstr "الاسم"
 
 #. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
+msgid "No data to display"
+msgstr "لا توجد بيانات لعرضها "
+
+#. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "Note: Validated work entries cannot be modified."
 msgstr "ملاحظة: لا يمكن تعديل قيود العمل المصدقة. "
@@ -236,13 +274,13 @@ msgstr "ملاحظة: لا يمكن تعديل قيود العمل المصدق�
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.overtime_work_entry_type
 msgid "Overtime Hours"
-msgstr ""
+msgstr "الساعات الإضافية "
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__code
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__code
 msgid "Payroll Code"
-msgstr ""
+msgstr "كود كشوف المرتبات "
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_leaves
@@ -262,7 +300,7 @@ msgstr "البحث عن نوع قيد العمل "
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__sequence
 msgid "Sequence"
-msgstr "التسلسل "
+msgstr "تسلسل "
 
 #. module: hr_work_entry
 #. odoo-javascript
@@ -273,22 +311,38 @@ msgstr "حل التعارض أولاً "
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Start Date"
-msgstr "تاريخ البداية"
+msgstr "تاريخ البدء "
 
 #. module: hr_work_entry
-#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entry_start_before_end
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_work_entry_start_before_end
 msgid "Starting time should be before end time."
 msgstr "يجب أن يسبق تاريخ البداية تاريخ النهاية. "
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__state
 msgid "State"
-msgstr "الحالة "
+msgstr "الولاية "
 
 #. module: hr_work_entry
-#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_type_unique_work_entry_code
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"كود الدولة حسب المعيار الدولي أيزو المكون من حرفين.\n"
+"يمكنك استخدام هذا الحقل لإجراء بحث سريع."
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
 msgid "The same code cannot be associated to multiple work entry types."
 msgstr "لا يمكن أن يكون الرمز ذاته مرتبطاً بعدة أنواع قيود عمل. "
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "This work entry is validated. You can't delete it."
+msgstr "لقد تم تصديق قيد العمل هذا، ولذلك، لا يمكنك حذفه. "
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -299,6 +353,14 @@ msgstr "خيارات الإجازة "
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date_stop
 msgid "To"
 msgstr "إلى"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
+msgid ""
+"Try to add some records, or make sure that there is no active filter in the "
+"search bar."
+msgstr ""
+"جرب إضافة بعض السجلات، أو تأكد من أنه لا يوجد عامل تصفية نشط في شريط البحث. "
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -321,15 +383,16 @@ msgstr "نوع غير محدد "
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__external_code
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__external_code
 msgid "Use this code to export your data to a third party"
-msgstr ""
+msgstr "استخدم هذا الكود لتصدير بياناتك إلى طرف خارجي "
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__validated
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Validated"
 msgstr "تم التصديق "
 
 #. module: hr_work_entry
-#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entries_no_validated_conflict
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_work_entries_no_validated_conflict
 msgid "Validated work entries cannot overlap"
 msgstr "لا يمكن أن تتداخل قيود العمل "
 
@@ -381,9 +444,25 @@ msgid "Work Entry Types"
 msgstr "أنواع قيد العمل "
 
 #. module: hr_work_entry
-#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entry_has_end
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_work_entry_has_end
 msgid "Work entry must end. Please define an end date or a duration."
 msgstr "يجب أن ينتهي قيد العمل. يرجى تحديد تاريخ انتهاء أو مدة محددة. "
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid ""
+"You can't change the Country of this work entry type cause it's currently "
+"used by the system. You need to delete related working entries first."
+msgstr ""
+"لا يمكنك تغيير الدولة لنوع قيد العمل هذا لأنه مستخدم حالياً من قِبَل النظام."
+" عليك أولاً حذف قيود العمل ذات الصلة. "
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "You can't change the country of this specific work entry type."
+msgstr "لا يمكنك تغيير الدولة لنوع قيد العمل هذا بالتحديد. "
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique

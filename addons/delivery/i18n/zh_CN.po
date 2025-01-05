@@ -1,38 +1,50 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* delivery
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# 稀饭~~ <wangwhai@qq.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
-# Emily Jia <eji@odoo.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Emily Jia <eji@odoo.com>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
-"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 msgid "%(carrier)s Error"
+msgstr "%(carrier)s错误"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/sale_order.py:0
+msgid ""
+"%s\n"
+"Free Shipping"
 msgstr ""
+"%s\n"
+"免费送货"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+msgid "%s (copy)"
+msgstr "%s（副本）"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Get rate"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>获取费率"
 
 #. module: delivery
 #. odoo-python
@@ -43,7 +55,7 @@ msgid ""
 "                </p>"
 msgstr ""
 "<p class=\"o_view_nocontent\">\n"
-"                    现在购买 Odoo企业版获取更多的服务商。\n"
+"                    立即购买 Odoo 企业版，获取更多服务商。\n"
 "                </p>"
 
 #. module: delivery
@@ -52,11 +64,13 @@ msgid ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
 "                                <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"o_stat_text o_warning_text fw-bold\">测试</span>\n"
+"                                <span class=\"o_stat_text\">环境</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"o_stat_text text-danger\">No debug</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text text-danger\">无调试</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -69,16 +83,21 @@ msgid ""
 "<span class=\"text-success\">Production</span>\n"
 "                                <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"text-success\">生产</span>\n"
+"                                <span class=\"o_stat_text\">环境</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
-msgid "<strong>Shipping Description:</strong>"
-msgstr "<strong>运输说明：</strong>"
+msgid "<strong>Shipping Description</strong>"
+msgstr "<strong>运输说明</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
-msgid "A description of the delivery method that you want to communicate to your customers on the Sales Order and sales confirmation email.E.g. instructions for customers to follow."
-msgstr "您希望在销售订单和销售确认电子邮件中与客户沟通的交货方式的描述，例如，客户要遵循的说明。"
+msgid ""
+"A description of the delivery method that you want to communicate to your "
+"customers on the Sales Order and sales confirmation email.E.g. instructions "
+"for customers to follow."
+msgstr "您希望在销售订单和销售确认电子邮件中与客户沟通的交货方式的描述，例如：客户要遵循的指示。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -88,7 +107,7 @@ msgstr "确认发货时触发"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__active
 msgid "Active"
-msgstr "启用"
+msgstr "有效"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -105,12 +124,12 @@ msgstr "添加送货方式"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "Add shipping"
-msgstr "设置物流"
+msgstr "添加物流"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Additional margin"
-msgstr ""
+msgstr "额外保证金"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__amount
@@ -119,14 +138,21 @@ msgstr "金额"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__amount
-msgid "Amount of the order to benefit from a free shipping, expressed in the company currency"
-msgstr "免费发货的订单金额，按公司本位币计算"
+msgid ""
+"Amount of the order to benefit from a free shipping, expressed in the "
+"company currency"
+msgstr "免费送货的订单金额，按公司本位币别显示"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
 msgstr "已归档"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Availability"
+msgstr "可用性"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__available_carrier_ids
@@ -152,9 +178,36 @@ msgid "Carrier"
 msgstr "承运商"
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+msgid ""
+"Carrier %s cannot have the same tag in both Must Have Tags and Excluded "
+"Tags."
+msgstr "运输商 %s 的 “必须拥有标签” 及 “排除的标签” 中，不可拥有相同的标签。"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
 msgid "Carrier Description"
-msgstr "运营商描述"
+msgstr "承运商描述"
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "Choose a pick-up point"
+msgstr "选择提货点"
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
+msgid "Choose this location"
+msgstr "选择此位置"
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/js/location_selector/location_schedule/location_schedule.js:0
+msgid "Closed"
+msgstr "已关闭"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
@@ -173,6 +226,11 @@ msgid "Contact"
 msgstr "联系人"
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Content"
+msgstr "内容"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_price
 msgid "Cost"
 msgstr "成本"
@@ -180,7 +238,7 @@ msgstr "成本"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__country_ids
 msgid "Countries"
-msgstr "国家"
+msgstr "国家/地区"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__create_uid
@@ -196,14 +254,14 @@ msgstr "创建人"
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__create_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__create_date
 msgid "Created on"
-msgstr "创建时间"
+msgstr "创建日期"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__currency_id
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__currency_id
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__currency_id
 msgid "Currency"
-msgstr "币种"
+msgstr "币别"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__partner_id
@@ -229,7 +287,7 @@ msgstr "定义新交货方式"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
-msgstr "发货承运商"
+msgstr "交货承运商"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_carrier
@@ -252,7 +310,14 @@ msgstr "发货消息"
 #: model:ir.model.fields,field_description:delivery.field_res_partner__property_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_res_users__property_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_sale_order__carrier_id
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Delivery Method"
+msgstr "交货方式"
+
+#. module: delivery
+#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
+#: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
+msgid "Delivery Methods"
 msgstr "交货方式"
 
 #. module: delivery
@@ -271,25 +336,20 @@ msgid "Delivery Product"
 msgstr "运费对应的产品"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_rating_success
-msgid "Delivery Rating Success"
-msgstr "获取运费成功"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_set
 msgid "Delivery Set"
-msgstr "已定物流商"
+msgstr "设置运货方式"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_zip_prefix
 msgid "Delivery Zip Prefix"
-msgstr "交货邮编前缀"
+msgstr "发货邮编前缀"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__recompute_delivery_price
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__recompute_delivery_price
 msgid "Delivery cost should be recomputed"
-msgstr "发货成本应重新计算"
+msgstr "应重新计算运货成本"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
@@ -297,16 +357,18 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery carriers to restrict\n"
 "            which zips it is available to."
 msgstr ""
+"交货邮编前缀被分配给交货承运商，\n"
+"            以限制其可用的邮编范围。"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Description"
-msgstr "说明"
+msgstr "描述"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-msgid "Destination Availability"
-msgstr "目的地有效性"
+msgid "Destination"
+msgstr "目的地"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__sequence
@@ -332,18 +394,24 @@ msgid ""
 "Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
 "            UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "            to each method."
-msgstr ""
+msgstr "每家承运商（如 UPS）可以有多种运输方式（如 UPS 快递、UPS 标准），并有一套相应的定价规则。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
 msgid "Environment"
-msgstr "Environment"
+msgstr "环境"
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "Error: this delivery method is not available for this address."
-msgstr "错误:此交货方式不适用于这个地址。"
+msgstr "错误：此交货方式不适用于该地址。"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+msgid "Error: this delivery method is not available."
+msgstr "错误：此交付方式不适用。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
@@ -351,6 +419,8 @@ msgid ""
 "Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
 "Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
+"预估成本：客户将收到预估运费的发票。\n"
+"实际费用：客户将收到实际运费的发票，运费将在发货后更新到 SO 上。"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -358,31 +428,32 @@ msgid "Estimated cost"
 msgstr "预估运费"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__excluded_tag_ids
+msgid "Excluded Tags"
+msgstr "排除的标签"
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
-msgstr "如果您打算根据发货的实际数量填写账单的话，就填写这一字段"
+msgstr "如果计划根据发货的实际数量开具发票，请填写此字段。"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-msgid "Filling this form allows you to filter delivery carriers according to the delivery address of your customer."
-msgstr "填写此表，您可以根据您的客户的发货地址进行过滤。"
+msgid ""
+"Filling this form allows you to make the shipping method available according"
+" to the content of the order or its destination."
+msgstr "填写此表后，您就可以根据订单内容或目的地选择运输方式。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
 msgid "Fixed Margin"
-msgstr ""
+msgstr "固定毛利"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_price
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__fixed
 msgid "Fixed Price"
 msgstr "固定价格"
-
-#. module: delivery
-#. odoo-python
-#: code:addons/delivery/models/sale_order.py:0
-msgid "Free Shipping"
-msgstr "免费送货"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__free_over
@@ -407,7 +478,7 @@ msgstr "获取费率并创建运单/面单"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Group By"
-msgstr "分组"
+msgstr "分组方式"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__id
@@ -419,8 +490,24 @@ msgstr "ID"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__free_over
-msgid "If the order total amount (shipping excluded) is above or equal to this value, the customer benefits from a free shipping"
-msgstr "如果订单总额（不包括运费）高于或等于此值，客户可享受免费发货服务"
+msgid ""
+"If the order total amount (shipping excluded) is above or equal to this "
+"value, the customer benefits from a free shipping"
+msgstr "如果订单总额（不包括运费）高于或等于此值，客户可享受免费送货服务"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__max_volume
+msgid ""
+"If the total volume of the order is over this volume, the method won't be "
+"available."
+msgstr "如果订单总量超过此数量，则无法使用该方法。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__max_weight
+msgid ""
+"If the total weight of the order is over this weight, the method won't be "
+"available."
+msgstr "如果订单总重量超过此重量，则无法使用该方法。"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -445,7 +532,7 @@ msgstr "开票信息"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__invoice_policy
 msgid "Invoicing Policy"
-msgstr "开票策略"
+msgstr "开票政策"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
@@ -466,11 +553,28 @@ msgstr "最后更新人"
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__write_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__write_date
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr "上次更新日期"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+msgid "Manual actions might be needed."
+msgstr ""
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+msgid "List view"
+msgstr "列表视图"
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+msgid "Loading..."
+msgstr "加载中... 稍安勿躁"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_local_delivery
-#: model:product.template,name:delivery.product_product_local_delivery_product_template
 msgid "Local Delivery"
 msgstr "本地配送"
 
@@ -483,6 +587,12 @@ msgstr "记录请求以便于调试"
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
 msgid "Manage delivery zip prefixes"
 msgstr "管理递送邮政编码前缀"
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+msgid "Map view"
+msgstr "地图视图"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -500,9 +610,24 @@ msgid "Margin on Rate"
 msgstr "利润率"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__max_volume
+msgid "Max Volume"
+msgstr "最大体积"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__max_weight
+msgid "Max Weight"
+msgstr "最大重量"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__max_value
 msgid "Maximum Value"
 msgstr "最大值"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__must_have_tag_ids
+msgid "Must Have Tags"
+msgstr "必须有的标签"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
@@ -517,9 +642,28 @@ msgstr "新服务商"
 
 #. module: delivery
 #. odoo-python
+#: code:addons/delivery/models/sale_order.py:0
+msgid "No pick-up points are available for this delivery address."
+msgstr "此送货地址没有可用的提货点。"
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+msgid "No result"
+msgstr "没有结果"
+
+#. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "Not available for current order"
-msgstr ""
+msgstr "当前订单不提供"
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/js/location_selector/location/location.xml:0
+#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
+msgid "Opening hours"
+msgstr "营业时间"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
@@ -532,9 +676,14 @@ msgid "Order"
 msgstr "订单"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order__pickup_location_data
+msgid "Pickup Location Data"
+msgstr "取货位置数据"
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Please select a country before choosing a state or a zip prefix."
-msgstr ""
+msgstr "请在选择州或邮政编码前选择国家/地区。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__name
@@ -548,8 +697,14 @@ msgstr "前缀已存在！"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
-msgid "Prefixes of zip codes that this carrier applies to. Note that regular expressions can be used to support countries with varying zip code lengths, i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' will only match '100' and not '1000')"
-msgstr "此承运商适用的邮编前缀。请注意，正则表达式可用于支持不同国家/地区的不同邮编长度，例如，可将“$”添加至邮编前缀的末尾，以匹配具体邮编（例如，“100$”将仅匹配“100”，不匹配“1000”）"
+msgid ""
+"Prefixes of zip codes that this carrier applies to. Note that regular "
+"expressions can be used to support countries with varying zip code lengths, "
+"i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
+"will only match '100' and not '1000')"
+msgstr ""
+"该承运商适用的邮编前缀。请注意，正则表达式可用于支持不同国家/地区的不同邮编长度，例如：可将“$”添加至邮编前缀的末尾，以匹配具体邮编（例如：“100$”"
+" 只匹配“100”，而不匹配 “1000”）"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -572,6 +727,11 @@ msgstr "价格"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__price_rule_ids
 msgid "Pricing Rules"
 msgstr "价格规则"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_product_category
+msgid "Product Category"
+msgstr "产品类别"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__product_qty
@@ -614,13 +774,19 @@ msgstr "销售订单"
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "销售订单行"
+msgstr "销售订单明细"
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+msgid "Search"
+msgstr "搜索"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__sequence
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__sequence
 msgid "Sequence"
-msgstr "序号"
+msgstr "序列"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__is_all_service
@@ -630,18 +796,15 @@ msgstr "服务产品"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
 msgid "Set to True if your credentials are certified for production."
-msgstr "如果您的凭证已通过生产认证，请设置为True。"
+msgstr "如果您的证书已通过生产认证，请设置为 True。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_id
-#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Shipping Method"
 msgstr "送货方式"
 
 #. module: delivery
-#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.model,name:delivery.model_delivery_carrier
-#: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Shipping Methods"
 msgstr "送货方式"
@@ -649,33 +812,37 @@ msgstr "送货方式"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__shipping_weight
 msgid "Shipping Weight"
-msgstr "发货重量"
+msgstr "运输重量"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__shipping_insurance
-msgid "Shipping insurance is a service which may reimburse senders whose parcels are lost, stolen, and/or damaged in transit."
-msgstr "运输保险是一项可以报销包裹在运输过程中丢失，被盗和/或损坏的发件人的服务。"
+msgid ""
+"Shipping insurance is a service which may reimburse senders whose parcels "
+"are lost, stolen, and/or damaged in transit."
+msgstr "运输保险服务，可为包裹在运输途中丢失、被盗和/或损坏的寄件人提供补偿。"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-msgid "Shipping method details to be included at bottom sales orders and their confirmation emails. E.g. Instructions for customers to follow."
-msgstr "送货方式详细信息将包含在底部销售订单及其确认电子邮件中。例如，客户要遵循的说明。"
+msgid ""
+"Shipping method details to be included at bottom sales orders and their "
+"confirmation emails. E.g. Instructions for customers to follow."
+msgstr "送货方式详细信息将包含在底部销售订单及其确认电子邮件中。例如：客户要遵循的指示。"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Standard delivery"
-msgstr ""
+msgstr "标准送货"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
 msgid "States"
-msgstr "状态"
+msgstr "省/州"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_shipping_insurance
 msgid "Supports Shipping Insurance"
-msgstr "支持航运保险"
+msgstr "支持运费保险"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
@@ -684,14 +851,29 @@ msgid "The Poste"
 msgstr "邮政"
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__excluded_tag_ids
+msgid ""
+"The method is NOT available if at least one product of the order has one of "
+"these tags."
+msgstr "如果订单中至少有一个产品带有这些标记，则无法使用该方法。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__must_have_tag_ids
+msgid ""
+"The method is available only if at least one product of the order has one of"
+" these tags."
+msgstr "只有当订单中至少有一个产品带有这些标签时，才可使用该方法。"
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
-msgid "The return label can be downloaded by the customer from the customer portal."
-msgstr "客户可以从客户门户下载退货标签。"
+msgid ""
+"The return label can be downloaded by the customer from the customer portal."
+msgstr "客户可以从客户门户下载退货单。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "The return label is automatically generated at the delivery."
-msgstr "退货标签在发货时自动生成。"
+msgstr "退货单在发货时自动生成。"
 
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_shipping_insurance_is_percentage
@@ -702,7 +884,13 @@ msgstr "运输保险必须是介于 0 和 100 之间的百分比。"
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "The shipping is free since the order amount exceeds %.2f."
-msgstr "由于订单金额超过 %.2f，提供免费送货。"
+msgstr "由于订单金额超过 %.2f，因此免运费。"
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
+msgid "There was an error loading the map"
+msgstr "加载地图时出错"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -710,22 +898,34 @@ msgid ""
 "These methods allow to automatically compute the delivery price\n"
 "            according to your settings; on the sales order (based on the\n"
 "            quotation) or the invoice (based on the delivery orders)."
-msgstr ""
+msgstr "这些方法可以根据您的设置，在销售订单（基于报价单）或发票（基于交货单）上自动计算运费。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__fixed_margin
 msgid "This fixed amount will be added to the shipping price."
-msgstr ""
+msgstr "该固定金额将被添加到运费。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__tracking_url
+msgid ""
+"This option adds a link for the customer in the portal to track their "
+"package easily. Use <shipmenttrackingnumber> as a placeholder in your URL."
+msgstr "此选项可在门户网站中为客户添加一个链接，方便客户追踪包裹。在 URL 中使用<shipmenttrackingnumber>作为占位符。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
 msgid "This percentage will be added to the shipping price."
-msgstr "这个百分比将被添加到物流价格。"
+msgstr "该百分比将被计入运费。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__total_weight
 msgid "Total Order Weight"
-msgstr ""
+msgstr "订单总重量"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__tracking_url
+msgid "Tracking Link"
+msgstr "追踪连接"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -737,7 +937,7 @@ msgstr "更新"
 #: code:addons/delivery/models/sale_order.py:0
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "Update shipping cost"
-msgstr "更新发货成本"
+msgstr "更新运费"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable
@@ -747,13 +947,18 @@ msgstr "可变"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable_factor
 msgid "Variable Factor"
-msgstr "变量计算器"
+msgstr "可变系数"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__volume
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__volume
 msgid "Volume"
 msgstr "体积"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__volume_uom_name
+msgid "Volume unit of measure label"
+msgstr "体积单位标签"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__weight
@@ -770,7 +975,12 @@ msgstr "重量 * 体积"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__weight_uom_name
 msgid "Weight Uom Name"
-msgstr ""
+msgstr "重量单位名称"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__weight_uom_name
+msgid "Weight unit of measure label"
+msgstr "重量单位标签"
 
 #. module: delivery
 #. odoo-python
@@ -781,10 +991,24 @@ msgid ""
 "The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
 "\n"
 msgstr ""
-"已结算的订单，不支持修改运费!\n"
+"已结算的订单，不支持修改运费！\n"
 "\n"
-"已经处理以下交货明细（产品、结算数量和价格）：\n"
+"已经处理以下交货明细（产品、开票数量和价格）：\n"
 "\n"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/product_category.py:0
+msgid ""
+"You cannot delete the deliveries product category as it is used on the "
+"delivery carriers products."
+msgstr "您不能删除交货产品类别，因为该类别用于交货承运商产品。"
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "Your postal code"
+msgstr "您的邮政编码"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
@@ -799,4 +1023,9 @@ msgstr "邮编前缀"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "e.g. UPS Express"
-msgstr "例如，UPS　快递"
+msgstr "例如：UPS 快递"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "i.e. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
+msgstr "即：https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"

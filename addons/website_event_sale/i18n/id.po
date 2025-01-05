@@ -1,46 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_event_sale
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Abe Manyo, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Abe Manyo, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
-"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid ""
-"<i class=\"fa fa-ban me-2\"/>\n"
-"                                            Unpublished"
-msgstr ""
-"<i class=\"fa fa-ban me-2\"/>\n"
-"                                            Belum dipublikasikan"
+msgid "<i class=\"fa fa-check me-2\" role=\"img\"/>Registered"
+msgstr "<i class=\"fa fa-check me-2\" role=\"img\"/>Pendaftaran"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid ""
-"<small class=\"o_wevent_participating text-bg-success\">\n"
-"                                            <i class=\"fa fa-check me-2\"/>\n"
-"                                            Registered\n"
-"                                        </small>"
-msgstr ""
-"<small class=\"o_wevent_participating text-bg-success\">\n"
-"                                            <i class=\"fa fa-check me-2\"/>\n"
-"                                            Terdaftar\n"
-"                                        </small>"
+msgid "<small>Add this event to your calendar</small>"
+msgstr "<small>Tambahkan acara ini ke kalender Anda</small>"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
@@ -48,23 +35,48 @@ msgid ""
 "<span>Sign In</span>\n"
 "                <span class=\"fa fa-sign-in\"/>"
 msgstr ""
+"<span>Sign In</span>\n"
+"                <span class=\"fa fa-sign-in\"/>"
 
 #. module: website_event_sale
 #. odoo-python
 #: code:addons/website_event_sale/models/product_pricelist.py:0
-msgid "A pricelist item with a positive min. quantity cannot be applied to this event tickets product."
-msgstr "Item daftar harga dengan kuantitas minimal yang positif tidak dapat diterapkan ke produk tiket acara ini."
+msgid ""
+"A pricelist item with a positive min. quantity cannot be applied to this "
+"event tickets product."
+msgstr ""
+"Item daftar harga dengan kuantitas minimal yang positif tidak dapat "
+"diterapkan ke produk tiket acara ini."
 
 #. module: website_event_sale
 #. odoo-python
 #: code:addons/website_event_sale/models/product_pricelist.py:0
-msgid "A pricelist item with a positive min. quantity will not be applied to the event tickets products."
-msgstr "Item daftar harga dengan kuantitas minimal yang positif tidak akan diterapkan ke produk tiket acara."
+msgid ""
+"A pricelist item with a positive min. quantity will not be applied to the "
+"event tickets products."
+msgstr ""
+"Item daftar harga dengan kuantitas minimal yang positif tidak akan "
+"diterapkan ke produk tiket acara."
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Add to Google Agenda"
+msgstr "Tambahkan ke Google Agenda"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Add to iCal/Outlook"
+msgstr "Tambahkan ke iCal/Outlook"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
 msgid "Confirm Registration"
-msgstr ""
+msgstr "Konfirmasi Pendaftaran"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Don't miss out!"
+msgstr "Jangan ketinggalan!"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_event_sale_report
@@ -72,34 +84,54 @@ msgid "Event Sales Report"
 msgstr "Laporan Sales Acara"
 
 #. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Event Subtitle"
+msgstr "Subtitle Acara"
+
+#. module: website_event_sale
 #: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
 msgid "Event Tickets"
-msgstr "Tiket-Tiket Acara"
+msgstr "Tiket acara"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Event Title"
+msgstr "Judul Acara"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
 msgid "Free"
-msgstr "Gratis"
+msgstr "Bebas"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
 msgid "From"
 msgstr "Dari"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid "Go to Event"
-msgstr "Pergi ke Acara"
-
-#. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
 msgid "Go to Payment"
-msgstr ""
+msgstr "Pergi ke Pembayaran"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Google Agenda"
+msgstr "Google Agenda"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Outlook"
+msgstr "Outlook"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_pricelist_item
 msgid "Pricelist Rule"
 msgstr "Peraturan Daftar Harga"
+
+#. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_product_template
+msgid "Product"
+msgstr "Produk"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
@@ -115,12 +147,12 @@ msgstr "Acara yang Dipublikasikan"
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_sale_order
 msgid "Sales Order"
-msgstr "Sale Order"
+msgstr "Order Penjualan"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Sale Order Line"
+msgstr "Baris Pesanan Penjualan"
 
 #. module: website_event_sale
 #. odoo-python
@@ -131,8 +163,12 @@ msgstr "Maaf, tiket %(ticket)s untuk acara %(event)s sudah sold out."
 #. module: website_event_sale
 #. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
-msgid "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s ticket for the %(event)s event."
-msgstr "Maaf, hanya %(remaining_seats)d tempat duduk yang masih tersisa untuk tiket %(ticket)s untuk acara %(event)s."
+msgid ""
+"Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s"
+" ticket for the %(event)s event."
+msgstr ""
+"Maaf, hanya %(remaining_seats)d tempat duduk yang masih tersisa untuk tiket "
+"%(ticket)s untuk acara %(event)s."
 
 #. module: website_event_sale
 #. odoo-python
@@ -158,15 +194,12 @@ msgid "We are looking forward to meeting you at the following"
 msgstr "Kami tidak sabar untuk bertemu Anda di"
 
 #. module: website_event_sale
-#: model:ir.model,name:website_event_sale.model_website
-msgid "Website"
-msgstr "Website"
-
-#. module: website_event_sale
 #. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 msgid "You cannot raise manually the event ticket quantity in your cart"
-msgstr "Anda tidak bisa menaikkan secara manual kuantitas tiket acara di keranjang belanja Anda"
+msgstr ""
+"Anda tidak bisa menaikkan secara manual kuantitas tiket acara di keranjang "
+"belanja Anda"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
@@ -179,6 +212,6 @@ msgid "events"
 msgstr "acara-acara"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
 msgid "to"
 msgstr "kepada"

@@ -1,23 +1,48 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import_module
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 18.1alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-11-19 15:37+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
-"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid ""
+"\n"
+"You may need the Enterprise version to install the data module. Please visit https://www.odoo.com/pricing-plan for more information.\n"
+"If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
+msgstr ""
+"\n"
+"您可能需要企業版才可安裝數據模組。請瀏覽 https://www.odoo.com/pricing-plan 獲取更多資訊。\n"
+"如果需要網站主題，可到 https://github.com/odoo/design-themes 下載。\n"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
+msgid "Activate"
+msgstr "啟動"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_module_filter_apps_inherit
+msgid "Apps"
+msgstr "應用程式"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -30,6 +55,20 @@ msgid "Close"
 msgstr "關閉"
 
 #. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid ""
+"Connection to %(url)s failed, the module %(module)s cannot be downloaded."
+msgstr "連線至 %(url)s 失敗，未能下載模組 %(module)s。"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid "Connection to %s failed The list of industry modules cannot be fetched"
+msgstr "與 %s 的連接失敗. 無法獲取行業模塊列表"
+
+#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/controllers/main.py:0
 msgid "Could not select database '%s'"
 msgstr "無法選擇資料庫'%s'"
@@ -37,7 +76,7 @@ msgstr "無法選擇資料庫'%s'"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__create_uid
 msgid "Created by"
-msgstr "創立者"
+msgstr "建立人員"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__create_date
@@ -46,10 +85,28 @@ msgstr "建立於"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
+#: model:ir.model.fields,field_description:base_import_module.field_base_module_uninstall__display_name
+#: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__display_name
+#: model:ir.model.fields,field_description:base_import_module.field_ir_ui_view__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
 #. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid ""
+"Error while importing module '%(module)s'.\n"
+"\n"
+" %(error_message)s \n"
+"\n"
+msgstr ""
+"匯入以下模組時發生錯誤：%(module)s。\n"
+"\n"
+" %(error_message)s \n"
+"\n"
+
+#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "File '%s' exceed maximum allowed file size"
 msgstr "檔案 '%s' 超過了允許的檔案大小"
@@ -61,18 +118,17 @@ msgstr "強制初始化"
 
 #. module: base_import_module
 #: model:ir.model.fields,help:base_import_module.field_base_import_module__force
-msgid "Force init mode even if installed. (will update `noupdate='1'` records)"
+msgid ""
+"Force init mode even if installed. (will update `noupdate='1'` records)"
 msgstr "即使已經安裝也強制初始化。（將更新 `noupdate='1'` 記錄）"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__id
+#: model:ir.model.fields,field_description:base_import_module.field_base_module_uninstall__id
+#: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__id
+#: model:ir.model.fields,field_description:base_import_module.field_ir_ui_view__id
 msgid "ID"
-msgstr "ID"
-
-#. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Import App"
-msgstr "匯入app"
+msgstr "識別號"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__import_message
@@ -83,14 +139,13 @@ msgstr "匯入消息"
 #: model:ir.actions.act_window,name:base_import_module.action_view_base_module_import
 #: model:ir.model,name:base_import_module.model_base_import_module
 #: model:ir.ui.menu,name:base_import_module.menu_view_base_module_import
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import Module"
 msgstr "匯入模組"
 
 #. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Import module"
-msgstr "匯入模組"
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__with_demo
+msgid "Import demo data of module"
+msgstr "匯入模塊的演示數據"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__imported
@@ -98,9 +153,25 @@ msgid "Imported Module"
 msgstr "匯入的模組"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module____last_update
-msgid "Last Modified on"
-msgstr "最後修改於"
+#: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__industries
+msgid "Industries"
+msgstr "行業"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Install"
+msgstr "安裝"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid "Install an Industry"
+msgstr "安裝一個行業"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Install the application"
+msgstr "安裝應用程式"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_uid
@@ -113,6 +184,19 @@ msgid "Last Updated on"
 msgstr "最後更新於"
 
 #. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Load demo data"
+msgstr "載入範例資料"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid ""
+"Load demo data to test the industry's features with sample records. Do not "
+"load them if this is your production database."
+msgstr "載入模擬數據，以使用範例記錄測試行業功能。如果這是正式運行資料庫，請勿載入模擬數據。"
+
+#. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
 msgid "Module"
 msgstr "模組"
@@ -123,6 +207,27 @@ msgid "Module .ZIP file"
 msgstr "模組的 .ZIP 文件包"
 
 #. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__module_type
+msgid "Module Type"
+msgstr "模塊類型"
+
+#. module: base_import_module
+#: model:ir.model,name:base_import_module.model_base_module_uninstall
+msgid "Module Uninstall"
+msgstr "模組卸載"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Module file (.zip)"
+msgstr "模組檔案(.zip)"
+
+#. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__modules_dependencies
+msgid "Modules Dependencies"
+msgstr "模組相依關係"
+
+#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "No file sent."
 msgstr "沒有發送文件。"
@@ -133,24 +238,27 @@ msgid "Note: you can only import data modules (.xml files and static assets)"
 msgstr "注意：您只能匯入資料模組（.xml 檔和靜態資產）"
 
 #. module: base_import_module
+#: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__official
+msgid "Official Apps"
+msgstr "官方應用程式"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid "Only administrators can install data modules."
+msgstr "只有管理員才可安裝數據模組。"
+
+#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/controllers/main.py:0
 msgid "Only administrators can upload a module"
 msgstr "只有管理員能夠上傳模組"
 
 #. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "Only zip files are supported."
 msgstr "僅支持zip文件。"
-
-#. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Open Modules"
-msgstr "打開模組"
-
-#. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Select module package to import (.zip file):"
-msgstr "選擇要匯入的模組包（.zip 文件）："
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__state
@@ -158,25 +266,45 @@ msgid "Status"
 msgstr "狀態"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:0
-msgid "Studio customizations require Studio"
-msgstr "Studio 自訂需要安裝 Studio"
-
-#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "Studio customizations require the Odoo Studio app."
 msgstr "Studio自訂需要Odoo Studio模組。"
 
 #. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid ""
-"Unmet module dependencies: \n"
-"\n"
-" - %s"
+"The installation of the data module would fail as the following dependencies"
+" can't be found in the addons-path:\n"
 msgstr ""
-"未滿足的模組依賴項：\n"
+"數據模組的安裝會失敗，因為在 addons-path 中找不到以下依賴項：\n"
 "\n"
-"- %s"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid ""
+"The list of industry applications cannot be fetched. Please try again later"
+msgstr "無法獲取行業申請列表。請稍後再試"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid "The module %s cannot be downloaded"
+msgstr "無法下載模塊 %s"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid "Unknown module dependencies:"
+msgstr "未知的模組依賴項："
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
+msgid "Upgrade"
+msgstr "升級"
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_ui_view

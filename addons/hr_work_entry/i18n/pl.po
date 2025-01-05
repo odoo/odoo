@@ -1,39 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_work_entry
-#
+# 
 # Translators:
-# Piotr Strębski <strebski@gmail.com>, 2022
-# Paweł Wodyński <pw@myodoo.pl>, 2022
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2022
-# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2022
-# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2022
-# Wojciech Warczakowski <w.warczakowski@gmail.com>, 2022
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2022
-# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2022
-# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
-# Martin Trigaux, 2023
-# Zdzisław Krajewski <zdzichucb@gmail.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Zdzisław Krajewski <zdzichucb@gmail.com>, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
-"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: pl\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_employee.py:0
 msgid "%s work entries"
-msgstr ""
+msgstr "%s  wpisy pracy"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_employee_view_form
@@ -42,11 +32,14 @@ msgid ""
 "                            Work Entries\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"Wpisy pracy\n"
+"</span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "<span>Hours</span>"
-msgstr ""
+msgstr "<span>Godziny</span>"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__active
@@ -70,7 +63,7 @@ msgstr "Obecność"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_tree
 msgid "Beginning"
-msgstr ""
+msgstr "Początek"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__cancelled
@@ -80,8 +73,12 @@ msgstr "Anulowano"
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__code
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__code
-msgid "Careful, the Code is used in many references, changing it could lead to unwanted changes."
+msgid ""
+"Careful, the Code is used in many references, changing it could lead to "
+"unwanted changes."
 msgstr ""
+"Ostrożnie, kod jest używany w wielu odniesieniach, jego zmiana może "
+"prowadzić do niepożądanych zmian."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__color
@@ -97,17 +94,33 @@ msgstr "Firma"
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__conflict
 msgid "Conflict"
-msgstr ""
+msgstr "Konflikt"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Conflicting"
-msgstr ""
+msgstr "Konflikt"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__conflict
 msgid "Conflicts"
 msgstr "Konflikty"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__country_id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_id
+msgid "Country"
+msgstr "Kraj"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_code
+msgid "Country Code"
+msgstr "Kod kraju"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_type_action
+msgid "Create a new work entry type"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_uid
@@ -145,14 +158,18 @@ msgid "Description"
 msgstr "Opis"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__display_name
 msgid "Display Name"
 msgstr "Nazwa wyświetlana"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__draft
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Draft"
 msgstr "Projekt"
 
@@ -201,16 +218,23 @@ msgid "Has Work Entries"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__active
-msgid "If the active field is set to false, it will allow you to hide the work entry type without removing it."
+msgid ""
+"If the active field is set to false, it will allow you to hide the work "
+"entry type without removing it."
 msgstr ""
+"Jeśli aktywne pole zostanie ustawione na wartość false, umożliwi to ukrycie "
+"typu wpisu pracy bez jego usuwania."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_uid
@@ -238,20 +262,25 @@ msgid "Name"
 msgstr "Nazwa"
 
 #. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
+msgid "No data to display"
+msgstr "Brak danych do wyświetlenia"
+
+#. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "Note: Validated work entries cannot be modified."
-msgstr ""
+msgstr "Uwaga: Zatwierdzonych wpisów pracy nie można modyfikować."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.overtime_work_entry_type
 msgid "Overtime Hours"
-msgstr ""
+msgstr "Nadgodziny"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__code
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__code
 msgid "Payroll Code"
-msgstr ""
+msgstr "Kod wynagrodzenia"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_leaves
@@ -261,12 +290,12 @@ msgstr "Szczegóły czasu wolnego zasobów"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Search Work Entry"
-msgstr ""
+msgstr "Wyszukiwanie wpisu pracy"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 msgid "Search Work Entry Type"
-msgstr ""
+msgstr "Wyszukiwanie Typ wpisu pracy"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__sequence
@@ -277,7 +306,7 @@ msgstr "Sekwencja"
 #. odoo-javascript
 #: code:addons/hr_work_entry/static/src/xml/work_entry_templates.xml:0
 msgid "Solve conflicts first"
-msgstr ""
+msgstr "Najpierw rozwiązuj konflikty"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -285,9 +314,9 @@ msgid "Start Date"
 msgstr "Data początkowa"
 
 #. module: hr_work_entry
-#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entry_start_before_end
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_work_entry_start_before_end
 msgid "Starting time should be before end time."
-msgstr ""
+msgstr "Czas rozpoczęcia powinien być wcześniejszy niż czas zakończenia."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__state
@@ -295,19 +324,44 @@ msgid "State"
 msgstr "Stan"
 
 #. module: hr_work_entry
-#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_type_unique_work_entry_code
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"Kod kraju ISO w dwóch znakach. \n"
+"Możesz użyć tego pola do szybkiego wyszukiwania."
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
 msgid "The same code cannot be associated to multiple work entry types."
+msgstr "Ten sam kod nie może być powiązany z wieloma typami wpisów pracy."
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "This work entry is validated. You can't delete it."
 msgstr ""
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Time Off Options"
-msgstr ""
+msgstr "Opcje dni wolnych"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date_stop
 msgid "To"
 msgstr "Do"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
+msgid ""
+"Try to add some records, or make sure that there is no active filter in the "
+"search bar."
+msgstr ""
+"Spróbuj dodać jakieś rekordy lub upewnij się, że nie ma aktywnego filtra na "
+"pasku wyszukiwania."
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -324,7 +378,7 @@ msgstr "Niezdefiniowane"
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry.py:0
 msgid "Undefined Type"
-msgstr ""
+msgstr "Niezdefiniowany typ"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__external_code
@@ -334,13 +388,14 @@ msgstr ""
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__validated
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Validated"
 msgstr "Zatwierdzone"
 
 #. module: hr_work_entry
-#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entries_no_validated_conflict
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_work_entries_no_validated_conflict
 msgid "Validated work entries cannot overlap"
-msgstr ""
+msgstr "Zatwierdzone wpisy pracy nie mogą się pokrywać"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_attendance
@@ -355,7 +410,7 @@ msgstr "Zapisy pracy"
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_user_work_entry_employee
 msgid "Work Entries Employees"
-msgstr ""
+msgstr "Wpisy pracy Pracownicy"
 
 #. module: hr_work_entry
 #: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_action
@@ -363,12 +418,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "Work Entry"
-msgstr ""
+msgstr "Wpis pracy"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "Work Entry Name"
-msgstr ""
+msgstr "Nazwa wpisu pracy"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__work_entry_type_id
@@ -382,7 +437,7 @@ msgstr "Typ zapisu pracy"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Work Entry Type Name"
-msgstr ""
+msgstr "Nazwa typu wpisu pracy"
 
 #. module: hr_work_entry
 #: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_type_action
@@ -390,11 +445,26 @@ msgid "Work Entry Types"
 msgstr "Typy zapisów pracy"
 
 #. module: hr_work_entry
-#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entry_has_end
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_work_entry_has_end
 msgid "Work entry must end. Please define an end date or a duration."
+msgstr ""
+"Wpis pracy musi się zakończyć. Zdefiniuj datę zakończenia lub czas trwania."
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid ""
+"You can't change the Country of this work entry type cause it's currently "
+"used by the system. You need to delete related working entries first."
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "You can't change the country of this specific work entry type."
 msgstr ""
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique
 msgid "You cannot have the same employee twice."
-msgstr ""
+msgstr "Nie można mieć tego samego pracownika dwa razy."

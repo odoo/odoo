@@ -1,36 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* gamification
-#
+# 
 # Translators:
-# eriiikgt, 2022
-# Arnau Ros, 2022
-# Jonatan Gk, 2022
-# Susanna Pujol, 2022
-# Denys Sarapulov, 2022
-# RGB Consulting <odoo@rgbconsulting.com>, 2022
-# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Quim - eccit <quim@eccit.com>, 2022
-# Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
-# Carles Antoli <carlesantoli@hotmail.com>, 2022
-# marcescu, 2022
-# Ivan Espinola, 2022
-# jabelchi, 2023
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
-"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: gamification
@@ -54,7 +40,7 @@ msgstr "%sha rebutjat el repte "
 #. module: gamification
 #: model:mail.template,body_html:gamification.mail_template_data_new_rank_reached
 msgid ""
-"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<div style=\"color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
 "<table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
 "    <tbody>\n"
 "        <tr>\n"
@@ -84,9 +70,12 @@ msgid ""
 "                </p>\n"
 "            </td>\n"
 "        </tr>\n"
-"        <tr t-if=\"user.signature\">\n"
-"            <td style=\"padding:15px 20px 10px 20px;\">\n"
+"        <tr>\n"
+"            <td t-if=\"not user.share and user.active\" style=\"padding:15px 20px 10px 20px;\">\n"
 "                <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"            </td>\n"
+"            <td t-else=\"\" style=\"padding:15px 20px 10px 20px;\">\n"
+"                <t t-out=\"user.company_id.name or ''\"></t>\n"
 "            </td>\n"
 "        </tr>\n"
 "    </tbody>\n"
@@ -111,18 +100,28 @@ msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
-msgid "<i role=\"img\" class=\"fa fa-clock-o fa-3x\" title=\"Goal in Progress\" aria-label=\"Goal in Progress\"/>"
-msgstr "<i role=\"img\" class=\"fa fa-clock-o fa-3x\" title=\"Goal in Progress\" aria-label=\"Goal in Progress\"/>"
+msgid ""
+"<i role=\"img\" class=\"text-700 fa fa-clock-o fa-3x\" title=\"Goal in "
+"Progress\" aria-label=\"Goal in Progress\"/>"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
-msgid "<i role=\"img\" class=\"text-danger fa fa-times fa-3x\" title=\"Goal Failed\" aria-label=\"Goal Failed\"/>"
-msgstr "<i role=\"img\" class=\"text-danger fa fa-times fa-3x\" title=\"Goal Failed\" aria-label=\"Goal Failed\"/>"
+msgid ""
+"<i role=\"img\" class=\"text-danger fa fa-times fa-3x\" title=\"Goal "
+"Failed\" aria-label=\"Goal Failed\"/>"
+msgstr ""
+"<i role=\"img\" class=\"text-danger fa fa-times fa-3x\" title=\"Goal "
+"Failed\" aria-label=\"Goal Failed\"/>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
-msgid "<i role=\"img\" class=\"text-success fa fa-check fa-3x\" title=\"Goal Reached\" aria-label=\"Goal Reached\"/>"
-msgstr "<i role=\"img\" class=\"text-success fa fa-check fa-3x\" title=\"Goal Reached\" aria-label=\"Goal Reached\"/>"
+msgid ""
+"<i role=\"img\" class=\"text-success fa fa-check fa-3x\" title=\"Goal "
+"Reached\" aria-label=\"Goal Reached\"/>"
+msgstr ""
+"<i role=\"img\" class=\"text-success fa fa-check fa-3x\" title=\"Goal "
+"Reached\" aria-label=\"Goal Reached\"/>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -448,8 +447,12 @@ msgstr ""
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__condition
 #: model:ir.model.fields,help:gamification.field_gamification_goal__definition_condition
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__condition
-msgid "A goal is considered as completed when the current value is compared to the value to reach"
-msgstr "Un objectiu es considera com a completat quan el valor actual es compara amb el valor a assolir"
+msgid ""
+"A goal is considered as completed when the current value is compared to the "
+"value to reach"
+msgstr ""
+"Un objectiu es considera com a completat quan el valor actual es compara amb"
+" el valor a assolir"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_list_action
@@ -603,8 +606,16 @@ msgstr "Insígnies"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
-msgid "Badges are granted when a challenge is finished. This is either at the end of a running period (eg: end of the month for a monthly challenge), at the end date of a challenge (if no periodicity is set) or when the challenge is manually closed."
-msgstr "Les insígnies es concedeixen quan un repte ha acabat. Això passa, o bé al final del període d'execució (per exemple: final del mes per un repte mensual), a la data final del repte (si no s'ha establert periodicitat) o quan el repte es tanca manualment. "
+msgid ""
+"Badges are granted when a challenge is finished. This is either at the end "
+"of a running period (eg: end of the month for a monthly challenge), at the "
+"end date of a challenge (if no periodicity is set) or when the challenge is "
+"manually closed."
+msgstr ""
+"Les insígnies es concedeixen quan un repte ha acabat. Això passa, o bé al "
+"final del període d'execució (per exemple: final del mes per un repte "
+"mensual), a la data final del repte (si no s'ha establert periodicitat) o "
+"quan el repte es tanca manualment. "
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_mode
@@ -641,11 +652,11 @@ msgstr "La configuració d'un objectiu ja començat no pot modificar-se"
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 #: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Cancel"
-msgstr "Cancel·lar"
+msgstr "Cancel·la"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__canceled
-msgid "Canceled"
+msgid "Cancelled"
 msgstr "Cancel·lat"
 
 #. module: gamification
@@ -678,8 +689,12 @@ msgstr "Nom desafiament"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__challenge_id
-msgid "Challenge that generated the goal, assign challenge to users to generate goals with a value in this field."
-msgstr "Repte que va generar l'objectiu. Assigneu, el repte als usuaris per a generar objectius amb un valor en aquest camp."
+msgid ""
+"Challenge that generated the goal, assign challenge to users to generate "
+"goals with a value in this field."
+msgstr ""
+"Repte que va generar l'objectiu. Assigneu, el repte als usuaris per a "
+"generar objectius amb un valor en aquest camp."
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.challenge_list_action
@@ -692,7 +707,9 @@ msgstr "Desafiaments"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_max
 msgid "Check to set a monthly limit per person of sending this badge"
-msgstr "Marcar per a establir un límit mensual d'enviaments d'aquesta insígnia per persona."
+msgstr ""
+"Marcar per a establir un límit mensual d'enviaments d'aquesta insígnia per "
+"persona."
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -703,6 +720,11 @@ msgstr "Objectius clicables"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__closed
 msgid "Closed goal"
 msgstr "Objectiu tancat"
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__color
+msgid "Color Index"
+msgstr "Índex de color"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__comment
@@ -741,7 +763,7 @@ msgstr "Consolidat"
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_karma_tracking.py:0
-msgid "Consolidation from %s to %s"
+msgid "Consolidation from %(from_date)s to %(end_date)s"
 msgstr ""
 
 #. module: gamification
@@ -776,8 +798,16 @@ msgstr "Crea un rang nou"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.action_new_simplified_res_users
-msgid "Create and manage users that will connect to the system. Users can be deactivated should there be a period of time during which they will/should not connect to the system. You can assign them groups in order to give them specific access to the applications they need to use in the system."
-msgstr "Creeu i gestioneu els usuaris que accediran al sistema. Els usuaris poden ser desactivats si durant un període de temps no haurien d'accedir al sistema. Podeu assignar-los-hi grups per tal de que tinguin accés a les aplicacions que necessiten utilitzar en el sistema."
+msgid ""
+"Create and manage users that will connect to the system. Users can be "
+"deactivated should there be a period of time during which they will/should "
+"not connect to the system. You can assign them groups in order to give them "
+"specific access to the applications they need to use in the system."
+msgstr ""
+"Creeu i gestioneu els usuaris que accediran al sistema. Els usuaris poden "
+"ser desactivats si durant un període de temps no haurien d'accedir al "
+"sistema. Podeu assignar-los-hi grups per tal de que tinguin accés a les "
+"aplicacions que necessiten utilitzar en el sistema."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__create_uid
@@ -831,7 +861,7 @@ msgstr "Dades"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__field_date_id
@@ -841,8 +871,12 @@ msgstr "El camp de data"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__computation_mode
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__computation_mode
-msgid "Define how the goals will be computed. The result of the operation will be stored in the field 'Current'."
-msgstr "Definiu com es calcularan els objectius. El resultat de l'operació s'emmagatzemarà en el camp 'Current'."
+msgid ""
+"Define how the goals will be computed. The result of the operation will be "
+"stored in the field 'Current'."
+msgstr ""
+"Definiu com es calcularan els objectius. El resultat de l'operació "
+"s'emmagatzemarà en el camp 'Current'."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__challenge_category
@@ -862,12 +896,16 @@ msgstr "Definició Descripció"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Depending on the Display mode, reports will be individual or shared."
-msgstr "Depenent del mode de visualització, els informes seran individuals o compartits."
+msgstr ""
+"Depenent del mode de visualització, els informes seran individuals o "
+"compartits."
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
-msgid "Describe the challenge: what is does, who it targets, why it matters..."
-msgstr "Descriviu el repte: que fa, a qui va destinat, per què és important... "
+msgid ""
+"Describe the challenge: what is does, who it targets, why it matters..."
+msgstr ""
+"Descriviu el repte: que fa, a qui va destinat, per què és important... "
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
@@ -901,7 +939,7 @@ msgstr "Mode de visualització"
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__display_name
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__display_name
 msgid "Display Name"
-msgstr "Nom a mostrar"
+msgstr "Nom mostrat"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__display_mode
@@ -920,8 +958,15 @@ msgstr "Doctor"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__domain
-msgid "Domain for filtering records. General rule, not user depending, e.g. [('state', '=', 'done')]. The expression can contain reference to 'user' which is a browse record of the current user if not in batch mode."
-msgstr "Domini per filtrar registres. Regla general, no depenent de l'usuari, per exemple. [('state', '=', 'done')]. L'expressió pot contenir una referència a «usuari» que és un registre de navegació de l'usuari actual si no està en mode per lots."
+msgid ""
+"Domain for filtering records. General rule, not user depending, e.g. "
+"[('state', '=', 'done')]. The expression can contain reference to 'user' "
+"which is a browse record of the current user if not in batch mode."
+msgstr ""
+"Domini per filtrar registres. Regla general, no depenent de l'usuari, per "
+"exemple. [('state', '=', 'done')]. L'expressió pot contenir una referència a"
+" «usuari» que és un registre de navegació de l'usuari actual si no està en "
+"mode per lots."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__done
@@ -1038,7 +1083,7 @@ msgstr "Sufix complet"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__gain
 msgid "Gain"
-msgstr ""
+msgstr "Guany"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge
@@ -1293,7 +1338,8 @@ msgstr "Si s'estableix un màxim"
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_needaction
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Si està marcat, hi ha nous missatges que requereixen la vostra atenció."
+msgstr ""
+"Si està marcat, hi ha nous missatges que requereixen la vostra atenció."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_has_error
@@ -1311,7 +1357,7 @@ msgstr "Imatge"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_1024
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_1024
 msgid "Image 1024"
-msgstr "Imatge 1024Comment"
+msgstr "Imatge 1024"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_128
@@ -1338,18 +1384,32 @@ msgstr "En curs"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
-msgid "In batch mode, the domain is evaluated globally. If enabled, do not use keyword 'user' in above filter domain."
-msgstr "En el mode lot, el domini s'avalua globalment. Si està habilitat, no utilitzis la paraula clau \"usuari\" en el domini de filtres."
+msgid ""
+"In batch mode, the domain is evaluated globally. If enabled, do not use "
+"keyword 'user' in above filter domain."
+msgstr ""
+"En el mode lot, el domini s'avalua globalment. Si està habilitat, no "
+"utilitzis la paraula clau \"usuari\" en el domini de filtres."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_distinctive_field
-msgid "In batch mode, this indicates which field distinguishes one user from the other, e.g. user_id, partner_id..."
-msgstr "En la manera per lots, indica quin camp distingeix a un usuari d'un altre, per exemple, user_d, partner_id..."
+msgid ""
+"In batch mode, this indicates which field distinguishes one user from the "
+"other, e.g. user_id, partner_id..."
+msgstr ""
+"En la manera per lots, indica quin camp distingeix a un usuari d'un altre, "
+"per exemple, user_d, partner_id..."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__last_update
-msgid "In case of manual goal, reminders are sent if the goal as not been updated for a while (defined in challenge). Ignored in case of non-manual goal or goal not linked to a challenge."
-msgstr "En el cas d'objectius manuals, s'envien recordatoris si l'objectiu no ha estat actualitzat per un temps (definit al repte). Ignorat en cas d'objectius no manuals o objectius no enllaçats amb un repte. "
+msgid ""
+"In case of manual goal, reminders are sent if the goal as not been updated "
+"for a while (defined in challenge). Ignored in case of non-manual goal or "
+"goal not linked to a challenge."
+msgstr ""
+"En el cas d'objectius manuals, s'envien recordatoris si l'objectiu no ha "
+"estat actualitzat per un temps (definit al repte). Ignorat en cas "
+"d'objectius no manuals o objectius no enllaçats amb un repte. "
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__inprogress
@@ -1375,7 +1435,7 @@ msgstr "Invita usuaris nous"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_is_follower
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_is_follower
 msgid "Is Follower"
-msgstr "És seguidor"
+msgstr "És un seguidor"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__karma
@@ -1473,12 +1533,12 @@ msgstr "Llista d'objectius que han d'establir-se"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 msgid "Manual"
-msgstr ""
+msgstr "Manual"
 
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_master
 msgid "Master"
-msgstr "Master"
+msgstr "Mestre"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_has_error
@@ -1633,14 +1693,17 @@ msgstr "Ningú, assignat a través de reptes"
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
-msgid "Nobody has succeeded to reach every goal, no badge is rewarded for this challenge."
+msgid ""
+"Nobody has succeeded to reach every goal, no badge is rewarded for this "
+"challenge."
 msgstr ""
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 msgid "Nobody reached the required conditions to receive special badges."
-msgstr "Ningú ha assolit les condicions requerides per a rebre insígnies especials."
+msgstr ""
+"Ningú ha assolit les condicions requerides per a rebre insígnies especials."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__once
@@ -1672,7 +1735,7 @@ msgstr "Nombre d'errors"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_needaction_counter
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Nombre de missatges que requereixen una acció"
 
 #. module: gamification
@@ -1712,11 +1775,6 @@ msgid "Optimisation"
 msgstr "Optimització"
 
 #. module: gamification
-#: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
-msgid "Owner"
-msgstr "Propietari"
-
-#. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__owner_ids
 msgid "Owners"
 msgstr "Propietaris"
@@ -1740,8 +1798,12 @@ msgstr "Període"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__period
-msgid "Period of automatic goal assignment. If none is selected, should be launched manually."
-msgstr "Període de l'assignació automàtica d'objectius. Si no se selecciona cap, s'ha d'iniciar manualment."
+msgid ""
+"Period of automatic goal assignment. If none is selected, should be launched"
+" manually."
+msgstr ""
+"Període de l'assignació automàtica d'objectius. Si no se selecciona cap, "
+"s'ha d'iniciar manualment."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__period
@@ -1770,8 +1832,13 @@ msgstr "Codi Python"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__compute_code
-msgid "Python code to be executed for each user. 'result' should contains the new current value. Evaluated user can be access through object.user_id."
-msgstr "Codi Python que s'executarà per a cada usuari. 'result' ha de contenir el nou valor actual. Pot accedir-se a l'usuari avaluat mitjançant object.user_id."
+msgid ""
+"Python code to be executed for each user. 'result' should contains the new "
+"current value. Evaluated user can be access through object.user_id."
+msgstr ""
+"Codi Python que s'executarà per a cada usuari. 'result' ha de contenir el "
+"nou valor actual. Pot accedir-se a l'usuari avaluat mitjançant "
+"object.user_id."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__rank_id
@@ -1801,6 +1868,16 @@ msgid "Ranks List"
 msgstr "Llista de rangs"
 
 #. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
+msgid "Reach the next rank and become a Master!"
+msgstr ""
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
+msgid "Reach the next rank and become a powerful user!"
+msgstr ""
+
+#. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
 msgid "Reach the next rank and gain a very magic wand!"
 msgstr ""
@@ -1818,6 +1895,16 @@ msgstr ""
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
 msgid "Reach the next rank and gain a very nice unicorn!"
+msgstr ""
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
+msgid "Reach the next rank to improve your status!"
+msgstr ""
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
+msgid "Reach the next rank to show the rest of the world you exist."
 msgstr ""
 
 #. module: gamification
@@ -1849,11 +1936,6 @@ msgstr "Actualitzar desafiament"
 #: model:ir.actions.act_window,name:gamification.goals_from_challenge_act
 msgid "Related Goals"
 msgstr "Objectius relacionats"
-
-#. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_user_wizard__user_id
-msgid "Related user name for the resource to manage its access."
-msgstr "Usuari relacionat amb el recurs per gestionar-ne el seu accés."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__remaining_sending
@@ -1904,7 +1986,9 @@ msgstr "Responsable"
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 msgid "Retrieving progress for personal challenge without user information"
-msgstr "S'està recuperant el progrés per al repte personal sense informació de l'usuari"
+msgstr ""
+"S'està recuperant el progrés per al repte personal sense informació de "
+"l'usuari"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -1914,7 +1998,9 @@ msgstr "Recompensa"
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
-msgid "Reward (badge %(badge_name)s) for every succeeding user was sent to %(users)s."
+msgid ""
+"Reward (badge %(badge_name)s) for every succeeding user was sent to "
+"%(users)s."
 msgstr ""
 
 #. module: gamification
@@ -1989,8 +2075,12 @@ msgstr "Cerca de Rastrejos"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
-msgid "Security rules to define who is allowed to manually grant badges. Not enforced for administrator."
-msgstr "Regles de seguretat per a definir qui pot concedir insígnies manualment. No necessari pel administrador. "
+msgid ""
+"Security rules to define who is allowed to manually grant badges. Not "
+"enforced for administrator."
+msgstr ""
+"Regles de seguretat per a definir qui pot concedir insígnies manualment. No "
+"necessari pel administrador. "
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -2015,7 +2105,8 @@ msgstr "Remitent"
 #. module: gamification
 #: model:mail.template,description:gamification.email_template_goal_reminder
 msgid "Sent automatically to participant who haven't updated their goal"
-msgstr "Enviat automàticament al participant que no ha actualitzat el seu objectiu"
+msgstr ""
+"Enviat automàticament al participant que no ha actualitzat el seu objectiu"
 
 #. module: gamification
 #: model:mail.template,description:gamification.email_template_badge_received
@@ -2075,18 +2166,20 @@ msgstr "Comptador d'insígnies de plata"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__origin_ref
 msgid "Source"
-msgstr ""
+msgstr "Font"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__origin_ref_model_name
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 msgid "Source Type"
-msgstr ""
+msgstr "Tipus d'origen"
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
-msgid "Special rewards were sent to the top competing users. The ranking for this challenge is:"
+msgid ""
+"Special rewards were sent to the top competing users. The ranking for this "
+"challenge is:"
 msgstr ""
 
 #. module: gamification
@@ -2111,7 +2204,7 @@ msgstr "Iniciar la meta"
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "State"
-msgstr "Província"
+msgstr "Estat"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
@@ -2187,30 +2280,39 @@ msgstr "La data a utilitzar per al període de temps avaluat"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__end_date
-msgid "The day a new challenge will be automatically closed. If no periodicity is set, will use this date as the goal end date."
-msgstr "Dia en que es tancarà automàticament un nou repte. Si no s'estableix periodicitat, s'utilitzarà aquesta data com a data final de l'objectiu. "
+msgid ""
+"The day a new challenge will be automatically closed. If no periodicity is "
+"set, will use this date as the goal end date."
+msgstr ""
+"Dia en que es tancarà automàticament un nou repte. Si no s'estableix "
+"periodicitat, s'utilitzarà aquesta data com a data final de l'objectiu. "
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__start_date
-msgid "The day a new challenge will be automatically started. If no periodicity is set, will use this date as the goal start date."
-msgstr "El dia que comença automàticament un nou repte. Si no s'estableix periodicitat, usarà aquesta data com a data inicial de l'objectiu. "
+msgid ""
+"The day a new challenge will be automatically started. If no periodicity is "
+"set, will use this date as the goal start date."
+msgstr ""
+"El dia que comença automàticament un nou repte. Si no s'estableix "
+"periodicitat, usarà aquesta data com a data inicial de l'objectiu. "
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_goal_definition.py:0
 msgid ""
-"The domain for the definition %s seems incorrect, please check it.\n"
+"The domain for the definition %(definition)s seems incorrect, please check it.\n"
 "\n"
-"%s"
+"%(error_message)s"
 msgstr ""
-"El domini de la definició %s sembla incorrecte. Si us plau, reviseu-lo.\n"
-"\n"
-"%s"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__res_id_field
-msgid "The field name on the user profile (res.users) containing the value for res_id for action."
-msgstr "El nom del camp en el perfil d'usuari (res.users) que conté el valor de res.id per a l'acció."
+msgid ""
+"The field name on the user profile (res.users) containing the value for "
+"res_id for action."
+msgstr ""
+"El nom del camp en el perfil d'usuari (res.users) que conté el valor de "
+"res.id per a l'acció."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__condition__higher
@@ -2239,8 +2341,11 @@ msgstr "Com més baix, millor"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_max_number
-msgid "The maximum number of time this badge can be sent per month per person."
-msgstr "El nombre màxim de cops que aquesta insígnia es pot enviar cada mes per persona. "
+msgid ""
+"The maximum number of time this badge can be sent per month per person."
+msgstr ""
+"El nombre màxim de cops que aquesta insígnia es pot enviar cada mes per "
+"persona. "
 
 #. module: gamification
 #. odoo-python
@@ -2268,13 +2373,20 @@ msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__remind_update_delay
-msgid "The number of days after which the user assigned to a manual goal will be reminded. Never reminded if no value is specified."
-msgstr "El nombre de dies després dels quals es recordarà a l'usuari assignat a un objectiu manual. Mai es recorda si no s'especifica cap valor."
+msgid ""
+"The number of days after which the user assigned to a manual goal will be "
+"reminded. Never reminded if no value is specified."
+msgstr ""
+"El nombre de dies després dels quals es recordarà a l'usuari assignat a un "
+"objectiu manual. Mai es recorda si no s'especifica cap valor."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my_this_month
-msgid "The number of time the current user has received this badge this month."
-msgstr "El nombre de vegades que l'usuari actual ha rebut aquesta insígnia aquest mes."
+msgid ""
+"The number of time the current user has received this badge this month."
+msgstr ""
+"El nombre de vegades que l'usuari actual ha rebut aquesta insígnia aquest "
+"mes."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my
@@ -2284,7 +2396,9 @@ msgstr "El nombre de cops que l'usuari actual ha rebut aquesta insígnia."
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my_monthly_sending
 msgid "The number of time the current user has sent this badge this month."
-msgstr "El nombre de vegades que l'usuari actual ha enviat aquesta insígnia aquest mes."
+msgstr ""
+"El nombre de vegades que l'usuari actual ha enviat aquesta insígnia aquest "
+"mes."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__granted_users_count
@@ -2320,13 +2434,23 @@ msgstr "La unitat de l'objectiu i els valors actuals"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__goal_definition_ids
-msgid "The users that have succeeded these goals will receive automatically the badge."
-msgstr "Els usuaris que hagin aconseguit aquests objectius rebran automàticament la insígnia."
+msgid ""
+"The users that have succeeded these goals will receive automatically the "
+"badge."
+msgstr ""
+"Els usuaris que hagin aconseguit aquests objectius rebran automàticament la "
+"insígnia."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_user_expression
-msgid "The value to compare with the distinctive field. The expression can contain reference to 'user' which is a browse record of the current user, e.g. user.id, user.partner_id.id..."
-msgstr "El valor a comparar amb el camp distintiu. L'expressió pot contenir una referència a 'user' que és un registre de navegació de l'usuari actual, per exemple user.id, user.partner_id.id..."
+msgid ""
+"The value to compare with the distinctive field. The expression can contain "
+"reference to 'user' which is a browse record of the current user, e.g. "
+"user.id, user.partner_id.id..."
+msgstr ""
+"El valor a comparar amb el camp distintiu. L'expressió pot contenir una "
+"referència a 'user' que és un registre de navegació de l'usuari actual, per "
+"exemple user.id, user.partner_id.id..."
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goals_from_challenge_act
@@ -2457,8 +2581,13 @@ msgstr "¿A qui li agradaria recompensar?"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__reward_realtime
-msgid "With this option enabled, a user can receive a badge only once. The top 3 badges are still rewarded only at the end of the challenge."
-msgstr "Si s'activa aquesta opció, un usuari només pot rebre una insígnia un cop. Les insígnies dels 3 millors continuen concedint-se només al final del repte. "
+msgid ""
+"With this option enabled, a user can receive a badge only once. The top 3 "
+"badges are still rewarded only at the end of the challenge."
+msgstr ""
+"Si s'activa aquesta opció, un usuari només pot rebre una insígnia un cop. "
+"Les insígnies dels 3 millors continuen concedint-se només al final del "
+"repte. "
 
 #. module: gamification
 #: model_terms:gamification.badge,description:gamification.badge_idea
@@ -2534,7 +2663,8 @@ msgstr "Saps de què parles. La gent aprèn de tu."
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_bachelor
 msgid "You love learning things. Curiosity is a good way to progress."
-msgstr "T'encanta aprendre coses. La curiositat és una bona manera de progressar."
+msgstr ""
+"T'encanta aprendre coses. La curiositat és una bona manera de progressar."
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_student
@@ -2554,7 +2684,9 @@ msgstr "dies"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
-msgid "e.g. A Master Chief knows quite everything on the forum! You cannot beat him!"
+msgid ""
+"e.g. A Master Chief knows quite everything on the forum! You cannot beat "
+"him!"
 msgstr "p. ex ¡Un cap mestre ho sap tot al fòrum! ¡No el pots derrotar!"
 
 #. module: gamification

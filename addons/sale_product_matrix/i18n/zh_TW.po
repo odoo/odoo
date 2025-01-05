@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_product_matrix
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
-"zh_TW/)\n"
-"Language: zh_TW\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_product_matrix
@@ -32,20 +31,21 @@ msgstr "添加產品模式"
 #: model:ir.model.fields,help:sale_product_matrix.field_product_template__product_add_mode
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order_line__product_add_mode
 msgid ""
-"Configurator: choose attribute values to add the matching product variant to "
-"the order.\n"
+"Configurator: choose attribute values to add the matching product variant to the order.\n"
 "Grid: add several variants at once from the grid of attribute values"
 msgstr ""
+"配置器：選擇屬性值，將相符的產品款式加至訂單。\n"
+"網格：從屬性值網格中一次過加入多個款式。"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_product_tmpl_id
 msgid "Grid Product Tmpl"
-msgstr "產品變體矩陣模板"
+msgstr "產品款式網格範本"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_update
 msgid "Grid Update"
-msgstr "矩陣更新"
+msgstr "網格更新"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid
@@ -55,12 +55,12 @@ msgstr "矩陣本機存放區"
 #. module: sale_product_matrix
 #: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__matrix
 msgid "Order Grid Entry"
-msgstr "訂單矩陣條目"
+msgstr "訂單網格記項"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__report_grids
 msgid "Print Variant Grids"
-msgstr "列印變體矩陣"
+msgstr "列印款式網格"
 
 #. module: sale_product_matrix
 #: model:ir.model,name:sale_product_matrix.model_product_template
@@ -80,12 +80,12 @@ msgstr "銷售訂單"
 #. module: sale_product_matrix
 #: model:ir.model,name:sale_product_matrix.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "銷售訂單明細"
+msgstr "銷售訂單資料行"
 
 #. module: sale_product_matrix
 #: model_terms:ir.ui.view,arch_db:sale_product_matrix.product_template_grid_view_form
 msgid "Sales Variant Selection"
-msgstr "銷售變體選擇"
+msgstr "銷售款式選擇"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid
@@ -94,6 +94,9 @@ msgid ""
 "If grid_update, will be loaded on the SO.\n"
 "If not, represents the matrix to open."
 msgstr ""
+"網格的本地儲存技術設定。\n"
+"若為 grid_update，會載入至銷售訂單。\n"
+"如果沒有，則表示要打開的矩陣。"
 
 #. module: sale_product_matrix
 #. odoo-python

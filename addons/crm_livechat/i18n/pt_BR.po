@@ -1,26 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* crm_livechat
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Kevilyn Rosa, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.3\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Kevilyn Rosa, 2023\n"
-"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/"
-"teams/41243/pt_BR/)\n"
-"Language: pt_BR\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
-"1000000 == 0 ? 1 : 2;\n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: crm_livechat
 #. odoo-python
@@ -31,12 +28,12 @@ msgstr "Novo lead de %s"
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_chatbot_script
 msgid "Chatbot Script"
-msgstr "Script do chatbot"
+msgstr "Script do Chatbot"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_chatbot_script_step
 msgid "Chatbot Script Step"
-msgstr "Etapa do script do chatbot"
+msgstr "Etapa do script do Chatbot"
 
 #. module: crm_livechat
 #: model:ir.model.fields.selection,name:crm_livechat.selection__chatbot_script_step__step_type__create_lead
@@ -44,12 +41,20 @@ msgid "Create Lead"
 msgstr "Criar lead"
 
 #. module: crm_livechat
-#. odoo-python
 #. odoo-javascript
-#: code:addons/crm_livechat/models/discuss_channel.py:0
 #: code:addons/crm_livechat/static/src/core/channel_commands.js:0
 msgid "Create a new lead (/lead lead title)"
 msgstr "Criar um novo lead (/lead lead title)"
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/discuss_channel.py:0
+msgid ""
+"Create a new lead: %(pre_start)s%(lead_command)s %(i_start)slead "
+"title%(i_end)s%(pre_end)s"
+msgstr ""
+"Criar um novo lead: %(pre_start)s%(lead_command)s %(i_start)stítulo do lead "
+"%(i_end)s%(pre_end)s"
 
 #. module: crm_livechat
 #. odoo-python
@@ -60,7 +65,7 @@ msgstr "Novo lead criado: %s"
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_discuss_channel
 msgid "Discussion Channel"
-msgstr "Canal de Discussão"
+msgstr "Canal de discussão"
 
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script__lead_count
@@ -75,7 +80,7 @@ msgstr "Olá, o que o trouxe até nosso site hoje?👋"
 #. module: crm_livechat
 #: model:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_noone_available
 msgid "Hu-ho, it looks like none of our operators are available 🙁"
-msgstr "Hu-ho, parece que nenhum de nossos operadores está disponível.🙁"
+msgstr "O-ou, parece que nenhum de nossos operadores está disponível.🙁"
 
 #. module: crm_livechat
 #: model:chatbot.script,title:crm_livechat.chatbot_script_lead_generation_bot
@@ -90,7 +95,7 @@ msgstr "Leads"
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__crm_team_id
 msgid "Sales Team"
-msgstr "Equipe de Vendas"
+msgstr "Equipe de vendas"
 
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__step_type
@@ -108,7 +113,7 @@ msgid ""
 "Used in combination with 'create_lead' step type in order to automatically "
 "assign the created lead/opportunity to the defined team"
 msgstr ""
-"Usado em combinação com o tipo de etapa \"criar_lead\" para atribuir "
+"Usado em combinação com o tipo de etapa “criar_lead” para atribuir "
 "automaticamente o lead/oportunidade criado à equipe definida"
 
 #. module: crm_livechat
@@ -116,5 +121,5 @@ msgstr ""
 msgid ""
 "Would you mind leaving your email address so that we can reach you back?"
 msgstr ""
-"Você se importaria de deixar seu endereço de e-mail para que possamos entrar "
-"em contato com você?"
+"Gostaria de deixar seu endereço de e-mail para que possamos entrar em "
+"contato com você?"

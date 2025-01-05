@@ -1,34 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_check_printing
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2022
-# Michal Veselý <michal@veselyberanek.net>, 2022
-# karolína schusterová <karolina.schusterova@vdp.sk>, 2022
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
-# Jiří Podhorecký, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Jiří Podhorecký, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: cs\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
-msgid ": Check Number Sequence"
+msgid "%(journal)s: Check Number Sequence"
 msgstr ""
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
+msgid "<span>&amp;nbsp;</span>"
+msgstr "<span>&amp;nbsp;</span>"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -37,8 +37,11 @@ msgstr ""
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_left
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_right
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_top
-msgid "Adjust the margins of generated checks to make it fit your printer's settings."
-msgstr "Upravte okraje generovaných šeků tak, aby odpovídaly nastavení tiskárny."
+msgid ""
+"Adjust the margins of generated checks to make it fit your printer's "
+"settings."
+msgstr ""
+"Upravte okraje generovaných šeků tak, aby odpovídaly nastavení tiskárny."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
@@ -51,21 +54,22 @@ msgid "Cancel"
 msgstr "Zrušit"
 
 #. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__bank_check_printing_layout
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid "Check Layout"
-msgstr "Zkontrolujte rozložení"
+msgstr "Vzhled šeku"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_left
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_left
 msgid "Check Left Margin"
-msgstr "levý okraj šeku"
+msgstr "Levý okraj šeku"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_number
 msgid "Check Number"
-msgstr "číslo šeku"
+msgstr "Číslo šeku"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
@@ -75,7 +79,7 @@ msgstr "Tisk šeků"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_right
 msgid "Check Right Margin"
-msgstr "Zkontrolujte správnou marži"
+msgstr "Pravý okraj šeku"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_sequence_id
@@ -86,7 +90,7 @@ msgstr "Sekvence šeku"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_top
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_top
 msgid "Check Top Margin"
-msgstr "Zkontrolujte ziskovost"
+msgstr "Horní okraj šeku"
 
 #. module: account_check_printing
 #. odoo-python
@@ -106,9 +110,11 @@ msgid "Check to print"
 msgstr "Šek k tisku"
 
 #. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
 #: model:account.payment.method,name:account_check_printing.account_payment_method_check
 msgid "Checks"
-msgstr "Kontroly"
+msgstr "Šeky"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
@@ -135,64 +141,78 @@ msgstr "Společnosti"
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_config_settings
 msgid "Config Settings"
-msgstr "Nastavení konfigurace"
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_res_partner
-msgid "Contact"
-msgstr "Kontakt"
+msgstr "Konfigurační nastavení"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_uid
 msgid "Created by"
-msgstr "Vytvořeno od"
+msgstr "Vytvořeno uživatelem"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_date
 msgid "Created on"
-msgstr "Vytvořeno"
+msgstr "Vytvořeno dne"
 
 #. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
+msgid "Default"
+msgstr "Výchozí"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment_method__display_name
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__display_name
 msgid "Display Name"
-msgstr "Zobrazované jméno"
+msgstr "Zobrazovací název"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "Go to the configuration panel"
-msgstr "Přejít na panel konfigurace"
+msgstr "Přejít na konfigurační panel"
 
 #. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_layout_available
+msgid "Has Check Layout"
+msgstr ""
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__id
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__id
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment_method__id
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__id
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__id
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "In order to print multiple checks at once, they must belong to the same bank journal."
-msgstr "Abyste mohli tisknout více šeků najednou, musí patřit do stejného bankovního deníku."
+msgid ""
+"In order to print multiple checks at once, they must belong to the same bank"
+" journal."
+msgstr ""
+"Abyste mohli tisknout více šeků najednou, musí patřit do stejného bankovního"
+" deníku."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
 msgid "Journal"
-msgstr "Deník"
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_move
-msgid "Journal Entry"
-msgstr "Položka deníku"
+msgstr "Účetní deník"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_uid
 msgid "Last Updated by"
-msgstr "Naposledy upraveno od"
+msgstr "Naposledy upraveno uživatelem"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_date
 msgid "Last Updated on"
-msgstr "Naposled upraveno"
+msgstr "Naposledy upraveno dne"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_manual_sequencing
@@ -210,6 +230,11 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"Ručně: Zaplacení proběhne libovolnou metodou mimo Odoo.\n"
+"Poskytovatel platby: Každý poskytovatel platby má vlastní platební metodu. Vyžádejte si platbu na/z platební karty pomocí platebního tokenu, uloženého partnerem během online nákupu.\n"
+"Hromadný depozit: Sdružte několik zákaznických šeků, vytvořte a odešlete hromadný depozit své bance. Je nezbytný modul account_batch_payment.\n"
+"Příkaz k úhradě SEPA: V rámci SEPA zóny zaplaťte nahráním SEPA souboru příkazu k úhradě do vaší banky.\n"
+"SEPA příkaz k inkasu: V rámci zóny SEPA proběhne platba díky povolení, které vám udělil partner. Je nezbytný modul account_sepa.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -228,24 +253,22 @@ msgstr "Další číslo šeku"
 #: code:addons/account_check_printing/models/account_journal.py:0
 #: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:0
 msgid "Next Check Number should only contains numbers."
-msgstr "Číslo další kontroly by mělo obsahovat pouze čísla."
+msgstr "Další číslo šeku by mělo obsahovat pouze čísla."
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__disabled
 msgid "None"
-msgstr "Nic"
+msgstr "Žádné"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_line_id
-#: model:ir.model.fields,field_description:account_check_printing.field_res_partner__property_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_res_users__property_payment_method_id
 msgid "Payment Method"
-msgstr "Platební podmínky"
+msgstr "Platební metoda"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment_method
 msgid "Payment Methods"
-msgstr "Platební podmínky"
+msgstr "Platební metody"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
@@ -255,26 +278,20 @@ msgstr "Platby"
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "Payments to print as a checks must have 'Check' selected as payment method and not have already been reconciled"
-msgstr "U plateb, které se mají tisknout jako šeky, musí být jako způsob platby vybrána možnost „Šek“ a již nebyly odsouhlaseny"
+msgid ""
+"Payments to print as a checks must have 'Check' selected as payment method "
+"and not have already been reconciled"
+msgstr ""
+"U plateb, které se mají tisknout jako šeky, musí být jako způsob platby "
+"vybrána možnost „Šek“ a nesmí být již spárovány"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid "Please enter the number of the first pre-printed check that you are about to print on."
-msgstr "Zadejte číslo prvního předtištěného šeku, na který se chystáte tisknout."
-
-#. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_bank_statement_line__preferred_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
-msgid "Preferred Payment Method"
-msgstr "Preferovaný způsob platby"
-
-#. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
-#: model:ir.model.fields,help:account_check_printing.field_res_users__property_payment_method_id
-msgid "Preferred payment method when paying this vendor. This is used to filter vendor bills by preferred payment method to register payments in mass. Use cases: create bank files for batch wires, check runs."
-msgstr "Preferovaná platební metoda při platbě tomuto prodejci. Slouží k filtrování faktur dodavatele podle preferovaného způsobu platby k hromadné registraci plateb. Případy použití: vytvořte bankovní soubory pro dávkové kabely, zkontrolujte běhy."
+msgid ""
+"Please enter the number of the first pre-printed check that you are about to"
+" print on."
+msgstr ""
+"Zadejte číslo prvního předtištěného šeku, na který se chystáte tisknout."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -289,7 +306,7 @@ msgstr "Tisk šeku"
 #. module: account_check_printing
 #: model:ir.actions.server,name:account_check_printing.action_account_print_checks
 msgid "Print Checks"
-msgstr "Tisk šeků"
+msgstr "Vytisknout šeky"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_date_label
@@ -306,14 +323,9 @@ msgid "Print Pre-numbered Checks"
 msgstr "Tisk předčíslovaných šeků"
 
 #. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_payment_register
-msgid "Register Payment"
-msgstr "Zaznamenat platbu"
-
-#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
 msgid "Right Margin"
-msgstr "Správná marže"
+msgstr "Pravý okraj"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_layout
@@ -323,7 +335,7 @@ msgid ""
 "In order to disable the printing feature, select 'None'."
 msgstr ""
 "Vyberte formát odpovídající šekovému papíru, na který budete šeky tisknout.\n"
-"Chcete-li deaktivovat funkci tisku, vyberte možnost Žádný."
+"Chcete-li deaktivovat funkci tisku, vyberte možnost 'Žádný'."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
@@ -333,18 +345,22 @@ msgstr "Odesláno"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number
 msgid "Sequence number of the next printed check."
-msgstr "Pořadové číslo dalšího vytištěného šeku."
+msgstr "Číslo sekvence dalšího vytištěného šeku."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__show_check_number
 msgid "Show Check Number"
-msgstr ""
+msgstr "Zobrazit číslo šeku"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "Something went wrong with Check Layout, please select another layout in Invoicing/Accounting Settings and try again."
-msgstr "Při kontrole rozložení se něco pokazilo, vyberte prosím jiné rozložení v nastavení fakturace / účtování a zkuste to znovu."
+msgid ""
+"Something went wrong with Check Layout, please select another layout in "
+"Invoicing/Accounting Settings and try again."
+msgstr ""
+"Něco se pokazilo s vzhledem šeku, vyberte jiný vzhled v nastavení aplikace "
+"Fakturace/Účetnictví a zkuste to znovu."
 
 #. module: account_check_printing
 #. odoo-python
@@ -359,19 +375,33 @@ msgstr ""
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
-msgid "The last check number was %s. In order to avoid a check being rejected by the bank, you can only use a greater number."
-msgstr "Číslo posledního šeku bylo %s.Abyste zabránili odmítnutí šeku bankou, můžete použít pouze vyšší číslo."
+msgid ""
+"The last check number was %s. In order to avoid a check being rejected by "
+"the bank, you can only use a greater number."
+msgstr ""
+"Číslo posledního šeku bylo %s. Abyste zabránili odmítnutí šeku bankou, měli "
+"byste použít vyšší číslo."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
-msgid "The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers or if the current numbering is wrong, you can change it in the journal configuration page."
-msgstr "Vybraný deník je nakonfigurován pro tisk čísel šeků. Pokud váš předtištěný šekový papír již obsahuje čísla nebo pokud je aktuální číslování nesprávné, můžete jej změnit na stránce konfigurace deníku."
+msgid ""
+"The selected journal is configured to print check numbers. If your pre-"
+"printed check paper already has numbers or if the current numbering is "
+"wrong, you can change it in the journal configuration page."
+msgstr ""
+"Vybraný deník je nakonfigurován pro tisk čísel šeků. Pokud váš předtištěný "
+"šekový papír již obsahuje čísla nebo pokud je aktuální číslování nesprávné, "
+"můžete jej změnit na stránce konfigurace deníku."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
-msgid "This option allows you to print check details (stub) on multiple pages if they don't fit on a single page."
-msgstr "Tato volba umožňuje tisknout podrobnosti o kontrole (stub) na více stránkách, pokud se nevejdou na jednu stránku."
+msgid ""
+"This option allows you to print check details (stub) on multiple pages if "
+"they don't fit on a single page."
+msgstr ""
+"Tato možnost umožňuje tisknout detaily šeku (útržek) na více stránkách, "
+"pokud se nevejdou na jednu stránku."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -380,26 +410,31 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
-"Tato možnost umožňuje vytisknout štítek s datem na šeku podle CPA.\n"
+"Tato možnost umožňuje vytisknout štítek s datem na šeku dle CPA.\n"
 "Toto deaktivujte, pokud předtištěný šek obsahuje štítek s datem."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid "This will allow to save on payments the number of the corresponding check."
-msgstr "To umožní ušetřit na platbách číslo příslušného šeku."
+msgid ""
+"This will allow to save on payments the number of the corresponding check."
+msgstr "Toto umožní uložit na platbách číslo příslušeného šeku."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Unmark Sent"
-msgstr "Zrušeno označení"
+msgstr "Odznačit jako odeslané"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Void Check"
-msgstr "Kontrola neplatnosti"
+msgstr "Zneplatnit šek"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "You have to choose a check layout. For this, go in Invoicing/Accounting Settings, search for 'Checks layout' and set one."
-msgstr "Musíte zvolit rozložení kontroly. Chcete-li to provést, přejděte do Nastavení fakturace / účetnictví, vyhledejte 'Rozvrh kontroly' a nastavte jej."
+msgid ""
+"You have to choose a check layout. For this, go in Invoicing/Accounting "
+"Settings, search for 'Checks layout' and set one."
+msgstr ""
+"Musíte vybrat vzhled šeku. Za tímto účelem jděte do nastavení aplikace "
+"Fakturace/Účetnictví a vyhledejte 'Vzhled šeků' zvolte nějakou možnost."

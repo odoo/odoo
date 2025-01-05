@@ -1,34 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_timesheet_attendance
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Thi Huong Nguyen, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__attendance_cost
 msgid "Attendance Cost"
-msgstr ""
+msgstr "Attendance Cost"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_attendance
-msgid "Attendance Hours"
-msgstr ""
+msgid "Attendance Time"
+msgstr "Thời gian có mặt"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__company_id
@@ -39,11 +38,13 @@ msgstr "Công ty"
 #: model_terms:ir.actions.act_window,help:hr_timesheet_attendance.action_hr_timesheet_attendance_report
 msgid "Compare the time recorded by your employees with their attendance."
 msgstr ""
+"So sánh thời gian được nhân viên của bạn ghi nhận với dữ liệu chấm công của "
+"họ."
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__cost_difference
 msgid "Cost Difference"
-msgstr ""
+msgstr "Cost Difference"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__date
@@ -57,14 +58,10 @@ msgid "Display Name"
 msgstr "Tên hiển thị"
 
 #. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__employee_id
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
 msgid "Employee"
 msgstr "Nhân viên"
-
-#. module: hr_timesheet_attendance
-#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_difference
-msgid "Hours Difference"
-msgstr ""
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__id
@@ -72,19 +69,24 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_timesheet_attendance
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
+msgid "Last Week"
+msgstr "Tuần trước"
+
+#. module: hr_timesheet_attendance
 #: model:ir.model,name:hr_timesheet_attendance.model_ir_ui_menu
 msgid "Menu"
-msgstr "Trình đơn"
+msgstr "Menu"
 
 #. module: hr_timesheet_attendance
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
 msgid "My Department"
-msgstr ""
+msgstr "Phòng ban của tôi"
 
 #. module: hr_timesheet_attendance
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
 msgid "My Team"
-msgstr ""
+msgstr "Đội của tôi"
 
 #. module: hr_timesheet_attendance
 #: model_terms:ir.actions.act_window,help:hr_timesheet_attendance.action_hr_timesheet_attendance_report
@@ -92,27 +94,21 @@ msgid "No data yet!"
 msgstr "Chưa có dữ liệu nào!"
 
 #. module: hr_timesheet_attendance
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
-msgid "Sum of Total Attendance"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
+msgid "This Week"
+msgstr "Tuần này"
 
 #. module: hr_timesheet_attendance
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
-msgid "Sum of Total Difference"
-msgstr ""
-
-#. module: hr_timesheet_attendance
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
-msgid "Sum of Total Timesheet"
-msgstr ""
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_difference
+msgid "Time Difference"
+msgstr "Chênh lệch thời gian"
 
 #. module: hr_timesheet_attendance
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_graph
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_pivot
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
 msgid "Timesheet Attendance"
-msgstr ""
+msgstr "Timesheet Attendance"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model,name:hr_timesheet_attendance.model_hr_timesheet_attendance_report
@@ -128,14 +124,14 @@ msgstr "Chi phí theo thời gian"
 #: model:ir.actions.act_window,name:hr_timesheet_attendance.action_hr_timesheet_attendance_report
 #: model:ir.ui.menu,name:hr_timesheet_attendance.menu_hr_timesheet_attendance_report
 msgid "Timesheets / Attendance Analysis"
-msgstr ""
+msgstr "Bảng chấm công/Phân tích chấm công"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_timesheet
-msgid "Timesheets Hours"
-msgstr ""
+msgid "Timesheets Time"
+msgstr "Thời gian bảng chấm công"
 
 #. module: hr_timesheet_attendance
-#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__user_id
-msgid "User"
-msgstr "Người dùng"
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
+msgid "Today"
+msgstr "Hôm nay"

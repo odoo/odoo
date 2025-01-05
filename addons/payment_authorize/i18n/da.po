@@ -1,35 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_authorize
-#
+# 
 # Translators:
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2019\n"
-"Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
-"Language: da\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid ""
-"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-"
-"select\">\n"
-"                        <option value=\"checking\">Personal Checking</"
-"option>\n"
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">\n"
+"                        <option value=\"checking\">Personal Checking</option>\n"
 "                        <option value=\"savings\">Personal Savings</option>\n"
-"                        <option value=\"businessChecking\">Business "
-"Checking</option>\n"
+"                        <option value=\"businessChecking\">Business Checking</option>\n"
 "                    </select>"
 msgstr ""
 
@@ -41,17 +37,17 @@ msgstr ""
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_client_key
 msgid "API Client Key"
-msgstr ""
+msgstr "API Klient nøgle"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_login
 msgid "API Login ID"
-msgstr ""
+msgstr "API Login ID"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_signature_key
 msgid "API Signature Key"
-msgstr ""
+msgstr "API Signatur nøgle"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_transaction_key
@@ -61,7 +57,7 @@ msgstr "API transaktionsnøgle"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Account Number"
-msgstr ""
+msgstr "Kontonummer"
 
 #. module: payment_authorize
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_provider__code__authorize
@@ -81,7 +77,7 @@ msgstr ""
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Bank Name"
-msgstr ""
+msgstr "Banknavn"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -91,12 +87,12 @@ msgstr ""
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Card Number"
-msgstr ""
+msgstr "Kortnummer"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__code
 msgid "Code"
-msgstr ""
+msgstr "Kode"
 
 #. module: payment_authorize
 #. odoo-python
@@ -110,14 +106,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 msgid ""
-"Could not retrieve the transaction details. (error code: %s; error_details: "
-"%s)"
+"Could not retrieve the transaction details. (error code: %(error_code)s; "
+"error_details: %(error_message)s)"
 msgstr ""
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Expiration"
-msgstr ""
+msgstr "Udløbsdato"
 
 #. module: payment_authorize
 #. odoo-python
@@ -130,17 +126,17 @@ msgstr ""
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "Generate Client Key"
-msgstr ""
+msgstr "Generer klient nøgle"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "How to get paid with Authorize.Net"
-msgstr ""
+msgstr "Hvordan man bliver betalt med Authorize.net"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "MM"
-msgstr ""
+msgstr "MM"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -162,7 +158,7 @@ msgstr ""
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Betalingsudbyder"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token
@@ -178,13 +174,12 @@ msgstr "Betalingstransaktion"
 #. odoo-javascript
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 msgid "Payment processing failed"
-msgstr ""
+msgstr "Behandlingen af betaling mislykkedes"
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
-msgid ""
-"Received data with status code \"%(status)s\" and error code \"%(error)s\""
+msgid "Received data with status code \"%(status)s\" and error code \"%(error)s\""
 msgstr ""
 
 #. module: payment_authorize
@@ -219,7 +214,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 msgid ""
-"The transaction is not in a status to be refunded. (status: %s, details: %s)"
+"The transaction is not in a status to be refunded. (status: %(status)s, "
+"details: %(message)s)"
 msgstr ""
 
 #. module: payment_authorize
@@ -244,4 +240,4 @@ msgstr ""
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "YY"
-msgstr ""
+msgstr "YY"

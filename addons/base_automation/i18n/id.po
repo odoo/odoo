@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_automation
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Abe Manyo, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"POT-Creation-Date: 2024-09-26 12:50+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
-"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_automation
@@ -27,12 +26,14 @@ msgid ""
 "\"\n"
 "                (ID:"
 msgstr ""
+"\"\n"
+"                (ID:"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/kanban_header_patch.js:0
 msgid "\"%s\" tag is added"
-msgstr ""
+msgstr "Tag \"%s\" ditambahkan"
 
 #. module: base_automation
 #. odoo-python
@@ -41,30 +42,34 @@ msgid ""
 "\"On live update\" automation rules can only be used with \"Execute Python "
 "Code\" action type."
 msgstr ""
+"Peraturan otomisasi \"update on live\" hanya dapat digunakan dengan tipe "
+"action \"Jalankan Kode Python\""
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "%s actions"
-msgstr ""
+msgstr "%s action"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "1 action"
-msgstr ""
+msgstr "1 action"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<code>env</code>: environment on which the action is triggered"
-msgstr ""
+msgstr "<code>env</code>: environment pada mana action dipicu"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
-"<code>model</code>: model of the record on which the action is triggered; is "
-"a void recordset"
+"<code>model</code>: model of the record on which the action is triggered; is"
+" a void recordset"
 msgstr ""
+"<code>model</code>: model record pada mana action dipicu; adalaha void "
+"recordset"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -72,6 +77,8 @@ msgid ""
 "<code>payload</code>: the payload of the call (GET parameters, JSON body), "
 "as a dict."
 msgstr ""
+"<code>payload</code>: payload dari call (GET parameters, JSON body), sebagai"
+" dict."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -79,11 +86,13 @@ msgid ""
 "<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
 "<code>timezone</code>: useful Python libraries"
 msgstr ""
+"<code>waktu</code>, <code>tanggalwaktu</code>, <code>dateutil</code>, "
+"<code>zonawaktu</code>: Python libraries yang berguna"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 msgid "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Actions\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Action\"/>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -91,6 +100,8 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/> The default target record getter will work "
 "out-of-the-box for any webhook coming from another Odoo instance."
 msgstr ""
+"<i class=\"fa fa-info-circle\"/> Default target record getter akan bekerja "
+"siap pakai untuk webhook apapun yang datang dari instance Odoo lain."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -99,55 +110,59 @@ msgid ""
 "be executed <em>every time</em> the watched fields change, <em>whether you "
 "save or not</em>."
 msgstr ""
+"<i class=\"fa fa-warning\"/> Peraturan otomasi yang dipicu oleh perubahan UI"
+" akan dijalankan <em>setiap kali</em> field yang diawasi berubah, <em>tidak "
+"peduli Anda save atau tidak</em>."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span class=\"text-muted\"> Available variables: </span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"> Variabel yang Tersedia: </span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "<span invisible=\"evaluation_type != 'value'\">to</span>\n"
-"                                                                <span "
-"invisible=\"evaluation_type != 'equation'\">as</span>"
+"                                                        <span invisible=\"evaluation_type != 'equation'\">as</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value'\">to</span>\n"
+"                                                        <span invisible=\"evaluation_type != 'equation'\">as</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "<span invisible=\"trigger != 'on_time_created'\">after creation</span>\n"
-"                                    <span invisible=\"trigger != "
-"'on_time_updated'\">after last update</span>\n"
-"                                    <span invisible=\"trigger != "
-"'on_time'\">after</span>"
+"                                    <span invisible=\"trigger != 'on_time_updated'\">after last update</span>\n"
+"                                    <span invisible=\"trigger != 'on_time'\">after</span>"
 msgstr ""
+"<span invisible=\"trigger != 'on_time_created'\">setelah pembuatan</span>\n"
+"                                    <span invisible=\"trigger != 'on_time_updated'\">setelah update terakhir</span>\n"
+"                                    <span invisible=\"trigger != 'on_time'\">setelah</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by adding</span>"
-msgstr ""
+msgstr "<span>dengan menambahkan</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by clearing it</span>"
-msgstr ""
+msgstr "<span>dengan membersihkannya</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by removing</span>"
-msgstr ""
+msgstr "<span>dengan menghapus</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by setting it to</span>"
-msgstr ""
+msgstr "<span>dengan mengaturnya ke</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid ""
-"<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
-msgstr ""
+msgid "<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
+msgstr "<strong><i class=\"fa fa-lock\"/> Rahasiakan, amankan.</strong>"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__name
@@ -158,12 +173,12 @@ msgstr "Nama Tindakan"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__action_server_ids
 msgid "Actions"
-msgstr ""
+msgstr "Action"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Actions To Do"
-msgstr ""
+msgstr "Action Untuk Dilakukan"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__active
@@ -173,34 +188,34 @@ msgstr "Aktif"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Add an action"
-msgstr ""
+msgstr "Tambahkan actio"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Add followers"
-msgstr ""
+msgstr "Tambahkan follower"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Add followers: %(partner_names)s"
-msgstr ""
+msgstr "Tambahkan follower: %(partner_names)s"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_created
 msgid "After creation"
-msgstr ""
+msgstr "Setelah pembuatan"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_updated
 msgid "After last update"
-msgstr ""
+msgstr "Setelah update terakhir"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_domain
 msgid "Apply on"
-msgstr ""
+msgstr "Terapkan pada"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -212,7 +227,7 @@ msgstr "Diarsipkan"
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Automate <em>everything</em> with Automation Rules"
-msgstr ""
+msgstr "Otomatiskan <em>semuanya</em> dengan Peraturan Otomatisasi"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
@@ -221,12 +236,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base_automation.selection__ir_actions_server__usage__base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Automation Rule"
-msgstr ""
+msgstr "Peraturan Otomatisasi"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__name
 msgid "Automation Rule Name"
-msgstr ""
+msgstr "Nama Peraturan Otomatisasi"
 
 #. module: base_automation
 #: model:ir.actions.act_window,name:base_automation.base_automation_act
@@ -234,28 +249,28 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
 msgid "Automation Rules"
-msgstr ""
+msgstr "Peraturan-Peraturan Otomatisasi"
 
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 msgid "Automation Rules: check and execute"
-msgstr ""
+msgstr "Peraturan-Peraturan Otomatisasi: periksa dan jalankan"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/kanban_header_patch.js:0
 msgid "Automations"
-msgstr ""
+msgstr "Otomatisasi-Otomatisasi"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time
 msgid "Based on date field"
-msgstr ""
+msgstr "Berdasarkan field tanggal"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_pre_domain
 msgid "Before Update Domain"
-msgstr ""
+msgstr "Sebelum Mengupdate Domain"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -263,36 +278,38 @@ msgid ""
 "Change the URL's secret if you think the URL is no longer secure. You will "
 "have to update any automated system that calls this webhook to the new URL."
 msgstr ""
+"Ubah secret dari URL bila Anda merasa URL tidak lagi aman. Anda harus "
+"mengupdate sistem otomatis apapun yang menggunakan webhook ini ke URL baru."
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Compute"
-msgstr ""
+msgstr "Hitung"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Create %(model_name)s with name %(value)s"
-msgstr ""
+msgstr "Buat %(model_name)s dengan nama %(value)s"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Create a new Record"
-msgstr ""
+msgstr "Buat Record baru"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Create activity: %(activity_name)s"
-msgstr ""
+msgstr "Buat kegiatan: %(activity_name)s"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Create next activity"
-msgstr ""
+msgstr "Buat kegiatan berikutnya"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
@@ -308,12 +325,12 @@ msgstr "Dibuat pada"
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "Custom"
-msgstr ""
+msgstr "Kustom"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Date Field"
-msgstr ""
+msgstr "Field Tanggal"
 
 #. module: base_automation
 #. odoo-javascript
@@ -325,7 +342,7 @@ msgstr "Hari"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Delay"
-msgstr ""
+msgstr "Jeda"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_range
@@ -334,50 +351,55 @@ msgid ""
 "delay before the trigger date, like sending a reminder 15 minutes before a "
 "meeting."
 msgstr ""
+"Jeda setelah tanggal picu. Anda dapat menaruh nomor negatif bila Anda "
+"membutuhkan jeda sebelum tanggal pemicu, seperti mengirimkan pengingat 15 "
+"menit sebelum meeting."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
 msgid "Delay after trigger date"
-msgstr ""
+msgstr "Tunda setelah tanggal pemicu"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range_type
 msgid "Delay type"
-msgstr ""
+msgstr "Tipe penunda"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Delete Action"
-msgstr ""
+msgstr "Hapus Action"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "Deprecated (do not use)"
-msgstr ""
+msgstr "Didepresiasi (jangan gunakan)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__description
 msgid "Description"
-msgstr ""
+msgstr "Keteranga"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid "Disable Automation Rule"
-msgstr ""
+msgstr "Nonaktifkan Peraturan Otomatisasi"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid ""
 "Disabling this automation rule will enable you to continue your workflow\n"
-"                but any data created after this could potentially be "
-"corrupted,\n"
-"                as you are effectively disabling a customization that may "
-"set\n"
+"                but any data created after this could potentially be corrupted,\n"
+"                as you are effectively disabling a customization that may set\n"
 "                important and/or required fields."
 msgstr ""
+"Menonaktifkan peraturan otomatis ini akan memungkinkan Anda untuk melanjutkan workflow Anda\n"
+"                tapi data apapun yang dibuat setelah ini memiliki potensi untuk rusak,\n"
+"                karena Anda menonaktifkan kustomisasi yang mungkin menyiapkan\n"
+"                 field yang penting dan/atau diperlukan."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -388,19 +410,19 @@ msgstr "Nama Tampilan"
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid "Edit Automation Rule"
-msgstr ""
+msgstr "Edit Peraturan Otomatisasi"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "Email Events"
-msgstr ""
+msgstr "Email Acara"
 
 #. module: base_automation
 #. odoo-python
@@ -409,45 +431,48 @@ msgid ""
 "Email, follower or activity action types cannot be used when deleting "
 "records, as there are no more records to apply these changes to!"
 msgstr ""
+"Email, pengikut atau tipe action kegiatan tidak dapat digunakan saat "
+"menghapus record, karena tidak ada lagi record untuk menerapkan perubahan "
+"ini!"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Execute Python Code"
-msgstr ""
+msgstr "Jalankan Kode Python"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Execute several actions"
-msgstr ""
+msgstr "Jalankan beberapa action"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "External"
-msgstr ""
+msgstr "Eksternal"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Extra Conditions"
-msgstr ""
+msgstr "Kondisi Ekstra"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__on_change_field_ids
 msgid "Fields that trigger the onchange."
-msgstr ""
+msgstr "Field yang memicu perubahan"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Generic User"
-msgstr ""
+msgstr "User Umum"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_is_mail_thread
 msgid "Has Mail Thread"
-msgstr ""
+msgstr "Memiliki Thread Email"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__hour
@@ -462,50 +487,55 @@ msgstr "ID"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
 msgid ""
-"If present, this condition must be satisfied before executing the automation "
-"rule."
+"If present, this condition must be satisfied before executing the automation"
+" rule."
 msgstr ""
+"Bila diaktifkan, kondisi ini harus dipenuhi sebelum menjalankan peraturan "
+"otomatisasi ini"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
 msgid ""
-"If present, this condition must be satisfied before the update of the record."
+"If present, this condition must be satisfied before the update of the "
+"record. Not checked on record creation."
 msgstr ""
+"Bila diaktifkan, kondisi ini harus dipenuhi sebelum update record dapat "
+"dilakukan. Tidak diperiksa pada pembuatan record."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Keep track of what this automation does and why it exists..."
-msgstr ""
+msgstr "Lacak apa yang otomatisasi Anda lakukan dan kenapa mereka ada..."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
 msgid "Last Run"
-msgstr ""
+msgstr "Run Terakhir"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_uid
 msgid "Last Updated by"
-msgstr "Terakhir diperbarui oleh"
+msgstr "Terakhir Diperbarui oleh"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_date
 msgid "Last Updated on"
-msgstr "Terakhir diperbarui pada"
+msgstr "Terakhir Diperbarui pada"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__least_delay_msg
 msgid "Least Delay Msg"
-msgstr ""
+msgstr "Pesan yang paling Tidak Tertunda"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__log_webhook_calls
 msgid "Log Calls"
-msgstr ""
+msgstr "Catat Panggilan"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Logs"
-msgstr ""
+msgstr "Log"
 
 #. module: base_automation
 #. odoo-python
@@ -514,6 +544,8 @@ msgid ""
 "Mail event can not be configured on model %s. Only models with discussion "
 "feature can be used."
 msgstr ""
+"Email acara tidak dapat dikonfigurasi pada model %s. Hanya model dengan "
+"fitur diskusi yang dapat digunakan."
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__minutes
@@ -537,11 +569,13 @@ msgid ""
 "Model of action %(action_name)s should match the one from automated rule "
 "%(rule_name)s."
 msgstr ""
+"Model action %(action_name)s harus cocok dengan yang dari peraturan otomatis"
+" %(rule_name)s."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
 msgid "Model on which the automation rule runs."
-msgstr ""
+msgstr "Model pada mana peraturan otomatis berjalan."
 
 #. module: base_automation
 #. odoo-javascript
@@ -554,7 +588,7 @@ msgstr "Bulan"
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "No record to run the automation on was found."
-msgstr ""
+msgstr "Tidak ada record untuk menjalankan otomatisasi yang ditemukan."
 
 #. module: base_automation
 #. odoo-python
@@ -563,159 +597,175 @@ msgid ""
 "Note that this automation rule can be triggered up to %d minutes after its "
 "schedule."
 msgstr ""
+"Ingat bahwa peraturan otomatisasi ini dapat dipicu %d menit setelah "
+"jadwalnya."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Notes"
-msgstr ""
+msgstr "Catatan"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
 msgid "On Change Fields Trigger"
-msgstr ""
+msgstr "On Change Fields Trigger"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_change
 msgid "On UI change"
-msgstr ""
+msgstr "Pada perubahan UI"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_archive
 msgid "On archived"
-msgstr ""
+msgstr "Pada pengarsipan"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
 msgid "On creation"
-msgstr ""
+msgstr "Pada pembuatan"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unlink
 msgid "On deletion"
-msgstr ""
+msgstr "Pada penghapusan"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_received
 msgid "On incoming message"
-msgstr ""
+msgstr "Pada pesan masuk"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_sent
 msgid "On outgoing message"
-msgstr ""
+msgstr "Pada pesan keluar"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create_or_write
 msgid "On save"
-msgstr ""
+msgstr "Pada penyimpanan"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unarchive
 msgid "On unarchived"
-msgstr ""
+msgstr "Pada pembatalan pengarsipan"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_write
 msgid "On update"
-msgstr ""
+msgstr "Pada update"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_webhook
 msgid "On webhook"
-msgstr ""
+msgstr "Pada webhook"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Post as Message"
-msgstr ""
+msgstr "Post sebagai Pesan"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Post as Note"
-msgstr ""
+msgstr "Post sebagai Catatan"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_priority_set
 msgid "Priority is set to"
-msgstr ""
+msgstr "Prioritas ditetapkan ke"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__record_getter
 msgid "Record Getter"
-msgstr ""
+msgstr "Record Getter"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Remove followers"
-msgstr ""
+msgstr "Hapus pengikut"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Remove followers: %(partner_names)s"
-msgstr ""
+msgstr "Hapus pengikut: %(partner_names)s"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Rotate Secret"
-msgstr ""
+msgstr "Rotasikan Secret"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select a date field..."
-msgstr ""
+msgstr "Pilih field tanggal..."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select a value..."
-msgstr ""
+msgstr "Pilih value..."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select fields..."
-msgstr ""
+msgstr "Pilih field-field..."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
-msgid "Send SMS Text Message"
-msgstr ""
+msgid "Send SMS"
+msgstr "Kirim SMS"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Send SMS: %(template_name)s"
-msgstr ""
+msgstr "Kirim SMS: %(template_name)s"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Send Webhook Notification"
-msgstr ""
+msgstr "Kirim Notifikasi Webhook"
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Send an email when an object changes state, archive records\n"
-"                after a month of inactivity or remind yourself to follow-up "
-"on\n"
+"                after a month of inactivity or remind yourself to follow-up on\n"
 "                tasks when a specific tag is added."
 msgstr ""
+"Kirim email saat status object berganti, arsip record\n"
+"                setelah sebulan tidak aktif atau ingatkan diri Anda untuk follow-up pada\n"
+"                task saat tag tertentu ditambahkan."
+
+#. module: base_automation
+#: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
+msgid ""
+"Send an email when an object changes state, archive records after a month of"
+" inactivity or remind yourself to follow-up on tasks when a specific tag is "
+"added.<br>With Automation Rules, you can automate any workflow."
+msgstr ""
+"Kirim email saat status object berganti, arsip rekaman setelah sebulan tidak"
+" aktif atau ingatkan diri Anda untuk follow-up pada task saat tag tertentu "
+"ditambahkan.<br>Dengan Peraturan Otomatisasi, Anda dapat mengotomatiskan "
+"workflow apa pun."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Send email"
-msgstr ""
+msgstr "Kirim email"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Send email: %(template_name)s"
-msgstr ""
+msgstr "Kirim email: %(template_name)s"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
@@ -728,51 +778,56 @@ msgid ""
 "Some triggers need a reference to a selection field. This field is used to "
 "store it."
 msgstr ""
+"Beberapa pemicu membutuhkan referensi ke field pemilihan. Field ini "
+"digunakan untuk menyimpannya."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
 msgid ""
-"Some triggers need a reference to another field. This field is used to store "
-"it."
+"Some triggers need a reference to another field. This field is used to store"
+" it."
 msgstr ""
+"Beberapa pemicu membutuhkan referensi ke field lain. Field ini digunakan "
+"untuk menyimpannya."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Specific User"
-msgstr ""
+msgstr "User Spesifik"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_stage_set
 msgid "Stage is set to"
-msgstr ""
+msgstr "Stage ditetapkan ke"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/kanban_header_patch.js:0
 msgid "Stage is set to \"%s\""
-msgstr ""
+msgstr "Tahap ditetapkan menjadi \"%s\""
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_state_set
 msgid "State is set to"
-msgstr ""
+msgstr "Status ditetapkan ke"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_tag_set
 msgid "Tag is added"
-msgstr ""
+msgstr "Tag ditambahka"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Target Record"
-msgstr ""
+msgstr "Record Tujuan"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
-msgid "Target model of actions %(action_names)s are different from rule model."
-msgstr ""
+msgid ""
+"Target model of actions %(action_names)s are different from rule model."
+msgstr "Model of action tujuan %(action_names)s berbeda dari model peraturan."
 
 #. module: base_automation
 #. odoo-python
@@ -781,6 +836,8 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr ""
+"\"%(trigger_value)s\" %(trigger_label)s hanya dapat digunakan dengan tipe "
+"action \"%(state_value)s\""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -788,6 +845,8 @@ msgid ""
 "The automation rule will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
 msgstr ""
+"Peraturan otomatisasi akan dipicu bila dan hanya bila salah satu field ini "
+"diupdate. Bila kosong, semua field akan diawasi."
 
 #. module: base_automation
 #. odoo-javascript
@@ -796,6 +855,8 @@ msgid ""
 "The error occurred during the execution of the automation rule\n"
 "                \""
 msgstr ""
+"Error terjadi pada pelaksanaan peraturan otomatis\n"
+"                \""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__record_getter
@@ -803,12 +864,20 @@ msgid ""
 "This code will be run to find on which record the automation rule should be "
 "run."
 msgstr ""
+"Kode harus dijalankan untuk mencari pada record mana peraturan otomatis "
+"harusnya dijalankan."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "Timing Conditions"
-msgstr ""
+msgstr "Kondisi Timing"
+
+#. module: base_automation
+#: model:digest.tip,name:base_automation.digest_tip_base_automation_0
+#: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
+msgid "Tip: Automate everything with Automation Rules"
+msgstr "Tip: Otomatiskan segala sesuatu dengan Peraturan Otomatisasi"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -818,64 +887,59 @@ msgstr "Pemicu"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_id
 msgid "Trigger Date"
-msgstr ""
+msgstr "Tanggal Pemicu"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_selection_field_id
 msgid "Trigger Field"
-msgstr ""
+msgstr "Field Pemicu"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_model_name
 msgid "Trigger Field Model"
-msgstr ""
+msgstr "Model Field Pemicu"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
 msgid "Trigger Fields"
-msgstr ""
+msgstr "Field Pemicu"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref
 msgid "Trigger Reference"
-msgstr ""
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_display_name
-msgid "Trigger Reference Display Name"
-msgstr ""
+msgstr "Referensi Pemicu"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.ir_actions_server_view_form_automation
 msgid "Type"
-msgstr ""
+msgstr "Tipe"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "URL will be created once the rule is saved."
-msgstr ""
+msgstr "URL akan dibuat setelah peraturan disimpan."
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Update"
-msgstr ""
+msgstr "Update"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Update the Record"
-msgstr ""
+msgstr "Update Recor"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__url
 msgid "Url"
-msgstr ""
+msgstr "Url"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__usage
@@ -886,18 +950,18 @@ msgstr "Penggunaan"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
 msgid "Use Calendar"
-msgstr ""
+msgstr "Gunakan Kalender"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_user_set
 msgid "User is set"
-msgstr ""
+msgstr "User ditetapkan"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "Values Updated"
-msgstr ""
+msgstr "Value Diupdate"
 
 #. module: base_automation
 #. odoo-python
@@ -909,24 +973,24 @@ msgstr "Peringatan"
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "Webhook Log"
-msgstr ""
+msgstr "Webhook Log"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "Webhook Logs"
-msgstr ""
+msgstr "Webhook Logs"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__webhook_uuid
 msgid "Webhook UUID"
-msgstr ""
+msgstr "Webhook UUID"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "Weeks"
-msgstr ""
+msgstr "Minggu"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
@@ -934,24 +998,29 @@ msgid ""
 "When calculating a day-based timed condition, it is possibleto use a "
 "calendar to compute the date based on working days."
 msgstr ""
+"Saat menghitung kondisi waktu berdasarkan hari, kalender dapat digunakan "
+"untuk menghitung tanggal berdasarkan hari-hari kerja."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                If present, will be checked by the scheduler. If empty, will "
-"be checked at creation and update."
+"                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Kapan seharusnya kondisi dipicu.\n"
+"                Bila diisi, akan diperiksa oleh penjadwal. Bila kosong, akan diperiksa pada pembuatan dan pada update."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
 msgid "When unchecked, the rule is hidden and will not be executed."
 msgstr ""
+"Saat tidak dicentang, peraturan akan disembunyikan dan tidak akan "
+"dijalankan."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "When updating"
-msgstr ""
+msgstr "Saat mengupdate"
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -959,6 +1028,8 @@ msgid ""
 "With Automation Rules, you can automate\n"
 "                <em>any</em> workflow."
 msgstr ""
+"Dengan Peraturan Otomatis, Anda dapat mengotomatiskan\n"
+"                workflow <em>apapun</em>."
 
 #. module: base_automation
 #. odoo-javascript
@@ -966,12 +1037,16 @@ msgstr ""
 msgid ""
 "You can ask an administrator to disable or correct this automation rule."
 msgstr ""
+"Anda dapat meminta administrator untuk menonaktifkan atau membetulkan "
+"peraturan otomatisasi ini."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid "You can disable this automation rule or edit it to solve the issue."
 msgstr ""
+"Anda dapat menonaktifkan peraturan otomatis ini atau mengeditnya untuk "
+"menyelesaikan masalah."
 
 #. module: base_automation
 #. odoo-python
@@ -980,25 +1055,29 @@ msgid ""
 "You cannot send an email, add followers or create an activity for a deleted "
 "record.  It simply does not work."
 msgstr ""
+"Anda tidak dapat mengirimkan email, menambahkan pengikut atau membuat "
+"kegiatan untuk record yang dihapus.  Kegiatan tersebut tidak akan berhasil."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "Your webhook URL contains a secret. Don't share it online or carelessly."
 msgstr ""
+"URL webhook Anda memiliki secret. Jangan bagikan secara online dan simpan ke"
+" diri Anda sendiri."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 msgid "based on"
-msgstr ""
+msgstr "berdasarkan pada"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "e.g. Support flow"
-msgstr ""
+msgstr "contoh Support flow"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.xml:0
 msgid "no action defined..."
-msgstr ""
+msgstr "tidak ada action yang didefinisikan..."

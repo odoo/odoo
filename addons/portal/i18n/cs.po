@@ -1,47 +1,39 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* portal
-#
+# 
 # Translators:
-# Damian Brencic <brencicdamian12313@gmail.com>, 2022
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2022
-# Michal Veselý <michal@veselyberanek.net>, 2022
-# Chris, 2022
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
-# Martin Trigaux, 2022
-# karolína schusterová <karolina.schusterova@vdp.sk>, 2022
-# Jiří Podhorecký, 2022
-# Aleš Fiala <f.ales1@seznam.cz>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:57+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: cs\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "\" to validate your action."
-msgstr ""
+msgstr "\" pro potvrzení vaší akce."
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 msgid "%s days overdue"
-msgstr ""
+msgstr "%s dny po splatnosti"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "1. Enter your password to confirm you own this account"
-msgstr ""
+msgstr "1. Zadejte své heslo pro potvrzení vlastnictví tohoto účtu"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -49,40 +41,39 @@ msgid ""
 "2. Confirm you want to delete your account by\n"
 "                                        copying down your login ("
 msgstr ""
+"2. Potvrďte, že chcete smazat svůj účet\n"
+"                                        zkopírováním přihlašovacích údajů ("
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
-msgid "<i class=\"fa fa-fw fa-id-card-o me-1 small text-muted\"/> My Account"
-msgstr ""
+msgid "<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary\"/> My Account"
+msgstr "<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary\"/> Můj účet"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
-msgid "<i class=\"fa fa-fw fa-sign-out me-1 small text-muted\"/> Logout"
-msgstr ""
+msgid "<i class=\"fa fa-fw fa-sign-out me-1 small text-primary\"/> Logout"
+msgstr "<i class=\"fa fa-fw fa-sign-out me-1 small text-primary\"/> Odhlásit se"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
-msgid "<i class=\"fa fa-fw fa-th me-1 small text-muted\"/> Apps"
+msgid "<i class=\"fa fa-fw fa-th me-1 small text-primary\"/> Apps"
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_layout
-msgid "<i class=\"fa fa-pencil mx-1\"/>Edit Security Settings"
-msgstr "<i class=\"fa fa-pencil mx-1\"/>Upravit nastavení zabezpečení"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_layout
-msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr "<i class=\"fa fa-pencil\"/> Upravit"
+#: model_terms:ir.ui.view,arch_db:portal.side_content
+msgid "<i class=\"fa fa-pencil\"/> Edit information"
+msgstr "<i class=\"fa fa-pencil\"/> Změnit informace"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Back to edit mode"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>Zpět do režimu úprav"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
-msgid "<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" title=\"Previous\"/>"
+msgid ""
+"<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
 msgstr ""
 
 #. module: portal
@@ -98,32 +89,54 @@ msgstr "<i title=\"Dokumentace\" class=\"fa fa-fw o_button_icon fa-info-circle\"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "<option value=\"\">Country...</option>"
-msgstr ""
+msgstr "<option value=\"\">Země...</option>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "<option value=\"\">select...</option>"
-msgstr ""
+msgstr "<option value=\"\">vybrat...</option>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
-msgid "<small class=\"form-text text-muted\">Changing company name or VAT number is not allowed once document(s) have been issued for your account. <br/>Please contact us directly for this operation.</small>"
+msgid ""
+"<small class=\"form-text text-muted\">\n"
+"                Company name, VAT Number and country can not be changed once document(s) have been issued for your account.\n"
+"                <br/>Please contact us directly for that operation.\n"
+"            </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                Po vystavení dokumentů pro váš účet nelze změnit název společnosti, DIČ a zemi.\n"
+"                <br/>Pro tuto operaci nás prosím kontaktujte přímo.\n"
+"            </small>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+msgstr ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+msgstr "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small me-1 navbar-text\">Filter By:</span>"
-msgstr ""
+msgstr "<span class=\"small me-1 navbar-text\">Filtrovat za:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small me-1 navbar-text\">Group By:</span>"
-msgstr ""
+msgstr "<span class=\"small me-1 navbar-text\">Seskupit podle:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small me-1 navbar-text\">Sort By:</span>"
-msgstr ""
+msgstr "<span class=\"small me-1 navbar-text\">Řadit podle:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -163,7 +176,7 @@ msgid ""
 "                        An account has been created for you with the following login: <t t-out=\"object.user_id.login\">demo</t><br><br>\n"
 "                        Click on the button below to pick a password and activate your account.\n"
 "                        <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"                            <a t-att-href=\"object.user_id.signup_url\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
+"                            <a t-att-href=\"object.user_id.partner_id._get_signup_url()\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
 "                                <strong>Activate Account</strong>\n"
 "                            </a>\n"
 "                        </div>\n"
@@ -213,17 +226,17 @@ msgstr ""
 #. module: portal
 #: model:ir.model,name:portal.model_res_users_apikeys_description
 msgid "API Key Description"
-msgstr ""
+msgstr "Popis API klíče"
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 msgid "API Key Ready"
-msgstr ""
+msgstr "API klíč je připraven"
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal_signature.js:0
+#: code:addons/portal/static/src/signature_form/signature_form.js:0
 msgid "Accept & Sign"
 msgstr "Přijmout a podepsat"
 
@@ -231,18 +244,13 @@ msgstr "Přijmout a podepsat"
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_warning
 #: model:ir.model.fields,field_description:portal.field_portal_share__access_warning
 msgid "Access warning"
-msgstr "Upozornění na přístup"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_layout
-msgid "Account Security"
-msgstr "Zabezpečení účtu"
+msgstr "Varování přístupových práv"
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "Account deleted!"
-msgstr ""
+msgstr "Účet byl smazán!"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
@@ -273,18 +281,12 @@ msgstr "Přidáno na"
 #. module: portal
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
 msgid "Already Registered"
-msgstr ""
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-msgid "An access token must be provided for each attachment."
-msgstr "Pro každou přílohu musí být poskytnut přístupový token."
+msgstr "Již zaregistrované"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Are you sure you want to do this?"
-msgstr ""
+msgstr "Opravdu to chcete udělat?"
 
 #. module: portal
 #. odoo-javascript
@@ -293,8 +295,6 @@ msgid "Avatar"
 msgstr "Avatar"
 
 #. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Cancel"
@@ -309,17 +309,34 @@ msgstr "Změnit heslo"
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
-msgid "Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."
-msgstr "Změna DIČ není povolena, pokud byly pro váš účet vydány dokument(y). Prosím kontaktujte nás přímo pro tuto operaci."
+msgid ""
+"Changing VAT number is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
+"Změna DIČ není povolena, pokud byly pro váš účet vydány dokument(y). Prosím "
+"kontaktujte nás přímo pro tuto operaci."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
-msgid "Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."
-msgstr "Po vydání dokumentu(ů) pro váš účet není změna názvu společnosti povolena. Kontaktujte nás přímo pro tuto operaci."
+msgid ""
+"Changing company name is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
+"Po vydání dokumentu(ů) pro váš účet není změna názvu společnosti povolena. "
+"Kontaktujte nás přímo pro tuto operaci."
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
+msgid ""
+"Changing the country is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
+"Změna země není povolena, jakmile byly pro váš účet vystaveny dokumenty. Pro"
+" tuto operaci nás prosím kontaktujte přímo."
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 msgid "Check failed"
 msgstr "Kontrola se nezdařila"
 
@@ -330,14 +347,15 @@ msgstr "Město"
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_signature.xml:0
+#: code:addons/portal/static/src/signature_form/signature_form.xml:0
 msgid "Click here to see your document."
 msgstr "Kliknutím sem zobrazíte dokument."
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
+#: model_terms:ir.ui.view,arch_db:portal.side_content
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Close"
 msgstr "Zavřít"
@@ -350,32 +368,37 @@ msgstr " Název společnosti "
 #. module: portal
 #: model:ir.model,name:portal.model_res_config_settings
 msgid "Config Settings"
-msgstr "Nastavení konfigurace"
+msgstr "Konfigurační nastavení"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
+msgid "Configure your connection parameters"
+msgstr "Nastavte si vaše možnosti přihlášení"
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 msgid "Confirm"
 msgstr "Potvrdit"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
-msgid ""
-"Confirm\n"
-"                                <span class=\"fa fa-long-arrow-right\"/>"
-msgstr ""
-"Potvrdit\n"
-"                                <span class=\"fa fa-long-arrow-right\"/>"
-
-#. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 msgid "Confirm Password"
 msgstr "Potvrzení hesla"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Connection &amp; Security"
+msgstr "Účet &amp; bezpečnost"
+
+#. module: portal
 #: model:ir.model,name:portal.model_res_partner
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__partner_id
+#: model_terms:ir.ui.view,arch_db:portal.portal_layout
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_contact
+#: model_terms:ir.ui.view,arch_db:portal.side_content
 msgid "Contact"
 msgstr "Kontakt"
 
@@ -398,38 +421,26 @@ msgstr "Soubor se nepodařilo uložit <strong>%s</strong>"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "Country"
-msgstr "Stát"
+msgstr "Země"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__create_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__create_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__create_uid
 msgid "Created by"
-msgstr "Vytvořeno od"
+msgstr "Vytvořeno uživatelem"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__create_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__create_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__create_date
 msgid "Created on"
-msgstr "Vytvořeno"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-msgid "Currently available to everyone viewing this document, click to restrict to internal employees."
-msgstr "Aktuálně k dispozici všem, kteří si prohlížejí tento dokument, kliknutím omezte na interní zaměstnance."
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-msgid "Currently restricted to internal employees, click to make it available to everyone viewing this document."
-msgstr "Aktuálně omezeno na interní zaměstnance. Kliknutím jej zpřístupníte všem, kteří si prohlížejí tento dokument."
+msgstr "Vytvořeno dne"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__portal_allow_api_keys
 msgid "Customer API Keys"
-msgstr ""
+msgstr "API klíče zákazníka"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -439,7 +450,7 @@ msgstr "URL zákaznického portálu"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.res_config_settings_view_form
 msgid "Customers can generate API Keys"
-msgstr ""
+msgstr "Zákazník může generovat API klíče"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -455,7 +466,7 @@ msgstr "Smazat"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Delete Account"
-msgstr ""
+msgstr "Smazat účet"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -464,7 +475,6 @@ msgstr "Popis"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
-#: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "Details"
 msgstr "Podrobnosti"
 
@@ -482,10 +492,14 @@ msgid ""
 "                                            This action cannot be undone.\n"
 "                                        </b>"
 msgstr ""
+"Zakázáním vašeho účtu znemožníte přihlášení.<br/>\n"
+"                                        <b>\n"
+"                                            <i class=\"fa fa-exclamation-triangle text-danger\"/>\n"
+"                                            Tuto operaci nelze vrátit zpět.\n"
+"                                        </b>"
 
 #. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Discard"
 msgstr "Zrušit"
 
@@ -494,18 +508,13 @@ msgstr "Zrušit"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__display_name
 msgid "Display Name"
-msgstr "Zobrazované jméno"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "Documents"
-msgstr "Dokumenty"
+msgstr "Zobrazovací název"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 msgid "Due in %s days"
-msgstr ""
+msgstr "Splatnost za %s dní"
 
 #. module: portal
 #. odoo-javascript
@@ -517,23 +526,17 @@ msgstr "Vyprší dnes"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "Email"
-msgstr "E-mail "
+msgstr "Email "
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Email Address already taken by another user"
-msgstr ""
+msgstr "E-mailová adresa již byla obsazena jiným uživatelem"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
 msgid "Email Thread"
-msgstr "E-mailové vlákno"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-msgid "Employees Only"
-msgstr "Pouze zaměstnanci"
+msgstr "Emailové vlákno"
 
 #. module: portal
 #. odoo-javascript
@@ -546,6 +549,11 @@ msgstr "Zadejte popis a účel klíče."
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Forgot password?"
 msgstr "Zapomenuté heslo?"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Go Back"
+msgstr "Zpět"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -575,11 +583,13 @@ msgid ""
 "Here is your new API key, use it instead of a password for RPC access.\n"
 "                Your login is still necessary for interactive usage."
 msgstr ""
+"Zde je váš nový klíč API, použijte jej místo hesla pro přístup RPC.\n"
+"                Vaše přihlášení je stále nutné pro interaktivní použití."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
 msgid "Home"
-msgstr "Úvod"
+msgstr "Domovská stránka"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__id
@@ -592,13 +602,7 @@ msgstr "ID"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Important:"
-msgstr ""
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-msgid "Internal Note"
-msgstr "Interní poznámka"
+msgstr "Důležité:"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -606,20 +610,14 @@ msgid "Internal User"
 msgstr "Interní uživatel"
 
 #. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-msgid "Internal notes are only displayed to internal users."
-msgstr ""
-
-#. module: portal
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__ko
 msgid "Invalid"
-msgstr ""
+msgstr "Neplatný"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Invalid Email Address"
-msgstr ""
+msgstr "Neplatná e-mailová adresa"
 
 #. module: portal
 #. odoo-python
@@ -641,17 +639,23 @@ msgstr "Pozvánka"
 #. module: portal
 #: model:mail.template,description:portal.mail_template_data_portal_welcome
 msgid "Invitation email to contacts to create a user account"
-msgstr ""
+msgstr "E-mail s pozvánkou pro kontakty k vytvoření uživatelského účtu"
+
+#. module: portal
+#. odoo-python
+#: code:addons/portal/wizard/portal_share.py:0
+msgid "Invitation to access %s"
+msgstr "Pozvánka na přístup %s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_internal
 msgid "Is Internal"
-msgstr ""
+msgstr "Je interní"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_portal
 msgid "Is Portal"
-msgstr ""
+msgstr "Je portál"
 
 #. module: portal
 #. odoo-javascript
@@ -660,25 +664,33 @@ msgid ""
 "It is very important that this description be clear\n"
 "                and complete,"
 msgstr ""
+"Je velmi důležité, aby tento popis byl jasný\n"
+"                a kompletní,"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "Key Description"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_uid
 msgid "Last Updated by"
-msgstr "Naposledy upraveno od"
+msgstr "Naposledy upraveno uživatelem"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__write_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_date
 msgid "Last Updated on"
-msgstr "Naposled upraveno"
+msgstr "Naposledy upraveno dne"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__login_date
 msgid "Latest Authentication"
-msgstr ""
+msgstr "Poslední přihlášení"
 
 #. module: portal
 #. odoo-javascript
@@ -692,6 +704,19 @@ msgid "Link"
 msgstr "Odkaz"
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/js/portal_security.js:0
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Log out from all devices"
+msgstr "Odhlásit ze všech zařízení"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/js/portal_security.js:0
+msgid "Log out from all devices?"
+msgstr "Odhlásit ze všech zařízení?"
+
+#. module: portal
 #: model:ir.model,name:portal.model_mail_message
 msgid "Message"
 msgstr "Zpráva"
@@ -699,19 +724,28 @@ msgstr "Zpráva"
 #. module: portal
 #. odoo-python
 #: code:addons/portal/models/mail_thread.py:0
-msgid "Model %(model_name)s does not support token signature, as it does not have %(field_name)s field."
-msgstr "Modelka %(model_name)s nepodporuje podpis tokenu, protože nemá %(field_name)s pole."
+msgid ""
+"Model %(model_name)s does not support token signature, as it does not have "
+"%(field_name)s field."
+msgstr ""
+"Modelka %(model_name)s nepodporuje podpis tokenu, protože nemá "
+"%(field_name)s pole."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "Multi company reports are not supported."
-msgstr ""
+msgstr "Přehledy za více společností nejsou podporovány."
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_layout
+msgid "My account"
+msgstr "Můj účet"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "Name"
-msgstr "Jméno"
+msgstr "Název"
 
 #. module: portal
 #. odoo-javascript
@@ -721,7 +755,7 @@ msgstr "Pojmenujte svůj klíč"
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "New API Key"
 msgstr "Nový klíč API"
@@ -734,14 +768,8 @@ msgstr "Nové heslo:"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
-#: model_terms:ir.ui.view,arch_db:portal.pager
 msgid "Next"
 msgstr "Další"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "No Documents to display"
-msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
@@ -757,7 +785,7 @@ msgstr "Odoo Logo"
 #. odoo-python
 #: code:addons/portal/models/res_users_apikeys_description.py:0
 msgid "Only internal and portal users can create API keys"
-msgstr ""
+msgstr "API klíče mohou vytvářet pouze interní uživatelé a uživatelé portálu"
 
 #. module: portal
 #. odoo-javascript
@@ -794,7 +822,7 @@ msgstr "Telefon"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Please enter your password to confirm you own this account"
-msgstr ""
+msgstr "Zadejte prosím své heslo pro potvrzení vlastnictví tohoto účtu"
 
 #. module: portal
 #. odoo-python
@@ -806,37 +834,32 @@ msgstr "Správa přístupu k portálu"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
 msgid "Portal Access URL"
-msgstr "URL přístupu k portálu"
+msgstr "URL portálového přístupu"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
 msgid "Portal Mixin"
-msgstr "Portal Mixin"
+msgstr "Portálový mixin"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_share
 msgid "Portal Sharing"
-msgstr "Portal Sharing"
+msgstr "Portálové sdílení"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
 msgid "Portal User Config"
-msgstr "Nastavení uživatele portálu"
+msgstr "Nastavení portálového uživatele"
 
 #. module: portal
 #: model:mail.template,name:portal.mail_template_data_portal_welcome
 msgid "Portal: User Invite"
-msgstr ""
+msgstr "Portal: Pozvání uživatele"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "Powered by"
 msgstr "Běží na"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.pager
-msgid "Prev"
-msgstr "Předchozí"
 
 #. module: portal
 #. odoo-javascript
@@ -845,15 +868,13 @@ msgid "Previous"
 msgstr "Předchozí"
 
 #. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/js/portal_chatter.js:0
-msgid "Published on %s"
-msgstr "Publikováno na %s"
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
-msgid "Put my email and phone in a block list to make sure I'm never contacted again"
+msgid ""
+"Put my email and phone in a block list to make sure I'm never contacted "
+"again"
 msgstr ""
+"Vložte můj e-mail a telefon do seznamu blokovaných, abyste se mě už nikdy "
+"nekontaktovali"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_qweb
@@ -863,7 +884,7 @@ msgstr "Qweb"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Re-Invite"
-msgstr ""
+msgstr "Znovu pozvat"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__partner_ids
@@ -873,7 +894,7 @@ msgstr "Příjemci"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__resource_ref
 msgid "Related Document"
-msgstr ""
+msgstr "Související dokument"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__res_id
@@ -888,7 +909,17 @@ msgstr "Související model dokumentu"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Revoke Access"
-msgstr ""
+msgstr "Odebrat přístup"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Revoke All Sessions"
+msgstr "Odhlášení ze všech zařízení"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Save"
+msgstr "Uložit"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -898,7 +929,7 @@ msgstr "Rozsah"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Search"
-msgstr "Hledání"
+msgstr "Vyhledávání"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -907,7 +938,8 @@ msgstr "Zabezpečení"
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Security Control"
 msgstr "Bezpečnostní kontrola"
 
@@ -929,10 +961,15 @@ msgstr ""
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal/static/src/js/portal_composer.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Send"
 msgstr "Odeslat"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_contact
+msgid "Send message"
+msgstr "Odeslat zprávu"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.portal_share_action
@@ -951,10 +988,18 @@ msgid "Sign in"
 msgstr "Přihlásit se"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.frontend_layout
+msgid "Skip to Content"
+msgstr ""
+
+#. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal_composer.js:0
-msgid "Some fields are required. Please make sure to write a message or attach a document"
+msgid ""
+"Some fields are required. Please make sure to write a message or attach a "
+"document"
 msgstr ""
+"Některá pole jsou povinná. Nezapomeňte napsat zprávu nebo přiložit dokument"
 
 #. module: portal
 #. odoo-python
@@ -978,8 +1023,13 @@ msgid "Street"
 msgstr "Ulice"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
+msgid "Street 2"
+msgstr "Ulice 2"
+
+#. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_signature.xml:0
+#: code:addons/portal/static/src/signature_form/signature_form.xml:0
 msgid "Thank You!"
 msgstr "Děkujeme"
 
@@ -992,44 +1042,35 @@ msgstr "Přílohu %s nelze odstranit, protože je spojena se zprávou."
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
-msgid "The attachment %s cannot be removed because it is not in a pending state."
-msgstr "The attachment %s nelze odebrat, protože není ve stavu čekající na vyřízení."
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-msgid "The attachment %s does not exist or you do not have the rights to access it."
-msgstr "Příloha %s neexistuje nebo nemáte oprávnění k přístupu."
+msgid ""
+"The attachment %s cannot be removed because it is not in a pending state."
+msgstr ""
+"The attachment %s nelze odebrat, protože není ve stavu čekající na vyřízení."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
-msgid "The attachment does not exist or you do not have the rights to access it."
+msgid ""
+"The attachment does not exist or you do not have the rights to access it."
 msgstr "Příloha neexistuje nebo nemáte přístupová práva."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 msgid "The contact \"%s\" does not have a valid email."
-msgstr ""
+msgstr "Kontakt \"%s\" nemá validní email."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 msgid "The contact \"%s\" has the same email as an existing user"
-msgstr ""
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/portal.py:0
-msgid "The document does not exist or you do not have the rights to access it."
-msgstr "Dokument neexistuje nebo nemáte oprávnění k přístupu."
+msgstr "Kontakt \"%s\" má stejný email jako existující uživatel"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "The key cannot be retrieved later and provides"
-msgstr ""
+msgstr "Klíč nelze později získat a poskytnout"
 
 #. module: portal
 #. odoo-python
@@ -1040,32 +1081,32 @@ msgstr "Nové heslo a jeho potvrzení musí být stejné."
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
-msgid "The old password you provided is incorrect, your password was not changed."
-msgstr "Staré heslo, které jste zadali, je neplatné. Vaše heslo nebylo změněno."
+msgid ""
+"The old password you provided is incorrect, your password was not changed."
+msgstr ""
+"Staré heslo, které jste zadali, je neplatné. Vaše heslo nebylo změněno."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 msgid "The partner \"%s\" already has the portal access."
-msgstr ""
+msgstr "Partner \"%s\" již má přístup k portálu."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 msgid "The partner \"%s\" has no portal access or is internal."
-msgstr ""
+msgstr "Partner \"%s\" nemá přístup k portálu nebo je interní."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
-msgid "The template \"Portal: new user\" not found for sending email to the portal user."
+msgid ""
+"The template \"Portal: new user\" not found for sending email to the portal "
+"user."
 msgstr ""
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-msgid "There are no comments for now."
-msgstr "Momentálně nejsou žádné komentáře."
+"Šablona \"Portal: new user\" nebyla nalezena pro odeslání e-mailu uživateli "
+"portálu."
 
 #. module: portal
 #. odoo-python
@@ -1080,13 +1121,18 @@ msgstr "Toto je náhled zákaznického portálu."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
-msgid "This partner is linked to an internal User and already has access to the Portal."
+msgid ""
+"This partner is linked to an internal User and already has access to the "
+"Portal."
 msgstr ""
+"Tento partner je propojen s interním Uživatelem a již má přístup k Portálu."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
-msgid "This text is included at the end of the email sent to new portal users."
+msgid ""
+"This text is included at the end of the email sent to new portal users."
 msgstr ""
+"Tento text je uveden na konci e-mailu zaslaného novým uživatelům portálu."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
@@ -1097,6 +1143,12 @@ msgstr "Tento text je přidán do emailu odesílaného novým uživatelům port�
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Toggle filters"
 msgstr "Přepnout filtry"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "Type in your password to confirm :"
+msgstr "Pro potvrzení zadejte své heslo:"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
@@ -1121,7 +1173,7 @@ msgstr "Platný"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Valid Email Address"
-msgstr ""
+msgstr "Platná emailová adresa"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1131,13 +1183,7 @@ msgstr "Ověřte nové heslo:"
 #. module: portal
 #: model:ir.model,name:portal.model_ir_ui_view
 msgid "View"
-msgstr "Pohled"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-msgid "Visible"
-msgstr "Viditelné"
+msgstr "Zobrazení"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids
@@ -1148,16 +1194,10 @@ msgstr "Viditelné"
 #: model:ir.model.fields,field_description:portal.field_fleet_vehicle__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_contract__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_services__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_fleet_vehicle_model__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_gamification_badge__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_gamification_challenge__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_contract__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_department__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_employee__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_job__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_leave__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_leave_allocation__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_plan_employee_activity__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_loyalty_card__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_iap_account__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_lunch_supplier__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread__website_message_ids
@@ -1168,15 +1208,16 @@ msgstr "Viditelné"
 #: model:ir.model.fields,field_description:portal.field_maintenance_equipment__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_maintenance_equipment_category__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_maintenance_request__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_note_note__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_phone_blacklist__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_product_category__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_product_pricelist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_product_product__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_product_template__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_rating_mixin__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_users__website_message_ids
 msgid "Website Messages"
-msgstr "Zprávy webstránky"
+msgstr "Webové zprávy"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_account_analytic_account__website_message_ids
@@ -1187,16 +1228,10 @@ msgstr "Zprávy webstránky"
 #: model:ir.model.fields,help:portal.field_fleet_vehicle__website_message_ids
 #: model:ir.model.fields,help:portal.field_fleet_vehicle_log_contract__website_message_ids
 #: model:ir.model.fields,help:portal.field_fleet_vehicle_log_services__website_message_ids
+#: model:ir.model.fields,help:portal.field_fleet_vehicle_model__website_message_ids
 #: model:ir.model.fields,help:portal.field_gamification_badge__website_message_ids
 #: model:ir.model.fields,help:portal.field_gamification_challenge__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_contract__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_department__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_employee__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_job__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_leave__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_leave_allocation__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_plan_employee_activity__website_message_ids
-#: model:ir.model.fields,help:portal.field_loyalty_card__website_message_ids
+#: model:ir.model.fields,help:portal.field_iap_account__website_message_ids
 #: model:ir.model.fields,help:portal.field_lunch_supplier__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread__website_message_ids
@@ -1207,15 +1242,16 @@ msgstr "Zprávy webstránky"
 #: model:ir.model.fields,help:portal.field_maintenance_equipment__website_message_ids
 #: model:ir.model.fields,help:portal.field_maintenance_equipment_category__website_message_ids
 #: model:ir.model.fields,help:portal.field_maintenance_request__website_message_ids
-#: model:ir.model.fields,help:portal.field_note_note__website_message_ids
 #: model:ir.model.fields,help:portal.field_phone_blacklist__website_message_ids
+#: model:ir.model.fields,help:portal.field_product_category__website_message_ids
+#: model:ir.model.fields,help:portal.field_product_pricelist__website_message_ids
 #: model:ir.model.fields,help:portal.field_product_product__website_message_ids
 #: model:ir.model.fields,help:portal.field_product_template__website_message_ids
 #: model:ir.model.fields,help:portal.field_rating_mixin__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_users__website_message_ids
 msgid "Website communication history"
-msgstr "Historie komunikace webstránky"
+msgstr "Webová historie komunikace"
 
 #. module: portal
 #. odoo-javascript
@@ -1236,6 +1272,12 @@ msgstr "Napište zprávu..."
 
 #. module: portal
 #. odoo-javascript
+#: code:addons/portal/static/src/chatter/core/composer_patch.js:0
+msgid "Write a message…"
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Write down your key"
 msgstr "Zapište si klíč"
@@ -1243,24 +1285,23 @@ msgstr "Zapište si klíč"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Wrong password."
-msgstr ""
+msgstr "Chybné heslo."
 
 #. module: portal
-#. odoo-python
-#: code:addons/portal/wizard/portal_share.py:0
-msgid "You are invited to access %s"
-msgstr "Jste zván k přístupu %s"
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid ""
+"You are about to log out from all devices that currently have access to this"
+" user's account."
+msgstr ""
+"Chystáte se odhlásit ze všech zařízení, která mají aktuálně přístup k účtu "
+"tohoto uživatele."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "You cannot leave any password empty."
 msgstr "Všechna hesla musí být vyplněná."
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_share_template
-msgid "You have been invited to access the following document:"
-msgstr "Byli jste pozváni k přístupu k následujícímu dokumentu:"
 
 #. module: portal
 #. odoo-javascript
@@ -1271,18 +1312,18 @@ msgstr "Musíte být"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "You should enter \""
-msgstr ""
+msgstr "Měli byste zadat \""
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 msgid "You should first grant the portal access to the partner \"%s\"."
-msgstr ""
+msgstr "Nejprve byste měli partnerovi udělit přístup k portálu \"%s\"."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
 msgid "Your account at {{ object.user_id.company_id.name }}"
-msgstr ""
+msgstr "Váš účet na adrese {{ object.user_id.company_id.name }}"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact
@@ -1296,26 +1337,13 @@ msgstr "PSČ"
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-msgid "avatar"
-msgstr "avatar"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-msgid "comment"
-msgstr "komentář"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-msgid "comments"
-msgstr "komentáře"
-
-#. module: portal
-#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "full access"
+msgstr "plný přístup"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_share_template
+msgid "has invited you to access the following"
 msgstr ""
 
 #. module: portal
@@ -1325,6 +1353,8 @@ msgid ""
 "it will be the only way to\n"
 "                identify the key once created"
 msgstr ""
+"bude to jediný způsob,\n"
+"                jak identifikovat vytvořený klíč"
 
 #. module: portal
 #. odoo-javascript
@@ -1344,6 +1374,12 @@ msgstr "Heslo"
 
 #. module: portal
 #. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "revoke"
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 msgid "to post a comment."
 msgstr "přidat komentář."
@@ -1352,4 +1388,4 @@ msgstr "přidat komentář."
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "to your user account, it is very important to store it securely."
-msgstr ""
+msgstr "do vašeho uživatelského účtu, je velmi důležité jej bezpečně uložit."

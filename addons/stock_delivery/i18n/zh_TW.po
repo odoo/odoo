@@ -1,0 +1,600 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_delivery
+# 
+# Translators:
+# Wil Odoo, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/sale_order.py:0
+msgid "%(name)s (Estimated Cost: %(cost)s)"
+msgstr "%(name)s（預計成本：%(cost)s）"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_quant_package_weight_form
+msgid "(computed:"
+msgstr "（已計算得出："
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.stock_report_delivery_package_section_line_inherit_delivery
+msgid "<span> - Weight (estimated): </span>"
+msgstr "<span> - 重量(估計): </span>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_stock_report_delivery_no_package_section_line
+#: model_terms:ir.ui.view,arch_db:stock_delivery.stock_report_delivery_package_section_line_inherit_delivery
+msgid "<span> - Weight: </span>"
+msgstr "<span> - 重量: </span>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
+msgid "<span>Shipping Weight: </span>"
+msgstr "<span>裝運重量: </span>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
+msgid "<strong>Carrier</strong>"
+msgstr "<strong>運輸服務商</strong>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
+msgid "<strong>Shipping Method:</strong>"
+msgstr "<strong>運送方式</strong>："
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
+msgid "<strong>Shipping Weight: </strong>"
+msgstr "<strong>運輸重量：</strong>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
+msgid ""
+"<strong>Shipping Weight:</strong>\n"
+"                    <br/>"
+msgstr ""
+"<strong>運輸重量:</strong>\n"
+"                <br/>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
+msgid "<strong>Total Weight</strong>"
+msgstr "<strong>總重量</strong>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
+msgid "<strong>Tracking Number</strong>"
+msgstr "<strong>追蹤號碼</strong>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
+msgid "<strong>Weight: </strong>"
+msgstr "<strong>重量</strong>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
+msgid "<strong>Weight</strong>"
+msgstr "<strong>重量</strong>"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
+msgid "Applicable on Shipping Methods"
+msgstr "適用於運輸方式"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid "Cancel"
+msgstr "取消"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid ""
+"Cancelling a delivery may not be undoable. Are you sure you want to "
+"continue?"
+msgstr "取消配送可能無法撤消。確定要繼續？"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__carrier_id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__package_carrier_type
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_id
+#: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
+msgid "Carrier"
+msgstr "承運商"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__shipper_package_code
+msgid "Carrier Code"
+msgstr "承運商代碼"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
+msgid "Carrier name"
+msgstr "承運商名稱"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__company_id
+msgid "Company"
+msgstr "公司"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+msgid "Cost: %(price).2f %(currency)s"
+msgstr "成本： %(price).2f %(currency)s"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__create_uid
+msgid "Created by"
+msgstr "建立人員"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__create_date
+msgid "Created on"
+msgstr "建立於"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_choose_delivery_carrier
+msgid "Delivery Carrier Selection Wizard"
+msgstr "貨運承運商選擇介面"
+
+#. module: stock_delivery
+#: model:ir.ui.menu,name:stock_delivery.menu_action_delivery_carrier_form
+msgid "Delivery Methods"
+msgstr "送貨方式"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_choose_delivery_package
+msgid "Delivery Package Selection Wizard"
+msgstr "交貨包裹選擇嚮導"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__delivery_package_type_id
+msgid "Delivery Package Type"
+msgstr "快遞包裹類型"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.vpicktree_view_tree
+msgid "Destination"
+msgstr "目的地"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__destination_country_code
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__destination_country_code
+msgid "Destination Country"
+msgstr "目的地國家"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
+msgid "Discard"
+msgstr "捨棄"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: stock_delivery
+#: model:ir.actions.act_window,name:stock_delivery.act_delivery_trackers_url
+msgid "Display tracking links"
+msgstr "顯示追蹤連結"
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
+msgid ""
+"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+msgstr ""
+"預計成本：客戶將收到預估運費的發票。\n"
+"實際費用：客戶將收到實際運費的發票，運費將在發貨後更新到銷售訂單上。"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+msgid "Exception occurred with respect to carrier on the transfer"
+msgstr ""
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+msgid "Exception:"
+msgstr "例外："
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
+msgid "FedEx"
+msgstr "FedEx"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_product_product__hs_code
+#: model:ir.model.fields,field_description:stock_delivery.field_product_template__hs_code
+#: model_terms:ir.ui.view,arch_db:stock_delivery.product_template_hs_code
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
+msgid "HS Code"
+msgstr "HS編碼"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__id
+msgid "ID"
+msgstr "識別號"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_route
+msgid "Inventory Routes"
+msgstr "庫存路線"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__invoice_policy
+msgid "Invoicing Policy"
+msgstr "發票政策"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__is_return_picking
+msgid "Is Return Picking"
+msgstr "是退貨領料"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__write_uid
+msgid "Last Updated by"
+msgstr "最後更新者"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__write_date
+msgid "Last Updated on"
+msgstr "最後更新於"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+msgid "Manual actions might be needed."
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
+msgid "No carrier integration"
+msgstr "無承運商串接"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
+msgid "OK"
+msgstr "確定"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_product_product__country_of_origin
+#: model:ir.model.fields,field_description:stock_delivery.field_product_template__country_of_origin
+msgid "Origin of Goods"
+msgstr "貨物原產地"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
+msgid "Package"
+msgstr "包裹"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+msgid "Package Details"
+msgstr "包裝詳情"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/wizard/choose_delivery_package.py:0
+msgid "Package too heavy!"
+msgstr "包裹太重！"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_quant_package
+msgid "Packages"
+msgstr "包裹"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__picking_id
+msgid "Picking"
+msgstr "提貨"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid "Print Return Label"
+msgstr "列印退貨單"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_product_template
+msgid "Product"
+msgstr "商品"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "產品移動(移庫明細)"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__delivery_type
+msgid "Provider"
+msgstr "服務商"
+
+#. module: stock_delivery
+#: model:ir.model.fields.selection,name:stock_delivery.selection__delivery_carrier__invoice_policy__real
+msgid "Real cost"
+msgstr "實際成本"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__return_label_ids
+msgid "Return Label"
+msgstr "退貨單"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_return_picking
+msgid "Return Picking"
+msgstr "退回提貨"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__route_ids
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_delivery_carrier_form_inherit_stock_delivery
+msgid "Routes"
+msgstr "路線"
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_product_product__country_of_origin
+#: model:ir.model.fields,help:stock_delivery.field_product_template__country_of_origin
+msgid ""
+"Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
+"As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
+msgstr ""
+"原產地規則確定貨物的來源，即不是貨物的運自何處，而是貨物的生產或製造地。\n"
+"因此，「原產地」是商業貿易商品的「經濟國籍」。"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__sale_price
+msgid "Sale Price"
+msgstr "銷售價格"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_sale_order
+msgid "Sales Order"
+msgstr "銷售訂單"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "銷售訂單明細"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
+msgid "Save"
+msgstr "儲存"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid "Send to Shipper"
+msgstr "發給托運人"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+msgid ""
+"Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
+"%(ref)s"
+msgstr "貨件已運輸給承運商 %(carrier_name)s 以進行裝運，追蹤編號為 %(ref)s"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_price
+msgid "Shipping Cost"
+msgstr "發貨成本"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid "Shipping Information"
+msgstr "送貨資訊"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_delivery_carrier
+#: model_terms:ir.ui.view,arch_db:stock_delivery.stock_location_route_view_form_inherit_stock_delivery
+msgid "Shipping Methods"
+msgstr "寄送方式"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__shipping_weight
+msgid "Shipping Weight"
+msgstr "發貨重量"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
+msgid "Shipping Weight:"
+msgstr "裝運重量："
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_product_product__hs_code
+#: model:ir.model.fields,help:stock_delivery.field_product_template__hs_code
+msgid "Standardized code for international shipping and goods declaration."
+msgstr "國際運輸及貨物申報的標準代碼。"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_move
+msgid "Stock Move"
+msgstr "庫存移動"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_package_type
+msgid "Stock package type"
+msgstr "庫存包裝類型"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_rounding
+msgid "Technical field indicating weight's number of decimal places"
+msgstr "技術欄位，指示重量小數位數"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_is_kg
+msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
+msgstr "技術欄位，指示重量計量單位是公斤抑或不是（即磅）"
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_stock_move_line__destination_country_code
+#: model:ir.model.fields,help:stock_delivery.field_stock_picking__destination_country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"ISO 國家代碼使用兩個字元。\n"
+" 您可以使用此欄位進行快速搜尋。"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/delivery_carrier.py:0
+msgid ""
+"The package cannot be created because the total weight of the products in "
+"the picking is 0.0 %s"
+msgstr "無法建立包裹，因為提貨單上產品的重量總計是 0.0 %s"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/wizard/choose_delivery_carrier.py:0
+msgid "The shipping price will be set once the delivery is done."
+msgstr "當完成運貨後將更新運費."
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/wizard/choose_delivery_package.py:0
+msgid ""
+"The weight of your package is higher than the maximum weight authorized for "
+"this package type. Please choose another package type."
+msgstr "您的包裹的重量高於這個包裝類型所授權的最大重量。請選擇另一個包類型。"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/delivery_carrier.py:0
+msgid "There is no matching delivery rule."
+msgstr "沒有匹配的交貨規則。"
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_stock_quant_package__weight
+msgid "Total weight of all the products contained in the package."
+msgstr "該包裝所有產品的總重量."
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight
+msgid "Total weight of the products in the picking."
+msgstr "該次撿貨所有產品的總重量."
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
+msgid "Trackers URL"
+msgstr "追蹤器連結"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid "Tracking"
+msgstr "追蹤"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_tracking_ref
+msgid "Tracking Reference"
+msgstr "追蹤編碼"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_tracking_url
+msgid "Tracking URL"
+msgstr "追蹤網址"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+msgid "Tracking links for shipment:"
+msgstr "運輸追蹤連結："
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
+msgid "Tracking:"
+msgstr "追蹤:"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_picking
+msgid "Transfer"
+msgstr "轉移"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move__weight
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid "Weight"
+msgstr "重量"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid "Weight for shipping"
+msgstr "裝運重量"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__weight_uom_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight_uom_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_name
+msgid "Weight unit of measure label"
+msgstr "重量單位計量摘要"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
+msgid "Weight:"
+msgstr "重量："
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+msgid ""
+"You cannot pack products into the same package when they have different "
+"carriers (i.e. check that all of their transfers have a carrier assigned and"
+" are using the same carrier)."
+msgstr "若產品的承運物流商不同，便不可包裝至同一包裹中。（即是說，請檢查產品的所有轉移是否已有指定物流商，並使用同一物流商。）"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
+msgid "You have multiple tracker links, they are available in the chatter."
+msgstr "您有多個追蹤器連結，它們在聊天中可用。"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
+msgstr "你的送貨方式在快遞商網站上沒有重新導向，可用作追蹤此訂單。"
+
+#. module: stock_delivery
+#: model:ir.ui.menu,name:stock_delivery.menu_delivery_zip_prefix
+msgid "Zip Prefix"
+msgstr "郵政編碼字首"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
+msgid "^A0N,44,33^FDShipping Weight:"
+msgstr "^A0N,44,33^貨運重量："
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
+msgid "^A0N,44,33^FDWeight:"
+msgstr "^A0N,44,33^重量："
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
+msgid "^FO310,200"
+msgstr "^FO310,200"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
+msgid "^FS"
+msgstr "^FS"

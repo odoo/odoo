@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_tax_python
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_tax_python
@@ -25,114 +25,72 @@ msgid ""
 "\n"
 "    - Group of Taxes: The tax is a set of sub taxes.\n"
 "    - Fixed: The tax amount stays the same whatever the price.\n"
-"    - Percentage of Price: The tax amount is a % of the price:\n"
+"    - Percentage: The tax amount is a % of the price:\n"
 "        e.g 100 * (1 + 10%) = 110 (not price included)\n"
 "        e.g 110 / (1 + 10%) = 100 (price included)\n"
-"    - Percentage of Price Tax Included: The tax amount is a division of the price:\n"
+"    - Percentage Tax Included: The tax amount is a division of the price:\n"
 "        e.g 180 / (1 - 10%) = 200 (not price included)\n"
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
 "\n"
-"    - Nhóm thuế: Thuế được dùng là tập hợp của các loại thuế con.\n"
-"    - Cố định: Số tiền tính thuế luôn bằng nhau dù giá có thay đổi.\n"
-"    - Phần trăm giá: Số tiền tính thuế theo % giá:\n"
-"        e.g 100 * 10% = 110 (chưa bao gồm giá)\n"
-"        e.g 110 / (1 + 10%) = 100 (đã gồm giá)\n"
-"    - Phần trăm của giá đã bao gồm thuế: Tiền thuế là khoản tiền được chia ra từ giá:\n"
-"        e.g 180 / (1 - 10%) = 200 (chưa bao gồm giá)\n"
-"        e.g 200 * (1 - 10%) = 180 (đã gồm giá)\n"
+"    - Nhóm thuế: Thuế là tập hợp của các loại thuế phụ.\n"
+"    - Cố định: Số tiền thuế luôn không đổi dù giá có thay đổi.\n"
+"    - Phần trăm: Số tiền thuế được tính theo % giá cả:\n"
+"        VD: 100 * (1 + 10%) = 110 (chưa bao gồm trong giá)\n"
+"        VD: 110 / (1 + 10%) = 100 (đã gồm trong giá)\n"
+"    - Phần trăm đã bao gồm thuế: Tiền thuế là khoản tiền được chia ra từ giá:\n"
+"        VD: 180 / (1 - 10%) = 200 (chưa bao gồm trong giá)\n"
+"        VD: 200 * (1 - 10%) = 180 (đã gồm trong giá)\n"
 "        "
 
 #. module: account_tax_python
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_applicable
-msgid "Applicable Code"
-msgstr "Applicable Code"
-
-#. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax__python_compute
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__formula
 msgid ""
-"Compute the amount of the tax by setting the variable 'result'.\n"
+"Compute the amount of the tax.\n"
 "\n"
-":param base_amount: float, actual amount on which the tax is applied\n"
+":param base: float, actual amount on which the tax is applied\n"
 ":param price_unit: float\n"
 ":param quantity: float\n"
-":param company: res.company recordset singleton\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
+":param product: A object representing the product\n"
 msgstr ""
-"Compute the amount of the tax by setting the variable 'result'.\n"
+"Tính số tiền thuế.\n"
 "\n"
-":param base_amount: float, actual amount on which the tax is applied\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param company: res.company recordset singleton\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
+":param base: thả nổi, số tiền thực tế được tính thuế\n"
+":param price_unit: thả nổi\n"
+":param quantity: thả nổi\n"
+":param product: Một đối tượng đại diện cho sản phẩm\n"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
-msgid ""
-"Compute the amount of the tax by setting the variable 'result'.\n"
-"\n"
-":param base_amount: float, actual amount on which the tax is applied\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
-msgstr ""
-"Compute the amount of the tax by setting the variable 'result'.\n"
-"\n"
-":param base_amount: float, actual amount on which the tax is applied\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
-
-#. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
-msgid ""
-"Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
-"\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param company: res.company recordset singleton\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
-msgstr ""
-"Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
-"\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param company: res.company recordset singleton\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
-
-#. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
-msgid ""
-"Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
-"\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
-msgstr ""
-"Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
-"\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
-
-#. module: account_tax_python
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_compute
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
-#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax_template__amount_type__code
-msgid "Python Code"
-msgstr "Mã Python"
+msgid "Custom Formula"
+msgstr "Công thức tùy chỉnh"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
+msgid "Formula"
+msgstr "Công thức"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
+msgid "Formula Decoded Info"
+msgstr "Thông tin được giải mã"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/models/account_tax.py:0
+msgid "Malformed formula '%(formula)s' at position %(position)s"
+msgstr "Công thức '%(formula)s' không đúng định dạng tại vị trí %(position)s"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
@@ -141,11 +99,5 @@ msgstr "Thuế"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
 msgid "Tax Computation"
 msgstr "Tính thuế"
-
-#. module: account_tax_python
-#: model:ir.model,name:account_tax_python.model_account_tax_template
-msgid "Templates for Taxes"
-msgstr "Mẫu cho thuế"

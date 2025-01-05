@@ -1,42 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_landed_costs
-#
+# 
 # Translators:
-# Denys Sarapulov, 2022
-# AncesLatino2004, 2022
-# eriiikgt, 2022
-# Sandra Franch <sandra.franch@upc.edu>, 2022
-# Susanna Pujol, 2022
-# Martin Trigaux, 2022
-# Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
-# Harcogourmet, 2022
-# jabelchi, 2022
-# marcescu, 2022
-# RGB Consulting <odoo@rgbconsulting.com>, 2022
-# Quim - eccit <quim@eccit.com>, 2022
-# jabiri7, 2022
-# Ivan Espinola, 2023
-#
+# Wil Odoo, 2024
+# Xavier, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Ivan Espinola, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Xavier, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
-"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
-msgid " already out"
-msgstr "ja fora"
+msgid "%(product)s: %(quantity)s already out"
+msgstr ""
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
@@ -47,17 +35,6 @@ msgstr "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "<span class=\"o_stat_text\">Valuation</span>"
 msgstr ""
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_account_move_line__product_type
-msgid ""
-"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
-"A consumable product is a product for which stock is not managed.\n"
-"A service is a non-material product you provide."
-msgstr ""
-"Un producte emmagatzemable és un producte pel qual gestioneu estoc. Cal instal·lar l'aplicació Inventari.\n"
-"Un consumible és un producte pel qual no es gestiona estoc.\n"
-"Un servei és un producte no material que subministreu. "
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__account_id
@@ -82,7 +59,7 @@ msgstr "Activitats"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Decoració de l'activitat d'excepció"
+msgstr "Activitat d'excepció de decoració"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_state
@@ -141,7 +118,7 @@ msgstr "Per pes"
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Cancel"
-msgstr "Cancel·lar"
+msgstr "Cancel·la"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__cancel
@@ -159,11 +136,6 @@ msgid "Company"
 msgstr "Empresa"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__company_id
-msgid "Company related to this journal"
-msgstr "Empresa relacionada amb aquest diari"
-
-#. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Compute"
 msgstr "Calcula"
@@ -171,7 +143,7 @@ msgstr "Calcula"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_res_config_settings
 msgid "Config Settings"
-msgstr "Ajustos de configuració"
+msgstr "Paràmetres de configuració"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__price_unit
@@ -192,8 +164,12 @@ msgstr "Línia de cost"
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
-msgid "Cost and adjustments lines do not match. You should maybe recompute the landed costs."
-msgstr "Les línies de cost i ajustament no coincideixen. Vostè ha de recalcular potser els costos de transport."
+msgid ""
+"Cost and adjustments lines do not match. You should maybe recompute the "
+"landed costs."
+msgstr ""
+"Les línies de cost i ajustament no coincideixen. Vostè ha de recalcular "
+"potser els costos de transport."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
@@ -248,7 +224,8 @@ msgstr "Mètode de divisió per defecte"
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method when used for Landed Cost"
-msgstr "Mètode de desglossament per defecte quan s'utilitza per al cost desembarcat"
+msgstr ""
+"Mètode de desglossament per defecte quan s'utilitza per al cost desembarcat"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
@@ -257,11 +234,19 @@ msgid "Description"
 msgstr "Descripció"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_purchase_order_line__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_move__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_layer__display_name
 msgid "Display Name"
-msgstr "Nom a mostrar"
+msgstr "Nom mostrat"
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,name:stock_landed_costs.mt_stock_landed_cost_open
@@ -312,6 +297,15 @@ msgid "Future Activities"
 msgstr "Activitats futures"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_account_move_line__product_type
+msgid ""
+"Goods are tangible materials and merchandise you provide.\n"
+"A service is a non-material product you provide."
+msgstr ""
+"Els béns són materials i mercaderies tangibles que proporcioneu.\n"
+"Un servei és un producte no material que proporcioneu."
+
+#. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Group By"
 msgstr "Agrupar per"
@@ -322,9 +316,17 @@ msgid "Has Message"
 msgstr "Té un missatge"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_purchase_order_line__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_move__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_layer__id
 msgid "ID"
 msgstr "ID"
 
@@ -341,7 +343,8 @@ msgstr "Icona que indica una activitat d'excepció."
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Si està marcat, hi ha nous missatges que requereixen la vostra atenció."
+msgstr ""
+"Si està marcat, hi ha nous missatges que requereixen la vostra atenció."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error
@@ -352,13 +355,17 @@ msgstr "Si està marcat, alguns missatges tenen un error d'entrega."
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__landed_cost_ok
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__landed_cost_ok
-msgid "Indicates whether the product is a landed cost: when receiving a vendor bill, you can allocate this cost on preceding receipts."
-msgstr "Indica si el producte és un cost aterrat: quan rebeu una factura del proveïdor, podeu assignar aquest cost en els rebuts anteriors."
+msgid ""
+"Indicates whether the product is a landed cost: when receiving a vendor "
+"bill, you can allocate this cost on preceding receipts."
+msgstr ""
+"Indica si el producte és un cost aterrat: quan rebeu una factura del "
+"proveïdor, podeu assignar aquest cost en els rebuts anteriors."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
 msgid "Is Follower"
-msgstr "És seguidor"
+msgstr "És un seguidor"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__is_landed_costs_line
@@ -404,7 +411,6 @@ msgstr "Cost en destí"
 #: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_bank_statement_line__landed_costs_ids
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_ids
-#: model:ir.model.fields,field_description:stock_landed_costs.field_account_payment__landed_costs_ids
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -417,7 +423,6 @@ msgstr "Costos en destí"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_bank_statement_line__landed_costs_visible
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_visible
-#: model:ir.model.fields,field_description:stock_landed_costs.field_account_payment__landed_costs_visible
 msgid "Landed Costs Visible"
 msgstr "Costos en destí visibles"
 
@@ -428,7 +433,9 @@ msgstr "Cost en destí validat"
 
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
-msgid "Landed costs allow you to include additional costs (shipment, insurance, customs duties, etc) into the cost of the product."
+msgid ""
+"Landed costs allow you to include additional costs (shipment, insurance, "
+"customs duties, etc) into the cost of the product."
 msgstr ""
 
 #. module: stock_landed_costs
@@ -519,7 +526,7 @@ msgstr "Nombre d'errors"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Nombre de missatges que requereixen una acció"
 
 #. module: stock_landed_costs
@@ -547,13 +554,16 @@ msgstr "Albarà"
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 msgid "Please configure Stock Expense Account for product: %s."
-msgstr "Configuri per favor el compte de gastos d'existències pel producte: %s."
+msgstr ""
+"Configuri per favor el compte de gastos d'existències pel producte: %s."
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 msgid "Please define %s on which those additional costs should apply."
-msgstr "Si us plau, defineixi %s sobre els quals haurien d'aplicar-se aquests costos addicionals."
+msgstr ""
+"Si us plau, defineixi %s sobre els quals haurien d'aplicar-se aquests costos"
+" addicionals."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
@@ -585,7 +595,7 @@ msgstr "Quantitat"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Valoracions"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_user_id
@@ -600,7 +610,8 @@ msgstr "Error de lliurament SMS"
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Show all records which has next action date is before today"
-msgstr "Mostra tots els registres en que la data de següent acció és abans d'avui"
+msgstr ""
+"Mostra tots els registres en que la data de següent acció és abans d'avui"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__split_method
@@ -610,7 +621,7 @@ msgstr "Mètode de divisió"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__state
 msgid "State"
-msgstr "Província"
+msgstr "Estat"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -626,7 +637,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Estat basat en activitats\n"
-"Sobrepassat: La data límit ja ha passat\n"
+"Vençuda: La data límit ja ha passat\n"
 "Avui: La data de l'activitat és avui\n"
 "Planificat: Activitats futures."
 
@@ -641,6 +652,7 @@ msgid "Stock Landed Cost Line"
 msgstr "Línia de cost d'existències desembarcades"
 
 #. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_move
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__move_id
 msgid "Stock Move"
 msgstr "Moviment d'estoc"
@@ -680,8 +692,12 @@ msgstr "Validar"
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
-msgid "Validated landed costs cannot be cancelled, but you could create negative landed costs to reverse them"
-msgstr "Costos descarregats validats no poden ser cancel·lats, pero vostè podria crear un cost negatiu descarregat per revertir els descarregats."
+msgid ""
+"Validated landed costs cannot be cancelled, but you could create negative "
+"landed costs to reverse them"
+msgstr ""
+"Costos descarregats validats no poden ser cancel·lats, pero vostè podria "
+"crear un cost negatiu descarregat per revertir els descarregats."
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
@@ -722,11 +738,20 @@ msgstr "Pes"
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
-msgid "You cannot apply landed costs on the chosen %s(s). Landed costs can only be applied for products with FIFO or average costing method."
-msgstr "No podeu aplicar els costos desembarcats en el seleccionat %s(s). Els costos desembarcats només poden aplicar-se per a productes amb mètodes FIFO o de cost mitjà."
+msgid ""
+"You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
+"applied for products with FIFO or average costing method."
+msgstr ""
+"No podeu aplicar els costos desembarcats en el seleccionat %s(s). Els costos"
+" desembarcats només poden aplicar-se per a productes amb mètodes FIFO o de "
+"cost mitjà."
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/product.py:0
-msgid "You cannot change the product type or disable landed cost option because the product is used in an account move line."
-msgstr "No es pot canviar el tipus de producte ni desactivar l'opció del preu de lliurament perquè el producte s'utilitza en una línia de moviment de compte."
+msgid ""
+"You cannot change the product type or disable landed cost option because the"
+" product is used in an account move line."
+msgstr ""
+"No es pot canviar el tipus de producte ni desactivar l'opció del preu de "
+"lliurament perquè el producte s'utilitza en una línia de moviment de compte."

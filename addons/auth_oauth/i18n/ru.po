@@ -1,31 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_oauth
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.providers
 msgid "- or -"
 msgstr "- или -"
-
-#. module: auth_oauth
-#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
-msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Tutorial"
-msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Учебное пособие"
 
 #. module: auth_oauth
 #. odoo-python
@@ -41,7 +38,7 @@ msgstr "Разрешите пользователям входить в сист
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Allow users to sign in with their Google account"
-msgstr "Разрешить пользователям входить в свою учетную запись Google."
+msgstr "Разрешить пользователям входить в свою учетную запись Google"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__enabled
@@ -91,6 +88,9 @@ msgstr "Конечная точка данных"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__display_name
 msgid "Display Name"
 msgstr "Отображаемое имя"
 
@@ -101,6 +101,9 @@ msgstr "Аутентификация Google"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__id
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -138,6 +141,12 @@ msgstr "Войдите в систему с помощью Odoo.com"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
 msgid "Login button label"
 msgstr "Ярлык кнопки входа в систему"
+
+#. module: auth_oauth
+#. odoo-python
+#: code:addons/auth_oauth/models/res_users.py:0
+msgid "Missing subject identity"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_access_token
@@ -203,7 +212,7 @@ msgstr "Последовательность"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__server_uri_google
 msgid "Server uri"
-msgstr "Сервер url"
+msgstr "Сервер uri"
 
 #. module: auth_oauth
 #. odoo-python
@@ -215,6 +224,11 @@ msgstr "Регистрация в этой базе данных запреще�
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter
 msgid "System Parameter"
 msgstr "Параметр Системы"
+
+#. module: auth_oauth
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+msgid "Tutorial"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
@@ -229,14 +243,20 @@ msgstr "URL UserInfo"
 #. module: auth_oauth
 #. odoo-python
 #: code:addons/auth_oauth/controllers/main.py:0
-msgid "You do not have access to this database or your invitation has expired. Please ask for an invitation and be sure to follow the link in your invitation email."
-msgstr "У вас нет доступа к этой базе данных или срок действия вашего приглашения истек. Пожалуйста, запросите приглашение и обязательно перейдите по ссылке в письме с приглашением."
+msgid ""
+"You do not have access to this database or your invitation has expired. "
+"Please ask for an invitation and be sure to follow the link in your "
+"invitation email."
+msgstr ""
+"У вас нет доступа к этой базе данных или срок действия вашего приглашения "
+"истек. Пожалуйста, запросите приглашение и обязательно перейдите по ссылке в"
+" письме с приглашением."
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_tree
 msgid "arch"
-msgstr "арка"
+msgstr "arch"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form

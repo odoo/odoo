@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_geolocalize
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Cécile Collart <cco@odoo.com>, 2022
-# Jolien De Paepe, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fr\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: base_geolocalize
@@ -79,8 +77,8 @@ msgstr "Nom d'affichage"
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
-msgid "Error with geolocation server:"
-msgstr "Erreur avec le serveur de géolocalisation :"
+msgid "Error with geolocation server: %s"
+msgstr "Erreur avec le serveur de géolocalisation : %s"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geocoder
@@ -126,12 +124,12 @@ msgstr "Clé :"
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__write_uid
 msgid "Last Updated by"
-msgstr "Dernière mise à jour par"
+msgstr "Mis à jour par"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__write_date
 msgid "Last Updated on"
-msgstr "Dernière mise à jour le"
+msgstr "Mis à jour le"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -163,7 +161,8 @@ msgstr "Assignation de partenaire"
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 msgid "Provider %s is not implemented for geolocation service."
-msgstr "Le fournisseur %s n'est pas implémenté pour le service de géolocalisation."
+msgstr ""
+"Le fournisseur %s n'est pas implémenté pour le service de géolocalisation."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -179,7 +178,7 @@ msgstr "Actualiser la localisation"
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_techname
 msgid "Technical Name"
-msgstr ""
+msgstr "Nom technique"
 
 #. module: base_geolocalize
 #. odoo-python
@@ -208,8 +207,13 @@ msgstr "Mis à jour le :"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
-msgid "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
-msgstr "Rendez-vous sur https://developers.google.com/maps/documentation/geocoding/get-api-key pour plus d'informations."
+msgid ""
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key"
+" for more information."
+msgstr ""
+"Rendez-vous sur "
+"https://developers.google.com/maps/documentation/geocoding/get-api-key pour "
+"plus d'informations."
 
 #. module: base_geolocalize
 #. odoo-python

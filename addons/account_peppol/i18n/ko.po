@@ -1,0 +1,1076 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_peppol
+# 
+# Translators:
+# Wil Odoo, 2024
+# Daye Jeong, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Daye Jeong, 2025\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
+msgid "%s (customer not on Peppol)"
+msgstr "%s (고객이 Peppol에 가입되어 있지 않음)"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "%s has requested electronic invoices reception on Peppol."
+msgstr "%s가 Peppol에서 전자 청구서 수신을 요청하였습니다."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid ""
+"<br/>\n"
+"                            If you need a Peppol compliant software, we recommend"
+msgstr ""
+"<br/>\n"
+"                            Peppol 규격의 소프트웨어가 필요하다면, 저희가 권장하는 것은"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
+msgid ""
+"<span class=\"mx-1\" invisible=\"'demo_' not in peppol_message_uuid\"> (Demo)</span>\n"
+"                    <span class=\"text-muted mx-3\" invisible=\"peppol_move_state != 'to_send'\">\n"
+"                        The invoice will be sent automatically via Peppol\n"
+"                    </span>"
+msgstr ""
+"<span class=\"mx-1\" invisible=\"'demo_' not in peppol_message_uuid\"> (데모)</span>\n"
+"                    <span class=\"text-muted mx-3\" invisible=\"peppol_move_state != 'to_send'\">\n"
+"                         청구서는 Peppol을 통해 자동으로 발송됩니다.\n"
+"                    </span>"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
+msgid ""
+"A participant with these details has already been registered on the network."
+" If you have previously registered to an alternative Peppol service, please "
+"deregister from that service, or request a migration key before trying "
+"again. "
+msgstr ""
+"해당 세부 정보가 있는 참가자가 이미 네트워크에 등록되어 있습니다. 이전에 다른 Peppol 서비스에 등록한 경우, 해당 서비스의 등록을"
+" 취소하거나 마이그레이션 키를 요청하여 다시 시도하세요."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_company.py:0
+msgid "A purchase journal must be used to receive Peppol documents."
+msgstr "Peppol 문서를 받으려면 매입 전표를 사용해야 합니다."
+
+#. module: account_peppol
+#: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
+msgid "Account EDI proxy user"
+msgstr "계정 EDI 프록시 사용자"
+
+#. module: account_peppol
+#: model:ir.model,name:account_peppol.model_account_move_send
+msgid "Account Move Send"
+msgstr "계정 이동 보내기"
+
+#. module: account_peppol
+#: model:ir.model,name:account_peppol.model_account_move_send_batch_wizard
+msgid "Account Move Send Batch Wizard"
+msgstr "계정 이동 일괄 전송 마법사"
+
+#. module: account_peppol
+#: model:ir.model,name:account_peppol.model_account_move_send_wizard
+msgid "Account Move Send Wizard"
+msgstr "계정 이동 전송 마법사"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_journal__is_peppol_journal
+msgid "Account used for Peppol"
+msgstr "Peppol에 사용되는 계정입니다."
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
+msgid "Activate"
+msgstr "활성화"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Activate Electronic Invoicing"
+msgstr "전자 인보이스 활성화"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "Activate Electronic Invoicing (via Peppol)"
+msgstr "전자 청구서 발행 활성화 (Peppol 사용)"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid "Activate Peppol"
+msgstr "Peppol 활성화"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid "Activate Peppol (Demo)"
+msgstr "Peppol 활성화 (데모)"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid "Activate Peppol (Test)"
+msgstr "Peppol 활성화 (테스트)"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid "Allow incoming invoices"
+msgstr "수신 청구서 허용"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Allow reception"
+msgstr "수신 허용"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Allow sending and receiving invoices through the PEPPOL network"
+msgstr "PEPPOL 네트워크를 통한 청구서 송수신을 허용합니다."
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_partner__available_peppol_edi_formats
+#: model:ir.model.fields,field_description:account_peppol.field_res_users__available_peppol_edi_formats
+msgid "Available Peppol Edi Formats"
+msgstr "사용 가능한 Peppol Edi 양식"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_partner__available_peppol_sending_methods
+#: model:ir.model.fields,field_description:account_peppol.field_res_users__available_peppol_sending_methods
+msgid "Available Peppol Sending Methods"
+msgstr "사용 가능한 Peppol 전송 방법"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid ""
+"By clicking the button below I accept that Odoo may process my e-invoices."
+msgstr "아래 버튼을 클릭하면 Odoo에서 내 전자 청구서를 처리하게 된다는 사실에 동의합니다."
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__receiver
+msgid "Can send and receive"
+msgstr "송수신 가능"
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__sender
+msgid "Can send but not receive"
+msgstr "전송 가능, 수신 불가능"
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__smp_registration
+msgid "Can send, pending registration to receive"
+msgstr "전송 가능, 수신 등록 대기 중"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid "Can't migrate unless registered to receive documents."
+msgstr "문서 수신을 등록하지 않으면 마이그레이션할 수 없습니다."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_service_configuration
+msgid "Cancel"
+msgstr "취소"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
+msgid "Cancel PEPPOL"
+msgstr "PEPPOL 취소"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move.py:0
+msgid "Cannot cancel an entry that has already been sent to PEPPOL"
+msgstr "이미 PEPPOL로 전송된 항목은 취소할 수 없습니다."
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
+msgid "Cannot receive this format"
+msgstr "이 형식을 수신할 수 없습니다."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "Cannot register a user with a %s application"
+msgstr "%s 애플리케이션에 사용자를 등록할 수 없습니다."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Check Partner(s)"
+msgstr "협력사 확인"
+
+#. module: account_peppol
+#: model:ir.model.fields,help:account_peppol.field_peppol_registration__peppol_eas
+#: model:ir.model.fields,help:account_peppol.field_res_company__peppol_eas
+#: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_eas
+msgid ""
+"Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.\n"
+"             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
+msgstr ""
+"BIS Billing 3.0 및 관련 변수에 대해 엔드포인트 식별에 사용하는 코드입니다.\n"
+"             다음에서 확인하실 수 있습니다.  https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
+
+#. module: account_peppol
+#: model:ir.model,name:account_peppol.model_res_company
+msgid "Companies"
+msgstr "회사"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__company_id
+msgid "Company"
+msgstr "회사"
+
+#. module: account_peppol
+#: model:ir.model,name:account_peppol.model_res_config_settings
+msgid "Config Settings"
+msgstr "환경 설정"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Configure Peppol Services"
+msgstr "Peppol 서비스 설정"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_service_configuration
+msgid "Confirm"
+msgstr "승인"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
+msgid "Connection error, please try again later."
+msgstr "접속 오류입니다. 나중에 다시 시도하세요."
+
+#. module: account_peppol
+#: model:ir.model,name:account_peppol.model_res_partner
+msgid "Contact"
+msgstr "연락처"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid "Contact email and mobile number are required."
+msgstr "연락처 이메일 및 휴대폰 번호는 필수 입력 사항입니다."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "Contact email and phone number are required."
+msgstr "이메일과 전화번호는 필수 입력 사항입니다."
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
+msgid "Create, send and receive e-invoices for free."
+msgstr "전자 청구서를 무료로 만들어서 보내고 받을 수 있습니다."
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__create_uid
+#: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service_wizard__create_uid
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__create_date
+#: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service_wizard__create_date
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__create_date
+msgid "Created on"
+msgstr "작성일"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Customer is on Peppol but did not enable receiving documents."
+msgstr "고객이 Peppol을 사용 중이지만 문서 수신을 활성화하지 않았습니다."
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__demo
+msgid "Demo"
+msgstr "데모"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__display_name
+#: model:ir.model.fields,field_description:account_peppol.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account_peppol.field_account_move__display_name
+#: model:ir.model.fields,field_description:account_peppol.field_account_move_send__display_name
+#: model:ir.model.fields,field_description:account_peppol.field_account_move_send_batch_wizard__display_name
+#: model:ir.model.fields,field_description:account_peppol.field_account_move_send_wizard__display_name
+#: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__display_name
+#: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service_wizard__display_name
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__display_name
+#: model:ir.model.fields,field_description:account_peppol.field_res_company__display_name
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:account_peppol.field_res_partner__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__document_identifier
+msgid "Document Identifier"
+msgstr "문서 ID"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__document_name
+msgid "Document Name"
+msgstr "문서명"
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__done
+msgid "Done"
+msgstr "완료"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
+msgid "E-invoices will soon be mandatory in many countries"
+msgstr "곧 많은 국가에서 전자 청구서 사용이 의무화될 것입니다."
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__edi_mode
+msgid "EDI mode"
+msgstr "EDI 모드"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_mode
+msgid "EDI operating mode"
+msgstr "EDI 실행 모드"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service_wizard__edi_user_id
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__edi_user_id
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_user
+msgid "EDI user"
+msgstr "EDI 사용자"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_identification
+msgid "Edi Identification"
+msgstr "Edi 식별"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid "Email"
+msgstr "이메일"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__enabled
+msgid "Enabled"
+msgstr "활성화"
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__error
+msgid "Error"
+msgstr "오류"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.account_journal_dashboard_kanban_view
+msgid "Fetch Peppol invoice status"
+msgstr "Peppol 청구서 상태 가져오기"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.account_journal_dashboard_kanban_view
+msgid "Fetch from Peppol"
+msgstr "Peppol에서 가져오기"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
+msgid "Free on Odoo"
+msgstr "Odoo에서 무료"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
+msgid "Fully automated"
+msgstr "완전 자동화"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "I want to migrate my existing Peppol connection to Odoo (optional):"
+msgstr "기존 Peppol 연결을 Odoo로 마이그레이션합니다 (선택 사항):"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__id
+#: model:ir.model.fields,field_description:account_peppol.field_account_journal__id
+#: model:ir.model.fields,field_description:account_peppol.field_account_move__id
+#: model:ir.model.fields,field_description:account_peppol.field_account_move_send__id
+#: model:ir.model.fields,field_description:account_peppol.field_account_move_send_batch_wizard__id
+#: model:ir.model.fields,field_description:account_peppol.field_account_move_send_wizard__id
+#: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__id
+#: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service_wizard__id
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__id
+#: model:ir.model.fields,field_description:account_peppol.field_res_company__id
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__id
+#: model:ir.model.fields,field_description:account_peppol.field_res_partner__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/controllers/portal.py:0
+msgid ""
+"If you want to be invoiced by Peppol, your configuration must be valid."
+msgstr "Peppol 청구서를 받으려면 설정이 유효한지 확인하세요."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid ""
+"In Belgium, electronic invoicing will be <u>mandatory as of January "
+"2026</u>."
+msgstr "벨기에에서는 <u>2026년 1월부터 전자 청구서</u>가 의무화됩니다."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Incoming Invoices Journal"
+msgstr "수신한 청구서 전표"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
+#: model:ir.model.fields,field_description:account_peppol.field_res_users__invoice_sending_method
+msgid "Invoice sending"
+msgstr "청구서 전송"
+
+#. module: account_peppol
+#: model:ir.model.fields,help:account_peppol.field_account_peppol_service_wizard__service_json
+msgid ""
+"JSON representation of peppol services as retrieved from the peppol server."
+msgstr "peppol 서버에서 검색된 peppol 서비스의 JSON 표현입니다."
+
+#. module: account_peppol
+#: model:ir.model,name:account_peppol.model_account_journal
+msgid "Journal"
+msgstr "전표"
+
+#. module: account_peppol
+#: model:ir.model,name:account_peppol.model_account_move
+msgid "Journal Entry"
+msgstr "전표 입력"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__write_uid
+#: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service_wizard__write_uid
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__write_uid
+msgid "Last Updated by"
+msgstr "최근 편집자"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__write_date
+#: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service_wizard__write_date
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__write_date
+msgid "Last Updated on"
+msgstr "최근 업데이트 날짜"
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__prod
+msgid "Live"
+msgstr "실시간"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Migrate registration to another service"
+msgstr "등록을 다른 서비스로 마이그레이션"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_migration_key
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_migration_key
+msgid "Migration Key"
+msgstr "마이그레이션 키"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__phone_number
+#: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_phone_number
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_phone_number
+msgid "Mobile number"
+msgstr " 휴대폰 번호"
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_registered
+msgid "Not registered"
+msgstr "등록하지 않음"
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
+msgid "Not valid"
+msgstr "유효하지 않음"
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_verified
+msgid "Not verified yet"
+msgstr "아직 승인되지 않음"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "Odoo"
+msgstr "Odoo"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
+msgid "Odoo keeps you up to date with the new regulation."
+msgstr "Odoo는 최신 규정을 지속적으로 업데이트합니다."
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__account_edi_proxy_client_user__proxy_type__peppol
+msgid "PEPPOL"
+msgstr "PEPPOL"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_purchase_journal_id
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_purchase_journal_id
+msgid "PEPPOL Purchase Journal"
+msgstr "PEPPOL 구매 전표"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
+msgid ""
+"PEPPOL allows for complete automation of sending and receiving e-invoices."
+msgstr "PEPPOL은 전자 청구서의 송수신을 완전히 자동화할 수 있도록 합니다."
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
+msgid ""
+"PEPPOL is the secure standard for e-invoices used in EU and across the "
+"world."
+msgstr "PEPPOL은 EU와 전 세계에서 널리 사용되는 전자 청구서의 안전한 표준입니다."
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_message_uuid
+#: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_message_uuid
+msgid "PEPPOL message ID"
+msgstr "PEPPOL 메시지 ID"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_move_state
+#: model:ir.model.fields,field_description:account_peppol.field_account_journal__account_peppol_proxy_state
+#: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_move_state
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__account_peppol_proxy_state
+#: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_proxy_state
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_proxy_state
+msgid "PEPPOL status"
+msgstr "PEPPOL 상태"
+
+#. module: account_peppol
+#: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_new_documents_ir_actions_server
+msgid "PEPPOL: retrieve new documents"
+msgstr "PEPPOL: 새 문서 검색"
+
+#. module: account_peppol
+#: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_message_status_ir_actions_server
+msgid "PEPPOL: update message status"
+msgstr "PEPPOL: 메시지 상태 업데이트"
+
+#. module: account_peppol
+#: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_participant_status_ir_actions_server
+msgid "PEPPOL: update participant status"
+msgstr "PEPPOL: 참가자 상태 업데이트"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid ""
+"PS: <b style=\"color: $o-enterprise-action-color;\">We did not send your "
+"invoice on Peppol.</b>"
+msgstr ""
+"추신: <b style=\"color: $o-enterprise-action-color;\">Peppol을 통해 청구서를 보내지 "
+"않았습니다.</b>"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid ""
+"PS: This invoice has also been <b style=\"color: $o-enterprise-action-"
+"color\">sent on Peppol</b>."
+msgstr ""
+"추신: 이 청구서는 <b style=\"color: $o-enterprise-action-color\">Peppol을 통해서도 "
+"발송</b>되었습니다."
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
+msgid "Pending Reception"
+msgstr "수신 대기 중"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
+#: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_endpoint
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_endpoint
+#: model_terms:ir.ui.view,arch_db:account_peppol.portal_my_details_fields
+msgid "Peppol Endpoint"
+msgstr "Peppol Endpoint"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
+msgid "Peppol Ready"
+msgstr "Peppol 준비 완료"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_journal.py:0
+msgid "Peppol Ready invoices"
+msgstr "Peppol 준비 완료된 청구서"
+
+#. module: account_peppol
+#: model:ir.model,name:account_peppol.model_peppol_registration
+msgid "Peppol Registration"
+msgstr "Peppol 등록"
+
+#. module: account_peppol
+#: model:ir.model,name:account_peppol.model_account_peppol_service
+msgid "Peppol Service"
+msgstr "Peppol 서비스"
+
+#. module: account_peppol
+#: model:ir.model,name:account_peppol.model_account_peppol_service_wizard
+msgid "Peppol Services Wizard"
+msgstr "Peppol 서비스 마법사"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
+msgid ""
+"Peppol document (UUID: %(uuid)s) has been received successfully.\n"
+"(Sender endpoint: %(endpoint)s)"
+msgstr ""
+"Peppol 문서 (UUID: %(uuid)s)가 성공적으로 수신되었습니다.\n"
+"(발신자 엔드포인트: %(endpoint)s)"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.portal_my_details_fields
+msgid "Peppol e-Address (EAS)"
+msgstr "페폴 전자 주소 (EAS)"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_eas
+#: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_eas
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_eas
+msgid "Peppol e-address (EAS)"
+msgstr "Peppol 전자 주소 (EAS)"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_partner__peppol_verification_state
+#: model:ir.model.fields,field_description:account_peppol.field_res_users__peppol_verification_state
+msgid "Peppol endpoint verification"
+msgstr "Peppol 엔드포인트 확인"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
+msgid "Peppol error: %s"
+msgstr "Peppol 오류: %s"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Peppol is in testing/demo mode."
+msgstr "Peppol이 테스트/데모 모드에 있습니다."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.account_journal_dashboard_kanban_view
+msgid "Peppol ready invoices"
+msgstr "Peppol 준비 완료된 청구서"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
+msgid "Peppol status"
+msgstr "Peppol 상태"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
+msgid "Peppol status update: %s"
+msgstr "Peppol 상태 업데이트: %s"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_warnings
+msgid "Peppol warnings"
+msgstr "Peppol 경고"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_company.py:0
+msgid ""
+"Please enter the mobile number in the correct international format.\n"
+"For example: +32123456789, where +32 is the country code.\n"
+"Currently, only European countries are supported."
+msgstr ""
+"국제 코드를 포함한 휴대폰 번호를 올바른 형식으로 입력하세요..\n"
+"예 +821012345678, 여기서 +82는 국가 코드입니다.\n"
+"현재 유럽 국가만 지원됩니다."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
+msgid "Please fill in the EAS code and the Participant ID code."
+msgstr "EAS 코드와 참가자 ID 코드를 입력하세요."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_company.py:0
+msgid "Please install the phonenumbers library."
+msgstr "전화번호 라이브러리를 설치하세요."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Please verify partner configuration in partner settings."
+msgstr "파트너 설정 메뉴에서 파트너 환경설정을 확인하세요."
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__contact_email
+#: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_contact_email
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_contact_email
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Primary contact email"
+msgstr "기본 연락처 이메일"
+
+#. module: account_peppol
+#: model:ir.model.fields,help:account_peppol.field_peppol_registration__contact_email
+#: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_contact_email
+#: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_contact_email
+msgid "Primary contact email for Peppol-related communication"
+msgstr "Peppol 관련 연락을 위한 기본 이메일"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.js:0
+msgid "Print & Send"
+msgstr "인쇄 후 보내기"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
+msgid "Proxy Type"
+msgstr "프록시 유형"
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__to_send
+msgid "Queued"
+msgstr "대기 중"
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__ready
+msgid "Ready to send"
+msgstr "전송 준비 완료"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__smp_registration
+msgid "Register as a receiver"
+msgstr "수신자로 등록"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/demo_utils.py:0
+msgid "Registered as a sender (demo)."
+msgstr "발신자로 등록 (데모)."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "Registered as a sender."
+msgstr "발신자로 등록."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/demo_utils.py:0
+msgid "Registered to receive documents via Peppol (demo)."
+msgstr "Peppol (데모)을 통해 문서 수신 등록."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "Registered to receive documents via Peppol."
+msgstr "Peppol을 통해 문서 수신 등록."
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__rejected
+msgid "Rejected"
+msgstr "거부됨"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Remove from Peppol"
+msgstr "Peppol에서 제거"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid "Send electronic invoices, and receive bills automatically via Peppol"
+msgstr "전자 청구서를 보내고 Peppol을 통해 자동으로 청구서를 받습니다."
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service_wizard__service_ids
+msgid "Service"
+msgstr "서비스"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service_wizard__service_info
+msgid "Service Info"
+msgstr "서비스 정보"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service_wizard__service_json
+msgid "Service Json"
+msgstr "서비스 Json"
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__skipped
+msgid "Skipped"
+msgstr "건너뛰기"
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__test
+msgid "Test"
+msgstr "테스트"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid ""
+"Test mode allows sending e-invoices through the test Peppol network.\n"
+"                                    By clicking the button below I accept that Odoo may process my e-invoices."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/controllers/portal.py:0
+msgid "That country is not available for Peppol."
+msgstr "해당 국가에서는 Peppol을 사용할 수 없습니다."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_company.py:0
+msgid "The Peppol endpoint identification number is not correct."
+msgstr "Peppol 엔드포인트 식별 번호가 올바르지 않습니다."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
+msgid "The Peppol service that is used is likely to be %s."
+msgstr "사용된 Peppol 서비스는 %s일 가능성이 높습니다."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "The document has been sent to the Peppol Access Point for processing"
+msgstr "문서 처리를 위해 Peppol 액세스 포인트로 전송되었습니다."
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
+msgid "The e-invoicing network"
+msgstr "전자 인보이스 네트워크"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid ""
+"The endpoint number might not be correct. Please check if you entered the "
+"right identification number."
+msgstr "엔드포인트 번호가 올바르지 않을 수 있습니다. 올바른 식별 번호를 입력했는지 확인하세요."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/service_wizard.py:0
+msgid ""
+"The following services are listed on your participant but cannot be "
+"configured here. If you wish to configure them differently, please contact "
+"support."
+msgstr "다음 서비스는 참가자에 등록되어 있지만 여기에서 구성할 수 없습니다. 이러한 서비스의 구성을 조정하려면 지원팀에 문의하세요."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
+msgstr "협력사에 Peppol EAS 및/또는 엔드 포인트 식별 기호가 없습니다."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
+msgid ""
+"The recommended EAS code for Belgium is 0208. The Endpoint should be the "
+"Company Registry number."
+msgstr "벨기에 권장 EAS 코드는 0208입니다. 회사 등록 번호를 엔드포인트로 해야 합니다."
+
+#. module: account_peppol
+#: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_edi_identification
+msgid "The unique id that identifies this user, typically the vat"
+msgstr "이 사용자를 식별하는 고유 ID로, 보통 VAT"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "This will delete your Peppol registration."
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid ""
+"This will migrate your Peppol registration away from Odoo.  A migration key "
+"will be generated.                                         If the other "
+"service does not support migration, consider unregistering instead."
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
+msgid ""
+"To generate complete electronic invoices, also set a country for this "
+"partner."
+msgstr "전자 청구서를 생성하려면 해당 협력사의 국가와 은행 계좌도 설정해야 합니다."
+
+#. module: account_peppol
+#: model:ir.model.fields,help:account_peppol.field_peppol_registration__peppol_endpoint
+#: model:ir.model.fields,help:account_peppol.field_res_company__peppol_endpoint
+#: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_endpoint
+msgid ""
+"Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
+"known as 'Endpoint ID'."
+msgstr "BIS Billing 3.0 및 관련 변수에서 사용하는 고유 식별 기호로 '엔드 포인트 ID' 라고도 합니다."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Update"
+msgstr "업데이트"
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__valid
+msgid "Valid"
+msgstr "유효"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
+msgid "Verify"
+msgstr "확인하기:"
+
+#. module: account_peppol
+#: model:ir.actions.server,name:account_peppol.partner_action_verify_peppol
+msgid "Verify Peppol"
+msgstr "Peppol 확인"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
+msgid "Verify partner's PEPPOL endpoint"
+msgstr "파트너의 PEPPOL 엔드포인트 승인"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "View Partner(s)"
+msgstr "협력사 보기"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
+msgid "What is Peppol and why it's great ?"
+msgstr "Peppol이란 무엇이며, 왜 좋은가요?"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Why should I use PEPPOL ?"
+msgstr "왜 PEPPOL을 사용해야 하나요?"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Why should you use it ?"
+msgstr "왜 이것을 사용해야 하나요?"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__wizard_id
+msgid "Wizard"
+msgstr "마법사"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/demo_utils.py:0
+msgid "You can now receive demo vendor bills."
+msgstr "이제 데모 모드에서 공급업체 청구서를 받아볼 수 있습니다."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/demo_utils.py:0
+msgid "You can now send invoices in demo mode."
+msgstr "이제 데모 모드에서 청구서를 보낼 수 있습니다."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "You can now send invoices via Peppol."
+msgstr "이제 Peppol을 통해 청구서를 보낼 수 있습니다."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid ""
+"You registration has been rejected, the reason has been sent to you via email.\n"
+"                            Please contact our support if you need further assistance."
+msgstr ""
+
+#. module: account_peppol
+#: model:ir.model.fields,help:account_peppol.field_peppol_registration__phone_number
+#: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
+#: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
+msgid "You will receive a verification code to this mobile number"
+msgstr "이 휴대폰 번호로 인증 코드가 전송됩니다."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Your Peppol ID"
+msgstr "귀하의 Peppol ID"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid "Your endpoint"
+msgstr "사용자 엔드포인트"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Your migration key is:"
+msgstr "마이그레이션 키입니다:"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid "Your mobile"
+msgstr "사용자 모바일"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid ""
+"Your registration on Peppol network should be activated within a day. The "
+"updated status will be visible in Settings."
+msgstr "Peppol 네트워크 등록은 하루 이내에 활성화됩니다. 업데이트된 상태는 설정 섹션에서 확인할 수 있습니다."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Your registration should be activated within a day."
+msgstr "등록하신 내용이 하루 내에 활성화될 것입니다."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/controllers/portal.py:0
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__invoice_sending_method__peppol
+msgid "by Peppol"
+msgstr "by Peppol"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "invoices and credit notes."
+msgstr "청구서 및 대변 전표."

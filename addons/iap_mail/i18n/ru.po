@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* iap_mail
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: iap_mail
@@ -93,10 +95,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:iap_mail.enrich_company
 msgid ""
 "<i class=\"fa fa-fw me-2 fa-twitter text-primary\"/>\n"
-"                    <b>Twitter</b>"
+"                    <b>X</b>"
 msgstr ""
-"<i class=\"fa fa-fw me-2 fa-twitter text-primary\"/>\n"
-"                    <b>Twitter</b>"
 
 #. module: iap_mail
 #: model_terms:ir.ui.view,arch_db:iap_mail.enrich_company
@@ -113,15 +113,101 @@ msgid "<span> per year</span>"
 msgstr "<span> в год</span>"
 
 #. module: iap_mail
+#: model:ir.model.fields,field_description:iap_mail.field_iap_account__message_needaction
+msgid "Action Needed"
+msgstr "Требуются действия"
+
+#. module: iap_mail
+#: model:ir.model.fields,field_description:iap_mail.field_iap_account__message_attachment_count
+msgid "Attachment Count"
+msgstr "Количество вложений"
+
+#. module: iap_mail
 #. odoo-javascript
 #: code:addons/iap_mail/static/src/js/services/iap_notification_service.js:0
 msgid "Buy more credits"
 msgstr "Купить больше кредитов"
 
 #. module: iap_mail
+#: model:ir.model.fields,field_description:iap_mail.field_iap_account__company_ids
+msgid "Company"
+msgstr "Компания"
+
+#. module: iap_mail
+#: model:ir.model.fields,field_description:iap_mail.field_iap_account__warning_user_ids
+msgid "Email Alert Recipients"
+msgstr ""
+
+#. module: iap_mail
+#: model:ir.model.fields,field_description:iap_mail.field_iap_account__warning_threshold
+msgid "Email Alert Threshold"
+msgstr ""
+
+#. module: iap_mail
+#: model:ir.model.fields,field_description:iap_mail.field_iap_account__message_follower_ids
+msgid "Followers"
+msgstr "Подписчики"
+
+#. module: iap_mail
+#: model:ir.model.fields,field_description:iap_mail.field_iap_account__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Подписчики"
+
+#. module: iap_mail
+#: model:ir.model.fields,field_description:iap_mail.field_iap_account__has_message
+msgid "Has Message"
+msgstr "Есть сообщение"
+
+#. module: iap_mail
 #: model:ir.model,name:iap_mail.model_iap_account
 msgid "IAP Account"
 msgstr "IAP учетная запись"
+
+#. module: iap_mail
+#: model:ir.model.fields,help:iap_mail.field_iap_account__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+"Если флажок установлен, значит, новые сообщения требуют вашего внимания."
+
+#. module: iap_mail
+#: model:ir.model.fields,help:iap_mail.field_iap_account__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Если отмечено, некоторые сообщения имеют ошибку доставки."
+
+#. module: iap_mail
+#: model:ir.model.fields,field_description:iap_mail.field_iap_account__message_is_follower
+msgid "Is Follower"
+msgstr "Является подписчиком"
+
+#. module: iap_mail
+#: model:ir.model.fields,field_description:iap_mail.field_iap_account__message_has_error
+msgid "Message Delivery error"
+msgstr "Ошибка доставки сообщения"
+
+#. module: iap_mail
+#: model:ir.model.fields,field_description:iap_mail.field_iap_account__message_ids
+msgid "Messages"
+msgstr "Сообщения"
+
+#. module: iap_mail
+#: model:ir.model.fields,field_description:iap_mail.field_iap_account__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Число действий"
+
+#. module: iap_mail
+#: model:ir.model.fields,field_description:iap_mail.field_iap_account__message_has_error_counter
+msgid "Number of errors"
+msgstr "Число ошибок"
+
+#. module: iap_mail
+#: model:ir.model.fields,help:iap_mail.field_iap_account__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Количество сообщений, требующих принятия мер"
+
+#. module: iap_mail
+#: model:ir.model.fields,help:iap_mail.field_iap_account__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Количество недоставленных сообщений"
 
 #. module: iap_mail
 #: model_terms:ir.ui.view,arch_db:iap_mail.enrich_company

@@ -1,27 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* contacts
-#
+# 
 # Translators:
-# Kristoffer Grundström <lovaren@gmail.com>, 2022
-# 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2022
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
-# Kim Asplund <kim.asplund@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
-"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: contacts
@@ -41,21 +36,21 @@ msgid "Configuration"
 msgstr "Konfiguration"
 
 #. module: contacts
+#: model:ir.model,name:contacts.model_res_partner
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_partner_category_form
 msgid "Contact Tags"
 msgstr "Kontaktetiketter"
-
-#. module: contacts
-#: model:ir.ui.menu,name:contacts.menu_partner_title_contact
-msgid "Contact Titles"
-msgstr "Titlar på kontakter"
 
 #. module: contacts
 #: model:ir.actions.act_window,name:contacts.action_contacts
 #: model:ir.ui.menu,name:contacts.menu_contacts
 #: model:ir.ui.menu,name:contacts.res_partner_menu_contacts
 msgid "Contacts"
-msgstr "Kontakter"
+msgstr "Kontaktpersoner"
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_country_partner
@@ -73,9 +68,21 @@ msgid "Create a Contact in your address book"
 msgstr "Skapa en kontakt i din adressbok"
 
 #. module: contacts
+#: model:ir.model.fields,field_description:contacts.field_res_partner__display_name
+#: model:ir.model.fields,field_description:contacts.field_res_users__display_name
+msgid "Display Name"
+msgstr "Visningsnamn"
+
+#. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_country_state_partner
 msgid "Fed. States"
 msgstr "Fed. stater"
+
+#. module: contacts
+#: model:ir.model.fields,field_description:contacts.field_res_partner__id
+#: model:ir.model.fields,field_description:contacts.field_res_users__id
+msgid "ID"
+msgstr "ID"
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.res_partner_industry_menu
@@ -90,7 +97,9 @@ msgstr "Lokalisering"
 #. module: contacts
 #: model_terms:ir.actions.act_window,help:contacts.action_contacts
 msgid "Odoo helps you track all activities related to your contacts."
-msgstr "Odoo hjälper dig att hålla reda på alla aktiviteter relaterade till dina kontakter."
+msgstr ""
+"Odoo hjälper dig att hålla reda på alla aktiviteter relaterade till dina "
+"kontakter."
 
 #. module: contacts
 #: model:ir.model,name:contacts.model_res_users

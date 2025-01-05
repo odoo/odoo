@@ -1,37 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_forum
-#
+# 
 # Translators:
-# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
-# Martin Trigaux, 2022
-# Wichanon Jamwutthipreecha, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
-"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/website_forum.js:0
 msgid " Flag"
-msgstr ""
+msgstr "ธง"
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/website_forum.js:0
 msgid " Flagged"
-msgstr ""
+msgstr "ปักธงแล้ว"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_answers
@@ -112,6 +110,12 @@ msgstr "%d คะแนน Karma จำเป็น เพื่อสร้า�
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
+msgid "%d karma required to delete a comment."
+msgstr "%d karma จำเป็นต้องลบความคิดเห็น"
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post.py:0
 msgid "%d karma required to delete or reactivate a post."
 msgstr "%dคะแนน Karma จำเป็น เพื่อลบหรือเปิดใช้งานโพสต์อีกครั้ง"
 
@@ -161,12 +165,6 @@ msgstr "%dคะแนน Karma จำเป็น เพื่อแท็ก�
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
-msgid "%d karma required to unlink a comment."
-msgstr "%dคะแนน Karma จำเป็น เพื่อยกเลิกการเชื่อมโยงความคิดเห็น"
-
-#. module: website_forum
-#. odoo-python
-#: code:addons/website_forum/models/forum_post.py:0
 msgid "%d karma required to unlink a post."
 msgstr "%dคะแนน Karma จำเป็น เพื่อยกเลิกการเชื่อมโยงโพสต์"
 
@@ -183,9 +181,21 @@ msgid "%d karma required to validate a post."
 msgstr "%dคะแนน Karma จำเป็น เพื่อตรวจสอบโพสต์"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "&amp;nbsp;and&amp;nbsp;"
-msgstr "&amp;nbsp;and&amp;nbsp;"
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/website_forum_tags_wrapper.xml:0
+msgid "'Please enter 2 or more characters'"
+msgstr ""
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/website_forum_tags_wrapper.xml:0
+msgid "'Tags'"
+msgstr ""
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -199,25 +209,9 @@ msgid "(votes - 1) **"
 msgstr "(โหวต - 1) **"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-msgid ", by"
-msgstr "โดย"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
-#: model_terms:ir.ui.view,arch_db:website_forum.new_question
-msgid ", consider <b>adding an example</b>."
-msgstr "พิจารณาเพื่อ<b>เพิ่มตัวอย่าง</b>"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "/ (days + 2) **"
 msgstr "/ (วัน + 2) **"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-msgid "0 Answers"
-msgstr "0 คำตอบ"
 
 #. module: website_forum
 #. odoo-javascript
@@ -236,6 +230,15 @@ msgstr ""
 "        คำตอบ"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
+msgid ""
+"<b class=\"d-block \">This answer has been flagged</b>\n"
+"                            As a moderator, you can either validate or reject this answer."
+msgstr ""
+"<b class=\"d-block \">คำตอบนี้ถูกตั้งค่าสถานะ</b>\n"
+"                            ในฐานะผู้ดูแล คุณสามารถตรวจสอบหรือปฏิเสธคำตอบนี้ได้"
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid ""
 "<b class=\"d-block\">You have a pending post</b>\n"
@@ -245,63 +248,110 @@ msgstr ""
 "                       โปรดรอให้ผู้ดูแลตรวจสอบโพสต์ก่อนหน้าของคุณจึงจะได้รับอนุญาตให้ตอบคำถามได้"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
-msgid "<b> [Offensive]</b>"
-msgstr "<b> [ละเมิด]</b>"
-
-#. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Answers should not add or expand questions</b>. Instead either edit the question or add a question comment."
-msgstr "<b>คำตอบไม่ควรเพิ่มหรือขยายคำถาม</b> แก้ไขคำถามหรือเพิ่มความคิดเห็นของคำถามแทน"
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Answers should not add or expand questions</b>. Instead, either edit the question or add a comment."
+msgid ""
+"<b>Answers should not add or expand questions</b>. Instead either edit the "
+"question or add a question comment."
 msgstr ""
+"<b>คำตอบไม่ควรเพิ่มหรือขยายคำถาม</b> "
+"แก้ไขคำถามหรือเพิ่มความคิดเห็นของคำถามแทน"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Answers should not comment other answers</b>. Instead add a comment on the other answers."
-msgstr "<b>คำตอบไม่ควรแสดงความคิดเห็นต่อคำตอบอื่น ๆ </b> ให้เพิ่มความคิดเห็นในคำตอบอื่น ๆ แทน"
+msgid ""
+"<b>Answers should not add or expand questions</b>. Instead, either edit the "
+"question or add a comment."
+msgstr ""
+"<b>คำตอบไม่ควรเพิ่มหรือขยายคำถาม</b> ให้แก้ไขคำถามหรือเพิ่มความคิดเห็นแทน"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Answers should not start debates</b> This community Q&amp;A is not a discussion group. Please avoid holding debates in your answers as they tend to dilute the essence of questions and answers. For brief discussions please use commenting facility."
-msgstr "<b>คำตอบไม่ควรเริ่มด้วยการโต้เถียง</b> คำถามและคำตอบของชุมชนนี้ ไม่ใช่กลุ่มสำหรับการสนทนา โปรดหลีกเลี่ยงการโต้เถียงในคำตอบของคุณ เนื่องจากมักจะทำให้สาระสำคัญของคำถามและคำตอบเจือจางลง สำหรับการอภิปรายสั้น ๆ โปรดใช้เครื่องมืออำนวยความสะดวกในการแสดงความคิดเห็น"
+msgid ""
+"<b>Answers should not comment other answers</b>. Instead add a comment on "
+"the other answers."
+msgstr ""
+"<b>คำตอบไม่ควรแสดงความคิดเห็นต่อคำตอบอื่น ๆ </b> "
+"ให้เพิ่มความคิดเห็นในคำตอบอื่น ๆ แทน"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Answers shouldn't just point to other Questions</b>. Instead add a question comment indication \"Possible duplicate of...\". However, it's ok to include links to other questions or answers providing relevant additional information."
-msgstr "<b>คำตอบไม่ควรชี้ไปที่คำถามอื่น ๆ</b> ให้เพิ่มการบ่งชี้ความคิดเห็นของคำถามแทน \"อาจซ้ำกับ...\" อย่างไรก็ตาม การรวมลิงก์ไปยังคำถามหรือคำตอบอื่น ๆ ที่ให้ข้อมูลเพิ่มเติมที่เกี่ยวข้องนั้นเป็นเรื่องธรรมดา"
+msgid ""
+"<b>Answers should not start debates</b> This community Q&amp;A is not a "
+"discussion group. Please avoid holding debates in your answers as they tend "
+"to dilute the essence of questions and answers. For brief discussions please"
+" use commenting facility."
+msgstr ""
+"<b>คำตอบไม่ควรเริ่มด้วยการโต้เถียง</b> คำถามและคำตอบของชุมชนนี้ "
+"ไม่ใช่กลุ่มสำหรับการสนทนา โปรดหลีกเลี่ยงการโต้เถียงในคำตอบของคุณ "
+"เนื่องจากมักจะทำให้สาระสำคัญของคำถามและคำตอบเจือจางลง สำหรับการอภิปรายสั้น ๆ"
+" โปรดใช้เครื่องมืออำนวยความสะดวกในการแสดงความคิดเห็น"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Answers shouldn't just point to other questions</b>.Instead add a comment indicating <i>\"Possible duplicate of...\"</i>. However, it's fine to include links to other questions or answers providing relevant additional information."
-msgstr "<b>คำตอบไม่ควรชี้ไปที่คำถามอื่นเท่านั้น</b>แทนที่จะเพิ่มความคิดเห็นที่ระบุ <i>\"อาจซ้ำซ้อนของ...\"</i>อย่างไรก็ตาม การรวมลิงก์ไปยังคำถามหรือคำตอบอื่นๆ ที่ให้ข้อมูลเพิ่มเติมที่เกี่ยวข้องนั้นเป็นเรื่องปกติ"
+msgid ""
+"<b>Answers shouldn't just point to other Questions</b>. Instead add a "
+"question comment indication \"Possible duplicate of...\". However, it's ok "
+"to include links to other questions or answers providing relevant additional"
+" information."
+msgstr ""
+"<b>คำตอบไม่ควรชี้ไปที่คำถามอื่น ๆ</b> "
+"ให้เพิ่มการบ่งชี้ความคิดเห็นของคำถามแทน \"อาจซ้ำกับ...\" อย่างไรก็ตาม "
+"การรวมลิงก์ไปยังคำถามหรือคำตอบอื่น ๆ "
+"ที่ให้ข้อมูลเพิ่มเติมที่เกี่ยวข้องนั้นเป็นเรื่องธรรมดา"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Answers shouldn't just provide a link a solution</b>. Instead provide the solution description text in your answer, even if it's just a copy/paste. Links are welcome, but should be complementary to answer, referring sources or additional reading."
-msgstr "<b>คำตอบไม่ควรให้แค่ลิงก์เพื่อแก้ปัญหา</b> ให้ใส่ข้อความคำอธิบายโซลูชันในคำตอบของคุณ แม้ว่าจะเป็นเพียงการคัดลอก/วางก็ตาม ลิงก์นั้นสามารถใช้ได้ แต่ควรเพื่อเสริมคำตอบ อ้างอิงแหล่งที่มา หรือการอ่านเพิ่มเติม"
+msgid ""
+"<b>Answers shouldn't just point to other questions</b>.Instead add a comment"
+" indicating <i>\"Possible duplicate of...\"</i>. However, it's fine to "
+"include links to other questions or answers providing relevant additional "
+"information."
+msgstr ""
+"<b>คำตอบไม่ควรชี้ไปที่คำถามอื่นเท่านั้น</b>แทนที่จะเพิ่มความคิดเห็นที่ระบุ "
+"<i>\"อาจซ้ำซ้อนของ...\"</i>อย่างไรก็ตาม การรวมลิงก์ไปยังคำถามหรือคำตอบอื่นๆ "
+"ที่ให้ข้อมูลเพิ่มเติมที่เกี่ยวข้องนั้นเป็นเรื่องปกติ"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Before you ask - please make sure to search for a similar question.</b> You can search questions by their title or tags. It’s also OK to answer your own question."
-msgstr "<b>ก่อนที่คุณจะถาม - โปรดตรวจสอบให้แน่ใจว่าได้ค้นหาคำถามที่คล้ายกัน</b> คุณสามารถค้นหาคำถามตามชื่อหรือแท็กได้ นอกจากนี้ยังสามารถตอบคำถามของคุณเองได้อีกด้วย"
+msgid ""
+"<b>Answers shouldn't just provide a link a solution</b>. Instead provide the"
+" solution description text in your answer, even if it's just a copy/paste. "
+"Links are welcome, but should be complementary to answer, referring sources "
+"or additional reading."
+msgstr ""
+"<b>คำตอบไม่ควรให้แค่ลิงก์เพื่อแก้ปัญหา</b> "
+"ให้ใส่ข้อความคำอธิบายโซลูชันในคำตอบของคุณ "
+"แม้ว่าจะเป็นเพียงการคัดลอก/วางก็ตาม ลิงก์นั้นสามารถใช้ได้ "
+"แต่ควรเพื่อเสริมคำตอบ อ้างอิงแหล่งที่มา หรือการอ่านเพิ่มเติม"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Please avoid asking questions that are too subjective and argumentative</b> or not relevant to this community."
-msgstr "<b>โปรดหลีกเลี่ยงคำถามที่เป็นความคิดเห็นส่วนตัวและมีข้อโต้แย้งมากเกินไป</b> หรือไม่มีความเกี่ยวข้องกับชุมชนนี้"
+msgid ""
+"<b>Before you ask - please make sure to search for a similar question.</b> "
+"You can search questions by their title or tags. It’s also OK to answer your"
+" own question."
+msgstr ""
+"<b>ก่อนที่คุณจะถาม - โปรดตรวจสอบให้แน่ใจว่าได้ค้นหาคำถามที่คล้ายกัน</b> "
+"คุณสามารถค้นหาคำถามตามชื่อหรือแท็กได้ "
+"นอกจากนี้ยังสามารถตอบคำถามของคุณเองได้อีกด้วย"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid ""
+"<b>Please avoid asking questions that are too subjective and "
+"argumentative</b> or not relevant to this community."
+msgstr ""
+"<b>โปรดหลีกเลี่ยงคำถามที่เป็นความคิดเห็นส่วนตัวและมีข้อโต้แย้งมากเกินไป</b> "
+"หรือไม่มีความเกี่ยวข้องกับชุมชนนี้"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
@@ -317,40 +367,6 @@ msgstr ""
 "            - มันดีที่สุดในการช่วยคัดเลือกคำถามและคำตอบที่ดีที่สุด!"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "<b>Tags</b> I Follow"
-msgstr "<b>แท็ก</b> I ติดตาม"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid ""
-"<b>This forum is empty.</b><br/>\n"
-"                    Be the first one asking a question"
-msgstr ""
-"<b>ฟอรั่มนี้ว่างเปล่า</b><br/>\n"
-"                    ถามคำถามเป็นคนแรกสิ"
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>What kinds of questions can I ask here?</b>"
-msgstr "<b>ฉันสามารถถามคำถามประเภทใดได้ที่นี้?</b>"
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>What should I avoid in my answers?</b>"
-msgstr "<b>ฉันควรหลีกเลี่ยงอะไรในคำตอบของฉัน</b>"
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>What should I avoid in my questions?</b>"
-msgstr "<b>ฉันควรหลีกเลี่ยงสิ่งใดในคำถามของฉัน?</b>"
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "<b>Why can other people edit my questions/answers?</b>"
 msgstr "<b>เหตุใดบุคคลอื่นจึงสามารถแก้ไขคำถาม/คำตอบของฉันได้?</b>"
@@ -361,83 +377,116 @@ msgid "<b>You already have a pending post.</b><br/>"
 msgstr "<b>คุณมีโพสต์ที่่ค้างอยู่</b><br/>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
-msgid "<b>[Answer]</b>"
-msgstr "<b>[คำตอบ]</b>"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.contact
 msgid ""
 "<b>|</b>\n"
-"                    <span class=\"fa fa-trophy bg-gold ms-2\" role=\"img\" aria-label=\"Gold badge\" title=\"Gold badge\"/>"
+"                    <span class=\"fa fa-trophy o-text-gold ms-2\" role=\"img\" aria-label=\"Gold badge\" title=\"Gold badge\"/>"
 msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.tag
-msgid "<em class=\"d-block mb-2\">or</em>"
-msgstr "<em class=\"d-block mb-2\">หรือ</em>"
+"<b>|</b>\n"
+"                    <span class=\"fa fa-trophy o-text-gold ms-2\" role=\"รูปภาพ\" aria-label=\"เหรียญทอง\" title=\"เหรียญทอง\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "<i class=\" fa fa-comment text-muted me-1\"/>Comment"
+msgid "<br/>by"
+msgstr "<br/>โดย"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid "<i class=\"fa fa-angle-left me-2\"/>Back to All Posts"
+msgstr "<i class=\"fa fa-angle-left me-2\"/>กลับไปที่โพสต์ทั้งหมด"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_votes
+msgid "<i class=\"fa fa-arrow-right\"/> Go To Forums"
+msgstr "<i class=\"fa fa-arrow-right\"/> ไปที่ฟอรั่ม"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
+msgid "<i class=\"fa fa-bug me-1\"/>Filter Tool"
+msgstr "<i class=\"fa fa-bug me-1\"/>เครื่องมือกรอง"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.vote
+msgid ""
+"<i class=\"fa fa-caret-down\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" title=\"Downvote\"/>"
 msgstr ""
+"<i class=\"fa fa-caret-down\" data-bs-toggle=\"เคล็ดลับเครื่องมือ\" data-bs-"
+"placement=\"บน\" title=\"โหวตลง\"/>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
-msgid "<i class=\"fa fa-bell fa-fw\"/> Followed Posts"
-msgstr "<i class=\"fa fa-bell fa-fw\"/> โพสต์ที่ติดตาม"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "<i class=\"fa fa-bug\"/> Filter Tool"
-msgstr "<i class=\"fa fa-bug\"/> เครื่องมือตัวกรอง"
+#: model_terms:ir.ui.view,arch_db:website_forum.vote
+msgid ""
+"<i class=\"fa fa-caret-up\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" title=\"Upvote\"/>"
+msgstr ""
+"<i class=\"fa fa-caret-up\" data-bs-toggle=\"เคล็ดลับเครื่องมือ\" data-bs-"
+"placement=\"บน\" title=\"โหวตขึ้น\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<i class=\"fa fa-check fa-fw me-1\"/>Accept"
-msgstr ""
+msgstr "<i class=\"fa fa-check fa-fw me-1\"/>ยอมรับ"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid ""
-"<i class=\"fa fa-check text-success d-block display-2\"/>\n"
-"            <b>You've Completely Caught Up!</b><br/>"
+"<i class=\"fa fa-check fa-fw me-1\"/>Be less specific in your wording for a "
+"wider search result."
 msgstr ""
-"<i class=\"fa fa-check text-success d-block display-2\"/>\n"
-"            <b>คุณตามทันแล้ว!</b><br/>"
+"<i class=\"fa fa-check fa-fw "
+"me-1\"/>ใช้คำเฉพาะเจาะจงน้อยลงเพื่อให้ได้ผลการค้นหาที่กว้างขึ้น"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "<i class=\"fa fa-check fa-fw me-1\"/>Check your spelling and try again."
+msgstr "<i class=\"fa fa-check fa-fw me-1\"/>ตรวจสอบการสะกดของคุณแล้วลองอีกครั้ง"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "<i class=\"fa fa-check fa-fw me-1\"/>Try searching for one or two words."
+msgstr "<i class=\"fa fa-check fa-fw me-1\"/>ลองค้นหาหนึ่งหรือสองคำ"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "<i class=\"fa fa-check me-1\"/>Solved"
+msgstr "<i class=\"fa fa-check me-1\"/>แก้ไขแล้ว"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
+msgid "<i class=\"fa fa-check\"/> Accept"
+msgstr "<i class=\"fa fa-check\"/>ยอมรับ"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "<i class=\"fa fa-check\"/> How to configure TPS and TVQ's canadian taxes?"
-msgstr "<i class=\"fa fa-check\"/> จะกำหนดค่าภาษีแคนาดาของ TPS และ TVQ ได้อย่างไร?"
+msgstr ""
+"<i class=\"fa fa-check\"/> จะกำหนดค่าภาษีแคนาดาของ TPS และ TVQ ได้อย่างไร?"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
-msgid "<i class=\"fa fa-check-square-o fa-fw\"/> To Validate"
-msgstr "<i class=\"fa fa-check-square-o fa-fw\"/>เพื่อตรวจสอบ"
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<i class=\"fa fa-check\"/><span class=\"ms-2\">Accept</span>"
+msgstr "<i class=\"fa fa-check\"/><span class=\"ms-2\">ยอมรับ</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
 msgid "<i class=\"fa fa-comments-o me-1\" title=\"Forum\"/>"
+msgstr "<i class=\"fa fa-comments-o me-1\" title=\"ฟอรั่ม\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
+msgid ""
+"<i class=\"fa fa-ellipsis-h\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" title=\"More\"/>"
 msgstr ""
+"<i class=\"fa fa-ellipsis-h\" data-bs-toggle=\"เคล็ดลับเครื่องมือ\" data-bs-"
+"placement=\"บน\" title=\"เพิ่มเติม\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
 msgid "<i class=\"fa fa-eye me-1\" title=\"Views\"/>"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
-msgid "<i class=\"fa fa-flag fa-fw\"/> Flagged"
-msgstr "<i class=\"fa fa-flag fa-fw\"/> ตั้งค่าสถานะ"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid ""
-"<i class=\"fa fa-flag ms-4 mr4\"/>\n"
-"                                    Flagged"
-msgstr ""
+msgstr "<i class=\"fa fa-eye me-1\" title=\"จำนวนการดู\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -445,12 +494,28 @@ msgid "<i class=\"fa fa-flag\"/> Country"
 msgstr "<i class=\"fa fa-flag\"/> ประเทศ"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
-msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<i class=\"fa fa-font\"/> Text"
+msgstr "<i class=\"fa fa-font\"/> ข้อความ"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+#: model_terms:ir.ui.view,arch_db:website_forum.follow
+msgid "<i class=\"fa fa-fw fa-check me-1\"/>Following"
+msgstr "<i class=\"fa fa-fw fa-check me-1\"/>กำลังติดตาม"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
+msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
+msgstr "<i class=\"fa fa-globe me-1\" title=\"เว็บไซต์\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_mobile
+msgid "<i class=\"fa fa-info-circle fa-fw\"/> About this forum"
+msgstr "<i class=\"fa fa-info-circle fa-fw\"/> เกี่ยวกับฟอรั่มนี้"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid ""
 "<i class=\"fa fa-pencil\"/>\n"
 "                                Edit<span class=\"d-none d-lg-inline\"> your answer</span>"
@@ -459,59 +524,81 @@ msgstr ""
 "                                แก้ไข<span class=\"d-none d-lg-inline\">คำตอบของคุณ</span>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
-msgid "<i class=\"fa fa-question-circle-o fa-fw\"/> My Posts"
-msgstr "<i class=\"fa fa-question-circle-o fa-fw\"/> โพสต์ของฉัน"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "<i class=\"fa fa-reply me-1\"/>Answer"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "<i class=\"fa fa-share-alt text-muted me-1\"/>Share"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post
 msgid ""
-"<i class=\"fa fa-share-alt text-muted\"/>\n"
-"                                Share"
+"<i class=\"fa fa-reply me-1 d-lg-none\"/>\n"
+"                0"
 msgstr ""
-"<i class=\"fa fa-share-alt text-muted\"/>\n"
-"                                แชร์"
+"<i class=\"fa fa-reply me-1 d-lg-none\"/>\n"
+"                0"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
-msgid "<i class=\"fa fa-star fa-fw\"/> Favourites"
-msgstr "<i class=\"fa fa-star fa-fw\"/> รายการโปรด"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
-msgid "<i class=\"fa fa-tags fa-fw\"/> Followed Tags"
-msgstr "<i class=\"fa fa-tags fa-fw\"/> แท็กที่ติดตาม"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
-msgid "<i class=\"fa fa-thumbs-down text-danger ms-3\" role=\"img\" aria-label=\"Negative votes\" title=\"Negative votes\"/>"
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
+msgid "<i class=\"fa fa-reply me-1\"/>Reply"
 msgstr ""
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
+msgid ""
+"<i class=\"fa fa-share-alt\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" title=\"Share\"/>"
+msgstr ""
+"<i class=\"fa fa-share-alt\" data-bs-toggle=\"เคล็ดลับเครื่องมือ\" data-bs-"
+"placement=\"บน\" title=\"แชร์\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
+msgid "<i class=\"fa fa-shield fa-fw opacity-50\"/> Badges"
+msgstr "<i class=\"fa fa-shield fa-fw opacity-50\"/> เหรียญรางวัล"
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
-msgid "<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Positive votes\" title=\"Positive votes\"/>"
-msgstr "<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"โหวตด้านบวก\" title=\"Positive votes\"/>"
+msgid ""
+"<i class=\"fa fa-thumbs-down text-danger ms-3\" role=\"img\" aria-"
+"label=\"Negative votes\" title=\"Negative votes\"/>"
+msgstr ""
+"<i class=\"fa fa-thumbs-down text-danger ms-3\" role=\"รูปภาพ\" aria-"
+"label=\"คะแนนเสียงเชิงลบ\" title=\"คะแนนเสียงเชิงลบ\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid ""
+"<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Positive"
+" votes\" title=\"Positive votes\"/>"
+msgstr ""
+"<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-"
+"label=\"โหวตด้านบวก\" title=\"Positive votes\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<i class=\"fa fa-times fa-fw me-1\"/>Reject"
-msgstr ""
+msgstr "<i class=\"fa fa-times fa-fw me-1\"/>ปฏิเสธ"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
-msgid "<i class=\"fa fa-times\"/> Good morning to all! Please, can someone help solve my tax computation problem in Canada? Thanks!"
-msgstr "<i class=\"fa fa-times\"/> อรุณสวัสดิ์ทุกคน! ได้โปรด ใครสามารถช่วยแก้ปัญหาการคำนวณภาษีของฉันในแคนาดาได้บ้าง ขอบคุณ!"
+msgid ""
+"<i class=\"fa fa-times\"/> Good morning to all! Please, can someone help "
+"solve my tax computation problem in Canada? Thanks!"
+msgstr ""
+"<i class=\"fa fa-times\"/> อรุณสวัสดิ์ทุกคน! ได้โปรด "
+"ใครสามารถช่วยแก้ปัญหาการคำนวณภาษีของฉันในแคนาดาได้บ้าง ขอบคุณ!"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
+msgid "<i class=\"fa fa-times\"/> Reject"
+msgstr "<i class=\"fa fa-times\"/> ปฏิเสธ"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<i class=\"fa fa-times\"/><span class=\"ms-2\">Offensive</span>"
+msgstr "<i class=\"fa fa-times\"/><span class=\"ms-2\">ก้าวร้าว</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<i class=\"fa fa-times\"/><span class=\"ms-2\">Reject</span>"
+msgstr "<i class=\"fa fa-times\"/><span class=\"ms-2\">ปฏิเสธ</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -519,98 +606,119 @@ msgid "<i class=\"fa fa-user\"/> User"
 msgstr "<i class=\"fa fa-user\"/> ผู้ใช้"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "<i class=\"oi oi-chevron-left me-1\"/>Back"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
+msgid "<i class=\"fa fa-users fa-fw opacity-50\"/> People"
+msgstr "<i class=\"fa fa-users fa-fw opacity-50\"/> คน"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_question
-msgid "<i class=\"oi oi-chevron-left me-2\"/>Back to All Topics"
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "<i class=\"oi oi-arrow-right d-inline-block\"/> Go to Forums"
+msgstr "<i class=\"oi oi-arrow-right d-inline-block\"/> ไปที่ฟอรั่ม"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.404
+msgid ""
+"<i class=\"oi oi-arrow-right display-inline-block\"/> Return to questions "
+"list"
 msgstr ""
+"<i class=\"oi oi-arrow-right display-inline-block\"/> กลับไปยังรายการคำถาม"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_sub_nav
 msgid "<i class=\"oi oi-chevron-left small\"/> Back"
-msgstr ""
+msgstr "<i class=\"oi oi-chevron-left small\"/>กลับ"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "<small class=\"fw-bold\">Votes</small>"
+msgstr "<small class=\"fw-bold\">โหวต</small>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
+msgid "<small>(View all)</small>"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
-msgid ""
-"<small class=\"text-muted\">\n"
-"                    Flagged\n"
-"                </small>"
-msgstr ""
-"<small class=\"text-muted\">\n"
-"                    ตั้งค่าสถานะ\n"
-"                </small>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "<span class=\"badge text-bg-info\">Closed</span>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_all_entries
+msgid "<span class=\"badge bg-dark me-1\">Last post:</span>"
+msgstr "<span class=\"badge bg-dark me-1\">โพสต์ล่าสุด:</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.contact
-msgid "<span class=\"fa fa-trophy bg-bronze ms-2\" role=\"img\" aria-label=\"Bronze badge\" title=\"Bronze badge\"/>"
+msgid ""
+"<span class=\"fa fa-trophy o-text-bronze ms-2\" role=\"img\" aria-"
+"label=\"Bronze badge\" title=\"Bronze badge\"/>"
 msgstr ""
+"<span class=\"fa fa-trophy o-text-bronze ms-2\" role=\"รูปภาพ\" aria-"
+"label=\"เหรียญทองแดง\" title=\"เหรียญทองแดง\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.contact
-msgid "<span class=\"fa fa-trophy bg-silver ms-2\" role=\"img\" aria-label=\"Silver badge\" title=\"Silver badge\"/>"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
-msgid "<span class=\"fw-bold\">No answer posted yet.</span>"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
-msgid "<span class=\"fw-bold\">No question posted yet.</span>"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-msgid "<span class=\"mx-1 d-none d-sm-inline\">&amp;nbsp;|</span>"
-msgstr "<span class=\"mx-1 d-none d-sm-inline\">&amp;nbsp;|</span>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "<span class=\"mx-1 text-400 d-none d-lg-block\">|</span>"
-msgstr "<span class=\"mx-1 text-400 d-none d-lg-block\">|</span>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-msgid "<span class=\"mx-1\">|</span>"
-msgstr "<span class=\"mx-1\">|</span>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid ""
-"<span class=\"mx-1\">|</span>\n"
-"                    <i class=\"fa fa-star\"/>"
+"<span class=\"fa fa-trophy o-text-silver ms-2\" role=\"img\" aria-"
+"label=\"Silver badge\" title=\"Silver badge\"/>"
 msgstr ""
-"<span class=\"mx-1\">|</span>\n"
-"                    <i class=\"fa fa-star\"/>"
+"<span class=\"fa fa-trophy o-text-silver ms-2\" role=\"รูปภาพ\" aria-"
+"label=\"เหรียญเงิน\" title=\"เหรียญเงิน\"/>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "<span class=\"mx-3  mx-lg-2 text-400 d-none d-md-inline\">|</span>"
-msgstr "<span class=\"mx-3  mx-lg-2 text-400 d-none d-md-inline\">|</span>"
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid "<span class=\"flex-grow-1\">What kind of questions can I ask here?</span>"
+msgstr "<span class=\"flex-grow-1\">ฉันสามารถถามคำถามอะไรได้บ้างที่นี่?</span>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "<span class=\"navbar-text me-1\">Go to:</span>"
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid "<span class=\"flex-grow-1\">What should I avoid in my answers?</span>"
+msgstr "<span class=\"flex-grow-1\">ฉันควรหลีกเลี่ยงอะไรในคำตอบของฉันบ้าง?</span>"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid "<span class=\"flex-grow-1\">What should I avoid in my questions?</span>"
+msgstr "<span class=\"flex-grow-1\">ฉันควรหลีกเลี่ยงอะไรในคำถามของฉันบ้าง?</span>"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid ""
+"<span class=\"flex-grow-1\">Why can other people edit my "
+"questions/answers?</span>"
+msgstr ""
+"<span class=\"flex-"
+"grow-1\">เพราะเหตุใดบุคคลอื่นสามารถแก้ไขคำถาม/คำตอบของฉันได้?</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"<span class=\"form-text small text-muted d-block\">consider adding an "
+"example.</span>"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.tag
-msgid "<span class=\"navbar-text me-3\">Show Tags Starting By</span>"
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"<span class=\"form-text small text-muted d-block\">select text to format "
+"it.</span>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"<span class=\"form-text small text-muted d-block\">use '/' to insert "
+"images.</span>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"<span class=\"form-text small text-muted me-1\"><i class=\"fa fa-"
+"lightbulb-o\"/> Tip:</span>"
 msgstr ""
 
 #. module: website_forum
@@ -630,22 +738,37 @@ msgid "<span class=\"o_stat_text\">Posts</span>"
 msgstr "<span class=\"o_stat_text\">โพสต์</span>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+#: model_terms:ir.ui.view,arch_db:website_forum.display_activities
+msgid "<span class=\"text-muted\">There is no activity yet.</span>"
+msgstr "<span class=\"text-muted\">ยังไม่มีกิจกรรม</span>"
+
+#. module: website_forum
+#: model_terms:web_tour.tour,rainbow_man_message:website_forum.question
+msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
+msgstr "<span><b>ทำได้ดีมาก!</b> คุณได้ผ่านทุกขั้นตอนของทัวร์นี้แล้ว</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "<span>Be the first to answer this question</span>"
+msgstr "<span>เป็นคนแรกที่จะตอบคำถามนี้</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
+msgid "<span>Moderation</span>"
+msgstr "<span>การกลั่นกรอง</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid ""
-"<span class=\"o_wforum_answer_correct_badge border small border-success rounded-pill fw-bold text-success ms-2 px-2\">\n"
-"                            Best Answer\n"
-"                        </span>"
+"<span>Please wait for a moderator to validate your previous post to be "
+"allowed to reply to questions.</span>"
 msgstr ""
+"<span>โปรดรอให้ผู้ดูแลตรวจสอบโพสต์ก่อนหน้าของคุณจึงจะสามารถตอบคำถามได้</span>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "<span>By </span>"
-msgstr "<span>ด้วย </span>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_question
-msgid "A clear, explicit and concise title"
-msgstr "ชื่อเรื่องที่ชัดเจน ถูกต้อง และกระชับ"
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_header
+msgid "<span>You need to be registered to interact with the community.</span>"
+msgstr "<span>คุณต้องลงทะเบียนเพื่อโต้ตอบกับคอมมูนิตี้</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
@@ -657,11 +780,6 @@ msgstr "คำตอบใหม่บน"
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
 msgid "A new question"
 msgstr "คำถามใหม่"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "About"
-msgstr "เกี่ยวกับ"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_answer_accept_own
@@ -682,7 +800,7 @@ msgstr "ยอมรับคำตอบแล้ว"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Accepted answer removed"
-msgstr ""
+msgstr "ลบคำตอบที่ยอมรับแล้ว"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_accept
@@ -715,64 +833,58 @@ msgid "Activities"
 msgstr "กิจกรรม"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_related_posts
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "Activity"
 msgstr "กิจกรรม"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
+msgid "Add a comment"
+msgstr "เพิ่มความคิดเห็น"
+
+#. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__allow_share
-msgid "After posting the user will be proposed to share its question or answer on social networks, enabling social network propagation of the forum content."
-msgstr "หลังจากโพสต์ ผู้ใช้จะได้รับการเสนอให้แชร์คำถามหรือคำตอบบนสื่อสังคมต่าง ๆ ซึ่งทำให้สามารถเผยแพร่เนื้อหาในฟอรั่มสื่อสังคมได้"
+msgid ""
+"After posting the user will be proposed to share its question or answer on "
+"social networks, enabling social network propagation of the forum content."
+msgstr ""
+"หลังจากโพสต์ ผู้ใช้จะได้รับการเสนอให้แชร์คำถามหรือคำตอบบนสื่อสังคมต่าง ๆ "
+"ซึ่งทำให้สามารถเผยแพร่เนื้อหาในฟอรั่มสื่อสังคมได้"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/controllers/website_forum.py:0
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "All"
 msgstr "ทั้งหมด"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "All Forums"
-msgstr "ฟอรั่มทั้งหมด"
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
+msgid "All Posts"
+msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "All Tags"
-msgstr "แท็กทั้งหมด"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "All Topics"
 msgstr "หัวข้อทั้งหมด"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "All forums"
 msgstr "ฟอรั่มทั้งหมด"
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_bump
-msgid "Allow Bump"
-msgstr "อนุญาตการชน"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Amazing! There are no unanswered questions left!"
-msgstr "น่าทึ่งมาก! ไม่มีคำถามที่ยังไม่ได้ตอบเหลืออยู่!"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "Answer"
-msgstr "คำตอบ"
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "Animation of a pen checking a checkbox"
+msgstr "ภาพเคลื่อนไหวของปากกากำลังเลือกช่องทำเครื่องหมาย"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "Answer %s"
-msgstr ""
+msgstr "คำตอบ %s"
 
 #. module: website_forum
 #. odoo-python
@@ -833,6 +945,11 @@ msgid "Answer was accepted with 3 or more votes"
 msgstr "คำตอบถูกยอมรับด้วย 3 โหวตหรือมากกว่า"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Answer:"
+msgstr "คำตอบ:"
+
+#. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__child_count_desc
 msgid "Answered"
 msgstr "ตอบ"
@@ -848,17 +965,20 @@ msgid "Answered by"
 msgstr "ตอบแล้วโดย"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post
+msgid "Answered on"
+msgstr "ตอบเมื่อ"
+
+#. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_a_8
 msgid "Answered own question with at least 4 up votes"
 msgstr "ตอบคำถามของตัวเองด้วยคะแนนโหวตเห็นด้วยอย่างน้อย 4 คะแนน"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__child_count
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_form
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "Answers"
 msgstr "คำตอบ"
@@ -877,16 +997,27 @@ msgid "Archived"
 msgstr "เก็บถาวรแล้ว"
 
 #. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+msgid "Are you sure you want to delete this comment?"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "As a moderator, you can either validate or reject this answer."
+msgstr "ในฐานะผู้ดูแล คุณสามารถตรวจสอบหรือปฏิเสธคำตอบนี้ได้"
+
+#. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Ask a new question"
-msgstr ""
+msgstr "ถามคำถามใหม่"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Ask a question"
-msgstr ""
+msgstr "ถามคำถาม"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_ask
@@ -897,6 +1028,11 @@ msgstr "ถามคำถาม"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_post
 msgid "Ask questions without validation"
 msgstr "ถามคำถามโดยไม่ตรวจสอบความถูกต้อง"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid "Ask your question"
+msgstr "ถามคำถาม"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_26
@@ -947,6 +1083,8 @@ msgstr "จำนวนสิ่งที่แนบมา"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
+#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid "Author"
 msgstr "ผู้เขียน"
 
@@ -962,25 +1100,30 @@ msgstr "อัตชีวประวัติ"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.author_box
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
 #: model_terms:ir.ui.view,arch_db:website_forum.post_comment
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_header
 msgid "Avatar"
 msgstr "อวตาร"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "Back"
-msgstr "กลับ"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
-#: model_terms:ir.ui.view,arch_db:website_forum.header
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Back to Question"
 msgstr "กลับไปที่คำถาม"
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/controllers/website_forum.py:0
+msgid "Bad \"filters\" value \"%(filters)s\"."
+msgstr "ค่า \"ตัวกรอง\" ไม่ถูกต้อง \"%(filters)s\""
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/controllers/website_forum.py:0
+msgid "Bad \"tag_char\" value \"%(tag_char)s\""
+msgstr "ค่า \"tag_char\" ไม่ถูกต้อง \"%(tag_char)s\""
 
 #. module: website_forum
 #. odoo-python
@@ -990,9 +1133,8 @@ msgstr "คำขอที่ไม่ดี"
 
 #. module: website_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum_badges
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "Badges"
-msgstr "ป้ายรางวัล"
+msgstr "เหรียญรางวัล"
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post_reason__reason_type__basic
@@ -1000,19 +1142,14 @@ msgid "Basic"
 msgstr "พื้นฐาน"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Be less specific in your wording for a wider search result"
-msgstr "ใช้ถ้อยคำที่ไม่เฉพาะเจาะจงนักเพื่อผลลัพธ์การค้นหาที่กว้างขึ้น"
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "Because there are no posts in this forum yet."
+msgstr "เพราะยังไม่มีกระทู้ในฟอรั่มนี้"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Browse All"
-msgstr "เรียกดูทั้งหมด"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_post__bump_date
-msgid "Bumped on"
-msgstr "ชนบน"
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
+msgid "Best Answer"
+msgstr "คำตอบที่ดีที่สุด"
 
 #. module: website_forum
 #. odoo-javascript
@@ -1088,7 +1225,7 @@ msgstr "สามารถโหวตเห็นด้วย"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_use_full_editor
 msgid "Can Use Full Editor"
-msgstr ""
+msgstr "สามารถใช้โปรแกรมแก้ไขแบบเต็มได้"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_view
@@ -1099,16 +1236,6 @@ msgstr "สามารถดู"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_edit_retag
 msgid "Change question tags"
 msgstr "เปลี่ยนแท็กคำถาม"
-
-#. module: website_forum
-#: model:ir.model.fields,help:website_forum.field_forum_forum__allow_bump
-msgid "Check this box to display a popup for posts older than 10 days without any given answer. The popup will offer to share it on social networks. When shared, a question is bumped at the top of the forum."
-msgstr "ทำเครื่องหมายที่ช่องนี้เพื่อแสดงป๊อปอัพสำหรับโพสต์ที่เก่ากว่า 10 วันโดยไม่มีคำตอบ ป๊อปอัพจะเสนอให้แชร์บนสื่อสังคใต่าง ๆ เมื่อแชร์แล้วคำถามจะขึ้นที่ด้านบนของฟอรั่ม"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Check your spelling and try again"
-msgstr "ตรวจการสะกดของคุณแล้วลองอีกครั้ง"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_4
@@ -1125,12 +1252,6 @@ msgstr "คลิดที่นี้เพื่อยอมรับคำต
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Click to answer."
-msgstr "ตลิกเพื่อตอบ"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Click to post your answer."
 msgstr "คลิกเพื่อโพสต์คำตอบ"
 
@@ -1141,14 +1262,16 @@ msgid "Click to post your question."
 msgstr "คลิกเพื่อโพสต์คำถามของคุณ"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
-msgid "Close"
-msgstr "ปิด"
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
+msgid "Click to reply."
+msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "Close Post"
-msgstr "ปิดโพสต์"
+#: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_mobile
+msgid "Close"
+msgstr "ปิด"
 
 #. module: website_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum_post_reasons
@@ -1172,8 +1295,15 @@ msgstr "ปิดโพสต์"
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__close
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
 msgid "Closed"
 msgstr "ปิดแล้ว"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Closed Posts"
+msgstr "กระทู้ปิด"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__closed_uid
@@ -1196,9 +1326,12 @@ msgid "Closing Reason"
 msgstr "เหตุผลการปิด"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__color
+msgid "Color"
+msgstr "สี"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid "Comment"
 msgstr "ความคิดเห็น"
 
@@ -1214,8 +1347,8 @@ msgstr "แสดงความคิดเห็นบนโพสต์ขอ
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_comment
-msgid "Comment this post..."
-msgstr "แสดงความคิดเห็นบนโพสต์นี้"
+msgid "Comment this post"
+msgstr "แสดงความคิดเห็นโพสต์นี้"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_2
@@ -1225,10 +1358,9 @@ msgid "Commentator"
 msgstr "ผู้แสดงความคิดเห็น"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
-#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
-msgid "Comments"
-msgstr "ความคิดเห็น"
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
+msgid "Community Forums"
+msgstr "ฟอรัมของคอมมูนิตี้"
 
 #. module: website_forum
 #: model:gamification.challenge,name:website_forum.challenge_configure_profile
@@ -1254,18 +1386,8 @@ msgstr "เนื้อหา"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_convert_all
-msgid "Convert all answers to comments and vice versa"
-msgstr "แปลงคำตอบทั้งหมดเป็นความคิดเห็นและในทางกลับกัน"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
-msgid "Convert as a answer"
-msgstr "แปลงเป็นคำตอบ"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-msgid "Convert as a comment"
-msgstr "แปลงเป็นความคิดเห็น"
+msgid "Convert all comments to answers"
+msgstr "แปลงความคิดเห็นทั้งหมดเป็นคำตอบ"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_accept
@@ -1274,8 +1396,18 @@ msgstr "แปลงความคิดเห็นเป็นคำตอบ
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_convert_own
-msgid "Convert own answers to comments and vice versa"
-msgstr "แปลงคำตอบของตัวเองเป็นความคิดเห็นและในทางกลับกัน"
+msgid "Convert own comments to answers"
+msgstr "แปลงความคิดเห็นของตัวเองเป็นคำตอบ"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
+msgid "Convert to Comment"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
+msgid "Convert to answer"
+msgstr "แปลงเป็นคำตอบ"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__is_correct
@@ -1310,9 +1442,23 @@ msgid "Create a new tag"
 msgstr "สร้างแท็กใหม่"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_sign_up_cta
+msgid ""
+"Create an account today to enjoy exclusive features and engage with our "
+"awesome community!"
+msgstr ""
+"สร้างบัญชีวันนี้เพื่อเพลิดเพลินไปกับฟีเจอร์พิเศษและมีส่วนร่วมกับคอมมูนิตี้ที่ยอดเยี่ยมของเรา!"
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_tag_create
 msgid "Create new tags"
 msgstr "สร้างแท็กใหม่"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/website_forum_tags_wrapper.xml:0
+msgid "Create option \""
+msgstr "สร้างตัวเลือก \""
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_32
@@ -1332,6 +1478,7 @@ msgstr "สร้างโดย"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__create_date
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__create_date
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__create_date
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post
 msgid "Created on"
 msgstr "สร้างเมื่อ"
 
@@ -1379,16 +1526,28 @@ msgid "Define the visibility of the challenge through menus"
 msgstr "กำหนดการมองเห็นความท้าทายผ่านเมนู"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 #: model_terms:ir.ui.view,arch_db:website_forum.post_comment
-#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+#: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
 msgid "Delete"
 msgstr "ลบ"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_all
+msgid "Delete all comments"
+msgstr "ลบความคิดเห็นทั้งหมด"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_unlink_all
 msgid "Delete all posts"
 msgstr "ลบโพสต์ทั้งหมดด"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_own
+msgid "Delete own comments"
+msgstr "ลบความคิดเห็นของตัวเอง"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_unlink_own
@@ -1399,10 +1558,10 @@ msgstr "ลบโพสต์ของตัวเอง"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Delete the accepted answer"
-msgstr ""
+msgstr "ลบคำตอบที่ได้รับการยอมรับ"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "Deleted"
 msgstr "ลบ"
 
@@ -1419,7 +1578,6 @@ msgstr "ลบโพสต์ของตัวเองที่มีการ
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__description
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_all_entries
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Description"
@@ -1452,6 +1610,18 @@ msgid "Discussions (multiple answers)"
 msgstr "การสนทนา (หลายคำตอบ)"
 
 #. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_forum.py:0
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Dismiss"
+msgstr "ยกเลิก"
+
+#. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Dismiss message"
+msgstr "ยกเลิกข้อความ"
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__display_name
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__display_name
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__display_name
@@ -1467,6 +1637,7 @@ msgstr "แสดงประวัติผู้ใช้โดยละเอ
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_downvote
+#: model_terms:ir.ui.view,arch_db:website_forum.vote
 msgid "Downvote"
 msgstr "โหวตไม่เห็นด้วย"
 
@@ -1474,7 +1645,7 @@ msgstr "โหวตไม่เห็นด้วย"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Downvote for posting offensive contents"
-msgstr ""
+msgstr "โหวตลงสำหรับการโพสต์เนื้อหาที่ไม่เหมาะสม"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_1
@@ -1482,23 +1653,17 @@ msgid "Duplicate post"
 msgstr "โพสต์ซ้ำ"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+#: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
 msgid "Edit"
-msgstr "การแก้ไข"
+msgstr "แก้ไข"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "Edit Answer"
 msgstr "แก้ไขคำตอบ"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "Edit Forum in Backend"
-msgstr "แก้ไขฟอรั่มในส่วนหลัง"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "Edit Question"
 msgstr "แก้ไขคำถาม"
 
@@ -1518,6 +1683,16 @@ msgid "Edit your Post"
 msgstr "แก้ไขโพสของคุณ"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+msgid "Edit your answer"
+msgstr "แก้ไขคำตอบของคุณ"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+msgid "Edit your question"
+msgstr "แก้ไขคำถามของคุณ"
+
+#. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_7
 #: model:gamification.challenge,name:website_forum.challenge_editor
 #: model:gamification.goal.definition,name:website_forum.definition_editor
@@ -1528,6 +1703,16 @@ msgstr "ผู้แก้ไข"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_editor
 msgid "Editor Features: image and links"
 msgstr "ฟีเจอร์ตัวแก้ไข: รูปภาพและลิงก์"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "Empty box"
+msgstr "กล่องว่าง"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_sign_up_cta
+msgid "Enjoying the discussion? Don't just read, join in!"
+msgstr ""
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_5
@@ -1541,10 +1726,17 @@ msgstr "ผู้ตื่นรู้"
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid ""
 "Example\n"
-"                        <i class=\"fa fa-question-circle\"/>"
+"                            <i class=\"fa fa-question-circle\"/>"
 msgstr ""
 "ตัวอย่าง\n"
-"                        <i class=\"fa fa-question-circle\"/>"
+"                            <i class=\"fa fa-question-circle\"/>"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/public_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
+msgid "Facebook"
+msgstr "Facebook"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_3
@@ -1554,6 +1746,7 @@ msgstr "คำถามยอดฮิต"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__favourite_count
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "Favorite"
 msgstr "รายการโปรด"
 
@@ -1589,9 +1782,18 @@ msgid "Favourite Questions"
 msgstr "คำถามโปรด"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
 msgid "Favourites"
 msgstr "รายการโปรด"
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_post__last_activity_date
+msgid ""
+"Field to keep track of a post's last activity. Updated whenever it is "
+"replied to, or when a comment is added on the post or one of its replies."
+msgstr ""
+"ช่องสำหรับติดตามกิจกรรมล่าสุดของโพสต์ อัปเดตทุกครั้งที่มีการตอบกลับ "
+"หรือเมื่อมีการเพิ่มความคิดเห็นในโพสต์หรือการตอบกลับอย่างใดอย่างหนึ่ง"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -1619,7 +1821,7 @@ msgid "First upvote"
 msgstr "โหวตไม่เห็นด้วยครั้งแรก"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+#: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
 msgid "Flag"
 msgstr "ตั้งค่าสถานะ"
 
@@ -1631,8 +1833,8 @@ msgstr "ตั้งค่าสถานะโพสต์ว่าเป็น
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__flagged
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
 msgid "Flagged"
 msgstr "ตั้งค่าสถานะ"
 
@@ -1642,9 +1844,19 @@ msgid "Flagged by"
 msgstr "ตั้งค่าสถานะโดย"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.follow
+msgid "Follow"
+msgstr "ติดตาม"
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "Followed Questions"
 msgstr "คำถามที่ติดตาม"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
+msgid "Followed Tags"
+msgstr "แท็กที่ติดตาม"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_follower_ids
@@ -1661,15 +1873,22 @@ msgid "Followers (Partners)"
 msgstr "ผู้ติดตาม (พาร์ทเนอร์)"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "Following"
-msgstr "กำลังติดตาม"
-
-#. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "For example, if you ask an interesting question or give a helpful answer, your input will be upvoted. On the other hand if the answer is misleading - it will be downvoted. Each vote in favor will generate 10 points, each vote against will subtract 2 points. There is a limit of 200 points that can be accumulated for a question or answer per day. The table given at the end explains reputation point requirements for each type of moderation task."
+msgid ""
+"For example, if you ask an interesting question or give a helpful answer, "
+"your input will be upvoted. On the other hand if the answer is misleading - "
+"it will be downvoted. Each vote in favor will generate 10 points, each vote "
+"against will subtract 2 points. There is a limit of 200 points that can be "
+"accumulated for a question or answer per day. The table given at the end "
+"explains reputation point requirements for each type of moderation task."
 msgstr ""
+"ตัวอย่างเช่น หากคุณถามคำถามที่น่าสนใจหรือให้คำตอบที่เป็นประโยชน์ "
+"ข้อมูลของคุณจะถูกโหวตเห็นด้วย ในทางกลับกัน หากคำตอบนั้นทำให้เข้าใจผิด "
+"คำตอบนั้นจะถูกลบคะแนน การลงคะแนนเสียงเห็นด้วยแต่ละครั้งจะได้ 10 คะแนน "
+"การลงคะแนนเสียงที่ไม่เห็นด้วยแต่ละครั้งจะถูกลบ 2 คะแนน "
+"มีการจำกัดคะแนนที่สามารถสะสมได้ 200 คะแนนสำหรับคำถามหรือคำตอบต่อวัน "
+"ตารางที่ให้ไว้ตอนท้ายจะอธิบายข้อกำหนดคะแนนความน่าเชื่อถือสำหรับงานตรวจสอบแต่ละประเภท"
 
 #. module: website_forum
 #. odoo-python
@@ -1691,7 +1910,7 @@ msgstr "ฟอรั่ม"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_website__forum_count
 msgid "Forum Count"
-msgstr ""
+msgstr "จำนวนฟอรั่ม"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form_add
@@ -1707,7 +1926,7 @@ msgstr "ชื่อฟอรั่ม"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
 msgid "Forum Page"
-msgstr ""
+msgstr "หน้าฟอรั่ม"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post
@@ -1718,7 +1937,7 @@ msgstr "โพสต์ฟอรั่ม"
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_post_action
 msgid "Forum Post Pages"
-msgstr ""
+msgstr "หน้าโพสต์ฟอรั่ม"
 
 #. module: website_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum_post_pages
@@ -1729,6 +1948,11 @@ msgstr "โพสต์ฟอรั่ม"
 #: model:ir.model,name:website_forum.model_forum_tag
 msgid "Forum Tag"
 msgstr "แท็กฟอรั่ม"
+
+#. module: website_forum
+#: model:ir.actions.act_window,name:website_forum.forum_tag_action
+msgid "Forum Tags"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_forum_action
@@ -1744,10 +1968,30 @@ msgid "Gamification Challenge"
 msgstr "ความท้าทายในรูปแบบเกม"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.follow
+msgid "Get notified when there's activity on this post"
+msgstr "รับการแจ้งเตือนเมื่อมีกิจกรรมในโพสต์นี้"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.follow
+msgid "Get notified when this tag is used"
+msgstr "รับการแจ้งเตือนเมื่อมีการใช้แท็กนี้"
+
+#. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Give your post title."
 msgstr "มอบชื่อให้โพสต์ของคุณ"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "Go back to the list of"
+msgstr "กลับไปที่รายการของ"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "Go enjoy a cup of coffee."
+msgstr "ไปจิบกาแฟกันเพลินๆ"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_3
@@ -1800,7 +2044,7 @@ msgstr "กลุ่มโดย"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__faq
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.faq
 msgid "Guidelines"
 msgstr "แนวทางการปฏิบัติ"
 
@@ -1828,32 +2072,25 @@ msgid "Has Message"
 msgstr "มีข้อความ"
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__has_pending_post
+msgid "Has pending post"
+msgstr "มีกระทู้รอดำเนินการ"
+
+#. module: website_forum
 #: model:forum.forum,name:website_forum.forum_help
 msgid "Help"
 msgstr "ช่วยเหลือ"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_votes
+msgid "Help moderating the forums by upvoting and downvoting posts. <br/>"
+msgstr "ช่วยกลั่นกรองฟอรั่มโดยการอัปโหวตและดาวน์โหวตโพสต์ <br/>"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid "Here a table with the privileges and the karma level"
 msgstr "ที่นี่คือตารางสิทธิพิเศษและระดับ Karma"
-
-#. module: website_forum
-#. odoo-python
-#: code:addons/website_forum/models/forum_forum.py:0
-#: model_terms:forum.forum,welcome_message:website_forum.forum_help
-msgid "Hide Intro"
-msgstr "ซ่อนบทนำ"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "I'm <b>Following</b>"
-msgstr "ฉัน<b>กำลังติดตาม</b>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "I'm Following"
-msgstr "ฉันกำลังติดตาม"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__id
@@ -1883,8 +2120,10 @@ msgstr "ถ้าเลือก ข้อความบางข้อคว�
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__karma_dofollow
-msgid "If the author has not enough karma, a nofollow attribute is added to links"
-msgstr "หากผู้เขียนมีคะแนน Karma ไม่เพียงพอ คุณลักษณะไม่ติดตามจะถูกเพิ่มลงในลิงก์"
+msgid ""
+"If the author has not enough karma, a nofollow attribute is added to links"
+msgstr ""
+"หากผู้เขียนมีคะแนน Karma ไม่เพียงพอ คุณลักษณะไม่ติดตามจะถูกเพิ่มลงในลิงก์"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -1907,8 +2146,19 @@ msgstr ""
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "If you fit in one of these example or if your motivation for asking the question is “I would like to participate in a discussion about ______”, then you should not be asking here but on our mailing lists. However, if your motivation is “I would like others to explain ______ to me”, then you are probably OK."
-msgstr "หากคุณเหมาะสมกับตัวอย่างใดตัวอย่างหนึ่งเหล่านี้ หรือถ้าแรงจูงใจของคุณในการถามคำถามคือ “ฉันต้องการมีส่วนร่วมในการอภิปรายเกี่ยวกับ ______” คุณไม่ควรถามที่นี่แต่ควรถามในรายชื่อผู้รับจดหมายของเรา อย่างไรก็ตาม หากแรงจูงใจของคุณคือ “ฉันอยากให้คนอื่นอธิบาย ______ ให้ฉันฟัง” คุณก็อาจจะโอเค"
+msgid ""
+"If you fit in one of these example or if your motivation for asking the "
+"question is “I would like to participate in a discussion about ______”, then"
+" you should not be asking here but on our mailing lists. However, if your "
+"motivation is “I would like others to explain ______ to me”, then you are "
+"probably OK."
+msgstr ""
+"หากคุณเหมาะสมกับตัวอย่างใดตัวอย่างหนึ่งเหล่านี้ "
+"หรือถ้าแรงจูงใจของคุณในการถามคำถามคือ "
+"“ฉันต้องการมีส่วนร่วมในการอภิปรายเกี่ยวกับ ______” "
+"คุณไม่ควรถามที่นี่แต่ควรถามในรายชื่อผู้รับจดหมายของเรา อย่างไรก็ตาม "
+"หากแรงจูงใจของคุณคือ “ฉันอยากให้คนอื่นอธิบาย ______ ให้ฉันฟัง” "
+"คุณก็อาจจะโอเค"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
@@ -1975,6 +2225,11 @@ msgid "Is Follower"
 msgstr "เป็นผู้ติดตาม"
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__can_moderate
+msgid "Is a moderator"
+msgstr "เป็นผู้ดำเนินรายการ"
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__has_validated_answer
 msgid "Is answered"
 msgstr "ตอบแล้ว"
@@ -1995,11 +2250,6 @@ msgstr "ไม่อนุญาตให้แก้ไขการลงคะ
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "It is not allowed to vote for its own post."
 msgstr "ไม่อนุญาตให้ลงคะแนนสำหรับโพสต์ของตัวเอง"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "Karma"
-msgstr "Karma"
 
 #. module: website_forum
 #. odoo-javascript
@@ -2043,18 +2293,18 @@ msgid "Karma to unlink"
 msgstr "Karma เพื่อยกเลิกการเชื่อมโยง"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post
+msgid "Last Activity"
+msgstr "กิจกรรมล่าสุด"
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__last_post_id
 #: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
 msgid "Last Post"
 msgstr "โพสต์สุดท้าย"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_options
-msgid "Last Post:"
-msgstr "โพสต์สุดท้าย:"
-
-#. module: website_forum
-#: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__write_date_desc
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__last_activity_date_desc
 msgid "Last Updated"
 msgstr "อัปเดตครั้งสุดท้าย"
 
@@ -2075,9 +2325,9 @@ msgid "Last Updated on"
 msgstr "อัปเดตครั้งล่าสุดเมื่อ"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Last activity date"
-msgstr "วันที่กิจกรรมสุดท้าย"
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__last_activity_date
+msgid "Last activity on"
+msgstr "กิจกรรมล่าสุดเมื่อ"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
@@ -2090,19 +2340,31 @@ msgid "Left 10 answers with score of 10 or more"
 msgstr "เหลือ 10 คำตอบกับ 10 หรือมากกว่า"
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_url
+msgid "Link to questions with the tag"
+msgstr "ลิงก์ไปยังคำถามที่มีแท็ก"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/public_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
+msgid "LinkedIn"
+msgstr "LinkedIn"
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
 msgid "List"
 msgstr "รายการ"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid "Mark as Best Answer"
 msgstr "ทำเครื่องหมายว่าเป็นคำตอบที่ดีที่สุด"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
 msgid "Mark as Offensive"
-msgstr ""
+msgstr "ทำเครื่องหมายว่าไม่เหมาะสม"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
@@ -2116,9 +2378,9 @@ msgid "Mark as spam"
 msgstr "ทำเครื่องหมายว่าเป็นแสปม"
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__menu_id
-msgid "Menu"
-msgstr "เมนู"
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
+msgid "Meet our community members"
+msgstr "พบกับสมาชิกคอมมูนิตี้ของเรา"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_has_error
@@ -2145,19 +2407,9 @@ msgid "Moderate posts"
 msgstr "กลั่นกรองโพสต์"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "Moderation"
-msgstr "การกลั่นกรอง"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
 msgid "Moderation tools"
 msgstr "เครื่องมือกลั่นกรอง"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-msgid "More"
-msgstr "เพิ่มเติม"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -2166,43 +2418,33 @@ msgid "More over:"
 msgstr "นอกจากนี้:"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
+msgid "Most Used Tags"
+msgstr "แท็กที่ใช้มากที่สุด"
+
+#. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__vote_count_desc
 msgid "Most Voted"
 msgstr "ได้รับการโหวตมากที่สุด"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Most answered"
-msgstr "ได้รับคำตอบมากที่สุด"
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
+msgid "Most used Tags"
+msgstr "แท็กที่ใช้มากที่สุด"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__tag_most_used_ids
+msgid "Most used tags"
+msgstr "แท็กที่ใช้มากที่สุด"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Most voted"
-msgstr "ได้รับการโหวตมากที่สุด"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/xml/public_templates.xml:0
-msgid "Move this question to the top of the list by sharing it on social networks."
-msgstr "ย้ายคำถามนี้ไปที่ด้านบนสุดของรายการโดยการแชร์บนเครื่อข่ายสังคม"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "My <b>Favourites</b>"
-msgstr "<b>รายการโปรด</b>ของฉัน"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "My <b>Posts</b>"
-msgstr "<b>โพสต์</b>ของฉัน"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "My Favourites"
+msgid "My Favorites"
 msgstr "รายการโปรดของฉัน"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
 msgid "My Posts"
 msgstr "โพสต์ของฉัน"
 
@@ -2212,8 +2454,12 @@ msgid "My Vote"
 msgstr "โหวตของฉัน"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
+msgid "My forums"
+msgstr "ฟอรั่มของฉัน"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_header
 msgid "My profile"
 msgstr "โปรไฟล์ของฉัน"
 
@@ -2224,7 +2470,6 @@ msgstr "ชื่อ"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_votes
-#: model_terms:ir.ui.view,arch_db:website_forum.vote
 msgid "Negative vote"
 msgstr "โหวตด้านลบ"
 
@@ -2241,8 +2486,7 @@ msgid "New Forum"
 msgstr "ฟอรั่มใหม่"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "New Post"
 msgstr "โพสต์ใหม่"
 
@@ -2255,7 +2499,6 @@ msgstr "คำถามใหม่"
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__create_date_desc
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Newest"
 msgstr "ใหม่ล่าสุด"
 
@@ -2277,39 +2520,14 @@ msgid "Nice Question"
 msgstr "คำถามน่าสนใจ"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_activities
-msgid "No activities yet!"
-msgstr "ยังไม่มีกิจกรรม!"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "No favourite questions in this forum (yet).<br/>"
-msgstr "ยังไม่มีคำถามโปรดในฟอรั่มนี้<br/>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "No flagged posts"
-msgstr "ไม่มีโพสต์ที่ตั้งสถานะ"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all
 msgid "No forum is available yet."
 msgstr "ยังไม่มีฟอรั่ม"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "No post to be validated"
-msgstr "ไม่มีโพสต์ที่จะตรวจสอบ"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.tag
-msgid "No tags"
-msgstr "ไม่มีแท็ก"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_votes
-msgid "No vote given by you yet!"
-msgstr "ยังไม่มีการลงคะแนนจากคุณ!"
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_all_entries
+msgid "No posts yet"
+msgstr "ยังไม่มีการโพสต์"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_dofollow
@@ -2360,8 +2578,8 @@ msgstr "จำนวนโพสต์ที่ตั้งสถานะ"
 #: model:ir.model.fields,help:website_forum.field_forum_forum__message_needaction_counter
 #: model:ir.model.fields,help:website_forum.field_forum_post__message_needaction_counter
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "จํานวนข้อความที่ต้องดําเนินการ"
+msgid "Number of messages requiring action"
+msgstr "จำนวนข้อความที่ต้องดำเนินการ"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__message_has_error_counter
@@ -2383,19 +2601,28 @@ msgstr "นอกประเด็นหรือไม่เกี่ยวข
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__offensive
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post_reason__reason_type__offensive
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 #: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Offensive"
 msgstr "ละเมิด"
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/website_forum.js:0
-#: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "Offensive Post"
 msgstr "โพสต์ที่ละเมิด"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Offensive Posts"
+msgstr "กระทู้ที่ไม่เหมาะสม"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+msgid "Oh no! Please <a href=\"%s\">sign in</a> to perform this action"
+msgstr ""
 
 #. module: website_forum
 #. odoo-javascript
@@ -2404,9 +2631,9 @@ msgid "On average,"
 msgstr "โดยเฉลี่ย"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-msgid "Only one answer per question is allowed"
-msgstr "อนุญาตเพียงหนึ่งคำตอบต่อหนึ่งคำถามเท่านั้น"
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "Oops!"
+msgstr "อุ๊ปส์!"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
@@ -2419,16 +2646,6 @@ msgid "Order and Visibility"
 msgstr "ลำดับและการมองเห็น"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Order by"
-msgstr "เรียงลำดับโดย"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
-msgid "Our forums"
-msgstr "ฟอรั่มของเรา"
-
-#. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_23
 #: model:gamification.challenge,name:website_forum.challenge_peer_pressure
 #: model:gamification.goal.definition,name:website_forum.definition_peer_pressure
@@ -2436,18 +2653,16 @@ msgid "Peer Pressure"
 msgstr "แรงกดดันของขุนนาง"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "People"
-msgstr "ประชาชน"
-
-#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__plain_content
 msgid "Plain Content"
 msgstr "เนื้อหาธรรมดา"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
-msgid "Please wait for a moderator to validate your previous post before continuing."
+msgid ""
+"Please wait for a moderator to validate your previous post before "
+"continuing."
 msgstr "โปรดรอให้ผู้ดูแลตรวจสอบโพสต์ก่อนหน้าของคุณก่อนดำเนินการต่อ"
 
 #. module: website_forum
@@ -2473,7 +2688,6 @@ msgstr "คำถามยอดนิยม (500)"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_votes
-#: model_terms:ir.ui.view,arch_db:website_forum.vote
 msgid "Positive vote"
 msgstr "โหวตด้านบวก"
 
@@ -2496,7 +2710,7 @@ msgstr "โพสต์คำตอบ"
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_post_reason_action
 msgid "Post Close Reason"
-msgstr ""
+msgstr "เหตุผลที่ปิดโพสต์"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_reason
@@ -2504,14 +2718,9 @@ msgid "Post Closing Reason"
 msgstr "โพสต์เหตุผลปิด"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
-msgid "Post Comment"
-msgstr "โพสต์ความคิดเห็น"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
 msgid "Post Count"
-msgstr ""
+msgstr "จำนวนโพสต์"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_vote
@@ -2527,13 +2736,13 @@ msgstr "โพสต์คำถามของคุณ"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Post is closed and marked as offensive content"
-msgstr ""
+msgstr "โพสต์ถูกปิดและทำเครื่องหมายว่าเป็นเนื้อหาที่ไม่เหมาะสม"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Post is closed and marked as spam"
-msgstr ""
+msgstr "โพสต์ถูกปิดและทำเครื่องหมายว่าเป็นสแปม"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
@@ -2563,11 +2772,6 @@ msgstr "ไม่สามารถโพสต์คำตอบ [ลบ] ห�
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
 msgid "Posts"
 msgstr "โพสต์"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_options
-msgid "Posts:"
-msgstr "โพสต์:"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__privacy
@@ -2611,8 +2815,7 @@ msgstr "ใส่คำถามของคุณที่นี้"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__parent_id
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 msgid "Question"
 msgstr "คำถาม"
 
@@ -2620,7 +2823,7 @@ msgstr "คำถาม"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "Question %s"
-msgstr ""
+msgstr "คำถาม %s"
 
 #. module: website_forum
 #. odoo-python
@@ -2629,11 +2832,6 @@ msgstr ""
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 msgid "Question Edited"
 msgstr "แก้ไขคำถามแล้ว"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
-msgid "Question by"
-msgstr "คำถามโดย"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_question_downvote
@@ -2687,6 +2885,11 @@ msgid "Question voted up 6 times"
 msgstr "คำถามถูกโหวตเห็นด้วย 6 ครั้ง"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Question:"
+msgstr "คำถาม:"
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "Questions"
 msgstr "คำถาม"
@@ -2720,7 +2923,7 @@ msgstr "อันดับ"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__rating_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "การให้คะแนน"
 
 #. module: website_forum
 #. odoo-python
@@ -2729,13 +2932,8 @@ msgid "Re: %s"
 msgstr "ตอบกลับ: %s"
 
 #. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/website_forum.js:0
-msgid "Read the guidelines to know how to gain karma."
-msgstr "อ่านแนวทางการปฏิบัติเพื่อทราบวิธีการได้รับ Karma"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Read: #{question.name}"
 msgstr "อ่าน: #{question.name}"
 
@@ -2770,11 +2968,9 @@ msgid "Refuse"
 msgstr "ปฏิเสธ"
 
 #. module: website_forum
-#. odoo-python
-#: code:addons/website_forum/models/forum_forum.py:0
-#: model_terms:forum.forum,welcome_message:website_forum.forum_help
-msgid "Register"
-msgstr "ลงทะเบียน"
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_related_posts
+msgid "Related Posts"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__relevancy
@@ -2791,11 +2987,12 @@ msgstr "การคำนวณที่เกี่ยวข้อง"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Remove validated answer"
-msgstr ""
+msgstr "ลบคำตอบที่ถูกต้อง"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+#: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
 msgid "Reopen"
 msgstr "เปิดอีกครั้ง"
 
@@ -2803,7 +3000,19 @@ msgstr "เปิดอีกครั้ง"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Reopen a banned question"
-msgstr ""
+msgstr "เปิดคำถามที่ถูกแบนอีกครั้ง"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_related_posts
+#: model_terms:ir.ui.view,arch_db:website_forum.post_stats
+msgid "Replies"
+msgstr "ตอบกลับ"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_stats
+msgid "Reply"
+msgstr "ตอบกลับ"
 
 #. module: website_forum
 #. odoo-python
@@ -2819,18 +3028,13 @@ msgstr "ตอบคำถามของตัวเอง"
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__website_id
 #: model:ir.model.fields,help:website_forum.field_forum_post__website_id
-msgid "Restrict publishing to this website."
-msgstr "จำกัดการเผยแพร่ในเว็บไซต์นี้"
+msgid "Restrict to a specific website."
+msgstr "จำกัดเฉพาะเว็บไซต์ใดเว็บไซต์หนึ่ง"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.private_profile
-msgid "Return to the forum."
+#: model_terms:ir.ui.view,arch_db:website_forum.profile_access_denied
+msgid "Return to the forum"
 msgstr "กลับไปที่ฟอรั่ม"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.404
-msgid "Return to the question list."
-msgstr "กลับไปที่รายการคำถาม"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__moderator_id
@@ -2864,11 +3068,6 @@ msgid "Scholar"
 msgstr "นักวิชาการ"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Search Tips"
-msgstr "ค้นหาเคล็ดลับ"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
 msgid "Search in Post"
 msgstr "ค้นหาในโพสต์"
@@ -2884,15 +3083,10 @@ msgid "Second Relevance Parameter"
 msgstr "พารามิเตอร์ที่เกี่ยวข้องอันดับสอง"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.tag
-msgid "See"
-msgstr "ดู"
-
-#. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/res_users.py:0
 msgid "See our Forum"
-msgstr ""
+msgstr "ดูฟอรั่มของเรา"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
@@ -2931,14 +3125,23 @@ msgstr "ลำดับ"
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_forum.py:0
-msgid "Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together."
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid ""
+"Share and discuss the best content and new marketing ideas, build your "
+"professional profile and become a better marketer together."
 msgstr ""
+"แบ่งปันและพูดคุยเกี่ยวกับเนื้อหาที่ดีที่สุดและไอเดียทางการตลาดใหม่ๆ "
+"สร้างโปรไฟล์มืออาชีพของคุณและเป็นนักการตลาดที่ดีขึ้นไปพร้อมกัน"
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/xml/public_templates.xml:0
-msgid "Share this content to increase your chances to be featured on the front page and attract more visitors."
-msgstr "แชร์เนื้อหานี้เพื่อเพิ่มโอกาสในการแสดงจุดเด่นต่าง ๆ บนหน้าแรกและดึงดูดผู้เยี่ยมชมมากขึ้น"
+msgid ""
+"Share this content to increase your chances to be featured on the front page"
+" and attract more visitors."
+msgstr ""
+"แชร์เนื้อหานี้เพื่อเพิ่มโอกาสในการแสดงจุดเด่นต่าง ๆ "
+"บนหน้าแรกและดึงดูดผู้เยี่ยมชมมากขึ้น"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_share
@@ -2946,24 +3149,23 @@ msgid "Sharing Options"
 msgstr "แชร์ตัวเลือก"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Show"
-msgstr "แสดง"
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
+msgid "Show Tags Starting with"
+msgstr "แสดงแท็กที่เริ่มต้นด้วย"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.tag
-msgid "Show Tags Starting By"
-msgstr "แสดงแท็กเริ่มต้นโดย"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "Showing results for"
 msgstr "แสดงผลลัพธ์สำหรับ"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "Sign in"
-msgstr "ลงชื่อเข้าใช้"
+#. odoo-python
+#: code:addons/website_forum/models/forum_forum.py:0
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_sign_up_cta
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_header
+msgid "Sign up"
+msgstr "ลงชื่อ"
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__privacy__connected
@@ -2972,7 +3174,7 @@ msgstr "ลงชื่อเข้าใช้แล้ว"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "Solved"
 msgstr "แก้แล้ว"
 
@@ -2982,38 +3184,35 @@ msgid "Some users"
 msgstr "ผู้ใช้บางราย"
 
 #. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/website_forum.js:0
-msgid "Sorry you must be logged in to perform this action"
-msgstr "ขออภัย คุณต้องเข้าสู่ระบบเพื่อดำเนินการ"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/website_forum.js:0
-msgid "Sorry you must be logged to flag a post"
-msgstr "ขออภัย คุณต้องเข้าสู่ระบบเพื่อตั้งค่าสถานะโพสต์"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/website_forum.js:0
-msgid "Sorry you must be logged to vote"
-msgstr "ขออภัย คุณต้องเข้าสู่ระบบเพื่อโหวต"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/website_forum.js:0
-msgid "Sorry, anonymous users cannot choose correct answer."
-msgstr "ขออภัย ผู้ใช้ที่ไม่ระบุชื่อไม่สามารถเลือกคำตอบที่ถูกต้องได้"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.404
 msgid "Sorry, this question is not available anymore."
 msgstr "ขออภัย คำถามนี้ไม่มีอยู่แล้ว"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Sorry, we could not find any <b>%s</b> result <b>%s</b> %s%s%s."
-msgstr "ขออภัย เราไม่พบ <b>%s</b> ผลลัพ์ <b>%s</b> %s%s%s"
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "Sorry, we could not find any <b>solved</b> results"
+msgstr "ขออภัย เราไม่พบผลลัพธ์ที่<b>แก้ไขได้</b>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "Sorry, we could not find any <b>unanswered</b> results"
+msgstr "ขออภัย เราไม่พบผลลัพธ์ที่ยัง<b>ไม่มีคำตอบ</b>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "Sorry, we could not find any <b>unsolved</b> results"
+msgstr "ขออภัย เราไม่พบผลลัพธ์ที่ยัง<b>ไม่ได้รับการแก้ไข</b>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "Sorry, we could not find any results"
+msgstr "ขออภัย เราไม่พบผลลัพธ์ใดๆ"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+msgid "Sorry, you cannot select your own posts as best answer"
+msgstr "ขออภัย คุณไม่สามารถเลือกโพสต์ของคุณเองเป็นคำตอบที่ดีที่สุดได้"
 
 #. module: website_forum
 #. odoo-javascript
@@ -3030,6 +3229,11 @@ msgstr "แสปมโพสต์ทั้งหมด"
 #: model:forum.post.reason,name:website_forum.reason_8
 msgid "Spam or advertising"
 msgstr "สแปมหรือโฆษณา"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "Start by creating a post"
+msgstr "เริ่มต้นด้วยการสร้างโพสต์"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__state
@@ -3049,6 +3253,11 @@ msgid "Student"
 msgstr "นักเรียน"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.follow
+msgid "Subscribe"
+msgstr "ติดตาม"
+
+#. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_31
 #: model:gamification.challenge,name:website_forum.challenge_supporter
 #: model:gamification.goal.definition,name:website_forum.definition_supporter
@@ -3064,23 +3273,28 @@ msgstr "แท็ก"
 #. module: website_forum
 #: model:ir.model.constraint,message:website_forum.constraint_forum_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "มีชื่อแท็กแล้ว!"
 
 #. module: website_forum
-#: model:ir.actions.act_window,name:website_forum.forum_tag_action
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__tag_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__tag_ids
 #: model:ir.ui.menu,name:website_forum.menu_forum_tag_global
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_tag_view_list
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
 msgid "Tags"
 msgstr "แท็ก"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "Tags I Follow"
-msgstr "แท็กที่ฉันติดตาม"
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
+msgid ""
+"Tap into the collective knowledge of our community by asking your questions "
+"in our forums,<br/> where helpful members are ready to assist you."
+msgstr ""
+"ใช้ประโยชน์จากคลังข้อมูลโดยรวมของคอมมูนิตี้ของเราโดยถามคำถามของคุณในฟอรั่มของเรา"
+" ซึ่งสมาชิกพร้อมที่จะช่วยเหลือคุณ"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_32
@@ -3102,11 +3316,6 @@ msgid "Teaser"
 msgstr "ทีเซอร์"
 
 #. module: website_forum
-#: model:ir.model.fields,help:website_forum.field_forum_post__bump_date
-msgid "Technical field allowing to bump a question. Writing on this field will trigger a write on write_date and therefore bump the post. Directly writing on write_date is currently not supported and this field is a workaround."
-msgstr "ฟิลด์เทคนิคที่อนุญาตให้ชนคำถาม การเขียนในฟิลด์นี้จะทำให้เกิดการเขียนใน write_date และทำการชนโพสต์ ขณะนี้ไม่รองรับการเขียนโดยตรงใน write_date และฟิลด์นี้เป็นวิธีแก้ปัญหาชั่วคราว"
-
-#. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/xml/public_templates.xml:0
 msgid "Thanks for posting!"
@@ -3116,14 +3325,18 @@ msgstr "ขอบคุณสำหรับโพสต์!"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "The accepted answer is deleted"
-msgstr ""
+msgstr "คำตอบที่ยอมรับจะถูกลบออก"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
-msgid "The goal of this site is create a relevant knowledge base that would answer questions related to Odoo."
-msgstr "เป้าหมายของไซต์นี้คือการสร้างฐานความรู้ที่เกี่ยวข้อง ซึ่งจะตอบคำถามที่เกี่ยวกับ Odoo"
+msgid ""
+"The goal of this site is create a relevant knowledge base that would answer "
+"questions related to Odoo."
+msgstr ""
+"เป้าหมายของไซต์นี้คือการสร้างฐานความรู้ที่เกี่ยวข้อง "
+"ซึ่งจะตอบคำถามที่เกี่ยวกับ Odoo"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3131,43 +3344,71 @@ msgid "The question has been closed"
 msgstr "คำถามนี้ถูกปิดแล้ว"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "There are no answers yet"
+msgstr "ยังไม่มีคำตอบ"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
+msgid "There are no tags being used in this forum."
+msgstr "ไม่มีแท็กที่ใช้ในฟอรั่มนี้"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
+msgid "There are no tags matching the selected filter"
+msgstr "ไม่มีแท็กที่ตรงกับตัวกรองที่เลือก"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
+msgid "There are no tags matching the selected search."
+msgstr "ไม่มีแท็กที่ตรงกับการค้นหาที่เลือก"
+
+#. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
-msgid "Therefore questions and answers can be edited like wiki pages by experienced users of this site in order to improve the overall quality of the knowledge base content. Such privileges are granted based on user karma level: you will be able to do the same once your karma gets high enough."
-msgstr "ดังนั้น คำถามและคำตอบสามารถแก้ไขได้เหมือนหน้า Wiki โดยผู้ใช้ที่มีประสบการณ์ของไซต์นี้ เพื่อปรับปรุงคุณภาพโดยรวมของเนื้อหาและความรู้ต่าง ๆ  สิทธิพิเศษต่าง ๆ จะได้รับตามระดับ Karma ของผู้ใช้ คุณจะสามารถทำได้เช่นเดียวกันเมื่อคะแนน Karma ของคุณสูงพอ"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
-msgid "This community is for professional and enthusiast users, partners and programmers."
-msgstr "ชุมชนนี้มีไว้สำหรับผู้ใช้ พาร์ทเนอร์ และนักพฒนาโปรแกรม ที่เป็นมืออาชีพและกระตือรือร้น"
+msgid ""
+"Therefore questions and answers can be edited like wiki pages by experienced"
+" users of this site in order to improve the overall quality of the knowledge"
+" base content. Such privileges are granted based on user karma level: you "
+"will be able to do the same once your karma gets high enough."
+msgstr ""
+"ดังนั้น คำถามและคำตอบสามารถแก้ไขได้เหมือนหน้า Wiki "
+"โดยผู้ใช้ที่มีประสบการณ์ของไซต์นี้ "
+"เพื่อปรับปรุงคุณภาพโดยรวมของเนื้อหาและความรู้ต่าง ๆ  สิทธิพิเศษต่าง ๆ "
+"จะได้รับตามระดับ Karma ของผู้ใช้ คุณจะสามารถทำได้เช่นเดียวกันเมื่อคะแนน "
+"Karma ของคุณสูงพอ"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "This community is for professional and enthusiast users, partners and programmers. You can ask questions about:"
-msgstr "ชุมชนนี้มีไว้สำหรับผู้ใช้ พาร์ทเนอร์ และนักพัฒนาโปรแกรมที่เป็นมืออาชีพและกระตือรือร้น คุณสามารถถามคำถามเกี่ยวกับ:"
-
-#. module: website_forum
-#. odoo-python
-#: code:addons/website_forum/models/forum_forum.py:0
-msgid "This community is for professionals and enthusiasts of our products and services."
+msgid ""
+"This community is for professional and enthusiast users, partners and "
+"programmers. You can ask questions about:"
 msgstr ""
+"ชุมชนนี้มีไว้สำหรับผู้ใช้ พาร์ทเนอร์ "
+"และนักพัฒนาโปรแกรมที่เป็นมืออาชีพและกระตือรือร้น คุณสามารถถามคำถามเกี่ยวกับ:"
 
 #. module: website_forum
 #: model:forum.forum,description:website_forum.forum_help
-msgid "This community is for professionals and enthusiasts of our products and services. Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together."
-msgstr "ชุมชนนี้มีไว้สำหรับมืออาชีพและผู้ที่ชื่นชอบสินค้าและบริการของเรา แชร์และพูดคุยเกี่ยวกับเนื้อหาที่ดีที่สุดและแนวคิดทางการตลาดใหม่ ๆ สร้างโปรไฟล์มืออาชีพของคุณและกลายเป็นนักการตลาดที่ดียิ่งขึ้นไปด้วยกัน"
-
-#. module: website_forum
-#: model_terms:forum.forum,welcome_message:website_forum.forum_help
-msgid "This community is for professionals and enthusiasts of our products and services.<br>Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together."
+msgid ""
+"This community is for professionals and enthusiasts of our products and "
+"services. Share and discuss the best content and new marketing ideas, build "
+"your professional profile and become a better marketer together."
 msgstr ""
+"ชุมชนนี้มีไว้สำหรับมืออาชีพและผู้ที่ชื่นชอบสินค้าและบริการของเรา "
+"แชร์และพูดคุยเกี่ยวกับเนื้อหาที่ดีที่สุดและแนวคิดทางการตลาดใหม่ ๆ "
+"สร้างโปรไฟล์มืออาชีพของคุณและกลายเป็นนักการตลาดที่ดียิ่งขึ้นไปด้วยกัน"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__relevancy_post_vote
-msgid "This formula is used in order to sort by relevance. The variable 'votes' represents number of votes for a post, and 'days' is number of days since the post creation"
-msgstr "สูตรนี้ใช้เพื่อจัดเรียงตามความเกี่ยวข้อง ตัวแปรการ 'โหวต' หมายถึงจำนวนโหวตสำหรับโพสต์ และ 'วัน' คือจำนวนวันนับตั้งแต่สร้างโพสต์"
+msgid ""
+"This formula is used in order to sort by relevance. The variable 'votes' "
+"represents number of votes for a post, and 'days' is number of days since "
+"the post creation"
+msgstr ""
+"สูตรนี้ใช้เพื่อจัดเรียงตามความเกี่ยวข้อง ตัวแปรการ 'โหวต' "
+"หมายถึงจำนวนโหวตสำหรับโพสต์ และ 'วัน' คือจำนวนวันนับตั้งแต่สร้างโพสต์"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -3188,10 +3429,32 @@ msgstr "โพสต์นี้ถูกตั้งค่าสถานะแ
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "This post is awaiting validation"
+msgstr "โพสต์นี้กำลังรอการตรวจสอบ"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid ""
-"This post is currently awaiting moderation and it's not published yet.<br/>\n"
-"                Do you want <b>Accept</b> or <b>Reject</b> this post?"
+"This post is currently awaiting moderation and is not published yet.<br/>\n"
+"                    As a moderator you can either <b>Accept</b> or <b>Reject</b> this post."
 msgstr ""
+"โพสต์นี้กำลังรอการตรวจสอบและยังไม่ได้เผยแพร่<br/>\n"
+"                    ในฐานะผู้ดูแล คุณสามารถ<b>ยอมรับ</b>หรือ<b>ปฏิเสธ</b>โพสต์นี้ได้"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "This question has been flagged"
+msgstr "คำถามนี้ถูกตั้งค่าสถานะ"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "This user hasn't answered any questions yet. <br/>"
+msgstr "ผู้ใช้รายนี้ยังไม่ได้ตอบคำถาม <br/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "This user hasn't posted any questions yet.<br/>"
+msgstr "ผู้ใช้รายนี้ยังไม่ได้โพสต์คำถามใดๆ<br/>"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_14
@@ -3203,7 +3466,7 @@ msgstr "ภาษาที่ใช้ข่มขู่"
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Title"
-msgstr "ชื่อเรื่อง"
+msgstr "คำนำหน้าชื่อ"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -3223,20 +3486,20 @@ msgid "To"
 msgstr "ถึง"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
 msgid "To Validate"
 msgstr "เพื่อตรวจสอบ"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "To prevent your question from being flagged and possibly removed, avoid asking subjective questions where …"
-msgstr "เพื่อป้องกันไม่ให้คำถามของคุณถูกตั้งค่าสถานะและอาจถูกลบ ให้หลีกเลี่ยงการถามคำถามที่มีความเป็นความคิดเห็นส่วนตัวซึ่ง ..."
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "Toggle favorite status"
-msgstr "สถานะสลับรายการโปรด"
+msgid ""
+"To prevent your question from being flagged and possibly removed, avoid "
+"asking subjective questions where …"
+msgstr ""
+"เพื่อป้องกันไม่ให้คำถามของคุณถูกตั้งค่าสถานะและอาจถูกลบ "
+"ให้หลีกเลี่ยงการถามคำถามที่มีความเป็นความคิดเห็นส่วนตัวซึ่ง ..."
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_9
@@ -3249,14 +3512,9 @@ msgid "Too subjective and argumentative"
 msgstr "เป็นความคิดเห็นส่วนตัวและมีข้อโต้แย้งมากเกินไป"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.tag
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
 msgid "Toolbar with button groups"
 msgstr "แถบเครื่องมือที่มีกลุ่มปุ่ม"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "Topics"
-msgstr "หัวข้อ"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_tree
@@ -3266,7 +3524,7 @@ msgstr "คำตอบทั้งหมด"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_tree
 msgid "Total Posts"
-msgstr ""
+msgstr "โพสต์ทั้งหมด"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_tree
@@ -3282,47 +3540,49 @@ msgstr "คะแนนโหวตทั้งหมด"
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_karma_tracking
 msgid "Track Karma Changes"
-msgstr ""
+msgstr "ติดตามความเปลี่ยนแปลงของ Karma"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Trending"
-msgstr "กำลังมาแรง"
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/public_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
+msgid "Twitter"
+msgstr "Twitter"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Try searching for one or two words"
-msgstr "ลองค้นหาสักหนึ่งหรือสองคำ"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "Unanswered"
 msgstr "ยกเลิกการตอบ"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+#: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
 msgid "Undelete"
 msgstr "ยกเลิกการลบ"
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_all
-msgid "Unlink all comments"
-msgstr "ยกเลิกการเชื่อมโยงความคิดเห็นทั้งหมด"
+#: model_terms:ir.ui.view,arch_db:website_forum.follow
+msgid "Unfollow"
+msgstr "เลิกติดตาม"
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_own
-msgid "Unlink own comments"
-msgstr "ยกเลิกการเชื่อมโยงกับความคิดเห็นของตัวเอง"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid "Unmark as Best Answer"
 msgstr "ยกเลิกการทำเครื่องหมายเป็นคำตอบที่ดีที่สุด"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "Unsolved"
 msgstr "ยังไม่แก้"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
+msgid "Unused Tags"
+msgstr "แท็กที่ไม่ได้ใช้"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__tag_unused_ids
+msgid "Unused tags"
+msgstr "แท็กที่ไม่ได้ใช้"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__write_uid
@@ -3336,6 +3596,7 @@ msgstr "อัปเดตเมื่อ"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_upvote
+#: model_terms:ir.ui.view,arch_db:website_forum.vote
 msgid "Upvote"
 msgstr "โหวตเห็นด้วย"
 
@@ -3374,7 +3635,7 @@ msgstr "ผู้ใช้"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "User answer accepted"
-msgstr ""
+msgstr "คำตอบของผู้ใช้ได้รับการยอมรับแล้ว"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_post_action_favorites
@@ -3383,7 +3644,7 @@ msgstr "โพสต์โปรดของผู้ใช้"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+#: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
 #: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
 msgid "Validate"
 msgstr "ตรวจสอบ"
@@ -3392,7 +3653,7 @@ msgstr "ตรวจสอบ"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Validate an answer"
-msgstr ""
+msgstr "ตรวจสอบคำตอบ"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
@@ -3400,15 +3661,22 @@ msgid "Validate question"
 msgstr "ตรวจสอบคำถาม"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model_terms:ir.ui.view,arch_db:website_forum.post_stats
 msgid "View"
 msgstr "ดู"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
+msgid "View my answer <i class=\"oi oi-arrow-right ms-1\"/>"
+msgstr "ดูคำตอบของฉัน <i class=\"oi oi-arrow-right ms-1\"/>"
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__views
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_related_posts
+#: model_terms:ir.ui.view,arch_db:website_forum.post_stats
 msgid "Views"
-msgstr "ยอดเข้าชม"
+msgstr "มุมมอง"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_12
@@ -3423,7 +3691,7 @@ msgstr "โหวต"
 #. module: website_forum
 #: model:ir.model.constraint,message:website_forum.constraint_forum_post_vote_vote_uniq
 msgid "Vote already exists!"
-msgstr ""
+msgstr "โหวตแล้ว!"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__vote_ids
@@ -3435,16 +3703,6 @@ msgstr "โหวต"
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__pending
 msgid "Waiting Validation"
 msgstr "กำลังรอการตรวจสอบ"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "Waiting for validation"
-msgstr "รอการตรวจสอบ"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_res_users__forum_waiting_posts_count
-msgid "Waiting post"
-msgstr "รอโพสต์"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_website
@@ -3511,6 +3769,8 @@ msgid "Welcome Message"
 msgstr "ข้อความต้อนรับ"
 
 #. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_forum.py:0
 #: model_terms:forum.forum,welcome_message:website_forum.forum_help
 msgid "Welcome!"
 msgstr "ยินดีต้อนรับ!"
@@ -3518,11 +3778,29 @@ msgstr "ยินดีต้อนรับ!"
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "When a question or answer is upvoted, the user who posted them will gain some points, which are called \"karma points\". These points serve as a rough measure of the community trust to him/her. Various moderation tasks are gradually assigned to the users based on those points."
-msgstr "เมื่อมีการโหวตคำถามหรือคำตอบ ผู้ใช้ที่โพสต์จะได้รับคะแนนบางส่วน ซึ่งเรียกว่า \"คะแนน Karma\" ประเด็นเหล่านี้เป็นตัววัดความเชื่อถือของชุมชนที่มีต่อเขา/เธอ งานการกลั่นกรองต่างๆ จะค่อยๆ มอบหมายให้กับผู้ใช้ตามคะแนนเหล่านั้น"
+msgid ""
+"When a question or answer is upvoted, the user who posted them will gain "
+"some points, which are called \"karma points\". These points serve as a "
+"rough measure of the community trust to him/her. Various moderation tasks "
+"are gradually assigned to the users based on those points."
+msgstr ""
+"เมื่อมีการโหวตคำถามหรือคำตอบ ผู้ใช้ที่โพสต์จะได้รับคะแนนบางส่วน ซึ่งเรียกว่า"
+" \"คะแนน Karma\" "
+"ประเด็นเหล่านี้เป็นตัววัดความเชื่อถือของชุมชนที่มีต่อเขา/เธอ "
+"งานการกลั่นกรองต่างๆ จะค่อยๆ มอบหมายให้กับผู้ใช้ตามคะแนนเหล่านั้น"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid "Write a clear, explicit and concise title"
+msgstr "เขียนชื่อที่ชัดเจนและรัดกุม"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_header
+msgid "XP"
+msgstr "XP"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "You already have a pending post"
 msgstr "คุณมีโพสต์ที่รอดำเนินการอยู่"
 
@@ -3531,6 +3809,11 @@ msgstr "คุณมีโพสต์ที่รอดำเนินการ
 #: code:addons/website_forum/static/src/xml/public_templates.xml:0
 msgid "You can share your question once it has been validated"
 msgstr "คุณสามารถแชร์คำถามของคุณเมื่อได้รับการตรวจสอบแล้ว"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
+msgid "You can't vote for your own post"
+msgstr "คุณไม่สามารถลงคะแนนให้กับโพสต์ของคุณเองได้"
 
 #. module: website_forum
 #. odoo-python
@@ -3544,9 +3827,29 @@ msgid "You cannot post an empty answer"
 msgstr "คุณไม่สามารถโพสต์คำตอบที่ว่างเปล่าได้"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "You have no posts in this forum (yet)."
-msgstr "คุณยังไม่มีโพสต์ในฟอรั่มนี้"
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
+msgid "You don't have enough karma"
+msgstr "คุณมี karma ไม่เพียงพอ"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "You have a pending post"
+msgstr "คุณมีโพสต์ที่รอดำเนินการ"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "You have not answered any questions yet. <br/>"
+msgstr "คุณยังไม่ได้ตอบคำถาม <br/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "You have not posted any questions yet. <br/>"
+msgstr "คุณยังไม่ได้โพสต์คำถาม <br/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_votes
+msgid "You haven't given any votes yet."
+msgstr "คุณยังไม่ได้โหวตเลย"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -3561,13 +3864,24 @@ msgstr "คุณต้องมีคะแนน Karma เพียงพอ�
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "You should only ask practical, answerable questions based on actual problems that you face. Chatty, open-ended questions diminish the usefulness of this site and push other questions off the front page."
-msgstr "คุณควรถามคำถามที่ใช้งานได้จริงและตอบได้ โดยอิงจากปัญหาจริงที่คุณเผชิญ คำถามชวนคุย ปลายเปิดลดทอนประโยชน์ของเว็บไซต์นี้และผลักคำถามอื่นๆ ออกจากหน้าแรก"
+msgid ""
+"You should only ask practical, answerable questions based on actual problems"
+" that you face. Chatty, open-ended questions diminish the usefulness of this"
+" site and push other questions off the front page."
+msgstr ""
+"คุณควรถามคำถามที่ใช้งานได้จริงและตอบได้ โดยอิงจากปัญหาจริงที่คุณเผชิญ "
+"คำถามชวนคุย ปลายเปิดลดทอนประโยชน์ของเว็บไซต์นี้และผลักคำถามอื่นๆ "
+"ออกจากหน้าแรก"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "You're not following any topic in this forum (yet).<br/>"
-msgstr "คุณยังไม่ได้ติดตามหัวข้อใด ๆ ในฟอรั่มนี้<br/>"
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "You're following this post"
+msgstr "คุณกำลังติดตามโพสต์นี้"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "You've Completely Caught&amp;nbsp;Up!"
+msgstr "คุณตามทันแล้ว!"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -3581,42 +3895,32 @@ msgid "Your favourite"
 msgstr "รายการโปรดของคุณ"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-msgid "[Closed]"
-msgstr "[ปิด]"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-msgid "[Deleted]"
-msgstr "[ลบ]"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-msgid "[Offensive]"
-msgstr "[ละเมิด]"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "accept any answer"
 msgstr "ยอมรับคำตอบ"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "activity date"
-msgstr "วันที่กิจกรรม"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "and join this Forum"
-msgstr ""
+msgstr "และเข้าร่วมฟอรั่มนี้"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
+msgid "and search"
+msgstr "และค้นหา"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.author_box
+msgid "at"
+msgstr "ที่"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "breadcrumb"
 msgstr "เกล็ดขนมปัง"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 msgid "by"
 msgstr "โดย"
 
@@ -3649,7 +3953,7 @@ msgstr "โหวตไม่เห็นด้วย"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "downvoted"
-msgstr ""
+msgstr "โหวตลง"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
@@ -3659,17 +3963,17 @@ msgstr "เช่น ช่วยเหลือ"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form_add
 msgid "e.g. Technical Assistance"
-msgstr ""
+msgstr "เช่น ความช่วยเหลือด้านเทคนิค"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_form
 msgid "e.g. When should I plant my tomatoes?"
-msgstr ""
+msgstr "เช่น ฉันควรปลูกมะเขือเทศตอนช่วงไหน?"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "edit any post, view offensive flags"
-msgstr "แก้ไขโพสต์ใด ๆ ดูการตั้งค่าสถานะที่ไม่เหมาะสม"
+msgstr "แก้ไขโพสต์ ดูการตั้งค่าสถานะที่ไม่เหมาะสม"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3689,8 +3993,11 @@ msgstr "เนื่องจาก:"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
-msgid "has been posted and require your validation. Click here to access the question :"
-msgstr "ได้รับการโพสต์และต้องการการการตรวจสอบจากคุณ คลิกที่นี้เพื่อเข้าสู่คำถาม:"
+msgid ""
+"has been posted and require your validation. Click here to access the "
+"question :"
+msgstr ""
+"ได้รับการโพสต์และต้องการการการตรวจสอบจากคุณ คลิกที่นี้เพื่อเข้าสู่คำถาม:"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
@@ -3712,7 +4019,8 @@ msgstr "ที่นี้"
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid "how to configure or customize Odoo to specific business needs,"
-msgstr "กำหนดค่าหรือปรับแต่ง Odoo ให้ตรงกับความต้องการทางธุรกิจเฉพาะได้อย่างไร"
+msgstr ""
+"กำหนดค่าหรือปรับแต่ง Odoo ให้ตรงกับความต้องการทางธุรกิจเฉพาะได้อย่างไร"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3737,17 +4045,12 @@ msgstr ""
 "        คำตอบของคุณถูกเลือกให้เป็นคำตอบที่ถูกต้อง ดูว่าคุณสามารถทำอย่างไรกับคะแนน Karma "
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "in your favourites"
 msgstr "ในรายการโปรดของคุณ"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "in your followed list"
-msgstr "ในรายการที่ติดตามของคุณ"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "in your posts"
 msgstr "ในโพสต์ของคุณ"
 
@@ -3757,7 +4060,7 @@ msgid "insert text link, upload files"
 msgstr "แทรกลิงก์ข้อความ อัปโหลดไฟล์"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "instead."
 msgstr "แทนที่"
 
@@ -3769,47 +4072,38 @@ msgstr "เป็นการพูดจาหยาบคายในรูป
 
 #. module: website_forum
 #. odoo-javascript
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+msgid "karma is required to perform this action. "
+msgstr "karma จะต้องดำเนินการนี้"
+
+#. module: website_forum
+#. odoo-javascript
 #: code:addons/website_forum/static/src/xml/public_templates.xml:0
 msgid "karma points"
 msgstr "คะแนน karma"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "matching \""
 msgstr "ตรงกัน"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "most answered"
-msgstr "ถูกตอบมากที่สุด"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "most voted"
-msgstr "ถูกโหวตมากที่สุด"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "newest"
-msgstr "ใหม่ล่าสุด"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "no changes"
-msgstr ""
+msgstr "ไม่มีการเปลี่ยนแปลง"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "no more downvoted"
-msgstr ""
+msgstr "ไม่มีการโหวตลงอีกต่อไป"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "no more upvoted"
-msgstr ""
+msgstr "ไม่มีการโหวตเพิ่มอีกต่อไป"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
@@ -3829,14 +4123,16 @@ msgstr ""
 "        5 ชั่วโมง คำถามที่แชร์ในสองช่องทางโซเชียลเน็ตเวิร์กมี"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.tag
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_all_entries
 msgid "post"
 msgstr "โพสต์"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_all_entries
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "solved"
-msgstr "แก้แล้ว"
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "posts"
+msgstr "โพสต์"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3845,35 +4141,22 @@ msgid "specific questions about Odoo service offers, etc."
 msgstr "คำถามเฉพาะเกี่ยวกับข้อเสนอและบริการต่าง ๆ ของ Odoo และอื่น ๆ "
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "tag"
+msgstr "แท็ก"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
+msgid "tags"
 msgstr "แท็ก"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "there is no actual problem to be solved: “I’m curious if other people feel like I do.”"
+msgid ""
+"there is no actual problem to be solved: “I’m curious if other people feel "
+"like I do.”"
 msgstr "ไม่มีปัญหาจริงที่ต้องแก้ไข: \"ฉันอยากรู้ว่าคนอื่นรู้สึกเหมือนฉันไหม\""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "to partecipate"
-msgstr "เพื่อเข้าร่วม"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "trending"
-msgstr "กำลังมาแรง"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "unanswered"
-msgstr "ไม่ได้ตอบ"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "unsolved"
-msgstr "ยังไม่แก้"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
@@ -3884,36 +4167,44 @@ msgstr "โหวตออนไลน์และเพิ่มความค
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "upvoted"
-msgstr ""
+msgstr "โหวตขึ้น"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "using the"
 msgstr "ใช้"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "we are being asked an open-ended, hypothetical question: “What if ______ happened?”"
-msgstr "เรากำลังถูกถามคำถามปลายเปิดและที่สมมติขึ้นว่า \"จะเกิดอะไรขึ้นถ้า ______ เกิดขึ้น\""
+msgid ""
+"we are being asked an open-ended, hypothetical question: “What if ______ "
+"happened?”"
+msgstr ""
+"เรากำลังถูกถามคำถามปลายเปิดและที่สมมติขึ้นว่า \"จะเกิดอะไรขึ้นถ้า ______ "
+"เกิดขึ้น\""
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid "what's the best way to use Odoo for a specific business need,"
-msgstr "วิธีที่ดีที่สุดในการใช้ Odoo สำหรับความต้องการทางธุรกิจแบบเฉพาะคืออะไร"
+msgstr ""
+"วิธีที่ดีที่สุดในการใช้ Odoo สำหรับความต้องการทางธุรกิจแบบเฉพาะคืออะไร"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.author_box
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
 msgid "xp"
 msgstr "xp"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "your answer is provided along with the question, and you expect more answers: “I use ______ for ______, what do you use?”"
-msgstr "คำตอบของคุณมีให้พร้อมกับคำถาม และคุณคาดหวังคำตอบเพิ่มเติม: “ฉันใช้ ______ สำหรับ ______ คุณล่ะใช้อะไร”"
+msgid ""
+"your answer is provided along with the question, and you expect more "
+"answers: “I use ______ for ______, what do you use?”"
+msgstr ""
+"คำตอบของคุณมีให้พร้อมกับคำถาม และคุณคาดหวังคำตอบเพิ่มเติม: “ฉันใช้ ______ "
+"สำหรับ ______ คุณล่ะใช้อะไร”"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
@@ -3921,11 +4212,6 @@ msgid "your biography can be seen as tooltip"
 msgstr "ชีวประวัติของคุณสามารถมองเห็นเป็นทูลทิป"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-msgid "| Flagged"
-msgstr "| ตั้งค่าสถานะ"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "圾 Text"
-msgstr "圾 Text"
+#: model_terms:ir.ui.view,arch_db:website_forum.follow
+msgid "your email..."
+msgstr "อีเมลของคุณ..."

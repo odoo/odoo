@@ -1,28 +1,52 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_org_chart
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:01+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
-"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
+msgid "<span class=\"o_stat_text\">Org Chart</span>"
+msgstr "<span class=\"o_stat_text\">組織架構圖</span>"
+
+#. module: hr_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
+msgid "Add a new employee"
+msgstr "添加一個新員工"
 
 #. module: hr_org_chart
 #: model:ir.model,name:hr_org_chart.model_hr_employee_base
 msgid "Basic Employee"
 msgstr "一般員工"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__department_color
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__department_color
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__department_color
+msgid "Department Color"
+msgstr "部門顏色"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_count
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_count
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_count
+msgid "Direct Subordinates Count"
+msgstr "直屬下屬人數"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,help:hr_org_chart.field_hr_employee__subordinate_ids
@@ -42,10 +66,23 @@ msgid "Employee"
 msgstr "員工"
 
 #. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_department_hierarchy_view
+msgid "Employees"
+msgstr "員工"
+
+#. module: hr_org_chart
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 msgid "In order to get an organigram, set a manager and save the record."
 msgstr "要獲得組織圖，請設定經理並儲存記錄。"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_controller.xml:0
+msgid ""
+"In the Organigram you will have a clear overview of the hierarchy of "
+"employees."
+msgstr "在公司架構圖中，你可清楚概覽員工的層級結構。"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_all_count
@@ -64,13 +101,19 @@ msgstr "間接的下屬"
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__is_subordinate
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__is_subordinate
 msgid "Is Subordinate"
-msgstr ""
+msgstr "是下屬"
 
 #. module: hr_org_chart
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 msgid "More managers"
 msgstr "更多經理人"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_controller.xml:0
+msgid "No Data"
+msgstr "沒有資料"
 
 #. module: hr_org_chart
 #. odoo-javascript
@@ -82,7 +125,13 @@ msgstr "沒有層級職位。"
 #. odoo-python
 #: code:addons/hr_org_chart/models/hr_org_chart_mixin.py:0
 msgid "Operation not supported"
-msgstr ""
+msgstr "不支援該操作"
+
+#. module: hr_org_chart
+#: model:ir.actions.act_window,name:hr_org_chart.action_hr_employee_org_chart
+#: model:ir.ui.menu,name:hr_org_chart.menu_hr_employee_org_chart
+msgid "Org Chart"
+msgstr "組織架構圖"
 
 #. module: hr_org_chart
 #: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
@@ -95,6 +144,13 @@ msgstr "人員管理組織結構圖"
 #: model:ir.model,name:hr_org_chart.model_hr_employee_public
 msgid "Public Employee"
 msgstr "公開員工"
+
+#. module: hr_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
+msgid ""
+"Quickly find all the information you need for your employees such as contact"
+" data, job position, availability, etc."
+msgstr "快速找到你需要的所有員工資訊，例如聯絡資料、職位、空閒時間等。"
 
 #. module: hr_org_chart
 #. odoo-javascript
@@ -116,7 +172,7 @@ msgstr "下屬"
 
 #. module: hr_org_chart
 #. odoo-javascript
-#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.js:0
+#: code:addons/hr_org_chart/static/src/fields/hooks.js:0
 msgid "Team"
 msgstr "團隊"
 
@@ -131,3 +187,9 @@ msgstr "該員工沒有經理或下級。"
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 msgid "Total"
 msgstr "總計"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_card.xml:0
+msgid "people"
+msgstr "人"

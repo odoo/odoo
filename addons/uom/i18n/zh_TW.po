@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* uom
-#
+# 
 # Translators:
-# Benson <Benson.Dr@Gmail.com>, 2023
-# Martin Trigaux, 2023
-# Tony Ng, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:03+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
-"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: uom
@@ -91,14 +89,16 @@ msgstr "綜合比率"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__category_id
-msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
 msgstr "計量單位轉換只能在同一個類型之間進行。轉換根據比例."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
 #: model:ir.model.fields,field_description:uom.field_uom_uom__create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "建立人員"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_date
@@ -125,7 +125,7 @@ msgstr "打"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
 msgid "Group By"
-msgstr "分組方式"
+msgstr "分組依據"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_hour
@@ -134,25 +134,23 @@ msgstr "小時"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor_inv
-msgid "How many times this Unit of Measure is bigger than the reference Unit of Measure in this category: 1 * (this unit) = ratio * (reference unit)"
+msgid ""
+"How many times this Unit of Measure is bigger than the reference Unit of "
+"Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr "這個度量單位的數量大於此類別中的參考度量單位：1 *（本單位）=比率*（參考單位）"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor
-msgid "How much bigger or smaller this unit is compared to the reference Unit of Measure for this category: 1 * (reference unit) = ratio * (this unit)"
+msgid ""
+"How much bigger or smaller this unit is compared to the reference Unit of "
+"Measure for this category: 1 * (reference unit) = ratio * (this unit)"
 msgstr "本類別計量單位和參考計量單位相比，大或者小的倍數。1 * (參考單位)=比率 * (本單位)"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__id
 #: model:ir.model.fields,field_description:uom.field_uom_uom__id
 msgid "ID"
-msgstr "ID"
-
-#. module: uom
-#: model:ir.model.fields,field_description:uom.field_uom_category____last_update
-#: model:ir.model.fields,field_description:uom.field_uom_uom____last_update
-msgid "Last Modified on"
-msgstr "最後修改於"
+msgstr "識別號"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__write_uid
@@ -223,6 +221,7 @@ msgid "Smaller than the reference Unit of Measure"
 msgstr "小於參考計量單位"
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 msgid ""
 "Some critical fields have been modified on %s.\n"
@@ -248,7 +247,9 @@ msgstr "表面"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
-msgid "The computed quantity will be a multiple of this value. Use 1.0 for a Unit of Measure that cannot be further split, such as a piece."
+msgid ""
+"The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
+"of Measure that cannot be further split, such as a piece."
 msgstr "計算的數量將是這個值的倍數。  不能進一步分割的單位，比如 1 片，使用1.0 。"
 
 #. module: uom
@@ -257,6 +258,7 @@ msgid "The conversion ratio for a unit of measure cannot be 0!"
 msgstr "計量單位的轉換比率不能為 0！"
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 msgid ""
 "The following units of measure are used by the system and cannot be deleted: %s\n"
@@ -276,9 +278,22 @@ msgid "The rounding precision must be strictly positive."
 msgstr "小數點的精度必須為正數。"
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
-msgid "The unit of measure %s defined on the order line doesn't belong to the same category as the unit of measure %s defined on the product. Please correct the unit of measure defined on the order line or on the product, they should belong to the same category."
-msgstr "訂單行上定義的計量單位 %s 與產品上定義的計量單位 %s 不屬於同一類別。請更正訂單行或產品上定義的計量單位，它們應屬於同一類別。"
+msgid ""
+"The unit of measure %(unit)s defined on the order line doesn't belong to the"
+" same category as the unit of measure %(product_unit)s defined on the "
+"product. Please correct the unit of measure defined on the order line or on "
+"the product. They should belong to the same category."
+msgstr ""
+"訂單資料行上定義的計量單位 %(unit)s，與產品上定義的計量單位 "
+"%(product_unit)s，不屬於同一類別。請更正訂單資料行或產品上定義的計量單位。兩個單位應屬於同一類別。"
+
+#. module: uom
+#. odoo-python
+#: code:addons/uom/models/uom_uom.py:0
+msgid "The value of ratio could not be Zero"
+msgstr "比率數值不可為零"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
@@ -287,7 +302,8 @@ msgstr "類型"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
-msgid "Uncheck the active field to disable a unit of measure without deleting it."
+msgid ""
+"Uncheck the active field to disable a unit of measure without deleting it."
 msgstr "取消勾選有效欄位以停用度量單位，而不刪除它。"
 
 #. module: uom
@@ -298,7 +314,7 @@ msgstr "單位"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__name
 msgid "Unit of Measure"
-msgstr "單位"
+msgstr "量度單位"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__name
@@ -342,16 +358,19 @@ msgstr ""
 "您將有以下計量單位：小時，天。"
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 msgid "UoM category %s must have at least one reference unit of measure."
 msgstr "UoM 類別 %s 必須至少有一個參考計量單位."
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 msgid "UoM category %s should have a reference unit of measure."
 msgstr "計量單位類別 %s 應具有參考計量單位。"
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 msgid "UoM category %s should only have one reference unit of measure."
 msgstr "計量單位類別%s應該有一個參考計量單位。"
@@ -364,9 +383,10 @@ msgstr "計量單位"
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_vol
 msgid "Volume"
-msgstr "體積"
+msgstr "容量 / 體積"
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 msgid "Warning for %s"
 msgstr "%s 的警告"

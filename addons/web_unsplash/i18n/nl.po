@@ -1,30 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* web_unsplash
-#
+# 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
-# Martin Trigaux, 2022
-# Jolien De Paepe, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: web_unsplash
-#: model_terms:ir.ui.view,arch_db:web_unsplash.res_config_settings_view_form
-msgid "<i class=\"oi oi-arrow-right\"/> Generate an Access Key"
-msgstr ""
 
 #. module: web_unsplash
 #: model:ir.model.fields,field_description:web_unsplash.field_res_config_settings__unsplash_access_key
@@ -33,14 +26,14 @@ msgstr "Toegangssleutel"
 
 #. module: web_unsplash
 #. odoo-javascript
-#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#: code:addons/web_unsplash/static/src/unsplash_credentials/unsplash_credentials.xml:0
 #: model:ir.model.fields,field_description:web_unsplash.field_res_config_settings__unsplash_app_id
 msgid "Application ID"
 msgstr "Applicatie ID"
 
 #. module: web_unsplash
 #. odoo-javascript
-#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#: code:addons/web_unsplash/static/src/unsplash_credentials/unsplash_credentials.xml:0
 msgid "Apply"
 msgstr "Toepassen"
 
@@ -67,40 +60,50 @@ msgid "ERROR: Unknown Unsplash notify URL!"
 msgstr "FOUTMELDING: onbekende Unsplash notify URL!"
 
 #. module: web_unsplash
+#: model_terms:ir.ui.view,arch_db:web_unsplash.res_config_settings_view_form
+msgid "Generate an Access Key"
+msgstr "Een toegangssleutel genereren"
+
+#. module: web_unsplash
 #. odoo-javascript
-#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#: code:addons/web_unsplash/static/src/unsplash_credentials/unsplash_credentials.xml:0
 msgid "Get an Access key"
 msgstr "Een toegangssleutel verkrijgen"
 
 #. module: web_unsplash
 #. odoo-javascript
-#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#: code:addons/web_unsplash/static/src/unsplash_credentials/unsplash_credentials.xml:0
 msgid "Paste your access key here"
 msgstr "Plak je toegangssleutel hier"
 
 #. module: web_unsplash
 #. odoo-javascript
-#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#: code:addons/web_unsplash/static/src/unsplash_credentials/unsplash_credentials.xml:0
 msgid "Paste your application ID here"
 msgstr "Plak je applicatie ID hier"
 
 #. module: web_unsplash
 #. odoo-javascript
-#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#: code:addons/web_unsplash/static/src/media_dialog/media_dialog.xml:0
+#: code:addons/web_unsplash/static/src/media_dialog_legacy/image_selector.xml:0
 msgid "Photos (via Unsplash)"
 msgstr "Foto's (via Unsplash)"
 
 #. module: web_unsplash
 #. odoo-javascript
-#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
+#: code:addons/web_unsplash/static/src/media_dialog/image_selector_patch.js:0
+#: code:addons/web_unsplash/static/src/media_dialog_legacy/image_selector.js:0
 msgid "Please check your Unsplash access key and application ID."
 msgstr "Controleer je Unsplash toegangssleutel en application ID."
 
 #. module: web_unsplash
 #. odoo-javascript
-#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
+#: code:addons/web_unsplash/static/src/media_dialog/image_selector_patch.js:0
+#: code:addons/web_unsplash/static/src/media_dialog_legacy/image_selector.js:0
 msgid "Please check your internet connection or contact administrator."
-msgstr "Je dient je internetverbinding te controleren of je administrator te contacteren."
+msgstr ""
+"Je dient je internetverbinding te controleren of je administrator te "
+"contacteren."
 
 #. module: web_unsplash
 #: model:ir.model,name:web_unsplash.model_ir_qweb_field_image
@@ -109,43 +112,52 @@ msgstr "Qweb veld afbeelding"
 
 #. module: web_unsplash
 #. odoo-javascript
-#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
+#: code:addons/web_unsplash/static/src/media_dialog/image_selector_patch.js:0
+#: code:addons/web_unsplash/static/src/media_dialog_legacy/image_selector.js:0
 msgid "Search is temporarily unavailable"
 msgstr "Zoeken is tijdelijk onbeschikbaar"
 
 #. module: web_unsplash
 #. odoo-javascript
-#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
+#: code:addons/web_unsplash/static/src/media_dialog/image_selector_patch.js:0
+#: code:addons/web_unsplash/static/src/media_dialog_legacy/image_selector.js:0
 msgid "Setup Unsplash to access royalty free photos."
 msgstr "Stel Unsplash in voor toegang tot royaltyvrije foto's."
 
 #. module: web_unsplash
 #. odoo-javascript
-#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
+#: code:addons/web_unsplash/static/src/media_dialog/image_selector_patch.js:0
+#: code:addons/web_unsplash/static/src/media_dialog_legacy/image_selector.js:0
 msgid "Something went wrong"
 msgstr "Er is iets misgegaan"
 
 #. module: web_unsplash
 #. odoo-javascript
-#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
-msgid "The max number of searches is exceeded. Please retry in an hour or extend to a better account."
-msgstr "Het maximale aantal zoekopdrachten is bereikt. Probeer het over een uur opnieuw of breid je account uit."
+#: code:addons/web_unsplash/static/src/media_dialog/image_selector_patch.js:0
+#: code:addons/web_unsplash/static/src/media_dialog_legacy/image_selector.js:0
+msgid ""
+"The max number of searches is exceeded. Please retry in an hour or extend to"
+" a better account."
+msgstr ""
+"Het maximale aantal zoekopdrachten is bereikt. Probeer het over een uur "
+"opnieuw of breid je account uit."
 
 #. module: web_unsplash
 #. odoo-javascript
-#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
+#: code:addons/web_unsplash/static/src/media_dialog/image_selector_patch.js:0
+#: code:addons/web_unsplash/static/src/media_dialog_legacy/image_selector.js:0
 msgid "Unauthorized Key"
 msgstr "Ongeautoriseerde sleutel"
 
 #. module: web_unsplash
 #. odoo-javascript
-#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
-msgid "Uploading %s '%s' images."
-msgstr "Uploaden %s '%s' afbeeldingen."
+#: code:addons/web_unsplash/static/src/unsplash_service.js:0
+msgid "Uploading %(count)s '%(query)s' images."
+msgstr "%(count)s '%(query)s' afbeeldingen aan het uploaden."
 
 #. module: web_unsplash
 #. odoo-javascript
-#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
+#: code:addons/web_unsplash/static/src/unsplash_service.js:0
 msgid "Uploading '%s' image."
 msgstr "Uploaden '%s' afbeelding."
 
@@ -156,18 +168,25 @@ msgstr "Gebruiker"
 
 #. module: web_unsplash
 #. odoo-javascript
-#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#: code:addons/web_unsplash/static/src/unsplash_credentials/unsplash_credentials.xml:0
 msgid "and paste"
-msgstr "en plakken"
+msgstr "en plak"
 
 #. module: web_unsplash
 #. odoo-javascript
-#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#: code:addons/web_unsplash/static/src/unsplash_credentials/unsplash_credentials.xml:0
 msgid "and paste it here:"
 msgstr "en hier plakken:"
 
 #. module: web_unsplash
 #. odoo-javascript
-#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#: code:addons/web_unsplash/static/src/unsplash_credentials/unsplash_credentials.xml:0
 msgid "here:"
 msgstr "hier"
+
+#. module: web_unsplash
+#. odoo-javascript
+#: code:addons/web_unsplash/static/src/media_dialog/media_dialog.xml:0
+#: code:addons/web_unsplash/static/src/media_dialog_legacy/image_selector.xml:0
+msgid "unsplash"
+msgstr "unsplash"

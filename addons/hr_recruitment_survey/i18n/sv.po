@@ -1,25 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_recruitment_survey
-#
+# 
 # Translators:
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2022
-# Martin Trigaux, 2022
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
-#
+# Wil Odoo, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
-"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_recruitment_survey
@@ -48,6 +46,33 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hej <t t-out=\"object.partner_id.name or 'sökande'\">[applicant name]</t><br><br>\n"
+"        <t>\n"
+"            Du har gått vidare i rekryteringsprocessen och vi vill att du svarar på några frågor.\n"
+"        </t>\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                <t>\n"
+"                    Starta den skriftliga intervjun\n"
+"                </t>\n"
+"            </a>\n"
+"        </div> \n"
+"        <t t-if=\"object.deadline\">\n"
+"            Vänligen besvara intervjun för <t t-out=\"format_date(object.deadline)\">[deadline date]</t>.<br><br>\n"
+"        </t>\n"
+"        <t>\n"
+"            Vi önskar dig lycka till! Tack på förhand för ditt deltagande.\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_recruitment_survey_button_form_view
+msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Go to Recruitment"
+msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Gå till Rekrytering"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -55,8 +80,8 @@ msgid ""
 "<span class=\"o_stat_text\">Consult</span>\n"
 "                        <span class=\"o_stat_text\">Interview</span>"
 msgstr ""
-"<span class=\"o_stat_text\">Rårfråga</span>\n"
-"                        <span class=\"o_stat_text\">Intervju</span>"
+"<span class=\"o_stat_text\">Titta på </span>\n"
+"                        <span class=\"o_stat_text\">intervjusvar</span>"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1
@@ -69,6 +94,11 @@ msgid "Activities"
 msgstr "Aktiviteter"
 
 #. module: hr_recruitment_survey
+#: model_terms:ir.actions.act_window,help:hr_recruitment_survey.survey_survey_action_recruitment
+msgid "Add a new survey"
+msgstr "Lägg till en ny enkät"
+
+#. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_applicant
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_invite__applicant_id
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__applicant_id
@@ -78,13 +108,18 @@ msgstr "Sökande"
 #. module: hr_recruitment_survey
 #: model:mail.template,name:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid "Applicant: Interview"
-msgstr ""
+msgstr "Sökande: Intervju"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_job__survey_id
-msgid "Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"
-msgstr "Välj ett intervjuformulär för det här befattningen och du kommer att kunna skriva ut / besvara denna intervju från alla sökande som ansöker om det här arbetet"
+msgid ""
+"Choose an interview form for this job position and you will be able to "
+"print/answer this interview from all applicants who apply for this job"
+msgstr ""
+"Välj ett intervjuformulär för det här befattningen och du kommer att kunna "
+"skriva ut / besvara denna intervju från alla sökande som ansöker om det här "
+"arbetet"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
@@ -99,7 +134,7 @@ msgstr "Utbildning"
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q2
 msgid "From which university did or will you graduate?"
-msgstr ""
+msgstr "Från vilket universitet har du eller kommer du att ta examen?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row2
@@ -141,7 +176,7 @@ msgstr "Intervjuformulär"
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
 msgid "Interview Form: %s"
-msgstr ""
+msgstr "Intervjuformulär: %s"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
@@ -149,12 +184,15 @@ msgid "Interview Survey"
 msgstr "Intervjuenkät"
 
 #. module: hr_recruitment_survey
+#: model:ir.actions.act_window,name:hr_recruitment_survey.survey_survey_action_recruitment
+#: model:ir.ui.menu,name:hr_recruitment_survey.menu_hr_recruitment_config_surveys
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Interviews"
-msgstr ""
+msgstr "Intervjuer"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_job
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__hr_job_ids
 msgid "Job Position"
 msgstr "Tjänst"
 
@@ -181,7 +219,7 @@ msgstr "Kontorsadress"
 #. module: hr_recruitment_survey
 #: model:mail.template,subject:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid "Participate to {{ object.survey_id.display_name }} interview"
-msgstr ""
+msgstr "Delta i intervjun {{ object.survey_id.display_name }}"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q5
@@ -190,8 +228,11 @@ msgstr "Tidigare arbetslivserfarenheter"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.survey,description:hr_recruitment_survey.survey_recruitment_form
-msgid "Please answer those questions to help recruitment officers to preprocess your application."
+msgid ""
+"Please answer those questions to help recruitment officers to preprocess "
+"your application."
 msgstr ""
+"Svara på dessa frågor för att hjälpa rekryterarna att förbereda din ansökan."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
@@ -199,23 +240,33 @@ msgid ""
 "Please fill information about you: who you are, what are your education, experience, and activities.\n"
 "    It will help us managing your application."
 msgstr ""
+"Fyll i information om dig själv: vem du är, vad du har för utbildning, erfarenhet och aktiviteter.\n"
+"    Det hjälper oss att hantera din ansökan."
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 msgid "Please provide an applicant name."
-msgstr ""
+msgstr "Ange ett namn på den sökande."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q5
-msgid "Please summarize your education history: schools, location, diplomas, ..."
-msgstr ""
+msgid ""
+"Please summarize your education history: schools, location, diplomas, ..."
+msgstr "Sammanfatta din utbildningshistoria: skolor, ort, examensbevis, ..."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
-msgid "Please tell us a bit more about yourself: what are your main activities, ..."
+msgid ""
+"Please tell us a bit more about yourself: what are your main activities, ..."
 msgstr ""
+"Berätta lite mer om dig själv: vad är din huvudsakliga sysselsättning, ..."
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields.selection,name:hr_recruitment_survey.selection__survey_survey__survey_type__recruitment
+msgid "Recruitment"
+msgstr "Rekrytering"
 
 #. module: hr_recruitment_survey
 #: model:survey.survey,title:hr_recruitment_survey.survey_recruitment_form
@@ -225,7 +276,7 @@ msgstr "Rekryteringsformulär"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_ids
 msgid "Responses"
-msgstr ""
+msgstr "Svar"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -235,17 +286,18 @@ msgstr "Titta på intervjurapporten"
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid "Send Interview"
-msgstr ""
+msgstr "Skicka intervju"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 msgid "Send an interview"
-msgstr ""
+msgstr "Skicka en intervju"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
+#: model:ir.model,name:hr_recruitment_survey.model_survey_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__survey_id
 msgid "Survey"
 msgstr "Enkät"
@@ -256,14 +308,19 @@ msgid "Survey Invitation Wizard"
 msgstr "Guiden för inbjudan till enkätundersökningar"
 
 #. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__survey_type
+msgid "Survey Type"
+msgstr "Typ av undersökning"
+
+#. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_survey_user_input
 msgid "Survey User Input"
-msgstr "Användarsvar"
+msgstr "Enkät användarsvar"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.survey,description_done:hr_recruitment_survey.survey_recruitment_form
 msgid "Thank you for answering this survey. We will come back to you soon."
-msgstr "Tack för dina svar, vi återkommer snarast."
+msgstr "Tack för att du svarade på denna enkät. Vi återkommer snart till dig."
 
 #. module: hr_recruitment_survey
 #. odoo-python
@@ -290,19 +347,28 @@ msgstr "Blev du hänvisad av en anställd?"
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q6
 msgid "What are your main knowledge regarding the job you are applying to?"
-msgstr ""
+msgstr "Vilka är dina viktigaste kunskaper om det jobb du söker?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q8
 msgid "What is important for you?"
-msgstr ""
+msgstr "Vad är viktigt för dig?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q1
 msgid "Which country are you from?"
-msgstr ""
+msgstr "Vilket land kommer du ifrån?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row4
 msgid "Working with state of the art technology"
 msgstr "Arbeta med toppmodern teknik"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.actions.act_window,help:hr_recruitment_survey.survey_survey_action_recruitment
+msgid ""
+"You can create surveys used for recruitments. Design easily your interview,\n"
+"                send invitations and analyze answers."
+msgstr ""
+"Du kan skapa undersökningar som används för rekryteringar. Designa enkelt din intervju,\n"
+"skicka inbjudningar och analysera svaren."

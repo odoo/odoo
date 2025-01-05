@@ -1,40 +1,42 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mass_mailing_sale
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-07 10:47+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mass_mailing_sale
+#. odoo-python
 #: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
 msgid "INVOICED"
-msgstr "INVOICED"
+msgstr "ĐÃ LẬP HOÁ ĐƠN"
 
 #. module: mass_mailing_sale
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sale.mailing_mailing_view_form
 msgid "Invoiced"
-msgstr "Đã xuất hóa đơn"
+msgstr "Đã lập hóa đơn"
 
 #. module: mass_mailing_sale
 #: model:ir.model.fields,field_description:mass_mailing_sale.field_mailing_mailing__sale_invoiced_amount
 msgid "Invoiced Amount"
-msgstr "Invoiced Amount"
+msgstr "Số tiền đã lập hoá đơn"
 
 #. module: mass_mailing_sale
+#. odoo-python
 #: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
 msgid "Invoices Analysis"
 msgstr "Phân tích hóa đơn"
@@ -42,27 +44,30 @@ msgstr "Phân tích hóa đơn"
 #. module: mass_mailing_sale
 #: model:ir.model,name:mass_mailing_sale.model_mailing_mailing
 msgid "Mass Mailing"
-msgstr "Gửi mail hàng loạt"
+msgstr "Gửi thư hàng loạt"
 
 #. module: mass_mailing_sale
+#. odoo-python
 #: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
 msgid "No Quotations yet!"
-msgstr ""
+msgstr "Chưa có báo giá nào!"
 
 #. module: mass_mailing_sale
+#. odoo-python
 #: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
 msgid "No Revenues yet!"
-msgstr ""
+msgstr "Chưa có doanh thu!"
 
 #. module: mass_mailing_sale
+#. odoo-python
 #: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
 msgid "QUOTATIONS"
-msgstr "QUOTATIONS"
+msgstr "BÁO GIÁ"
 
 #. module: mass_mailing_sale
 #: model:ir.model.fields,field_description:mass_mailing_sale.field_mailing_mailing__sale_quotation_count
 msgid "Quotation Count"
-msgstr "Tổng số báo giá"
+msgstr "Số báo giá"
 
 #. module: mass_mailing_sale
 #: model:ir.model.fields.selection,name:mass_mailing_sale.selection__utm_campaign__ab_testing_winner_selection__sale_quotation_count
@@ -71,9 +76,14 @@ msgid "Quotations"
 msgstr "Báo giá"
 
 #. module: mass_mailing_sale
+#. odoo-python
 #: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
-msgid "Quotations will appear here once your customers add products to their Carts or when your sales reps assign this mailing."
+msgid ""
+"Quotations will appear here once your customers add products to their Carts "
+"or when your sales reps assign this mailing."
 msgstr ""
+"Báo giá sẽ xuất hiện ở đây khi khách hàng thêm sản phẩm vào giỏ hàng hoặc "
+"khi đại diện bán hàng của bạn tiến hành gửi thư hàng loạt."
 
 #. module: mass_mailing_sale
 #: model:ir.model.fields.selection,name:mass_mailing_sale.selection__utm_campaign__ab_testing_winner_selection__sale_invoiced_amount
@@ -81,14 +91,16 @@ msgid "Revenues"
 msgstr "Doanh thu"
 
 #. module: mass_mailing_sale
+#. odoo-python
 #: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
 msgid "Revenues will appear here once orders are turned into invoices."
-msgstr ""
+msgstr "Doanh thu sẽ xuất hiện ở đây khi đơn hàng chuyển thành hoá đơn."
 
 #. module: mass_mailing_sale
+#. odoo-python
 #: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
 msgid "Sales Analysis"
-msgstr "Phân tích kinh doanh"
+msgstr "Phân tích bán hàng"
 
 #. module: mass_mailing_sale
 #: model:ir.model,name:mass_mailing_sale.model_sale_order
@@ -98,7 +110,7 @@ msgstr "Đơn bán hàng"
 #. module: mass_mailing_sale
 #: model:ir.model.fields,help:mass_mailing_sale.field_utm_campaign__ab_testing_winner_selection
 msgid "Selection to determine the winner mailing that will be sent."
-msgstr "Lựa chọn để xác định người chiến thắng sẽ được gửi thư."
+msgstr "Lựa chọn để xác định phiên bản thư chiến thắng sẽ được gửi đi."
 
 #. module: mass_mailing_sale
 #: model:ir.model,name:mass_mailing_sale.model_utm_campaign
@@ -108,4 +120,4 @@ msgstr "Chiến dịch UTM"
 #. module: mass_mailing_sale
 #: model:ir.model.fields,field_description:mass_mailing_sale.field_utm_campaign__ab_testing_winner_selection
 msgid "Winner Selection"
-msgstr "Lựa chọn người chiến thắng"
+msgstr "Lựa chọn phiên bản chiến thắng"

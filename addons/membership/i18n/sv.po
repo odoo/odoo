@@ -1,33 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* membership
-#
+# 
 # Translators:
-# Haojun Zou <apollo_zhj@msn.com>, 2022
-# Simon S, 2022
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2022
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
-# Kristoffer Grundström <lovaren@gmail.com>, 2022
-# Zou Haojun <haojunzou84@gmail.com>, 2022
-# Kim Asplund <kim.asplund@gmail.com>, 2022
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
-# Martin Trigaux, 2022
-# lynnliuying <lynn.liu1971@gmail.com>, 2022
-# Michael Tanzi <michael.tanzi@vertel.se>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Michael Tanzi <michael.tanzi@vertel.se>, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
-"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: membership
@@ -43,12 +32,16 @@ msgstr "# Betald"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__num_waiting
 msgid "# Waiting"
-msgstr "Väntar"
+msgstr "# Väntar"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
-msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" title=\"Period\"/><strong> From: </strong>"
-msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" title=\"Period\"/><strong>Från:</strong>"
+msgid ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
+"title=\"Period\"/><strong> From: </strong>"
+msgstr ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
+"title=\"Period\"/><strong>Från:</strong>"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
@@ -63,8 +56,12 @@ msgstr "<strong>Till:</strong>"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner__associate_member
 #: model:ir.model.fields,help:membership.field_res_users__associate_member
-msgid "A member with whom you want to associate your membership.It will consider the membership state of the associated member."
-msgstr "En medlem som du vill associera med ditt medlemskap. Medlemmen kommer att överväga medlemskapet för den associerade medlemmen."
+msgid ""
+"A member with whom you want to associate your membership.It will consider "
+"the membership state of the associated member."
+msgstr ""
+"En medlem som du vill associera med ditt medlemskap. Medlemmen kommer att "
+"överväga medlemskapet för den associerade medlemmen."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__account_invoice_line
@@ -74,7 +71,7 @@ msgstr "Bokföring fakturarad"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
 msgid "Add a description..."
-msgstr "Lägg till beskrivning..."
+msgstr "Lägg till en beskrivning..."
 
 #. module: membership
 #: model_terms:ir.actions.act_window,help:membership.action_membership_members
@@ -143,7 +140,7 @@ msgstr "Kontrollera om produkten är kvalificerad för medlemskap."
 #: model:ir.model.fields,field_description:membership.field_report_membership__company_id
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Company"
-msgstr "Bolag"
+msgstr "Företag"
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_marketing_config_association
@@ -165,7 +162,7 @@ msgstr "Skapad av"
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__create_date
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__create_date
 msgid "Created on"
-msgstr "Skapad"
+msgstr "Skapad den"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__membership_state
@@ -242,7 +239,7 @@ msgstr "Slutdatum för medlemskap"
 #. module: membership
 #: model:ir.model.constraint,message:membership.constraint_product_template_membership_date_greater
 msgid "Error! Ending Date cannot be set before Beginning Date."
-msgstr ""
+msgstr "Fel! Slutdatum kan inte ställas in före startdatum."
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -267,7 +264,7 @@ msgstr "Från"
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Group By"
-msgstr "Gruppera efter"
+msgstr "Grupp Av"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
@@ -365,7 +362,7 @@ msgstr "Verifikat"
 #. module: membership
 #: model:ir.model,name:membership.model_account_move_line
 msgid "Journal Item"
-msgstr "Transaktion"
+msgstr "Journalpost"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__write_uid
@@ -377,7 +374,7 @@ msgstr "Senast uppdaterad av"
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__write_date
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__write_date
 msgid "Last Updated on"
-msgstr "Senast uppdaterad på"
+msgstr "Senast uppdaterad den"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__partner_id
@@ -648,7 +645,7 @@ msgstr "Summa av kvantitet"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
 msgid "Taxes"
-msgstr "Moms"
+msgstr "Skatter"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner__membership_amount

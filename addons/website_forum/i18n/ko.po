@@ -1,53 +1,51 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_forum
-#
+# 
 # Translators:
-# JH CHOI <hwangtog@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Sarah Park, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
-"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/website_forum.js:0
 msgid " Flag"
-msgstr ""
+msgstr "신고하기"
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/website_forum.js:0
 msgid " Flagged"
-msgstr ""
+msgstr "신고함"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_answers
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_tree
 msgid "# Answers"
-msgstr ""
+msgstr "# 답변"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_favorites
 msgid "# Favorites"
-msgstr ""
+msgstr "# 즐겨찾기"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_posts
 msgid "# Posts"
-msgstr ""
+msgstr "# 게시물"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_views
@@ -112,6 +110,12 @@ msgstr "새 질문을 작성하려면 %d 명성이 필요합니다."
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
+msgid "%d karma required to delete a comment."
+msgstr "댓글을 삭제하려면 %d 카르마가 필요합니다."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post.py:0
 msgid "%d karma required to delete or reactivate a post."
 msgstr "게시물을 삭제하거나 다시 활성화하려면 %d 명성이 필요합니다."
 
@@ -161,12 +165,6 @@ msgstr "태그를 다시 할려면 %d 명성이 필요합니다."
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
-msgid "%d karma required to unlink a comment."
-msgstr "댓글 링크를 해제하려면 %d 명성이 필요합니다."
-
-#. module: website_forum
-#. odoo-python
-#: code:addons/website_forum/models/forum_post.py:0
 msgid "%d karma required to unlink a post."
 msgstr "게시물의 링크를 해제하려면 %d 명성이 필요합니다."
 
@@ -183,9 +181,21 @@ msgid "%d karma required to validate a post."
 msgstr "게시물을 승인하려면 %d 명성이 필요합니다."
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "&amp;nbsp;and&amp;nbsp;"
-msgstr "&amp;nbsp;및&amp;nbsp;"
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/website_forum_tags_wrapper.xml:0
+msgid "'Please enter 2 or more characters'"
+msgstr "'2자 이상 입력해 주세요'"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/website_forum_tags_wrapper.xml:0
+msgid "'Tags'"
+msgstr "'태그'"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -199,25 +209,9 @@ msgid "(votes - 1) **"
 msgstr "(투표 - 1) **"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-msgid ", by"
-msgstr ", 작성자"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
-#: model_terms:ir.ui.view,arch_db:website_forum.new_question
-msgid ", consider <b>adding an example</b>."
-msgstr ", <b>예제 추가</b>를 고려하십시오."
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "/ (days + 2) **"
 msgstr "/ (일 + 2) **"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-msgid "0 Answers"
-msgstr "답변 0"
 
 #. module: website_forum
 #. odoo-javascript
@@ -236,6 +230,15 @@ msgstr ""
 "          있습니다."
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
+msgid ""
+"<b class=\"d-block \">This answer has been flagged</b>\n"
+"                            As a moderator, you can either validate or reject this answer."
+msgstr ""
+"<b class=\"d-block \">이 답변이 신고되었습니다.</b>\n"
+"                            운영자는 이 답변을 승인하거나 거부할 수 있습니다."
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid ""
 "<b class=\"d-block\">You have a pending post</b>\n"
@@ -245,62 +248,93 @@ msgstr ""
 "                        중재자가 질문에 대한 답변이 허용되도록 이전 게시물을 승인하는 동안 기다리십시오."
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
-msgid "<b> [Offensive]</b>"
-msgstr "<b> [불쾌함]</b>"
-
-#. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Answers should not add or expand questions</b>. Instead either edit the question or add a question comment."
+msgid ""
+"<b>Answers should not add or expand questions</b>. Instead either edit the "
+"question or add a question comment."
 msgstr "<b>답변은 질문을 추가하거나 확장해서는 안됩니다</b>. 대신 질문을 편집하거나 질문 주석을 추가하십시오."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Answers should not add or expand questions</b>. Instead, either edit the question or add a comment."
-msgstr ""
+msgid ""
+"<b>Answers should not add or expand questions</b>. Instead, either edit the "
+"question or add a comment."
+msgstr "<b>답변에는 질문을 추가하거나 확장할 수 없습니다</b>. 대신 질문을 수정하거나 의견을 추가할 수 있습니다."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Answers should not comment other answers</b>. Instead add a comment on the other answers."
+msgid ""
+"<b>Answers should not comment other answers</b>. Instead add a comment on "
+"the other answers."
 msgstr "<b>답변은 다른 답변을 언급해서는 안됩니다</b>. 대신 다른 답변에 의견을 추가하십시오."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Answers should not start debates</b> This community Q&amp;A is not a discussion group. Please avoid holding debates in your answers as they tend to dilute the essence of questions and answers. For brief discussions please use commenting facility."
-msgstr "<b>답변은 토론을 시작해서는 안됩니다.</b> 이 커뮤니티 Q&amp;A는 토론 그룹이 아닙니다. 질문과 답변의 본질을 희석시키는 경향이 있으므로 답변에 토론을 포함시키지 마십시오. 간단한 토론을 하려면 주석 기능을 사용하십시오."
+msgid ""
+"<b>Answers should not start debates</b> This community Q&amp;A is not a "
+"discussion group. Please avoid holding debates in your answers as they tend "
+"to dilute the essence of questions and answers. For brief discussions please"
+" use commenting facility."
+msgstr ""
+"<b>답변은 토론을 시작해서는 안됩니다.</b> 이 커뮤니티 Q&amp;A는 토론 그룹이 아닙니다. 질문과 답변의 본질을 희석시키는 "
+"경향이 있으므로 답변에 토론을 포함시키지 마십시오. 간단한 토론을 하려면 주석 기능을 사용하십시오."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Answers shouldn't just point to other Questions</b>. Instead add a question comment indication \"Possible duplicate of...\". However, it's ok to include links to other questions or answers providing relevant additional information."
-msgstr "<b>답변이 다른 질문을 지목해서는 안됩니다</b>. 대신 \"가능한 복제 가능 항목...\"이라는 질문 주석 표시를 추가하십시오. 그러나 관련 추가 정보를 제공하는 다른 질문이나 답변에 대한 링크를 포함해도 됩니다."
+msgid ""
+"<b>Answers shouldn't just point to other Questions</b>. Instead add a "
+"question comment indication \"Possible duplicate of...\". However, it's ok "
+"to include links to other questions or answers providing relevant additional"
+" information."
+msgstr ""
+"<b>답변이 다른 질문을 지목해서는 안됩니다</b>. 대신 \"가능한 복제 가능 항목...\"이라는 질문 주석 표시를 추가하십시오. "
+"그러나 관련 추가 정보를 제공하는 다른 질문이나 답변에 대한 링크를 포함해도 됩니다."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Answers shouldn't just point to other questions</b>.Instead add a comment indicating <i>\"Possible duplicate of...\"</i>. However, it's fine to include links to other questions or answers providing relevant additional information."
-msgstr "<b>답변은 다른 질문을 지목해서는 안됩니다</b>. 대신 <i>\"가능한 복제 가능 항목...\"</i>이라는 질문 주석 표시를 추가하십시오. 그러나 관련 추가 정보를 제공하는 다른 질문이나 답변에 대한 링크를 포함해도됩니다."
+msgid ""
+"<b>Answers shouldn't just point to other questions</b>.Instead add a comment"
+" indicating <i>\"Possible duplicate of...\"</i>. However, it's fine to "
+"include links to other questions or answers providing relevant additional "
+"information."
+msgstr ""
+"<b>답변은 다른 질문을 지목해서는 안됩니다</b>. 대신 <i>\"가능한 복제 가능 항목...\"</i>이라는 질문 주석 표시를 "
+"추가하십시오. 그러나 관련 추가 정보를 제공하는 다른 질문이나 답변에 대한 링크를 포함해도됩니다."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Answers shouldn't just provide a link a solution</b>. Instead provide the solution description text in your answer, even if it's just a copy/paste. Links are welcome, but should be complementary to answer, referring sources or additional reading."
-msgstr "<b>답변은 단지 솔루션 링크를 제공해서는 안됩니다</b>. 대신 복사/붙여넣기인 경우에도 답에 솔루션 설명 텍스트를 제공하십시오. 링크는 환영하지만 답변, 추천 소스 또는 추가 자료를 보완하려면 보완 적이어야합니다."
+msgid ""
+"<b>Answers shouldn't just provide a link a solution</b>. Instead provide the"
+" solution description text in your answer, even if it's just a copy/paste. "
+"Links are welcome, but should be complementary to answer, referring sources "
+"or additional reading."
+msgstr ""
+"<b>답변은 단지 솔루션 링크를 제공해서는 안됩니다</b>. 대신 복사/붙여넣기인 경우에도 답에 솔루션 설명 텍스트를 제공하십시오. "
+"링크는 환영하지만 답변, 추천 소스 또는 추가 자료를 보완하려면 보완 적이어야합니다."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Before you ask - please make sure to search for a similar question.</b> You can search questions by their title or tags. It’s also OK to answer your own question."
-msgstr "<b>문의하기 전에 유사한 질문을 검색하십시오.</b> 제목이나 태그별로 질문을 검색할 수 있습니다. 자신의 질문에 대답해도 됩니다."
+msgid ""
+"<b>Before you ask - please make sure to search for a similar question.</b> "
+"You can search questions by their title or tags. It’s also OK to answer your"
+" own question."
+msgstr ""
+"<b>문의하기 전에 유사한 질문을 검색하십시오.</b> 제목이나 태그별로 질문을 검색할 수 있습니다. 자신의 질문에 대답해도 됩니다."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>Please avoid asking questions that are too subjective and argumentative</b> or not relevant to this community."
+msgid ""
+"<b>Please avoid asking questions that are too subjective and "
+"argumentative</b> or not relevant to this community."
 msgstr "이 커뮤니티와 관련이 없거나 <b>너무 주관적이고 논쟁적인 질문은 피하십시오.</b>"
 
 #. module: website_forum
@@ -317,94 +351,94 @@ msgstr ""
 "              - 최고의 질문과 답변을 선택하는 데 정말 도움이 됩니다!"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "<b>Tags</b> I Follow"
-msgstr "내가 팔로잉하는 <b>태그</b>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid ""
-"<b>This forum is empty.</b><br/>\n"
-"                    Be the first one asking a question"
-msgstr ""
-"<b>이 게시판을 비었습니다.</b><br/>\n"
-"                    질문하는 첫 번째 사람이 되어 보세요."
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>What kinds of questions can I ask here?</b>"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>What should I avoid in my answers?</b>"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "<b>What should I avoid in my questions?</b>"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "<b>Why can other people edit my questions/answers?</b>"
-msgstr ""
+msgstr "<b>다른 사람들이 내 질문/답변을 수정할 수 있는 이유는 무엇인가요?</b>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "<b>You already have a pending post.</b><br/>"
-msgstr "<b>이미 대기중인 게시물이 있습니다.</b><br/>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
-msgid "<b>[Answer]</b>"
-msgstr "<b>[답변]</b>"
+msgstr "<b>이미 대기 중인 게시물이 있습니다.</b><br/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.contact
 msgid ""
 "<b>|</b>\n"
-"                    <span class=\"fa fa-trophy bg-gold ms-2\" role=\"img\" aria-label=\"Gold badge\" title=\"Gold badge\"/>"
+"                    <span class=\"fa fa-trophy o-text-gold ms-2\" role=\"img\" aria-label=\"Gold badge\" title=\"Gold badge\"/>"
 msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.tag
-msgid "<em class=\"d-block mb-2\">or</em>"
-msgstr "<em class=\"d-block mb-2\">또는</em>"
+"<b>|</b>\n"
+"                    <span class=\"fa fa-trophy o-text-gold ms-2\" role=\"img\" aria-label=\"금배지\" title=\"금배지\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "<i class=\" fa fa-comment text-muted me-1\"/>Comment"
+msgid "<br/>by"
+msgstr "<br/>작성자"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid "<i class=\"fa fa-angle-left me-2\"/>Back to All Posts"
+msgstr "<i class=\"fa fa-angle-left me-2\"/>모든 게시물로 돌아가기"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_votes
+msgid "<i class=\"fa fa-arrow-right\"/> Go To Forums"
+msgstr "<i class=\"fa fa-arrow-right\"/> 포럼으로 이동"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
+msgid "<i class=\"fa fa-bug me-1\"/>Filter Tool"
+msgstr "<i class=\"fa fa-bug me-1\"/>필터 도구"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.vote
+msgid ""
+"<i class=\"fa fa-caret-down\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" title=\"Downvote\"/>"
 msgstr ""
+"<i class=\"fa fa-caret-down\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" title=\"반대투표\"/>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
-msgid "<i class=\"fa fa-bell fa-fw\"/> Followed Posts"
-msgstr "<i class=\"fa fa-bell fa-fw\"/> 팔로우된 게시물"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "<i class=\"fa fa-bug\"/> Filter Tool"
-msgstr "<i class=\"fa fa-bug\"/> 필터 도구"
+#: model_terms:ir.ui.view,arch_db:website_forum.vote
+msgid ""
+"<i class=\"fa fa-caret-up\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" title=\"Upvote\"/>"
+msgstr ""
+"<i class=\"fa fa-caret-up\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" title=\"찬성투표\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<i class=\"fa fa-check fa-fw me-1\"/>Accept"
-msgstr ""
+msgstr "<i class=\"fa fa-check fa-fw me-1\"/>수락"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid ""
-"<i class=\"fa fa-check text-success d-block display-2\"/>\n"
-"            <b>You've Completely Caught Up!</b><br/>"
+"<i class=\"fa fa-check fa-fw me-1\"/>Be less specific in your wording for a "
+"wider search result."
 msgstr ""
-"<i class=\"fa fa-check text-success d-block display-2\"/>\n"
-"            <b>완전히 잡혔어요!</b><br/>"
+"<i class=\"fa fa-check fa-fw me-1\"/>더 폭넓은 검색 결과를 얻으려면 검색어를 덜 구체적으로 작성하세요."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "<i class=\"fa fa-check fa-fw me-1\"/>Check your spelling and try again."
+msgstr "<i class=\"fa fa-check fa-fw me-1\"/>철자를 확인하고 다시 시도해 주세요."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "<i class=\"fa fa-check fa-fw me-1\"/>Try searching for one or two words."
+msgstr "<i class=\"fa fa-check fa-fw me-1\"/>한두 개의 단어로 검색해 보세요."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "<i class=\"fa fa-check me-1\"/>Solved"
+msgstr "<i class=\"fa fa-check me-1\"/>해결 완료"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
+msgid "<i class=\"fa fa-check\"/> Accept"
+msgstr "<i class=\"fa fa-check\"/> 수락"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -413,31 +447,28 @@ msgid "<i class=\"fa fa-check\"/> How to configure TPS and TVQ's canadian taxes?
 msgstr "<i class=\"fa fa-check\"/> TPS 및 TVQ의 캐나다 세금을 구성하는 방법은 무엇입니까?"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
-msgid "<i class=\"fa fa-check-square-o fa-fw\"/> To Validate"
-msgstr "<i class=\"fa fa-check-square-o fa-fw\"/> 승인"
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<i class=\"fa fa-check\"/><span class=\"ms-2\">Accept</span>"
+msgstr "<i class=\"fa fa-check\"/><span class=\"ms-2\">수락</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
 msgid "<i class=\"fa fa-comments-o me-1\" title=\"Forum\"/>"
+msgstr "<i class=\"fa fa-comments-o me-1\" title=\"게시판\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
+msgid ""
+"<i class=\"fa fa-ellipsis-h\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" title=\"More\"/>"
 msgstr ""
+"<i class=\"fa fa-ellipsis-h\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" title=\"더\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
 msgid "<i class=\"fa fa-eye me-1\" title=\"Views\"/>"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
-msgid "<i class=\"fa fa-flag fa-fw\"/> Flagged"
-msgstr "<i class=\"fa fa-flag fa-fw\"/> 신고함"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid ""
-"<i class=\"fa fa-flag ms-4 mr4\"/>\n"
-"                                    Flagged"
-msgstr ""
+msgstr "<i class=\"fa fa-eye me-1\" title=\"조회수\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -445,12 +476,28 @@ msgid "<i class=\"fa fa-flag\"/> Country"
 msgstr "<i class=\"fa fa-flag\"/> 국가"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<i class=\"fa fa-font\"/> Text"
+msgstr "<i class=\"fa fa-font\"/> 텍스트"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.follow
+msgid "<i class=\"fa fa-fw fa-check me-1\"/>Following"
+msgstr "<i class=\"fa fa-fw fa-check me-1\"/>팔로잉"
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
 msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_mobile
+msgid "<i class=\"fa fa-info-circle fa-fw\"/> About this forum"
+msgstr "<i class=\"fa fa-info-circle fa-fw\"/> 게시판 정보"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid ""
 "<i class=\"fa fa-pencil\"/>\n"
 "                                Edit<span class=\"d-none d-lg-inline\"> your answer</span>"
@@ -459,59 +506,81 @@ msgstr ""
 "                                <span class=\"d-none d-lg-inline\"> 답변</span> 수정하기"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
-msgid "<i class=\"fa fa-question-circle-o fa-fw\"/> My Posts"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "<i class=\"fa fa-reply me-1\"/>Answer"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "<i class=\"fa fa-share-alt text-muted me-1\"/>Share"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post
 msgid ""
-"<i class=\"fa fa-share-alt text-muted\"/>\n"
-"                                Share"
+"<i class=\"fa fa-reply me-1 d-lg-none\"/>\n"
+"                0"
 msgstr ""
-"<i class=\"fa fa-share-alt text-muted\"/>\n"
-"                                공유"
+"<i class=\"fa fa-reply me-1 d-lg-none\"/>\n"
+"                0"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
-msgid "<i class=\"fa fa-star fa-fw\"/> Favourites"
-msgstr "<i class=\"fa fa-star fa-fw\"/> 즐겨찾기"
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
+msgid "<i class=\"fa fa-reply me-1\"/>Reply"
+msgstr "<i class=\"fa fa-reply me-1\"/>댓글"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
-msgid "<i class=\"fa fa-tags fa-fw\"/> Followed Tags"
-msgstr "<i class=\"fa fa-tags fa-fw\"/> 팔로우된 태그"
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
+msgid ""
+"<i class=\"fa fa-share-alt\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" title=\"Share\"/>"
+msgstr ""
+"<i class=\"fa fa-share-alt\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" title=\"공유\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
+msgid "<i class=\"fa fa-shield fa-fw opacity-50\"/> Badges"
+msgstr "<i class=\"fa fa-shield fa-fw opacity-50\"/> 배지"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
-msgid "<i class=\"fa fa-thumbs-down text-danger ms-3\" role=\"img\" aria-label=\"Negative votes\" title=\"Negative votes\"/>"
+msgid ""
+"<i class=\"fa fa-thumbs-down text-danger ms-3\" role=\"img\" aria-"
+"label=\"Negative votes\" title=\"Negative votes\"/>"
 msgstr ""
+"<i class=\"fa fa-thumbs-down text-danger ms-3\" role=\"img\" aria-"
+"label=\"부정적 투표\" title=\"부정적 투표\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
-msgid "<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Positive votes\" title=\"Positive votes\"/>"
-msgstr "<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Positive votes\" title=\"Positive votes\"/>"
+msgid ""
+"<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Positive"
+" votes\" title=\"Positive votes\"/>"
+msgstr ""
+"<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Positive"
+" votes\" title=\"Positive votes\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<i class=\"fa fa-times fa-fw me-1\"/>Reject"
-msgstr ""
+msgstr "<i class=\"fa fa-times fa-fw me-1\"/>거부"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
-msgid "<i class=\"fa fa-times\"/> Good morning to all! Please, can someone help solve my tax computation problem in Canada? Thanks!"
+msgid ""
+"<i class=\"fa fa-times\"/> Good morning to all! Please, can someone help "
+"solve my tax computation problem in Canada? Thanks!"
 msgstr ""
+"<i class=\"fa fa-times\"/> 안녕하세요, 캐나다에서 세금 계산 문제를 해결하는 데 도움을 받을 수 있나요? "
+"감사합니다."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
+msgid "<i class=\"fa fa-times\"/> Reject"
+msgstr "<i class=\"fa fa-times\"/> 거부"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<i class=\"fa fa-times\"/><span class=\"ms-2\">Offensive</span>"
+msgstr "<i class=\"fa fa-times\"/><span class=\"ms-2\">모욕</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<i class=\"fa fa-times\"/><span class=\"ms-2\">Reject</span>"
+msgstr "<i class=\"fa fa-times\"/><span class=\"ms-2\">거부</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -519,131 +588,171 @@ msgid "<i class=\"fa fa-user\"/> User"
 msgstr "<i class=\"fa fa-user\"/> 사용자"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "<i class=\"oi oi-chevron-left me-1\"/>Back"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
+msgid "<i class=\"fa fa-users fa-fw opacity-50\"/> People"
+msgstr "<i class=\"fa fa-users fa-fw opacity-50\"/> 사용자"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_question
-msgid "<i class=\"oi oi-chevron-left me-2\"/>Back to All Topics"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "<i class=\"oi oi-arrow-right d-inline-block\"/> Go to Forums"
+msgstr "<i class=\"oi oi-arrow-right d-inline-block\"/> 게시판으로 이동하기"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.404
+msgid ""
+"<i class=\"oi oi-arrow-right display-inline-block\"/> Return to questions "
+"list"
+msgstr "<i class=\"oi oi-arrow-right display-inline-block\"/> 질문 목록으로 돌아가기"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_sub_nav
 msgid "<i class=\"oi oi-chevron-left small\"/> Back"
-msgstr ""
+msgstr "<i class=\"oi oi-chevron-left small\"/> 뒤로"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "<small class=\"fw-bold\">Votes</small>"
-msgstr ""
+msgstr "<small class=\"fw-bold\">투표</small>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
-msgid ""
-"<small class=\"text-muted\">\n"
-"                    Flagged\n"
-"                </small>"
-msgstr ""
-"<small class=\"text-muted\">\n"
-"                    신고함\n"
-"                </small>"
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
+msgid "<small>(View all)</small>"
+msgstr "<small>(모두 보기)</small>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "<span class=\"badge text-bg-info\">Closed</span>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_all_entries
+msgid "<span class=\"badge bg-dark me-1\">Last post:</span>"
+msgstr "<span class=\"badge bg-dark me-1\">최근 게시물:</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.contact
-msgid "<span class=\"fa fa-trophy bg-bronze ms-2\" role=\"img\" aria-label=\"Bronze badge\" title=\"Bronze badge\"/>"
+msgid ""
+"<span class=\"fa fa-trophy o-text-bronze ms-2\" role=\"img\" aria-"
+"label=\"Bronze badge\" title=\"Bronze badge\"/>"
 msgstr ""
+"<span class=\"fa fa-trophy o-text-bronze ms-2\" role=\"img\" aria-"
+"label=\"동배지\" title=\"동배지\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.contact
-msgid "<span class=\"fa fa-trophy bg-silver ms-2\" role=\"img\" aria-label=\"Silver badge\" title=\"Silver badge\"/>"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
-msgid "<span class=\"fw-bold\">No answer posted yet.</span>"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
-msgid "<span class=\"fw-bold\">No question posted yet.</span>"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-msgid "<span class=\"mx-1 d-none d-sm-inline\">&amp;nbsp;|</span>"
-msgstr "<span class=\"mx-1 d-none d-sm-inline\">&amp;nbsp;|</span>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "<span class=\"mx-1 text-400 d-none d-lg-block\">|</span>"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-msgid "<span class=\"mx-1\">|</span>"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid ""
-"<span class=\"mx-1\">|</span>\n"
-"                    <i class=\"fa fa-star\"/>"
+"<span class=\"fa fa-trophy o-text-silver ms-2\" role=\"img\" aria-"
+"label=\"Silver badge\" title=\"Silver badge\"/>"
 msgstr ""
+"<span class=\"fa fa-trophy o-text-silver ms-2\" role=\"img\" aria-"
+"label=\"은배지\" title=\"은배지\"/>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "<span class=\"mx-3  mx-lg-2 text-400 d-none d-md-inline\">|</span>"
-msgstr ""
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid "<span class=\"flex-grow-1\">What kind of questions can I ask here?</span>"
+msgstr "<span class=\"flex-grow-1\">여기에서 어떤 질문을 할 수 있나요?</span>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "<span class=\"navbar-text me-1\">Go to:</span>"
-msgstr ""
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid "<span class=\"flex-grow-1\">What should I avoid in my answers?</span>"
+msgstr "<span class=\"flex-grow-1\">답변에서 피해야 할 사항은 무엇인가요?</span>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.tag
-msgid "<span class=\"navbar-text me-3\">Show Tags Starting By</span>"
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid "<span class=\"flex-grow-1\">What should I avoid in my questions?</span>"
+msgstr "<span class=\"flex-grow-1\">질문에서 피해야 할 사항은 무엇인가요?</span>"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid ""
+"<span class=\"flex-grow-1\">Why can other people edit my "
+"questions/answers?</span>"
+msgstr "<span class=\"flex-grow-1\">다른 사람이 내 질문/답변을 수정할 수 있는 이유는 무엇인가요?</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"<span class=\"form-text small text-muted d-block\">consider adding an "
+"example.</span>"
+msgstr "<span class=\"form-text small text-muted d-block\">예제를 추가해 보세요.</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"<span class=\"form-text small text-muted d-block\">select text to format "
+"it.</span>"
 msgstr ""
+"<span class=\"form-text small text-muted d-block\">텍스트를 선택하여 서식을 "
+"지정합니다.</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"<span class=\"form-text small text-muted d-block\">use '/' to insert "
+"images.</span>"
+msgstr ""
+"<span class=\"form-text small text-muted d-block\">'/'를 사용하여 이미지를 "
+"삽입합니다.</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"<span class=\"form-text small text-muted me-1\"><i class=\"fa fa-"
+"lightbulb-o\"/> Tip:</span>"
+msgstr ""
+"<span class=\"form-text small text-muted me-1\"><i class=\"fa fa-"
+"lightbulb-o\"/> 팁:</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "<span class=\"o_stat_text\">Favorites</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">즐겨찾기</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_form
 msgid "<span class=\"o_stat_text\">Go to <br/>Website</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"><br/>웹사이트</span>로 이동"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "<span class=\"o_stat_text\">Posts</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">게시물</span>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+#: model_terms:ir.ui.view,arch_db:website_forum.display_activities
+msgid "<span class=\"text-muted\">There is no activity yet.</span>"
+msgstr "<span class=\"text-muted\">아직 활동이 없습니다.</span>"
+
+#. module: website_forum
+#: model_terms:web_tour.tour,rainbow_man_message:website_forum.question
+msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
+msgstr "<span><b>잘하셨습니다!</b>  이번 여정의 모든 단계를 마쳤습니다.</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "<span>Be the first to answer this question</span>"
+msgstr "<span>이 질문에 가장 먼저 답변을 남겨주세요</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
+msgid "<span>Moderation</span>"
+msgstr "<span>조정</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid ""
-"<span class=\"o_wforum_answer_correct_badge border small border-success rounded-pill fw-bold text-success ms-2 px-2\">\n"
-"                            Best Answer\n"
-"                        </span>"
-msgstr ""
+"<span>Please wait for a moderator to validate your previous post to be "
+"allowed to reply to questions.</span>"
+msgstr "<span>운영자가 이전 게시물을 승인할 때까지 기다려야 질문에 답변할 수 있습니다.</span>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "<span>By </span>"
-msgstr "<span>By </span>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_question
-msgid "A clear, explicit and concise title"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_header
+msgid "<span>You need to be registered to interact with the community.</span>"
+msgstr "<span>커뮤니티에 참여하려면 회원 가입을 하시기 바랍니다.</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
@@ -655,11 +764,6 @@ msgstr "다음에 대한 새로운 답변 : "
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
 msgid "A new question"
 msgstr "새로운 질문"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "About"
-msgstr "소개"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_answer_accept_own
@@ -680,7 +784,7 @@ msgstr "답변으로 채택됨"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Accepted answer removed"
-msgstr ""
+msgstr "채택된 답변 삭제됨"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_accept
@@ -705,7 +809,7 @@ msgstr "조치 필요"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__active
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__active
 msgid "Active"
-msgstr "활성"
+msgstr "활성화"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
@@ -713,64 +817,56 @@ msgid "Activities"
 msgstr "활동"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_related_posts
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "Activity"
 msgstr "활동"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
+msgid "Add a comment"
+msgstr "댓글 남기기"
+
+#. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__allow_share
-msgid "After posting the user will be proposed to share its question or answer on social networks, enabling social network propagation of the forum content."
+msgid ""
+"After posting the user will be proposed to share its question or answer on "
+"social networks, enabling social network propagation of the forum content."
 msgstr "게시물 등록 후 소셜 네트워크에 질문이나 답변을 공유하여 게시판 콘텐츠의 소셜 네트워크 전파를 가능하게 합니다."
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/controllers/website_forum.py:0
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "All"
 msgstr "전체"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "All Forums"
-msgstr "모든 포럼"
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
+msgid "All Posts"
+msgstr "모든 게시물"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "All Tags"
-msgstr "모든 태그"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "All Topics"
 msgstr "모든 주제"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "All forums"
 msgstr "모든 게시판"
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_bump
-msgid "Allow Bump"
-msgstr "끌어올리기 허용"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Amazing! There are no unanswered questions left!"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "Answer"
-msgstr "답변"
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "Animation of a pen checking a checkbox"
+msgstr "확인란에 체크하는 펜 애니메이션"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "Answer %s"
-msgstr ""
+msgstr "답변 %s "
 
 #. module: website_forum
 #. odoo-python
@@ -831,6 +927,11 @@ msgid "Answer was accepted with 3 or more votes"
 msgstr "3표 이상으로 답변이 채택되었습니다"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Answer:"
+msgstr "답변:"
+
+#. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__child_count_desc
 msgid "Answered"
 msgstr "답변함"
@@ -838,12 +939,17 @@ msgstr "답변함"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
 msgid "Answered Posts"
-msgstr ""
+msgstr "답변이 달린 게시물"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_form
 msgid "Answered by"
 msgstr "답변자"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post
+msgid "Answered on"
+msgstr "답변일"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_a_8
@@ -852,11 +958,9 @@ msgstr "최소 4표 이상 자신의 질문에 답변함"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__child_count
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_form
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "Answers"
 msgstr "답변"
@@ -875,16 +979,27 @@ msgid "Archived"
 msgstr "보관됨"
 
 #. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+msgid "Are you sure you want to delete this comment?"
+msgstr "이 댓글을 정말 삭제하시겠습니까?"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "As a moderator, you can either validate or reject this answer."
+msgstr "운영자는 이 답변을 승인하거나 거부할 수 있습니다."
+
+#. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Ask a new question"
-msgstr ""
+msgstr "새로운 질문하기"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Ask a question"
-msgstr ""
+msgstr "질문하기"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_ask
@@ -895,6 +1010,11 @@ msgstr "질문하기"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_post
 msgid "Ask questions without validation"
 msgstr "승인없이 질문하기"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid "Ask your question"
+msgstr "질문하기"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_26
@@ -945,6 +1065,8 @@ msgstr "첨부 파일 수"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
+#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid "Author"
 msgstr "작성자"
 
@@ -960,25 +1082,30 @@ msgstr "자서전 작가"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.author_box
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
 #: model_terms:ir.ui.view,arch_db:website_forum.post_comment
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_header
 msgid "Avatar"
 msgstr "아바타"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "Back"
-msgstr "뒤로"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
-#: model_terms:ir.ui.view,arch_db:website_forum.header
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Back to Question"
 msgstr "질문으로 돌아가기"
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/controllers/website_forum.py:0
+msgid "Bad \"filters\" value \"%(filters)s\"."
+msgstr "잘못된 \"filters\" 값 \"%(filters)s\"."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/controllers/website_forum.py:0
+msgid "Bad \"tag_char\" value \"%(tag_char)s\""
+msgstr "잘못된 \"tag_char\" 값 \"%(tag_char)s\""
 
 #. module: website_forum
 #. odoo-python
@@ -988,7 +1115,6 @@ msgstr "나쁜 요청"
 
 #. module: website_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum_badges
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "Badges"
 msgstr "뱃지"
 
@@ -998,19 +1124,14 @@ msgid "Basic"
 msgstr "기본"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Be less specific in your wording for a wider search result"
-msgstr "더 넓은 검색 결과를 위한 덜 구체적인 표현"
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "Because there are no posts in this forum yet."
+msgstr "이 게시판에는 아직 게시물이 없습니다."
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Browse All"
-msgstr "모두 찾아보기"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_post__bump_date
-msgid "Bumped on"
-msgstr "끌어올린 날"
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
+msgid "Best Answer"
+msgstr "베스트 답변"
 
 #. module: website_forum
 #. odoo-javascript
@@ -1086,7 +1207,7 @@ msgstr "찬성투표 가능"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_use_full_editor
 msgid "Can Use Full Editor"
-msgstr ""
+msgstr "전체 에디터 사용 가능"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_view
@@ -1097,16 +1218,6 @@ msgstr "보기 가능"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_edit_retag
 msgid "Change question tags"
 msgstr "질문 태그 변경"
-
-#. module: website_forum
-#: model:ir.model.fields,help:website_forum.field_forum_forum__allow_bump
-msgid "Check this box to display a popup for posts older than 10 days without any given answer. The popup will offer to share it on social networks. When shared, a question is bumped at the top of the forum."
-msgstr "답변이 없이 10일이 지난 게시물에 대해 팝업을 표시하려면이 상자를 선택하십시오. 팝업은 소셜 네트워크에서 공유하도록 제안합니다. 공유되면 포럼 상단으로 질문이 끌어 올려집니다."
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Check your spelling and try again"
-msgstr "철자를 확인하고 다시 시도하십시오"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_4
@@ -1123,12 +1234,6 @@ msgstr "이 답변을 채택하려면 여기를 클릭하십시오."
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
-msgid "Click to answer."
-msgstr ""
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Click to post your answer."
 msgstr "답변을 게시하려면 클릭하십시오."
 
@@ -1139,14 +1244,16 @@ msgid "Click to post your question."
 msgstr "질문을 게시하려면 클릭하십시오."
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
-msgid "Close"
-msgstr "닫기"
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
+msgid "Click to reply."
+msgstr "클릭하여 답글 작성하기"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "Close Post"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_mobile
+msgid "Close"
+msgstr "닫기"
 
 #. module: website_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum_post_reasons
@@ -1170,8 +1277,15 @@ msgstr "게시 마감하기"
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__close
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
 msgid "Closed"
 msgstr "마감됨"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Closed Posts"
+msgstr "비공개 게시물"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__closed_uid
@@ -1194,9 +1308,12 @@ msgid "Closing Reason"
 msgstr "마감 사유"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__color
+msgid "Color"
+msgstr "색상"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid "Comment"
 msgstr "댓글"
 
@@ -1212,8 +1329,8 @@ msgstr "자신의 게시글의 댓글"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_comment
-msgid "Comment this post..."
-msgstr "이 게시물의 댓글..."
+msgid "Comment this post"
+msgstr "이 게시물에 댓글 달기"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_2
@@ -1223,10 +1340,9 @@ msgid "Commentator"
 msgstr "논평자"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
-#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
-msgid "Comments"
-msgstr "의견"
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
+msgid "Community Forums"
+msgstr "커뮤니티 게시판"
 
 #. module: website_forum
 #: model:gamification.challenge,name:website_forum.challenge_configure_profile
@@ -1242,7 +1358,7 @@ msgstr "완성된 자기 소개"
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_7
 msgid "Contains offensive or malicious remarks"
-msgstr ""
+msgstr "모욕적이거나 악의적인 발언이 포함되어 있는 경우"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__content
@@ -1252,18 +1368,8 @@ msgstr "내용"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_convert_all
-msgid "Convert all answers to comments and vice versa"
-msgstr "모든 답변을 댓글로 변환하거나 그 반대로 변환"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
-msgid "Convert as a answer"
-msgstr "답변으로 변환"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-msgid "Convert as a comment"
-msgstr "댓글로 변환"
+msgid "Convert all comments to answers"
+msgstr "모든 댓글을 답변으로 전환"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_accept
@@ -1272,8 +1378,18 @@ msgstr "댓글을 답변으로 변환"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_convert_own
-msgid "Convert own answers to comments and vice versa"
-msgstr "자신의 답변을 댓글로 변환하거나 그 반대로 변환"
+msgid "Convert own comments to answers"
+msgstr "자신의 댓글을 답변으로 전환"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
+msgid "Convert to Comment"
+msgstr "댓글로 전환"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
+msgid "Convert to answer"
+msgstr "답변으로 변환"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__is_correct
@@ -1300,7 +1416,7 @@ msgstr "새 게시물 작성하기"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Create a new post in this forum by clicking on the button."
-msgstr ""
+msgstr "버튼을 클릭하여 이 게시판에 새 게시물을 작성합니다."
 
 #. module: website_forum
 #: model_terms:ir.actions.act_window,help:website_forum.forum_tag_action
@@ -1308,9 +1424,22 @@ msgid "Create a new tag"
 msgstr "새 태그 만들기"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_sign_up_cta
+msgid ""
+"Create an account today to enjoy exclusive features and engage with our "
+"awesome community!"
+msgstr "지금 바로 가입하여 독점 서비스를 이용해보고 특별한 커뮤니티와 소통하세요!"
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_tag_create
 msgid "Create new tags"
 msgstr "새 태그 만들기"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/website_forum_tags_wrapper.xml:0
+msgid "Create option \""
+msgstr "생성 옵션 \""
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_32
@@ -1330,6 +1459,7 @@ msgstr "작성자"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__create_date
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__create_date
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__create_date
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post
 msgid "Created on"
 msgstr "작성일자"
 
@@ -1349,17 +1479,17 @@ msgstr "비평가"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
 msgid "Date"
-msgstr "일자"
+msgstr "날짜"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
 msgid "Date (high to low)"
-msgstr ""
+msgstr "날짜 (내림차순)"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
 msgid "Date (low to high)"
-msgstr ""
+msgstr "날짜 (오름차순)"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__default_order
@@ -1369,7 +1499,7 @@ msgstr "기본"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "Default Sort"
-msgstr ""
+msgstr "기본 정렬"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_gamification_challenge__challenge_category
@@ -1377,16 +1507,28 @@ msgid "Define the visibility of the challenge through menus"
 msgstr "메뉴를 통한 도전의 가시성 정의"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 #: model_terms:ir.ui.view,arch_db:website_forum.post_comment
-#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+#: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
 msgid "Delete"
 msgstr "삭제"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_all
+msgid "Delete all comments"
+msgstr "모든 댓글 삭제"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_unlink_all
 msgid "Delete all posts"
 msgstr "모든 게시물 삭제하기"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_own
+msgid "Delete own comments"
+msgstr "내 댓글 삭제"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_unlink_own
@@ -1397,10 +1539,10 @@ msgstr "자신의 게시물 삭제하기"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Delete the accepted answer"
-msgstr ""
+msgstr "채택된 답변 삭제"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "Deleted"
 msgstr "삭제됨"
 
@@ -1417,7 +1559,6 @@ msgstr "찬성투표가 3개 이상인 게시물을 삭제했습니다."
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__description
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_all_entries
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Description"
@@ -1426,7 +1567,7 @@ msgstr "설명"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "Description visible on website"
-msgstr ""
+msgstr "웹사이트에 표시되는 설명"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -1435,7 +1576,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
 #: model_terms:ir.ui.view,arch_db:website_forum.post_comment
 msgid "Discard"
-msgstr "작성 취소"
+msgstr "취소"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_6
@@ -1447,7 +1588,19 @@ msgstr "규율가"
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__mode__discussions
 msgid "Discussions (multiple answers)"
-msgstr ""
+msgstr "토론 (복수 응답)"
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_forum.py:0
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Dismiss"
+msgstr "해산"
+
+#. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Dismiss message"
+msgstr "메시지 삭제"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__display_name
@@ -1465,6 +1618,7 @@ msgstr "상세한 사용자 이력 표시"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_downvote
+#: model_terms:ir.ui.view,arch_db:website_forum.vote
 msgid "Downvote"
 msgstr "반대투표"
 
@@ -1472,31 +1626,25 @@ msgstr "반대투표"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Downvote for posting offensive contents"
-msgstr ""
+msgstr "모욕적인 콘텐츠 게시물에 대한 반대투표"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_1
 msgid "Duplicate post"
-msgstr ""
+msgstr "중복 게시물"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+#: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
 msgid "Edit"
-msgstr "편집하기"
+msgstr "편집"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "Edit Answer"
 msgstr "답변 편집하기"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "Edit Forum in Backend"
-msgstr "백엔드에서 게시판 편집하기"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "Edit Question"
 msgstr "질문 편집하기"
 
@@ -1516,16 +1664,36 @@ msgid "Edit your Post"
 msgstr "귀하의 게시물 편집하기"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+msgid "Edit your answer"
+msgstr "답변 수정하기"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+msgid "Edit your question"
+msgstr "질문 수정하기"
+
+#. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_7
 #: model:gamification.challenge,name:website_forum.challenge_editor
 #: model:gamification.goal.definition,name:website_forum.definition_editor
 msgid "Editor"
-msgstr "편집가"
+msgstr "편집기"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_editor
 msgid "Editor Features: image and links"
 msgstr "편집기 기능 : 이미지 및 링크"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "Empty box"
+msgstr "비어 있는 박스"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_sign_up_cta
+msgid "Enjoying the discussion? Don't just read, join in!"
+msgstr "토론이 재미있으신가요? 직접 참여해보세요!"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_5
@@ -1539,10 +1707,17 @@ msgstr "계몽가"
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid ""
 "Example\n"
-"                        <i class=\"fa fa-question-circle\"/>"
+"                            <i class=\"fa fa-question-circle\"/>"
 msgstr ""
 "예제\n"
-"                        <i class=\"fa fa-question-circle\"/>"
+"                            <i class=\"fa fa-question-circle\"/>"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/public_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
+msgid "Facebook"
+msgstr "페이스북"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_3
@@ -1552,6 +1727,7 @@ msgstr "유명한 질문"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__favourite_count
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "Favorite"
 msgstr "즐겨찾기"
 
@@ -1587,9 +1763,16 @@ msgid "Favourite Questions"
 msgstr "즐겨찾는 질문"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
 msgid "Favourites"
 msgstr "즐겨찾기"
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_post__last_activity_date
+msgid ""
+"Field to keep track of a post's last activity. Updated whenever it is "
+"replied to, or when a comment is added on the post or one of its replies."
+msgstr "필드를 사용하여 게시물의 마지막 활동을 추적합니다. 댓글이 달리거나 추가 댓글이 달릴 때마다 업데이트됩니다."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -1617,7 +1800,7 @@ msgid "First upvote"
 msgstr "첫 번째 찬성투표"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+#: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
 msgid "Flag"
 msgstr "신고하기"
 
@@ -1629,8 +1812,8 @@ msgstr "모욕 게시물 신고하기"
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__flagged
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
 msgid "Flagged"
 msgstr "신고함"
 
@@ -1640,9 +1823,19 @@ msgid "Flagged by"
 msgstr "신고자"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.follow
+msgid "Follow"
+msgstr "팔로우"
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "Followed Questions"
 msgstr "팔로우하는 질문"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
+msgid "Followed Tags"
+msgstr "팔로우된 태그"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_follower_ids
@@ -1656,18 +1849,23 @@ msgstr "팔로워"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_partner_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "팔로워 (파트너)"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "Following"
-msgstr "팔로잉"
+msgstr "팔로워 (협력사)"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "For example, if you ask an interesting question or give a helpful answer, your input will be upvoted. On the other hand if the answer is misleading - it will be downvoted. Each vote in favor will generate 10 points, each vote against will subtract 2 points. There is a limit of 200 points that can be accumulated for a question or answer per day. The table given at the end explains reputation point requirements for each type of moderation task."
+msgid ""
+"For example, if you ask an interesting question or give a helpful answer, "
+"your input will be upvoted. On the other hand if the answer is misleading - "
+"it will be downvoted. Each vote in favor will generate 10 points, each vote "
+"against will subtract 2 points. There is a limit of 200 points that can be "
+"accumulated for a question or answer per day. The table given at the end "
+"explains reputation point requirements for each type of moderation task."
 msgstr ""
+"예를 들어, 흥미로운 질문이나 유용한 답변을 제공하면 해당 의견은 찬성투표를 받게 됩니다. 반면 답변에 오해의 소지가 있는 경우, 해당 "
+"답변은 반대투표를 받게 됩니다. 찬성투표를 받을 때마다 10점을 획득하게 되며, 반대투표를 받을 때마다 2점이 차감됩니다. 각각의 질문 "
+"또는 답변에 대해 누적되는 포인트는 하루 총 200점으로 제한되어 있습니다. 마지막에 제시된 표에서 각 유형에 대한 점수 요건을 확인할 "
+"수 있습니다."
 
 #. module: website_forum
 #. odoo-python
@@ -1689,7 +1887,7 @@ msgstr "게시판"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_website__forum_count
 msgid "Forum Count"
-msgstr ""
+msgstr "게시판 수"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form_add
@@ -1705,7 +1903,7 @@ msgstr "게시판 이름"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
 msgid "Forum Page"
-msgstr ""
+msgstr "게시판 페이지"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post
@@ -1716,7 +1914,7 @@ msgstr "게시물"
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_post_action
 msgid "Forum Post Pages"
-msgstr ""
+msgstr "게시판 게시물 페이지"
 
 #. module: website_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum_post_pages
@@ -1726,6 +1924,11 @@ msgstr "게시물"
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_tag
 msgid "Forum Tag"
+msgstr "게시판 태그"
+
+#. module: website_forum
+#: model:ir.actions.act_window,name:website_forum.forum_tag_action
+msgid "Forum Tags"
 msgstr "게시판 태그"
 
 #. module: website_forum
@@ -1742,10 +1945,30 @@ msgid "Gamification Challenge"
 msgstr "도전 과제 업적"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.follow
+msgid "Get notified when there's activity on this post"
+msgstr "이 게시물에 활동이 있으면 알림 받기"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.follow
+msgid "Get notified when this tag is used"
+msgstr "이 태그가 사용되면 알림 받기"
+
+#. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Give your post title."
-msgstr ""
+msgstr "글 제목을 입력합니다."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "Go back to the list of"
+msgstr "목록으로 돌아가기"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "Go enjoy a cup of coffee."
+msgstr "커피 한 잔의 여유를 즐겨보세요."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_3
@@ -1798,7 +2021,7 @@ msgstr "그룹별"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__faq
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.faq
 msgid "Guidelines"
 msgstr "지침"
 
@@ -1826,32 +2049,25 @@ msgid "Has Message"
 msgstr "메시지가 있습니다"
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__has_pending_post
+msgid "Has pending post"
+msgstr "보류 중인 게시물 있음"
+
+#. module: website_forum
 #: model:forum.forum,name:website_forum.forum_help
 msgid "Help"
 msgstr "도움말"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_votes
+msgid "Help moderating the forums by upvoting and downvoting posts. <br/>"
+msgstr "게시글에 대한 찬성표와 반대표를 던져 게시판을 중재하는 데 도움을 줍니다. <br/>"
+
+#. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid "Here a table with the privileges and the karma level"
-msgstr ""
-
-#. module: website_forum
-#. odoo-python
-#: code:addons/website_forum/models/forum_forum.py:0
-#: model_terms:forum.forum,welcome_message:website_forum.forum_help
-msgid "Hide Intro"
-msgstr "소개 숨기기"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "I'm <b>Following</b>"
-msgstr "<b>팔로우하는 중</b>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "I'm Following"
-msgstr "팔로우하는 중"
+msgstr "다음은 권한과 카르마 레벨이 표시된 표입니다"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__id
@@ -1881,7 +2097,8 @@ msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합�
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__karma_dofollow
-msgid "If the author has not enough karma, a nofollow attribute is added to links"
+msgid ""
+"If the author has not enough karma, a nofollow attribute is added to links"
 msgstr "작성자가 명성이 충분하지 않으면 링크에 nofollow 특성이 추가됩니다."
 
 #. module: website_forum
@@ -1889,7 +2106,7 @@ msgstr "작성자가 명성이 충분하지 않으면 링크에 nofollow 특성�
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "If this approach is not for you, please respect the community."
-msgstr ""
+msgstr "이 방법이 적합하지 않은 경우에도 커뮤니티를 존중해 주세요."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
@@ -1905,8 +2122,16 @@ msgstr ""
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "If you fit in one of these example or if your motivation for asking the question is “I would like to participate in a discussion about ______”, then you should not be asking here but on our mailing lists. However, if your motivation is “I would like others to explain ______ to me”, then you are probably OK."
-msgstr "만약 당신이 이러한 예시들 중 하나에 들어맞거나 질문을 한 동기가 “저는 ______에 대한 토론에 참여하고 싶습니다”라면, 당신은 여기서가 아니라 우리의 메일링 리스트에 있어야 합니다. 하지만, 만약 여러분의 동기가 “다른 사람들이 나에게 ______를 설명해주었으면 좋겠어요”라면, 여러분은 아마 괜찮을 거예요."
+msgid ""
+"If you fit in one of these example or if your motivation for asking the "
+"question is “I would like to participate in a discussion about ______”, then"
+" you should not be asking here but on our mailing lists. However, if your "
+"motivation is “I would like others to explain ______ to me”, then you are "
+"probably OK."
+msgstr ""
+"만약 당신이 이러한 예시들 중 하나에 들어맞거나 질문을 한 동기가 “저는 ______에 대한 토론에 참여하고 싶습니다”라면, 당신은 "
+"여기서가 아니라 우리의 메일링 리스트에 있어야 합니다. 하지만, 만약 여러분의 동기가 “다른 사람들이 나에게 ______를 설명해주었으면"
+" 좋겠어요”라면, 여러분은 아마 괜찮을 거예요."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
@@ -1947,7 +2172,7 @@ msgstr "512 이미지"
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_13
 msgid "Inappropriate and unacceptable statements"
-msgstr ""
+msgstr "부적절하고 허용되지 않는 발언"
 
 #. module: website_forum
 #. odoo-javascript
@@ -1958,7 +2183,7 @@ msgstr "질문과 관련된 태그를 삽입하십시오."
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_11
 msgid "Insulting and offensive language"
-msgstr ""
+msgstr "모욕적이고 불쾌감을 주는 언어"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__user_favourite
@@ -1971,6 +2196,11 @@ msgstr "즐겨찾기 여부"
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_is_follower
 msgid "Is Follower"
 msgstr "팔로워임"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__can_moderate
+msgid "Is a moderator"
+msgstr "중재자임"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__has_validated_answer
@@ -1993,11 +2223,6 @@ msgstr "다른 사람의 투표는 수정할 수 없습니다."
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "It is not allowed to vote for its own post."
 msgstr "자신의 게시물에 투표할 수 없습니다."
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "Karma"
-msgstr "명성"
 
 #. module: website_forum
 #. odoo-javascript
@@ -2041,18 +2266,18 @@ msgid "Karma to unlink"
 msgstr "링크해제하기 명성"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post
+msgid "Last Activity"
+msgstr "최근 활동"
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__last_post_id
 #: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
 msgid "Last Post"
-msgstr ""
+msgstr "최근 게시물"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_options
-msgid "Last Post:"
-msgstr ""
-
-#. module: website_forum
-#: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__write_date_desc
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__last_activity_date_desc
 msgid "Last Updated"
 msgstr "최근 갱신"
 
@@ -2073,8 +2298,8 @@ msgid "Last Updated on"
 msgstr "최근 갱신 일자"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Last activity date"
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__last_activity_date
+msgid "Last activity on"
 msgstr "최근 활동일"
 
 #. module: website_forum
@@ -2088,19 +2313,31 @@ msgid "Left 10 answers with score of 10 or more"
 msgstr "10점 이상으로 10개의 답변을 남겼습니다."
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_url
+msgid "Link to questions with the tag"
+msgstr "태그가 포함된 질문 링크"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/public_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
+msgid "LinkedIn"
+msgstr "링크드인"
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
 msgid "List"
 msgstr "목록"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid "Mark as Best Answer"
 msgstr "최고의 답변으로 표시"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
 msgid "Mark as Offensive"
-msgstr ""
+msgstr "모욕적인 게시물로 표시"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
@@ -2114,9 +2351,9 @@ msgid "Mark as spam"
 msgstr "스팸으로 표시"
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__menu_id
-msgid "Menu"
-msgstr "메뉴"
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
+msgid "Meet our community members"
+msgstr "커뮤니티 회원 만나보기"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_has_error
@@ -2143,19 +2380,9 @@ msgid "Moderate posts"
 msgstr "중재 게시물"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "Moderation"
-msgstr "중재중"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
 msgid "Moderation tools"
 msgstr "중재 도구"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-msgid "More"
-msgstr "더 보기"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -2164,45 +2391,35 @@ msgid "More over:"
 msgstr "추가 :"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
+msgid "Most Used Tags"
+msgstr "가장 많이 사용된 태그"
+
+#. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__vote_count_desc
 msgid "Most Voted"
 msgstr "최고 득표"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Most answered"
-msgstr "최고의 답변"
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
+msgid "Most used Tags"
+msgstr "가장 많이 사용된 태그"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__tag_most_used_ids
+msgid "Most used tags"
+msgstr "가장 많이 사용된 태그"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Most voted"
-msgstr "최고 득표"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/xml/public_templates.xml:0
-msgid "Move this question to the top of the list by sharing it on social networks."
-msgstr "이 질문을 소셜 네트워크에서 공유하여 목록의 맨 위로 끌어 올리십시오."
+msgid "My Favorites"
+msgstr "내 즐겨찾기"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "My <b>Favourites</b>"
-msgstr "<b>즐겨찾기</b>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "My <b>Posts</b>"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "My Favourites"
-msgstr "개인 즐겨찾기"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
 msgid "My Posts"
-msgstr ""
+msgstr "내 게시물"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__user_vote
@@ -2210,8 +2427,12 @@ msgid "My Vote"
 msgstr "나의 투표"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
+msgid "My forums"
+msgstr "내 게시판"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_header
 msgid "My profile"
 msgstr "개인 프로필"
 
@@ -2222,7 +2443,6 @@ msgstr "이름"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_votes
-#: model_terms:ir.ui.view,arch_db:website_forum.vote
 msgid "Negative vote"
 msgstr "부정적인 투표"
 
@@ -2239,8 +2459,7 @@ msgid "New Forum"
 msgstr "새 게시판"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "New Post"
 msgstr "새로운 게시물"
 
@@ -2253,7 +2472,6 @@ msgstr "새로운 질문"
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__create_date_desc
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Newest"
 msgstr "최신"
 
@@ -2275,39 +2493,14 @@ msgid "Nice Question"
 msgstr "좋은 질문"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_activities
-msgid "No activities yet!"
-msgstr "아직 활동이 없습니다!"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "No favourite questions in this forum (yet).<br/>"
-msgstr "이 게시판에는 즐겨찾기한 질문이 없습니다.<br/>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "No flagged posts"
-msgstr "신고한 게시물이 없습니다"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all
 msgid "No forum is available yet."
 msgstr "사용가능한 게시판이 없습니다."
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "No post to be validated"
-msgstr "확인할 게시물이 없습니다"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.tag
-msgid "No tags"
-msgstr "태그 없음"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_votes
-msgid "No vote given by you yet!"
-msgstr "아직 투표권이 없습니다!"
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_all_entries
+msgid "No posts yet"
+msgstr "아직 게시물이 없습니다"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_dofollow
@@ -2317,12 +2510,12 @@ msgstr "링크 팔로우 없음"
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_4
 msgid "Not a real post"
-msgstr ""
+msgstr "실제 게시물이 아님"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_6
 msgid "Not relevant or out dated"
-msgstr ""
+msgstr "관련성이 없거나 오래됨"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_2
@@ -2358,7 +2551,7 @@ msgstr "신고한 게시물 수"
 #: model:ir.model.fields,help:website_forum.field_forum_forum__message_needaction_counter
 #: model:ir.model.fields,help:website_forum.field_forum_post__message_needaction_counter
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "조치가 필요한 메시지 수"
 
 #. module: website_forum
@@ -2366,34 +2559,43 @@ msgstr "조치가 필요한 메시지 수"
 #: model:ir.model.fields,help:website_forum.field_forum_post__message_has_error_counter
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "전송 오류 메시지 수"
+msgstr "전송 오류가 발생한 메시지 수입니다."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__count_posts_waiting_validation
 msgid "Number of posts waiting for validation"
-msgstr "승인 대기중인 게시물 수"
+msgstr "승인 대기 중인 게시물 수"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_2
 msgid "Off-topic or not relevant"
-msgstr ""
+msgstr "주제를 벗어났거나 관련성이 없음"
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__offensive
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post_reason__reason_type__offensive
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 #: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Offensive"
 msgstr "모욕"
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/website_forum.js:0
-#: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "Offensive Post"
 msgstr "모욕 게시물"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Offensive Posts"
+msgstr "불쾌감을 주는 게시물"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+msgid "Oh no! Please <a href=\"%s\">sign in</a> to perform this action"
+msgstr "안됩니다! 이 작업을 수행하려면 먼저 <a href=\"%s\">로그인</a>해 주세요."
 
 #. module: website_forum
 #. odoo-javascript
@@ -2402,9 +2604,9 @@ msgid "On average,"
 msgstr "평균적."
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-msgid "Only one answer per question is allowed"
-msgstr "질문당 하나의 답변만 허용됩니다"
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "Oops!"
+msgstr "이런!"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
@@ -2414,17 +2616,7 @@ msgstr "옵션"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "Order and Visibility"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Order by"
-msgstr "주문자"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
-msgid "Our forums"
-msgstr "우리의 게시판"
+msgstr "주문 및 표시"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_23
@@ -2434,18 +2626,16 @@ msgid "Peer Pressure"
 msgstr "집단 압박"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "People"
-msgstr "사용자"
-
-#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__plain_content
 msgid "Plain Content"
 msgstr "일반 내용"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
-msgid "Please wait for a moderator to validate your previous post before continuing."
+msgid ""
+"Please wait for a moderator to validate your previous post before "
+"continuing."
 msgstr "계속하기 전에 중재자가 이전 게시물을 승인할 때까지 기다리십시오."
 
 #. module: website_forum
@@ -2471,7 +2661,6 @@ msgstr "인기있는 질문(500)"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_votes
-#: model_terms:ir.ui.view,arch_db:website_forum.vote
 msgid "Positive vote"
 msgstr "긍정적인 투표"
 
@@ -2479,7 +2668,7 @@ msgstr "긍정적인 투표"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__post_id
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
 msgid "Post"
-msgstr "전기"
+msgstr "발행"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
@@ -2489,22 +2678,17 @@ msgstr "답변 게시하기"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__child_ids
 msgid "Post Answers"
-msgstr ""
+msgstr "답변 게시하기"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_post_reason_action
 msgid "Post Close Reason"
-msgstr ""
+msgstr "게시물 마감 사유"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_reason
 msgid "Post Closing Reason"
 msgstr "게시 마감 사유"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
-msgid "Post Comment"
-msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
@@ -2525,13 +2709,13 @@ msgstr "질문 게시하기"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Post is closed and marked as offensive content"
-msgstr ""
+msgstr "게시물이 폐쇄되고 불쾌감을 주는 콘텐츠로 표시됩니다"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Post is closed and marked as spam"
-msgstr ""
+msgstr "게시물이 폐쇄되고 스팸으로 표시됩니다"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
@@ -2563,11 +2747,6 @@ msgid "Posts"
 msgstr "게시물"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_options
-msgid "Posts:"
-msgstr ""
-
-#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__privacy
 msgid "Privacy"
 msgstr "비공개"
@@ -2584,6 +2763,10 @@ msgid ""
 "Signed In: Forum is visible for signed in users\n"
 "Some users: Forum and their content are hidden for non members of selected group"
 msgstr ""
+"공개: 게시판이 전체 공개됩니다\n"
+"로그인 됨: 로그인한 사용자에게만 게시판이 공개됩니다.\n"
+"일부 사용자: 선택한 그룹의 구성원이\n"
+" 아닌 사용자에게는 게시판 및 해당 콘텐츠가 숨겨집니다."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_25
@@ -2606,8 +2789,7 @@ msgstr "여기에 질문을 넣으십시오."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__parent_id
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 msgid "Question"
 msgstr "질문"
 
@@ -2615,7 +2797,7 @@ msgstr "질문"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "Question %s"
-msgstr ""
+msgstr "질문 %s"
 
 #. module: website_forum
 #. odoo-python
@@ -2624,11 +2806,6 @@ msgstr ""
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 msgid "Question Edited"
 msgstr "질문 편집됨"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
-msgid "Question by"
-msgstr "질문자"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_question_downvote
@@ -2682,6 +2859,11 @@ msgid "Question voted up 6 times"
 msgstr "6표 이상 찬성투표된 질문"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Question:"
+msgstr "질문:"
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "Questions"
 msgstr "질문"
@@ -2689,7 +2871,7 @@ msgstr "질문"
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__mode__questions
 msgid "Questions (1 answer)"
-msgstr ""
+msgstr "질문 (답변 1)"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__mode
@@ -2703,7 +2885,7 @@ msgstr ""
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_15
 msgid "Racist and hate speech"
-msgstr ""
+msgstr "인종 차별 및 혐오 표현"
 
 #. module: website_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum_rank_global
@@ -2715,7 +2897,7 @@ msgstr "등급"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__rating_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "평가"
 
 #. module: website_forum
 #. odoo-python
@@ -2724,13 +2906,8 @@ msgid "Re: %s"
 msgstr "회신 : %s"
 
 #. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/website_forum.js:0
-msgid "Read the guidelines to know how to gain karma."
-msgstr "이 지침을 읽고 명성을 얻는 방법을 알아보세요."
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Read: #{question.name}"
 msgstr "읽기 : #{question.name}"
 
@@ -2765,11 +2942,9 @@ msgid "Refuse"
 msgstr "반려"
 
 #. module: website_forum
-#. odoo-python
-#: code:addons/website_forum/models/forum_forum.py:0
-#: model_terms:forum.forum,welcome_message:website_forum.forum_help
-msgid "Register"
-msgstr "등록하기"
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_related_posts
+msgid "Related Posts"
+msgstr "관련 게시물"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__relevancy
@@ -2786,11 +2961,12 @@ msgstr "관련성 계산"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Remove validated answer"
-msgstr ""
+msgstr "승인된 답변 삭제"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+#: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
 msgid "Reopen"
 msgstr "다시 열기"
 
@@ -2798,7 +2974,19 @@ msgstr "다시 열기"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Reopen a banned question"
-msgstr ""
+msgstr "차단된 질문 다시 열기"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_related_posts
+#: model_terms:ir.ui.view,arch_db:website_forum.post_stats
+msgid "Replies"
+msgstr "답글"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_stats
+msgid "Reply"
+msgstr "회신"
 
 #. module: website_forum
 #. odoo-python
@@ -2814,18 +3002,13 @@ msgstr "자신의 질문에 대한 답변"
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__website_id
 #: model:ir.model.fields,help:website_forum.field_forum_post__website_id
-msgid "Restrict publishing to this website."
-msgstr "이 웹 사이트로의 게시를 제한합니다."
+msgid "Restrict to a specific website."
+msgstr "특정 웹사이트로만 제한."
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.private_profile
-msgid "Return to the forum."
-msgstr "게시판으로 돌아갑니다."
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.404
-msgid "Return to the question list."
-msgstr "질문 목록으로 돌아갑니다."
+#: model_terms:ir.ui.view,arch_db:website_forum.profile_access_denied
+msgid "Return to the forum"
+msgstr "게시판으로 돌아가기"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__moderator_id
@@ -2849,7 +3032,7 @@ msgstr "SMS 전송 에러"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 msgid "Save Changes"
-msgstr ""
+msgstr "변경 사항 저장"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_26
@@ -2857,11 +3040,6 @@ msgstr ""
 #: model:gamification.goal.definition,name:website_forum.definition_scholar
 msgid "Scholar"
 msgstr "학자"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Search Tips"
-msgstr "검색 팁"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
@@ -2879,15 +3057,10 @@ msgid "Second Relevance Parameter"
 msgstr "두 번째 관련성 매개 변수"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.tag
-msgid "See"
-msgstr "보기"
-
-#. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/res_users.py:0
 msgid "See our Forum"
-msgstr ""
+msgstr "게시판 보기"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
@@ -2926,13 +3099,20 @@ msgstr "순서"
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_forum.py:0
-msgid "Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together."
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid ""
+"Share and discuss the best content and new marketing ideas, build your "
+"professional profile and become a better marketer together."
 msgstr ""
+"최고의 콘텐츠와 새로운 마케팅 아이디어를 공유하고 토론하며 전문적인 프로필을 쌓아 더 나은 마케터가 될 수 있도록 함께 노력할 수 "
+"있습니다."
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/xml/public_templates.xml:0
-msgid "Share this content to increase your chances to be featured on the front page and attract more visitors."
+msgid ""
+"Share this content to increase your chances to be featured on the front page"
+" and attract more visitors."
 msgstr "이 콘텐츠를 공유하여 첫 페이지에 게재될 기회를 늘리고 더 많은 방문자를 유치하십시오."
 
 #. module: website_forum
@@ -2941,24 +3121,23 @@ msgid "Sharing Options"
 msgstr "공유 옵션"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Show"
-msgstr "보기"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.tag
-msgid "Show Tags Starting By"
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
+msgid "Show Tags Starting with"
 msgstr "다음으로 시작하는 태그 보기"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "Showing results for"
-msgstr ""
+msgstr "다음에 대한 결과 표시 중"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "Sign in"
-msgstr "로그인"
+#. odoo-python
+#: code:addons/website_forum/models/forum_forum.py:0
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_sign_up_cta
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_header
+msgid "Sign up"
+msgstr "가입"
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__privacy__connected
@@ -2967,38 +3146,14 @@ msgstr "로그인함"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "Solved"
-msgstr "해결됨"
+msgstr "해결 완료"
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__privacy__private
 msgid "Some users"
-msgstr ""
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/website_forum.js:0
-msgid "Sorry you must be logged in to perform this action"
-msgstr "이 작업을 수행하려면 로그인해야 합니다"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/website_forum.js:0
-msgid "Sorry you must be logged to flag a post"
-msgstr "게시물을 신고하려면 로그인해야 합니다."
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/website_forum.js:0
-msgid "Sorry you must be logged to vote"
-msgstr "투표하려면 로그인해야 합니다."
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/js/website_forum.js:0
-msgid "Sorry, anonymous users cannot choose correct answer."
-msgstr "익명 사용자는 정답을 선택할 수 없습니다."
+msgstr "일부 사용자"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.404
@@ -3006,9 +3161,30 @@ msgid "Sorry, this question is not available anymore."
 msgstr "죄송합니다, 이 질문은 더이상 사용할 수 없습니다."
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Sorry, we could not find any <b>%s</b> result <b>%s</b> %s%s%s."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "Sorry, we could not find any <b>solved</b> results"
+msgstr "죄송합니다, <b>해결</b> 결과를 찾을 수 없습니다."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "Sorry, we could not find any <b>unanswered</b> results"
+msgstr "죄송합니다, <b>미답변</b> 결과를 찾을 수 없습니다."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "Sorry, we could not find any <b>unsolved</b> results"
+msgstr "죄송합니다, <b>미해결</b> 결과를 찾을 수 없습니다."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "Sorry, we could not find any results"
+msgstr "죄송합니다, 내용을 찾을 수 없습니다 "
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+msgid "Sorry, you cannot select your own posts as best answer"
+msgstr "자신의 게시물은 베스트 글로 추천할 수 없습니다."
 
 #. module: website_forum
 #. odoo-javascript
@@ -3025,6 +3201,11 @@ msgstr "스팸 전체 게시물"
 #: model:forum.post.reason,name:website_forum.reason_8
 msgid "Spam or advertising"
 msgstr "스팸 또는 광고"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "Start by creating a post"
+msgstr "먼저 게시물을 만들어 보세요"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__state
@@ -3044,6 +3225,11 @@ msgid "Student"
 msgstr "학생"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.follow
+msgid "Subscribe"
+msgstr "구독"
+
+#. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_31
 #: model:gamification.challenge,name:website_forum.challenge_supporter
 #: model:gamification.goal.definition,name:website_forum.definition_supporter
@@ -3059,23 +3245,26 @@ msgstr "태그"
 #. module: website_forum
 #: model:ir.model.constraint,message:website_forum.constraint_forum_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "태그명이 이미 존재합니다!"
 
 #. module: website_forum
-#: model:ir.actions.act_window,name:website_forum.forum_tag_action
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__tag_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__tag_ids
 #: model:ir.ui.menu,name:website_forum.menu_forum_tag_global
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_tag_view_list
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
 msgid "Tags"
 msgstr "태그"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "Tags I Follow"
-msgstr "내가 팔로우하는 태그"
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
+msgid ""
+"Tap into the collective knowledge of our community by asking your questions "
+"in our forums,<br/> where helpful members are ready to assist you."
+msgstr "도움이 필요한 회원들은 게시판에<br/> 질문을 남겨 커뮤니티 구성원의 집단지성을 활용할 수 있습니다."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_32
@@ -3097,11 +3286,6 @@ msgid "Teaser"
 msgstr "티저"
 
 #. module: website_forum
-#: model:ir.model.fields,help:website_forum.field_forum_post__bump_date
-msgid "Technical field allowing to bump a question. Writing on this field will trigger a write on write_date and therefore bump the post. Directly writing on write_date is currently not supported and this field is a workaround."
-msgstr "질문을 끌어 올릴 수 있는 기술 필드. 이 필드에 쓰면 write_date에 쓰기가 시작되어 게시물이 끌어 올려집니다. write_date에 직접 쓰는 것은 현재 지원되지 않으며 이 필드는 해결 방법입니다."
-
-#. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/xml/public_templates.xml:0
 msgid "Thanks for posting!"
@@ -3111,13 +3295,15 @@ msgstr "게시해 주셔서 감사합니다!"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "The accepted answer is deleted"
-msgstr ""
+msgstr "채택된 답변 삭제됨"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
-msgid "The goal of this site is create a relevant knowledge base that would answer questions related to Odoo."
+msgid ""
+"The goal of this site is create a relevant knowledge base that would answer "
+"questions related to Odoo."
 msgstr "이 사이트의 목표는 Odoo와 관련된 질문에 답변 할 수 있는 관련 기술 자료를 만드는 것입니다."
 
 #. module: website_forum
@@ -3126,43 +3312,66 @@ msgid "The question has been closed"
 msgstr "질문이 마감되었습니다"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "There are no answers yet"
+msgstr "아직 답변이 없습니다."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
+msgid "There are no tags being used in this forum."
+msgstr "이 게시판에서 사용되는 태그가 아직 없습니다."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
+msgid "There are no tags matching the selected filter"
+msgstr "선택한 필터와 일치하는 태그가 없습니다"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
+msgid "There are no tags matching the selected search."
+msgstr "선택한 검색어와 일치하는 태그가 없습니다."
+
+#. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
-msgid "Therefore questions and answers can be edited like wiki pages by experienced users of this site in order to improve the overall quality of the knowledge base content. Such privileges are granted based on user karma level: you will be able to do the same once your karma gets high enough."
-msgstr "따라서 본 사이트의 숙련된 사용자가 질문과 답변을 위키 페이지처럼 편집하여 전반적인 기술 자료 내용을 개선할 수 있습니다. 이러한 권한은 사용자의 명성 수준에 따라 부여됩니다. 명성이 충분히 높아지면 동일한 작업을 수행할 수 있습니다."
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
-msgid "This community is for professional and enthusiast users, partners and programmers."
-msgstr "이 커뮤니티는 전문가 및 애호가, 파트너 및 프로그래머를 위한 커뮤니티입니다."
+msgid ""
+"Therefore questions and answers can be edited like wiki pages by experienced"
+" users of this site in order to improve the overall quality of the knowledge"
+" base content. Such privileges are granted based on user karma level: you "
+"will be able to do the same once your karma gets high enough."
+msgstr ""
+"따라서 본 사이트의 숙련된 사용자가 질문과 답변을 위키 페이지처럼 편집하여 전반적인 기술 자료 내용을 개선할 수 있습니다. 이러한 권한은"
+" 사용자의 명성 수준에 따라 부여됩니다. 명성이 충분히 높아지면 동일한 작업을 수행할 수 있습니다."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "This community is for professional and enthusiast users, partners and programmers. You can ask questions about:"
-msgstr "이 커뮤니티는 전문가 및 애호가, 파트너 및 프로그래머를 위한 커뮤니티입니다. 다음과 같은 질문을 할 수 있습니다."
-
-#. module: website_forum
-#. odoo-python
-#: code:addons/website_forum/models/forum_forum.py:0
-msgid "This community is for professionals and enthusiasts of our products and services."
+msgid ""
+"This community is for professional and enthusiast users, partners and "
+"programmers. You can ask questions about:"
 msgstr ""
+"이 커뮤니티는 전문적이며 열정적인 사용자들과 협력사, 그리고 프로그래머들을 위해 마련되었습니다. 다음 내용에 대해 질문이 가능합니다:"
 
 #. module: website_forum
 #: model:forum.forum,description:website_forum.forum_help
-msgid "This community is for professionals and enthusiasts of our products and services. Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together."
-msgstr "이 커뮤니티는 NAT 제품 및 서비스의 전문가와 매니아를 위한 커뮤니티입니다. 최고의 컨텐츠와 새로운 마케팅 아이디어를 공유하고 업무 협의하고, 프로페셔널 프로필을 구축하고, 함께 더 나은 마케팅 전문가가 될 수 있습니다."
-
-#. module: website_forum
-#: model_terms:forum.forum,welcome_message:website_forum.forum_help
-msgid "This community is for professionals and enthusiasts of our products and services.<br>Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together."
+msgid ""
+"This community is for professionals and enthusiasts of our products and "
+"services. Share and discuss the best content and new marketing ideas, build "
+"your professional profile and become a better marketer together."
 msgstr ""
+"이 커뮤니티는 NAT 제품 및 서비스의 전문가와 매니아를 위한 커뮤니티입니다. 최고의 컨텐츠와 새로운 마케팅 아이디어를 공유하고 업무 "
+"협의하고, 프로페셔널 프로필을 구축하고, 함께 더 나은 마케팅 전문가가 될 수 있습니다."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__relevancy_post_vote
-msgid "This formula is used in order to sort by relevance. The variable 'votes' represents number of votes for a post, and 'days' is number of days since the post creation"
-msgstr "이 공식은 관련성을 기준으로 정렬하기 위해 사용됩니다. 변수 'votes'는 게시물의 투표 수를 나타내며, 'days'는 게시물 작성 후 지난 일 수입니다."
+msgid ""
+"This formula is used in order to sort by relevance. The variable 'votes' "
+"represents number of votes for a post, and 'days' is number of days since "
+"the post creation"
+msgstr ""
+"이 공식은 관련성을 기준으로 정렬하기 위해 사용됩니다. 변수 'votes'는 게시물의 투표 수를 나타내며, 'days'는 게시물 작성 후"
+" 지난 일 수입니다."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -3183,15 +3392,37 @@ msgstr "이 게시물은 이미 신고되었습니다"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "This post is awaiting validation"
+msgstr "승인 대기 중인 게시물입니다"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid ""
-"This post is currently awaiting moderation and it's not published yet.<br/>\n"
-"                Do you want <b>Accept</b> or <b>Reject</b> this post?"
+"This post is currently awaiting moderation and is not published yet.<br/>\n"
+"                    As a moderator you can either <b>Accept</b> or <b>Reject</b> this post."
 msgstr ""
+"이 게시물은 현재 검토 대기 중이며 아직 게시되지 않았습니다.<br/>\n"
+"                    이 게시물을 <b>승인</b>하거나 <b>거부</b>할 수 있습니다."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "This question has been flagged"
+msgstr "신고된 질문입니다"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "This user hasn't answered any questions yet. <br/>"
+msgstr "이 사용자는 아직 질문에 답변하지 않았습니다. <br/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "This user hasn't posted any questions yet.<br/>"
+msgstr "이 사용자는 아직 질문을 게시하지 않았습니다.<br/>"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_14
 msgid "Threatening language"
-msgstr ""
+msgstr "위협적인 언어"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__name
@@ -3215,53 +3446,46 @@ msgstr "제목은 비워둘 수 없습니다."
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__recipient_id
 msgid "To"
-msgstr "도착"
+msgstr "종료 시간"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
 msgid "To Validate"
 msgstr "승인하기"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "To prevent your question from being flagged and possibly removed, avoid asking subjective questions where …"
+msgid ""
+"To prevent your question from being flagged and possibly removed, avoid "
+"asking subjective questions where …"
 msgstr "질문이 신고되거나 제거되지 않도록 하려면 여기에선 주관적인 질문을 하지 마십시오..."
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "Toggle favorite status"
-msgstr "즐겨찾기 상태 전환"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_9
 msgid "Too localized"
-msgstr ""
+msgstr "너무 현지화되어 있음"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_3
 msgid "Too subjective and argumentative"
-msgstr ""
+msgstr "지나치게 주관적이고 논쟁적"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.tag
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
 msgid "Toolbar with button groups"
 msgstr "버튼 그룹을 가진 툴바"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "Topics"
-msgstr "주제"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_tree
 msgid "Total Answers"
-msgstr ""
+msgstr "모든 답변"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_tree
 msgid "Total Posts"
-msgstr ""
+msgstr "모든 게시물"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_tree
@@ -3277,47 +3501,49 @@ msgstr "전체 투표수"
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_karma_tracking
 msgid "Track Karma Changes"
-msgstr ""
+msgstr "카르마 변경 사항 추적"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Trending"
-msgstr "경향"
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/public_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
+msgid "Twitter"
+msgstr "트위터"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Try searching for one or two words"
-msgstr "한두 단어로 검색"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "Unanswered"
 msgstr "미답변"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+#: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
 msgid "Undelete"
 msgstr "삭제 취소"
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_all
-msgid "Unlink all comments"
-msgstr "모든 댓글 링크 해제"
+#: model_terms:ir.ui.view,arch_db:website_forum.follow
+msgid "Unfollow"
+msgstr "팔로우 취소"
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_own
-msgid "Unlink own comments"
-msgstr "자신의 댓글 링크 해제"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid "Unmark as Best Answer"
 msgstr "최고의 답변으로 표시 해제"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "Unsolved"
 msgstr "미해결"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
+msgid "Unused Tags"
+msgstr "사용되지 않은 태그"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__tag_unused_ids
+msgid "Unused tags"
+msgstr "사용되지 않은 태그"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__write_uid
@@ -3327,10 +3553,11 @@ msgstr "갱신자"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__write_date
 msgid "Updated on"
-msgstr ""
+msgstr "업데이트 일자"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_upvote
+#: model_terms:ir.ui.view,arch_db:website_forum.vote
 msgid "Upvote"
 msgstr "찬성투표"
 
@@ -3357,7 +3584,7 @@ msgstr "질문에 찬성투표(6)"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 msgid "Use a clear, explicit and concise title"
-msgstr ""
+msgstr "명확하고 간결한 제목을 사용하세요"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_res_users
@@ -3369,16 +3596,16 @@ msgstr "사용자"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "User answer accepted"
-msgstr ""
+msgstr "사용자 답변으로 채택됨"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_post_action_favorites
 msgid "Users favorite posts"
-msgstr ""
+msgstr "사용자가 즐겨찾는 게시물"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+#: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
 #: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
 msgid "Validate"
 msgstr "승인"
@@ -3387,7 +3614,7 @@ msgstr "승인"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Validate an answer"
-msgstr ""
+msgstr "답변 승인하기"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
@@ -3395,20 +3622,27 @@ msgid "Validate question"
 msgstr "질문 검증"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model_terms:ir.ui.view,arch_db:website_forum.post_stats
 msgid "View"
 msgstr "화면"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
+msgid "View my answer <i class=\"oi oi-arrow-right ms-1\"/>"
+msgstr "내 답변 보기 <i class=\"oi oi-arrow-right ms-1\"/>"
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__views
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_related_posts
+#: model_terms:ir.ui.view,arch_db:website_forum.post_stats
 msgid "Views"
 msgstr "화면"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_12
 msgid "Violent language"
-msgstr ""
+msgstr "폭력적인 언어"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__vote
@@ -3418,7 +3652,7 @@ msgstr "투표"
 #. module: website_forum
 #: model:ir.model.constraint,message:website_forum.constraint_forum_post_vote_vote_uniq
 msgid "Vote already exists!"
-msgstr ""
+msgstr "투표가 이미 존재합니다!"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__vote_ids
@@ -3429,17 +3663,7 @@ msgstr "투표"
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__pending
 msgid "Waiting Validation"
-msgstr "승인 대기중"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "Waiting for validation"
-msgstr "승인 대기중"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_res_users__forum_waiting_posts_count
-msgid "Waiting post"
-msgstr "게시 대기중"
+msgstr "승인 대기 중"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_website
@@ -3506,6 +3730,8 @@ msgid "Welcome Message"
 msgstr "환영 메시지"
 
 #. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_forum.py:0
 #: model_terms:forum.forum,welcome_message:website_forum.forum_help
 msgid "Welcome!"
 msgstr "환영합니다!"
@@ -3513,19 +3739,40 @@ msgstr "환영합니다!"
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "When a question or answer is upvoted, the user who posted them will gain some points, which are called \"karma points\". These points serve as a rough measure of the community trust to him/her. Various moderation tasks are gradually assigned to the users based on those points."
-msgstr "질문이나 답변이 상향 조정되면 이를 게시한 사용자가 어느 정도 점수를 얻게 되는데, 이를 \"명성 포인트\"라고 합니다. 이러한 점들은 그/그녀에 대한 지역사회의 신뢰의 대략적인 척도로 작용합니다. 이러한 점에 따라 다양한 조정 작업이 점차 사용자에게 할당됩니다."
+msgid ""
+"When a question or answer is upvoted, the user who posted them will gain "
+"some points, which are called \"karma points\". These points serve as a "
+"rough measure of the community trust to him/her. Various moderation tasks "
+"are gradually assigned to the users based on those points."
+msgstr ""
+"질문이나 답변이 상향 조정되면 이를 게시한 사용자가 어느 정도 점수를 얻게 되는데, 이를 \"명성 포인트\"라고 합니다. 이러한 점들은 "
+"그/그녀에 대한 지역사회의 신뢰의 대략적인 척도로 작용합니다. 이러한 점에 따라 다양한 조정 작업이 점차 사용자에게 할당됩니다."
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid "Write a clear, explicit and concise title"
+msgstr "명확하고 간결한 제목을 사용하세요"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_header
+msgid "XP"
+msgstr "XP"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "You already have a pending post"
-msgstr "이미 대기중인 게시물이 있습니다"
+msgstr "이미 대기 중인 게시물이 있습니다"
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/xml/public_templates.xml:0
 msgid "You can share your question once it has been validated"
-msgstr ""
+msgstr "질문이 승인되면 공유할 수 있습니다"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
+msgid "You can't vote for your own post"
+msgstr "자신의 게시물에 투표할 수 없습니다"
 
 #. module: website_forum
 #. odoo-python
@@ -3539,14 +3786,34 @@ msgid "You cannot post an empty answer"
 msgstr "빈 답변은 게시할 수 없습니다"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "You have no posts in this forum (yet)."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
+msgid "You don't have enough karma"
+msgstr "투표를 위한 카르마가 충분하지 않습니다"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "You have a pending post"
+msgstr "대기 중인 게시물이 있습니다"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "You have not answered any questions yet. <br/>"
+msgstr "아직 질문에 답변하지 않으셨습니다. <br/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "You have not posted any questions yet. <br/>"
+msgstr "아직 질문을 게시하지 않으셨습니다. <br/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_votes
+msgid "You haven't given any votes yet."
+msgstr "아직 투표하지 않으셨습니다."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "You may now participate in our forums."
-msgstr ""
+msgstr "이제 게시판에 참여하실 수 있습니다."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -3556,13 +3823,23 @@ msgstr "태그를 편집하려면 충분한 명성이 있어야 합니다."
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "You should only ask practical, answerable questions based on actual problems that you face. Chatty, open-ended questions diminish the usefulness of this site and push other questions off the front page."
-msgstr "여러분은 여러분이 직면하고 있는 실제 문제들에 근거해서만 실용적이고 대답 가능한 질문을 해야 합니다. 수다스럽고 열린 질문은 이 사이트의 유용성을 떨어뜨리고 다른 질문들을 첫페이지에서 밀어냅니다."
+msgid ""
+"You should only ask practical, answerable questions based on actual problems"
+" that you face. Chatty, open-ended questions diminish the usefulness of this"
+" site and push other questions off the front page."
+msgstr ""
+"여러분은 여러분이 직면하고 있는 실제 문제들에 근거해서만 실용적이고 대답 가능한 질문을 해야 합니다. 수다스럽고 열린 질문은 이 사이트의"
+" 유용성을 떨어뜨리고 다른 질문들을 첫페이지에서 밀어냅니다."
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "You're not following any topic in this forum (yet).<br/>"
-msgstr "이 게시판엔 아직 주제가 없습니다.<br/>"
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "You're following this post"
+msgstr "이 게시물을 팔로우 중입니다"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "You've Completely Caught&amp;nbsp;Up!"
+msgstr "최신 정보를 확인했습니다!"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -3576,42 +3853,32 @@ msgid "Your favourite"
 msgstr "귀하의 즐겨찾기"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-msgid "[Closed]"
-msgstr "[마감됨]"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-msgid "[Deleted]"
-msgstr "[삭제됨]"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-msgid "[Offensive]"
-msgstr "[모욕]"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "accept any answer"
 msgstr "아무 답변이나 채택하기"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "activity date"
-msgstr "활동 날짜"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "and join this Forum"
-msgstr ""
+msgstr "또한 이 게시판에 참여합니다."
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
+msgid "and search"
+msgstr "그리고 검색"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.author_box
+msgid "at"
+msgstr "at"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "breadcrumb"
 msgstr "사이트 이동 경로"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 msgid "by"
 msgstr "작성자"
 
@@ -3644,22 +3911,22 @@ msgstr "반대투표"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "downvoted"
-msgstr ""
+msgstr "반대투표"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "e.g. Help"
-msgstr ""
+msgstr "예. 도움말"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form_add
 msgid "e.g. Technical Assistance"
-msgstr ""
+msgstr "예. 기술 지원"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_form
 msgid "e.g. When should I plant my tomatoes?"
-msgstr ""
+msgstr "예. 토마토는 언제 심어야 하나요?"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
@@ -3684,7 +3951,9 @@ msgstr "이유 : "
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
-msgid "has been posted and require your validation. Click here to access the question :"
+msgid ""
+"has been posted and require your validation. Click here to access the "
+"question :"
 msgstr "게시되었으며 승인 검사가 필요합니다. 다음 질문에 접근하려면 여기를 클릭하세요."
 
 #. module: website_forum
@@ -3732,19 +4001,14 @@ msgstr ""
 "         올바른 답변으로 선택된 경우. 명성으로 할 수 있는 일 보기"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "in your favourites"
 msgstr "귀하의 즐겨찾기에서"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "in your followed list"
-msgstr "귀하가 팔로우하는 목록에서"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "in your posts"
-msgstr ""
+msgstr "게시물"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
@@ -3752,9 +4016,9 @@ msgid "insert text link, upload files"
 msgstr "텍스트 링크 삽입. 파일 업로드"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "instead."
-msgstr ""
+msgstr "대신."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3764,47 +4028,38 @@ msgstr "그것은 질문으로 위장한 소리입니다 : “______ 정말 형�
 
 #. module: website_forum
 #. odoo-javascript
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+msgid "karma is required to perform this action. "
+msgstr "이 작업을 수행하려면 명성이 필요합니다."
+
+#. module: website_forum
+#. odoo-javascript
 #: code:addons/website_forum/static/src/xml/public_templates.xml:0
 msgid "karma points"
 msgstr "명성 포인트"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "matching \""
 msgstr "일치 작업 \""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "most answered"
-msgstr "최고의 답변"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "most voted"
-msgstr "최고 득표"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "newest"
-msgstr "최신"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "no changes"
-msgstr ""
+msgstr "변경 사항 없음"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "no more downvoted"
-msgstr ""
+msgstr "더 이상 반대투표가 없습니다"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "no more upvoted"
-msgstr ""
+msgstr "더 이상 찬성투표가 없습니다"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
@@ -3824,14 +4079,16 @@ msgstr ""
 "          두 소셜 네트워크에서 공유되는 질문은 다음과 같습니다."
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.tag
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_all_entries
 msgid "post"
 msgstr "게시하기"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_all_entries
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "solved"
-msgstr "해결됨"
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid "posts"
+msgstr "게시물"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3840,35 +4097,22 @@ msgid "specific questions about Odoo service offers, etc."
 msgstr "Odoo 서비스 제공 등에 대한 특정 질문 등."
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "tag"
+msgstr "태그"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
+msgid "tags"
 msgstr "태그"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "there is no actual problem to be solved: “I’m curious if other people feel like I do.”"
+msgid ""
+"there is no actual problem to be solved: “I’m curious if other people feel "
+"like I do.”"
 msgstr "실제로 해결해야 할 문제는 없습니다 : “다른 사람들이 저처럼 느끼는 지 궁금해요.”"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "to partecipate"
-msgstr "참여하기"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "trending"
-msgstr "경향"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "unanswered"
-msgstr "미답변"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "unsolved"
-msgstr "미해결"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
@@ -3879,17 +4123,19 @@ msgstr "찬성투표. 댓글 추가"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "upvoted"
-msgstr ""
+msgstr "찬성투표"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "using the"
 msgstr "사용"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "we are being asked an open-ended, hypothetical question: “What if ______ happened?”"
+msgid ""
+"we are being asked an open-ended, hypothetical question: “What if ______ "
+"happened?”"
 msgstr "우리는 개방형의 가상의 질문을 받습니다 : “______가 발생하면 어떻게 됩니까?”"
 
 #. module: website_forum
@@ -3900,15 +4146,17 @@ msgstr "특정 비즈니스 요구에 Odoo를 사용하는 가장 좋은 방법�
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.author_box
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
 msgid "xp"
 msgstr "xp"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
-msgid "your answer is provided along with the question, and you expect more answers: “I use ______ for ______, what do you use?”"
-msgstr "귀하의 답변은 질문과 함께 제공되며 더 많은 답변을 기대합니다. : “______에는 ______를 사용합니다. 무엇을 사용하십니까?”"
+msgid ""
+"your answer is provided along with the question, and you expect more "
+"answers: “I use ______ for ______, what do you use?”"
+msgstr ""
+"귀하의 답변은 질문과 함께 제공되며 더 많은 답변을 기대합니다. : “______에는 ______를 사용합니다. 무엇을 사용하십니까?”"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
@@ -3916,11 +4164,6 @@ msgid "your biography can be seen as tooltip"
 msgstr "툴팁으로 귀하의 이력을 볼 수 있습니다"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-msgid "| Flagged"
-msgstr "| 신고했습니다"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "圾 Text"
-msgstr "圾 문자"
+#: model_terms:ir.ui.view,arch_db:website_forum.follow
+msgid "your email..."
+msgstr "귀하의 이메일..."

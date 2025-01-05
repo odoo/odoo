@@ -1,77 +1,76 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_sale
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Abe Manyo, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
-"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
-msgid "(left:"
+#. odoo-python
+#: code:addons/pos_sale/models/sale_order.py:0
+msgid "%(line_description)s (Cancelled)"
+msgstr ""
+
+#. module: pos_sale
+#. odoo-python
+#: code:addons/pos_sale/models/account_move.py:0
+msgid "%(old_name)s (Cancelled)"
 msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
+#: code:addons/pos_sale/static/src/app/components/orderline/orderline.xml:0
 msgid "(tax incl.)"
-msgstr ""
+msgstr "(termasuk pajak.)"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
 msgid "<span style=\"margin: 0px 5px;\">:</span>"
-msgstr ""
+msgstr "<span style=\"margin: 0px 5px;\">:</span>"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "A new order has been created."
+msgstr "Order baru telah dibuat."
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
+msgid "Amount To Pay In POS"
+msgstr "Jumlah Untuk Dibayar Di POS"
+
+#. module: pos_sale
+#: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
+msgid "Amount left to pay in POS to avoid double payment or double invoicing."
 msgstr ""
+"Jumlah tersisa untuk dibayar di POS untuk menghindari pembayaran dobel atau "
+"pemfakturan dobel."
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Apply a down payment (fixed amount)"
-msgstr ""
+msgstr "Terapkan down payment (jumlah tetap"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Apply a down payment (percentage)"
-msgstr ""
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
-msgid "Back"
-msgstr "Kembali"
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/MobileSaleOrderManagementScreen.xml:0
-msgid "Back to list"
-msgstr "Kembali ke daftar"
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js:0
-msgid "Cancelled"
-msgstr "Dibatalkan"
+msgstr "Terapkan down payment (persentase)"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_res_config_settings
@@ -84,51 +83,52 @@ msgid "Currency Rate"
 msgstr "Kurs Mata Uang"
 
 #. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
-msgid "Customer"
-msgstr "Pelanggan"
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
-msgid "Customer loading error"
-msgstr ""
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
-msgid "Date"
-msgstr "Tanggal"
-
-#. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.message_body
 msgid "Delivered from"
-msgstr ""
+msgstr "Dikirim dari"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__qty_delivered
+msgid "Delivery Quantity"
+msgstr "Kuantitas Terkirim"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_account_move__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_session__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_product_template__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_stock_picking__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Do you want to load the SN/Lots linked to the Sales Order?"
-msgstr ""
+msgstr "Apakah Anda ingin memuat Nomor Seri/Lot yang di-link ke Sales Order?"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Down Payment"
-msgstr ""
+msgstr "Down Payment"
 
 #. module: pos_sale
 #: model:product.template,name:pos_sale.default_downpayment_product_product_template
 msgid "Down Payment (POS)"
-msgstr ""
+msgstr "Down Payment (POS)"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__down_payment_details
 msgid "Down Payment Details"
-msgstr ""
+msgstr "Detail Down Payment"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_config__down_payment_product_id
@@ -138,97 +138,108 @@ msgid "Down Payment Product"
 msgstr "Product Down Payment"
 
 #. module: pos_sale
+#. odoo-python
+#: code:addons/pos_sale/models/pos_order.py:0
+msgid ""
+"Down payment (ref: %(order_reference)s on \n"
+" %(date)s)"
+msgstr "Down payment (ref: %(order_reference)s pada %(date)s)"
+
+#. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Due balance: %s"
-msgstr ""
+msgstr "Saldo jatuh tempo: %s"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
-msgid "E.g. customer: Steward, date: 2020-05-09"
-msgstr ""
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "Error amount too high"
+msgstr "Jumlah error terlalu tinggi"
 
 #. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/ReceiptScreen/OrderReceipt.xml:0
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
 msgid "From"
 msgstr "Dari"
 
 #. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_account_move__id
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_session__id
+#: model:ir.model.fields,field_description:pos_sale.field_product_template__id
+#: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__id
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order__id
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__id
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__id
+#: model:ir.model.fields,field_description:pos_sale.field_stock_picking__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__invoiced
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_subscription_report__state__invoiced
 msgid "Invoiced"
 msgstr "Telah Difakturkan"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid ""
-"It seems that you didn't configure a down payment product in your point of sale.\n"
-"                        You can go to your point of sale configuration to choose one."
+"It seems that you didn't configure a down payment product in your point of "
+"sale. You can go to your point of sale configuration to choose one."
 msgstr ""
+"Sepertinya Anda tidak mengonfigurasi down payment produk di POS. Anda dapat "
+"pergi ke konfigurasi POS untuk mengonfigurasinya."
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_account_move
+msgid "Journal Entry"
+msgstr "Entri Jurnal"
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/sale_order.py:0
 msgid "Linked POS Orders"
-msgstr ""
+msgstr "Order POS yang di-Link"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_origin_id
 msgid "Linked Sale Order"
-msgstr ""
+msgstr "Sale Order yang di-Link"
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/pos_order.py:0
 msgid "Linked Sale Orders"
-msgstr ""
+msgstr "Sale Orders yang di-Link"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js:0
-msgid "Locked"
-msgstr "Dikunci"
-
-#. module: pos_sale
-#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_draft
-msgid "New"
-msgstr "Baru"
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
-msgid "Next Order List"
-msgstr ""
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
-msgid "No"
-msgstr "Tidak"
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "No down payment product"
-msgstr ""
+msgstr "Tidak ada down payment produk"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_sessions_open_count
 msgid "Open POS Sessions"
-msgstr ""
+msgstr "Sesi POS Terbuk"
 
 #. module: pos_sale
 #: model:ir.actions.act_window,name:pos_sale.pos_session_action_from_crm_team
 msgid "Open Sessions"
-msgstr ""
+msgstr "Sesi Terbuka"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
+#: code:addons/pos_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
+msgid "Optional Products:"
+msgstr "Produk Opsional:"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__order_reference
 msgid "Order"
 msgstr "Order"
 
@@ -236,10 +247,17 @@ msgstr "Order"
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_line_ids
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__pos_order_line_ids
 msgid "Order lines Transfered to Point of Sale"
-msgstr ""
+msgstr "Baris order Ditransfer ke POS"
+
+#. module: pos_sale
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_subscription_report__order_reference__pos_order
+msgid "POS Order"
+msgstr "Order POS"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_subscription_report__state__paid
 msgid "Paid"
 msgstr "Lunas"
 
@@ -251,7 +269,7 @@ msgstr "Konfigurasi Point of Sale"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr ""
+msgstr "Baris Order POS"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order
@@ -266,7 +284,7 @@ msgstr "Sesi Point of Sale"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_config_ids
 msgid "Point of Sales"
-msgstr ""
+msgstr "POS"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_count
@@ -274,56 +292,38 @@ msgid "Pos Order Count"
 msgstr "Jumlah Order POS"
 
 #. module: pos_sale
-#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_done
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__done
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_subscription_report__state__done
 msgid "Posted"
 msgstr "Terekam"
 
 #. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
-msgid "Previous Order List"
-msgstr ""
+#: model:ir.model,name:pos_sale.model_product_template
+msgid "Product"
+msgstr "Produk"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
-msgid "Products not available in POS"
-msgstr ""
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js:0
-msgid "Quotation"
-msgstr "Penawaran"
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js:0
-msgid "Quotation Sent"
-msgstr "Penawaran Terkirim"
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
+#: code:addons/pos_sale/static/src/app/components/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Quotation/Order"
-msgstr ""
+msgstr "Quotation/Order"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "SN/Lots Loading"
-msgstr ""
+msgstr "Memuat Nomor Seri/Lot"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
+#: code:addons/pos_sale/static/src/app/components/orderline/orderline.xml:0
 msgid "SO"
-msgstr ""
+msgstr "Sales Order"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__sale_order_count
 msgid "Sale Order Count"
-msgstr ""
+msgstr "Jumlah Sale Order"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
@@ -336,8 +336,6 @@ msgid "Sales Analysis Report"
 msgstr "Analisis Laporan Sales"
 
 #. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js:0
 #: model:ir.model,name:pos_sale.model_sale_order
 msgid "Sales Order"
 msgstr "Order Penjualan"
@@ -345,7 +343,7 @@ msgstr "Order Penjualan"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Detail Order Penjualan"
+msgstr "Baris Pesanan Penjualan"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_crm_team
@@ -359,69 +357,44 @@ msgstr "Tim Penjualan"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_crm_team_id
 msgid "Sales Team (PoS)"
-msgstr ""
+msgstr "Tim Sales (POS)"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "Sales are reported to the following sales team"
-msgstr ""
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
-msgid "Salesman"
-msgstr "Penjual"
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
-msgid "Salesperson"
-msgstr "Penjual"
+msgstr "Sales dilaporkan ke tim sales berikut"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.crm_team_view_kanban_dashboard
 msgid "Session Running"
-msgstr ""
+msgstr "Sesi Berjalan"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_order_amount_total
 msgid "Session Sale Amount"
-msgstr ""
+msgstr "Jumlah Sale di Sesi"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.crm_team_view_kanban_dashboard
 msgid "Sessions Running"
-msgstr ""
+msgstr "Sesi-Sesi Berjalan"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
+#: code:addons/pos_sale/static/src/app/components/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Set Sale Order"
-msgstr ""
+msgstr "Tetapkan Sale Order"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Settle the order"
-msgstr ""
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
-msgid "Some of the products in your Sale Order are not available in POS, do you want to import them?"
-msgstr ""
+msgstr "Settle pesanan"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_id
 msgid "Source Sale Order Line"
-msgstr ""
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
-msgid "State"
-msgstr "Status"
+msgstr "Sumber Baris Sale Order"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__state
@@ -429,79 +402,71 @@ msgid "Status"
 msgstr "Status"
 
 #. module: pos_sale
-#: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
-msgid "The amount due from the sale order."
-msgstr ""
-
-#. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_order__currency_rate
-msgid "The rate of the currency to the currency of rate applicable at the date of the order"
-msgstr ""
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
-msgid "There was a problem in loading the %s customer."
-msgstr ""
+msgid ""
+"The rate of the currency to the currency of rate applicable at the date of "
+"the order"
+msgstr "Nilai mata uang ke mata uang yang berlaku pada tanggal pesanan"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
 #: model:ir.model.fields,help:pos_sale.field_pos_session__crm_team_id
 #: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_crm_team_id
 msgid "This Point of sale's sales will be related to this Sales Team."
-msgstr ""
+msgstr "Sale POS ini akan dikaitkan ke Tim Sales ini."
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "This product will be applied when down payment is made"
-msgstr ""
+msgstr "Produk ini akan diterapkan saat down payment dibuat"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__down_payment_product_id
 #: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_down_payment_product_id
 msgid "This product will be used as down payment on a sale order."
-msgstr ""
+msgstr "Produk ini akan digunakan sebagai down payment pada sale order."
 
 #. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
-msgid "Total"
-msgstr "Total"
+#: model:ir.model,name:pos_sale.model_stock_picking
+msgid "Transfer"
+msgstr "Transfer"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
 msgid ""
-"Transfered<br/>\n"
+"Transferred<br/>\n"
 "                                from Sale"
 msgstr ""
+"Ditransfer<br/>\n"
+"                                dari Sale"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale
 msgid ""
-"Transfered<br/>\n"
+"Transferred<br/>\n"
 "                                to POS"
 msgstr ""
-
-#. module: pos_sale
-#: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
-msgid "Unpaid Amount"
-msgstr ""
+"Ditransfer<br/>\n"
+"                                ke POS"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "What do you want to do?"
-msgstr ""
+msgstr "Apa yang Anda ingin lakukan?"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
-msgid "Yes"
-msgstr "Ya"
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid ""
+"You have tried to charge a down payment of %s but only %s remains to be "
+"paid, %s will be applied to the purchase order line."
+msgstr ""
+"Anda sudah mencoba menambahkan down payment sebesar %s tapi hanya %s yang "
+"tersisa untuk dibayar, %s akan diterapkan ke baris purchase order."
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
-msgid "You have tried to charge a down payment of %s but only %s remains to be paid, %s will be applied to the purchase order line."
-msgstr ""
+#: code:addons/pos_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
+msgid "from"
+msgstr "dari"

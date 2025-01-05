@@ -1,30 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* partner_autocomplete
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Larissa Manderfeld, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__additional_info
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__additional_info
 msgid "Additional info"
-msgstr "Zusätzliche Informationen"
+msgstr "Zusätzliche Infos"
+
+#. module: partner_autocomplete
+#: model:iap.service,description:partner_autocomplete.iap_service_partner_autocomplete
+msgid "Automatically enrich your contact base with corporate data."
+msgstr ""
+"Reichern Sie Ihre Kontaktdatenbank automatisch mit Unternehmensdaten an."
 
 #. module: partner_autocomplete
 #. odoo-javascript
@@ -41,14 +46,16 @@ msgstr "Unternehmen"
 #. odoo-python
 #: code:addons/partner_autocomplete/models/res_company.py:0
 msgid "Company auto-completed by Odoo Partner Autocomplete Service"
-msgstr "Unternehmen automatisch vervollständigt durch Odoo Partner Auto-Vervollständigung."
+msgstr ""
+"Unternehmen automatisch vervollständigt durch Odoo Partner-"
+"Autovervollständigung."
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__partner_gid
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__partner_gid
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__partner_gid
 msgid "Company database ID"
-msgstr "Unternehmes-Datenbank ID"
+msgstr "Unternehmesdatenbank-ID"
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_config_settings
@@ -81,15 +88,20 @@ msgid "Enrich Done"
 msgstr "Anreicherung abgeschlossen"
 
 #. module: partner_autocomplete
+#: model:iap.service,unit_name:partner_autocomplete.iap_service_partner_autocomplete
+msgid "Enrichments"
+msgstr "Anreicherungen"
+
+#. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_ir_http
 msgid "HTTP Routing"
-msgstr "HTTP Routing"
+msgstr "HTTP-Routing"
 
 #. module: partner_autocomplete
 #. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_core.js:0
 msgid "IAP Account Token missing"
-msgstr "IAP Account Token fehlt"
+msgstr "IAP-Kontotoken fehlt"
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_iap_autocomplete_api
@@ -104,7 +116,7 @@ msgstr "ID"
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__partner_autocomplete_insufficient_credit
 msgid "Insufficient credit"
-msgstr "Unzureichende Gutschrift"
+msgstr "Unzureichendes Guthaben"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__synched
@@ -125,13 +137,13 @@ msgstr "Zuletzt aktualisiert am"
 #. odoo-python
 #: code:addons/partner_autocomplete/models/iap_autocomplete_api.py:0
 msgid "No account token"
-msgstr "Kein Account Token"
+msgstr "Kein Kontotoken"
 
 #. module: partner_autocomplete
 #. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_core.js:0
 msgid "Not enough credits for Partner Autocomplete"
-msgstr "Nicht genügend Credits für Partner Autocomplete"
+msgstr "Nicht genügend Guthaben für Partner-Autovervollständigung"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__partner_id
@@ -141,18 +153,18 @@ msgstr "Partner"
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_partner_autocomplete_sync
 msgid "Partner Autocomplete Sync"
-msgstr "Partner Autovervollständigung Syncroninastion"
+msgstr "Synchronisation der Partner-Autovervollständigung"
 
 #. module: partner_autocomplete
 #: model:ir.actions.server,name:partner_autocomplete.ir_cron_partner_autocomplete_ir_actions_server
 msgid "Partner Autocomplete: Sync with remote DB"
-msgstr ""
+msgstr "Partner-Autovervollständigung: Synchronisation mit der Remote-DB"
 
 #. module: partner_autocomplete
 #. odoo-python
 #: code:addons/partner_autocomplete/models/res_partner.py:0
 msgid "Partner created by Odoo Partner Autocomplete Service"
-msgstr "Partner erstellt von Odoo Partner Autovervollständigung Service"
+msgstr "Partner erstellt durch Odoo-Partner-Autovervollständigungsservice"
 
 #. module: partner_autocomplete
 #. odoo-javascript
@@ -171,7 +183,7 @@ msgstr "Autovervollständigung wird gesucht ..."
 #. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 msgid "Set Your Account Token"
-msgstr "Bestimmen Sie Ihr Account Token"
+msgstr "Bestimmen Sie Ihr Konto-Token"
 
 #. module: partner_autocomplete
 #. odoo-python

@@ -1,34 +1,39 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_stock
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Larissa Manderfeld, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"POT-Creation-Date: 2024-10-25 07:50+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "<span invisible=\"not show_availability\">Units</span>"
-msgstr ""
+msgstr "<span invisible=\"not show_availability\">Einheiten</span>"
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product_card/product_card.js:0
+msgid "All available quantity selected"
+msgstr "Alle verfügbaren Mengen ausgewählt"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__stock_notification_partner_ids
 msgid "Back in stock Notifications"
-msgstr "Wieder-vorrätoig-Benachrichtigungen"
+msgstr "„Wieder vorrätig“-Benachrichtigungen"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings
@@ -77,7 +82,7 @@ msgstr "Erhalten Sie eine Benachrichtigung, wenn wieder vorrätig"
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "How to display products having low quantities (on hand - reserved)"
 msgstr ""
-"Wie werden Produkte mit geringem Bestand angezeigt? (vorrätig - reserviert)"
+"Wie werden Produkte mit geringem Bestand angezeigt (vorrätig - reserviert)?"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -94,7 +99,7 @@ msgstr "Ungültige E-Mail"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Inventory Defaults"
-msgstr "Lager-Standardeinstellungen"
+msgstr "Standardeinstellungen für Lager"
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -114,6 +119,12 @@ msgid "Out of Stock"
 msgstr "Nicht vorrätig"
 
 #. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product/product.xml:0
+msgid "Out of stock"
+msgstr "Nicht vorrätig"
+
+#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Out-of-Stock"
@@ -123,7 +134,7 @@ msgstr "Nicht vorrätig"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__out_of_stock_message
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__out_of_stock_message
 msgid "Out-of-Stock Message"
-msgstr "Out-of-Stock-Nachricht"
+msgstr "„Nicht vorrätig“-Nachricht"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -135,7 +146,7 @@ msgstr "Produkt"
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
 msgid "Product Variant"
-msgstr "Produktvarianten"
+msgstr "Produktvariante"
 
 #. module: website_sale_stock
 #: model:ir.actions.server,name:website_sale_stock.ir_cron_send_availability_email_ir_actions_server
@@ -145,17 +156,23 @@ msgstr "Produkt: E-Mails bezüglich Produktverfügbarkeit versenden"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "Regards,"
-msgstr "Grüße,"
+msgstr "Freundliche Grüße"
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product_card/product_card.xml:0
+msgid "Requested quantity not available"
+msgstr "Geforderte Menge nicht verfügbar"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
 msgid "Sales Order"
-msgstr "Verkaufsauftrag "
+msgstr "Verkaufsauftrag"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Kundenauftragszeile"
+msgstr "Verkaufsauftragszeile"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -175,17 +192,17 @@ msgstr "Schwelle anzeigen"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__show_availability
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__show_availability
 msgid "Show availability Qty"
-msgstr "Verfügbare Menge anzeigen"
+msgstr "Mengenverfügbarkeit anzeigen"
 
 #. module: website_sale_stock
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 msgid ""
-"Some products became unavailable and your cart has been updated. We're sorry "
-"for the inconvenience."
+"Some products became unavailable and your cart has been updated. We're sorry"
+" for the inconvenience."
 msgstr ""
-"Manche Produkte sind zur Zeit nicht auf Lager. Ihr Warenkorb wurde "
-"aktualisiert. Bitte entschuldigen Sie etwaige Unannehmlichkeiten."
+"Manche Produkte sind zurzeit nicht auf Lager. Ihr Warenkorb wurde "
+"aktualisiert. Entschuldigen Sie die Unannehmlichkeiten."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -197,12 +214,14 @@ msgstr "Das folgende Produkt ist jetzt verfügbar."
 #: code:addons/website_sale_stock/models/sale_order.py:0
 msgid "The item has not been added to your cart since it is not available."
 msgstr ""
+"Der Artikel wurde nicht in Ihren Warenkorb gelegt, da er nicht verfügbar "
+"ist."
 
 #. module: website_sale_stock
 #. odoo-python
 #: code:addons/website_sale_stock/models/product_product.py:0
 msgid "The product '%(product_name)s' is now available"
-msgstr "Das Produkt '%(product_name)s' ist jetzt verfügbar"
+msgstr "Das Produkt „%(product_name)s“ ist jetzt verfügbar"
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -225,14 +244,14 @@ msgstr "Einheiten"
 #: model:ir.model.fields,field_description:website_sale_stock.field_website__warehouse_id
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Warehouse"
-msgstr "Lager"
+msgstr "Lagerhaus"
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "We'll notify you once the product is back in stock."
 msgstr ""
-"Wir werden Sie benachrichtigen, sobald das Produkt wieder auf Lager ist."
+"Wir werden Sie benachrichtigen, sobald das Produkt wieder vorrätig ist."
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
@@ -266,8 +285,17 @@ msgstr "Sie haben bereits %s Einheiten in Ihrem Warenkorb."
 
 #. module: website_sale_stock
 #. odoo-python
-#: code:addons/website_sale_stock/models/sale_order.py:0
 #: code:addons/website_sale_stock/models/sale_order_line.py:0
+msgid ""
+"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
+"available"
+msgstr ""
+"Sie möchten %(desired_qty)s %(product_name)s, aber nur %(new_qty)s sind "
+"verfügbar."
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order.py:0
 msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
 msgstr ""
 "Sie möchten %(desired_qty)s Produkte, aber nur %(new_qty)s sind verfügbar."
@@ -275,8 +303,10 @@ msgstr ""
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
-msgid "You ask for %s Units but only %s are available."
-msgstr "Sie möchten %s Einheiten, aber nur %s sind verfügbar."
+msgid "You ask for %(quantity1)s Units but only %(quantity2)s are available."
+msgstr ""
+"Sie haben %(quantity1)s Produkte angefragt, aber nur %(quantity2)s sind "
+"verfügbar."
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -294,10 +324,10 @@ msgstr "auf Lager."
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "only if below"
-msgstr "Nur wenn weniger als"
+msgstr "nur, wenn weniger als"
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "youremail@gmail.com"
-msgstr "ihreemail@gmail.com"
+msgstr "youremail@gmail.com"

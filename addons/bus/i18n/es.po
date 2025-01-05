@@ -1,29 +1,43 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* bus
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: es\n"
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: bus
+#: model:ir.model,name:bus.model_res_groups
+msgid "Access Groups"
+msgstr "Grupos de acceso"
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_attachment
+msgid "Attachment"
+msgstr "Archivo adjunto"
 
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
 msgid "Away"
 msgstr "Ausente"
+
+#. module: bus
+#: model:ir.model,name:bus.model_bus_listener_mixin
+msgid "Can send messages via bus.bus"
+msgstr "Puede enviar mensajes mediante bus.bus"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__channel
@@ -57,10 +71,15 @@ msgid "Display Name"
 msgstr "Nombre mostrado"
 
 #. module: bus
+#: model:ir.model,name:bus.model_ir_http
+msgid "HTTP Routing"
+msgstr "Enrutamiento HTTP "
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__id
 #: model:ir.model.fields,field_description:bus.field_bus_presence__id
 msgid "ID"
-msgstr "Identificación"
+msgstr "ID"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__status
@@ -112,14 +131,31 @@ msgstr "En línea"
 #. module: bus
 #. odoo-javascript
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
 msgid "Refresh"
 msgstr "Actualizar"
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid ""
+"Save your work and refresh to get the latest updates and avoid potential "
+"issues."
+msgstr ""
+"Guarde su trabajo y actualice la página para obtener las actualizaciones más"
+" recientes y evitar problemas potenciales."
 
 #. module: bus
 #. odoo-javascript
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
 msgid "The page appears to be out of date."
 msgstr "Parece que la página no está actualizada."
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid "The page is out of date"
+msgstr "La página no está actualizada"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
@@ -129,7 +165,12 @@ msgstr "Usuario"
 #. module: bus
 #: model:ir.model,name:bus.model_bus_presence
 msgid "User Presence"
-msgstr "Usuario conectado"
+msgstr "Conexión del usuario"
+
+#. module: bus
+#: model:ir.model,name:bus.model_res_users_settings
+msgid "User Settings"
+msgstr "Ajustes de usuario"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__user_id
@@ -139,8 +180,14 @@ msgstr "Usuarios"
 #. module: bus
 #. odoo-python
 #: code:addons/bus/controllers/home.py:0
-msgid "Your password is the default (admin)! If this system is exposed to untrusted users it is important to change it immediately for security reasons. I will keep nagging you about it!"
+msgid ""
+"Your password is the default (admin)! If this system is exposed to untrusted"
+" users it is important to change it immediately for security reasons. I will"
+" keep nagging you about it!"
 msgstr ""
+"Está usando la contraseña por defecto (admin). Si se expone este sistema a "
+"usuarios no confiables, es importante que la cambie inmediatamente por "
+"motivos de seguridad. Seguiré advirtiéndole al respecto."
 
 #. module: bus
 #: model:ir.model,name:bus.model_ir_websocket

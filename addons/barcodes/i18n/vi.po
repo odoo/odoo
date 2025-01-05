@@ -1,30 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* barcodes
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Thi Huong Nguyen, 2022
-#
+# Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:32+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
-msgstr ""
+msgstr " '*' không phải là Mẫu mã vạch Regex hợp lệ. Có phải ý bạn là '.*'?"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -41,8 +41,12 @@ msgstr ""
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
-msgid "A barcode nomenclature defines how the point of sale identify and interprets barcodes"
-msgstr "Một phép đặt tên mã vạch xác định cách thức mà POS xác định và biên dịch mã vạch"
+msgid ""
+"A barcode nomenclature defines how the point of sale identify and interprets"
+" barcodes"
+msgstr ""
+"Một phép đặt tên mã vạch xác định cách thức mà POS xác định và biên dịch mã "
+"vạch"
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -63,7 +67,7 @@ msgstr "Luôn luôn"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__name
 msgid "An internal identification for this barcode nomenclature rule"
-msgstr "Một định danh nội bộ về quy tắc đặt tên mã vạch này"
+msgstr "Một định danh nội bộ về phép đặt tên mã vạch này"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__name
@@ -77,14 +81,20 @@ msgstr "Bất kỳ"
 
 #. module: barcodes
 #. odoo-javascript
+#: code:addons/barcodes/static/src/components/manual_barcode.xml:0
+msgid "Apply"
+msgstr "Áp dụng"
+
+#. module: barcodes
+#. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 msgid "Barcode"
-msgstr ""
+msgstr "Mã vạch"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
 msgid "Barcode Event Mixin"
-msgstr "Mixin Sự kiện Mã vạch"
+msgstr "Mixin sự kiện mã vạch"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
@@ -92,35 +102,35 @@ msgstr "Mixin Sự kiện Mã vạch"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__barcode_nomenclature_id
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Barcode Nomenclature"
-msgstr "Phép đặt tên Mã vạch"
+msgstr "Phép đặt tên mã vạch"
 
 #. module: barcodes
 #: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
 msgid "Barcode Nomenclatures"
-msgstr "Phép đặt tên Mã vạch"
+msgstr "Phép đặt tên mã vạch"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__pattern
 msgid "Barcode Pattern"
-msgstr "Mẫu Mã vạch"
+msgstr "Mẫu mã vạch"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_rule
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
 msgid "Barcode Rule"
-msgstr "Quy tắc Mã vạch"
+msgstr "Quy tắc mã vạch"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
 msgid "Barcode Scanned"
-msgstr "Mã vạch Được quét"
+msgstr "Mã vạch được quét"
 
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
-msgid "Barcode: "
-msgstr "Mã vạch:"
+msgid "Barcode: %(barcode)s"
+msgstr "Mã vạch: %(barcode)s"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_res_company
@@ -142,8 +152,11 @@ msgstr "Được tạo vào"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__display_name
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__display_name
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__display_name
+#: model:ir.model.fields,field_description:barcodes.field_ir_http__display_name
+#: model:ir.model.fields,field_description:barcodes.field_res_company__display_name
 msgid "Display Name"
-msgstr "Tên Hiển thị"
+msgstr "Tên hiển thị"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__ean13
@@ -166,6 +179,12 @@ msgid "Encoding"
 msgstr "Mã hoá"
 
 #. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/components/manual_barcode.js:0
+msgid "Enter a barcode..."
+msgstr "Nhập một mã vạch..."
+
+#. module: barcodes
 #: model:ir.model,name:barcodes.model_ir_http
 msgid "HTTP Routing"
 msgstr "Định tuyến HTTP"
@@ -173,6 +192,9 @@ msgstr "Định tuyến HTTP"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__id
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__id
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__id
+#: model:ir.model.fields,field_description:barcodes.field_ir_http__id
+#: model:ir.model.fields,field_description:barcodes.field_res_company__id
 msgid "ID"
 msgstr "ID"
 
@@ -180,13 +202,13 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__write_uid
 msgid "Last Updated by"
-msgstr "Cập nhật Lần cuối bởi"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_date
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__write_date
 msgid "Last Updated on"
-msgstr "Cập nhật Lần cuối vào"
+msgstr "Cập nhật lần cuối vào"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__none
@@ -208,17 +230,23 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
+"Các mẫu cũng có thể xác định cách thức các giá trị số, chẳng hạn như cân nặng hay giá cả, có thể được\n"
+"                                mã hoá thành mã vạch. Chúng được biểu thị bằng <code>{NNN}</code> trong đó\n"
+"                                các chữ N xác định nơi mà các chữ số của số được mã hoá. Các số thập phân cũng\n"
+"                                được hỗ trợ với phần thập phân được biểu thị bằng các chữ D, ví dụ như <code>{NNNDD}</code>. Trong những trường hợp này,\n"
+"                                trường mã vạch trên các bản ghi liên kết <i>phải</i> hiển thị những chữ số này\n"
+"                                là các số 0."
 
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.js:0
 msgid "Please, Scan again!"
-msgstr ""
+msgstr "Vui lòng quét lại!"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
 msgid "Rule Name"
-msgstr "Tên Quy tắc"
+msgstr "Tên quy tắc"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__rule_ids
@@ -233,18 +261,25 @@ msgstr "Trình tự"
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Tables"
-msgstr "Bảng"
+msgstr "Bàn"
 
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 msgid "Tap to scan"
-msgstr ""
+msgstr "Bấm để quét"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
 msgid "The barcode matching pattern"
 msgstr "Mã vạch khớp với mẫu"
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+msgid ""
+"The barcode pattern %(pattern)s does not lead to a valid regular expression."
+msgstr "Mẫu mã vạch %(pattern)s không dẫn tới biểu thức chính quy hợp lệ."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
@@ -259,25 +294,39 @@ msgstr "Mẫu phù hợp sẽ là bí danh cho mã vạch này"
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
-msgid "There is a syntax error in the barcode pattern %(pattern)s: a rule can only contain one pair of braces."
-msgstr "Có lỗi cú pháp trong mẫu mã vạch %(pattern)s: một quy tắc chỉ có thể chứa một cặp dấu ngoặc nhọn."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
+"contain one pair of braces."
+msgstr ""
+"Có lỗi cú pháp trong mẫu mã vạch %(pattern)s: một quy tắc chỉ có thể chứa "
+"một cặp dấu ngoặc nhọn."
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
-msgid "There is a syntax error in the barcode pattern %(pattern)s: braces can only contain N's followed by D's."
-msgstr "Có lỗi cú pháp trong mẫu mã vạch %(pattern)s: trong dấu ngoặc nhọn chỉ có thể chứa các chữ N theo sau là các chữ D."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: braces can only "
+"contain N's followed by D's."
+msgstr ""
+"Có lỗi cú pháp trong mẫu mã vạch %(pattern)s: trong dấu ngoặc nhọn chỉ có "
+"thể chứa các chữ N theo sau là các chữ D."
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
-msgid "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
-msgstr "Có lỗi cú pháp trong mẫu mã vạch %(pattern)s: trong dấu ngoặc nhọn trống."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: empty braces."
+msgstr ""
+"Có lỗi cú pháp trong mẫu mã vạch %(pattern)s: trong dấu ngoặc nhọn trống."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
-msgid "This rule will apply only if the barcode is encoded with the specified encoding"
-msgstr "Quy tắc này sẽ chỉ áp dụng nếu mã vạch được mã hóa bằng cách mã hóa được chỉ định"
+msgid ""
+"This rule will apply only if the barcode is encoded with the specified "
+"encoding"
+msgstr ""
+"Quy tắc này sẽ chỉ áp dụng nếu mã vạch được mã hóa bằng cách mã hóa được chỉ"
+" định"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
@@ -286,8 +335,14 @@ msgstr "Loại"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
-msgid "UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding."
-msgstr "Mã UPC có thể được chuyển đổi thành EAN bằng cách thêm tiền tố là một số 0. Thiết lập này xác định xem một mã vạch UPC/EAN nên được tự động chuyển đổi bằng cách này hay cách khác khi khớp một quy tắc với cách mã hoá khác."
+msgid ""
+"UPC Codes can be converted to EAN by prefixing them with a zero. This "
+"setting determines if a UPC/EAN barcode should be automatically converted in"
+" one way or another when trying to match a rule with the other encoding."
+msgstr ""
+"Mã UPC có thể được chuyển đổi thành EAN bằng cách thêm tiền tố là một số 0. "
+"Thiết lập này xác định xem một mã vạch UPC/EAN nên được tự động chuyển đổi "
+"bằng cách này hay cách khác khi khớp một quy tắc với cách mã hoá khác."
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
@@ -307,7 +362,7 @@ msgstr "Chuyển đổi UPC/EAN"
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__product
 msgid "Unit Product"
-msgstr "Đơn vị Sản phẩm"
+msgstr "Đơn vị sản phẩm"
 
 #. module: barcodes
 #. odoo-javascript
@@ -317,8 +372,11 @@ msgstr "Lệnh mã vạch không xác định"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
-msgid "Used to order rules such that rules with a smaller sequence match first"
-msgstr "Được sử dụng để sắp xếp thứ tự các quy tắc sao cho các quy tắc có trình tự nhỏ hơn sẽ khớp trước"
+msgid ""
+"Used to order rules such that rules with a smaller sequence match first"
+msgstr ""
+"Được sử dụng để sắp xếp thứ tự các quy tắc sao cho các quy tắc có trình tự "
+"nhỏ hơn sẽ khớp trước"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned

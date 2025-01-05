@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_recruitment_survey
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Jolien De Paepe, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_recruitment_survey
@@ -47,6 +45,33 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Beste <t t-out=\"object.partner_id.name or 'applicant'\">[naam sollicitant]</t><br><br>\n"
+"        <t>\n"
+"            Je hebt de wervingsprocedure doorlopen en we willen graag dat je een paar vragen beantwoord.\n"
+"        </t>\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                <t>\n"
+"                    Begin de schriftelijke enquête\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"        <t t-if=\"object.deadline\">\n"
+"            Beantwoord de enquête voor <t t-out=\"format_date(object.deadline)\">[deadline]</t>.<br><br>\n"
+"        </t>\n"
+"        <t>\n"
+"            Veel succes! Hartelijk dank voor je deelname.\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_recruitment_survey_button_form_view
+msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Go to Recruitment"
+msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Naar Werving & Selectie"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -68,6 +93,11 @@ msgid "Activities"
 msgstr "Activiteiten"
 
 #. module: hr_recruitment_survey
+#: model_terms:ir.actions.act_window,help:hr_recruitment_survey.survey_survey_action_recruitment
+msgid "Add a new survey"
+msgstr "Voeg een nieuwe enquête toe"
+
+#. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_applicant
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_invite__applicant_id
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__applicant_id
@@ -77,13 +107,18 @@ msgstr "Sollicitant"
 #. module: hr_recruitment_survey
 #: model:mail.template,name:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid "Applicant: Interview"
-msgstr ""
+msgstr "Sollcitant: Interview"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_job__survey_id
-msgid "Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"
-msgstr "Kies een interviewformulier voor deze functie. Dit geeft je de mogelijkheid om deze af te drukken/te beantwoorden voor alle sollicitanten, die hebben gesolliciteerd voor deze functie."
+msgid ""
+"Choose an interview form for this job position and you will be able to "
+"print/answer this interview from all applicants who apply for this job"
+msgstr ""
+"Kies een interviewformulier voor deze functie. Dit geeft je de mogelijkheid "
+"om deze af te drukken/te beantwoorden voor alle sollicitanten, die hebben "
+"gesolliciteerd voor deze functie."
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
@@ -98,7 +133,7 @@ msgstr "Opleiding"
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q2
 msgid "From which university did or will you graduate?"
-msgstr ""
+msgstr "Van welke universiteit ben je of ga je afstuderen?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row2
@@ -140,7 +175,7 @@ msgstr "Interviewformulier"
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
 msgid "Interview Form: %s"
-msgstr ""
+msgstr "Interviewformulier: %s"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
@@ -148,12 +183,15 @@ msgid "Interview Survey"
 msgstr "Interviewenquête"
 
 #. module: hr_recruitment_survey
+#: model:ir.actions.act_window,name:hr_recruitment_survey.survey_survey_action_recruitment
+#: model:ir.ui.menu,name:hr_recruitment_survey.menu_hr_recruitment_config_surveys
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Interviews"
 msgstr "Interviews"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_job
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__hr_job_ids
 msgid "Job Position"
 msgstr "Functie"
 
@@ -180,7 +218,7 @@ msgstr "Kantoorlocatie"
 #. module: hr_recruitment_survey
 #: model:mail.template,subject:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid "Participate to {{ object.survey_id.display_name }} interview"
-msgstr ""
+msgstr "Deelnemen aan {{ object.survey_id.display_name }} interview"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q5
@@ -189,8 +227,12 @@ msgstr "Vorige werkervaring"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.survey,description:hr_recruitment_survey.survey_recruitment_form
-msgid "Please answer those questions to help recruitment officers to preprocess your application."
-msgstr "Beantwoord deze vragen om de recruiters te helpen je sollicitatie voor te bereiden."
+msgid ""
+"Please answer those questions to help recruitment officers to preprocess "
+"your application."
+msgstr ""
+"Beantwoord deze vragen om de recruiters te helpen je sollicitatie voor te "
+"bereiden."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
@@ -205,18 +247,26 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 msgid "Please provide an applicant name."
-msgstr ""
+msgstr "Geef de naam van de sollicitant."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q5
-msgid "Please summarize your education history: schools, location, diplomas, ..."
-msgstr "Graag je opleidingsgeschiedenis samenvatten: scholen, locatie, diploma's,..."
+msgid ""
+"Please summarize your education history: schools, location, diplomas, ..."
+msgstr ""
+"Graag je opleidingsgeschiedenis samenvatten: scholen, locatie, diploma's,..."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
-msgid "Please tell us a bit more about yourself: what are your main activities, ..."
+msgid ""
+"Please tell us a bit more about yourself: what are your main activities, ..."
 msgstr "Vertel ons wat meer over jezelf: wat zijn je hoofdactiviteiten,..."
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields.selection,name:hr_recruitment_survey.selection__survey_survey__survey_type__recruitment
+msgid "Recruitment"
+msgstr "Werving & Selectie"
 
 #. module: hr_recruitment_survey
 #: model:survey.survey,title:hr_recruitment_survey.survey_recruitment_form
@@ -226,7 +276,7 @@ msgstr "Wervingsformulier"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_ids
 msgid "Responses"
-msgstr ""
+msgstr "Antwoorden"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -236,17 +286,18 @@ msgstr "Zie interviewverslag"
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid "Send Interview"
-msgstr ""
+msgstr "Interview verzenden"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 msgid "Send an interview"
-msgstr ""
+msgstr "Verzend een interview"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
+#: model:ir.model,name:hr_recruitment_survey.model_survey_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__survey_id
 msgid "Survey"
 msgstr "Enquête"
@@ -257,6 +308,11 @@ msgid "Survey Invitation Wizard"
 msgstr "Enquête uitnodiging wizard"
 
 #. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__survey_type
+msgid "Survey Type"
+msgstr "Enquêtetype"
+
+#. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_survey_user_input
 msgid "Survey User Input"
 msgstr "Enquête gebruikersinvoer"
@@ -264,7 +320,9 @@ msgstr "Enquête gebruikersinvoer"
 #. module: hr_recruitment_survey
 #: model_terms:survey.survey,description_done:hr_recruitment_survey.survey_recruitment_form
 msgid "Thank you for answering this survey. We will come back to you soon."
-msgstr "Bedankt voor het beantwoorden van onze enquête. We koppelen binnenkort terug naar je."
+msgstr ""
+"Bedankt voor het beantwoorden van onze enquête. We koppelen binnenkort terug"
+" naar je."
 
 #. module: hr_recruitment_survey
 #. odoo-python
@@ -292,18 +350,29 @@ msgstr "Ben je doorverwezen door een werknemer?"
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q6
 msgid "What are your main knowledge regarding the job you are applying to?"
 msgstr ""
+"Wat is je belangrijkste kennis met betrekking tot de baan waarop je "
+"solliciteert?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q8
 msgid "What is important for you?"
-msgstr ""
+msgstr "Wat is belangrijk voor jou?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q1
 msgid "Which country are you from?"
-msgstr ""
+msgstr "Van welk land ben je?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row4
 msgid "Working with state of the art technology"
 msgstr "Werken met de allernieuwste technologie"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.actions.act_window,help:hr_recruitment_survey.survey_survey_action_recruitment
+msgid ""
+"You can create surveys used for recruitments. Design easily your interview,\n"
+"                send invitations and analyze answers."
+msgstr ""
+"Je kunt enquêtes maken die worden gebruikt voor aanwervingen. Ontwerp eenvoudig je sollicitatiegesprek,\n"
+"                verstuur uitnodigingen en analyseer antwoorden."

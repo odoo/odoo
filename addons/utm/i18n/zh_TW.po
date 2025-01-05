@@ -1,31 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* utm
-#
+# 
 # Translators:
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
-# Martin Trigaux, 2022
-# Tony Ng, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
-"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: utm
 #. odoo-python
 #: code:addons/utm/models/utm_source.py:0
 msgid "%(content)s (%(model_description)s created on %(create_date)s)"
-msgstr ""
+msgstr "%(content)s (%(model_description)s，於 %(create_date)s 建立)"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__active
@@ -48,12 +46,12 @@ msgstr "審批基礎流程"
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Approved"
-msgstr "已批准"
+msgstr "已審批"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Archive"
-msgstr ""
+msgstr "封存"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
@@ -81,12 +79,12 @@ msgstr "自動生成的活動"
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__campaign_id
 msgid "Campaign"
-msgstr "行銷"
+msgstr "行銷活動"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__name
 msgid "Campaign Identifier"
-msgstr ""
+msgstr "活動標識"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__title
@@ -115,13 +113,15 @@ msgstr "行銷"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
-msgid "Campaigns are used to centralize your marketing efforts and track their results."
+msgid ""
+"Campaigns are used to centralize your marketing efforts and track their "
+"results."
 msgstr "行銷活動用於集中您的營銷工作並跟踪其結果。"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "Campaigns that are assigned to me"
-msgstr ""
+msgstr "分配給我的活動"
 
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_christmas_special
@@ -173,7 +173,7 @@ msgstr "在您的行銷活動中建立作業流程"
 #: model:ir.model.fields,field_description:utm.field_utm_stage__create_uid
 #: model:ir.model.fields,field_description:utm.field_utm_tag__create_uid
 msgid "Created by"
-msgstr "創立者"
+msgstr "建立人員"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__create_date
@@ -237,12 +237,12 @@ msgstr "編輯"
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_email_campaign_products
 msgid "Email Campaign - Products"
-msgstr "電郵廣告-產品"
+msgstr "電郵推廣活動 - 產品"
 
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_email_campaign_services
 msgid "Email Campaign - Services"
-msgstr "電郵行銷 - 服務"
+msgstr "電郵推廣活動 - 服務"
 
 #. module: utm
 #. odoo-javascript
@@ -259,13 +259,15 @@ msgstr "收集資料"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-msgid "Gather data, build a recipient list and write content based on your Marketing target."
+msgid ""
+"Gather data, build a recipient list and write content based on your "
+"Marketing target."
 msgstr "收集資料、建立收件人列表並根據您的營銷目標編寫內容。"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "Group By"
-msgstr "分組方式"
+msgstr "分組依據"
 
 #. module: utm
 #: model:ir.model,name:utm.model_ir_http
@@ -279,13 +281,13 @@ msgstr "HTTP 路由"
 #: model:ir.model.fields,field_description:utm.field_utm_stage__id
 #: model:ir.model.fields,field_description:utm.field_utm_tag__id
 msgid "ID"
-msgstr "ID"
+msgstr "識別號"
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Ideas"
-msgstr "創意"
+msgstr "想法"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__write_uid
@@ -348,7 +350,7 @@ msgstr "媒體"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "My Campaigns"
-msgstr ""
+msgstr "我的活動"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source_mixin__name
@@ -369,6 +371,16 @@ msgid "No Sources yet!"
 msgstr "還沒有來源！"
 
 #. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_medium.py:0
+msgid ""
+"Oops, you can't delete the Medium '%s'.\n"
+"Doing so would be like tearing down a load-bearing wall — not the best idea."
+msgstr ""
+"哎唷，你不可刪除媒介「%s」。\n"
+"這樣做就如推倒一道承重的主力牆一樣，不是明智之舉。"
+
+#. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Pre-Launch"
@@ -383,7 +395,9 @@ msgstr "準備行銷活動並在使其上線前獲得批准"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-msgid "Prepare your Campaign, test it with part of your audience and deploy it fully afterwards."
+msgid ""
+"Prepare your Campaign, test it with part of your audience and deploy it "
+"fully afterwards."
 msgstr "準備您的營銷活動，與部分受眾進行測試，然後完成部署"
 
 #. module: utm
@@ -401,7 +415,7 @@ msgstr "負責人"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Restore"
-msgstr ""
+msgstr "還原"
 
 #. module: utm
 #. odoo-javascript
@@ -423,12 +437,12 @@ msgstr "銷售"
 #. module: utm
 #: model:utm.stage,name:utm.campaign_stage_1
 msgid "Schedule"
-msgstr "安排"
+msgstr "預約"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_search
 msgid "Search UTM Medium"
-msgstr "搜索 UTM 媒體"
+msgstr "搜尋 UTM 媒介"
 
 #. module: utm
 #. odoo-javascript
@@ -441,12 +455,12 @@ msgstr "發送"
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: model:utm.stage,name:utm.campaign_stage_3
 msgid "Sent"
-msgstr "已發送"
+msgstr "發送"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_stage__sequence
 msgid "Sequence"
-msgstr "序號"
+msgstr "序列號"
 
 #. module: utm
 #. odoo-javascript
@@ -494,18 +508,22 @@ msgstr "階段"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_stage
-msgid "Stages allow you to organize your workflow  (e.g. plan, design, in progress, done, …)."
-msgstr ""
+msgid ""
+"Stages allow you to organize your workflow  (e.g. plan, design, in progress,"
+" done, …)."
+msgstr "利用不同「階段」，你可細分和整理工作流程（例如：規劃、設計、進行中、已完成，等等）。"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_tag__color
-msgid "Tag color. No color means no display in kanban to distinguish internal tags from public categorization tags."
+msgid ""
+"Tag color. No color means no display in kanban to distinguish internal tags "
+"from public categorization tags."
 msgstr "標籤顏色。沒有顏色意味著看板中沒有顯示以區分內部標籤和公共分類標籤。"
 
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "標籤名稱已存在!"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__tag_ids
@@ -514,17 +532,11 @@ msgid "Tags"
 msgstr "標籤"
 
 #. module: utm
-#. odoo-python
-#: code:addons/utm/models/utm_medium.py:0
-msgid "The UTM medium '%s' cannot be deleted as it is used in some main functional flows, such as the recruitment and the mass mailing."
-msgstr ""
-
-#. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_campaign_unique_name
 #: model:ir.model.constraint,message:utm.constraint_utm_medium_unique_name
 #: model:ir.model.constraint,message:utm.constraint_utm_source_unique_name
 msgid "The name must be unique"
-msgstr ""
+msgstr "名稱必須獨一無二"
 
 #. module: utm
 #. odoo-javascript
@@ -540,18 +552,22 @@ msgstr "本周"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__campaign_id
-msgid "This is a name that helps you keep track of your different campaign efforts, e.g. Fall_Drive, Christmas_Special"
-msgstr "這是一個幫助您追蹤不同行銷活動的名稱，例如，Fall_Drive、Christmas_Special"
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
+msgstr "此名稱可幫助你追蹤不同行銷活動，例：秋季推廣、聖誕特別優惠"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr "這是傳達方法，例如，明信片、電子信件或橫幅廣告"
+msgstr "傳遞方式，例：明信片、電子郵件、橫幅廣告"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__source_id
-msgid "This is the source of the link, e.g. Search Engine, another domain, or name of email list"
-msgstr "這是連結來源，例如，搜尋引擎、其他域名或電子信件列表名稱"
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
+msgstr "連結的來源，例：搜尋引擎、其他網站，或電郵清單的名稱"
 
 #. module: utm
 #. odoo-javascript
@@ -562,8 +578,10 @@ msgstr "待批准"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-msgid "Track incoming events (e.g. Christmas, Black Friday, ...) and publish timely content."
-msgstr ""
+msgid ""
+"Track incoming events (e.g. Christmas, Black Friday, ...) and publish timely"
+" content."
+msgstr "追蹤將會發生的事件（例如：聖誕節、黑色星期五，等等），發佈適時的內容。"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_campaign
@@ -580,17 +598,19 @@ msgstr "UTM 活動"
 #. module: utm
 #: model:ir.model,name:utm.model_utm_medium
 msgid "UTM Medium"
-msgstr "UTM媒體"
+msgstr "UTM 媒介"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_medium_action
-msgid "UTM Mediums track the mean that was used to attract traffic (e.g. \"Website\", \"Twitter\", ...)."
-msgstr "UTM 媒體跟踪用於吸引流量的平均值（例如“網站”、“推特”等）。"
+msgid ""
+"UTM Mediums track the mean that was used to attract traffic (e.g. "
+"\"Website\", \"X\", ...)."
+msgstr "「UTM 媒介」追蹤吸引訪客流量的方式及媒介（例如：網站、X 等）。"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_mixin
 msgid "UTM Mixin"
-msgstr "UTM Mixin"
+msgstr "UTM混入程式"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source
@@ -600,12 +620,14 @@ msgstr "UTM來源"
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source_mixin
 msgid "UTM Source Mixin"
-msgstr ""
+msgstr "UTM 來源混入"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_source_action
-msgid "UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", \"\", ...)."
-msgstr "UTM Sources 追蹤流量來自何處（例如“May Newsletter”、“”、...）。"
+msgid ""
+"UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", \"\", "
+"...)."
+msgstr "「UTM 來源」追蹤流量從何而來（例：五月電子報）。"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.action_view_utm_stage
@@ -629,19 +651,27 @@ msgid "Use This For My Campaigns"
 msgstr "將此用於我的行銷活動"
 
 #. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_source.py:0
+msgid ""
+"You cannot update multiple records with the same name. The name should be "
+"unique!"
+msgstr "不可更新擁有相同名稱的多項記錄。名稱應該獨一無二。"
+
+#. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_form
 msgid "e.g. \"Brainstorming\""
-msgstr ""
+msgstr "例：腦力激盪構思"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
 msgid "e.g. \"Christmas Mailing\""
-msgstr ""
+msgstr "例：聖誕郵件"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
 msgid "e.g. \"Email\""
-msgstr ""
+msgstr "例：電郵"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form

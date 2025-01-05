@@ -1,38 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* snailmail
-#
+# 
 # Translators:
-# Kari Lindgren <karisatu@gmail.com>, 2022
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Tukea <nokoa@live.fi>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
-# Joakim Weckman, 2022
-# Mikko Salmela <salmemik@gmail.com>, 2022
-# Svante Suominen <svante.suominen@web-veistamo.fi>, 2022
-# Martin Trigaux, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__attachment_error
 msgid "ATTACHMENT_ERROR"
-msgstr ""
+msgstr "ATTACHMENT_ERROR"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_cover
@@ -49,7 +39,7 @@ msgstr "Osoite"
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/core/notification_group_model_patch.js:0
+#: code:addons/snailmail/static/src/core/failure_model_patch.js:0
 msgid "An error occurred when sending a letter with Snailmail."
 msgstr "Kirjeen lähettämisessä Etanapostilla tapahtui virhe."
 
@@ -134,7 +124,7 @@ msgstr "Peru epäonnistumisilmoitus"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__canceled
-msgid "Canceled"
+msgid "Cancelled"
 msgstr "Peruttu"
 
 #. module: snailmail
@@ -153,7 +143,6 @@ msgid "Close"
 msgstr "Sulje"
 
 #. module: snailmail
-#: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__color
 msgid "Color"
 msgstr "Väri"
@@ -242,7 +231,7 @@ msgstr "FORMAT_ERROR"
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/core_ui/snailmail_error.js:0
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_missing_required_fields_action
 msgid "Failed letter"
 msgstr "Epäonnistunut kirje"
@@ -283,7 +272,7 @@ msgstr "Tiedot"
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "Invalid recipient name."
-msgstr ""
+msgstr "Vastaanottajan nimi on virheellinen."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_uid
@@ -332,12 +321,6 @@ msgstr "Viesti"
 #: model:ir.model,name:snailmail.model_mail_notification
 msgid "Message Notifications"
 msgstr "Viestien ilmoitukset"
-
-#. module: snailmail
-#: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
-#: model:ir.model.fields,help:snailmail.field_mail_message__message_type
-msgid "Message type: email for email message, notification for system message, comment for other messages such as user replies"
-msgstr "Viestityyppi: Sähköposti  sähköposteille, Ilmoitus järjestelmän viesteille, ja Kommentti muille viesteille, kuten käyttäjien vastauksille."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
@@ -435,6 +418,11 @@ msgid "Send Now"
 msgstr "Lähetä heti"
 
 #. module: snailmail
+#: model:iap.service,description:snailmail.iap_service_snailmail
+msgid "Send your customer invoices and follow-up reports by post, worldwide."
+msgstr ""
+
+#. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__sent
@@ -457,6 +445,16 @@ msgstr "Etanapostit on lähetetty onnistuneesti"
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__notification_type__snail
 msgid "Snailmail"
 msgstr "Kirjeposti"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
+msgid "Snailmail Color"
+msgstr "Etanapostin väri"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_cover_readonly
+msgid "Snailmail Cover Readonly"
+msgstr ""
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
@@ -523,11 +521,16 @@ msgid "Snailmail: process letters queue"
 msgstr "Etanaposti: kirjeen käsittelyjono"
 
 #. module: snailmail
+#: model:iap.service,unit_name:snailmail.iap_service_snailmail
+msgid "Stamps"
+msgstr "Postimerkit"
+
+#. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state_id
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__state_id
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "State"
-msgstr "Tila"
+msgstr "Alue"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state
@@ -570,8 +573,12 @@ msgstr "Vastaanottajan osoite ei ole täydellinen"
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-msgid "The attachment of the letter could not be sent. Please check its content and contact the support if the problem persists."
-msgstr "Kirjeen liitettä ei voitu lähettää. Tarkista sen sisältö ja ota yhteyttä asiakaspalveluun, jos ongelma jatkuu."
+msgid ""
+"The attachment of the letter could not be sent. Please check its content and"
+" contact the support if the problem persists."
+msgstr ""
+"Kirjeen liitettä ei voitu lähettää. Tarkista sen sisältö ja ota yhteyttä "
+"asiakaspalveluun, jos ongelma jatkuu."
 
 #. module: snailmail
 #. odoo-python
@@ -582,13 +589,19 @@ msgstr "Etanaposti ei kata kumppanin maata."
 #. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
-msgid "The country to which you want to send the letter is not supported by our service."
+msgid ""
+"The country to which you want to send the letter is not supported by our "
+"service."
 msgstr "Palvelumme ei tue maata, johon haluat lähettää kirjeen."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
-msgid "The customer address is not complete. Update the address here and re-send the letter."
-msgstr "Asiakkaan osoite ei ole täydellinen. Päivitä osoite tässä ja lähetä kirje uudelleen."
+msgid ""
+"The customer address is not complete. Update the address here and re-send "
+"the letter."
+msgstr ""
+"Asiakkaan osoite ei ole täydellinen. Päivitä osoite tässä ja lähetä kirje "
+"uudelleen."
 
 #. module: snailmail
 #. odoo-python
@@ -599,8 +612,12 @@ msgstr "Asiakirja on lähetetty oikein postitse.<br>Seurantatunnus on %s"
 #. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
-msgid "The letter could not be sent due to insufficient credits on your IAP account."
-msgstr "Kirjettä ei voitu lähettää, koska IAP-tililläsi ei ole riittävästi krediittejä."
+msgid ""
+"The letter could not be sent due to insufficient credits on your IAP "
+"account."
+msgstr ""
+"Kirjettä ei voitu lähettää, koska IAP-tililläsi ei ole riittävästi "
+"krediittejä."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__message_type
@@ -629,6 +646,26 @@ msgid "Update address of partner"
 msgstr "Kumppanin osoitteen päivittäminen"
 
 #. module: snailmail
+#: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
+#: model:ir.model.fields,help:snailmail.field_mail_message__message_type
+msgid ""
+"Used to categorize message generator\n"
+"'email': generated by an incoming email e.g. mailgateway\n"
+"'comment': generated by user input e.g. through discuss or composer\n"
+"'email_outgoing': generated by a mailing\n"
+"'notification': generated by system e.g. tracking messages\n"
+"'auto_comment': generated by automated notification mechanism e.g. acknowledgment\n"
+"'user_notification': generated for a specific recipient"
+msgstr ""
+"Käytetään viestigeneraattorin luokitteluun\n"
+"'email': syntyy saapuvan sähköpostin, esim. mailgatewayn, tuloksena\n"
+"'kommentti': syntyy käyttäjän syötteestä esim. discuss- tai composer-ohjelmassa\n"
+"'email_outgoing': syntyy postituksesta\n"
+"'notification': järjestelmän tuottama esim. seurantaviestit\n"
+"'auto_comment': automaattisen ilmoitusmekanismin tuottama, esim. kuittaus\n"
+"'user_notification': luodaan tietylle vastaanottajalle"
+
+#. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_snailmail_letter__state
 msgid ""
 "When a letter is created, the status is 'Pending'.\n"
@@ -642,14 +679,23 @@ msgstr ""
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-msgid "You don't have an IAP account registered for this service.<br>Please go to <a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
-msgstr "Sinulla ei ole IAP-tiliä rekisteröitynä tätä palvelua varten.<br>Mene osoitteeseen &lt;a href=%s target=\"new\"&gt;iap.odoo.com</a> lunastaaksesi ilmaiset krediittisi."
+msgid ""
+"You don't have an IAP account registered for this service.<br>Please go to "
+"<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
+msgstr ""
+"Sinulla ei ole IAP-tiliä rekisteröitynä tätä palvelua varten.<br>Mene "
+"osoitteeseen &lt;a href=%s target=\"new\"&gt;iap.odoo.com</a> lunastaaksesi "
+"ilmaiset krediittisi."
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-msgid "You don't have enough credits to perform this operation.<br>Please go to your <a href=%s target=\"new\">iap account</a>."
-msgstr "Sinulla ei ole tarpeeksi krediittejä tämän operaation suorittamiseen.<br>Mene &lt;a href=%s target=\"new\"&gt;iap-tilillesi</a>."
+msgid ""
+"You don't have enough credits to perform this operation.<br>Please go to "
+"your <a href=%s target=\"new\">iap account</a>."
+msgstr ""
+"Sinulla ei ole tarpeeksi krediittejä tämän operaation "
+"suorittamiseen.<br>Mene &lt;a href=%s target=\"new\"&gt;iap-tilillesi</a>."
 
 #. module: snailmail
 #. odoo-javascript

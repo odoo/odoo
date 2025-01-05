@@ -1,58 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* crm
-#
+# 
 # Translators:
-# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2022
-# Pekka Ikonen, 2022
-# Mikko Salmela <salmemik@gmail.com>, 2022
-# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2022
-# Sanna Edelman <direct@generare.com>, 2022
-# Jukka Paulin <jukka.paulin@gmail.com>, 2022
-# Kimmo Lehtonen <leban@netzionale.com>, 2022
-# Miika Nissi <miika.nissi@tawasta.fi>, 2022
-# artol <arto.leskinen@tek.fi>, 2022
-# Svante Suominen <svante.suominen@web-veistamo.fi>, 2022
-# Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2022
-# Jussi Lehto <jussi@gulfeo.com>, 2022
-# Johanna Valkonen <miujohanna@gmail.com>, 2022
-# Henri Komulainen <henri.komulainen@web-veistamo.fi>, 2022
-# Joni Winsten, 2022
-# Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2022
-# Sari Mäyrä <sari.mayra@sv-oy.fi>, 2022
-# Kari Lindgren <karisatu@gmail.com>, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
-# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
-# Miku Laitinen <miku.laitinen@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_count
 msgid "# Leads/Opps assigned this month"
 msgstr "# Tänä kuukautena toimeksiannetut liidit tai myyntimahdollisuudet"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_lead__calendar_event_count
-msgid "# Meetings"
-msgstr "Tapaamisten lkm"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_recurring_plan__number_of_months
@@ -101,14 +71,11 @@ msgstr "%(duplicates)s kaksoiskappaleet on yhdistetty."
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
-msgid "%(members_assigned)s leads assigned among %(member_count)s salespersons."
-msgstr "%(members_assigned)s myyntimahdollisuudet on jaettu %(member_count)s myyjälle."
-
-#. module: crm
-#. odoo-python
-#: code:addons/crm/models/res_config_settings.py:0
-msgid "%s and %s"
-msgstr "%s ja %s"
+msgid ""
+"%(members_assigned)s leads assigned among %(member_count)s salespersons."
+msgstr ""
+"%(members_assigned)s myyntimahdollisuudet on jaettu %(member_count)s "
+"myyjälle."
 
 #. module: crm
 #. odoo-python
@@ -125,8 +92,11 @@ msgstr "<b>Luo ensimmäinen myyntimahdollisuutesi</b>"
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/js/tours/crm.js:0
-msgid "<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle."
-msgstr "<b>Raahaa &amp; pudota mahdollisuuksia</b> sarakkeiden välillä edetessäsi."
+msgid ""
+"<b>Drag &amp; drop opportunities</b> between columns as you progress in your"
+" sales cycle."
+msgstr ""
+"<b>Raahaa &amp; pudota mahdollisuuksia</b> sarakkeiden välillä edetessäsi."
 
 #. module: crm
 #. odoo-javascript
@@ -135,85 +105,79 @@ msgid "<b>Write a few letters</b> to look for a company, or create a new one."
 msgstr "<b>Kirjoita muutama kirje</b> ja etsi yritys tai luo uusi yritys."
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_partner_kanban_view
-msgid "<i class=\"fa fa-fw fa-star\" aria-label=\"Opportunities\" role=\"img\" title=\"Opportunities\"/>"
-msgstr "<i class=\"fa fa-fw fa-star\" aria-label=\"Myyntimahdollisuudet\" role=\"img\" title=\"Myyntimahdollisuudet\"/>"
-
-#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "<i class=\"fa fa-gear\" role=\"img\" title=\"Switch to automatic probability\" aria-label=\"Switch to automatic probability\"/>"
-msgstr "<i class=\"fa fa-gear\" role=\"img\" title=\"Switch to automatic probability\" aria-label=\"Switch to automatic probability\"/>"
+msgid ""
+"<i class=\"fa fa-gear\" role=\"img\" title=\"Switch to automatic "
+"probability\" aria-label=\"Switch to automatic probability\"/>"
+msgstr ""
+"<i class=\"fa fa-gear\" role=\"img\" title=\"Switch to automatic "
+"probability\" aria-label=\"Switch to automatic probability\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "<i class=\"fa fa-info-circle me-2\" title=\"Assigned Lead Count\"/>"
+msgstr "<i class=\"fa fa-info-circle me-2\" title=\"Vastuutettujen liidien määrä\"/>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_partner_kanban_view
+msgid ""
+"<i class=\"fa fa-star me-1\" aria-label=\"Opportunities\" role=\"img\" "
+"title=\"Opportunities\"/>"
 msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid "<i title=\"Update now\" role=\"img\" aria-label=\"Update now\" class=\"fa fa-fw fa-refresh\"/>"
-msgstr "<i title=\"Päivitä nyt\" role=\"img\" aria-label=\"Päivitä nyt\" class=\"fa fa-fw fa-refresh\"/>"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" title=\"By saving this change, the customer email will also be updated.\" attrs=\"{'invisible': [('partner_email_update', '=', False)]}\"/>"
-msgstr "<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" title=\"By saving this change, the customer email will also be updated.\" attrs=\"{'invisible': [('partner_email_update', '=', False)]}\"/>"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" title=\"By saving this change, the customer phone number will also be updated.\" attrs=\"{'invisible': [('partner_phone_update', '=', False)]}\"/>"
-msgstr "<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" title=\"By saving this change, the customer phone number will also be updated.\" attrs=\"{'invisible': [('partner_phone_update', '=', False)]}\"/>"
+msgid ""
+"<i title=\"Update now\" role=\"img\" aria-label=\"Update now\" class=\"fa "
+"fa-fw fa-refresh\"/>"
+msgstr ""
+"<i title=\"Päivitä nyt\" role=\"img\" aria-label=\"Päivitä nyt\" class=\"fa "
+"fa-fw fa-refresh\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&lt;', 2)]}\"> Meetings</span>\n"
-"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&gt;', 1)]}\"> Meeting</span>"
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"By saving this change, the customer email will also be updated.\" "
+"invisible=\"not partner_email_update\"/>"
 msgstr ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&lt;', 2)]}\"> Tapaamista</span>\n"
-"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&gt;', 1)]}\"> Tapaaminen</span>"
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"Tämän muutoksen tallentamalla tallennetaan myös asiakkaan "
+"sähköpostiosoite.\" invisible=\"not partner_email_update\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&lt;', 2)]}\">Similar Leads</span>\n"
-"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&gt;', 1)]}\">Similar Lead</span>"
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"By saving this change, the customer phone number will also be "
+"updated.\" invisible=\"not partner_phone_update\"/>"
 msgstr ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&lt;', 2)]}\">Samankaltaisia liidejä</span>\n"
-"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&gt;', 1)]}\">Samanlainen liidi</span>"
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"Tämän muutoksen tallentamalla tallennetaan myös asiakkaan "
+"puhelinnumero.\" invisible=\"not partner_phone_update\"/>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid ""
+"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; 2\">Similar Leads</span>\n"
+"                                    <span class=\"o_stat_text\" invisible=\"duplicate_lead_count &gt; 1\">Similar Lead</span>"
+msgstr ""
+"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; 2\">Samankaltaisia liidejä</span>\n"
+"                                    <span class=\"o_stat_text\" invisible=\"duplicate_lead_count &gt; 1\">Samanlainen liidi</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
 msgid ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', False)]}\">Leads</span>\n"
-"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', True)]}\">Opportunities</span>"
+"<span class=\"o_stat_text\" invisible=\"not use_leads\">Leads</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"use_leads\">Opportunities</span>"
 msgstr ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', False)]}\">Liidejä</span>\n"
-"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', True)]}\">Myyntimahdollisuuksia</span>"
+"<span class=\"o_stat_text\" invisible=\"not use_leads\">Liidit</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"use_leads\">Myyntimahdollisuudet</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
 msgid "<span class=\"o_stat_text\"> Leads</span>"
 msgstr "<span class=\"o_stat_text\">Liidiä</span>"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "<span class=\"oe_grey p-2 text-nowrap\"> at </span>"
-msgstr ""
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid ""
-"<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
-"                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> at </span>"
-msgstr ""
-"<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
-"                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> osoitteessa </span>"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "<span class=\"oe_grey p-2\"> %</span>"
-msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
@@ -226,8 +190,20 @@ msgid "<span class=\"oe_inline\"> / </span>"
 msgstr "<span class=\"oe_inline\"> / </span>"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
-msgid "<span class=\"text-bg-danger\">Lost</span>"
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid "<span class=\"opacity-50 p-2 text-nowrap\"> at </span>"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid ""
+"<span class=\"opacity-50 p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
+"                                        <span class=\"opacity-50 p-2\" groups=\"!crm.group_use_recurring_revenues\"> at </span>"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid "<span class=\"opacity-50 p-2\"> %</span>"
 msgstr ""
 
 #. module: crm
@@ -236,6 +212,8 @@ msgid ""
 "<span> leads assigned this month\n"
 "                            on a maximum of </span>"
 msgstr ""
+"<span> tässä kuussa osoitetut liidit,\n"
+"                            joista enintään </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -251,11 +229,16 @@ msgstr "<span>Yhdistetty liidi/mahdollisuus</span>"
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid ""
 "<span>Periodically assign leads based on rules</span><br/>\n"
-"                                <span attrs=\"{'invisible': [('crm_use_auto_assignment', '=', False)]}\">\n"
+"                                <span invisible=\"not crm_use_auto_assignment\">\n"
 "                                    All sales teams will use this setting by default unless\n"
 "                                    specified otherwise.\n"
 "                                </span>"
 msgstr ""
+"<span>Määritä säännöllisesti liidejä sääntöjen perusteella</span><br/>\n"
+"                                <span invisible=\"not crm_use_auto_assignment\">\n"
+"                                    Kaikki myyntitiimit käyttävät tätä asetusta oletusarvoisesti, paitsi jos\n"
+"                                    on määritetty toisin.\n"
+"                                </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -273,13 +256,13 @@ msgid ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background-color: white; padding: 0; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Your Lead/Opportunity</span><br>\n"
+"                    <span style=\"font-size: 10px;\">Your Lead/Opportunity</span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Interest in your products</span>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
-"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt=\"object.company_id.name\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt=\"object.company_id.name\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -291,15 +274,15 @@ msgid ""
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
-"                            Hi <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br><br>\n"
+"                            Hi <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br/><br/>\n"
 "                            Welcome to <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>.\n"
-"                            It's great to meet you! Now that you're on board, you'll discover what <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> has to offer. My name is <t t-out=\"object.user_id.name or ''\">Marc Demo</t> and I'll help you get the most out of Odoo. Could we plan a quick demo soon?<br>\n"
-"                            Feel free to reach out at any time!<br><br>\n"
-"                            Best,<br>\n"
+"                            It's great to meet you! Now that you're on board, you'll discover what <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> has to offer. My name is <t t-out=\"object.user_id.name or ''\">Marc Demo</t> and I'll help you get the most out of Odoo. Could we plan a quick demo soon?<br/>\n"
+"                            Feel free to reach out at any time!<br/><br/>\n"
+"                            Best,<br/>\n"
 "                            <t t-if=\"object.user_id\">\n"
 "                                <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
-"                                <br>Email: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
-"                                <br>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                                <br/>Email: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
+"                                <br/>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "                            </t>\n"
 "                            <t t-else=\"\">\n"
 "                                <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>\n"
@@ -313,8 +296,8 @@ msgid ""
 "    <!-- FOOTER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; font-size:11px;\">\n"
-"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\">\n"
-"            <b t-out=\"object.company_id.name or ''\">My Company (San Francisco)</b><br>\n"
+"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\"/>\n"
+"            <b t-out=\"object.company_id.name or ''\">My Company (San Francisco)</b><br/>\n"
 "            <div style=\"color: #999999;\">\n"
 "                <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
 "                <t t-if=\"object.company_id.email\">\n"
@@ -336,16 +319,113 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 24px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background-color: white; padding: 0; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Liidisi / myyntimahdollisuutesi</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Kiinnostus tuotteitasi kohtaan</span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt=\"object.company_id.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            Hei <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br/><br/>\n"
+"                            Tervetuloa <t t-out=\"object.company_id.name or ''\">yritykseni (Kerava)</t>.\n"
+"                            On hienoa tavata! Nyt kun olet mukana, voit tutustua siihen, mitä <t t-out=\"object.company_id.name or ''\">Yritys (Kerava)</t> tarjoaa. Minä olen <t t-out=\"object.user_id.name or ''\">Marc Demo</t> ja autan sinua saamaan kaiken irti Odoosta. Voisimmeko järjestää pikaisen demon pian?<br/>\n"
+"                            Ota rohkeasti yhteyttä milloin tahansa!<br/><br/>\n"
+"                            Parhain terveisin,<br/>\n"
+"                           <t t-if=\"object.user_id\"> \n"
+"                               <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
+"                               <br/>Sähköposti: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
+"                               <br/>Puhelin: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                           </t>\n"
+"                            <t t-else=\"\">\n"
+"                                <t t-out=\"object.company_id.name or ''\">Yritykseni (Kerava)</t>\n"
+"                            </t>\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; font-size:11px;\">\n"
+"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\"/>\n"
+"            <b t-out=\"object.company_id.name or ''\">Oma yritys (Kerava)</b><br/>\n"
+"            <div style=\"color: #999999;\">\n"
+"                <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                <t t-if=\"object.company_id.email\">\n"
+"                    | <a t-attf-href=\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none; color: #999999;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                </t>\n"
+"                <t t-if=\"object.company_id.website\">\n"
+"                    | <a t-attf-href=\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; color: #999999;\" t-out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
+"                </t>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    Palvelinta pyörittää <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=email\" style=\"color: #875A7B;\">Odoo</a>\n"
+"</td></tr>\n"
+"</table>\n"
+"        "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
-msgid "A Python dictionary that will be evaluated to provide default values when creating new records for this alias."
-msgstr "Python-kirjasto, joka evaluoidaan oletusarvoja varten, kun tätä aliasta varten luodaan uusia tietueita."
+msgid ""
+"A Python dictionary that will be evaluated to provide default values when "
+"creating new records for this alias."
+msgstr ""
+"Python-kirjasto, joka evaluoidaan oletusarvoja varten, kun tätä aliasta "
+"varten luodaan uusia tietueita."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_3
-msgid "A great tip to boost sales efficiency is to always define a next step on each opportunity. To manage ongoing activities, click on any status of the progress bar to filter opportunities based on their next activities' status. Click on the grey area of the progress bar to see all opportunities that have no next activity."
-msgstr "Hyvä vinkki myynnin tehokkuuden lisäämiseksi on määritellä aina seuraava vaihe jokaiselle myyntitilaisuudelle. Voit hallita käynnissä olevia toimintoja napsauttamalla mitä tahansa edistymispalkin tilaa, jolloin voit suodattaa tilaisuudet niiden seuraavien toimintojen tilan perusteella. Napsauta edistymispalkin harmaata aluetta nähdäksesi kaikki tilaisuudet, joilla ei ole seuraavaa toimintoa."
+msgid ""
+"A great tip to boost sales efficiency is to always define a next step on "
+"each opportunity. To manage ongoing activities, click on any status of the "
+"progress bar to filter opportunities based on their next activities' status."
+" Click on the grey area of the progress bar to see all opportunities that "
+"have no next activity."
+msgstr ""
+"Hyvä vinkki myynnin tehokkuuden lisäämiseksi on määritellä aina seuraava "
+"vaihe jokaiselle myyntitilaisuudelle. Voit hallita käynnissä olevia "
+"toimintoja napsauttamalla mitä tahansa edistymispalkin tilaa, jolloin voit "
+"suodattaa tilaisuudet niiden seuraavien toimintojen tilan perusteella. "
+"Napsauta edistymispalkin harmaata aluetta nähdäksesi kaikki tilaisuudet, "
+"joilla ei ole seuraavaa toimintoa."
+
+#. module: crm
+#. odoo-python
+#: code:addons/crm/models/crm_lead.py:0
+msgid "A new lead has been created and is not assigned to any team."
+msgstr ""
+
+#. module: crm
+#. odoo-python
+#: code:addons/crm/models/crm_lead.py:0
+msgid "A new lead has been created for the team \"%(team_name)s\"."
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -362,6 +442,7 @@ msgstr "Vaatii toimenpiteitä"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__active
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__active
 #: model:ir.model.fields,field_description:crm.field_crm_recurring_plan__active
+#: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Active"
 msgstr "Aktiivinen"
@@ -375,6 +456,7 @@ msgstr "Aktiiviset liidit"
 #: model:ir.actions.act_window,name:crm.crm_activity_report_action
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_ids
 #: model:ir.ui.menu,name:crm.crm_activity_report_menu
+#: model:ir.ui.menu,name:crm.crm_team_menu_config_activities
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
 msgid "Activities"
 msgstr "Toimenpiteet"
@@ -387,9 +469,12 @@ msgid "Activities Analysis"
 msgstr "Toimenpiteiden analyysi"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_res_users__target_sales_done
-msgid "Activities Done Target"
-msgstr "Tehtyjen toimenpiteiden tavoite"
+#: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
+#: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action_team
+msgid ""
+"Activities marked as Done on Leads will appear here, providing an overview "
+"of lead interactions."
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_mail_activity
@@ -408,6 +493,11 @@ msgid "Activity Exception Decoration"
 msgstr "Toimenpiteen poikkeuksen tyyli"
 
 #. module: crm
+#: model:ir.ui.menu,name:crm.mail_activity_plan_menu_config_lead
+msgid "Activity Plans"
+msgstr "Toimintasuunnitelmat"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_state
 msgid "Activity State"
 msgstr "Toimenpiteen tila"
@@ -416,7 +506,7 @@ msgstr "Toimenpiteen tila"
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__mail_activity_type_id
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Activity Type"
-msgstr "Toimenpiteiden tyyppi"
+msgstr "Toimenpidetyyppi"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_type_icon
@@ -434,8 +524,10 @@ msgid "Activity by"
 msgstr "Toimenpiteen suorittaja"
 
 #. module: crm
-#: model:ir.actions.client,name:crm.crm_lead_action_configure_properties_field
-msgid "Add Properties"
+#: model_terms:ir.actions.act_window,help:crm.mail_activity_plan_action_lead
+msgid ""
+"Activity plans are used to assign a list of activities in just a few clicks\n"
+"                    (e.g. \"Demo Preparation Process\", \"Qualification\", ...)"
 msgstr ""
 
 #. module: crm
@@ -456,8 +548,11 @@ msgstr "Lisää seuraava %s"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__assignment_domain
-msgid "Additional filter domain when fetching unassigned leads to allocate to the team."
-msgstr "Lisäsuodatinalue, kun haetaan tiimille jaettavia jakamattomia liidejä."
+msgid ""
+"Additional filter domain when fetching unassigned leads to allocate to the "
+"team."
+msgstr ""
+"Lisäsuodatinalue, kun haetaan tiimille jaettavia jakamattomia liidejä."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -481,6 +576,21 @@ msgid "Alias Contact Security"
 msgstr "Aliaksen kontaktien tietoturva"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_team__alias_domain_id
+msgid "Alias Domain"
+msgstr "Alias Domain"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_team__alias_domain
+msgid "Alias Domain Name"
+msgstr "Alias Verkkotunnus"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_team__alias_full_name
+msgid "Alias Email"
+msgstr "Alias Email"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_name
 msgid "Alias Name"
 msgstr "Aliaksen nimi"
@@ -488,17 +598,12 @@ msgstr "Aliaksen nimi"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_status
 msgid "Alias Status"
-msgstr ""
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_domain
-msgid "Alias domain"
-msgstr "Alias domain"
+msgstr "Alias Status"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "Aliaksen tila arvioituna viimeksi vastaanotetun viestin perusteella."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_model_id
@@ -528,7 +633,6 @@ msgstr "Käytä duplikaattien poistoa"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.crm_recurring_plan_view_search
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Archived"
 msgstr "Arkistoitu"
 
@@ -540,7 +644,7 @@ msgid ""
 "                                        To work with the CRM, you should <a name=\"%d\" type=\"action\" tabindex=\"-1\">join a team.</a>"
 msgstr ""
 "Koska et ole minkään myyntitiimin jäsen, sinulle näytetään <b>oletusarvoisesti ensimmäisen tiimin</b>myyntiputki.\n"
-"                                        Jotta voisit työskennellä CRM:n kanssa, sinun on <a name=\"%d\" type=\"action\" tabindex=\"-1\">liityttävä tiimiin</a>."
+"                                        Jotta voisit työskennellä CRM:n kanssa, sinun on <a name=\"%d\" type=\"action\" tabindex=\"-1\">liityttävä tiimiin</a>"
 
 #. module: crm
 #. odoo-python
@@ -737,14 +841,26 @@ msgid "Channel"
 msgstr "Kanava"
 
 #. module: crm
+#: model_terms:digest.tip,tip_description:crm.digest_tip_crm_6
+msgid ""
+"Check the Stage Tracker of Leads to identify bottlenecks in your Sales "
+"process."
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__use_leads
-msgid "Check this box to filter and qualify incoming requests as leads before converting them into opportunities and assigning them to a salesperson."
-msgstr "Merkitse tämä valintaruutu, kun haluat suodattaa ja luokitella saapuvat pyynnöt liideiksi ennen niiden muuntamista mahdollisuuksiksi ja kohdistamista myyntihenkilölle."
+msgid ""
+"Check this box to filter and qualify incoming requests as leads before "
+"converting them into opportunities and assigning them to a salesperson."
+msgstr ""
+"Merkitse tämä valintaruutu, kun haluat suodattaa ja luokitella saapuvat "
+"pyynnöt liideiksi ennen niiden muuntamista mahdollisuuksiksi ja "
+"kohdistamista myyntihenkilölle."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__use_opportunities
 msgid "Check this box to manage a presales process with opportunities."
-msgstr "Valitse tämä hallinnoidaksesi esimyyntiprosessia mahdollisuuksilla"
+msgstr "Valitse tämä hallinnoidaksesi esimyyntiprosessia mahdollisuuksilla."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__city
@@ -758,14 +874,22 @@ msgstr "Kaupunki"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_report__tag_ids
 #: model:ir.model.fields,help:crm.field_crm_lead__tag_ids
-msgid "Classify and analyze your lead/opportunity categories like: Training, Service"
-msgstr "Luokittele ja analysoi liidejäsi/myyntimahdollisuuksiasi ryhmittäin, esim. Koulutus, Palvelu"
+msgid ""
+"Classify and analyze your lead/opportunity categories like: Training, "
+"Service"
+msgstr ""
+"Luokittele ja analysoi liidejäsi/myyntimahdollisuuksiasi ryhmittäin, esim. "
+"Koulutus, Palvelu"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/js/tours/crm.js:0
-msgid "Click on the breadcrumb to go back to your Pipeline. Odoo will save all modifications as you navigate."
-msgstr "Klikkaa leivänmurua palataksesi takaisin myyntiputkeen. Odoo tallentaa kaikki muutokset navigoidessasi."
+msgid ""
+"Click on the breadcrumb to go back to your Pipeline. Odoo will save all "
+"modifications as you navigate."
+msgstr ""
+"Klikkaa leivänmurua palataksesi takaisin myyntiputkeen. Odoo tallentaa "
+"kaikki muutokset navigoidessasi."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date_closed
@@ -781,7 +905,8 @@ msgstr "Sulkemispäivä"
 #. odoo-python
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:0
 msgid "Closed/Dead leads cannot be converted into opportunities."
-msgstr "Suljettuja/Menetettyjä liidejä ei voi muuttaa myyntimahdollisuuksiksi."
+msgstr ""
+"Suljettuja/Menetettyjä liidejä ei voi muuttaa myyntimahdollisuuksiksi."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost__lost_feedback
@@ -835,13 +960,7 @@ msgid "Configuration"
 msgstr "Asetukset"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
-msgid "Configure a custom domain"
-msgstr "Mukautetun toimialueen määrittäminen"
-
-#. module: crm
-#. odoo-javascript
-#: code:addons/crm/static/src/js/tours/crm.js:0
+#: model_terms:web_tour.tour,rainbow_man_message:crm.crm_tour
 msgid "Congrats, best of luck catching such big fish! :)"
 msgstr "Onnittelut, onnea näin isojen kalojen narraamiseen! :)"
 
@@ -852,6 +971,8 @@ msgstr "Huomioi liidit, jotka on luotu alkaen:"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+#: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "Contact"
 msgstr "Kontakti"
 
@@ -927,8 +1048,6 @@ msgid "Convert to opportunities"
 msgstr "Muunnetaan mahdollisuuksiksi"
 
 #. module: crm
-#. odoo-python
-#: code:addons/crm/models/crm_lead.py:0
 #: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity_partner
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__name__convert
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner_mass__name__convert
@@ -937,8 +1056,12 @@ msgstr "Muunna mahdollisuudeksi"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid "Convert visitors of your website into leads and perform data enrichment based on their IP address"
-msgstr "Muunna verkkosivujen vierailijat liideiksi CRM:ään ja rikasta dataa IP-osoitteiden perusteella"
+msgid ""
+"Convert visitors of your website into leads and perform data enrichment "
+"based on their IP address"
+msgstr ""
+"Muunna verkkosivujen vierailijat liideiksi CRM:ään ja rikasta dataa IP-"
+"osoitteiden perusteella"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__email_state__correct
@@ -964,7 +1087,7 @@ msgstr "Maa"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_website_crm_iap_reveal
 msgid "Create Leads/Opportunities from your website's traffic"
-msgstr "Luo Liidejä/Mahdollisuuksia verkkosivusi liikenteestä."
+msgstr "Luo Liidejä/Myyntimahdollisuuksia verkkosivusi liikenteestä"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
@@ -975,6 +1098,11 @@ msgstr "Luo mahdollisuus"
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_all_leads
 msgid "Create a Lead"
 msgstr "Luo liidi"
+
+#. module: crm
+#: model_terms:ir.actions.act_window,help:crm.mail_activity_plan_action_lead
+msgid "Create a Lead Activity Plan"
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -989,7 +1117,8 @@ msgstr "Luo toistuva suunnitelma"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_mining_in_pipeline
 msgid "Create a lead mining request directly from the opportunity pipeline."
-msgstr "Luo pyyntö liidien kalasteluun suoraan mahdollisuuksien myyntiputkesta."
+msgstr ""
+"Luo pyyntö liidien kalasteluun suoraan mahdollisuuksien myyntiputkesta."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__create
@@ -1089,7 +1218,6 @@ msgstr "Mukautettu palautettu viesti"
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_id
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 msgid "Customer"
@@ -1160,18 +1288,35 @@ msgstr "Tiesitkö, että sähköpostit, jotka lähetetään"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
-msgid "Did you know emails sent to a Sales Team alias generate opportunities in your pipeline?"
-msgstr "Tiesitkö, että myyntitiimin aliakselle lähetetyt sähköpostiviestit luovat myyntimahdollisuuksia myyntiputkeen?"
+msgid ""
+"Did you know emails sent to a Sales Team alias generate opportunities in "
+"your pipeline?"
+msgstr ""
+"Tiesitkö, että myyntitiimin aliakselle lähetetyt sähköpostiviestit luovat "
+"myyntimahdollisuuksia myyntiputkeen?"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_4
-msgid "Did you know you can search a company by name or VAT number to instantly fill in all its data? Odoo autocompletes everything for you: logo, address, company size, business information, social media accounts, etc."
-msgstr "Tiesitkö, että voit hakea yritystä nimen tai alv-numeron perusteella ja täyttää välittömästi kaikki sen tiedot? Odoo täyttää kaiken automaattisesti puolestasi: logo, osoite, yrityksen koko, yritystiedot, sosiaalisen median tilit jne."
+msgid ""
+"Did you know you can search a company by name or VAT number to instantly "
+"fill in all its data? Odoo autocompletes everything for you: logo, address, "
+"company size, business information, social media accounts, etc."
+msgstr ""
+"Tiesitkö, että voit hakea yritystä nimen tai alv-numeron perusteella ja "
+"täyttää välittömästi kaikki sen tiedot? Odoo täyttää kaiken automaattisesti "
+"puolestasi: logo, osoite, yrityksen koko, yritystiedot, sosiaalisen median "
+"tilit jne."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_5
-msgid "Did you know you can turn a list of opportunities into a map view, using the top-right map icon? A lot of screens in Odoo can be turned into a map: tasks, contacts, delivery orders, etc."
-msgstr "Tiesitkö, että voit muuttaa myyntimahdollisuuksien luettelon karttanäkymäksi käyttämällä oikean yläkulman karttakuvaketta? Monet Odoon näytöt voidaan muuttaa kartaksi: tehtävät, yhteystiedot, toimitustilaukset jne."
+msgid ""
+"Did you know you can turn a list of opportunities into a map view, using the"
+" top-right map icon? A lot of screens in Odoo can be turned into a map: "
+"tasks, contacts, delivery orders, etc."
+msgstr ""
+"Tiesitkö, että voit muuttaa myyntimahdollisuuksien luettelon karttanäkymäksi"
+" käyttämällä oikean yläkulman karttakuvaketta? Monet Odoon näytöt voidaan "
+"muuttaa kartaksi: tehtävät, yhteystiedot, toimitustilaukset jne."
 
 #. module: crm
 #: model:ir.model,name:crm.model_digest_digest
@@ -1179,6 +1324,7 @@ msgid "Digest"
 msgstr "Yhteenveto"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_calendar_event__display_name
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__display_name
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__display_name
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__display_name
@@ -1191,6 +1337,14 @@ msgstr "Yhteenveto"
 #: model:ir.model.fields,field_description:crm.field_crm_merge_opportunity__display_name
 #: model:ir.model.fields,field_description:crm.field_crm_recurring_plan__display_name
 #: model:ir.model.fields,field_description:crm.field_crm_stage__display_name
+#: model:ir.model.fields,field_description:crm.field_crm_team__display_name
+#: model:ir.model.fields,field_description:crm.field_crm_team_member__display_name
+#: model:ir.model.fields,field_description:crm.field_digest_digest__display_name
+#: model:ir.model.fields,field_description:crm.field_ir_config_parameter__display_name
+#: model:ir.model.fields,field_description:crm.field_mail_activity__display_name
+#: model:ir.model.fields,field_description:crm.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:crm.field_res_partner__display_name
+#: model:ir.model.fields,field_description:crm.field_utm_campaign__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
 
@@ -1198,7 +1352,9 @@ msgstr "Näyttönimi"
 #. odoo-python
 #: code:addons/crm/models/digest.py:0
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "Sinulla ei ole oikeutta tähän toimintoon. Et voi käyttää tätä tietoa käyttäjien  yhteenvetopostissa"
+msgstr ""
+"Sinulla ei ole oikeutta tähän toimintoon. Et voi käyttää tätä tietoa "
+"käyttäjien  yhteenvetopostissa"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__nothing
@@ -1217,17 +1373,20 @@ msgstr "Verkkotunnus"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 msgid "Drag your opportunity to <b>Won</b> when you get the deal. Congrats!"
 msgstr ""
+"Vedä myyntimahdollisuutesi<b>Voitettu</b>-sarakkeeseen, kun saat kaupan "
+"tehtyä. Onnittelut!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Duration: %s"
-msgstr ""
+msgstr "Kesto: %s"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_forecast
 msgid "Easily set expected closing dates and overview your revenue streams."
-msgstr "Aseta helposti odotetut päättymispäivät ja tee yleiskatsaus tulovirtoihin."
+msgstr ""
+"Aseta helposti odotetut päättymispäivät ja tee yleiskatsaus tulovirtoihin."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -1243,6 +1402,7 @@ msgid "Email"
 msgstr "Sähköposti"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_team__alias_email
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Email Alias"
 msgstr "Sähköpostialias"
@@ -1250,7 +1410,7 @@ msgstr "Sähköpostialias"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_domain_criterion
 msgid "Email Domain Criterion"
-msgstr ""
+msgstr "Sähköpostin verkkotunnuksen kriteeri"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_state
@@ -1266,6 +1426,12 @@ msgstr "Sähköpostin kopio"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Email cc:"
 msgstr "Sähköposti cc:"
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_crm_team__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr ""
+"Sähköpostin verkkotunnus esim. 'example.com' kohdassa 'odoo@example.com'"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -1294,28 +1460,38 @@ msgstr "Rikasta liidit vain pyydettässä"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_enrich
-msgid "Enrich your leads automatically with company data based on their email address."
-msgstr "Rikasta liidit automaattisesti perustuen heidän sähköpostista saatavaan yritysdataan."
+msgid ""
+"Enrich your leads automatically with company data based on their email "
+"address."
+msgstr ""
+"Rikasta liidit automaattisesti perustuen heidän sähköpostista saatavaan "
+"yritysdataan."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Enrich your leads with company data based on their email addresses"
-msgstr "Rikastuta liidit yritystiedoilla, jotka perustuvat heidän sähköpostiosoitteisiinsa"
+msgstr ""
+"Rikastuta liidit yritystiedoilla, jotka perustuvat heidän "
+"sähköpostiosoitteisiinsa"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
-msgid "Enter here the internal requirements for this stage (ex: Offer sent to customer). It will appear as a tooltip over the stage's name."
-msgstr "Kirjoita tähän tämän vaiheen sisäiset vaatimukset (esim. tarjous on lähetetty asiakkaalle). Teksti näkyy vihjeenä vaiheen nimen yläpuolella."
+msgid ""
+"Enter here the internal requirements for this stage (ex: Offer sent to "
+"customer). It will appear as a tooltip over the stage's name."
+msgstr ""
+"Kirjoita tähän tämän vaiheen sisäiset vaatimukset (esim. tarjous on "
+"lähetetty asiakkaalle). Teksti näkyy vihjeenä vaiheen nimen yläpuolella."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__date_deadline
 msgid "Estimate of the date on which the opportunity will be won."
-msgstr "Arvio päivästä, jolloin mahdollisuus voitetaan"
+msgstr "Arvio päivästä, jolloin myyntimahdollisuus voitetaan."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_exceeded
 msgid "Exceed monthly lead assignement"
-msgstr ""
+msgstr "Ylitä kuukausittainen liidimäärä"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date_deadline
@@ -1381,13 +1557,18 @@ msgstr "Kentän otsikko"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__phone_sanitized
-msgid "Field used to store sanitized phone number. Helps speeding up searches and comparisons."
-msgstr "Kenttä, jota käytetään puhdistetun puhelinnumeron tallentamiseen. Auttaa nopeuttamaan hakuja ja vertailuja."
+msgid ""
+"Field used to store sanitized phone number. Helps speeding up searches and "
+"comparisons."
+msgstr ""
+"Kenttä, jota käytetään puhdistetun puhelinnumeron tallentamiseen. Auttaa "
+"nopeuttamaan hakuja ja vertailuja."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency_field
 msgid "Fields that can be used for predictive lead scoring computation"
-msgstr "Kentät joita voidaan käyttää ennakoivaan liidien pisteytyksen laskentaan"
+msgstr ""
+"Kentät joita voidaan käyttää ennakoivaan liidien pisteytyksen laskentaan"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__fold
@@ -1416,8 +1597,16 @@ msgstr "Font awesome -ikoni esim.. fa-tasks"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_1
-msgid "For a sales team, there is nothing worse than being dry on leads. Fortunately, in just a few clicks, you can generate leads specifically targeted to your needs: company size, industry, etc. To help you test the feature, we offer you 200 credits for free."
-msgstr "Mikään ei ole myyntitiimille pahempaa kuin se, että liidit ovat vähissä. Onneksi voit muutamalla klikkauksella luoda liidit, jotka on kohdennettu juuri sinun tarpeisiisi: yrityksen koko, toimiala jne. mukaan. Jotta voisit testata ominaisuutta, tarjoamme sinulle 200 krediittiä ilmaiseksi."
+msgid ""
+"For a sales team, there is nothing worse than being dry on leads. "
+"Fortunately, in just a few clicks, you can generate leads specifically "
+"targeted to your needs: company size, industry, etc. To help you test the "
+"feature, we offer you 200 credits for free."
+msgstr ""
+"Mikään ei ole myyntitiimille pahempaa kuin se, että liidit ovat vähissä. "
+"Onneksi voit muutamalla klikkauksella luoda liidit, jotka on kohdennettu "
+"juuri sinun tarpeisiisi: yrityksen koko, toimiala jne. mukaan. Jotta voisit "
+"testata ominaisuutta, tarjoamme sinulle 200 krediittiä ilmaiseksi."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
@@ -1446,7 +1635,7 @@ msgstr "Alkaen %(source_name)s"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "From %(source_name)s: %(source_subject)s"
-msgstr ""
+msgstr "Alkaen %(source_name)s: %(source_subject)s"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -1458,12 +1647,12 @@ msgstr "Tulevat toimenpiteet"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_mine
 msgid "Generate new leads based on their country, industries, size, etc."
-msgstr "Luo uusia liidejä perustuen nmaahan, toimialaan, kokoon, yms."
+msgstr "Luo uusia liidejä perustuen maahan, toimialaan, kokoon, yms."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Generate new leads based on their country, industry, size, etc."
-msgstr "Luo uusia liidejä perustuen nmaahan, toimialaan, kokoon, yms."
+msgstr "Luo uusia liidejä perustuen maahan, toimialaan, kokoon, yms."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
@@ -1473,7 +1662,9 @@ msgstr "Hae häviämisen syy"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Give your team the requirements to move an opportunity to this stage."
-msgstr "Määrittele tiimille vaatimukset mahdollisuuden siirtämiseksi tähän vaiheeseen."
+msgstr ""
+"Määrittele tiimille vaatimukset mahdollisuuden siirtämiseksi tähän "
+"vaiheeseen."
 
 #. module: crm
 #. odoo-python
@@ -1505,6 +1696,7 @@ msgid "Hours"
 msgstr "Tunnit"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_calendar_event__id
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__id
@@ -1517,13 +1709,25 @@ msgstr "Tunnit"
 #: model:ir.model.fields,field_description:crm.field_crm_merge_opportunity__id
 #: model:ir.model.fields,field_description:crm.field_crm_recurring_plan__id
 #: model:ir.model.fields,field_description:crm.field_crm_stage__id
+#: model:ir.model.fields,field_description:crm.field_crm_team__id
+#: model:ir.model.fields,field_description:crm.field_crm_team_member__id
+#: model:ir.model.fields,field_description:crm.field_digest_digest__id
+#: model:ir.model.fields,field_description:crm.field_ir_config_parameter__id
+#: model:ir.model.fields,field_description:crm.field_mail_activity__id
+#: model:ir.model.fields,field_description:crm.field_res_config_settings__id
+#: model:ir.model.fields,field_description:crm.field_res_partner__id
+#: model:ir.model.fields,field_description:crm.field_utm_campaign__id
 msgid "ID"
 msgstr "ID"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_parent_thread_id
-msgid "ID of the parent record holding the alias (example: project holding the task creation alias)"
-msgstr "Ylätason aliastietueen id (esim. tehtävien luontiin käytettävän aliaksen sisältävä projekti)"
+msgid ""
+"ID of the parent record holding the alias (example: project holding the task"
+" creation alias)"
+msgstr ""
+"Ylätason aliastietueen id (esim. tehtävien luontiin käytettävän aliaksen "
+"sisältävä projekti)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_exception_icon
@@ -1533,13 +1737,17 @@ msgstr "Kuvake"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Ikoni joka kertoo poikkeustoiminnosta."
+msgstr "Kuvake joka kertoo poikkeustoiminnosta."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner__force_assignment
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass__force_assignment
-msgid "If checked, forces salesman to be updated on updated opportunities even if already set."
-msgstr "Jos valittuna, pakottaa myyjän päivittämään päivitetyt myyntimahdollisuudet, vaikka ne olisi jo asetettu."
+msgid ""
+"If checked, forces salesman to be updated on updated opportunities even if "
+"already set."
+msgstr ""
+"Jos valittuna, pakottaa myyjän päivittämään päivitetyt myyntimahdollisuudet,"
+" vaikka ne olisi jo asetettu."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction
@@ -1553,26 +1761,32 @@ msgid "If checked, some messages have a delivery error."
 msgstr "Jos valittu, joitakin viestejä ei ole toimitettu."
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_res_partner__team_id
-#: model:ir.model.fields,help:crm.field_res_users__team_id
-msgid "If set, this Sales Team will be used for sales and assignments related to this partner"
-msgstr "Jos asetettu, tätä myyntiryhmää käytetään tähän kumppaniin liittyvään myyntiin ja toimeksiantoihin"
-
-#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_bounced_content
-msgid "If set, this content will automatically be sent out to unauthorized users instead of the default message."
-msgstr "Jos asetettu, lähetetään automaattisesti luvattomille käyttäjille oletusviestin sijasta."
+msgid ""
+"If set, this content will automatically be sent out to unauthorized users "
+"instead of the default message."
+msgstr ""
+"Jos asetettu, lähetetään automaattisesti luvattomille käyttäjille "
+"oletusviestin sijasta."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__is_blacklisted
 #: model:ir.model.fields,help:crm.field_crm_lead__partner_is_blacklisted
-msgid "If the email address is on the blacklist, the contact won't receive mass mailing anymore, from any list"
-msgstr "Jos sähköpostiosoite on markkinointikiellossa, yhteystieto ei vastaanota postituksia miltään postituslistalta."
+msgid ""
+"If the email address is on the blacklist, the contact won't receive mass "
+"mailing anymore, from any list"
+msgstr ""
+"Jos sähköpostiosoite on markkinointikiellossa, yhteystieto ei vastaanota "
+"postituksia miltään postituslistalta."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__phone_sanitized_blacklisted
-msgid "If the sanitized phone number is on the blacklist, the contact won't receive mass mailing sms anymore, from any list"
-msgstr "Jos puhdistettu puhelinnumero on mustalla listalla, yhteyshenkilö ei enää saa massatekstiviestejä miltään listalta"
+msgid ""
+"If the sanitized phone number is on the blacklist, the contact won't receive"
+" mass mailing sms anymore, from any list"
+msgstr ""
+"Jos puhdistettu puhelinnumero on mustalla listalla, yhteyshenkilö ei enää "
+"saa massatekstiviestejä miltään listalta"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_import_crm
@@ -1591,11 +1805,6 @@ msgid "Inactive"
 msgstr "Passiivinen"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
-msgid "Include archived"
-msgstr "Sisällytä arkistoidut"
-
-#. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__email_state__incorrect
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__phone_state__incorrect
 msgid "Incorrect"
@@ -1603,13 +1812,25 @@ msgstr "Virheellinen"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__mobile_blacklisted
-msgid "Indicates if a blacklisted sanitized phone number is a mobile number. Helps distinguish which number is blacklisted             when there is both a mobile and phone field in a model."
-msgstr "Ilmaisee, onko mustalle listalle joutunut puhdistettu puhelinnumero matkapuhelinnumero. Auttaa erottamaan, mikä numero on mustalla listalla, kun mallissa on sekä matkapuhelin- että puhelinkenttä."
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Ilmaisee, onko mustalle listalle joutunut puhdistettu puhelinnumero "
+"matkapuhelinnumero. Auttaa erottamaan, mikä numero on mustalla listalla, kun"
+" mallissa on sekä matkapuhelin- että puhelinkenttä."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__phone_blacklisted
-msgid "Indicates if a blacklisted sanitized phone number is a phone number. Helps distinguish which number is blacklisted             when there is both a mobile and phone field in a model."
-msgstr "Ilmaisee, onko mustalle listalle merkitty puhdistettu puhelinnumero puhelinnumero. Auttaa erottamaan, mikä numero on mustalla listalla, kun mallissa on sekä matkapuhelin- että puhelinkenttä."
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a phone number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Ilmaisee, onko mustalle listalle merkitty puhdistettu puhelinnumero "
+"puhelinnumero. Auttaa erottamaan, mikä numero on mustalla listalla, kun "
+"mallissa on sekä matkapuhelin- että puhelinkenttä."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1624,8 +1845,12 @@ msgstr "Kunkin cron-eräajon väli (esim. 2 päivän välein tai 2 tunnin välei
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/res_config_settings.py:0
-msgid "Invalid repeat frequency. Consider changing frequency type instead of using large numbers."
-msgstr "Väärä toistotaajuus. Harkitse taajuuden tyypin vaihtamista suurten numeroiden käytön sijasta."
+msgid ""
+"Invalid repeat frequency. Consider changing frequency type instead of using "
+"large numbers."
+msgstr ""
+"Väärä toistotaajuus. Harkitse taajuuden tyypin vaihtamista suurten "
+"numeroiden käytön sijasta."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_is_follower
@@ -1640,12 +1865,18 @@ msgstr "Onko kumppani näkyvissä"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__is_won
 msgid "Is Won Stage?"
-msgstr "Voitettu tila"
+msgstr "On Voitettu-tila?"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_automated_probability
 msgid "Is automated probability?"
-msgstr "Automaattinen todennäköisyys"
+msgstr "On Automaattinen todennäköisyys?"
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_crm_lead__duration_tracking
+msgid "JSON that maps ids from a many2one field to seconds spent"
+msgstr ""
+"JSON, joka kartoittaa many2one-kentän tunnukset käytetyiksi sekunneiksi"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__function
@@ -1656,11 +1887,6 @@ msgstr "Tehtävänimike"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Job Position:"
 msgstr "Tehtävänimike:"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_lead__kanban_state
-msgid "Kanban State"
-msgstr "Kanban-tila"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created_value
@@ -1688,14 +1914,20 @@ msgid "Language:"
 msgstr "Kielet:"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_lead__date_action_last
+#: model:ir.model.fields,field_description:crm.field_crm_lead__date_automation_last
 msgid "Last Action"
 msgstr "Viimeisin toimenpide"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
-msgid "Last Action:"
-msgstr "Viimeisin toimenpide:"
+msgid "Last Automation:"
+msgstr "Viimeisin automaatio:"
+
+#. module: crm
+#. odoo-python
+#: code:addons/crm/models/crm_lead.py:0
+msgid "Last Meeting"
+msgstr "Viimeisin kokous"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_last_stage_update
@@ -1740,6 +1972,7 @@ msgid "Late Activities"
 msgstr "Myöhässä olevat toimenpiteet"
 
 #. module: crm
+#: model:ir.model,name:crm.model_crm_lead
 #: model:ir.model.fields.selection,name:crm.selection__crm_activity_report__lead_type__lead
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__type__lead
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
@@ -1780,6 +2013,11 @@ msgid "Lead Mining"
 msgstr "Liidien kalastelu"
 
 #. module: crm
+#: model:ir.actions.act_window,name:crm.mail_activity_plan_action_lead
+msgid "Lead Plans"
+msgstr "Liidin suunnitelmat"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_properties_definition
 msgid "Lead Properties"
 msgstr "Liidin ominaisuudet"
@@ -1816,6 +2054,11 @@ msgid "Lead Tags"
 msgstr "Liidien tunnisteet"
 
 #. module: crm
+#: model:ir.model.fields,help:crm.field_crm_team_member__lead_day_count
+msgid "Lead assigned to this member this last day (lost one excluded)"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
 msgid "Lead assigned to this member those last 30 days"
 msgstr "Tälle jäsenelle osoitetut liidit viimeisten 30 päivän aikana"
@@ -1829,13 +2072,12 @@ msgstr "Liidi tai mahdollisuus"
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
-msgid "Lead/Opportunities automatic assignment is limited to managers or administrators"
-msgstr "Liidien ja myyntimahdollisuuksien automaattinen jako on rajoitettu esimiesten ja järjestelmävalvojan oikeudeksi"
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "Liidi/mahdollisuus"
+msgid ""
+"Lead/Opportunities automatic assignment is limited to managers or "
+"administrators"
+msgstr ""
+"Liidien ja myyntimahdollisuuksien automaattinen jako on rajoitettu "
+"esimiesten ja järjestelmävalvojan oikeudeksi"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
@@ -1867,6 +2109,11 @@ msgid "Leads (30 days)"
 msgstr "Liidit (30 päivää)"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_team_member__lead_day_count
+msgid "Leads (last 24h)"
+msgstr ""
+
+#. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead_salesteam
 #: model:ir.actions.act_window,name:crm.crm_opportunity_report_action_lead
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_graph_lead
@@ -1876,8 +2123,15 @@ msgstr "Mahdollisuuksien analyysi"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.action_report_crm_lead_salesteam
-msgid "Leads Analysis allows you to check different CRM related information like the treatment delays or number of leads per state. You can sort out your leads analysis by different groups to get accurate grained analysis."
-msgstr "Liidianalyysi mahdollistaa useiden asiakkuuksienhallintaan liittyvien tietojen, kuten käsittelyviiveen tai tietyssä tilassa olevien liidien, tarkastelun. Voit järjestää liidianalyysin eri ryhmien perusteella saadaksesi mahdollisimman tarkan raportin."
+msgid ""
+"Leads Analysis allows you to check different CRM related information like "
+"the treatment delays or number of leads per state. You can sort out your "
+"leads analysis by different groups to get accurate grained analysis."
+msgstr ""
+"Liidianalyysi mahdollistaa useiden asiakkuuksienhallintaan liittyvien "
+"tietojen, kuten käsittelyviiveen tai tietyssä tilassa olevien liidien, "
+"tarkastelun. Voit järjestää liidianalyysin eri ryhmien perusteella "
+"saadaksesi mahdollisimman tarkan raportin."
 
 #. module: crm
 #. odoo-python
@@ -1897,7 +2151,8 @@ msgstr "Liidien luonti"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_all_leads
-msgid "Leads are the qualification step before the creation of an opportunity."
+msgid ""
+"Leads are the qualification step before the creation of an opportunity."
 msgstr "Liidien on karsintavaihe ennen myyntimahdollisuuden luomista."
 
 #. module: crm
@@ -1906,16 +2161,9 @@ msgid "Leads or Opportunities"
 msgstr "Liidit tai mahdollisuudet"
 
 #. module: crm
-#. odoo-python
-#: code:addons/crm/models/crm_team.py:0
-#: code:addons/crm/models/crm_team_member.py:0
-msgid "Leads team allocation should be done for at least 0.2 or maximum 30 work days, not %.2f."
-msgstr "Liidien jakaminen olisi tehtävä vähintään 0,2 tai enintään 30 työpäiväksi, ei %.2f."
-
-#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
-msgstr "Minulle vastuutetut liidit."
+msgstr "Minulle vastuutetut liidit"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -1924,8 +2172,12 @@ msgstr "Liidit joita ei ole vastuutettu"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
-msgid "Leads that you selected that have duplicates. If the list is empty, it means that no duplicates were found"
-msgstr "Valituista liideistä löydetyt duplikaatit. Jos lista on tyhjä, se tarkoittaa että yhtään  kaksoiskappaletta ei löytynyt."
+msgid ""
+"Leads that you selected that have duplicates. If the list is empty, it means"
+" that no duplicates were found"
+msgstr ""
+"Valituista liideistä löydetyt duplikaatit. Jos lista on tyhjä, se tarkoittaa"
+" että yhtään  kaksoiskappaletta ei löytynyt."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -1946,7 +2198,13 @@ msgstr "Liidien / myyntimahdollisuuksien määrä"
 #. odoo-javascript
 #: code:addons/crm/static/src/js/tours/crm.js:0
 msgid "Let's <b>Schedule an Activity.</b>"
-msgstr "<b>Suunnitellaan aktiviteetti</b>."
+msgstr "<b>Suunnitellaan aktiviteetti</b>"
+
+#. module: crm
+#: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
+#: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action_team
+msgid "Let's get to work!"
+msgstr ""
 
 #. module: crm
 #. odoo-javascript
@@ -1962,8 +2220,18 @@ msgstr "Yhdistetään olemassa olevaan asiakkaaseen"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__partner_id
-msgid "Linked partner (optional). Usually created when converting the lead. You can find a partner by its Name, TIN, Email or Internal Reference."
-msgstr "Linkitetty kumppani (optio). Normaalisti luotu, kun muutetaan liidiksi. Voit hakea partneria nimellä, y-tunnuksella, sähköpostiosoitteella tai sisäisellä viitteellä."
+msgid ""
+"Linked partner (optional). Usually created when converting the lead. You can"
+" find a partner by its Name, TIN, Email or Internal Reference."
+msgstr ""
+"Linkitetty kumppani (optio). Normaalisti luotu, kun muutetaan liidiksi. Voit"
+" hakea partneria nimellä, y-tunnuksella, sähköpostiosoitteella tai "
+"sisäisellä viitteellä."
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_team__alias_incoming_local
+msgid "Local-part based incoming detection"
+msgstr "Paikallisiin osiin perustuva saapuvien lähetysten havaitseminen"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_code
@@ -1978,8 +2246,12 @@ msgstr "Näyttää siltä, että mitään ei ole suunnitteilla."
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/js/tours/crm.js:0
-msgid "Looks like nothing is planned. :(<br><br><i>Tip: Schedule activities to keep track of everything you have to do!</i>"
+msgid ""
+"Looks like nothing is planned. :(<br><br><i>Tip: Schedule activities to keep"
+" track of everything you have to do!</i>"
 msgstr ""
+"Näyttää siltä, että mitään ei ole suunniteltu :(<br><br><i>Vinkki: Laadi "
+"aikataulu, jotta pysyt kärryillä siitä, mitä kaikkea sinun on tehtävä!</i>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -2004,7 +2276,7 @@ msgstr "Hävittyjen määrä"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "Lost Lead"
-msgstr ""
+msgstr "Hävitty liidi"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lost_reason_id
@@ -2018,7 +2290,7 @@ msgstr "Häviämisen syy"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Lost Reason:"
-msgstr "Kadonnut syy:"
+msgstr "Häviämisen syy:"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lost_reason_action
@@ -2043,8 +2315,14 @@ msgstr "Hallitse toistuvia suunnitelmia"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_config_settings__crm_auto_assignment_action
-msgid "Manual assign allow to trigger assignment from team form view using an action button. Automatic configures a cron running repeatedly assignment in all teams."
-msgstr "Manuaalinen määritys mahdollistaa määrityksen käynnistämisen tiimilomakkeen näkymästä toimintopainikkeella. Automaattinen määrittää cron-eräajoohjelman, joka suorittaa toistuvasti määrityksen kaikissa tiimeissä."
+msgid ""
+"Manual assign allow to trigger assignment from team form view using an "
+"action button. Automatic configures a cron running repeatedly assignment in "
+"all teams."
+msgstr ""
+"Manuaalinen määritys mahdollistaa määrityksen käynnistämisen tiimilomakkeen "
+"näkymästä toimintopainikkeella. Automaattinen määrittää cron-eräajoohjelman,"
+" joka suorittaa toistuvasti määrityksen kaikissa tiimeissä."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_action__manual
@@ -2052,22 +2330,14 @@ msgid "Manually"
 msgstr "Manuaalinen"
 
 #. module: crm
-#. odoo-python
-#: code:addons/crm/models/crm_lead.py:0
 #: model:ir.actions.act_window,name:crm.crm_lead_lost_action
 msgid "Mark Lost"
 msgstr "Merkitse hävityksi"
 
 #. module: crm
-#. odoo-python
-#: code:addons/crm/models/crm_lead.py:0
-msgid "Mark Won"
-msgstr "Merkitse voitetuksi"
-
-#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "Mark as Lost"
-msgstr ""
+msgstr "Merkitse hävityksi"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -2104,10 +2374,20 @@ msgid "Medium:"
 msgstr "Media:"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__meeting_display_date
+msgid "Meeting Display Date"
+msgstr "Kokouksen näyttöpäivämäärä"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__meeting_display_label
+msgid "Meeting Display Label"
+msgstr "Kokousnäytön etiketti"
+
+#. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Meeting scheduled at %s"
-msgstr ""
+msgstr "Kokous ajoitettu klo %s"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_calendar_event_new
@@ -2118,8 +2398,11 @@ msgstr "Tapaamiset"
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_team_member.py:0
-msgid "Member assignment domain for user %(user)s and team %(team)s is incorrectly formatted"
-msgstr "Käyttäjän %(user)s ja tiimin %(team)s jäsenmääritysalue on väärin muotoiltu"
+msgid ""
+"Member assignment domain for user %(user)s and team %(team)s is incorrectly "
+"formatted"
+msgstr ""
+"Käyttäjän %(user)s ja tiimin %(team)s jäsenmääritysalue on väärin muotoiltu"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
@@ -2140,7 +2423,9 @@ msgstr "Yhdistä mahdollisuudet"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass__deduplicate
 msgid "Merge with existing leads/opportunities of each partner"
-msgstr "Yhdistä olemassa oleviin liideihin/myyntimahdollisuuksiin jokaisella kumppanilla"
+msgstr ""
+"Yhdistä olemassa oleviin liideihin/myyntimahdollisuuksiin jokaisella "
+"kumppanilla"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__name__merge
@@ -2182,7 +2467,9 @@ msgstr "Kuukausittain"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__assignment_max
 msgid "Monthly average leads capacity for all salesmen belonging to the team"
-msgstr "Kaikkien tiimiin kuuluvien myyjien keskimääräinen kuukausittainen liidikapasiteetti"
+msgstr ""
+"Kaikkien tiimiin kuuluvien myyjien keskimääräinen kuukausittainen "
+"liidikapasiteetti"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__is_membership_multi
@@ -2265,19 +2552,15 @@ msgid "Next Activity Type"
 msgstr "Seuraavan toimenpiteen tyyppi"
 
 #. module: crm
+#. odoo-python
+#: code:addons/crm/models/crm_lead.py:0
+msgid "Next Meeting"
+msgstr "Seuraava kokous"
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Next Run"
 msgstr "Seuraava ajo"
-
-#. module: crm
-#: model:ir.model.fields.selection,name:crm.selection__crm_lead__kanban_state__green
-msgid "Next activity is planned"
-msgstr "Seuraava toimenpide on suunniteltu"
-
-#. module: crm
-#: model:ir.model.fields.selection,name:crm.selection__crm_lead__kanban_state__red
-msgid "Next activity late"
-msgstr "Seuraava toimenpide on myöhässä"
 
 #. module: crm
 #. odoo-python
@@ -2288,26 +2571,44 @@ msgstr "Ei"
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
+msgid "No Meeting"
+msgstr "Ei kokousta"
+
+#. module: crm
+#. odoo-python
+#: code:addons/crm/models/crm_lead.py:0
 msgid "No Subject"
 msgstr "Ei aihetta"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
-msgid "No allocated leads to %(team_name)s team and its salespersons because no unassigned lead matches its domain."
-msgstr "%(team_name)s-tiimille ja sen myyjille ei ole jaettu liidejä, koska yksikään määrittelemätön liidi ei vastaa sen toimialuetta."
+msgid ""
+"No allocated leads to %(team_name)s team and its salespersons because no "
+"unassigned lead matches its domain."
+msgstr ""
+"%(team_name)s-tiimille ja sen myyjille ei ole jaettu liidejä, koska yksikään"
+" määrittelemätön liidi ei vastaa sen toimialuetta."
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
-msgid "No allocated leads to %(team_name)s team because it has no capacity. Add capacity to its salespersons."
-msgstr "Liidejä ei ole vastuutettu tiimille %(team_name)s, koska sillä ei ole kapasiteettia. Lisää kapasiteettia sen myyjille."
+msgid ""
+"No allocated leads to %(team_name)s team because it has no capacity. Add "
+"capacity to its salespersons."
+msgstr ""
+"Liidejä ei ole vastuutettu tiimille %(team_name)s, koska sillä ei ole "
+"kapasiteettia. Lisää kapasiteettia sen myyjille."
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
-msgid "No allocated leads to any team or salesperson. Check your Sales Teams and Salespersons configuration as well as unassigned leads."
-msgstr "Ei jaettuja liidejä millekään tiimille tai myyjälle. Tarkista myyntitiimien ja myyjien määritykset sekä jakamattomat liidit."
+msgid ""
+"No allocated leads to any team or salesperson. Check your Sales Teams and "
+"Salespersons configuration as well as unassigned leads."
+msgstr ""
+"Ei jaettuja liidejä millekään tiimille tai myyjälle. Tarkista myyntitiimien "
+"ja myyjien määritykset sekä jakamattomat liidit."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -2316,33 +2617,33 @@ msgid "No data found!"
 msgstr "Tietoja ei löytynyt!"
 
 #. module: crm
-#: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
-#: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action_team
-msgid "No data yet!"
-msgstr "Ei vielä tietoja!"
+#. odoo-python
+#: code:addons/crm/models/crm_team.py:0
+msgid ""
+"No lead assigned to salespersons because no unassigned lead matches their "
+"domains."
+msgstr ""
+"Myyjille ei ole määritetty yhtään liidiä, koska yksikään määrittelemätön "
+"liidi ei vastaa heidän toimialuettaan."
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
-msgid "No lead assigned to salespersons because no unassigned lead matches their domains."
-msgstr "Myyjille ei ole määritetty yhtään liidiä, koska yksikään määrittelemätön liidi ei vastaa heidän toimialuettaan."
+msgid ""
+"No new lead allocated to %(team_name)s team because no unassigned lead "
+"matches its domain."
+msgstr ""
+"Tiimille %(team_name)s ei ole osoitettu uusia liidejä, koska yksikään "
+"määrittelemätön liidi ei vastaa sen toimialuetta."
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
-msgid "No new lead allocated to %(team_name)s team because no unassigned lead matches its domain."
-msgstr "Tiimille %(team_name)s ei ole osoitettu uusia liidejä, koska yksikään määrittelemätön liidi ei vastaa sen toimialuetta."
-
-#. module: crm
-#. odoo-python
-#: code:addons/crm/models/crm_team.py:0
-msgid "No new lead allocated to the teams because no lead match their domains."
-msgstr "Tiimille ei ole jaettu uusia liidejä, koska yksikään liidi ei vastaa niiden toimialueita."
-
-#. module: crm
-#: model:ir.model.fields.selection,name:crm.selection__crm_lead__kanban_state__grey
-msgid "No next activity planned"
-msgstr "Seuraavaa toimenpidettä ei ole suunniteltu"
+msgid ""
+"No new lead allocated to the teams because no lead match their domains."
+msgstr ""
+"Tiimille ei ole jaettu uusia liidejä, koska yksikään liidi ei vastaa niiden "
+"toimialueita."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_forecast
@@ -2392,8 +2693,12 @@ msgstr "Virheiden määrä"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_config_settings__crm_auto_assignment_interval_number
-msgid "Number of interval type between each cron run (e.g. each 2 days or each 4 days)"
-msgstr "Kunkin cron-eräajon väliin jäävien aikavälien määrä (esim. 2 päivän välein tai 4 päivän välein)"
+msgid ""
+"Number of interval type between each cron run (e.g. each 2 days or each 4 "
+"days)"
+msgstr ""
+"Kunkin cron-eräajon väliin jäävien aikavälien määrä (esim. 2 päivän välein "
+"tai 4 päivän välein)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__lead_all_assigned_month_count
@@ -2402,7 +2707,7 @@ msgstr "Viime kuussa vastuutettujen liidien ja myyntimahdollisuuksien määrä."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Toimenpiteitä vaativien viestien määrä"
 
 #. module: crm
@@ -2421,8 +2726,21 @@ msgstr ""
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_2
-msgid "Odoo's artificial intelligence engine predicts the success rate of each opportunity based on your history. You can always update the success rate manually, but if you let Odoo do the job the score is updated while the opportunity moves forward in your sales cycle."
-msgstr "Odoon tekoälymoottori ennustaa jokaisen tilaisuuden onnistumisprosentin historiasi perusteella. Voit aina päivittää onnistumisprosentin manuaalisesti, mutta jos annat Odoon tehdä työn, pisteet päivittyvät samalla, kun tilaisuus etenee myyntisyklissäsi."
+msgid ""
+"Odoo's artificial intelligence engine predicts the success rate of each "
+"opportunity based on your history. You can always update the success rate "
+"manually, but if you let Odoo do the job the score is updated while the "
+"opportunity moves forward in your sales cycle."
+msgstr ""
+"Odoon tekoälymoottori ennustaa jokaisen tilaisuuden onnistumisprosentin "
+"historiasi perusteella. Voit aina päivittää onnistumisprosentin "
+"manuaalisesti, mutta jos annat Odoon tehdä työn, pisteet päivittyvät "
+"samalla, kun tilaisuus etenee myyntisyklissäsi."
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+msgid "Ongoing"
+msgstr "Jatkuva"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
@@ -2433,7 +2751,7 @@ msgstr "Avoimet mahdollisuudet"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
 msgid "Open Opportunity"
-msgstr "avoin mahdollisuus"
+msgstr "Avoin myyntimahdollisuus"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
@@ -2466,8 +2784,18 @@ msgstr "Mahdollisuuksien analyysi"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.action_report_crm_opportunity_salesteam
-msgid "Opportunities Analysis gives you an instant access to your opportunities with information such as the expected revenue, planned cost, missed deadlines or the number of interactions per opportunity. This report is mainly used by the sales manager in order to do the periodic review with the channels of the sales pipeline."
-msgstr "Mahdollisuusanalyysi antaa välittömän pääsyn mahdollisuuksien erilaisiin tietoihin, kuten odotettu tuotto, suunniteltu kustannus, ohitetut määräajat tai mahdollisuuden sisäisten vuorovaikutteisten tapahtumien määrä. Useimmiten myynnin esimies käyttää tätä raporttia tehdäkseen jaksottaisarvion myyntiputkesta myyntitiimien kanssa."
+msgid ""
+"Opportunities Analysis gives you an instant access to your opportunities "
+"with information such as the expected revenue, planned cost, missed "
+"deadlines or the number of interactions per opportunity. This report is "
+"mainly used by the sales manager in order to do the periodic review with the"
+" channels of the sales pipeline."
+msgstr ""
+"Mahdollisuusanalyysi antaa välittömän pääsyn mahdollisuuksien erilaisiin "
+"tietoihin, kuten odotettu tuotto, suunniteltu kustannus, ohitetut määräajat "
+"tai mahdollisuuden sisäisten vuorovaikutteisten tapahtumien määrä. "
+"Useimmiten myynnin esimies käyttää tätä raporttia tehdäkseen "
+"jaksottaisarvion myyntiputkesta myyntitiimien kanssa."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_graph_forecast
@@ -2494,8 +2822,6 @@ msgstr "Minulle sovitut mahdollisuudet"
 #: model:ir.model.fields,field_description:crm.field_calendar_event__opportunity_id
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead__name
-#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count
-#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count
 #: model:ir.model.fields.selection,name:crm.selection__crm_activity_report__lead_type__opportunity
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__type__opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -2504,6 +2830,12 @@ msgstr "Minulle sovitut mahdollisuudet"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Opportunity"
 msgstr "Mahdollisuus"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count
+#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count
+msgid "Opportunity Count"
+msgstr ""
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_create
@@ -2551,13 +2883,14 @@ msgstr "Myyntimahdollisuus voitettu"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_force_thread_id
-msgid "Optional ID of a thread (record) to which all incoming messages will be attached, even if they did not reply to it. If set, this will disable the creation of new records completely."
-msgstr "Valinnainen sen viestiketjun (tietueen) ID, johon kaikki saapuvat viestit liitetään, vaikka niihin ei vastattaisikaan. Jos tämä asetetaan, uusien tietueiden luominen estetään kokonaan."
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
-msgid "Organization / Contact"
-msgstr "Yritys / kontakti"
+msgid ""
+"Optional ID of a thread (record) to which all incoming messages will be "
+"attached, even if they did not reply to it. If set, this will disable the "
+"creation of new records completely."
+msgstr ""
+"Valinnainen sen viestiketjun (tietueen) ID, johon kaikki saapuvat viestit "
+"liitetään, vaikka niihin ei vastattaisikaan. Jos tämä asetetaan, uusien "
+"tietueiden luominen estetään kokonaan."
 
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_over_3_years
@@ -2567,7 +2900,7 @@ msgstr "Yli 3 vuotta"
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_over_5_years
 msgid "Over 5 years "
-msgstr "Yli 5 vuotta"
+msgstr "Yli 5 vuotta "
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
@@ -2587,11 +2920,6 @@ msgid "Overdue Opportunity"
 msgstr "Erääntynyt mahdollisuus"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_user_id
-msgid "Owner"
-msgstr "Omistaja"
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_parent_model_id
 msgid "Parent Model"
 msgstr "Ylätason malli"
@@ -2603,8 +2931,14 @@ msgstr "Ylätason keskustelun ID"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_parent_model_id
-msgid "Parent model holding the alias. The model holding the alias reference is not necessarily the model given by alias_model_id (example: project (parent_model) and task (model))"
-msgstr "Aliaksen hallussa oleva emomalli. Alias-viittauksen sisältävä malli ei välttämättä ole alias_model_id:llä annettu malli (esimerkki: project (parent_model) ja task (model))"
+msgid ""
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
+"(parent_model) and task (model))"
+msgstr ""
+"Aliaksen hallussa oleva emomalli. Alias-viittauksen sisältävä malli ei "
+"välttämättä ole alias_model_id:llä annettu malli (esimerkki: project "
+"(parent_model) ja task (model))"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_email_update
@@ -2677,12 +3011,6 @@ msgid "Plan Name"
 msgstr "Suunnitelman nimi"
 
 #. module: crm
-#. odoo-python
-#: code:addons/crm/models/crm_lead.py:0
-msgid "Please select more than one element (lead or opportunity) from the list view."
-msgstr "Valitse enemmän kuin yksi elementti (liidi tai mahdollisuus) luettelonäkymästä."
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_pls_update__pls_fields
 msgid "Pls Fields"
 msgstr "Kentät"
@@ -2718,7 +3046,7 @@ msgstr "Mahdollisten liidien kaksoiskappaleiden määrä"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Predictive Lead Scoring"
-msgstr ""
+msgstr "Ennakoiva liidien pisteytys"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_field_labels
@@ -2728,7 +3056,9 @@ msgstr "Ennakoiva liidin pisteytyksen tunniste"
 #. module: crm
 #: model:ir.actions.server,name:crm.website_crm_score_cron_ir_actions_server
 msgid "Predictive Lead Scoring: Recompute Automated Probabilities"
-msgstr "Ennakoiva liidien pisteytys: Automaattisten todennäköisyyksien uudelleenlaskenta"
+msgstr ""
+"Ennakoiva liidien pisteytys: Automaattisten todennäköisyyksien "
+"uudelleenlaskenta"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__priority
@@ -2759,6 +3089,8 @@ msgstr "Todennäköisyys:"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lead_properties
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Properties"
 msgstr "Ominaisuudet"
 
@@ -2775,7 +3107,7 @@ msgstr "MRR suhteutettuna"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_prorated
 msgid "Prorated Recurring Revenues"
-msgstr ""
+msgstr "Ositetut toistuvat tulot"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__prorated_revenue
@@ -2795,7 +3127,7 @@ msgstr "Etenee"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Arviointi"
 
 #. module: crm
 #. odoo-javascript
@@ -2918,8 +3250,6 @@ msgstr "Myynti"
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency__team_id
 #: model:ir.model.fields,field_description:crm.field_crm_merge_opportunity__team_id
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_id
-#: model:ir.model.fields,field_description:crm.field_res_partner__team_id
-#: model:ir.model.fields,field_description:crm.field_res_users__team_id
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2973,7 +3303,8 @@ msgstr "Puhdistettu numero"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_my_activities
 msgid "Schedule activities to keep track of everything you have to do."
-msgstr "Laadi aikataulu, jotta pysyt kärryillä kaikesta, mitä sinun on tehtävä."
+msgstr ""
+"Laadi aikataulu, jotta pysyt kärryillä kaikesta, mitä sinun on tehtävä."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2987,9 +3318,10 @@ msgid "Search Opportunities"
 msgstr "Etsi mahdollisuuksia"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
-msgid "Select Leads/Opportunities"
-msgstr "Valitse liidit/mahdollisuudet"
+#. odoo-python
+#: code:addons/crm/models/crm_lead.py:0
+msgid "Select at least two Leads/Opportunities from the list to merge them."
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mail_compose
@@ -3005,19 +3337,17 @@ msgstr "Järjestys"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_recurring_plan_action
-msgid "Set Recurring Plans on Opportunities to display the contracts' renewal periodicity<br>(e.g: Monthly, Yearly)."
-msgstr "Aseta toistuvat sopimukset myyntimahdollisuuksille näyttämään sopimusten uusimisjaksot<br>(esim. kuukausittain tai vuosittain)."
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_lead_lost__set_reason
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
-msgid "Set a Loss Reason"
+msgid ""
+"Set Recurring Plans on Opportunities to display the contracts' renewal "
+"periodicity<br>(e.g: Monthly, Yearly)."
 msgstr ""
+"Aseta toistuvat sopimukset myyntimahdollisuuksille näyttämään sopimusten "
+"uusimisjaksot<br>(esim. kuukausittain tai vuosittain)."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Set a new stage in your opportunity pipeline"
-msgstr "Lisää uusi vaihe myyntiputkeen."
+msgstr "Lisää uusi vaihe myyntiputkeen"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_config_settings_action
@@ -3040,7 +3370,8 @@ msgstr "Näytä toistuvat tulot -valikko"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_my_activities_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Show all opportunities for which the next action date is before today"
-msgstr "Näytä kaikki mahdollisuudet, missä seuraavan toimenpiteen päivä on mennyt"
+msgstr ""
+"Näytä kaikki mahdollisuudet, missä seuraavan toimenpiteen päivä on mennyt"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -3088,8 +3419,12 @@ msgstr "Lähde:"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__team_id
-msgid "Specific team that uses this stage. Other teams will not be able to see or use this stage."
-msgstr "Tietty ryhmä joka käyttää tätä vaihetta. Muut ryhmät eivät voi nähdä tai käyttää tätä vaihetta."
+msgid ""
+"Specific team that uses this stage. Other teams will not be able to see or "
+"use this stage."
+msgstr ""
+"Tietty ryhmä joka käyttää tätä vaihetta. Muut ryhmät eivät voi nähdä tai "
+"käyttää tätä vaihetta."
 
 #. module: crm
 #. odoo-python
@@ -3145,16 +3480,10 @@ msgstr ""
 "           missä vaiheessa tietty mahdollisuus on."
 
 #. module: crm
-#: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
-#: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action_team
-msgid "Start scheduling activities on your opportunities"
-msgstr "Aloita toimintojen aikataulutus myyntimahdollisuuksistasi"
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__state_id
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "State"
-msgstr "Tila"
+msgstr "Alue"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_state
@@ -3167,7 +3496,12 @@ msgstr ""
 "Tila aktiviteetin perusteella\n"
 "Myöhässä: Eräpäivä on menneisyydessä\n"
 "Tänään: Eräpäivä on tänään\n"
-"Suunniteltu: Tulevaisuudessa"
+"Suunniteltu: Tulevaisuudessa."
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__duration_tracking
+msgid "Status time"
+msgstr "Tila-aika"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__street
@@ -3193,7 +3527,7 @@ msgstr "Katuosoite2"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Subject: "
-msgstr ""
+msgstr "Aihe: "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__subtype_id
@@ -3244,33 +3578,46 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
-msgid "The email address associated with this channel. New emails received will automatically create new leads assigned to the channel."
-msgstr "Tälle kanavalle yhdistetty sähköpostiosoite. Uudet saapuvat sähköpostit luovat automaattisesti myyntikanavalle määritettyjä liidejä."
+msgid ""
+"The email address associated with this channel. New emails received will "
+"automatically create new leads assigned to the channel."
+msgstr ""
+"Tälle kanavalle yhdistetty sähköpostiosoite. Uudet saapuvat sähköpostit "
+"luovat automaattisesti myyntikanavalle määritettyjä liidejä."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_model_id
-msgid "The model (Odoo Document Kind) to which this alias corresponds. Any incoming email that does not reply to an existing record will cause the creation of a new record of this model (e.g. a Project Task)"
-msgstr "Malli (Odoo Document Kind), jota tämä alias vastaa. Kaikki saapuvat sähköpostiviestit, jotka eivät vastaa olemassa olevaan tietueeseen, aiheuttavat uuden tietueen luomisen tähän malliin (esim. projektitehtävä)"
+msgid ""
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
+" email that does not reply to an existing record will cause the creation of "
+"a new record of this model (e.g. a Project Task)"
+msgstr ""
+"Malli (Odoo Document Kind), jota tämä alias vastaa. Kaikki saapuvat "
+"sähköpostiviestit, jotka eivät vastaa olemassa olevaan tietueeseen, "
+"aiheuttavat uuden tietueen luomisen tähän malliin (esim. projektitehtävä)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_name
-msgid "The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>"
-msgstr "Sähköpostin aliaksen nimi, esim. 'jobs', jos haluat saada sähköposteja osoitteeseen <jobs@example.odoo.com>"
+msgid ""
+"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
+"<jobs@example.odoo.com>"
+msgstr ""
+"Sähköpostin aliaksen nimi, esim. 'jobs', jos haluat saada sähköposteja "
+"osoitteeseen <jobs@example.odoo.com>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__partner_name
-msgid "The name of the future partner company that will be created while converting the lead into opportunity"
-msgstr "Tulevan kumppaniyrityksen nimi, joka luodaaan muutettaessa liidi mahdollisuudeksi"
+msgid ""
+"The name of the future partner company that will be created while converting"
+" the lead into opportunity"
+msgstr ""
+"Tulevan kumppaniyrityksen nimi, joka luodaaan muutettaessa liidi "
+"mahdollisuudeksi"
 
 #. module: crm
 #: model:ir.model.constraint,message:crm.constraint_crm_recurring_plan_check_number_of_months
 msgid "The number of month can't be negative."
 msgstr "Kuukauden määrä ei voi olla negatiivinen."
-
-#. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_user_id
-msgid "The owner of records created upon receiving emails on this alias. If this field is not set the system will attempt to find the right owner based on the sender (From) address, or will use the Administrator account if no system user is found for that address."
-msgstr "Tämän aliaksen sähköpostiviestien vastaanottamisen yhteydessä luotujen tietueiden omistaja. Jos tätä kenttää ei ole asetettu, järjestelmä yrittää löytää oikean omistajan lähettäjän (From) -osoitteen perusteella tai käyttää järjestelmänvalvojan tiliä, jos kyseisestä osoitteesta ei löydy järjestelmän käyttäjää."
 
 #. module: crm
 #: model:ir.model.constraint,message:crm.constraint_crm_lead_check_probability
@@ -3284,8 +3631,12 @@ msgstr "Onnistumisprosentti lasketaan seuraavien tekijöiden perusteella"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
-msgid "The success rate is computed based on the stage, but you can add more fields in the statistical analysis."
-msgstr "Onnistumisprosentti lasketaan vaiheen perusteella, mutta voit lisätä muita kenttiä tilastolliseen analyysiin."
+msgid ""
+"The success rate is computed based on the stage, but you can add more fields"
+" in the statistical analysis."
+msgstr ""
+"Onnistumisprosentti lasketaan vaiheen perusteella, mutta voit lisätä muita "
+"kenttiä tilastolliseen analyysiin."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
@@ -3294,58 +3645,87 @@ msgstr "Tämä analyysi näyttää, kuinka monta liidiä on luotu kuukaudessa."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
-msgid "This bar allows to filter the opportunities based on scheduled activities."
-msgstr "Tämä palkki antaa mahdollisuuden suodattaa mahdollisuuksia aikataulutettujen tehtävien perusteella."
+msgid ""
+"This bar allows to filter the opportunities based on scheduled activities."
+msgstr ""
+"Tämä palkki antaa mahdollisuuden suodattaa mahdollisuuksia aikataulutettujen"
+" tehtävien perusteella."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid "This can be used to automatically assign leads to sales persons based on rules"
-msgstr "Tätä voidaan käyttää liidien automaattiseen jakamiseen myyjille sääntöjen perusteella"
+msgid ""
+"This can be used to automatically assign leads to sales persons based on "
+"rules"
+msgstr ""
+"Tätä voidaan käyttää liidien automaattiseen jakamiseen myyjille sääntöjen "
+"perusteella"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "This can be used to compute statistical probability to close a lead"
-msgstr "Tätä voidaan käyttää liidin voittamisen tilastollisen todennäköisyyden laskentaan"
+msgstr ""
+"Tätä voidaan käyttää liidin voittamisen tilastollisen todennäköisyyden "
+"laskentaan"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
-msgstr "Tämä sähköposti on massapostitusten mustalla listalla. Klikkaa poistaaksesi mustalta listalta."
+msgstr ""
+"Tämä sähköposti on massapostitusten mustalla listalla. Klikkaa poistaaksesi "
+"mustalta listalta."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_normalized
-msgid "This field is used to search on email address as the primary email field can contain more than strictly an email address."
-msgstr "Tätä kenttää käytetään sähköpostiosoitteiden hakuun, koska ensisijainen sähköpostiosoite voi sisältää muutakin kuin vain sähköpostiosoitteen."
+msgid ""
+"This field is used to search on email address as the primary email field can"
+" contain more than strictly an email address."
+msgstr ""
+"Tätä kenttää käytetään sähköpostiosoitteiden hakuun, koska ensisijainen "
+"sähköpostiosoite voi sisältää muutakin kuin vain sähköpostiosoitteen."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__lang_code
 msgid "This field is used to set/get locales for user"
-msgstr "Tämän kentän avulla haetaan asetetaan käyttäjän lokalisaatio"
+msgstr "Tämän kentän avulla haetaan asetetaan käyttäjän maa-asetukset"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__campaign_id
-msgid "This is a name that helps you keep track of your different campaign efforts, e.g. Fall_Drive, Christmas_Special"
-msgstr "Nimi, joka auttaa luokittelemaan erilaiset kampanjatoimet esim. joulutervehdys, kesäkampanja"
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
+msgstr ""
+"Nimi, joka auttaa luokittelemaan erilaiset kampanjatoimet esim. "
+"joulutervehdys, kesäkampanja"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr "Toimitustapa, esim. postitus, sähköposti tai mainosbanneri."
+msgstr "Toimitustapa, esim. postitus, sähköposti tai mainosbanneri"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__source_id
-msgid "This is the source of the link, e.g. Search Engine, another domain, or name of email list"
-msgstr "Linkin lähde, esim. hakukone, toinen verkkotunnus tai sähköpostilistan nimi"
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
+msgstr ""
+"Linkin lähde, esim. hakukone, toinen verkkotunnus tai sähköpostilistan nimi"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
-msgstr "Tämä puhelinnumero on markkinointikieltolistalla tekstiviestimarkkinointia varten. Klikkaa poistaaksesi markkinointikiellon."
+msgid ""
+"This phone number is blacklisted for SMS Marketing. Click to unblacklist."
+msgstr ""
+"Tämä puhelinnumero on markkinointikieltolistalla tekstiviestimarkkinointia "
+"varten. Klikkaa poistaaksesi markkinointikiellon."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__fold
-msgid "This stage is folded in the kanban view when there are no records in that stage to display."
-msgstr "Tämä vaihe on laskostettuna kanban-näkymässä, kun vaiheessa ei ole yhtään näytettävää tietuetta."
+msgid ""
+"This stage is folded in the kanban view when there are no records in that "
+"stage to display."
+msgstr ""
+"Tämä vaihe on laskostettuna kanban-näkymässä, kun vaiheessa ei ole yhtään "
+"näytettävää tietuetta."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -3371,6 +3751,12 @@ msgid "Tip: Do not waste time recording customers' data"
 msgstr "Vinkki: Älä tuhlaa aikaa asiakkaiden tietojen tallentamiseen"
 
 #. module: crm
+#: model:digest.tip,name:crm.digest_tip_crm_6
+#: model_terms:digest.tip,tip_description:crm.digest_tip_crm_6
+msgid "Tip: Identify Bottlenecks at a glance"
+msgstr ""
+
+#. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_3
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_3
 msgid "Tip: Manage your pipeline"
@@ -3383,22 +3769,26 @@ msgid "Tip: Opportunity win rate is predicted with AI"
 msgstr "Vinkki: Tekoälyn avulla ennustetaan mahdollisuuksien voittoprosentti"
 
 #. module: crm
+#: model:digest.tip,name:crm.digest_tip_crm_7
+#: model_terms:digest.tip,tip_description:crm.digest_tip_crm_7
+msgid "Tip: Turn Sales Forecasting into Child's Play"
+msgstr ""
+
+#. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_5
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_5
 msgid "Tip: Turn a selection of opportunities into a map"
 msgstr "Vinkki: Tee myyntimahdollisuuksien valikoimasta kartta"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_lead__title
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "Title"
-msgstr "Otsikko"
-
-#. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
-msgid "To prevent data loss, Leads and Opportunities can only be merged by groups of %(max_length)s."
-msgstr "Tietojen menetyksen estämiseksi liidit ja myyntimahdollisuudet voidaan yhdistää vain %(max_length)s-ryhmiin."
+msgid ""
+"To prevent data loss, Leads and Opportunities can only be merged by groups "
+"of %(max_length)s."
+msgstr ""
+"Tietojen menetyksen estämiseksi liidit ja myyntimahdollisuudet voidaan "
+"yhdistää vain %(max_length)s-ryhmiin."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3424,8 +3814,12 @@ msgstr "Jäljellä olevat 12 kuukautta"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__lead_all_assigned_month_exceeded
-msgid "True if the monthly lead assignment count is greater than the maximum assignment limit, false otherwise."
+msgid ""
+"True if the monthly lead assignment count is greater than the maximum "
+"assignment limit, false otherwise."
 msgstr ""
+"True, jos kuukausittainen liidien määritysmäärä on suurempi kuin määrityksen"
+" enimmäisraja, muutoin False."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -3447,7 +3841,7 @@ msgstr "Tyyppiä käytetään erottamaan liidit ja mahdollisuudet toisistaan"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Poikkeusaktiviteetin tyyppi tietueella"
+msgstr "Poikkeusaktiviteetin tyyppi tietueella."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -3493,7 +3887,7 @@ msgstr "Tulevat päätökset"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
 msgid "Update"
-msgstr ""
+msgstr "Päivitä"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_pls_update_action
@@ -3513,8 +3907,12 @@ msgstr "Käytä liidejä"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
-msgid "Use Lost Reasons to report on why opportunities are lost (e.g.\"Undercut by competitors\")."
-msgstr "Käytä Häviön syy -toimintoa raportoidaksesi, miksi myyntimahdolliuuksia on hävitty (esim. \"Kilpailija myi halvemmalla\")."
+msgid ""
+"Use Lost Reasons to report on why opportunities are lost (e.g.\"Undercut by "
+"competitors\")."
+msgstr ""
+"Käytä Häviön syy -toimintoa raportoidaksesi, miksi myyntimahdolliuuksia on "
+"hävitty (esim. \"Kilpailija myi halvemmalla\")."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner_mass__action__each_exist_or_create
@@ -3536,24 +3934,48 @@ msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid "Use leads if you need a qualification step before creating an opportunity or a customer. It can be a business card you received, a contact form filled in your website, or a file of unqualified prospects you import, etc. Once qualified, the lead can be converted into a business opportunity and/or a new customer in your address book."
-msgstr "Käytä liidejä, jos tarvitset luokitteluvaiheen ennen mahdollisuuden tai asiakkaan luomista. Liidi voi olla saamasi käyntikortti, nettisivuilla täytetty yhteydenottolomake tai tuontitiedosto luokittelemattomista prospekteista tms. Kun liidi on luokiteltu, se voidaan muuttaa mahdollisuudeksi ja/tai uudeksi asiakkaaksi."
+msgid ""
+"Use leads if you need a qualification step before creating an opportunity or"
+" a customer. It can be a business card you received, a contact form filled "
+"in your website, or a file of unqualified prospects you import, etc. Once "
+"qualified, the lead can be converted into a business opportunity and/or a "
+"new customer in your address book."
+msgstr ""
+"Käytä liidejä, jos tarvitset luokitteluvaiheen ennen mahdollisuuden tai "
+"asiakkaan luomista. Liidi voi olla saamasi käyntikortti, nettisivuilla "
+"täytetty yhteydenottolomake tai tuontitiedosto luokittelemattomista "
+"prospekteista tms. Kun liidi on luokiteltu, se voidaan muuttaa "
+"mahdollisuudeksi ja/tai uudeksi asiakkaaksi."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
-msgid "Use the top left <i>Create</i> button, or send an email to"
-msgstr "Käytä vasemmassa yläkulmassa olevaa <i>Luo-painiketta</i> tai lähetä sähköpostia osoitteeseen"
+msgid "Use the <i>New</i> button, or send an email to"
+msgstr "Käytä <i>Uusi-painiketta</i> tai lähetä sähköpostia osoitteeseen"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
-msgid "Use the top left <i>Create</i> button, or send an email to %(email_link)s to test the email gateway."
+msgid ""
+"Use the <i>New</i> button, or send an email to %(email_link)s to test the "
+"email gateway."
+msgstr ""
+"Käytä <i>Uusi</i>-painiketta tai lähetä sähköpostiviesti osoitteeseen "
+"%(email_link)s testataksesi sähköpostin välityspalvelinta."
+
+#. module: crm
+#: model_terms:digest.tip,tip_description:crm.digest_tip_crm_7
+msgid ""
+"Use the CRM Forecast Kanban to easily define when Opportunities are expected"
+" to be won."
 msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
-msgid "Use the top left Create button, or configure an email alias to test the email gateway."
-msgstr "Käytä vasemmassa yläkulmassa olevaa Luo-painiketta tai määritä sähköpostipeitenimi testataksesi sähköpostiporttia."
+msgid ""
+"Use the New button, or configure an email alias to test the email gateway."
+msgstr ""
+"Käytä Uusi-painiketta tai määritä sähköpostin alias-nimi "
+"sähköpostipalvelimen testaamista varten."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -3563,12 +3985,8 @@ msgstr "Tämän valikon avulla saat yleiskuvan myyntiputkestasi."
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__sequence
 msgid "Used to order stages. Lower is better."
-msgstr "Käytetään myyntiprosessin vaiheiden järjestämiseen. Pienempi on parempi."
-
-#. module: crm
-#: model:ir.model,name:crm.model_res_users
-msgid "User"
-msgstr "Käyttäjä"
+msgstr ""
+"Käytetään myyntiprosessin vaiheiden järjestämiseen. Pienempi on parempi."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__user_company_ids
@@ -3638,7 +4056,7 @@ msgstr "Tervetuloa Demo"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "What went wrong?"
-msgstr ""
+msgstr "Mikä meni pieleen?"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead4
@@ -3654,11 +4072,6 @@ msgstr "Voitettu"
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency__won_count
 msgid "Won Count"
 msgstr "Voitettujen määrä"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_res_users__target_sales_won
-msgid "Won in Opportunities Target"
-msgstr "Voitettujen myyntimahdollisuuksissa tavoite"
 
 #. module: crm
 #. odoo-python
@@ -3723,20 +4136,25 @@ msgid "Zip"
 msgstr "Postinumero"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
+msgid "alias"
+msgstr "alias"
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "e.g. \"0123456789\""
-msgstr ""
+msgstr "esim. \"0123456789\""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "e.g. \"Monthly\""
-msgstr ""
+msgstr "esim. \"Kuukausittain\""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "e.g. \"email@address.com\""
-msgstr ""
+msgstr "esim. \"email@address.com\""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
@@ -3760,6 +4178,11 @@ msgid "e.g. https://www.odoo.com"
 msgstr "esim. https://www.odoo.com"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
+msgid "e.g. mycompany.com"
+msgstr "esim. mycompany.com"
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "for the leads created as of the"
 msgstr "liidien osalta, jotka on luotu"
@@ -3768,6 +4191,11 @@ msgstr "liidien osalta, jotka on luotu"
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "generate opportunities in your pipeline?<br>"
 msgstr "luoda myyntimahdollisuuksia myyntiputkessasi?<br>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
+msgid "lost"
+msgstr "menetetty"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count
@@ -3782,10 +4210,11 @@ msgstr "testataksesi sähköpostivälittäjää."
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "to your CRM. This email address is configurable by sales team members."
-msgstr "cRM:ään. Myyntitiimin jäsenet voivat määrittää tämän sähköpostiosoitteen."
+msgstr ""
+"cRM:ään. Myyntitiimin jäsenet voivat määrittää tämän sähköpostiosoitteen."
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "unknown"
-msgstr "Tuntematon"
+msgstr "tuntematon"

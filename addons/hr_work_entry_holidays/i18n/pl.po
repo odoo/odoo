@@ -1,0 +1,98 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_work_entry_holidays
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_contract__display_name
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_leave__display_name
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_leave_type__display_name
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry__display_name
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry_type__display_name
+msgid "Display Name"
+msgstr "Nazwa wyświetlana"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model,name:hr_work_entry_holidays.model_hr_contract
+msgid "Employee Contract"
+msgstr "Umowa pracownika"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model,name:hr_work_entry_holidays.model_hr_work_entry
+msgid "HR Work Entry"
+msgstr "Wpis pracy HR"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model,name:hr_work_entry_holidays.model_hr_work_entry_type
+msgid "HR Work Entry Type"
+msgstr "Typ zapisu pracy"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_contract__id
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_leave__id
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_leave_type__id
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry__id
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry_type__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_work_entry_holidays
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_holidays.work_entry_type_leave_form_inherit
+msgid "Payroll"
+msgstr "Wynagrodzenie"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry__leave_state
+msgid "Status"
+msgstr "Status"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model.fields,help:hr_work_entry_holidays.field_hr_work_entry__leave_state
+msgid ""
+"The status is set to 'To Submit', when a time off request is created.\n"
+"The status is 'To Approve', when time off request is confirmed by user.\n"
+"The status is 'Refused', when time off request is refused by manager.\n"
+"The status is 'Approved', when time off request is approved by manager."
+msgstr ""
+"Status jest ustawiony na 'Do przesłania', gdy tworzony jest wniosek o wolne.\n"
+"Status 'Do zatwierdzenia', gdy wniosek o wolne jest potwierdzany przez użytkownika.\n"
+"Status 'Odrzucony', gdy wniosek o wolne jest odrzucony przez kierownika.\n"
+"Status 'Zatwierdzony', gdy wniosek o wolne jest zatwierdzony przez kierownika."
+
+#. module: hr_work_entry_holidays
+#: model:ir.model,name:hr_work_entry_holidays.model_hr_leave
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry__leave_id
+msgid "Time Off"
+msgstr "Dni wolne"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model,name:hr_work_entry_holidays.model_hr_leave_type
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry_type__leave_type_ids
+msgid "Time Off Type"
+msgstr "Typ dni wolnych"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_leave_type__work_entry_type_id
+msgid "Work Entry Type"
+msgstr "Typ zapisu pracy"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model.fields,help:hr_work_entry_holidays.field_hr_work_entry_type__leave_type_ids
+msgid "Work entry used in the payslip."
+msgstr "Zapis pracy używany w pasku wypłaty."

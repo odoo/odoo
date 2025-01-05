@@ -1,0 +1,1549 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mail_group
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid ") <span invisible=\"not send_email\">and send them an email</span>."
+msgstr ") <span invisible=\"not send_email\">và gửi cho họ một email</span>."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "<br/> You'll be notified as soon as some new content is posted."
+msgstr "<br/> Bạn sẽ được thông báo ngay khi có nội dung mới được đăng."
+
+#. module: mail_group
+#: model:mail.template,body_html:mail_group.mail_template_list_subscribe
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hello,<br><br>\n"
+"                You have requested to be subscribed to the mailing list <strong t-out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                To confirm, please visit the following link: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
+"                <br><br>\n"
+"                If this was a mistake or you did not requested this action, please ignore this message.\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Xin chào,<br><br>\n"
+"                Bạn đã yêu cầu được đăng ký vào danh sách gửi thư này <strong t-out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                Để xác nhận, hãy truy cập liên kết sau: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
+"                <br><br>\n"
+"                Nếu đây là nhầm lẫn hoặc bạn không yêu cầu đăng ký, vui lòng bỏ qua tin nhắn này.\n"
+"            </div>\n"
+"        "
+
+#. module: mail_group
+#: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hello,<br><br>\n"
+"                You have requested to be unsubscribed to the mailing list <strong t-out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                To confirm, please visit the following link: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>.\n"
+"                <br><br>\n"
+"                If this was a mistake or you did not requested this action, please ignore this message.\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Xin chào,<br><br>\n"
+"                Bạn đã yêu cầu huỷ đăng ký khỏi danh sách gửi thư này <strong t-out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                Để xác nhận, hãy truy cập liên kết sau: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>.\n"
+"                <br><br>\n"
+"                Nếu đây là nhầm lẫn hoặc bạn không yêu cầu huỷ đăng ký, vui lòng bỏ qua tin nhắn này.\n"
+"            </div>\n"
+"        "
+
+#. module: mail_group
+#: model:mail.template,body_html:mail_group.mail_template_guidelines
+msgid ""
+"<div>\n"
+"                <p>Hello <t t-out=\"object.partner_id.name or ''\"></t>,</p>\n"
+"                <p>Please find below the guidelines of the <t t-out=\"object.mail_group_id.name\"></t> mailing list.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<div>\n"
+"                <p>Xin chào <t t-out=\"object.partner_id.name or ''\"></t>,</p>\n"
+"                <p>Vui lòng tham khảo quy định về <t t-out=\"object.mail_group_id.name\"></t> danh sách gửi thư</p> dưới đây.\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
+"            </div>\n"
+"        "
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_footer
+msgid "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgstr "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Ngày\" title=\"Ngày\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
+msgstr ""
+"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Bí danh\" "
+"title=\"Bí danh\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_name
+msgid "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
+msgstr "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Bí danh\" title=\"Bí danh\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
+"title=\"Recipients\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Người nhận\" "
+"title=\"Người nhận\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+msgid ""
+"<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
+"title=\"Previous message\"/>"
+msgstr ""
+"<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Tin nhắn trước đó\" "
+"title=\"Tin nhắn trước đó\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+msgid ""
+"<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Next message\" "
+"title=\"Next message\"/>"
+msgstr ""
+"<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Tin nhắn tiếp "
+"theo\" title=\"Tin nhắn tiếp theo\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+msgid ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show attachments\""
+" title=\"Show attachments\"/>"
+msgstr ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Hiển thị tệp đính "
+"kèm\" title=\"Hiển thị tệp đính kèm\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
+"title=\"Show replies\"/>"
+msgstr ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Hiển thị câu trả "
+"lời\" title=\"Hiển thị câu trả lời\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+msgid ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide "
+"attachments\" title=\"Hide attachments\"/>"
+msgstr ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Ẩn tệp đính kèm\""
+" title=\"Ẩn tệp đính kèm\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
+"title=\"Hide replies\"/>"
+msgstr ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Ẩn câu trả lời\" "
+"title=\"Ẩn câu trả lời\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid "<span class=\"bg-warning\">Pending</span>"
+msgstr "<span class=\"bg-warning\">Đang chờ</span>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+msgid ""
+"<span class=\"ms-2 badge text-bg-success\" invisible=\"author_moderation != 'allow'\">Whitelisted</span>\n"
+"                            <span class=\"ms-2 badge text-bg-danger\" invisible=\"author_moderation != 'ban'\">Banned</span>"
+msgstr ""
+"<span class=\"ms-2 badge text-bg-success\" invisible=\"author_moderation != 'allow'\">Cho phép</span>\n"
+"                            <span class=\"ms-2 badge text-bg-danger\" invisible=\"author_moderation != 'ban'\">Cấm</span>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_footer
+msgid "<span class=\"mx-2\">-</span>"
+msgstr "<span class=\"mx-2\">-</span>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
+msgid "<span>By thread</span>"
+msgstr "<span>Theo luồng</span>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"<span>No Mail Group yet.</span>\n"
+"                    <br/>"
+msgstr ""
+"<span>Chưa có nhóm gửi thư.</span>\n"
+"                    <br/>"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_defaults
+msgid ""
+"A Python dictionary that will be evaluated to provide default values when "
+"creating new records for this alias."
+msgstr ""
+"Một từ điển Python sẽ được đánh giá để cung cấp giá trị mặc định khi tạo bản"
+" ghi mới cho bí danh này. "
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Accept"
+msgstr "Chấp nhận"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__accepted
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+msgid "Accepted"
+msgstr "Được chấp thuận"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__action
+msgid "Action"
+msgstr "Tác vụ"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__active
+msgid "Active"
+msgstr "Đang hoạt động"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid ""
+"Add this email address to white list of people and accept all pending "
+"messages from the same author."
+msgstr ""
+"Thêm địa chỉ email này cho nhóm người được phép và chấp nhận tất cả tin nhắn"
+" đang chờ từ cùng một tác giả."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_id
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
+msgid "Alias"
+msgstr "Bí danh"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_contact
+msgid "Alias Contact Security"
+msgstr "Bảo mật bí danh liên hệ "
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain_id
+msgid "Alias Domain"
+msgstr "Miền bí danh"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain
+msgid "Alias Domain Name"
+msgstr "Tên miền bí danh"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_full_name
+msgid "Alias Email"
+msgstr "Email bí danh"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_name
+msgid "Alias Name"
+msgstr "Tên bí danh"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_status
+msgid "Alias Status"
+msgstr "Trạng thái bí danh"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_status
+msgid "Alias status assessed on the last message received."
+msgstr "Trạng thái bí danh được ước tính trong tin nhắn đã nhận gần đây nhất."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_model_id
+msgid "Aliased Model"
+msgstr "Mô hình bí danh"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "All messages of this group"
+msgstr "Tất cả tin nhắn của nhóm này"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Allowed Emails"
+msgstr "Email được phép"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Alone we can do so little, together we can do so much"
+msgstr ""
+"Một mình chúng ta có thể làm rất ít, cùng nhau chúng ta có thể làm rất nhiều"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__allow
+msgid "Always Allow"
+msgstr "Luôn luôn cho phép"
+
+#. module: mail_group
+#. odoo-javascript
+#: code:addons/mail_group/static/src/js/mail_group.js:0
+msgid "An email with instructions has been sent."
+msgstr "Email hướng dẫn đã được gửi"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
+msgid "Archived"
+msgstr "Đã lưu trữ"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
+msgid "Archives"
+msgstr "Lưu trữ"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__attachment_ids
+msgid "Attachments"
+msgstr "Tệp đính kèm"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__author_id
+msgid "Author"
+msgstr "Tác giả"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__author_moderation
+msgid "Author Moderation Status"
+msgstr "Trạng thái kiểm duyệt tác giả"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group_message__author_id
+msgid ""
+"Author of the message. If not set, email_from may hold an email address that"
+" did not match any partner."
+msgstr ""
+"Tác giả của thông điệp. Nếu không đặt, trường email_from có thể chứa địa chỉ"
+" email mà không khớp với bất kỳ đối tác nào."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__access_group_id
+msgid "Authorized Group"
+msgstr "Nhóm có thẩm quyền"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_notify
+msgid "Automatic notification"
+msgstr "Tự động thông báo"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message_reject__action__ban
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Ban"
+msgstr "Cấm"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Ban the author of the message ("
+msgstr "Cấm tác giả của tin nhắn ("
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid ""
+"Ban this email address and reject all pending messages from the same author "
+"and send an email to the author"
+msgstr ""
+"Cấm địa chỉ email này và từ chối tất cả tin nhắn đang chờ từ cùng một tác "
+"giả và gửi email tới tác giả đó"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__ban
+msgid "Banned"
+msgstr "Đã cấm"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Banned Emails"
+msgstr "Các email đã bị cấm"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
+msgid "By date"
+msgstr "Theo ngày"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__can_manage_group
+msgid "Can Manage"
+msgstr "Có thể quản lý"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__can_manage_group
+msgid "Can manage the members"
+msgstr "Có thể quản lý thành viên"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_child_ids
+msgid "Children"
+msgstr "Phụ"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Choose or configure a custom domain"
+msgstr "Chọn hoặc định cấu hình miền tùy chỉnh"
+
+#. module: mail_group
+#: model:mail.template,subject:mail_group.mail_template_list_subscribe
+msgid "Confirm subscription to {{ object.name }}"
+msgstr "Xác nhận đăng ký {{ object.name }}"
+
+#. module: mail_group
+#: model:mail.template,subject:mail_group.mail_template_list_unsubscribe
+msgid "Confirm unsubscription to {{ object.name }}"
+msgstr "Xác nhận ngừng đăng ký {{ object.name }}"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__body
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__body
+msgid "Contents"
+msgstr "Nội dung"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
+msgid "Create a Mail Group"
+msgstr "Tạo nhóm thư"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Create a new group"
+msgstr "Tạo nhóm mới"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__create_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__create_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__create_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__create_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__create_uid
+msgid "Created by"
+msgstr "Được tạo bởi"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__create_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__create_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__create_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__create_date
+msgid "Created on"
+msgstr "Được tạo vào"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__is_moderator
+msgid "Current user is a moderator of the group"
+msgstr "Người dùng hiện tại là người kiểm duyệt của nhóm"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_bounced_content
+msgid "Custom Bounced Message"
+msgstr "Tin nhắn bị trả lại tuỳ chỉnh"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_defaults
+msgid "Default Values"
+msgstr "Giá trị Mặc định"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__description
+msgid "Description"
+msgstr "Mô tả"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Discard"
+msgstr "Huỷ bỏ"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__display_name
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__display_name
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__display_name
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__display_name
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__email
+msgid "Email"
+msgstr "Email"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "Email %s is invalid"
+msgstr "Email %s không hợp lệ"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_email
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Email Alias"
+msgstr "Bí danh email"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__email_from_normalized
+msgid "Email From"
+msgstr "Email từ"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group_message__email_from
+msgid ""
+"Email address of the sender. This field is set when no matching partner is "
+"found and replaces the author_id field in the chatter."
+msgstr ""
+"Địa chỉ email của người gửi. Trường này được thiết lập khi không có đối tác "
+"tương ứng được tìm thấy và thay thế trường author_id ở chatter."
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "Ví dụ miền email 'example.com' trong 'odoo@example.com'"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Emails"
+msgstr "Email"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Emails waiting an action for this group"
+msgstr "Email đang chờ tác vụ cho nhóm này"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__public
+msgid "Everyone"
+msgstr "Mọi người"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+msgid "Follow-Ups"
+msgstr "Theo dõi"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__email_from
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+msgid "From"
+msgstr "Từ"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__mail_group_id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__mail_group_id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__mail_group_id
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Group"
+msgstr "Nhóm"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
+msgid "Group By"
+msgstr "Nhóm theo"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+msgid "Group Message"
+msgstr "Tin nhắn nhóm"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Group Name"
+msgstr "Tên Nhóm"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+msgid "Group message can only be linked to mail group. Current model is %s."
+msgstr ""
+"Tin nhắn nhóm chỉ có thể được liên kết với nhóm thư. Mô hình hiện tại là %s."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines_msg
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Guidelines"
+msgstr "Hướng dẫn"
+
+#. module: mail_group
+#: model:mail.template,subject:mail_group.mail_template_guidelines
+msgid "Guidelines of group {{ object.mail_group_id.name }}"
+msgstr "Hướng dẫn của nhóm {{ object.mail_group_id.name }}"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+msgid "Hello"
+msgstr "Xin chào"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__id
+msgid "ID"
+msgstr "ID"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_thread_id
+msgid ""
+"ID of the parent record holding the alias (example: project holding the task"
+" creation alias)"
+msgstr ""
+"ID của bản ghi chính chứa bí danh (ví dụ: dự án chứa bí danh tạo nhiệm vụ)"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_bounced_content
+msgid ""
+"If set, this content will automatically be sent out to unauthorized users "
+"instead of the default message."
+msgstr ""
+"Nếu được cài đặt, nội dung này sẽ tự động được gửi đến người dùng chưa được "
+"cấp quyền thay vì tin nhắn mặc định."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__image_128
+msgid "Image"
+msgstr "Hình ảnh"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "Invalid action for URL generation (%s)"
+msgstr "Tác vụ tạo URL không hợp lệ (%s)"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_moderation.py:0
+msgid "Invalid email address “%s”"
+msgstr "Địa chỉ email “%s” không hợp lệ"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.invalid_token_subscription
+msgid "Invalid or expired confirmation link."
+msgstr "Liên kết xác nhận không hợp lệ hoặc hết hạn."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Is Allowed"
+msgstr "Được được cho phép"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Is Banned"
+msgstr "Bị cấm"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__is_group_moderated
+msgid "Is Group Moderated"
+msgstr "Là nhóm đã kiểm duyệt"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__is_member
+msgid "Is Member"
+msgstr "Là một thành viên"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+msgid "Join"
+msgstr "Gia nhập"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__write_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__write_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__write_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__write_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__write_uid
+msgid "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__write_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__write_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__write_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__write_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__write_date
+msgid "Last Updated on"
+msgstr "Cập nhật lần cuối vào"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+msgid "Leave"
+msgstr "Rời khỏi"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
+msgid "Let people subscribe to your list online or manually add them here."
+msgstr ""
+"Cho phép mọi người đăng ký vào danh sách online hoặc tự thêm họ tại đây."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_incoming_local
+msgid "Local-part based incoming detection"
+msgstr "Phát hiện gửi đến dựa trên phần cục bộ"
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Mail Group"
+msgstr "Nhóm gửi thư"
+
+#. module: mail_group
+#: model:res.groups,name:mail_group.group_mail_group_manager
+msgid "Mail Group Administrator"
+msgstr "Quản trị nhóm thư"
+
+#. module: mail_group
+#: model:mail.template,name:mail_group.mail_template_list_subscribe
+msgid "Mail Group: Mailing List Subscription"
+msgstr "Nhóm thư: Đăng ký danh sách gửi thư"
+
+#. module: mail_group
+#: model:mail.template,name:mail_group.mail_template_list_unsubscribe
+msgid "Mail Group: Mailing List Unsubscription"
+msgstr "Nhóm thư: Huỷ đăng ký danh sách gửi thư"
+
+#. module: mail_group
+#: model:mail.template,name:mail_group.mail_template_guidelines
+msgid "Mail Group: Send Guidelines"
+msgstr "Nhóm thư: Gửi hướng dẫn"
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_action
+#: model:ir.ui.menu,name:mail_group.mail_group_menu
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+msgid "Mail Groups"
+msgstr "Nhóm thư"
+
+#. module: mail_group
+#: model:ir.actions.server,name:mail_group.ir_cron_mail_notify_group_moderators_ir_actions_server
+msgid "Mail List: Notify group moderators"
+msgstr "Danh sách thư: Thông báo quản trị viên nhóm"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__mail_message_id
+msgid "Mail Message"
+msgstr "Nội dung email"
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group_member
+msgid "Mailing List Member"
+msgstr "Thành viên danh sách gửi thư"
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group_message
+msgid "Mailing List Message"
+msgstr "Tin nhắn danh sách gửi thư"
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group_moderation
+msgid "Mailing List black/white list"
+msgstr "Danh sách đen/trắng gửi thư"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.portal_breadcrumbs_group
+msgid "Mailing Lists"
+msgstr "Danh sách Mail"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
+msgid ""
+"Mailing groups are communities that like to discuss a specific topic "
+"together."
+msgstr ""
+"Nhóm gửi thư là các cộng đồng có cùng sở thích thảo luận một chủ để cụ thể."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+msgid "Mailing-List:"
+msgstr "Danh sách gửi thư:"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+msgid "Member"
+msgstr "Thành viên"
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_member_action
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__member_ids
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
+msgid "Members"
+msgstr "Thành viên"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__member_count
+msgid "Members Count"
+msgstr "Số thành viên"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Members of this group"
+msgstr "Thành viên của nhóm này"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__members
+msgid "Members only"
+msgstr "Chỉ thành viên"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__mail_group_message_id
+msgid "Message"
+msgstr "Tin nhắn"
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_message_reject_action
+msgid "Message Rejection Explanation"
+msgstr "Giải thích từ chối tin nhắn"
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_message_action
+msgid "Messages"
+msgstr "Tin nhắn"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_count
+msgid "Messages Count"
+msgstr "Số tin nhắn"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_last_month_count
+msgid "Messages Per Month"
+msgstr "Tin nhắn mỗi tháng"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "Messages are pending moderation"
+msgstr "Tin nhắn đang chờ kiểm duyệt"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__mail_group_message_moderation_count
+msgid "Messages that need an action"
+msgstr "Tin nhắn cần tác vụ"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+msgid "Moderate Messages"
+msgstr "Kiểm duyệt nội dung"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation
+msgid "Moderate this group"
+msgstr "Kiểm duyệt nhóm này"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
+msgid "Moderated"
+msgstr "Đã kiểm duyệt"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderator_id
+msgid "Moderated By"
+msgstr "Được kiểm duyệt bởi"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_rule_ids
+msgid "Moderated Emails"
+msgstr "Email kiểm duyệt"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_rule_count
+msgid "Moderated emails count"
+msgstr "Đếm email được kiểm duyệt"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Moderated emails in this group"
+msgstr "Đã kiểm duyệt email trong nhóm này"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "Moderated group must have moderators."
+msgstr "Nhóm được kiểm duyệt phải có người kiểm duyệt"
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_moderation_action
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
+msgid "Moderation"
+msgstr "Kiểm duyệt"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_tree
+msgid "Moderation Lists"
+msgstr "Danh sách kiểm duyệt"
+
+#. module: mail_group
+#: model:ir.ui.menu,name:mail_group.mail_group_moderation_menu
+msgid "Moderation Rules"
+msgstr "Quy tắc kiểm duyệt"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Moderations"
+msgstr "Kiểm duyệt"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__is_moderator
+msgid "Moderator"
+msgstr "Người kiểm duyệt"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderator_ids
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Moderators"
+msgstr "Người kiểm duyệt"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "Moderators must have an email address."
+msgstr "Người kiểm duyệt phải có địa chỉ email."
+
+#. module: mail_group
+#: model:mail.group,name:mail_group.mail_group_1
+msgid "My Company News"
+msgstr "Tin tức công ty"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__name
+msgid "Name"
+msgstr "Tên"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"Need to unsubscribe? <br/>It's right here! <span class=\"oi fa-2x oi-arrow-"
+"down float-end\" role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
+msgstr ""
+"Bạn muốn huỷ đăng ký? <br/>Đây! <span class=\"oi fa-2x oi-arrow-down float-"
+"end\" role=\"img\" aria-label=\"\" title=\"Đọc thông tin này!\"/>"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__moderation_guidelines
+msgid ""
+"Newcomers on this moderated group will automatically receive the guidelines."
+msgstr ""
+"Người mới tham gia nhóm được kiểm duyệt này sẽ tự động nhận được hướng dẫn."
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
+msgid "No Members in this list yet!"
+msgstr "Danh sách này chưa có thành viên!"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
+msgid "No Messages in this list yet!"
+msgstr "Danh sách này chưa có tin nhắn!"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email_normalized
+msgid "Normalized Email"
+msgstr "Email chuẩn hóa"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__email_from_normalized
+msgid "Normalized From"
+msgstr "Đã chuẩn hoá từ"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_notify_msg
+msgid "Notification message"
+msgstr "Thông báo tin nhắn"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Notify Members"
+msgstr "Thông báo cho thành viên"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__mail_group_message_count
+msgid "Number of message in this group"
+msgstr "Số tin nhắn trong nhóm này"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid ""
+"Only an administrator or a moderator can send guidelines to group members."
+msgstr ""
+"Chỉ quản trị viên hoặc người kiểm duyệt có thể gửi hướng dẫn cho thành viên "
+"nhóm."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "Only members can send email to the mailing list."
+msgstr "Chỉ thành viên mới có thể gửi email tới danh sách gửi thư."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "Only selected groups of users can send email to the mailing list."
+msgstr ""
+"Chỉ nhóm người dùng được chọn mới có thể gửi email tới danh sách gửi thư."
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id
+msgid ""
+"Optional ID of a thread (record) to which all incoming messages will be "
+"attached, even if they did not reply to it. If set, this will disable the "
+"creation of new records completely."
+msgstr ""
+"ID tùy chọn của một luồng (bản ghi) tập hợp tất cả tin nhắn nhận được, thậm "
+"chí nếu đó là tin nhắn không có phản hồi. Nếu cài đặt, điều này sẽ tắt hoàn "
+"toàn việc tạo các bản ghi mới. "
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_parent_id
+msgid "Parent"
+msgstr "Chính"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_parent_model_id
+msgid "Parent Model"
+msgstr "Mô hình chính"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_parent_thread_id
+msgid "Parent Record Thread ID"
+msgstr "ID luồng bản ghi chính"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_model_id
+msgid ""
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
+"(parent_model) and task (model))"
+msgstr ""
+"Mô hình chính chứa bí danh này. Mô hình chứa tham chiếu bí danh không nhất "
+"thiết phải là mô hình được đưa ra bởi alias_model_id (Ví dụ: dự án "
+"(parent_model) và nhiệm vụ (model))"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__partner_id
+msgid "Partner"
+msgstr "Đối tác"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__member_partner_ids
+msgid "Partners Member"
+msgstr "Thành viên đối tác"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_ids
+msgid "Pending Messages"
+msgstr "Tin nhắn đang chờ"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_moderation_count
+msgid "Pending Messages Count"
+msgstr "Số tin nhắn đang chờ"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__pending_moderation
+msgid "Pending Moderation"
+msgstr "Đang đợi kiểm duyệt"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__moderation_notify
+msgid ""
+"People receive an automatic notification about their message being waiting "
+"for moderation."
+msgstr ""
+"Mọi người nhận được thông báo tự động về việc tin nhắn của họ đang chờ kiểm "
+"duyệt."
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__ban
+msgid "Permanent Ban"
+msgstr "Cấm vĩnh viễn"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_contact
+msgid ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr ""
+"Chính sách cho phép đăng tin nhắn lên tài liệu sử dụng cổng email.\n"
+"- mọi người: mọi người có thể đăng\n"
+"- đối tác: chỉ các đối tác đã xác thực\n"
+"- người theo dõi: chỉ những người theo dõi của tài liệu liên quan hoặc thành viên của kênh đang theo dõi\n"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+msgid "Post to:"
+msgstr "Đăng tới:"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__create_date
+msgid "Posted"
+msgstr "Đã đăng"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__access_mode
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Privacy"
+msgstr "Tính riêng tư"
+
+#. module: mail_group
+#: model:mail.group,name:mail_group.mail_group_2
+msgid "Public Mailing List"
+msgstr "Danh sách gửi thư công cộng"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/wizard/mail_group_message_reject.py:0
+msgid "Re: %s"
+msgstr "Phản hồi: %s"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_force_thread_id
+msgid "Record Thread ID"
+msgstr "ID luồng bản ghi"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+msgid "Reference"
+msgstr "Mã tham chiếu"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message_reject__action__reject
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Reject"
+msgstr "Từ chối"
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group_message_reject
+msgid "Reject Group Message"
+msgstr "Từ chối tin nhắn nhóm"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Reject Silently"
+msgstr "Âm thầm từ chối"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Reject the message"
+msgstr "Từ chối tin nhắn"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__rejected
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+msgid "Rejected"
+msgstr "Bị từ chối"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Remove message with explanation"
+msgstr "Xóa tin nhắn với giải thích"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Responsible Users"
+msgstr "Người dùng phụ trách"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
+msgid "Search Group Message"
+msgstr "Tìm kiếm tin nhắn nhóm"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_member_view_search
+msgid "Search Mail Group Member"
+msgstr "Tìm kiếm thành viên nhóm thư"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
+msgid "Search Mail group"
+msgstr "Tìm kiếm nhóm"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Search Moderation List"
+msgstr "Tìm kiếm danh sách kiểm duyệt"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__groups
+msgid "Selected group of users"
+msgstr "Nhóm người dùng được chọn"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Send"
+msgstr "Gửi"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Send & Ban"
+msgstr "Gửi & Cấm"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Send & Reject"
+msgstr "Gửi & Từ chối"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__send_email
+msgid "Send Email"
+msgstr "Gửi email"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Send Guidelines"
+msgstr "Gửi hướng dẫn"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group_message_reject__send_email
+msgid "Send an email to the author of the message"
+msgstr "Gửi email tới tác giả của tin nhắn"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
+msgid "Send guidelines to new subscribers"
+msgstr "Gửi hướng dẫn cho người đăng ký mới"
+
+#. module: mail_group
+#: model:mail.template,description:mail_group.mail_template_guidelines
+msgid "Sent to people who subscribed to a mailing group with group guidelines"
+msgstr ""
+"Gửi tới những người đã đăng ký vào nhóm gửi thư theo các nguyên tắc của nhóm"
+
+#. module: mail_group
+#: model:mail.template,description:mail_group.mail_template_list_unsubscribe
+msgid "Sent to people who unsubscribed from a mailing group"
+msgstr "Gửi tới những người đã hủy đăng ký khỏi nhóm gửi thư"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderation_status
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__status
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Status"
+msgstr "Trạng thái"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Stay in touch with our Community"
+msgstr "Giữ liên lạc với cộng đồng của chúng tôi"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__subject
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__subject
+msgid "Subject"
+msgstr "Tiêu đề"
+
+#. module: mail_group
+#. odoo-javascript
+#: code:addons/mail_group/static/src/js/mail_group.js:0
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Subscribe"
+msgstr "Đăng ký nhận tin"
+
+#. module: mail_group
+#: model:mail.template,description:mail_group.mail_template_list_subscribe
+msgid "Subscription confirmation to a mailing group"
+msgstr "Xác nhận đăng ký vào một nhóm gửi thư"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid ""
+"Template \"mail_group.mail_template_guidelines\" was not found. No email has"
+" been sent. Please contact an administrator to fix this issue."
+msgstr ""
+"Không tìm thấy mẫu \"mail_group.mail_template_guidelines\". Không có email "
+"được gửi. Hãy liên hệ quản trị viên để sửa sự cố này."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+msgid "Thank you!"
+msgstr "Cảm ơn bạn!"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "The \"Authorized Group\" is missing."
+msgstr "\"Nhóm được cấp quyền\" bị thiếu."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "The email"
+msgstr "Email"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+msgid "The email \"%s\" is not valid."
+msgstr "Email \"%s\" không hợp lệ."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "The group of the message do not match."
+msgstr "Nhóm của tin nhắn không khớp."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "The guidelines description is empty."
+msgstr "Mô tả hướng dẫn bị trống."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "The guidelines description is missing."
+msgstr "Mô tả hướng dẫn bị trống."
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_model_id
+msgid ""
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
+" email that does not reply to an existing record will cause the creation of "
+"a new record of this model (e.g. a Project Task)"
+msgstr ""
+"Mô hình (Loại tài liệu Odoo) mà bí danh này tương tác. Mọi email đến mà "
+"không phải là email trả lời một bản ghi hiện có sẽ tạo ra một bản ghi mới "
+"trong mô hình này. (ví dụ: Nhiệm vụ dự án) "
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_name
+msgid ""
+"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
+"<jobs@example.odoo.com>"
+msgstr ""
+"Tên của bí danh email, ví dụ: 'jobs' nếu bạn muốn nhận email gửi đến địa chỉ"
+" <jobs@example.odoo.com>"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "The notification message is missing."
+msgstr "Tin nhắn thông báo bị thiếu."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "The partner can not be found."
+msgstr "Không thể tìm đối tác."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+msgid "The record of the message should be the group."
+msgstr "Hồ sơ của tin nhắn phải là một nhóm."
+
+#. module: mail_group
+#. odoo-javascript
+#: code:addons/mail_group/static/src/js/mail_group.js:0
+msgid "This email is already subscribed."
+msgstr "Email này đã được đăng ký."
+
+#. module: mail_group
+#. odoo-javascript
+#: code:addons/mail_group/static/src/js/mail_group.js:0
+msgid "This email is not subscribed."
+msgstr "Email này không được đăng ký."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+msgid "This message can not be moderated"
+msgstr "Tin nhắn này không thể được kiểm duyệt"
+
+#. module: mail_group
+#: model:ir.model.constraint,message:mail_group.constraint_mail_group_member_unique_partner
+msgid "This partner is already subscribed to the group"
+msgstr "Đối tác đã được đăng ký vào nhóm"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+msgid "Those messages can not be moderated: %s."
+msgstr "Những tin nhắn đó không thể được kiểm duyệt: %s."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "To Review"
+msgstr "Để xem xét"
+
+#. module: mail_group
+#. odoo-javascript
+#: code:addons/mail_group/static/src/js/mail_group.js:0
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Unsubscribe"
+msgstr "Ngừng đăng ký"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+msgid "Unsubscribe:"
+msgstr "Ngừng đăng ký:"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
+msgid ""
+"When people send an email to the alias of the list, they will appear here."
+msgstr ""
+"Khi mọi người gửi email tới bí danh của danh sách, chúng sẽ xuất hiện ở đây."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Whitelist"
+msgstr "Danh sách trắng"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__allow
+msgid "Whitelisted"
+msgstr "Được phép"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+msgid "Wrong status (%s)"
+msgstr "Trạng thái sai (%s)"
+
+#. module: mail_group
+#: model:ir.model.constraint,message:mail_group.constraint_mail_group_moderation_mail_group_email_uniq
+msgid "You can create only one rule for a given email address in a group."
+msgstr ""
+"Bạn chỉ có thể tạo một quy tắc cho một địa chỉ email đã cho trong một nhóm."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+msgid "You have messages to moderate, please go for the proceedings."
+msgstr "Bạn có tin nhắn đợi kiểm duyệt, xin vui lòng đi xử lý."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+msgid "_______________________________________________"
+msgstr "_______________________________________________"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "alias"
+msgstr "bí danh"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "and send an email to the author ("
+msgstr "và gửi email tới tác giả ("
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+msgid "attachments"
+msgstr "đính kèm"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_footer
+msgid "by"
+msgstr "bởi"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "e.g. \"Newsletter\""
+msgstr "VD: \"Bản tin email\""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "e.g. mycompany.com"
+msgstr "VD: mycompany.com"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
+msgid "group"
+msgstr "nhóm"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "has been"
+msgstr "đã được"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"members<br/>\n"
+"                        <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" title=\"Traffic\"/>"
+msgstr ""
+"thành viên<br/>\n"
+"                        <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" title=\"Lưu lượng\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "messages / month"
+msgstr "tin nhắn / tháng"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid "more replies"
+msgstr "nhiều phản hồi hơn"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid "replies"
+msgstr "phản hồi"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "subscribed to"
+msgstr "đăng ký vào"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "the list"
+msgstr "danh sách"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "unsubscribed from"
+msgstr "ngừng đăng ký khỏi"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "your email..."
+msgstr "email của bạn..."

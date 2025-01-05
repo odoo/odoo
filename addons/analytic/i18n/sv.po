@@ -1,30 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* analytic
-#
+# 
 # Translators:
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
-# Martin Wilderoth <martin.wilderoth@linserv.se>, 2022
-# Daniel Osser <danielosser@gmail.com>, 2022
-# lynnliuying <lynn.liu1971@gmail.com>, 2022
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
-# Simon S, 2022
-# Kristoffer Grundström <lovaren@gmail.com>, 2023
-# Martin Trigaux, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
-"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: analytic
@@ -34,20 +26,30 @@ msgid "%s (copy)"
 msgstr "%s (kopia)"
 
 #. module: analytic
-#. odoo-javascript
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
-msgid "(no accounts)"
-msgstr ""
-
-#. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 msgid "<span class=\"o_stat_text\">Analytic Accounts</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Objektkonton</span>"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "<span class=\"o_stat_text\">Gross Margin</span>"
+msgstr "<span class=\"o_stat_text\">Bruttomarginal</span>"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_plan.py:0
+msgid ""
+"A 'Project' plan needs to exist and its id needs to be set as "
+"`analytic.project_plan` in the system variables"
 msgstr ""
+"En 'Projekt'-plan måste finnas och dess id måste ställas in som "
+"'analytic.project_plan' i systemvariablerna"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Account field"
+msgstr "Kontofält"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__account_ids
@@ -65,10 +67,15 @@ msgid "Active"
 msgstr "Aktiv"
 
 #. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_active_account
+msgid "Active account"
+msgstr "Aktivt konto"
+
+#. module: analytic
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
-msgid "Add a line"
-msgstr "Lägg till rad"
+msgid "Add a Line"
+msgstr "Lägg till en rad"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.action_account_analytic_account_form
@@ -84,7 +91,7 @@ msgstr "Administrativ"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__all_account_count
 msgid "All Analytic Accounts Count"
-msgstr ""
+msgstr "Alla objektkonton räknas"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__amount
@@ -94,25 +101,31 @@ msgstr "Belopp"
 
 #. module: analytic
 #. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Amount field"
+msgstr "Beloppsfält"
+
+#. module: analytic
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 msgid "Analytic"
-msgstr "Analytisk"
+msgstr "Objekt"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_account
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__name
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__account_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__auto_account_id
+#: model:ir.model.fields,field_description:analytic.field_analytic_plan_fields_mixin__auto_account_id
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
-#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Analytic Account"
-msgstr "Analyskonto"
+msgstr "Objektkonto"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_res_config_settings__group_analytic_accounting
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
-msgstr "Analytisk redovisning"
+msgstr "Objektredovisning"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
@@ -123,7 +136,7 @@ msgstr "Objektkonton"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__account_count
 msgid "Analytic Accounts Count"
-msgstr ""
+msgstr "Antal objektkonton"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
@@ -132,33 +145,23 @@ msgid "Analytic Distribution"
 msgstr "Objektfördelning"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #: model:ir.model,name:analytic.model_account_analytic_distribution_model
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_tree_view
 msgid "Analytic Distribution Model"
-msgstr ""
+msgstr "Objektfördelning"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_distribution_model
 msgid "Analytic Distribution Models"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution_search
-#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution_search
-msgid "Analytic Distribution Search"
-msgstr ""
-
-#. module: analytic
-#. odoo-javascript
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
-msgid "Analytic Distribution Template"
-msgstr ""
+msgstr "Objekta distributionsmodeller"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Item"
-msgstr ""
+msgstr "Objektpost"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
@@ -171,7 +174,7 @@ msgstr "Objekttransaktioner"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analysrad"
+msgstr "Objekttransaktion"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__line_ids
@@ -181,18 +184,22 @@ msgstr "Objektrader"
 #. module: analytic
 #: model:ir.model,name:analytic.model_analytic_mixin
 msgid "Analytic Mixin"
-msgstr ""
+msgstr "Objekt-mixin"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__analytic_plan_id
-#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Analytic Plan"
-msgstr ""
+msgstr "Objekt plan"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_analytic_plan_fields_mixin
+msgid "Analytic Plan Fields"
+msgstr "Fält för analytisk plan"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr ""
+msgstr "Tillämpbara objektscheman"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_plan_action
@@ -200,25 +207,25 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_tree_view
 msgid "Analytic Plans"
-msgstr ""
+msgstr "Objektscheman"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_precision
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_precision
 msgid "Analytic Precision"
-msgstr ""
+msgstr "Objektprecision"
 
 #. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_plan.py:0
 msgid "Analytical Accounts"
-msgstr ""
+msgstr "Objektkonton"
 
 #. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_plan.py:0
 msgid "Analytical Plans"
-msgstr ""
+msgstr "Objektscheman"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__applicability
@@ -241,7 +248,13 @@ msgstr "Associerad kontakt"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_asustek
 msgid "Asustek"
-msgstr ""
+msgstr "Asustek"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_line.py:0
+msgid "At least one analytic account must be set"
+msgstr "Minst ett objektkonto måste vara inställt"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_attachment_count
@@ -260,14 +273,20 @@ msgid "Balance:"
 msgstr "Saldo:"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Business domain"
+msgstr "Affärsdomän"
+
+#. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_partners_camp_to_camp
 msgid "Camp to Camp"
-msgstr ""
+msgstr "Läger till läger"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_integration_c2c
 msgid "CampToCamp"
-msgstr ""
+msgstr "CampToCamp"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__category
@@ -282,7 +301,7 @@ msgstr "Objektkontoplan"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_count
 msgid "Children Plans Count"
-msgstr ""
+msgstr "Barn planerar att räkna"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_ids
@@ -292,7 +311,13 @@ msgstr "Underordnade"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_plan_action
 msgid "Click to add a new analytic account plan."
-msgstr ""
+msgstr "Klicka för att lägga till en ny objektkontoplan."
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Close"
+msgstr "Stäng"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__color
@@ -307,15 +332,15 @@ msgstr "Färgindex"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_commercial_marketing
 msgid "Commercial & Marketing"
-msgstr ""
+msgstr "Kommersiellt och marknadsföring"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__company_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__company_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__company_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__company_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__company_id
 msgid "Company"
-msgstr "Bolag"
+msgstr "Företag"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__complete_name
@@ -325,7 +350,7 @@ msgstr "Fullständigt namn"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 msgid "Conditions to meet"
-msgstr ""
+msgstr "Villkor att uppfylla"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_res_config_settings
@@ -334,8 +359,12 @@ msgstr "Inställningar"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_line__product_uom_category_id
-msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
-msgstr "Omräkning av enheter kan endast ske om de tillhör samma kategori. Omräkningen baseras på angiven ratio."
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Omräkning av enheter kan endast ske om de tillhör samma kategori. "
+"Omräkningen baseras på ett givet förhållande."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -363,7 +392,7 @@ msgstr "Skapad av"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__create_date
 msgid "Created on"
-msgstr "Skapad"
+msgstr "Skapad den"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__credit
@@ -391,7 +420,7 @@ msgstr "Datum"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__active
 msgid "Deactivate the account."
-msgstr ""
+msgstr "Avaktivera kontot."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__debit
@@ -402,22 +431,22 @@ msgstr "Debet"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_agrolait
 msgid "Deco Addict"
-msgstr ""
+msgstr "Dekorationsmissbrukare"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__default_applicability
 msgid "Default Applicability"
-msgstr ""
+msgstr "Standard tillämplighet"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_deltapc
 msgid "Delta PC"
-msgstr ""
+msgstr "Delta PC"
 
 #. module: analytic
 #: model:account.analytic.plan,name:analytic.analytic_plan_departments
 msgid "Departments"
-msgstr ""
+msgstr "Avdelningar"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__name
@@ -428,7 +457,13 @@ msgstr "Beskrivning"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_desertic_hispafuentes
 msgid "Desertic - Hispafuentes"
-msgstr ""
+msgstr "Öken - Hispafuentes"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Disable save"
+msgstr "Inaktivera spara"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__display_name
@@ -436,13 +471,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__display_name
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__display_name
+#: model:ir.model.fields,field_description:analytic.field_analytic_plan_fields_mixin__display_name
+#: model:ir.model.fields,field_description:analytic.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Visningsnamn"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Distribution Analytic Account"
+
+#. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 msgid "Distribution to apply"
-msgstr ""
+msgstr "Distribution att ansöka"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__business_domain
@@ -450,10 +494,9 @@ msgid "Domain"
 msgstr "Domän"
 
 #. module: analytic
-#. odoo-javascript
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
-msgid "Editing"
-msgstr ""
+#: model:account.analytic.account,name:analytic.analytic_rd_finance
+msgid "Finance"
+msgstr "Ekonomi"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_follower_ids
@@ -463,12 +506,18 @@ msgstr "Följare"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Följare (partners)"
+msgstr "Följare (kontakter)"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Force applicability"
+msgstr "Tvinga tillämpbarhet"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action
 msgid "Gross Margin"
-msgstr ""
+msgstr "Bruttomarginal"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
@@ -482,23 +531,31 @@ msgid "Has Message"
 msgstr "Har meddelande"
 
 #. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_rd_hr
+msgid "Human Resources"
+msgstr "Personalavdelning"
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__id
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__id
+#: model:ir.model.fields,field_description:analytic.field_analytic_plan_fields_mixin__id
+#: model:ir.model.fields,field_description:analytic.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Om markerad så finns det meddelanden som kräver din uppmärksamhet."
+msgstr "Om markerat, nya meddelanden kräver din uppmärksamhet."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Om markerad har det uppstått leveransfel för vissa meddelanden."
+msgstr "Om markerad, några meddelanden har leveransfel."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -515,18 +572,12 @@ msgstr ""
 #. module: analytic
 #: model:account.analytic.plan,name:analytic.analytic_plan_internal
 msgid "Internal"
-msgstr ""
-
-#. module: analytic
-#. odoo-javascript
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
-msgid "Invalid"
-msgstr ""
+msgstr "Intern"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_is_follower
 msgid "Is Follower"
-msgstr "Är följare"
+msgstr "Är Följare"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__write_uid
@@ -544,36 +595,33 @@ msgstr "Senast uppdaterad av"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__write_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__write_date
 msgid "Last Updated on"
-msgstr "Senast uppdaterad på"
+msgstr "Senast uppdaterad den"
 
 #. module: analytic
-#. odoo-javascript
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
-msgid "Loading..."
-msgstr "Laddar..."
+#: model:account.analytic.account,name:analytic.analytic_rd_legal
+msgid "Legal"
+msgstr "Rättslig"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_think_big_systems
 msgid "Lumber Inc"
-msgstr ""
+msgstr "Lumber Inc"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_luminous_technologies
 msgid "Luminous Technologies"
-msgstr ""
+msgstr "Luminous Technologies"
 
 #. module: analytic
-#. odoo-javascript
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__mandatory
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_plan__default_applicability__mandatory
 msgid "Mandatory"
-msgstr ""
+msgstr "Obligatoriskt"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error
 msgid "Message Delivery error"
-msgstr "Fel vid leverans av meddelande"
+msgstr "Meddelande leveransfel"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_ids
@@ -583,7 +631,7 @@ msgstr "Meddelanden"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_millennium_industries
 msgid "Millennium Industries"
-msgstr ""
+msgstr "Millennium Industries"
 
 #. module: analytic
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__business_domain__general
@@ -599,13 +647,13 @@ msgstr "Namn"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_nebula
 msgid "Nebula"
-msgstr ""
+msgstr "Nebulosa"
 
 #. module: analytic
 #. odoo-javascript
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
-msgid "No Analytic Accounts for this plan"
-msgstr ""
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "New Model"
+msgstr "Ny modell"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
@@ -620,8 +668,8 @@ msgstr "Ingen aktivitet ännu på detta konto"
 #. module: analytic
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
-msgid "No plans available"
-msgstr ""
+msgid "No analytic plans found"
+msgstr "Inga verifikats planer hittades"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
@@ -635,8 +683,8 @@ msgstr "Antal fel"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Antal meddelanden som kräver en åtgärd"
+msgid "Number of messages requiring action"
+msgstr "Antal meddelanden som kräver åtgärd"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error_counter
@@ -644,45 +692,37 @@ msgid "Number of messages with delivery error"
 msgstr "Antal meddelanden med leveransfel"
 
 #. module: analytic
-#. odoo-javascript
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
-msgid "OK"
-msgstr "OK"
-
-#. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_mixin.py:0
 msgid "One or more lines require a 100% analytic distribution."
-msgstr ""
+msgstr "En eller flera rader kräver en 100% objektfördelning."
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_internal
 msgid "Operating Costs"
-msgstr ""
+msgstr "Driftskostnader"
 
 #. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_mixin.py:0
 msgid "Operation not supported"
-msgstr ""
+msgstr "Åtgärd stöds inte"
 
 #. module: analytic
-#. odoo-javascript
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__optional
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_plan__default_applicability__optional
 msgid "Optional"
-msgstr ""
+msgstr "Valfritt"
 
 #. module: analytic
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_line__category__other
 msgid "Other"
-msgstr "Annat"
+msgstr "Övriga"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_our_super_product
 msgid "Our Super Product"
-msgstr ""
+msgstr "Vår superprodukt"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__parent_id
@@ -703,18 +743,40 @@ msgstr "Partner"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__partner_category_id
 msgid "Partner Category"
-msgstr ""
+msgstr "Kategori av partner"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Percentage"
+msgstr "Procentuell andel"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__plan_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__plan_id
 msgid "Plan"
 msgstr "Plan"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Product field"
+msgstr "Produktfält"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_rd_production
+msgid "Production"
+msgstr "Produktion"
+
+#. module: analytic
 #: model:account.analytic.plan,name:analytic.analytic_plan_projects
-msgid "Projects"
-msgstr ""
+msgid "Project"
+msgstr "Projekt"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__account_id
+#: model:ir.model.fields,field_description:analytic.field_analytic_plan_fields_mixin__account_id
+msgid "Project Account"
+msgstr "Projektkonto"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__unit_amount
@@ -730,7 +792,7 @@ msgstr "Referens"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_rd_department
 msgid "Research & Development"
-msgstr ""
+msgstr "Forskning och utveckling"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -747,14 +809,25 @@ msgstr ""
 "                på utlägg (t.ex. vidarefakturering av resekostnader)."
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__root_id
+msgid "Root"
+msgstr "Rot"
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__root_plan_id
 msgid "Root Plan"
-msgstr ""
+msgstr "Grundplan"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Save as new analytic distribution model"
+msgstr "Spara som ny distributionsmodell för verifikat"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_seagate_p2
 msgid "Seagate P2"
-msgstr ""
+msgstr "Seagate P2"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
@@ -763,39 +836,57 @@ msgstr "Sök objektrader"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__company_id
-msgid "Select a company for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this company, it will automatically take this as an analytic account)"
+msgid ""
+"Select a company for which the analytic distribution will be used (e.g. "
+"create new customer invoice or Sales order if we select this company, it "
+"will automatically take this as an analytic account)"
 msgstr ""
+"Välj ett företag för vilket den objektdistributionen ska användas (t.ex. "
+"skapa en ny kundfaktura eller försäljningsorder om vi väljer detta företag, "
+"det kommer automatiskt att ta detta som ett objektkonto)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
-msgid "Select a partner category for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this partner, it will automatically take this as an analytic account)"
+msgid ""
+"Select a partner category for which the analytic distribution will be used "
+"(e.g. create new customer invoice or Sales order if we select this partner, "
+"it will automatically take this as an analytic account)"
 msgstr ""
+"Välj en partnerkategori för vilken den objektdistributionen ska användas "
+"(t.ex. skapa en ny kundfaktura eller försäljningsorder om vi väljer denna "
+"partner, kommer den automatiskt att ta detta som ett objektkonto)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
-msgid "Select a partner for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this partner, it will automatically take this as an analytic account)"
+msgid ""
+"Select a partner for which the analytic distribution will be used (e.g. "
+"create new customer invoice or Sales order if we select this partner, it "
+"will automatically take this as an analytic account)"
 msgstr ""
+"Välj en partner för vilken den objektdistributionen ska användas (t.ex. "
+"skapa en ny kundfaktura eller försäljningsorder om vi väljer denna partner, "
+"kommer den automatiskt att ta detta som ett objektkonto)"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__sequence
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__sequence
+msgid "Sequence"
+msgstr "Sekvens"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_spark
 msgid "Spark Systems"
-msgstr ""
+msgstr "Spark-system"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 msgid "Subplans"
-msgstr ""
-
-#. module: analytic
-#. odoo-python
-#: code:addons/analytic/models/analytic_line.py:0
-msgid "The selected account belongs to another company than the one you're trying to create an analytic item for"
-msgstr "Det valda kontot tillhör ett annat bolag än det du försöker skapa en objekttransaktion för"
+msgstr "Delplaner"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_absences
 msgid "Time Off"
-msgstr "Ledighet"
+msgstr "Frånvaro"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
@@ -806,7 +897,7 @@ msgstr "Totalt"
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__unavailable
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_plan__default_applicability__unavailable
 msgid "Unavailable"
-msgstr ""
+msgstr "Otillgänglig"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_id
@@ -816,7 +907,7 @@ msgstr "Måttenhet"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
 msgid "UoM Category"
-msgstr ""
+msgstr "UoM Kategori"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id
@@ -824,21 +915,30 @@ msgid "User"
 msgstr "Användare"
 
 #. module: analytic
-#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_tree_view
-msgid "View"
-msgstr "Visa"
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+msgid ""
+"You can't set a different company on your analytic account since there are "
+"some analytic items linked to it."
+msgstr ""
+"Du kan inte ange ett annat företag på ditt objektkonto eftersom det finns "
+"några transaktioner kopplade till det."
 
 #. module: analytic
 #. odoo-python
-#: code:addons/analytic/models/analytic_account.py:0
-msgid "You can't set a different company on your analytic account since there are some analytic items linked to it."
+#: code:addons/analytic/models/analytic_plan.py:0
+msgid "You cannot add a parent to the base plan '%s'"
 msgstr ""
 
 #. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_distribution_model.py:0
-msgid "You defined a distribution with analytic account(s) belonging to a specific company but a model shared between companies or with a different company"
+msgid ""
+"You defined a distribution with analytic account(s) belonging to a specific "
+"company but a model shared between companies or with a different company"
 msgstr ""
+"Du har definierat en distribution med objektkonton som tillhör ett specifikt"
+" företag men en modell som delas mellan företag eller med ett annat företag"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form

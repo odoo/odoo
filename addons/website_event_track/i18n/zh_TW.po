@@ -1,86 +1,80 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_event_track
-#
+# 
 # Translators:
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
-# Martin Trigaux, 2022
-# Tony Ng, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
-"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/models/website.py:0
 msgid "\"Events App Name\" field is required."
-msgstr ""
+msgstr "「活動應用程式名稱」是必填欄位。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_count
 #: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_count
 msgid "# Wishlisted"
-msgstr ""
+msgstr "列入願望清單數目"
 
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 msgid "%(name)s from %(company)s"
-msgstr ""
+msgstr "%(name)s（公司：%(company)s）"
 
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 msgid "%(name)s, %(function)s at %(company)s"
-msgstr ""
+msgstr "%(name)s, %(function)s 在 %(company)s"
 
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/models/website.py:0
 msgid "%s Events"
-msgstr ""
+msgstr "%s 活動"
 
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/controllers/webmanifest.py:0
 msgid "%s Online Events Application"
-msgstr ""
+msgstr "%s 網上活動申請"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
-msgid "&amp;bull;"
-msgstr "&amp;bull;"
+msgid "(timezone:"
+msgstr "(時區:"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_17
 msgid "10 DIY Furniture Ideas For Absolute Beginners"
-msgstr ""
+msgstr "10 個適合完全新手的 DIY 傢俬創意"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_18
 msgid "6 Woodworking tips and tricks for beginners"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
-msgid "<b>Contact Information</b>"
-msgstr ""
+msgstr "給初學者的 6 個木工提示和技巧"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Mail</b>:"
-msgstr "<b>信件</b>:"
+msgstr "<b>電郵</b>："
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -95,22 +89,12 @@ msgstr "<b>發起者</b>:"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Speaker Biography</b>:"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "<b>Speaker Profile</b>"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "<b>Talk Intro</b>"
-msgstr ""
+msgstr "<b>演講者背景</b>："
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Talk Introduction</b>:"
-msgstr "<b>演講介紹</b>:"
+msgstr "<b>講題介紹</b>："
 
 #. module: website_event_track
 #: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
@@ -133,6 +117,23 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t> 你好！<br>\n"
+"    很高興通知你，你提議的活動「<t t-out=\"object.name or ''\">（活動主題）</t>」已被接納及確認用於「<t t-out=\"object.event_id.name or ''\">OpenWood 系列網上發佈會</t>」活動。\n"
+"    <br>\n"
+"    你可在這裏找到更多詳細資料：\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"            查看演講\n"
+"        </a>\n"
+"    </div>\n"
+"    <br><br>\n"
+"    謝謝！\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
@@ -141,53 +142,64 @@ msgstr "<i class=\"fa fa-ban me-2\"/> 未發佈"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
-msgid "<i class=\"fa fa-bell me-2 text-muted\"/> Favorite Talks"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
-msgid "<i class=\"fa fa-folder-open\"/> Favorites"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
-msgid ""
-"<i class=\"oi oi-fw oi-arrow-right\"/>\n"
-"                        Write one."
-msgstr ""
+msgid "<i class=\"fa fa-bell mx-2 text-muted\"/> Favorite Talks"
+msgstr "<i class=\"fa fa-bell mx-2 text-muted\"/> 最愛演講"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
-msgid "<span class=\"d-none d-md-block ms-2\">&amp;bull;</span>"
-msgstr ""
+msgid "<span class=\"d-none d-md-block\">&amp;bull;</span>"
+msgstr "<span class=\"d-none d-md-block\">&amp;bull;</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
-msgid "<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
-msgstr "<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
+msgid ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-globe\" title=\"此處設定的值是特定於每個網站的。\" "
+"groups=\"website.group_multi_website\"/>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "<span class=\"fa fa-plus me-1\"/> Schedule Tracks"
+msgstr "<span class=\"fa fa-plus me-1\"/> 排期音軌"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
-"                                        <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
-"                                        <span class=\"o_wetrack_proposal_error_message\"/>\n"
-"                                    </span>"
+"                                    <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                    <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                </span>"
 msgstr ""
+"<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
+"                                    <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"錯誤\" title=\"錯誤\"/>\n"
+"                                    <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                </span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<span class=\"o_wetrack_proposal_label_content\">Talk Introduction</span>\n"
-"                                            <span>*</span>"
+"                                        <span>*</span>"
 msgstr ""
+"<span class=\"o_wetrack_proposal_label_content\">演講內容簡介</span>\n"
+"                                        <span>*（必填）</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<span class=\"o_wetrack_proposal_label_content\">Talk Title</span>\n"
-"                                            <span>*</span>"
+"                                        <span>*</span>"
 msgstr ""
+"<span class=\"o_wetrack_proposal_label_content\">演講主題</span>\n"
+"                                        <span>*（必填）</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+msgid "<span class=\"text-muted\"> tracks</span>"
+msgstr "<span class=\"text-muted\"> 音軌</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
@@ -195,50 +207,38 @@ msgid ""
 "<span for=\"contact_name\">Name</span>\n"
 "                    <span>*</span>"
 msgstr ""
+"<span for=\"contact_name\">姓名</span>\n"
+"                    <span>*（必填）</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
 msgid "<span id=\"search_number\" class=\"me-1\">0</span>Results"
-msgstr ""
+msgstr "<span id=\"search_number\" class=\"me-1\">0</span> 個結果"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "<span> - </span>"
-msgstr ""
+msgstr "<span> - </span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content_partner_info
 msgid "<span> at </span>"
-msgstr "<span> at </span>"
+msgstr "<span> 在 </span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<span>New track proposal</span>"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid ""
-"<strong>Lightning Talks</strong>. These are 30 minutes talks on many\n"
-"                                    different topics. Most topics are accepted in lightning talks."
-msgstr "<strong>分享會</strong>。這是在30分鐘內討論許多不同的話題。大多數話題都可以接受分享會。"
+msgstr "<span>提議新音軌</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "<strong>Location:</strong>"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid ""
-"<strong>Regular Talks</strong>. These are standard talks with slides,\n"
-"                                    alocated in slots of 60 minutes."
-msgstr "<strong>定期研討會</strong>。使用幻燈片的，在60分鐘內的標準討論。"
+msgstr "<strong>位置:</strong>"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track7
 msgid "A technical explanation of how to use computer design apps"
-msgstr ""
+msgstr "如何使用電腦設計應用程式的技術說明"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__kanban_state
@@ -256,7 +256,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction
 msgid "Action Needed"
-msgstr "需採取行動"
+msgstr "需要採取行動"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__active
@@ -285,8 +285,10 @@ msgstr "活動類型圖示"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
-msgid "Add a description to help your coworkers understand the meaning and purpose of the stage."
-msgstr ""
+msgid ""
+"Add a description to help your coworkers understand the meaning and purpose "
+"of the stage."
+msgstr "加入描述，幫助同事理解該階段的意義和目的。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
@@ -300,60 +302,63 @@ msgstr "在任務管道中添加新階段"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
-msgid "Add tags to your tracks to help your attendees browse your event web pages."
-msgstr ""
+msgid ""
+"Add tags to your tracks to help your attendees browse your event web pages."
+msgstr "為音軌加入標籤，幫助參加者輕易瀏覽你的活動網頁。"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
 msgid "Advanced lead management: tips and tricks from the fields"
-msgstr ""
+msgstr "進階銷售線索管理：前線人員的提示和技巧"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track13
 msgid "Advanced reporting"
-msgstr ""
+msgstr "進階報告"
 
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/models/event_event.py:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
 msgid "Agenda"
-msgstr "議程"
+msgstr "活動流程"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__color
 msgid "Agenda Color"
-msgstr ""
+msgstr "活動流程顏色"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_main
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
 msgid "All Talks"
-msgstr ""
+msgstr "所有演講"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
 msgid "Allow Track Proposals"
-msgstr ""
+msgstr "允許音軌提議"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 msgid "Allow push notifications?"
-msgstr ""
+msgstr "允許推送訊息？"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "Allow video and audio recording of their\n"
-"                                    presentation, for publishing on our website."
+"                            presentation, for publishing on our website."
 msgstr ""
-"允許錄製影片和錄音\n"
-"              介紹他們，以在我們的網站上發佈。"
+"允許對他們的演示錄影及錄音，\n"
+"                            以在我們的網站上發佈。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlisted_by_default
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Always Wishlisted"
-msgstr ""
+msgstr "永遠列入願望清單"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage2
@@ -364,7 +369,7 @@ msgstr "已公佈"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
 msgid "Application"
-msgstr "應用"
+msgstr "應用程式"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
@@ -374,8 +379,10 @@ msgstr "已封存"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_visitor__is_blacklisted
-msgid "As key track cannot be un-favorited, this field store the partner choice to remove the reminder for key tracks."
-msgstr ""
+msgid ""
+"As key track cannot be un-favorited, this field store the partner choice to "
+"remove the reminder for key tracks."
+msgstr "由於關鍵音軌不可從最愛移除，所以此欄位儲存合作夥伴有關刪除關鍵音軌提醒的選擇。"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_17
@@ -385,11 +392,15 @@ msgid ""
 "    a old tire is a real piece of cake and if you’re in need of a coffee table you can easily put one together using\n"
 "    wood crates."
 msgstr ""
+"你可能已聽說過，自己製作家具實際上不似想像般困難或複雜。\n"
+"    事實上，有些項目非常簡單，任何人都可以成功完成。例如，利用舊輪胎製作\n"
+"    一張可愛的小凳，確實非常容易；如果你需要一張茶几，使用木板條箱亦可\n"
+"    輕鬆組裝成一張。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件數"
+msgstr "附件數目"
 
 #. module: website_event_track
 #: model:event.track.tag.category,name:website_event_track.event_track_tag_category_1
@@ -402,16 +413,26 @@ msgid "Available Track Tags"
 msgstr "可用的專題研討標籤"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+msgid "Available on all event Agenda pages"
+msgstr "可在所有活動的議程頁面找到"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_main
+msgid "Back to All Talks"
+msgstr "返回所有演講"
+
+#. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
 msgid "Bandy clamp hack"
-msgstr ""
+msgstr "Bandy clamp hack"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_biography
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Biography"
-msgstr "傳記"
+msgstr "背景簡介"
 
 #. module: website_event_track
 #. odoo-python
@@ -426,39 +447,40 @@ msgid "Blocked"
 msgstr "已封鎖"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
 msgid "Book your seats to the best talks"
-msgstr ""
+msgstr "預訂座位，享受最精彩演講"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
 msgid "Book your talks"
-msgstr ""
+msgstr "預訂演講"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_14
 msgid "Building a DIY cabin from the ground up"
-msgstr ""
+msgstr "從頭開始建造 DIY 小木屋"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_url
 msgid "Button Target URL"
-msgstr ""
+msgstr "按鈕目標網址"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_title
 msgid "Button Title"
-msgstr ""
+msgstr "按鈕標題"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__is_website_cta_live
 msgid "CTA button is available"
-msgstr ""
+msgstr "行動呼籲按鈕可用"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Call for Proposals"
-msgstr "提議"
+msgstr "邀請提議"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__can_publish
@@ -466,14 +488,14 @@ msgid "Can Publish"
 msgstr "可以發佈"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_cancel
-msgid "Canceled Stage"
-msgstr "已取消階段"
-
-#. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage5
 msgid "Cancelled"
 msgstr "已取消"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_cancel
+msgid "Cancelled Stage"
+msgstr "已取消階段"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -488,7 +510,12 @@ msgstr "類別"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_12
 msgid "Climate positive"
-msgstr ""
+msgstr "Climate positive"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "Close"
+msgstr "關閉"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__color
@@ -504,12 +531,12 @@ msgstr "顏色索引"
 #. odoo-python
 #: code:addons/website_event_track/controllers/event_track.py:0
 msgid "Coming soon"
-msgstr ""
+msgstr "即將推出"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
 msgid "Coming soon ..."
-msgstr ""
+msgstr "即將推出⋯"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__company_id
@@ -529,7 +556,7 @@ msgstr "配置設定"
 #. module: website_event_track
 #: model:mail.template,subject:website_event_track.mail_template_data_track_confirmation
 msgid "Confirmation of {{ object.name }}"
-msgstr ""
+msgstr "確認 {{ object.name }}"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage1
@@ -539,8 +566,11 @@ msgstr "已確認"
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_13
 #: model_terms:event.track,description:website_event_track.event_7_track_3
-msgid "Considering to build a wooden house? Watch this video to find out more information about a construction process and final result. Step by step simple explanation! Interested?"
-msgstr ""
+msgid ""
+"Considering to build a wooden house? Watch this video to find out more "
+"information about a construction process and final result. Step by step "
+"simple explanation! Interested?"
+msgstr "正考慮建造一間木屋？觀看此影片，了解有關施工過程和最終結果的更多資料。一步步的簡單解釋！感興趣嗎？"
 
 #. module: website_event_track
 #. odoo-python
@@ -562,6 +592,11 @@ msgid "Contact Email"
 msgstr "聯繫電郵"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid "Contact Information"
+msgstr "聯繫資訊"
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_phone
 msgid "Contact Phone"
 msgstr "聯絡電話"
@@ -569,23 +604,23 @@ msgstr "聯絡電話"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
 msgid "Contact me through a different email/phone"
-msgstr ""
+msgstr "使用其他電郵地址 / 電話號碼聯絡我"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
 msgid "Create a Track"
-msgstr ""
+msgstr "新增音軌"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_location
 msgid "Create a Track Location"
-msgstr ""
+msgstr "新增音軌位置"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
 msgid "Create a Track Tag"
-msgstr ""
+msgstr "新增音軌標籤"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__create_uid
@@ -595,7 +630,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__create_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__create_uid
 msgid "Created by"
-msgstr "創立者"
+msgstr "建立人員"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__create_date
@@ -615,7 +650,14 @@ msgstr "客戶"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_19
 msgid "DIY Timber Cladding Project"
-msgstr ""
+msgstr "DIY 木材牆板項目"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PROPOSAL PAGES "
+"OF ALL EVENTS"
+msgstr "將內容方塊拖放至此處，使它可用於所有活動的所有提案頁面"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -625,22 +667,22 @@ msgstr "日期"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_11
 msgid "Day 2 Wrapup"
-msgstr ""
+msgstr "第 2 天總結"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_8
 msgid "Dealing with OpenWood Furniture"
-msgstr ""
+msgstr "處理 OpenWood 家具"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
 msgid "Define labels explaining kanban state management."
-msgstr ""
+msgstr "設定標籤，解釋看板狀態管理。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_location__sequence
 msgid "Define the order in which the location will appear on \"Agenda\" page"
-msgstr ""
+msgstr "設定「活動流程」頁面上顯示地點的順序"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
@@ -650,6 +692,10 @@ msgid ""
 "            You will use these stages in order to track the progress in\n"
 "            solving an event track."
 msgstr ""
+"設定活動會使用的步驟，\n"
+"            由創建音軌至關閉音軌。\n"
+"            你將使用這些階段\n"
+"            以追蹤處理活動音軌的進度。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -666,27 +712,27 @@ msgstr "說明"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__partner_tag_line
 msgid "Description of the partner (name, function and company name)"
-msgstr ""
+msgstr "合作夥伴描述（名稱、職能及公司名稱）"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track25
 msgid "Design contest (entire afternoon)"
-msgstr ""
+msgstr "設計比賽（整個下午）"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track24
 msgid "Design contest (entire day)"
-msgstr ""
+msgstr "設計比賽（全日）"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track6
 msgid "Detailed roadmap of our new products"
-msgstr ""
+msgstr "我們新產品的詳細路線圖"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track11
 msgid "Discover our new design team"
-msgstr ""
+msgstr "探索我們的新設計團隊"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__display_name
@@ -700,8 +746,10 @@ msgstr "顯示名稱"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_cta
-msgid "Display a Call to Action button to your Attendees while they watch your Track."
-msgstr ""
+msgid ""
+"Display a Call to Action button to your Attendees while they watch your "
+"Track."
+msgstr "參加者觀看你的音軌時，向他們顯示行動呼籲按鈕。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
@@ -711,7 +759,7 @@ msgstr "完成"
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
 msgid "Dowel Hack"
-msgstr ""
+msgstr "Dowel Hack"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__duration
@@ -721,7 +769,7 @@ msgstr "時長"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_3
 msgid "Easy Way To Build a Wooden House"
-msgstr ""
+msgstr "建造木屋的簡單方法"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -733,12 +781,12 @@ msgstr "編輯專題研討"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
 msgid "Email"
-msgstr "Email"
+msgstr "電郵"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__mail_template_id
 msgid "Email Template"
-msgstr "Email範本"
+msgstr "電郵範本"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -768,18 +816,18 @@ msgstr "活動地點"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
 msgid "Event Page"
-msgstr ""
+msgstr "活動頁面"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_proposal_menu_ids
 #: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track_proposal
 msgid "Event Proposals Menus"
-msgstr ""
+msgstr "活動提議選單"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_type
 msgid "Event Template"
-msgstr "活動模板"
+msgstr "活動範本"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track
@@ -791,7 +839,7 @@ msgstr "活動專題研討"
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_location
 msgid "Event Track Location"
-msgstr "專題研討活動地點"
+msgstr "活動專題研討地點"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_stage
@@ -808,7 +856,7 @@ msgstr "活動專題研討標籤"
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_tag_category
 msgid "Event Track Tag Category"
-msgstr ""
+msgstr "活動音軌標籤類別"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track
@@ -822,35 +870,35 @@ msgstr "活動專題研討"
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_menu_ids
 #: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track
 msgid "Event Tracks Menus"
-msgstr "專題研討活動明細"
+msgstr "活動專題研討選單"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_21
 msgid "Event Wrapup"
-msgstr ""
+msgstr "活動總結"
 
 #. module: website_event_track
 #: model:mail.template,name:website_event_track.mail_template_data_track_confirmation
 msgid "Event: Track Confirmation"
-msgstr ""
+msgstr "活動：確認音軌"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__events_app_name
 #: model:ir.model.fields,field_description:website_event_track.field_website__events_app_name
 msgid "Events App Name"
-msgstr ""
+msgstr "活動應用程式名稱"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
 msgid "Events PWA"
-msgstr ""
+msgstr "活動PWA"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
 msgid "Favorite On"
-msgstr ""
+msgstr "已設為最愛"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
@@ -859,13 +907,18 @@ msgstr "最愛"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
-msgid "Filter Tracks..."
-msgstr "篩選專題研討"
+msgid "Filter Tracks"
+msgstr "篩選音軌"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
 msgid "Filter by Tags"
-msgstr ""
+msgstr "以標籤篩選"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "Filters"
+msgstr "篩選"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
@@ -875,12 +928,12 @@ msgstr "已完工"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_2
 msgid "First Day Wrapup"
-msgstr ""
+msgstr "首天總結"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__fold
 msgid "Folded in Kanban"
-msgstr "在看板中折疊"
+msgstr "在看板中摺疊"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_follower_ids
@@ -900,12 +953,12 @@ msgstr "Font awesome 圖示，例如，fa-task"
 #. module: website_event_track
 #: model:event.track.tag.category,name:website_event_track.event_track_tag_category_2
 msgid "Format"
-msgstr "格式"
+msgstr "文字格式"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_fully_accessible
 msgid "Fully accessible"
-msgstr ""
+msgstr "完全可存取"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -913,14 +966,15 @@ msgid "Future Activities"
 msgstr "未來活動"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
 msgid "Get prepared and"
-msgstr ""
+msgstr "做好準備並"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
 msgid "Glue tip"
-msgstr ""
+msgstr "Glue tip"
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__done
@@ -946,12 +1000,12 @@ msgstr "灰色看板標籤"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Group By"
-msgstr "分組方式"
+msgstr "分組依據"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_11
 msgid "Happy with OpenWood"
-msgstr ""
+msgstr "滿意使用 OpenWood"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__has_message
@@ -971,57 +1025,57 @@ msgstr "最高"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
 msgid "Home page"
-msgstr ""
+msgstr "主頁"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track21
 msgid "House of World Cultures"
-msgstr ""
+msgstr "世界文化之家"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
 msgid "How can our team get in touch with you?"
-msgstr ""
+msgstr "我們的團隊可以如何聯絡你？"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track18
 msgid "How to build your marketing strategy within a competitive environment"
-msgstr ""
+msgstr "如何在競爭激烈環境中製定營銷策略"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track15
 msgid "How to communicate with your community"
-msgstr ""
+msgstr "如何與你的社群溝通"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track1
 msgid "How to design a new piece of furniture"
-msgstr ""
+msgstr "如何設計一件新家具"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track4
 msgid "How to develop automated processes"
-msgstr ""
+msgstr "如何開發自動化流程"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track16
 msgid "How to follow us on the social media"
-msgstr ""
+msgstr "如何在社交媒體上關注我們"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track9
 msgid "How to improve your quality processes"
-msgstr ""
+msgstr "如何改進你的品質流程"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track2
 msgid "How to integrate hardware materials in your pieces of furniture"
-msgstr ""
+msgstr "如何將五金材料融入你的家具中"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track8
 msgid "How to optimize your sales, from leads to sales orders"
-msgstr ""
+msgstr "如何優化你的銷售，從潛在客戶到銷售訂單"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__id
@@ -1031,7 +1085,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__id
 msgid "ID"
-msgstr "ID"
+msgstr "識別號"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_exception_icon
@@ -1045,8 +1099,10 @@ msgstr "用於指示異常活動的圖示。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_fully_accessible
-msgid "If checked, automatically publish tracks so that access links to customers are provided."
-msgstr ""
+msgid ""
+"If checked, automatically publish tracks so that access links to customers "
+"are provided."
+msgstr "若剔選，會自動發佈音軌，以便向客戶提供存取連結。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction
@@ -1062,22 +1118,26 @@ msgstr "勾選代表有訊息發生傳送錯誤。"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_visible_in_agenda
 msgid "If checked, the related tracks will be visible in the frontend."
-msgstr ""
+msgstr "若剔選，相關音軌會在前端顯示。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__mail_template_id
-msgid "If set an email will be sent to the customer when the track reaches this step."
-msgstr "如果在追蹤到達這一步時，設定發送電子信件給客戶。"
+msgid ""
+"If set an email will be sent to the customer when the track reaches this "
+"step."
+msgstr "如果設置，當音軌到達此步驟時，將向客戶發送一封電子郵件。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__wishlisted_by_default
-msgid "If set, the talk will be set as favorite for each attendee registered to the event."
-msgstr ""
+msgid ""
+"If set, the talk will be set as favorite for each attendee registered to the"
+" event."
+msgstr "若設定，演講會被設為所有報名參加活動的參加者的最愛。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image_url
 msgid "Image URL"
-msgstr "圖像網址"
+msgstr "圖片網址"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
@@ -1099,12 +1159,12 @@ msgstr "進行中"
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_15
 msgid "In this video we will see how lumber is made in a sawmill factory."
-msgstr ""
+msgstr "本影片介紹鋸木廠如何製造建築木材。"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
 msgid "In this video, I covered 6 tips and tricks to help out beginners:"
-msgstr ""
+msgstr "在本影片中，我介紹了 6 點幫助初學者的提示和技巧："
 
 #. module: website_event_track
 #. odoo-javascript
@@ -1116,12 +1176,12 @@ msgstr "安裝"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
 msgid "Install Application"
-msgstr ""
+msgstr "安裝應用程式"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Interactivity"
-msgstr ""
+msgstr "互動"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1131,7 +1191,7 @@ msgstr "介紹"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_website_cta_live
 msgid "Is CTA Live"
-msgstr ""
+msgstr "行動呼籲是否生效"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_is_follower
@@ -1146,52 +1206,52 @@ msgstr "已發佈"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_reminder_on
 msgid "Is Reminder On"
-msgstr ""
+msgstr "提醒功能是否開啟"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_done
 msgid "Is Track Done"
-msgstr ""
+msgstr "音軌是否已完成"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_live
 msgid "Is Track Live"
-msgstr ""
+msgstr "音軌是否公開播放中"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_soon
 msgid "Is Track Soon"
-msgstr ""
+msgstr "音軌是否即將舉行"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_today
 msgid "Is Track Today"
-msgstr ""
+msgstr "音軌是否今天舉行"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_upcoming
 msgid "Is Track Upcoming"
-msgstr ""
+msgstr "音軌是否快將開始"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_wishlisted
 msgid "Is Wishlisted"
-msgstr ""
+msgstr "已列入願望清單"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_blacklisted
 msgid "Is reminder off"
-msgstr ""
+msgstr "提醒功能是否關閉"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_function
 msgid "Job Position"
-msgstr "工作職缺"
+msgstr "工作職位"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Job Title"
-msgstr "職務頭銜"
+msgstr "工作職銜"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__legend_blocked
@@ -1221,12 +1281,12 @@ msgstr "看板有效解釋"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track23
 msgid "Key Success factors selling our furniture"
-msgstr ""
+msgstr "銷售家具的關鍵成功因素"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_9
 msgid "Kitchens for the Future"
-msgstr ""
+msgstr "未來的廚房"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__write_uid
@@ -1256,44 +1316,51 @@ msgstr "逾期活動"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track12
 msgid "Latest trends"
-msgstr ""
+msgstr "最新趨勢"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_26
 msgid "Less Furniture is More Furniture"
-msgstr ""
+msgstr "Less Furniture is More Furniture"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_4
 msgid "Life at Home Around the World: William’s Story"
-msgstr ""
+msgstr "世界各地的居家生活：威廉的故事"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Lightning Talks"
+msgstr "閃電演講"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_19
-msgid "Link to Q&amp;A here! The time has come to hide those old block walls. Love simple and transformation type projects like this! :)-"
-msgstr ""
+msgid ""
+"Link to Q&amp;A here! The time has come to hide those old block walls. Love "
+"simple and transformation type projects like this! :)-"
+msgstr "在此放下問答連結！ 是時候隱藏那些舊的砌牆了。 喜歡這樣簡單、改頭換面的項目！ :)-"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
 msgid "Live"
-msgstr "Live"
+msgstr "直播"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
 msgid "Live Now"
-msgstr ""
+msgstr "現正直播"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_10
 msgid "Live Testimonial"
-msgstr ""
+msgstr "現場用家分享"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_25
 msgid "Live Testimonials"
-msgstr ""
+msgstr "現場用家分享"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__location_id
@@ -1305,12 +1372,12 @@ msgstr "地點"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_13
 msgid "Log House Building"
-msgstr ""
+msgstr "木屋樓宇"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_15
 msgid "Logs to lumber"
-msgstr ""
+msgstr "由原木變木材"
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__0
@@ -1325,17 +1392,19 @@ msgstr "午餐"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta
 msgid "Magic Button"
-msgstr ""
+msgstr "魔術按鈕"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
 msgid "Making a center marking gauge"
-msgstr ""
+msgstr "圓心標記尺製作"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_location
-msgid "Manage from here the places where you organize your tracks (e.g. Rooms, Channels, ...)."
-msgstr ""
+msgid ""
+"Manage from here the places where you organize your tracks (e.g. Rooms, "
+"Channels, ...)."
+msgstr "從這裏管理你舉辦音軌的位置（例如房間、頻道...）。"
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
@@ -1360,27 +1429,27 @@ msgstr "訊息"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track22
 msgid "Minimal but efficient design"
-msgstr ""
+msgstr "簡約但高效設計"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_start_remaining
 msgid "Minutes before CTA starts"
-msgstr ""
+msgstr "分鐘至行動呼籲開始"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_remaining
 msgid "Minutes before track starts"
-msgstr ""
+msgstr "分鐘至音軌開始"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_relative
 msgid "Minutes compare to track start"
-msgstr ""
+msgstr "分鐘，與音軌開始時間相比"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
 msgid "Miter saw tip"
-msgstr ""
+msgstr "Miter saw tip"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track30
@@ -1395,7 +1464,7 @@ msgstr "我的活動截止時間"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track27
 msgid "My Company global presentation"
-msgstr ""
+msgstr "我公司的全球演示"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -1413,12 +1482,12 @@ msgstr "名稱"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
 msgid "Name of your website's Events Progressive Web Application"
-msgstr ""
+msgstr "你網站的活動PWA(漸進式網絡應用程式)的名稱"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track20
 msgid "New Certification Program"
-msgstr ""
+msgstr "新認證計劃"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_event_track
@@ -1448,24 +1517,18 @@ msgstr "下一活動類型"
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
 msgid "No Track Visitors yet!"
-msgstr ""
-
-#. module: website_event_track
-#. odoo-javascript
-#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form_tags.js:0
-msgid "No results found"
-msgstr "無任何結果"
+msgstr "未有追蹤訪客。"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_action_from_visitor
 msgid "No track favorited by this visitor"
-msgstr ""
+msgstr "訪客未有將任何音軌加至最愛"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
 msgid "No track found."
-msgstr ""
+msgstr "找不到音軌。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_tag__color
@@ -1484,8 +1547,8 @@ msgstr "錯誤數量"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "需要處理的消息數量"
+msgid "Number of messages requiring action"
+msgstr "需要採取行動的訊息數目"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error_counter
@@ -1495,12 +1558,12 @@ msgstr "有發送錯誤的郵件數量"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_24
 msgid "Old is New"
-msgstr ""
+msgstr "Old is New"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_20
 msgid "Our Last Day Together!"
-msgstr ""
+msgstr "我們在一起的最後一天！"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__partner_id
@@ -1510,7 +1573,7 @@ msgstr "業務夥伴"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track14
 msgid "Partnership programs"
-msgstr ""
+msgstr "合作夥伴計劃"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_phone
@@ -1527,29 +1590,29 @@ msgstr "圖片"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
 msgid "Plan your experience by adding your favorites talks to your wishlist"
-msgstr ""
+msgstr "將你的心水演講加至願望清單，預先規劃你的體驗"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
 msgid "Please enter either a contact email address or a contact phone number."
-msgstr ""
+msgstr "請輸入聯絡電郵地址或電話號碼。"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
 msgid "Please fill out the form correctly."
-msgstr ""
+msgstr "請正確填寫表格。"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track3
 msgid "Portfolio presentation"
-msgstr ""
+msgstr "介紹作品集"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_16
 msgid "Pretty. Ugly. Lovely."
-msgstr ""
+msgstr "Pretty. Ugly. Lovely."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
@@ -1563,8 +1626,11 @@ msgstr "優先級"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_7
-msgid "Probably one of the most asked questions I've gotten is how I got started woodworking! In this video I share with you how/why I started building furniture!"
-msgstr ""
+msgid ""
+"Probably one of the most asked questions I've gotten is how I got started "
+"woodworking! In this video I share with you how/why I started building "
+"furniture!"
+msgstr "我收到最多的問題之一，應該就是我是如何開始木工的！在這個影片中，我會與你分享我如何及為甚麼會開始建造家具！"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage0
@@ -1573,8 +1639,8 @@ msgstr "建議"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "Proposals are closed!"
-msgstr "建議關閉！"
+msgid "Proposals are closed."
+msgstr "提案期已截止。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track_proposal
@@ -1585,17 +1651,17 @@ msgstr "關於網站的建議"
 #: model:event.track.stage,name:website_event_track.event_track_stage3
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Published"
-msgstr "已公開"
+msgstr "已發佈"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track10
 msgid "Raising qualitive insights from your customers"
-msgstr ""
+msgstr "收集客戶的高質素見解"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "評分"
 
 #. module: website_event_track
 #. odoo-python
@@ -1622,22 +1688,27 @@ msgstr "紅色的看板標籤"
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage4
 msgid "Refused"
-msgstr "已拒絕"
+msgstr "已退回"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Regular Talks"
+msgstr "一般演講"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__track_start_relative
 msgid "Relative time compared to track start (seconds)"
-msgstr ""
+msgstr "與音軌開始相比的相對時間（秒）"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_cta_start_remaining
 msgid "Remaining time before CTA starts (seconds)"
-msgstr ""
+msgstr "行動呼籲開始前的剩餘時間（秒）"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__track_start_remaining
 msgid "Remaining time before track starts (seconds)"
-msgstr ""
+msgstr "音軌開始前的剩餘時間（秒）"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__user_id
@@ -1653,17 +1724,17 @@ msgstr "責任使用者"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_23
 msgid "Restoring Old Woodworking Tools"
-msgstr ""
+msgstr "復修殘舊木工工具"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_23
 msgid "Restoring old woodworking tools"
-msgstr ""
+msgstr "復修殘舊木工工具"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
 msgid "Right angle clamp jig"
-msgstr ""
+msgstr "Right angle clamp jig"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_seo_optimized
@@ -1676,31 +1747,32 @@ msgid "SMS Delivery error"
 msgstr "簡訊發送錯誤"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
-#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
-msgid "Schedule some tracks to get started"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "Search a talk ..."
+msgstr "搜尋演講⋯"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_6
 msgid "Securing your Lumber during transport"
-msgstr ""
+msgstr "繫穩及保護運輸過程中的木材"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form_tags.js:0
-msgid "Select categories"
-msgstr ""
+msgid "Select Categories"
+msgstr "選擇類別"
 
 #. module: website_event_track
 #: model:mail.template,description:website_event_track.mail_template_data_track_confirmation
-msgid "Sent to speakers whose track proposal is accepted (set the template on the right stage)"
-msgstr ""
+msgid ""
+"Sent to speakers whose track proposal is accepted (set the template on the "
+"right stage)"
+msgstr "傳送給音軌提議已獲接納的演講者（為正確階段設定範本）"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__seo_name
 msgid "Seo name"
-msgstr "Seo 名稱"
+msgstr "SEO 名稱"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__sequence
@@ -1708,19 +1780,19 @@ msgstr "Seo 名稱"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__sequence
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__sequence
 msgid "Sequence"
-msgstr "序號"
+msgstr "序列號"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
 msgid "Set Favorite"
-msgstr ""
+msgstr "設為最愛"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_delay
 msgid "Show Button"
-msgstr ""
+msgstr "顯示按鈕"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -1730,34 +1802,40 @@ msgstr "顯示在今天之前的下一個行動日期的所有記錄"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
 msgid "Showcase Tracks"
-msgstr ""
+msgstr "展覽音軌"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Speaker"
-msgstr "講者"
+msgstr "演講者"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Speaker Bio"
-msgstr ""
+msgstr "演講者簡介"
 
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 msgid "Speaker Email"
-msgstr "發言人電子信件"
+msgstr "演講者電郵"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__image
 msgid "Speaker Photo"
-msgstr ""
+msgstr "演講者照片"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Speaker Profile"
+msgstr "演講者簡介"
 
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 msgid "Speakers"
-msgstr "講者"
+msgstr "演講者"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__stage_id
@@ -1778,12 +1856,12 @@ msgstr "階段名稱"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
 msgid "Starting now!"
-msgstr ""
+msgstr "現正開始！"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track28
 msgid "Status & Strategy"
-msgstr ""
+msgstr "狀態與策略"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_state
@@ -1811,7 +1889,7 @@ msgstr "提交建議"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_tag_line
 msgid "Tag Line"
-msgstr ""
+msgstr "夥伴標語"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__name
@@ -1821,7 +1899,7 @@ msgstr "標籤名稱"
 #. module: website_event_track
 #: model:ir.model.constraint,message:website_event_track.constraint_event_track_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "標籤名稱已存在!"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__tag_ids
@@ -1829,6 +1907,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
 msgid "Tags"
 msgstr "標籤"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Talk Intro"
+msgstr "演講簡介"
 
 #. module: website_event_track
 #. odoo-python
@@ -1840,24 +1923,25 @@ msgstr "演講提案"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 msgid "Talk added to your Favorites"
-msgstr ""
+msgstr "演講已加至最愛"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 msgid "Talk already in your Favorites"
-msgstr ""
+msgstr "演講已在最愛之中"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 msgid "Talk removed from your Favorites"
-msgstr ""
+msgstr "已從最愛移除演講"
 
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/models/event_event.py:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
 msgid "Talks"
 msgstr "演講"
 
@@ -1885,23 +1969,25 @@ msgstr "謝謝您的建議。"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_url
 msgid "The full URL to access the document through the website."
-msgstr "通過網站存取此文件的完整網址。"
+msgstr "通過網站存取此文件的完整網址."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track17
 #: model:event.track,name:website_event_track.event_track29
 msgid "The new marketing strategy"
-msgstr ""
+msgstr "新的營銷策略"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track5
 msgid "The new way to promote your creations"
-msgstr ""
+msgstr "推廣你創作成品的新方式"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_17
-msgid "There are a lot of ideas worth exploring so start with the 10 DIY furniture ideas for absolute beginners."
-msgstr ""
+msgid ""
+"There are a lot of ideas worth exploring so start with the 10 DIY furniture "
+"ideas for absolute beginners."
+msgstr "有很多想法值得探討，先從適合初學者的 10 個 DIY 家具創意開始吧。"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5
@@ -1909,37 +1995,54 @@ msgid ""
 "There are several variants of wood is available in the world but we are talking about most expensive\n"
 "    ones in the world and keeping to the point we have arranged ten most expensive wood."
 msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
-msgid "They will be created automatically once attendees start browsing your events."
-msgstr ""
+"世界上有多種木材可供選擇，但我們討論的是世界上最昂貴的木材，\n"
+"    而且我們安排了十種最昂貴的木材。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "This event does not accept proposals."
-msgstr "這一活動不接受建議。"
+msgid ""
+"These are 30 minutes talks on many different topics. Most topics are "
+"accepted in lightning talks."
+msgstr "這些演講長約 30 分鐘，涉及多種不同主題。大多數主題都在閃電演講中被接受。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "These are standard talks with slides, alocated in slots of 60 minutes."
+msgstr "這些是附有投影片的標準演講，以每節 60 分鐘分配。"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+msgid ""
+"They will be created automatically once attendees start browsing your "
+"events."
+msgstr "參加者開始瀏覽你的活動時，它們就會自動建立。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_website__app_icon
-msgid "This field holds the image used as mobile app icon on the website (PNG format)."
-msgstr ""
+msgid ""
+"This field holds the image used as mobile app icon on the website (PNG "
+"format)."
+msgstr "此欄位保存網站上用作流動應用程式圖示的 PNG 格式圖片。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_res_config_settings__events_app_name
 #: model:ir.model.fields,help:website_event_track.field_website__events_app_name
 msgid "This fields holds the Event's Progressive Web App name."
-msgstr ""
+msgstr "此欄位保存活動的 PWA（漸進式網路應用程式）名稱。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
-msgid "This page hasn't been saved for offline reading yet.<br/>Please check your network connection."
-msgstr ""
+msgid ""
+"This page hasn't been saved for offline reading yet.<br/>Please check your "
+"network connection."
+msgstr "此頁面尚未儲存以供離線閱讀。<br/>請檢查你的網絡連線。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__fold
-msgid "This stage is folded in the kanban view when there are no records in that stage to display."
-msgstr "當這個階段中沒有任何記錄要呈現的時候，這個階段在看板視圖中被折疊起來"
+msgid ""
+"This stage is folded in the kanban view when there are no records in that "
+"stage to display."
+msgstr "當這個階段中沒有任何記錄要呈現的時候，這個階段在看板視圖中被折疊起來."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
@@ -1949,21 +2052,21 @@ msgstr "該步驟已完成，點選設定為阻止或進行中。"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "This track does not have a description."
-msgstr ""
+msgstr "此音軌未有描述。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "Timely release of presentation material (slides),\n"
-"                                    for publishing on our website."
+"                            for publishing on our website."
 msgstr ""
-"及時發佈演示材料（幻燈片）,\n"
-"                 用以在我們的網站上發佈。"
+"快速發放簡報材料（投影片），\n"
+"                            以在我們的網站上發佈。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__name
 msgid "Title"
-msgstr "標題"
+msgstr "稱謂"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -1973,12 +2076,12 @@ msgstr "今天的活動"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_22
 msgid "Tools for the Woodworking Beginner"
-msgstr ""
+msgstr "適合木工初學者的工具"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_5
 msgid "Top 10 Most Expensive Wood in the World"
-msgstr ""
+msgstr "世界上十大最昂貴木材"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5
@@ -1986,6 +2089,8 @@ msgid ""
 "Top most expensive wood in the world is quite interesting topic and several people may be surprised\n"
 "    that there are hundreds of wood types exist around the globe following different properties and use."
 msgstr ""
+"「世界上最昂貴的木材」是一個頗為有趣的話題。有些人可能會驚訝，\n"
+"    原來全球有數百種木材類型，各有不同特性和用途。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__track_id
@@ -1997,7 +2102,7 @@ msgstr "追蹤"
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_visitor
 msgid "Track / Visitor Link"
-msgstr ""
+msgstr "音軌 / 訪客連結"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_blocked
@@ -2007,7 +2112,7 @@ msgstr "追蹤受阻"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_count
 msgid "Track Count"
-msgstr "專題研討數量"
+msgstr "專題研討數目"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__date
@@ -2022,12 +2127,12 @@ msgstr "專題研討結束日期"
 #. module: website_event_track
 #: model:ir.ui.menu,name:website_event_track.menu_event_track_location
 msgid "Track Locations"
-msgstr ""
+msgstr "音軌位置"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_type_view_form_inherit_track
 msgid "Track Proposals Menu Item"
-msgstr ""
+msgstr "音軌提議選單項目"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_ready
@@ -2051,18 +2156,18 @@ msgstr "專題研討階段"
 #: model:ir.ui.menu,name:website_event_track.event_track_stage_menu
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
 msgid "Track Stages"
-msgstr "追蹤階段"
+msgstr "音軌階段"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.event_track_tag_category_action
 #: model:ir.ui.menu,name:website_event_track.event_track_tag_category_menu
 msgid "Track Tag Categories"
-msgstr ""
+msgstr "音軌標籤類別"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
 msgid "Track Tag Category"
-msgstr ""
+msgstr "音軌標籤類別"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track_tag
@@ -2074,12 +2179,12 @@ msgstr "專題研討標籤"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_list
 msgid "Track Tags Category"
-msgstr ""
+msgstr "音軌標籤類別"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_form
 msgid "Track Visitor"
-msgstr "Track Visitor"
+msgstr "音軌訪客"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.event_track_visitor_action
@@ -2089,12 +2194,14 @@ msgstr "Track Visitor"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_list
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
 msgid "Track Visitors"
-msgstr ""
+msgstr "音軌訪客"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
-msgid "Track Visitors store statistics on your events, including how many times tracks have been wishlisted."
-msgstr ""
+msgid ""
+"Track Visitors store statistics on your events, including how many times "
+"tracks have been wishlisted."
+msgstr "「音軌訪客」儲存有關你活動的統計數據，包括音軌被列入願望清單的次數。"
 
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_blocked
@@ -2114,7 +2221,7 @@ msgstr "專題研討"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_type_view_form_inherit_track
 msgid "Tracks Menu Item"
-msgstr ""
+msgstr "音軌選單項目"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_type__website_track_proposal
@@ -2124,8 +2231,10 @@ msgstr "追蹤關於網站的建議"
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
-msgid "Tracks define your event schedule. They can be talks, workshops or any similar activity."
-msgstr ""
+msgid ""
+"Tracks define your event schedule. They can be talks, workshops or any "
+"similar activity."
+msgstr "音軌定義您的活動日程。 它們可以是講座、工作坊或任何類似的活動。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track
@@ -2137,6 +2246,11 @@ msgstr "在網站上追蹤"
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "記錄的異常活動的類型。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+msgid "Unknown"
+msgstr "未知"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
@@ -2157,6 +2271,9 @@ msgid ""
 "    ingenuity along with a couple boards, a sturdy strap and a few screws are all I use to easily haul\n"
 "    long boards from the lumberyard to the Next Level Carpentry shop or jobsite."
 msgstr ""
+"按照這些簡單步驟，即可輕鬆利用短箱農夫車運載較長木材。運用少許木匠的\n"
+"    聰明才智，加上幾塊木板、一條堅固的綁帶和幾顆螺絲，\n"
+"    我就可以輕鬆地將長木板從伐木場運到下一級木工車間或工地。"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_6
@@ -2164,6 +2281,8 @@ msgid ""
 "Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) allows lumber to be\n"
 "    cinched securely WITHOUT the need to tie and untie tricky or complicated knots."
 msgstr ""
+"運用獨特的綁帶纏繞方法（不要用彈力繩!!!）\n"
+"    可以安全地繫緊木材，而無需打結和解開棘手或複雜的結。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -2173,7 +2292,7 @@ msgstr "查看專題研討"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_visible_in_agenda
 msgid "Visible in agenda"
-msgstr ""
+msgstr "在活動流程內顯示"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_published
@@ -2184,33 +2303,39 @@ msgstr "在當前網站可見"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__visitor_id
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
 msgid "Visitor"
-msgstr "訪問者"
+msgstr "訪客"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_ids
 msgid "Visitor Wishlist"
-msgstr ""
+msgstr "訪客願望清單"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.website_visitor_action_from_track
 msgid "Visitors Wishlist"
-msgstr ""
+msgstr "訪客願望清單"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_1
 msgid "Voice from Customer"
-msgstr ""
+msgstr "客戶的聲音"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.website_visitor_action_from_track
 msgid "Wait for visitors to add this track to their list of favorites"
-msgstr ""
+msgstr "等待訪客將此音軌加至他們的最愛列表中"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
-msgid "We did not find any track matching your"
-msgstr ""
+msgid "We could not find any track at this moment."
+msgstr "目前我們找不到任何音軌。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "We could not find any track matching your search for:"
+msgstr "找不到任何音軌符合你搜尋的："
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -2221,19 +2346,31 @@ msgstr "我們要求發言者接受協議，他們承諾："
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "We will accept a broad range of\n"
-"                            presentations, from reports on academic and\n"
-"                            commercial projects to tutorials and case\n"
-"                            studies. As long as the presentation is\n"
-"                            interesting and potentially useful to the\n"
-"                            audience, it will be considered for\n"
-"                            inclusion in the programme."
+"                                presentations, from reports on academic and\n"
+"                                commercial projects to tutorials and case\n"
+"                                studies. As long as the presentation is\n"
+"                                interesting and potentially useful to the\n"
+"                                audience, it will be considered for\n"
+"                                inclusion in the programme."
 msgstr ""
+"我們將接受廣泛的\n"
+"                 演示，從學術報告和\n"
+"                 商業專案到教學和案例\n"
+"                  研究。只要演示是\n"
+"                 有趣的和對潛在觀眾有用的。\n"
+"                 它會被考慮\n"
+"                 列入計劃當中。"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
 msgid "We will evaluate your proposition and get back to you shortly."
 msgstr "我們將評估您的建議，並盡快給您回覆。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "We're sorry, this event does not accept proposals anymore"
+msgstr "抱歉，此活動已不再接受提案"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website
@@ -2243,7 +2380,7 @@ msgstr "網站"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website__app_icon
 msgid "Website App Icon"
-msgstr ""
+msgstr "網站應用程式圖示"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_event_menu
@@ -2253,7 +2390,7 @@ msgstr "網站活動功能表"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image
 msgid "Website Image"
-msgstr ""
+msgstr "網站圖片"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_menu
@@ -2263,17 +2400,17 @@ msgstr "網站選單"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_message_ids
 msgid "Website Messages"
-msgstr "網站訊息"
+msgstr "網站資訊"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_url
 msgid "Website URL"
-msgstr "網站URL"
+msgstr "網站網址"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_visitor
 msgid "Website Visitor"
-msgstr "網站訪問者"
+msgstr "網站訪客"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_message_ids
@@ -2283,17 +2420,17 @@ msgstr "網站溝通記錄"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_description
 msgid "Website meta description"
-msgstr "網站元說明"
+msgstr "網站 meta 說明"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_keywords
 msgid "Website meta keywords"
-msgstr "網站元關鍵詞"
+msgstr "網站meta關鍵字"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_title
 msgid "Website meta title"
-msgstr "網站元標題"
+msgstr "網站meta標題"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_og_img
@@ -2308,102 +2445,106 @@ msgstr "歡迎來到第 2 天"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_1
 msgid "What This Event Is All About"
-msgstr ""
+msgstr "活動主題"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "What is your talk about?"
-msgstr ""
+msgstr "你的演講關於甚麼題目？"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "Who will give this talk? We will show this to attendees to showcase your talk."
-msgstr ""
+msgid ""
+"Who will give this talk? We will show this to attendees to showcase your "
+"talk."
+msgstr "演講的人是誰？ 我們會向參加者展示此內容，以介紹你的演講。"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_2
 msgid "Who's OpenWood anyway?"
-msgstr ""
+msgstr "到底誰是 OpenWood？"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Wishlisted By"
-msgstr ""
+msgstr "列入願望清單的人"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.event_track_action_from_visitor
 #: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_ids
 msgid "Wishlisted Tracks"
-msgstr ""
+msgstr "願望清單音軌"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
 msgid "Wishlists"
-msgstr "心願單"
+msgstr "願望清單"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_7
 msgid "Woodworking: How I got started!"
-msgstr ""
+msgstr "木工：我是如何開始的！"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
 msgid "You cannot access this page."
-msgstr ""
+msgstr "你不可存取此頁面。"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
-msgid "You have to enable push notifications to get reminders for your favorite tracks."
-msgstr ""
+msgid ""
+"You have to enable push notifications to get reminders for your favorite "
+"tracks."
+msgstr "必須啟用推送通知，才可收到最愛音軌提醒。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
 msgid "You're offline!"
-msgstr ""
+msgstr "你正離線！"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "a few seconds"
-msgstr ""
+msgstr "數秒"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
 msgid "ago"
-msgstr ""
+msgstr "前"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. \"John Doe was born in...\""
-msgstr ""
+msgstr "例：陳大文出生於⋯"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_tree
 msgid "e.g. \"Main Conference Room\""
-msgstr ""
+msgstr "例：主會議室"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. \"This talk will be about...\""
-msgstr ""
+msgstr "例：這場演講關於⋯"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. Get Yours Now!"
-msgstr ""
+msgstr "例：現在取得"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_view_form_quick_create
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. Inspiring Business Talk"
-msgstr "例如：具啟發性的商務談判"
+msgstr "例：啟發人心的商業講座"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. http://www.example.com"
-msgstr ""
+msgstr "例：http://www.example.com"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -2411,20 +2552,21 @@ msgid "hours"
 msgstr "小時"
 
 #. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_timer.js:0
+msgid "in %s"
+msgstr "在%s"
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "minutes after Track start"
-msgstr ""
+msgstr "音軌開始後分鐘"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
 msgid "register to your favorites talks now."
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
-#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
-msgid "search."
-msgstr "搜尋"
+msgstr "立即登記參加你的心水演講。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
@@ -2435,8 +2577,3 @@ msgstr "開始於"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "starts on"
 msgstr "開始在"
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
-msgid "tracks"
-msgstr ""

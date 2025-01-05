@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_skills_slides
-#
+# 
 # Translators:
-# Jiří Podhorecký, 2022
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 17.1alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2022\n"
+"POT-Creation-Date: 2024-01-08 06:51+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: cs\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: hr_skills_slides
@@ -32,11 +31,16 @@ msgid "Channel / Partners (Members)"
 msgstr "Kanál / partneři (členové)"
 
 #. module: hr_skills_slides
+#: model:hr.resume.line.type,name:hr_skills_slides.resume_type_training
+msgid "Completed Internal Training"
+msgstr ""
+
+#. module: hr_skills_slides
 #: model:ir.model,name:hr_skills_slides.model_slide_channel
 #: model:ir.model.fields,field_description:hr_skills_slides.field_hr_resume_line__channel_id
 #: model:ir.model.fields.selection,name:hr_skills_slides.selection__hr_resume_line__display_type__course
 msgid "Course"
-msgstr "Kurs"
+msgstr "Kurz"
 
 #. module: hr_skills_slides
 #: model:ir.model.fields,field_description:hr_skills_slides.field_hr_resume_line__course_url
@@ -71,7 +75,7 @@ msgstr ""
 #. module: hr_skills_slides
 #: model:ir.model,name:hr_skills_slides.model_hr_resume_line
 msgid "Resume line of an employee"
-msgstr ""
+msgstr "Řádek životopisu zaměstnance"
 
 #. module: hr_skills_slides
 #. odoo-python
@@ -82,7 +86,7 @@ msgstr ""
 #. module: hr_skills_slides
 #. odoo-python
 #: code:addons/hr_skills_slides/models/slide_channel.py:0
-msgid "The employee left the course <a href=\"%(link)s\">%(course)s</a>"
+msgid "The employee left the course %s"
 msgstr ""
 
 #. module: hr_skills_slides

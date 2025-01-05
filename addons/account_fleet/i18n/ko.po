@@ -1,0 +1,152 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_fleet
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_fleet
+#: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_log_services_view_form
+msgid ""
+"<span class=\"o_stat_text text-success\" invisible=\"account_move_state != 'posted'\" title=\"Service's Bill\">Service's Bill</span>\n"
+"                            <span class=\"o_stat_text text-warning\" invisible=\"account_move_state == 'posted'\" title=\"Service's Bill\">Service's Bill</span>"
+msgstr ""
+"<span class=\"o_stat_text text-success\" invisible=\"account_move_state != 'posted'\" title=\"서비스 청구서\">서비스 청구서</span>\n"
+"                            <span class=\"o_stat_text text-warning\" invisible=\"account_move_state == 'posted'\" title=\"서비스 청구서\">서비스 청구서</span>"
+
+#. module: account_fleet
+#: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__account_move_ids
+msgid "Account Move"
+msgstr "회계 이동"
+
+#. module: account_fleet
+#: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__account_move_line_id
+msgid "Account Move Line"
+msgstr "계정 이동 항목"
+
+#. module: account_fleet
+#. odoo-python
+#: code:addons/account_fleet/models/fleet_vehicle_log_services.py:0
+msgid "Bill"
+msgstr "청구"
+
+#. module: account_fleet
+#: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_view_form
+msgid "Bills"
+msgstr "공급업체 청구서"
+
+#. module: account_fleet
+#: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__bill_count
+msgid "Bills Count"
+msgstr "청구서 수"
+
+#. module: account_fleet
+#: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__amount
+msgid "Cost"
+msgstr "원가"
+
+#. module: account_fleet
+#: model:ir.model,name:account_fleet.model_account_automatic_entry_wizard
+msgid "Create Automatic Entries"
+msgstr "자동 입력 생성"
+
+#. module: account_fleet
+#: model_terms:ir.ui.view,arch_db:account_fleet.account_move_view_tree
+msgid "Creation Date"
+msgstr "작성일자"
+
+#. module: account_fleet
+#: model:ir.model.fields,field_description:account_fleet.field_account_automatic_entry_wizard__display_name
+#: model:ir.model.fields,field_description:account_fleet.field_account_move__display_name
+#: model:ir.model.fields,field_description:account_fleet.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__display_name
+#: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: account_fleet
+#: model:ir.model.fields,field_description:account_fleet.field_account_automatic_entry_wizard__id
+#: model:ir.model.fields,field_description:account_fleet.field_account_move__id
+#: model:ir.model.fields,field_description:account_fleet.field_account_move_line__id
+#: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__id
+#: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_fleet
+#: model:ir.model,name:account_fleet.model_account_move
+msgid "Journal Entry"
+msgstr "전표 입력"
+
+#. module: account_fleet
+#: model:ir.model,name:account_fleet.model_account_move_line
+msgid "Journal Item"
+msgstr "전표 항목"
+
+#. module: account_fleet
+#: model:ir.model.fields,field_description:account_fleet.field_account_move_line__need_vehicle
+msgid "Need Vehicle"
+msgstr "차량 필요"
+
+#. module: account_fleet
+#. odoo-python
+#: code:addons/account_fleet/models/account_move.py:0
+msgid "Service Vendor Bill: %s"
+msgstr "서비스 공급업체 청구서: %s"
+
+#. module: account_fleet
+#: model:ir.model,name:account_fleet.model_fleet_vehicle_log_services
+msgid "Services for vehicles"
+msgstr "차량 관리"
+
+#. module: account_fleet
+#: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__account_move_state
+msgid "Status"
+msgstr "상태"
+
+#. module: account_fleet
+#: model:ir.model,name:account_fleet.model_fleet_vehicle
+#: model:ir.model.fields,field_description:account_fleet.field_account_move_line__vehicle_id
+#: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__vehicle_id
+msgid "Vehicle"
+msgstr "차량"
+
+#. module: account_fleet
+#: model:fleet.service.type,name:account_fleet.data_fleet_service_type_vendor_bill
+msgid "Vendor Bill"
+msgstr "공급업체 청구서"
+
+#. module: account_fleet
+#. odoo-python
+#: code:addons/account_fleet/models/fleet_vehicle_log_services.py:0
+msgid ""
+"You cannot delete log services records because one or more of them were bill"
+" created."
+msgstr "서비스 항목 중 하나 이상에 청구서가 연결되어 있으므로 삭제할 수 없습니다."
+
+#. module: account_fleet
+#. odoo-python
+#: code:addons/account_fleet/models/fleet_vehicle_log_services.py:0
+msgid ""
+"You cannot modify amount of services linked to an account move line. Do it "
+"on the related accounting entry instead."
+msgstr "계정 이동 항목에 연결된 서비스 금액은 수정할 수 없습니다. 대신 관련 계정 항목에서 변경하세요."
+
+#. module: account_fleet
+#: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_view_form
+msgid "show the vendor bills for this vehicle"
+msgstr "이 차량의 공급업체 청구서 표시"

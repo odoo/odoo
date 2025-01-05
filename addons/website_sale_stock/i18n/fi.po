@@ -1,33 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_stock
-#
+# 
 # Translators:
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Marko Happonen <marko.happonen@sprintit.fi>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"POT-Creation-Date: 2024-10-25 07:50+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "<span invisible=\"not show_availability\">Units</span>"
+msgstr "<span invisible=\"not show_availability\">Yksikköä</span>"
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product_card/product_card.js:0
+msgid "All available quantity selected"
 msgstr ""
 
 #. module: website_sale_stock
@@ -118,6 +118,12 @@ msgid "Out of Stock"
 msgstr "Tuote loppu"
 
 #. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product/product.xml:0
+msgid "Out of stock"
+msgstr "Loppu varastosta"
+
+#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Out-of-Stock"
@@ -150,6 +156,12 @@ msgstr "Tuote: lähetä sähköpostia tuotteiden saatavuudesta"
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "Regards,"
 msgstr "Terveisin,"
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product_card/product_card.xml:0
+msgid "Requested quantity not available"
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
@@ -185,11 +197,11 @@ msgstr "Näytä saatavilla oleva määrä"
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 msgid ""
-"Some products became unavailable and your cart has been updated. We're sorry "
-"for the inconvenience."
+"Some products became unavailable and your cart has been updated. We're sorry"
+" for the inconvenience."
 msgstr ""
 "Osaa ostoskorissasi olleista tuotteista ei ole enää saatavilla ja siksi "
-"ostoskoriasi on päivitetty. Pahoittelut mahdollisesta haitasta!"
+"ostoskoriasi on päivitetty. Pahoittelut mahdollisesta haitasta."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -200,7 +212,7 @@ msgstr "Tuotetta on nyt saatavilla."
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 msgid "The item has not been added to your cart since it is not available."
-msgstr ""
+msgstr "Tuotetta ei ole lisätty ostoskoriin, koska sitä ei ole saatavilla."
 
 #. module: website_sale_stock
 #. odoo-python
@@ -222,7 +234,7 @@ msgstr "Siirto"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 msgid "Units"
-msgstr "kpl"
+msgstr "Kpl"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__website_warehouse_id
@@ -268,16 +280,23 @@ msgstr "Sinulla on jo %s yksikköä ostoskorissasi."
 
 #. module: website_sale_stock
 #. odoo-python
-#: code:addons/website_sale_stock/models/sale_order.py:0
 #: code:addons/website_sale_stock/models/sale_order_line.py:0
+msgid ""
+"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
+"available"
+msgstr ""
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order.py:0
 msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
 msgstr "Pyydät %(desired_qty)s tuotetta, mutta saatavilla on vain %(new_qty)s"
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
-msgid "You ask for %s Units but only %s are available."
-msgstr "Pyydät %s yksikköä, mutta saatavilla on vain %s."
+msgid "You ask for %(quantity1)s Units but only %(quantity2)s are available."
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-javascript

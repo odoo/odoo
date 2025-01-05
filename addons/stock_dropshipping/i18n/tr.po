@@ -1,26 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_dropshipping
-#
+# 
 # Translators:
-# Murat Kaplan <muratk@projetgrup.com>, 2022
-# Ediz Duman <neps1192@gmail.com>, 2022
-# Buket Şeker <buket_skr@hotmail.com>, 2022
-# Tugay Hatıl <tugayh@projetgrup.com>, 2022
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
-"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: stock_dropshipping
@@ -55,6 +51,11 @@ msgid "Is a Dropship"
 msgstr "Transit Satış mı"
 
 #. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_stock_lot
+msgid "Lot/Serial"
+msgstr "Lot/Seri"
+
+#. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_stock_picking_type
 msgid "Picking Type"
 msgstr "Toplama Türü"
@@ -65,14 +66,14 @@ msgid "Procurement Group"
 msgstr "Tedarik Grubu"
 
 #. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_stock_replenish_mixin
+msgid "Product Replenish Mixin"
+msgstr ""
+
+#. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_purchase_order
 msgid "Purchase Order"
 msgstr "Satınalma Siparişi"
-
-#. module: stock_dropshipping
-#: model:ir.model,name:stock_dropshipping.model_purchase_order_line
-msgid "Purchase Order Line"
-msgstr "Satınalma Sipariş Satırı"
 
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_sale_order
@@ -90,11 +91,16 @@ msgid "Stock Rule"
 msgstr "Stok Kuralı"
 
 #. module: stock_dropshipping
+#: model_terms:ir.ui.view,arch_db:stock_dropshipping.stock_picking_type_kanban
+msgid "To Validate"
+msgstr "Onaylanacak"
+
+#. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_stock_picking
 msgid "Transfer"
-msgstr "Transfer"
+msgstr "Aktarım"
 
 #. module: stock_dropshipping
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking_type__code
 msgid "Type of Operation"
-msgstr ""
+msgstr "Operasyon Türü"

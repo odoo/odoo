@@ -1,104 +1,105 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_adyen
-#
+# 	* payment_adyen
+# 
 # Translators:
-# Martin Trigaux, 2018
-# Mikko Salmela <salmemik@gmail.com>, 2018
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018\n"
-"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
 msgid ""
-"<strong>Warning:</strong> To capture the amount manually, you also need to "
-"set\n"
-"                    the Capture Delay to manual on your Adyen account "
-"settings."
+"<strong>Warning:</strong> To capture the amount manually, you also need to set\n"
+"                    the Capture Delay to manual on your Adyen account settings."
 msgstr ""
+"<strong>Varoitus:</strong> Jos haluat lukea summan manuaalisesti, sinun on myös asetettava seuraavat asetukset\n"
+"                    adyen-tilisi asetuksissa Capture Delay -viiveeksi manuaalinen."
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
-msgid "A request was sent to void the transaction with reference %s (%s)."
+msgid ""
+"A request was sent to void the transaction with reference %(reference)s "
+"(%(provider)s)."
 msgstr ""
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_key
 msgid "API Key"
-msgstr ""
+msgstr "API Avain"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_url_prefix
 msgid "API URL Prefix"
-msgstr ""
+msgstr "API URL-etuliite"
 
 #. module: payment_adyen
 #: model:ir.model.fields.selection,name:payment_adyen.selection__payment_provider__code__adyen
 msgid "Adyen"
-msgstr ""
+msgstr "Adyen"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid ""
 "An error occurred during the processing of your payment. Please try again."
-msgstr ""
+msgstr "Maksun käsittelyssä tapahtui virhe. Yritä uudelleen."
 
 #. module: payment_adyen
 #. odoo-javascript
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
 msgid "Cannot display the payment form"
-msgstr ""
+msgstr "Maksulomaketta ei voi näyttää"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_client_key
 msgid "Client Key"
-msgstr ""
+msgstr "Asiakasavain"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__code
 msgid "Code"
-msgstr ""
+msgstr "Koodi"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_provider.py:0
 msgid "Could not establish the connection to the API."
-msgstr ""
+msgstr "Yhteyttä API:han ei saatu muodostettua."
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_hmac_key
 msgid "HMAC Key"
-msgstr ""
+msgstr "HMAC-avain"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_capture_wizard__has_adyen_tx
 msgid "Has Adyen Tx"
-msgstr ""
+msgstr "Onko Adyen Tx"
 
 #. module: payment_adyen
 #. odoo-javascript
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
 msgid "Incorrect payment details"
-msgstr ""
+msgstr "Virheelliset maksutiedot"
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
 msgid "Learn More"
-msgstr ""
+msgstr "Lue lisää"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_merchant_account
@@ -109,22 +110,22 @@ msgstr "Kauppiaan tili"
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Viitettä %s vastaavaa tapahtumaa ei löytynyt."
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_capture_wizard
 msgid "Payment Capture Wizard"
-msgstr ""
+msgstr "Ohjattu maksujen kerääminen"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Maksupalveluntarjoaja"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_token
 msgid "Payment Token"
-msgstr ""
+msgstr "Maksutunniste"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_transaction
@@ -135,52 +136,53 @@ msgstr "Maksutapahtuma"
 #. odoo-javascript
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
 msgid "Payment processing failed"
-msgstr ""
+msgstr "Maksun käsittely epäonnistui"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "Received data for child transaction with missing transaction values"
 msgstr ""
+"Vastaanotetut tiedot lapsitapahtumasta, josta puuttuvat tapahtuma-arvot"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "Received data with invalid payment state: %s"
-msgstr ""
+msgstr "Vastaanotettu data, jonka maksutila on virheellinen: %s"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "Received data with missing merchant reference"
-msgstr ""
+msgstr "Vastaanotetut tiedot, joista puuttuu kauppiasviite"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "Received data with missing payment state."
-msgstr ""
+msgstr "Vastaanotetut tiedot, joista puuttuu maksutila."
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/controllers/main.py:0
 msgid "Received tampered payment request data."
-msgstr ""
+msgstr "Vastaanotettu väärennettyjä maksupyyntötietoja."
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_token__adyen_shopper_reference
 msgid "Shopper Reference"
-msgstr ""
+msgstr "Ostajan viite"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_api_key
 msgid "The API key of the webservice user"
-msgstr ""
+msgstr "Verkkopalvelun käyttäjän API-avain"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_hmac_key
 msgid "The HMAC key of the webhook"
-msgstr ""
+msgstr "Webhookin HMAC-avain"
 
 #. module: payment_adyen
 #. odoo-python
@@ -189,17 +191,19 @@ msgid ""
 "The amount processed by Adyen for the transaction %s is different than the "
 "one requested. Another transaction is created with the correct amount."
 msgstr ""
+"Adyenin käsittelemä summa tapahtumalle %s on eri kuin pyydetty summa. "
+"Luodaan toinen tapahtuma, jossa summa on oikea."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_api_url_prefix
 msgid "The base URL for the API endpoints"
-msgstr ""
+msgstr "API-päätepisteiden perus-URL-osoite"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "The capture of the transaction with reference %s failed."
-msgstr ""
+msgstr "Viitteellä %s olevan tapahtuman lukeminen epäonnistui."
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_capture_wizard_view_form
@@ -207,55 +211,59 @@ msgid ""
 "The capture or void of the transaction might take a few minutes to be\n"
 "                    processed by Adyen and reflected in Odoo."
 msgstr ""
+"Tapahtuman lukeminen tai mitätöinti saattaa kestää muutaman hetken\n"
+"                    ennen kuin Adyen on käsitellyt sen. Tämän jälkeen tapahtuma näkyy Odoossa."
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid ""
-"The capture request of %(amount)s for the transaction with reference %(ref)s "
-"has been requested (%(provider_name)s)."
+"The capture request of %(amount)s for the transaction with reference %(ref)s"
+" has been requested (%(provider_name)s)."
 msgstr ""
+"Viitteellä %(ref)s olevan tapahtuman %(amount)s lukupyyntö on pyydetty "
+"(%(provider_name)s)."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_client_key
 msgid "The client key of the webservice user"
-msgstr ""
+msgstr "Verkkopalvelun käyttäjän asiakasavain"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_merchant_account
 msgid "The code of the merchant account to use with this provider"
-msgstr ""
+msgstr "Tämän palveluntarjoajan kanssa käytettävän kauppiastilin koodi"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_provider.py:0
 msgid "The communication with the API failed. Details: %s"
-msgstr ""
+msgstr "Yhteys API:n kanssa epäonnistui. Yksityiskohdat: %s"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Tämän maksupalveluntarjoajan tekninen koodi."
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "The transaction is not linked to a token."
-msgstr ""
+msgstr "Transaktio ei ole sidottu valtuutuskoodiin."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_token__adyen_shopper_reference
 msgid "The unique reference of the partner owning this token"
-msgstr ""
+msgstr "Tämän käyttötunnisteen omistavan kumppanin yksilöllinen viite"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "The void of the transaction with reference %s failed."
-msgstr ""
+msgstr "Viitteellä %s olevan tapahtuman mitätöinti epäonnistui."
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "Your payment was refused. Please try again."
-msgstr ""
+msgstr "Maksusi hylättiin. Yritä uudelleen."

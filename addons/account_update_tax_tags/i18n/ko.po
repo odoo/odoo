@@ -1,0 +1,120 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_update_tax_tags
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_update_tax_tags
+#: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__company_id
+msgid "Company"
+msgstr "회사"
+
+#. module: account_update_tax_tags
+#: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: account_update_tax_tags
+#: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: account_update_tax_tags
+#: model:ir.model.fields,help:account_update_tax_tags.field_account_update_tax_tags_wizard__date_from
+msgid "Date from which journal items will be updated."
+msgstr "전표 항목이 업데이트되는 날짜입니다."
+
+#. module: account_update_tax_tags
+#: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
+msgid "Discard"
+msgstr "취소"
+
+#. module: account_update_tax_tags
+#: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__display_lock_date_warning
+msgid "Display Lock Date Warning"
+msgstr "잠금 날짜 주의 표시"
+
+#. module: account_update_tax_tags
+#: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: account_update_tax_tags
+#: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_update_tax_tags
+#: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: account_update_tax_tags
+#: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: account_update_tax_tags
+#: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__date_from
+msgid "Starting from"
+msgstr "다음에서 시작"
+
+#. module: account_update_tax_tags
+#: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
+msgid ""
+"The date you chose is violating the tax lock date, do this at your own risk."
+msgstr "선택한 날짜가 세금 납부 마감일과 충돌합니다. 해당 작업 진행에 대한 책임은 귀하에게 있습니다."
+
+#. module: account_update_tax_tags
+#: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
+msgid "Update"
+msgstr "업데이트"
+
+#. module: account_update_tax_tags
+#: model:ir.model,name:account_update_tax_tags.model_account_update_tax_tags_wizard
+msgid "Update Tax Tags Wizard"
+msgstr "세금 태그 업데이트 마법사"
+
+#. module: account_update_tax_tags
+#: model:ir.actions.act_window,name:account_update_tax_tags.action_open_wizard
+#: model_terms:ir.ui.view,arch_db:account_update_tax_tags.res_config_settings_view_form
+msgid "Update tax tags on existing Journal Entries"
+msgstr "기존 전표 항목의 세금 태그 업데이트"
+
+#. module: account_update_tax_tags
+#. odoo-python
+#: code:addons/account_update_tax_tags/wizard/account_update_tax_tags_wizard.py:0
+msgid ""
+"Update with children taxes that are child of multiple parents is not "
+"supported."
+msgstr "여러 상위 항목 세금에 대한 하위 세금으로 업데이트하는 것은 지원되지 않습니다."
+
+#. module: account_update_tax_tags
+#: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
+msgid ""
+"Updating tax tags on existing Journal Entries is an <b>irreversible</b> action that will impact\n"
+"                    your reports.<br/>\n"
+"                    It is highly recommended to backup your database beforehand.<br/>\n"
+"                    The update will change tax tags on your accounting history, starting from and including selected date,\n"
+"                    so that it matches with the current configuration of your taxes.<br/>"
+msgstr ""
+"기존 전표 항목의 세금 태그를 업데이트하는 것은 <b>되돌릴 수 없는</b> 작업이며\n"
+"                    보고서에 영향을 미칠 수 있습니다.<br/>\n"
+"                    따라서 미리 데이터베이스를 백업해 두는 것을 권장합니다.<br/>\n"
+"                    업데이트는 선택한 날짜를 포함한 계정 내역의 세금 태그를\n"
+"                    현재 세금 구성과 일치하도록 수정합니다.<br/>"

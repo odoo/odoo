@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_payment
-#
+# 
 # Translators:
-# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
-# Martin Trigaux, 2022
-# Wichanon Jamwutthipreecha, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
-"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_payment
@@ -67,18 +65,34 @@ msgid "<b>Payment Method:</b>"
 msgstr "<b>วิธีการชำระเงิน:</b>"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "<option value=\"\">Country...</option>"
+msgstr "<option value=\"\">ประเทศ...</option>"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "<span class=\"s_donation_currency pe-1\">$</span>"
 msgstr ""
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
-msgid ""
-"<strong>No suitable payment option could be found.</strong><br/>\n"
-"                                If you believe that it is an error, please contact the website administrator."
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "<span class=\"s_donation_currency pe-1\">$</span>10"
 msgstr ""
-"<strong>ไม่พบตัวเลือกการชำระเงินที่เหมาะสม</strong><br/>\n"
-"                                หากคุณเชื่อว่าเป็นข้อผิดพลาด โปรดติดต่อผู้ดูแลเว็บไซต์"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "<span class=\"s_donation_currency pe-1\">$</span>100"
+msgstr ""
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "<span class=\"s_donation_currency pe-1\">$</span>25"
+msgstr ""
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "<span class=\"s_donation_currency pe-1\">$</span>50"
+msgstr ""
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -99,12 +113,12 @@ msgstr "ปีแห่งการตื่นตัวทางวัฒนธ
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Activate Payments"
-msgstr ""
+msgstr "เปิดใช้งานการชำระเงิน"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Activate Stripe"
-msgstr ""
+msgstr "เปิดใช้งาน Stripe"
 
 #. module: website_payment
 #. odoo-javascript
@@ -121,11 +135,12 @@ msgstr "เพิ่มตัวเลือกที่กรอกล่วง
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "Amount"
 msgstr "จำนวน"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Amount ("
 msgstr "จำนวน ("
 
@@ -154,28 +169,22 @@ msgstr "ตั้งค่าการกำหนดค่า"
 #. odoo-python
 #: code:addons/website_payment/models/res_config_settings.py:0
 msgid "Configure %s"
-msgstr ""
-
-#. module: website_payment
-#: model:ir.actions.server,name:website_payment.action_stripe_connect_account
-msgid "Connect to Stripe"
-msgstr ""
+msgstr "การกำหนดค่า %s"
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
-#: model:ir.model,name:website_payment.model_res_country
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 msgid "Country"
 msgstr "ประเทศ"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid ""
 "Country\n"
-"                            <span class=\"s_website_form_mark\"> *</span>"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
 "ประเทศ\n"
-"                            <span class=\"s_website_form_mark\"> *</span>"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_payment
 #. odoo-python
@@ -187,6 +196,7 @@ msgstr "ต้องระบุประเทศ"
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_input
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Custom Amount"
 msgstr "จำนวนที่กำหนดเอง"
@@ -212,14 +222,19 @@ msgid "Display Options"
 msgstr "ตัวเลือกการแสดง"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#. odoo-python
+#: code:addons/website_payment/controllers/portal.py:0
+msgid "Donate"
+msgstr "บริจาค"
+
+#. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "Donate Now"
 msgstr "บริจาคตอนนี้"
 
 #. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
 #: model_terms:ir.ui.view,arch_db:website_payment.snippets
 msgid "Donation"
 msgstr "การบริจาค"
@@ -248,22 +263,22 @@ msgstr "แจ้งเตือนการบริจาค"
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 msgid "Email"
 msgstr "อีเมล"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid ""
 "Email\n"
-"                            <span class=\"s_website_form_mark\"> *</span>"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
 "อีเมล\n"
-"                            <span class=\"s_website_form_mark\"> *</span>"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 msgid "Email is invalid"
 msgstr "อีเมล์ไม่ถูกต้อง"
 
@@ -275,14 +290,14 @@ msgstr "ต้องระบุอีเมล"
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 msgid "Field '%s' is mandatory"
 msgstr "ช่อง '%s' เป็นช่องบังคับ"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__first_provider_label
 msgid "First Provider Label"
-msgstr ""
+msgstr "ป้ายกำกับผู้ให้บริการรายแรก"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -296,9 +311,8 @@ msgstr "บริจาค"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__is_stripe_supported_country
-#: model:ir.model.fields,field_description:website_payment.field_res_country__is_stripe_supported_country
 msgid "Is Stripe Supported Country"
-msgstr ""
+msgstr "เป็นประเทศที่รองรับ Stripe"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_payment_transaction__is_donation
@@ -318,22 +332,22 @@ msgstr "สูงสุด"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Minimum"
-msgstr ""
+msgstr "ขั้นต่ำ"
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 msgid "Name"
 msgstr "ชื่อ"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid ""
 "Name\n"
-"                            <span class=\"s_website_form_mark\"> *</span>"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
 "ชื่อ\n"
-"                            <span class=\"s_website_form_mark\"> *</span>"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_payment
 #. odoo-python
@@ -360,22 +374,28 @@ msgstr "หนึ่งปีในโรงเรียนมัธยม"
 #. module: website_payment
 #: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__other_than_paypal
 msgid "Other than Paypal"
-msgstr ""
+msgstr "นอกเหนือจาก Paypal"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Payment Details"
 msgstr "รายละเอียดการชำระเงิน"
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "ผู้ให้บริการชำระเงิน"
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "ธุรกรรมสำหรับการชำระเงิน"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/payment_form.js:0
+msgid "Payment processing failed"
+msgstr "การประมวลผลการชำระเงินล้มเหลว"
 
 #. module: website_payment
 #. odoo-python
@@ -391,7 +411,7 @@ msgstr "การชำระเงิน"
 #. module: website_payment
 #: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__paypal_only
 msgid "Paypal Only"
-msgstr ""
+msgstr "Paypal เท่านั้น"
 
 #. module: website_payment
 #. odoo-javascript
@@ -407,7 +427,7 @@ msgstr "ตัวเลือกที่กรอกล่วงหน้า"
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__providers_state
 msgid "Providers State"
-msgstr ""
+msgstr "Providers State"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -415,15 +435,9 @@ msgid "Recipient Email"
 msgstr "อีเมลผู้รับ"
 
 #. module: website_payment
-#. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
-msgid "Server Error"
-msgstr "เซิร์ฟเวอร์ผิดพลาด"
-
-#. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Shop - Payment"
-msgstr ""
+msgstr "ร้านค้า - ชำระเงิน"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -437,7 +451,7 @@ msgstr "ไม่ว่าจะเล็กหรือใหญ่ การ�
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 msgid "Some information is missing to process your payment."
 msgstr "ข้อมูลบางอย่างหายไปในการประมวลผลการชำระเงินของคุณ"
 
@@ -448,13 +462,21 @@ msgstr "สถานะ"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
-msgid "Stripe Connect is not available in your country, please use another payment provider."
+msgid ""
+"Stripe Connect is not available in your country, please use another payment "
+"provider."
 msgstr ""
+"Stripe Connect ไม่สามารถใช้งานได้ในประเทศของคุณ "
+"โปรดใช้ผู้ให้บริการชำระเงินรายอื่น"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
-msgid "Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple Pay, etc. as well as recurring charges."
+msgid ""
+"Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple "
+"Pay, etc. as well as recurring charges."
 msgstr ""
+"รองรับวิธีการชำระเงินส่วนใหญ่ Visa, Mastercard, Maestro, Google Pay, Apple "
+"Pay ฯลฯ รวมถึงการเรียกเก็บเงินที่เกิดขึ้นประจำ"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -464,8 +486,8 @@ msgstr "ขอบคุณสำหรับการบริจาคของ
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_donation/000.js:0
-msgid "The minimum donation amount is %s%s%s"
-msgstr "ยอดบริจาคขั้นต่ำคือ %s%s%s"
+msgid "The minimum donation amount is %(amount)s"
+msgstr ""
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -473,26 +495,14 @@ msgid "There is nothing to pay."
 msgstr "ไม่มีอะไรต้องชำระ"
 
 #. module: website_payment
-#. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
-msgid "Validation Error"
-msgstr "ข้อผิดพลาดในการตรวจสอบความถูกต้อง"
-
-#. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "View Alternatives"
-msgstr ""
+msgstr "ดูทางเลือก"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "View other providers"
-msgstr ""
-
-#. module: website_payment
-#. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
-msgid "We could not obtain payment fees."
-msgstr "เราไม่สามารถรับค่าธรรมเนียมการชำระเงินได้"
+msgstr "ดูผู้ให้บริการรายอื่น"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_payment_provider__website_id
@@ -502,15 +512,15 @@ msgstr "เว็บไซต์"
 #. module: website_payment
 #: model:mail.template,name:website_payment.mail_template_donation
 msgid "Website: Donation"
-msgstr ""
+msgstr "เว็บไซต์: บริจาค"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Write us a comment"
 msgstr "เขียนความคิดเห็นถึงเรา"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Your comment"
 msgstr "ความคิดเห็นของคุณ"
 

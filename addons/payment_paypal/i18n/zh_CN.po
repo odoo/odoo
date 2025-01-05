@@ -1,105 +1,123 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_paypal
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
-# Felix Yuen <fyu@odoo.com>, 2019
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-06 08:29+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Felix Yuen <fyu@odoo.com>, 2019\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
-"Language: zh_CN\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_paypal
-#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
-msgid ""
-"<br/><br/>\n"
-"                Thanks,<br/>\n"
-"                <b>The Odoo Team</b>"
-msgstr ""
-"<br/><br/>\n"
-"                谢谢，<br/>\n"
-"                <b>Odoo团队</b>"
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "Client ID"
+msgstr "客户 ID"
 
 #. module: payment_paypal
-#. odoo-python
-#: code:addons/payment_paypal/models/payment_provider.py:0
-msgid "Add your PayPal account to Odoo"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "Client Secret"
+msgstr "客户密钥"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__code
 msgid "Code"
-msgstr ""
+msgstr "代码"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_provider.py:0
+msgid "Could not establish the connection to the API."
+msgstr "无法建立与API的连接。"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_provider.py:0
+msgid "Could not generate a new access token."
+msgstr "无法生成新的访问令牌。"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_email_account
 msgid "Email"
-msgstr "EMail"
+msgstr "电子邮件"
 
 #. module: payment_paypal
-#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
-msgid ""
-"Hello,\n"
-"                <br/><br/>\n"
-"                You have received a payment through PayPal.<br/>\n"
-"                Kindly follow the instructions given by PayPal to create your account.<br/>\n"
-"                Then, help us complete your Paypal credentials in Odoo.<br/><br/>"
-msgstr ""
-"你好，\n"
-"                <br/><br/>\n"
-"               您已通过PayPal收到付款。<br/>\n"
-"                请按照PayPal提供的说明创建您的帐户。<br/>\n"
-"                然后，帮助我们在Odoo中完成您的Paypal凭证。<br/><br/>"
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "Generate your webhook"
+msgstr "生成您的webhook"
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
 msgid "How to configure your paypal account?"
-msgstr "如何设置您的Paypal账户？"
+msgstr "如何设置您的 Paypal 账户？"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_seller_account
-msgid "Merchant Account ID"
-msgstr "商家帐户ID"
+#. odoo-python
+#: code:addons/payment_paypal/controllers/main.py:0
+msgid "Invalid response format, can't normalize."
+msgstr "响应格式无效，无法正常化。"
 
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
-msgstr ""
+msgstr "txn_id（%(txn_id)s）或txn_type（%(txn_type)s）的缺失值。"
 
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "没有发现与参考文献%s相匹配的交易。"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_pdt_token
-msgid "PDT Identity Token"
-msgstr "PDT身份令牌"
+#: model:ir.model.fields.selection,name:payment_paypal.selection__payment_provider__code__paypal
+msgid "PayPal"
+msgstr "PayPal"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_access_token
+msgid "PayPal Access Token"
+msgstr "PayPal 访问令牌"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_access_token_expiry
+msgid "PayPal Access Token Expiry"
+msgstr "PayPal 访问令牌到期"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_client_id
+msgid "PayPal Client ID"
+msgstr "PayPal 客户 ID"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_client_secret
+msgid "PayPal Client Secret"
+msgstr "PayPal 客户密钥"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
 msgid "PayPal Transaction Type"
-msgstr ""
+msgstr "PayPal交易类型"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_webhook_id
+msgid "PayPal Webhook ID"
+msgstr "PayPal 网络钩子识别码"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "支付提供商"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_transaction
@@ -107,49 +125,57 @@ msgid "Payment Transaction"
 msgstr "付款交易"
 
 #. module: payment_paypal
-#: model:ir.model.fields.selection,name:payment_paypal.selection__payment_provider__code__paypal
-msgid "Paypal"
-msgstr "Paypal"
-
-#. module: payment_paypal
-#: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_use_ipn
-msgid "Paypal Instant Payment Notification"
-msgstr "Paypal 即时支付提醒"
+#. odoo-javascript
+#: code:addons/payment_paypal/static/src/js/payment_form.js:0
+msgid "Payment processing failed"
+msgstr "付款处理失败"
 
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 msgid "Received data with invalid payment status: %s"
-msgstr ""
+msgstr "收到的数据为无效的支付状态。%s"
 
 #. module: payment_paypal
-#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
-msgid "Set Paypal credentials"
-msgstr "设置Paypal凭据"
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_provider.py:0
+msgid "The communication with the API failed. Details: %s"
+msgstr "与 API 通信失败。详情：%s"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+msgid "The customer left the payment page."
+msgstr "客户已离开支付页面。"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_access_token_expiry
+msgid "The moment at which the access token becomes invalid."
+msgstr "访问令牌失效的时刻。"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_email_account
-msgid "The public business email solely used to identify the account with PayPal"
-msgstr ""
+msgid ""
+"The public business email solely used to identify the account with PayPal"
+msgstr "仅用于识别 PayPal 账户的公共商业电子邮件"
 
 #. module: payment_paypal
-#. odoo-python
-#: code:addons/payment_paypal/controllers/main.py:0
-msgid "The status of transaction with reference %(ref)s was not synchronized because the 'Payment data transfer' option is not enabled on the PayPal dashboard."
-msgstr ""
-
-#. module: payment_paypal
-#. odoo-python
-#: code:addons/payment_paypal/controllers/main.py:0
-msgid "The status of transaction with reference %(ref)s was not synchronized because the PDT Identify Token is not configured on the provider %(record_link)s."
-msgstr ""
+#: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_access_token
+msgid "The short-lived token used to access Paypal APIs"
+msgstr "用于访问 Paypal API 的短期令牌"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "该支付提供商的技术代码。"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_use_ipn
-msgid "Use IPN"
-msgstr "使用 IPN"
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "Webhook ID"
+msgstr "网络钩子识别码"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_provider.py:0
+msgid "You must have an HTTPS connection to generate a webhook."
+msgstr "必须使用 HTTPS 连接才能生成网络钩子。"

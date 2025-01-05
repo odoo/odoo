@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_crm
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_crm
@@ -33,7 +32,7 @@ msgstr "関連するリード"
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_quotation_partner_view_form
 msgid "Cancel"
-msgstr "取消"
+msgstr "キャンセル"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_quotation_partner_view_form
@@ -48,7 +47,7 @@ msgstr "新規に顧客を作成"
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_quotation_partner
 msgid "Create new or use existing Customer on new Quotation"
-msgstr "新規見積に、新規新規顧客を作成、または、既存顧客を使用する"
+msgstr "新規見積作成時に、顧客を新規作成、または、既存顧客を使用"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
@@ -81,6 +80,12 @@ msgid "Do not link to a customer"
 msgstr "顧客にリンクしない"
 
 #. module: sale_crm
+#. odoo-python
+#: code:addons/sale_crm/models/crm_lead.py:0
+msgid "Expected revenue has been updated based on the linked Sales Orders."
+msgstr "リンクされた販売オーダに基づいて、見込収益が更新されました。"
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
 msgid "ID"
 msgstr "ID"
@@ -88,12 +93,7 @@ msgstr "ID"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users__target_sales_invoiced
 msgid "Invoiced in Sales Orders Target"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner____last_update
-msgid "Last Modified on"
-msgstr "最終更新日"
+msgstr "販売オーダターゲットで請求済"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_uid
@@ -116,14 +116,9 @@ msgid "Link to an existing customer"
 msgstr "既存の顧客にリンク"
 
 #. module: sale_crm
-#: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
-msgid "Log in the chatter from which opportunity the order originates"
-msgstr "注文が起きる可能性のあるチャットにログインする"
-
-#. module: sale_crm
 #: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
 msgid "My Quotations"
-msgstr "自分の見積"
+msgstr "自分の見積書"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.crm_quotation_partner_action
@@ -140,7 +135,7 @@ msgstr "見積数"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_order_count
 msgid "Number of Sale Orders"
-msgstr ""
+msgstr "販売オーダ数"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order__opportunity_id
@@ -173,6 +168,7 @@ msgid "Sale Orders"
 msgstr "販売オーダ"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/models/crm_team.py:0
 msgid "Sales Analysis"
 msgstr "販売分析"
@@ -188,6 +184,7 @@ msgid "Sales Team"
 msgstr "販売チーム"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/models/crm_team.py:0
 msgid "Sales: Untaxed Total"
 msgstr "売上高:非課税合計"
@@ -208,6 +205,7 @@ msgid "User"
 msgstr "ユーザ"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/wizard/crm_opportunity_to_quotation.py:0
 msgid "You can only apply this action from a lead."
-msgstr ""
+msgstr "このアクションはリードからしか適用できません。"

@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sms
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# JH CHOI <hwangtog@gmail.com>, 2022
-# Sarah Park, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
-"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sms
@@ -33,6 +31,14 @@ msgstr "# 유효한 수신자"
 
 #. module: sms
 #. odoo-python
+#: code:addons/sms/models/sms_sms.py:0
+msgid ""
+"%(count)s out of the %(total)s selected SMS Text Messages have successfully "
+"been resent."
+msgstr "선택한 %(count)s개의 SMS 문자 메시지 중 %(total)s를 성공적으로 재전송했습니다."
+
+#. module: sms
+#. odoo-python
 #: code:addons/sms/models/sms_template.py:0
 msgid "%s (copy)"
 msgstr "%s (사본)"
@@ -44,10 +50,41 @@ msgid "%s invalid recipients"
 msgstr "%s 잘못된 수신자"
 
 #. module: sms
-#. odoo-python
-#: code:addons/sms/models/sms_sms.py:0
-msgid "%s out of the %s selected SMS Text Messages have successfully been resent."
+#: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
+msgid "+1 555-555-555"
+msgstr "+1 555-555-555"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
+msgid ""
+"<i class=\"fa fa-warning\"/> An error occurred with your account. Please "
+"contact the support for more information..."
+msgstr "<i class=\"fa fa-warning\"/> 계정에 오류가 발생했습니다. 자세한 내용은 지원팀에 문의하세요..."
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
+msgid ""
+"<i class=\"fa fa-warning\"/> You cannot send SMS while your account is not "
+"registered."
+msgstr "<i class=\"fa fa-warning\"/> 계정이 등록되지 않은 상태에서는 SMS를 보낼 수 없습니다."
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
+msgid ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                            Register"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                            등록하기"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
+msgid ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                            Set Sender Name"
+msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                            발신자 이름 설정"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -61,7 +98,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "<span class=\"o_stat_text\">Preview</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">미리 보기</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -74,13 +111,44 @@ msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
-msgid "<span class=\"text-warning\" attrs=\"{'invisible': [('no_record', '=', False)]}\">No records</span>"
+msgid "<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
+msgstr "<span class=\"text-warning\" invisible=\"not no_record\">기록 없음</span>"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
+msgid ""
+"<span invisible=\"sms_method != 'sms'\">\n"
+"                                The message will be sent as an SMS to the recipients of the template\n"
+"                                and will not appear in the messaging history.\n"
+"                            </span>\n"
+"                            <span invisible=\"sms_method != 'note'\">\n"
+"                                The SMS will not be sent, it will only be posted as an\n"
+"                                internal note in the messaging history.\n"
+"                            </span>\n"
+"                            <span invisible=\"sms_method != 'comment'\">\n"
+"                                The SMS will be sent as an SMS to the recipients of the\n"
+"                                template and it will also be posted as an internal note\n"
+"                                in the messaging history.\n"
+"                            </span>"
 msgstr ""
+"<span invisible=\"sms_method != 'sms'\">\n"
+"                                메시지는 서식을 수신하는 대상에게 SMS로 전송되며\n"
+"                                메시지 이력에는 표시되지 않습니다.\n"
+"                            </span>\n"
+"                            <span invisible=\"sms_method != 'note'\">\n"
+"                                SMS는 전송되지 않고 메시지 내역에서 내부 사용자만 볼 수 있도록\n"
+"                                메모로 게시됩니다.\n"
+"                            </span>\n"
+"                            <span invisible=\"sms_method != 'comment'\">\n"
+"                                메시지는 서식을 수신하는 대상에게 SMS로 전송되며\n"
+"                                메시지 이력에서 내부 사용자만 볼 수 있도록\n"
+"                                메모로 게시됩니다.\n"
+"                            </span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "<span> or to specify the country code.</span>"
-msgstr ""
+msgstr "<span> 또는 국가 코드를 지정합니다.</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -88,6 +156,20 @@ msgid ""
 "<strong>Invalid number:</strong>\n"
 "                        <span> make sure to set a country on the </span>"
 msgstr ""
+"<strong>잘못된 번호:</strong>\n"
+"                        <span> 다음에 국가를 설정해야 합니다. </span>"
+
+#. module: sms
+#: model:ir.model.constraint,message:sms.constraint_sms_tracker_sms_uuid_unique
+msgid "A record for this UUID already exists"
+msgstr "이 UUID에 대한 레코드가 이미 존재합니다."
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_account_code__account_id
+#: model:ir.model.fields,field_description:sms.field_sms_account_phone__account_id
+#: model:ir.model.fields,field_description:sms.field_sms_account_sender__account_id
+msgid "Account"
+msgstr "계정"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction
@@ -95,22 +177,30 @@ msgid "Action Needed"
 msgstr "조치 필요"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_base_automation__state
-#: model:ir.model.fields,field_description:sms.field_ir_actions_server__state
-#: model:ir.model.fields,field_description:sms.field_ir_cron__state
-msgid "Action To Do"
-msgstr "수행할 작업"
-
-#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
-msgid "Add a contextual action on the related model to open a sms composer with this template"
+msgid ""
+"Add a contextual action on the related model to open a sms composer with "
+"this template"
 msgstr "이 서식을 사용하여 SMS 작성기를 열려면 관련 모델에 대한 상황별 작업을 추가하십시오."
 
 #. module: sms
+#: model:ir.model.fields,help:sms.field_sms_sms__uuid
+msgid "Alternate way to identify a SMS record, used for delivery reports"
+msgstr "배송 보고서에 사용되는 SMS 레코드를 식별할 수 있는 다른 방법"
+
+#. module: sms
 #. odoo-javascript
-#: code:addons/sms/static/src/core/notification_group_model_patch.js:0
+#: code:addons/sms/static/src/core/failure_model_patch.js:0
 msgid "An error occurred when sending an SMS"
-msgstr ""
+msgstr "SMS 발송 중 오류가 발생했습니다."
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
+msgid ""
+"An unknown error occurred. Please contact Odoo support if this error "
+"persists."
+msgstr "알 수 없는 오류가 발생했습니다. 문제가 지속되면 Odoo 지원팀에 문의하세요."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
@@ -120,8 +210,10 @@ msgstr "적용 대상"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_reset_view_form
-msgid "Are you sure you want to reset these sms templates to their original configuration? Changes and translations will be lost."
-msgstr ""
+msgid ""
+"Are you sure you want to reset these sms templates to their original "
+"configuration? Changes and translations will be lost."
+msgstr "이 SMS 서식을 원래의 구성으로 초기화하시겠습니까? 변경 사항 및 번역한 내용은 저장되지 않습니다."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_attachment_count
@@ -157,21 +249,23 @@ msgstr "크레딧 구매하기"
 
 #. module: sms
 #. odoo-python
-#: code:addons/sms/models/sms_api.py:0
+#: code:addons/sms/tools/sms_api.py:0
 msgid "Buy credits."
-msgstr ""
+msgstr "크레딧을 구매하십시오."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__can_cancel
 msgid "Can Cancel"
-msgstr ""
+msgstr "취소 가능"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__can_resend
 msgid "Can Resend"
-msgstr ""
+msgstr "재발송 가능"
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_account_code_view_form
+#: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_reset_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
@@ -180,7 +274,7 @@ msgstr "취소"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__canceled
-msgid "Canceled"
+msgid "Cancelled"
 msgstr "취소됨"
 
 #. module: sms
@@ -189,20 +283,22 @@ msgid "Choose a language:"
 msgstr "언어 선택 :"
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
+msgid "Choose a template..."
+msgstr "서식을 선택하세요."
+
+#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "Choose an example"
 msgstr "예제 선택"
 
 #. module: sms
-#: model:ir.model.fields,help:sms.field_base_automation__sms_method
-#: model:ir.model.fields,help:sms.field_ir_actions_server__sms_method
-#: model:ir.model.fields,help:sms.field_ir_cron__sms_method
-msgid ""
-"Choose method for SMS sending:\n"
-"SMS: mass SMS\n"
-"Post as Message: log on document\n"
-"Post as Note: mass SMS with archives"
-msgstr ""
+#. odoo-python
+#: code:addons/sms/models/iap_account.py:0
+#: code:addons/sms/wizard/sms_account_code.py:0
+#: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
+msgid "Choose your sender name"
+msgstr "보낸 사람 이름 선택"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -227,6 +323,27 @@ msgid "Content"
 msgstr "내용"
 
 #. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_country_not_supported
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_country_not_supported
+msgid "Country Not Supported"
+msgstr "지원되지 않는 국가입니다."
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_registration_needed
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_registration_needed
+msgid "Country-specific Registration Required"
+msgstr "국가별로 등록해야 합니다."
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
+msgid "Country-specific registration required."
+msgstr "국가별로 등록해야 합니다."
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_account_code__create_uid
+#: model:ir.model.fields,field_description:sms.field_sms_account_phone__create_uid
+#: model:ir.model.fields,field_description:sms.field_sms_account_sender__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_composer__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_resend__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__create_uid
@@ -234,10 +351,14 @@ msgstr "내용"
 #: model:ir.model.fields,field_description:sms.field_sms_template__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__create_uid
+#: model:ir.model.fields,field_description:sms.field_sms_tracker__create_uid
 msgid "Created by"
 msgstr "작성자"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_account_code__create_date
+#: model:ir.model.fields,field_description:sms.field_sms_account_phone__create_date
+#: model:ir.model.fields,field_description:sms.field_sms_account_sender__create_date
 #: model:ir.model.fields,field_description:sms.field_sms_composer__create_date
 #: model:ir.model.fields,field_description:sms.field_sms_resend__create_date
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__create_date
@@ -245,8 +366,14 @@ msgstr "작성자"
 #: model:ir.model.fields,field_description:sms.field_sms_template__create_date
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__create_date
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__create_date
+#: model:ir.model.fields,field_description:sms.field_sms_tracker__create_date
 msgid "Created on"
 msgstr "작성일자"
+
+#. module: sms
+#: model:iap.service,unit_name:sms.iap_service_sms
+msgid "Credits"
+msgstr "크레딧"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__partner_id
@@ -264,11 +391,19 @@ msgid "Dear {{ object.display_name }} this is an automated SMS."
 msgstr "안녕하세요 {{ object.display_name }} 본 SMS는 자동발송되는 문자입니다."
 
 #. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
-msgid "Discard"
-msgstr "작성 취소"
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__sent
+msgid "Delivered"
+msgstr "배송완료"
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
+msgid "Discard"
+msgstr "취소"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_account_code__display_name
+#: model:ir.model.fields,field_description:sms.field_sms_account_phone__display_name
+#: model:ir.model.fields,field_description:sms.field_sms_account_sender__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_composer__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_resend__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__display_name
@@ -276,6 +411,7 @@ msgstr "작성 취소"
 #: model:ir.model.fields,field_description:sms.field_sms_template__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__display_name
+#: model:ir.model.fields,field_description:sms.field_sms_tracker__display_name
 msgid "Display Name"
 msgstr "표시명"
 
@@ -297,7 +433,7 @@ msgstr "문서 ID"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_model_description
 msgid "Document Model Description"
-msgstr ""
+msgstr "문서 모델 설명"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_model
@@ -307,7 +443,7 @@ msgstr "문서 모델명"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_duplicate
 msgid "Duplicate"
-msgstr "복제"
+msgstr "복사"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -323,7 +459,12 @@ msgstr "이메일 스레드"
 #. odoo-javascript
 #: code:addons/sms/static/src/components/phone_field/phone_field.js:0
 msgid "Enable SMS"
-msgstr ""
+msgstr "SMS 활성화"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
+msgid "Enter a phone number to get an SMS with a verification code."
+msgstr "SMS로 인증 코드를 받을 휴대폰 번호를 입력하세요."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__error
@@ -336,9 +477,14 @@ msgid "Error Message"
 msgstr "오류 메시지"
 
 #. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_expired
+msgid "Expired"
+msgstr "만료됨"
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__failure_type
 msgid "Failure Type"
-msgstr ""
+msgstr "실패 유형"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__failure_type
@@ -347,13 +493,16 @@ msgstr "실패 유형"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_sanitized
-msgid "Field used to store sanitized phone number. Helps speeding up searches and comparisons."
+msgid ""
+"Field used to store sanitized phone number. Helps speeding up searches and "
+"comparisons."
 msgstr "삭제된 전화 번호를 저장하는 데 사용되는 필드입니다. 검색 및 비교 속도를 높이는 데 도움이 됩니다."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__template_fs
-msgid "File from where the template originates. Used to reset broken template."
-msgstr ""
+msgid ""
+"File from where the template originates. Used to reset broken template."
+msgstr "서식이 만들어진 원래의 파일입니다. 서식이 손상된 경우 다시 제작하는데 사용합니다."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_follower_ids
@@ -363,7 +512,7 @@ msgstr "팔로워"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "팔로워 (파트너)"
+msgstr "팔로워 (협력사)"
 
 #. module: sms
 #. odoo-python
@@ -390,9 +539,17 @@ msgstr "SMS 오류임"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__has_unregistered_account
 msgid "Has Unregistered Account"
-msgstr ""
+msgstr "등록되지 않은 계정 있음"
 
 #. module: sms
+#: model:ir.model,name:sms.model_iap_account
+msgid "IAP Account"
+msgstr "IAP 계정"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_account_code__id
+#: model:ir.model.fields,field_description:sms.field_sms_account_phone__id
+#: model:ir.model.fields,field_description:sms.field_sms_account_sender__id
 #: model:ir.model.fields,field_description:sms.field_sms_composer__id
 #: model:ir.model.fields,field_description:sms.field_sms_resend__id
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__id
@@ -400,6 +557,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template__id
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__id
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__id
+#: model:ir.model.fields,field_description:sms.field_sms_tracker__id
 msgid "ID"
 msgstr "ID"
 
@@ -417,16 +575,10 @@ msgstr "만약 선택하였으면, 신규 메시지에 주의를 기울여야 �
 #: model:ir.model.fields,help:sms.field_fleet_vehicle__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_fleet_vehicle_log_contract__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_fleet_vehicle_log_services__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_fleet_vehicle_model__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_gamification_badge__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_gamification_challenge__message_has_sms_error
-#: model:ir.model.fields,help:sms.field_hr_contract__message_has_sms_error
-#: model:ir.model.fields,help:sms.field_hr_department__message_has_sms_error
-#: model:ir.model.fields,help:sms.field_hr_employee__message_has_sms_error
-#: model:ir.model.fields,help:sms.field_hr_job__message_has_sms_error
-#: model:ir.model.fields,help:sms.field_hr_leave__message_has_sms_error
-#: model:ir.model.fields,help:sms.field_hr_leave_allocation__message_has_sms_error
-#: model:ir.model.fields,help:sms.field_hr_plan_employee_activity__message_has_sms_error
-#: model:ir.model.fields,help:sms.field_loyalty_card__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_iap_account__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_lunch_supplier__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_blacklist__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_thread__message_has_sms_error
@@ -437,8 +589,9 @@ msgstr "만약 선택하였으면, 신규 메시지에 주의를 기울여야 �
 #: model:ir.model.fields,help:sms.field_maintenance_equipment__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_maintenance_equipment_category__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_maintenance_request__message_has_sms_error
-#: model:ir.model.fields,help:sms.field_note_note__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_phone_blacklist__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_product_category__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_product_pricelist__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_product_product__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_product_template__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_rating_mixin__message_has_sms_error
@@ -450,8 +603,12 @@ msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합�
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_sanitized_blacklisted
-msgid "If the sanitized phone number is on the blacklist, the contact won't receive mass mailing sms anymore, from any list"
+msgid ""
+"If the sanitized phone number is on the blacklist, the contact won't receive"
+" mass mailing sms anymore, from any list"
 msgstr ""
+"검증한 전화번호가 블랙리스트에 있는 번호인 경우, 어느 목록에서도 해당 연락처에 대해서는 더 이상 대량 발송 SMS를 보내지 않게 "
+"됩니다. "
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -465,18 +622,28 @@ msgstr "대기열"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__mobile_blacklisted
-msgid "Indicates if a blacklisted sanitized phone number is a mobile number. Helps distinguish which number is blacklisted             when there is both a mobile and phone field in a model."
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
 msgstr ""
+"해당 핸드폰 번호가 블랙리스트에 오른 번호인지 여부를 나타냅니다. 모델에 핸드폰과 유선전화 필드 양쪽이 있는 경우 블랙리스트에 올라 있는"
+" 번호를 구분하는데 사용합니다."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_blacklisted
-msgid "Indicates if a blacklisted sanitized phone number is a phone number. Helps distinguish which number is blacklisted             when there is both a mobile and phone field in a model."
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a phone number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
 msgstr ""
+"해당 전화번호가 블랙리스트에 오른 번호인지 여부를 나타냅니다. 모델에 핸드폰과 유선전화 필드 양쪽이 있는 경우 블랙리스트에 올라 있는 "
+"번호를 구분하는데 사용합니다."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
 msgid "Indicates if the SMS composer targets a single specific recipient"
-msgstr ""
+msgstr "SMS 작성기가 단일 특정 수신자를 대상으로 하는지 여부를 나타냅니다."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
@@ -485,10 +652,26 @@ msgid "Insufficient Credit"
 msgstr "크레딧 부족"
 
 #. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_invalid_destination
+msgid "Invalid Destination"
+msgstr "대상이 잘못되었습니다."
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
+msgid ""
+"Invalid phone number. Please make sure to follow the international format, "
+"i.e. a plus sign (+), then country code, city code, and local phone number. "
+"For example: +1 555-555-555"
+msgstr ""
+"입력한 전화번호가 잘못되었습니다. 더하기 기호(+) 다음에 국가 번호, 도시 번호, 지역 전화번호가 오는 국제 형식을 따르는지 "
+"확인하세요. 예를 들면 다음과 같습니다: +1 555-555-555."
+
+#. module: sms
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "Invalid recipient number. Please update it."
-msgstr ""
+msgstr "수신자 번호가 잘못되었습니다. 변경하시기 바랍니다."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_is_follower
@@ -498,7 +681,7 @@ msgstr "팔로워임"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_valid
 msgid "Is valid"
-msgstr ""
+msgstr "유효함"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_keep_log
@@ -511,6 +694,9 @@ msgid "Language"
 msgstr "사용 언어"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_account_code__write_uid
+#: model:ir.model.fields,field_description:sms.field_sms_account_phone__write_uid
+#: model:ir.model.fields,field_description:sms.field_sms_account_sender__write_uid
 #: model:ir.model.fields,field_description:sms.field_sms_composer__write_uid
 #: model:ir.model.fields,field_description:sms.field_sms_resend__write_uid
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__write_uid
@@ -518,10 +704,14 @@ msgstr "사용 언어"
 #: model:ir.model.fields,field_description:sms.field_sms_template__write_uid
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__write_uid
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__write_uid
+#: model:ir.model.fields,field_description:sms.field_sms_tracker__write_uid
 msgid "Last Updated by"
 msgstr "최근 갱신한 사람"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_account_code__write_date
+#: model:ir.model.fields,field_description:sms.field_sms_account_phone__write_date
+#: model:ir.model.fields,field_description:sms.field_sms_account_sender__write_date
 #: model:ir.model.fields,field_description:sms.field_sms_composer__write_date
 #: model:ir.model.fields,field_description:sms.field_sms_resend__write_date
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__write_date
@@ -529,8 +719,14 @@ msgstr "최근 갱신한 사람"
 #: model:ir.model.fields,field_description:sms.field_sms_template__write_date
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__write_date
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__write_date
+#: model:ir.model.fields,field_description:sms.field_sms_tracker__write_date
 msgid "Last Updated on"
 msgstr "최근 갱신 일자"
+
+#. module: sms
+#: model:ir.model,name:sms.model_sms_tracker
+msgid "Link SMS to mailing/sms tracking models"
+msgstr "SMS를 메일링 및 SMS 추적 모델에 연결합니다."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__mail_message_id
@@ -538,9 +734,19 @@ msgid "Mail Message"
 msgstr "메일 메시지"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_tracker__mail_notification_id
+msgid "Mail Notification"
+msgstr "메일 알림"
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_model__is_mail_thread_sms
 msgid "Mail Thread SMS"
 msgstr "메일 스레드 SMS"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_sms__to_delete
+msgid "Marked for deletion"
+msgstr "삭제 표시"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_message
@@ -559,12 +765,6 @@ msgstr "메시지 전송 오류"
 #: model:ir.model,name:sms.model_mail_notification
 msgid "Message Notifications"
 msgstr "메시지 알림"
-
-#. module: sms
-#: model:ir.model.fields,help:sms.field_mail_mail__message_type
-#: model:ir.model.fields,help:sms.field_mail_message__message_type
-msgid "Message type: email for email message, notification for system message, comment for other messages such as user replies"
-msgstr "메시지 유형: 이메일 메시지를 위한 이메일, 시스템 메시지를 위한 알림, 사용자 댓글과 같은 기타 메시지에 대한 의견"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_ids
@@ -590,7 +790,29 @@ msgstr "이름"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__no_record
 msgid "No Record"
-msgstr ""
+msgstr "기록 없음"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_not_allowed
+msgid "Not Allowed"
+msgstr "허용되지 않음"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_not_delivered
+msgid "Not Delivered"
+msgstr "미배송"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__note
+msgid "Note only"
+msgstr "메모만"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
+msgid ""
+"Note that this is not required, if you don't set a sender name, your SMS "
+"will be sent from a short code."
+msgstr "발신자 이름을 지정하지 않으면 SMS가 짧은 코드로 전송되므로 반드시 필요한 사항은 아닙니다."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__notification_id
@@ -610,7 +832,7 @@ msgstr "숫자"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__number_field_name
 msgid "Number Field"
-msgstr ""
+msgstr "숫자 필드"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction_counter
@@ -624,28 +846,36 @@ msgstr "오류 횟수"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "조치가 필요한 메시지 수"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "전송 오류 메시지 수"
+msgstr "전송 오류가 발생한 메시지 수입니다."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
-msgid "Number of recipients that will receive the SMS if sent in mass mode, without applying the Active Domain value"
-msgstr ""
+msgid ""
+"Number of recipients that will receive the SMS if sent in mass mode, without"
+" applying the Active Domain value"
+msgstr "활성화된 도메인 값을 적용하지 않고 대량 모드로 전송할 경우에 SMS를 수신할 수신자 수"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_optout
 msgid "Opted Out"
-msgstr ""
+msgstr "선택하지 않음"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__lang
-msgid "Optional translation language (ISO code) to select when sending out an email. If not set, the english version will be used. This should usually be a placeholder expression that provides the appropriate language, e.g. {{ object.partner_id.lang }}."
-msgstr "이메일 전송 시 번역 기능 (ISO code) 을 선택할 수 있습니다. 설정하지 않을 경우, 영어 버전을 사용합니다. 적합한 언어를 제공하기 위한 다음과 같이 예시용 메시지를 사용하도록 합니다. {{ object.partner_id.lang }}."
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+"이메일 전송 시 번역할 언어 (ISO code)를 선택할 수 있습니다. 설정하지 않을 경우, 영어가 기본 언어로 사용됩니다. 적절한 "
+"언어를 선택할 수 있도록 다음과 같은 예시용 메시지를 사용합니다. {{ object.partner_id.lang }}."
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -655,12 +885,7 @@ msgstr "발신 SMS"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__partner_id
 msgid "Partner"
-msgstr "파트너"
-
-#. module: sms
-#: model:ir.model,name:sms.model_mail_thread_phone
-msgid "Phone Blacklist Mixin"
-msgstr "전화번호 블랙리스트 혼합"
+msgstr "협력사"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized_blacklisted
@@ -668,29 +893,22 @@ msgid "Phone Blacklisted"
 msgstr "전화번호 블랙리스트"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_account_phone__phone_number
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_number
 msgid "Phone Number"
 msgstr "전화번호"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__recipient_single_number_itf
-msgid "Phone number of the recipient. If changed, it will be recorded on recipient's profile."
-msgstr ""
+msgid ""
+"Phone number of the recipient. If changed, it will be recorded on "
+"recipient's profile."
+msgstr "수신자의 전화 번호입니다. 변경하면, 수신자의 프로필에 저장됩니다."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_mobile_search
 msgid "Phone/Mobile"
 msgstr "전화번호/휴대전화"
-
-#. module: sms
-#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__comment
-msgid "Post as Message"
-msgstr "메시지로 게시"
-
-#. module: sms
-#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__note
-msgid "Post as Note"
-msgstr "메모로 게시"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
@@ -705,7 +923,12 @@ msgstr "다음 미리보기"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_reset_view_form
 msgid "Proceed"
-msgstr ""
+msgstr "진행"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__process
+msgid "Processing"
+msgstr "처리 중"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -715,7 +938,7 @@ msgstr "대기열에 넣기"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "평가"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -731,12 +954,12 @@ msgstr "수신인"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__partner_name
 msgid "Recipient Name"
-msgstr ""
+msgstr "수신인 이름"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number_itf
 msgid "Recipient Number"
-msgstr ""
+msgstr "수신자 번호"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__recipient_ids
@@ -757,6 +980,35 @@ msgstr "수신인 (협력사)"
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__resource_ref
 msgid "Record reference"
 msgstr "레코드 참조"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_account_code_view_form
+msgid "Register"
+msgstr "등록"
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/models/iap_account.py:0
+#: code:addons/sms/wizard/sms_account_phone.py:0
+msgid "Register Account"
+msgstr "계정 등록"
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
+msgid "Register now."
+msgstr "지금 등록하세요."
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_account_code_view_form
+#: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
+msgid "Register your SMS account"
+msgstr "SMS 계정 등록"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_rejected
+msgid "Rejected"
+msgstr "거부됨"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model
@@ -786,12 +1038,12 @@ msgstr "알림 재전송"
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_reset_action
 msgid "Reset SMS Template"
-msgstr ""
+msgstr "SMS 서식 초기화"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "Reset Template"
-msgstr ""
+msgstr "서식 재설정"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
@@ -805,7 +1057,6 @@ msgstr "재시도"
 #: code:addons/sms/static/src/core/notification_model_patch.js:0
 #: model:ir.actions.act_window,name:sms.sms_sms_action
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_id
-#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_message__message_type__sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__notification_type__sms
 #: model:ir.ui.menu,name:sms.sms_sms_menu
@@ -817,12 +1068,32 @@ msgstr "SMS"
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 msgid "SMS ("
-msgstr ""
+msgstr "SMS ("
 
 #. module: sms
-#: model:ir.model,name:sms.model_sms_api
-msgid "SMS API"
-msgstr "SMS API"
+#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__comment
+msgid "SMS (with note)"
+msgstr "SMS (메모 포함)"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__sms
+msgid "SMS (without note)"
+msgstr "SMS (메모 포함하지 않음)"
+
+#. module: sms
+#: model:ir.model,name:sms.model_sms_account_phone
+msgid "SMS Account Registration Phone Number Wizard"
+msgstr "SMS 계정 등록 전화번호 마법사"
+
+#. module: sms
+#: model:ir.model,name:sms.model_sms_account_sender
+msgid "SMS Account Sender Name Wizard"
+msgstr "SMS 계정 발신자 이름 마법사"
+
+#. module: sms
+#: model:ir.model,name:sms.model_sms_account_code
+msgid "SMS Account Verification Code Wizard"
+msgstr "SMS 계정 인증 코드 마법사"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_account_analytic_account__message_has_sms_error
@@ -833,16 +1104,10 @@ msgstr "SMS API"
 #: model:ir.model.fields,field_description:sms.field_fleet_vehicle__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_fleet_vehicle_log_contract__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_fleet_vehicle_log_services__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_fleet_vehicle_model__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_gamification_badge__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_gamification_challenge__message_has_sms_error
-#: model:ir.model.fields,field_description:sms.field_hr_contract__message_has_sms_error
-#: model:ir.model.fields,field_description:sms.field_hr_department__message_has_sms_error
-#: model:ir.model.fields,field_description:sms.field_hr_employee__message_has_sms_error
-#: model:ir.model.fields,field_description:sms.field_hr_job__message_has_sms_error
-#: model:ir.model.fields,field_description:sms.field_hr_leave__message_has_sms_error
-#: model:ir.model.fields,field_description:sms.field_hr_leave_allocation__message_has_sms_error
-#: model:ir.model.fields,field_description:sms.field_hr_plan_employee_activity__message_has_sms_error
-#: model:ir.model.fields,field_description:sms.field_loyalty_card__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_iap_account__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_lunch_supplier__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_blacklist__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_thread__message_has_sms_error
@@ -853,8 +1118,9 @@ msgstr "SMS API"
 #: model:ir.model.fields,field_description:sms.field_maintenance_equipment__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_maintenance_equipment_category__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_maintenance_request__message_has_sms_error
-#: model:ir.model.fields,field_description:sms.field_note_note__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_phone_blacklist__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_product_category__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_product_pricelist__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_product_product__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_product_template__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_rating_mixin__message_has_sms_error
@@ -867,7 +1133,12 @@ msgstr "SMS 전송 에러"
 #. odoo-javascript
 #: code:addons/sms/static/src/messaging_menu/messaging_menu_patch.js:0
 msgid "SMS Failures"
-msgstr "SMS 실패"
+msgstr "SMS 전송 실패"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_mail_notification__sms_id_int
+msgid "SMS ID"
+msgstr "SMS ID"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_number
@@ -896,7 +1167,6 @@ msgid "SMS Status"
 msgstr "SMS 상태"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_base_automation__sms_template_id
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_template_id
 #: model:ir.model.fields,field_description:sms.field_ir_cron__sms_template_id
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -911,7 +1181,7 @@ msgstr "SMS 서식 미리보기"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template_reset
 msgid "SMS Template Reset"
-msgstr ""
+msgstr "SMS 서식 초기화"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template
@@ -926,12 +1196,33 @@ msgstr "SMS 서식"
 #. odoo-python
 #: code:addons/sms/wizard/sms_template_reset.py:0
 msgid "SMS Templates have been reset"
-msgstr ""
+msgstr "SMS 서식이 초기화되었습니다."
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_mail_notification__sms_tracker_ids
+msgid "SMS Trackers"
+msgstr "SMS 추적기"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "SMS content"
 msgstr "SMS 내용"
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/models/ir_actions_server.py:0
+msgid "SMS template model of %(action_name)s does not match action model."
+msgstr "%(action_name)s의 SMS 서식 모델이 작업 모델과 일치하지 않습니다."
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_sms__sms_tracker_id
+msgid "SMS trackers"
+msgstr "SMS 추적기"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_tracker__sms_uuid
+msgid "SMS uuid"
+msgstr "SMS uuid"
 
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_cron_sms_scheduler_action_ir_actions_server
@@ -953,7 +1244,7 @@ msgstr "SMS 서식 검색"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Send & Close"
-msgstr ""
+msgstr "전송 후 닫기"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -963,6 +1254,12 @@ msgid "Send Now"
 msgstr "지금 보내기"
 
 #. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/components/sms_button/sms_button.js:0
+#: model:ir.actions.act_window,name:sms.res_partner_act_window_sms_composer_multi
+#: model:ir.actions.act_window,name:sms.res_partner_act_window_sms_composer_single
+#: model:ir.actions.act_window,name:sms.sms_composer_action_form
+#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__state__sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Send SMS"
 msgstr "SMS 보내기"
@@ -974,14 +1271,10 @@ msgid "Send SMS (%s)"
 msgstr "SMS 보내기 (%s)"
 
 #. module: sms
-#. odoo-javascript
-#: code:addons/sms/static/src/components/sms_button/sms_button.js:0
-#: model:ir.actions.act_window,name:sms.res_partner_act_window_sms_composer_multi
-#: model:ir.actions.act_window,name:sms.res_partner_act_window_sms_composer_single
-#: model:ir.actions.act_window,name:sms.sms_composer_action_form
-#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__state__sms
-msgid "Send SMS Text Message"
-msgstr "SMS 문자메시지 전송"
+#: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_method
+#: model:ir.model.fields,field_description:sms.field_ir_cron__sms_method
+msgid "Send SMS As"
+msgstr "다른 이름으로 SMS 보내기"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_composer
@@ -994,21 +1287,14 @@ msgid "Send SMS in batch"
 msgstr "SMS 일괄 전송하기"
 
 #. module: sms
+#: model:iap.service,description:sms.iap_service_sms
+msgid "Send SMS to your contacts directly from your database."
+msgstr "데이터베이스에 있는 연락처로 직접 SMS를 보낼 수 있습니다."
+
+#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Send an SMS"
 msgstr "SMS 보내기"
-
-#. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
-msgid "Send as"
-msgstr ""
-
-#. module: sms
-#: model:ir.model.fields,field_description:sms.field_base_automation__sms_method
-#: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_method
-#: model:ir.model.fields,field_description:sms.field_ir_cron__sms_method
-msgid "Send as (SMS)"
-msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_force_send
@@ -1021,6 +1307,17 @@ msgid "Send to numbers"
 msgstr "번호로 보내기"
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
+msgid "Send verification code"
+msgstr "인증 코드 전송"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_iap_account__sender_name
+#: model:ir.model.fields,field_description:sms.field_sms_account_sender__sender_name
+msgid "Sender Name"
+msgstr "발신자 이름"
+
+#. module: sms
 #: model:ir.actions.act_window,name:sms.sms_resend_action
 msgid "Sending Failures"
 msgstr "전송 실패"
@@ -1029,10 +1326,10 @@ msgstr "전송 실패"
 #. odoo-python
 #: code:addons/sms/models/ir_actions_server.py:0
 msgid "Sending SMS can only be done on a mail.thread or a transient model"
-msgstr ""
+msgstr "mail.thread 또는 transient model에서만 SMS를 전송할 수 있습니다."
 
 #. module: sms
-#: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__sent
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__pending
 msgid "Sent"
 msgstr "전송됨"
 
@@ -1048,9 +1345,14 @@ msgid "Server Error"
 msgstr "서버 오류"
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
+msgid "Set sender name"
+msgstr "발신자 이름 설정"
+
+#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Set up an account"
-msgstr ""
+msgstr "계정 만들기"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sidebar_action_id
@@ -1059,13 +1361,20 @@ msgstr "사이드바 동작"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__sidebar_action_id
-msgid "Sidebar action to make this template available on records of the related document model"
+msgid ""
+"Sidebar action to make this template available on records of the related "
+"document model"
 msgstr "관련 문서 모델의 레코드에서 이 서식을 사용할 수 있도록 하는 사이드바 동작"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__comment_single_recipient
 msgid "Single Mode"
-msgstr ""
+msgstr "단일 모드"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
+msgid "Skip for now"
+msgstr "지금 건너뛰기"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_resend_id
@@ -1080,7 +1389,7 @@ msgstr "SMS 서식"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number
 msgid "Stored Recipient Number"
-msgstr ""
+msgstr "저장된 수신자 번호"
 
 #. module: sms
 #. odoo-python
@@ -1091,12 +1400,12 @@ msgstr "성공"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__template_ids
 msgid "Template"
-msgstr "템플릿"
+msgstr "서식"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__template_fs
 msgid "Template Filename"
-msgstr ""
+msgstr "서식 파일명"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_preview_action
@@ -1115,15 +1424,35 @@ msgstr "템플릿(서식)"
 
 #. module: sms
 #. odoo-python
-#: code:addons/sms/models/sms_sms.py:0
-msgid "The SMS Text Messages could not be resent."
-msgstr ""
+#: code:addons/sms/tools/sms_api.py:0
+msgid ""
+"The SMS Service is currently unavailable for new users and new accounts "
+"registrations are suspended."
+msgstr "현재 신규 사용자 및 계정에 대한 신규 SMS 서비스 등록이 일시 중단되었습니다."
 
 #. module: sms
 #. odoo-python
-#: code:addons/sms/models/sms_api.py:0
+#: code:addons/sms/models/sms_sms.py:0
+msgid "The SMS Text Messages could not be resent."
+msgstr "SMS 문자 메시지는 다시 전송할 수 없습니다."
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
+msgid "The content of the message violates rules applied by our providers."
+msgstr "메시지 내용이 트위터에서 적용하는 규칙을 위반합니다."
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
+msgid "The destination country is not supported."
+msgstr "대상 국가는 지원되지 않습니다."
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
 msgid "The number you're trying to reach is not correctly formatted."
-msgstr ""
+msgstr "연락 번호 형식이 올바르지 않습니다."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__model_id
@@ -1133,47 +1462,103 @@ msgstr "이 서식을 사용할 수 있는 문서 유형"
 
 #. module: sms
 #. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
+msgid "The verification code is incorrect."
+msgstr "인증 코드가 잘못되었습니다."
+
+#. module: sms
+#. odoo-python
 #: code:addons/sms/models/sms_sms.py:0
 msgid "There are no SMS Text Messages to resend."
-msgstr ""
+msgstr "재전송할 SMS 문자 메시지가 없습니다."
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
+msgid "This SMS has been removed as the number was already used."
+msgstr "이 번호는 이미 사용되었기 때문에 삭제되었습니다."
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
+msgid ""
+"This account already has an existing sender name and it cannot be changed."
+msgstr "이 계정에는 이미 수정할 수 없는 발신자 이름이 있습니다."
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_iap_account__sender_name
+msgid "This is the name that will be displayed as the sender of the SMS."
+msgstr "SMS 발신자로 표시되는 이름입니다."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
-msgid "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
-msgstr ""
+msgid ""
+"This phone number is blacklisted for SMS Marketing. Click to unblacklist."
+msgstr "이 전화번호는 SMS 마케팅에서 블랙리스트에 올라있습니다. 블랙리스트를 해제하려면 클릭하세요."
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
+msgid "This phone number/account has been banned from our service."
+msgstr "이 전화번호 또는 계정은 서비스 이용이 금지되었습니다."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
 msgid "Try Again"
-msgstr ""
+msgstr "다시 시도하세요"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_ir_actions_server__state
+#: model:ir.model.fields,field_description:sms.field_ir_cron__state
 #: model:ir.model.fields,field_description:sms.field_mail_mail__message_type
 #: model:ir.model.fields,field_description:sms.field_mail_message__message_type
 msgid "Type"
 msgstr "유형"
 
 #. module: sms
-#: model:ir.model.fields,help:sms.field_base_automation__state
 #: model:ir.model.fields,help:sms.field_ir_actions_server__state
 #: model:ir.model.fields,help:sms.field_ir_cron__state
 msgid ""
 "Type of server action. The following values are available:\n"
-"- 'Execute Python Code': a block of python code that will be executed\n"
-"- 'Create a new Record': create a new record with new values\n"
 "- 'Update a Record': update the values of a record\n"
-"- 'Execute several actions': define an action that triggers several other server actions\n"
+"- 'Create Activity': create an activity (Discuss)\n"
 "- 'Send Email': post a message, a note or send an email (Discuss)\n"
-"- 'Add Followers': add followers to a record (Discuss)\n"
-"- 'Create Next Activity': create an activity (Discuss)\n"
-"- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
+"- 'Send SMS': send SMS, log them on documents (SMS)- 'Add/Remove Followers': add or remove followers to a record (Discuss)\n"
+"- 'Create Record': create a new record with new values\n"
+"- 'Execute Code': a block of Python code that will be executed\n"
+"- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
+"- 'Execute Existing Actions': define an action that triggers several other server actions\n"
 msgstr ""
+"서버 작업 유형입니다. 다음 값을 사용할 수 있습니다:\n"
+"- '레코드 업데이트': 레코드 값을 업데이트합니다.\n"
+"- '활동 만들기': 활동을 생성합니다. (토론)\n"
+"- '이메일 보내기': 메시지, 메모를 게시하거나 이메일을 전송합니다. (토론)\n"
+"- 'SMS 보내기': SMS를 보내고, 문서에 기록합니다. (SMS)- '팔로워 추가/제거': 레코드에 팔로워를 추가하거나 제거합니다 .(토론)\n"
+"- 'Create Record': create a new record with new values\n"
+"- 'Execute Code': a block of Python code that will be executed\n"
+"- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
+"- 'Execute Existing Actions': define an action that triggers several other server actions\n"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_sms__uuid
+msgid "UUID"
+msgstr "UUID"
+
+#. module: sms
+#: model:ir.model.constraint,message:sms.constraint_sms_sms_uuid_unique
+msgid "UUID must be unique"
+msgstr "UUID는 고유해야 합니다."
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__unknown
+msgid "Unknown error"
+msgstr "알 수 없는 오류"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_acc
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_acc
 msgid "Unregistered Account"
-msgstr ""
+msgstr "등록되지 않은 계정"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__template_id
@@ -1186,6 +1571,31 @@ msgid "Use blacklist"
 msgstr "블랙리스트 사용"
 
 #. module: sms
+#: model:ir.model.fields,help:sms.field_mail_mail__message_type
+#: model:ir.model.fields,help:sms.field_mail_message__message_type
+msgid ""
+"Used to categorize message generator\n"
+"'email': generated by an incoming email e.g. mailgateway\n"
+"'comment': generated by user input e.g. through discuss or composer\n"
+"'email_outgoing': generated by a mailing\n"
+"'notification': generated by system e.g. tracking messages\n"
+"'auto_comment': generated by automated notification mechanism e.g. acknowledgment\n"
+"'user_notification': generated for a specific recipient"
+msgstr ""
+"메세지 작성을 분류하는 데 사용됩니다.\n"
+"'email': 수신 이메일에 의해 작성됩니다. (예: 메일 게이트웨이)\n"
+"'comment': 토론 또는 작성란을 통해 사용자가 입력할 수 있습니다.\n"
+"'email_outgoing': 메일링에 의해 작성됩니다.\n"
+"'notification': 시스템에서 생성됩니다. (예: 메시지 추적)\n"
+"'auto_comment': 자동화된 알림 메커니즘에 의해 생성됩니다. (예: 승인)\n"
+"'user_notification': 특정 수신자를 위해 생성됩니다."
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_account_code__verification_code
+msgid "Verification Code"
+msgstr "인증 코드"
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids_count
 msgid "Visible records count"
 msgstr "보이는 레코드 수"
@@ -1195,6 +1605,20 @@ msgstr "보이는 레코드 수"
 #: code:addons/sms/models/sms_sms.py:0
 msgid "Warning"
 msgstr "경고"
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
+msgid "We were not able to find your account in our database."
+msgstr "데이터베이스에서 귀하의 계정을 찾을 수 없습니다."
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
+msgid ""
+"We were not able to reach you via your phone number. If you have requested "
+"multiple codes recently, please retry later."
+msgstr "귀하의 휴대폰 번호로 연결할 수 없습니다. 최근에 여러 번 코드를 요청한 경우 나중에 다시 시도하세요."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__website_message_ids
@@ -1212,6 +1636,13 @@ msgid "Whether this model supports messages and notifications through SMS"
 msgstr "이 모델이 SMS를 통한 메시지 및 알림을 지원하는지 여부"
 
 #. module: sms
+#: model:ir.model.fields,help:sms.field_sms_sms__to_delete
+msgid ""
+"Will automatically be deleted, while notifications will not be deleted in "
+"any case."
+msgstr "자동으로 삭제되며, 알림은 그 어떤 경우에도 삭제되지 않습니다."
+
+#. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_format
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_number_format
 msgid "Wrong Number Format"
@@ -1225,27 +1656,63 @@ msgstr "메시지 또는 관련 문서에 접근할 수 없습니다."
 
 #. module: sms
 #. odoo-python
-#: code:addons/sms/models/sms_api.py:0
+#: code:addons/sms/tools/sms_api.py:0
 msgid "You don't have an eligible IAP account."
-msgstr ""
+msgstr "적합한 IAP 계정이 없습니다."
 
 #. module: sms
 #. odoo-python
-#: code:addons/sms/models/sms_api.py:0
+#: code:addons/sms/tools/sms_api.py:0
 msgid "You don't have enough credits on your IAP account."
-msgstr ""
+msgstr "IAP 계정에 크레딧이 충분하지 않습니다."
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
+msgid "You tried too many times. Please retry later."
+msgstr "시도 횟수가 너무 많습니다. 나중에 다시 시도하세요."
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.js:0
-msgid "Your SMS Text Message must include at least one non-whitespace character"
+msgid ""
+"Your SMS Text Message must include at least one non-whitespace character"
+msgstr "SMS 문자 메시지에는 공백이 아닌 문자가 하나 이상 있어야 합니다."
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/wizard/sms_account_code.py:0
+msgid "Your SMS account has been successfully registered."
+msgstr "SMS 계정 등록이 완료되었습니다."
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
+msgid ""
+"Your sender name must be between 3 and 11 characters long and only contain "
+"alphanumeric characters."
+msgstr "발신자 이름은 3~11자 사이여야 하며 영숫자만 포함해야 합니다."
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
+msgid ""
+"Your sender name must be between 3 and 11 characters long and only contain alphanumeric characters.\n"
+"                        It must fit your company name, and you aren't allowed to modify it once you registered one, choose it carefully."
 msgstr ""
+"발신자 이름은 3~11자 사이여야 하며 영숫자로만 구성되어야 합니다.\n"
+"                        회사명과 일치해야 하며, 한 번 등록하면 변경할 수 없으므로 신중하게 선택하세요."
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
+msgid "Your sms account has not been activated yet."
+msgstr "SMS 계정이 아직 활성화되지 않았습니다."
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 msgid "characters, fits in"
-msgstr ""
+msgstr "문자, 포함됨"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1255,27 +1722,29 @@ msgstr "예. +1 415 555 0100"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. Calendar Reminder"
-msgstr ""
+msgstr "예: 캘린더 알림"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. Contact"
-msgstr ""
+msgstr "예. 연락처"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. en_US or {{ object.partner_id.lang }}"
-msgstr ""
+msgstr "예: en_US or {{ object.partner_id.lang }} "
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "out of"
-msgstr ""
+msgstr "다음에서"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
-msgid "recipients have an invalid phone number and will not receive this text message."
-msgstr ""
+msgid ""
+"recipients have an invalid phone number and will not receive this text "
+"message."
+msgstr "수신자 전화번호가 잘못되었기 때문에 이 문자 메시지를 수신할 수 없습니다."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form

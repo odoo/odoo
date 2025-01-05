@@ -1,85 +1,113 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment_transfer
-#
+# 	* payment_custom
+# 
 # Translators:
-# Paolo Valier, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:0
-msgid "; multiple order found"
-msgstr "; trovato ordine multiplo"
-
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:0
-msgid "; no order found"
-msgstr "; nessun ordine trovato"
-
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:0
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
 msgid ""
-"<div>\n"
-"<h3>Please use the following transfer details</h3>\n"
-"<h4>%(bank_title)s</h4>\n"
-"%(bank_accounts)s\n"
-"<h4>Communication</h4>\n"
-"<p>Please use the order name as communication reference.</p>\n"
-"</div>"
+"<small class=\"text-center text-wrap lh-sm\">Scan me in your banking "
+"app</small>"
 msgstr ""
-"<div>\n"
-"<h3>Utilizzare i seguenti dettagli di trasferimento</h3>\n"
-"<h4>%(bank_title)s</h4>\n"
-"%(bank_accounts)s\n"
-"<h4>Comunicazioni</h4>\n"
-"<p>Usare il nome dell'ordine come riferimento per la comunicazione.</p>\n"
-"</div>"
+"<small class=\"text-center text-wrap lh-sm\">Scansionami con l'app della tua"
+" banca</small>"
 
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:0
-msgid "Bank Account"
-msgstr "Conto bancario"
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
+msgid "<strong class=\"mt-auto\">Communication: </strong>"
+msgstr "<strong class=\"mt-auto\">Causale: </strong>"
 
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:0
-msgid "Bank Accounts"
-msgstr "Conti bancari"
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__code
+msgid "Code"
+msgstr "Codice"
 
-#. module: payment_transfer
-#: model:ir.model.fields.selection,name:payment_transfer.selection__payment_acquirer__provider__transfer
-msgid "Manual Payment"
-msgstr "Pagamento manuale"
+#. module: payment_custom
+#: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__code__custom
+msgid "Custom"
+msgstr "Personalizzata"
 
-#. module: payment_transfer
-#: model:ir.model,name:payment_transfer.model_payment_acquirer
-msgid "Payment Acquirer"
-msgstr "Sistema di pagamento"
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__custom_mode
+msgid "Custom Mode"
+msgstr "Modalità personalizzata"
 
-#. module: payment_transfer
-#: model:ir.model,name:payment_transfer.model_payment_transaction
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__qr_code
+msgid "Enable QR Codes"
+msgstr "Attiva i codici QR"
+
+#. module: payment_custom
+#: model:ir.model.fields,help:payment_custom.field_payment_provider__qr_code
+msgid "Enable the use of QR-codes when paying by wire transfer."
+msgstr "Enable the use of QR-codes when paying by wire transfer."
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
+msgid "Finalize your payment"
+msgstr "Completa il pagamento"
+
+#. module: payment_custom
+#. odoo-python
+#: code:addons/payment_custom/models/payment_transaction.py:0
+msgid "No transaction found matching reference %s."
+msgstr "Nessuna transazione trovata corrispondente al riferimento %s."
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
+msgid "OR"
+msgstr "OPPURE"
+
+#. module: payment_custom
+#: model:ir.model.constraint,message:payment_custom.constraint_payment_provider_custom_providers_setup
+msgid "Only custom providers should have a custom mode."
+msgstr ""
+"Solo i fornitori personalizzati devono avere una modalità personalizzata."
+
+#. module: payment_custom
+#: model:ir.model,name:payment_custom.model_payment_provider
+msgid "Payment Provider"
+msgstr "Fornitore di pagamenti"
+
+#. module: payment_custom
+#: model:ir.model,name:payment_custom.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Transazione di pagamento"
 
-#. module: payment_transfer
-#: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__provider
-msgid "Provider"
-msgstr "Fornitore"
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.payment_provider_form
+msgid "Reload Pending Message"
+msgstr "Ricarica messaggio in attesa"
 
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:0
-msgid "received data for reference %s"
-msgstr "ricevuti dati con riferimento %s"
+#. module: payment_custom
+#. odoo-python
+#: code:addons/payment_custom/models/payment_transaction.py:0
+msgid "The customer has selected %(provider_name)s to make the payment."
+msgstr "Il cliente ha scelto %(provider_name)s per effettuare il pagamento."
+
+#. module: payment_custom
+#: model:ir.model.fields,help:payment_custom.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "Codice tecnico del fornitore di pagamenti."
+
+#. module: payment_custom
+#: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__custom_mode__wire_transfer
+#: model:payment.method,name:payment_custom.payment_method_wire_transfer
+msgid "Wire Transfer"
+msgstr "Bonifico bancario"

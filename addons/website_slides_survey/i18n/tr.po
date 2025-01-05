@@ -1,38 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_slides_survey
-#
+# 
 # Translators:
-# Levent Karakaş <levent@mektup.at>, 2022
-# Yedigen, 2022
-# Murat Kaplan <muratk@projetgrup.com>, 2022
-# Halil, 2022
-# abc Def <hdogan1974@gmail.com>, 2022
-# Murat Durmuş <muratd@projetgrup.com>, 2022
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
-# Ediz Duman <neps1192@gmail.com>, 2023
-# İlknur Gözütok, 2023
-# Tugay Hatıl <tugayh@projetgrup.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
-"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__members_certified_count
+msgid "# Certified Attendees"
+msgstr ""
 
 #. module: website_slides_survey
 #. odoo-python
 #: code:addons/website_slides_survey/models/survey_survey.py:0
-msgid "- %s (Courses - %s)"
-msgstr "- %s (Kurslar - %s)"
+msgid "- %(certification)s (Courses - %(courses)s)"
+msgstr ""
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_kanban
@@ -64,13 +60,26 @@ msgstr ""
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
-msgid "<i class=\"fa fa-download\" aria-label=\"Download certification\" title=\"Download Certification\"/>"
-msgstr "<i class=\"fa fa-download\" aria-label=\"Download certification\" title=\"Download Certification\"/>"
+msgid "<i class=\"fa fa-arrow-right\"/> Get Certified"
+msgstr ""
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+msgid ""
+"<i class=\"fa fa-download\" aria-label=\"Download certification\" "
+"title=\"Download Certification\"/>"
+msgstr ""
+"<i class=\"fa fa-download\" aria-label=\"Download certification\" "
+"title=\"Download Certification\"/>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
-msgid "<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download certification\" title=\"Download certification\"/> Download certification"
-msgstr "<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download certification\" title=\"Download certification\"/> Sertifikayı indir"
+msgid ""
+"<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download "
+"certification\" title=\"Download certification\"/> Download certification"
+msgstr ""
+"<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download "
+"certification\" title=\"Download certification\"/> Sertifikayı indir"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_fill_form_done_inherit_website_slides
@@ -113,12 +122,8 @@ msgstr "<span class=\"ms-1\">Sertifikalar</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_form
-msgid ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '&gt;', 0)]}\">Finished</span>\n"
-"                <span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '=', 0)]}\">Certified</span>"
+msgid "<span class=\"o_stat_text\">Certified</span>"
 msgstr ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '&gt;', 0)]}\">Bitmiş</span>\n"
-"                <span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '=', 0)]}\">Onaylı</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.all_user_card
@@ -129,16 +134,6 @@ msgstr "<span class=\"text-muted small fw-bold\">Sertifikalar</span>"
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.top3_user_card
 msgid "<span class=\"text-muted\">Certifications</span>"
 msgstr "<span class=\"text-muted\">Sertifikalar</span>"
-
-#. module: website_slides_survey
-#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_kanban
-msgid "<span class=\"text-muted\">Certified</span>"
-msgstr "<span class=\"text-muted\">Onaylı</span>"
-
-#. module: website_slides_survey
-#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_kanban
-msgid "<span class=\"text-muted\">Finished</span>"
-msgstr "<span class=\"text-muted\">Bitmiş</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
@@ -156,6 +151,8 @@ msgid "A slide of type certification cannot be previewed."
 msgstr "Tür sertifikası slaytı önizlenemez."
 
 #. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.js:0
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_form
 msgid "Add Certification"
 msgstr "Sertifika Ekle"
@@ -239,8 +236,7 @@ msgstr "Kategori"
 
 #. module: website_slides_survey
 #. odoo-javascript
-#: code:addons/website_slides_survey/static/src/js/slides_upload.js:0
-#: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.js:0
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__survey_id
 #: model:ir.model.fields.selection,name:website_slides_survey.selection__slide_slide__slide_category__certification
 #: model:ir.model.fields.selection,name:website_slides_survey.selection__slide_slide__slide_type__certification
@@ -308,15 +304,31 @@ msgid "Certifications"
 msgstr "Sertifikalar"
 
 #. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+msgid "Certifications are exams that you successfully passed. <br/>"
+msgstr ""
+
+#. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_sidebar_done_button
 msgid "Certifications you have passed cannot be marked as not done"
 msgstr "Geçtiğiniz sertifikalar tamamlanmadı olarak işaretlenemez"
 
 #. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel_partner__survey_certification_success
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_partner_view_search
+msgid "Certified"
+msgstr "Onaylı"
+
+#. module: website_slides_survey
 #: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_1
 msgid "Chair"
 msgstr "Sandalye"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_slide_channel_partner
+msgid "Channel / Partners (Members)"
+msgstr "Kanal / İş Ortakları (Üyeler)"
 
 #. module: website_slides_survey
 #. odoo-javascript
@@ -386,7 +398,7 @@ msgstr "Kursa geri dön"
 
 #. module: website_slides_survey
 #. odoo-javascript
-#: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "How to upload a certification on your course?"
 msgstr "Kursunuza sertifika nasıl yüklenir?"
 
@@ -406,6 +418,12 @@ msgid "Mark To Do"
 msgstr "Yapılacak İşi İşaretle"
 
 #. module: website_slides_survey
+#. odoo-python
+#: code:addons/website_slides_survey/models/slide_channel.py:0
+msgid "No Attendee passed this course certification yet!"
+msgstr ""
+
+#. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
 msgid "No certification found for the given search term."
 msgstr "Belirtilen arama terimi için sertifika bulunamadı."
@@ -417,11 +435,13 @@ msgstr "Henüz sertifika yok!"
 
 #. module: website_slides_survey
 #: model_terms:slide.slide,description:website_slides_survey.slide_slide_demo_5_4
-msgid "Now that you have completed the course, it's time to test your knowledge!"
+msgid ""
+"Now that you have completed the course, it's time to test your knowledge!"
 msgstr "Şimdi kursu tamamladığınıza göre, bilginizi test etme zamanı!"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__nbr_certification
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel_partner__nbr_certification
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__nbr_certification
 msgid "Number of Certifications"
 msgstr "Sertifika Sayısı"
@@ -433,7 +453,7 @@ msgstr "Meşe"
 
 #. module: website_slides_survey
 #. odoo-javascript
-#: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
 msgid "Please select a certification."
 msgstr "Lütfen bir sertifika seçin."
 
@@ -458,9 +478,23 @@ msgid "Search Attempts..."
 msgstr "Arama Denemeleri..."
 
 #. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_category.js:0
+msgid "Select a certification"
+msgstr ""
+
+#. module: website_slides_survey
 #: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_2
 msgid "Select all the furniture shown in the video"
 msgstr "Videoda gösterilen tüm mobilyaları seçin"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
+msgid ""
+"Select an existing certification from the list. Creating or editing a "
+"certification can be done from the backend."
+msgstr ""
 
 #. module: website_slides_survey
 #: model:mail.template,description:website_slides_survey.mail_template_user_input_certification_failed
@@ -499,8 +533,12 @@ msgstr "Abone bilgileri"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_slide_slide__slide_type
-msgid "Subtype of the slide category, allows more precision on the actual file type / source type."
-msgstr "Slayt kategorisinin alt türü, gerçek dosya türü / kaynak türü üzerinde daha fazla hassasiyet sağlar."
+msgid ""
+"Subtype of the slide category, allows more precision on the actual file type"
+" / source type."
+msgstr ""
+"Slayt kategorisinin alt türü, gerçek dosya türü / kaynak türü üzerinde daha "
+"fazla hassasiyet sağlar."
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_tree_slides
@@ -547,13 +585,19 @@ msgstr ""
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_slide_slide__is_preview
-msgid "The course is accessible by anyone : the users don't need to join the channel to access the content of the course."
-msgstr "Kursa herkes tarafından erişilebilir: kullanıcıların kurs içeriğine erişmek için kanala katılmaları gerekmez."
+msgid ""
+"The course is accessible by anyone : the users don't need to join the "
+"channel to access the content of the course."
+msgstr ""
+"Kursa herkes tarafından erişilebilir: kullanıcıların kurs içeriğine erişmek "
+"için kanala katılmaları gerekmez."
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_channel_ids
-msgid "The courses this survey is linked to through the e-learning application"
-msgstr "Bu anketin e-öğrenme uygulaması aracılığıyla bağlantılı olduğu kurslar"
+msgid ""
+"The courses this survey is linked to through the e-learning application"
+msgstr ""
+"Bu anketin e-öğrenme uygulaması aracılığıyla bağlantılı olduğu kurslar"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_user_input__slide_id
@@ -563,7 +607,8 @@ msgstr "Üyelik bilgisi olmadığında ilgili kurs slaydı"
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_ids
 msgid "The slides this survey is linked to through the e-learning application"
-msgstr "Bu anketin e-öğrenme uygulaması aracılığıyla bağlantılı olduğu slaytlar"
+msgstr ""
+"Bu anketin e-öğrenme uygulaması aracılığıyla bağlantılı olduğu slaytlar"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__name
@@ -593,12 +638,6 @@ msgid "You are not allowed to link a certification."
 msgstr "Bir sertifikayı bağlamanıza izin verilmedi."
 
 #. module: website_slides_survey
-#. odoo-javascript
-#: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
-msgid "You can create your certification from here or use an existing one. Once your certification is created, you can still edit it in backend."
-msgstr "Sertifikanızı buradan oluşturabilir veya mevcut bir sertifikayı kullanabilirsiniz. Sertifikanız oluşturulduktan sonra, onu arka uçta düzenlemeye devam edebilirsiniz."
-
-#. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content
 msgid ""
 "You can gain badges by passing certifications. Here is a list of all available certification badges.\n"
@@ -609,8 +648,10 @@ msgstr ""
 
 #. module: website_slides_survey
 #: model:mail.template,subject:website_slides_survey.mail_template_user_input_certification_failed
-msgid "You have failed the course: {{ object.slide_partner_id.channel_id.name }}"
-msgstr "Kursta başarısız oldunuz: {{ object.slide_partner_id.channel_id.name }}"
+msgid ""
+"You have failed the course: {{ object.slide_partner_id.channel_id.name }}"
+msgstr ""
+"Kursta başarısız oldunuz: {{ object.slide_partner_id.channel_id.name }}"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content

@@ -1,33 +1,36 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* portal_rating
-#
+# 
 # Translators:
-# Marcel Savegnago <marcel.savegnago@gmail.com>, 2022
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/"
-"teams/41243/pt_BR/)\n"
-"Language: pt_BR\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
-"1000000 == 0 ? 1 : 2;\n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: portal_rating
+#. odoo-javascript
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
+msgid "#{Math.round(val * 100) / 100} stars on 5"
+msgstr "#{Math.round(val * 100) / 100} inicia em 5"
 
 #. module: portal_rating
 #. odoo-javascript
 #: code:addons/portal_rating/static/src/js/portal_rating_composer.js:0
 #: model_terms:ir.ui.view,arch_db:portal_rating.rating_stars_static_popup_composer
 msgid "Add Review"
-msgstr "Adicionar Avaliação"
+msgstr "Adicionar avaliação"
 
 #. module: portal_rating
 #. odoo-javascript
@@ -37,19 +40,13 @@ msgstr "Média"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
-msgid "Cancel"
-msgstr "Cancelar"
-
-#. module: portal_rating
-#. odoo-javascript
 #: code:addons/portal_rating/static/src/xml/portal_rating_composer.xml:0
 msgid "Close"
 msgstr "Fechar"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/chatter/frontend/message_patch.xml:0
 #: model_terms:ir.ui.view,arch_db:portal_rating.rating_rating_view_form
 msgid "Comment"
 msgstr "Comentário"
@@ -66,7 +63,7 @@ msgstr "Comentado em"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/chatter/frontend/message_patch.xml:0
 msgid "Delete"
 msgstr "Excluir"
 
@@ -78,7 +75,7 @@ msgstr "Detalhes"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/chatter/frontend/message_patch.xml:0
 msgid "Edit"
 msgstr "Editar"
 
@@ -87,19 +84,26 @@ msgstr "Editar"
 #: code:addons/portal_rating/static/src/js/portal_rating_composer.js:0
 #: model_terms:ir.ui.view,arch_db:portal_rating.rating_stars_static_popup_composer
 msgid "Edit Review"
-msgstr ""
+msgstr "Editar avaliação"
+
+#. module: portal_rating
+#: model:ir.model,name:portal_rating.model_mail_thread
+msgid "Email Thread"
+msgstr "Thread do e-mail"
 
 #. module: portal_rating
 #. odoo-javascript
+#: code:addons/portal_rating/static/src/chatter/frontend/composer_patch.xml:0
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 msgid "Empty star"
-msgstr ""
+msgstr "Zero estrelas"
 
 #. module: portal_rating
 #. odoo-javascript
+#: code:addons/portal_rating/static/src/chatter/frontend/composer_patch.xml:0
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 msgid "Full star"
-msgstr ""
+msgstr "Cinco estrelas"
 
 #. module: portal_rating
 #: model:ir.model,name:portal_rating.model_ir_http
@@ -113,46 +117,10 @@ msgid "Half a star"
 msgstr "Meia estrela"
 
 #. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_composer.js:0
-msgid "I don't like it"
-msgstr "Eu não gosto"
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_composer.js:0
-msgid "I hate it"
-msgstr "Eu odeio"
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_composer.js:0
-msgid "I like it"
-msgstr "Eu gosto"
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_composer.js:0
-msgid "I love it"
-msgstr "Eu amei"
-
-#. module: portal_rating
 #. odoo-python
 #: code:addons/portal_rating/controllers/portal_rating.py:0
 msgid "Invalid rating"
 msgstr "Avaliação inválida"
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_composer.js:0
-msgid "It's okay"
-msgstr "Está bem"
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
-msgid "Loading..."
-msgstr "Carregando..."
 
 #. module: portal_rating
 #: model:ir.model,name:portal_rating.model_mail_message
@@ -167,13 +135,19 @@ msgstr "Modificar seu comentário"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
-msgid "Post comment"
-msgstr "Poste comentários"
+#: code:addons/portal_rating/static/src/js/portal_rating_composer.js:0
+msgid "Post review"
+msgstr "Publicar avaliação"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
+msgid "Progress bar"
+msgstr "Barra de progresso"
+
+#. module: portal_rating
+#. odoo-javascript
+#: code:addons/portal_rating/static/src/chatter/frontend/message_patch.xml:0
 msgid "Published on"
 msgstr "Publicado em"
 
@@ -191,14 +165,14 @@ msgstr "Avaliação"
 #. odoo-javascript
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 msgid "Remove Selection"
-msgstr "Remover Seleção"
+msgstr "Remover seleção"
 
 #. module: portal_rating
 #. odoo-javascript
 #: code:addons/portal_rating/static/src/js/portal_rating_composer.js:0
 #: model_terms:ir.ui.view,arch_db:portal_rating.rating_stars_static_popup_composer
 msgid "Review"
-msgstr "Revisar"
+msgstr "Avaliar"
 
 #. module: portal_rating
 #. odoo-javascript
@@ -207,39 +181,31 @@ msgid ""
 "The rating is required. Please make sure to select one before sending your "
 "review."
 msgstr ""
+"A pontuação é obrigatória. Certifique-se de selecionar a pontuação antes de "
+"enviar sua avaliação."
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
-msgid "Update comment"
-msgstr "Atualizar comentário"
+#: code:addons/portal_rating/static/src/js/portal_rating_composer.js:0
+msgid "Update review"
+msgstr "Atualizar avaliação"
 
 #. module: portal_rating
 #. odoo-python
 #: code:addons/portal_rating/models/rating_rating.py:0
 msgid "Updating rating comment require write access on related record"
 msgstr ""
+"Atualizar o comentário da pontuação requer acesso de gravação no registro "
+"relacionado"
 
 #. module: portal_rating
 #. odoo-javascript
 #: code:addons/portal_rating/static/src/xml/portal_rating_composer.xml:0
 msgid "Write a review"
-msgstr ""
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_chatter.js:0
-msgid "Write your comment"
-msgstr "Escreva seu comentário"
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
-msgid "avatar"
-msgstr "avatar"
+msgstr "Escreva a avaliação"
 
 #. module: portal_rating
 #. odoo-javascript
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 msgid "stars"
-msgstr "stars"
+msgstr "estrelas"

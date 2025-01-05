@@ -1,28 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* portal
-#
+# 
 # Translators:
-# Mads Søndergaard, 2022
-# Aleksander, 2022
-# Marius Stedjan <marius@stedjan.com>, 2022
-# Jorunn D. Newth, 2022
-# Martin Trigaux, 2022
-# Cécile Collart <cco@odoo.com>, 2022
-# Henning Fyllingsnes, 2023
-#
+# Wil Odoo, 2024
+# Rune Restad, 2024
+# Natalia Myronets, 2024
+# Mads Søndergaard, 2024
+# Aleksander, 2024
+# Henning Fyllingsnes, 2024
+# Jorunn D. Newth, 2024
+# Martin Trigaux, 2024
+# Marius Stedjan <marius@stedjan.com>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Henning Fyllingsnes, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:57+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2024\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
-"Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nb\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: portal
@@ -50,28 +52,23 @@ msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
-msgid "<i class=\"fa fa-fw fa-id-card-o me-1 small text-muted\"/> My Account"
+msgid "<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary\"/> My Account"
 msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
-msgid "<i class=\"fa fa-fw fa-sign-out me-1 small text-muted\"/> Logout"
+msgid "<i class=\"fa fa-fw fa-sign-out me-1 small text-primary\"/> Logout"
 msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
-msgid "<i class=\"fa fa-fw fa-th me-1 small text-muted\"/> Apps"
+msgid "<i class=\"fa fa-fw fa-th me-1 small text-primary\"/> Apps"
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_layout
-msgid "<i class=\"fa fa-pencil mx-1\"/>Edit Security Settings"
+#: model_terms:ir.ui.view,arch_db:portal.side_content
+msgid "<i class=\"fa fa-pencil\"/> Edit information"
 msgstr ""
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_layout
-msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr "<i class=\"fa fa-pencil\"/> Rediger"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -80,7 +77,9 @@ msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
-msgid "<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" title=\"Previous\"/>"
+msgid ""
+"<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
 msgstr ""
 
 #. module: portal
@@ -96,7 +95,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "<option value=\"\">Country...</option>"
-msgstr ""
+msgstr "<option value=\"\">Land...</option>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -105,7 +104,23 @@ msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
-msgid "<small class=\"form-text text-muted\">Changing company name or VAT number is not allowed once document(s) have been issued for your account. <br/>Please contact us directly for this operation.</small>"
+msgid ""
+"<small class=\"form-text text-muted\">\n"
+"                Company name, VAT Number and country can not be changed once document(s) have been issued for your account.\n"
+"                <br/>Please contact us directly for that operation.\n"
+"            </small>"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 msgstr ""
 
 #. module: portal
@@ -116,7 +131,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small me-1 navbar-text\">Group By:</span>"
-msgstr ""
+msgstr "<span class=\"small me-1 navbar-text\">Grupper etter:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -161,7 +176,7 @@ msgid ""
 "                        An account has been created for you with the following login: <t t-out=\"object.user_id.login\">demo</t><br><br>\n"
 "                        Click on the button below to pick a password and activate your account.\n"
 "                        <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"                            <a t-att-href=\"object.user_id.signup_url\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
+"                            <a t-att-href=\"object.user_id.partner_id._get_signup_url()\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
 "                                <strong>Activate Account</strong>\n"
 "                            </a>\n"
 "                        </div>\n"
@@ -215,13 +230,13 @@ msgstr ""
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 msgid "API Key Ready"
 msgstr ""
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal_signature.js:0
+#: code:addons/portal/static/src/signature_form/signature_form.js:0
 msgid "Accept & Sign"
 msgstr "Aksepter og signer"
 
@@ -232,11 +247,6 @@ msgid "Access warning"
 msgstr "Adgangsadvarsel"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_layout
-msgid "Account Security"
-msgstr ""
-
-#. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "Account deleted!"
@@ -245,7 +255,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Add a note"
-msgstr "Nytt notat"
+msgstr "Legg til notat"
 
 #. module: portal
 #. odoo-javascript
@@ -274,12 +284,6 @@ msgid "Already Registered"
 msgstr ""
 
 #. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-msgid "An access token must be provided for each attachment."
-msgstr "En tilgangstoken på gis til hvert vedlegg."
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Are you sure you want to do this?"
 msgstr ""
@@ -291,12 +295,10 @@ msgid "Avatar"
 msgstr "Avatar"
 
 #. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Cancel"
-msgstr "Kanseller"
+msgstr "Avbryt"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -307,17 +309,33 @@ msgstr "Endre passord"
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
-msgid "Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."
-msgstr "Det er ikke mulig å endre organisasjonsnummer etter at dokumenter har blitt opprettet på kontoen din. Vennligst ta kontakt med oss direkte for å endre organisasjonsnummeret."
+msgid ""
+"Changing VAT number is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
+"Det er ikke mulig å endre organisasjonsnummer etter at dokumenter har blitt "
+"opprettet på kontoen din. Vennligst ta kontakt med oss direkte for å endre "
+"organisasjonsnummeret."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
-msgid "Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."
-msgstr "Det er ikke mulig å endre firmanavn etter at dokumenter har blitt opprettet på kontoen din. Vennligst ta kontakt med oss direkte for å endre navnet."
+msgid ""
+"Changing company name is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
+"Det er ikke mulig å endre firmanavn etter at dokumenter har blitt opprettet "
+"på kontoen din. Vennligst ta kontakt med oss direkte for å endre navnet."
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
+msgid ""
+"Changing the country is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 msgid "Check failed"
 msgstr ""
 
@@ -328,14 +346,15 @@ msgstr "Sted"
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_signature.xml:0
+#: code:addons/portal/static/src/signature_form/signature_form.xml:0
 msgid "Click here to see your document."
 msgstr "Klikk her for å se dokumentet ditt."
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
+#: model_terms:ir.ui.view,arch_db:portal.side_content
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Close"
 msgstr "Lukk"
@@ -343,7 +362,7 @@ msgstr "Lukk"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "Company Name"
-msgstr "Firmanavn"
+msgstr "Firma navn"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_config_settings
@@ -351,29 +370,34 @@ msgid "Config Settings"
 msgstr "Innstillinger"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
+msgid "Configure your connection parameters"
+msgstr ""
+
+#. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 msgid "Confirm"
 msgstr "Bekreft"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
-msgid ""
-"Confirm\n"
-"                                <span class=\"fa fa-long-arrow-right\"/>"
-msgstr ""
-"Bekreft\n"
-"                                <span class=\"fa fa-long-arrow-right\"/>"
-
-#. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 msgid "Confirm Password"
 msgstr "Bekreft passord"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Connection &amp; Security"
+msgstr ""
+
+#. module: portal
 #: model:ir.model,name:portal.model_res_partner
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__partner_id
+#: model_terms:ir.ui.view,arch_db:portal.portal_layout
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_contact
+#: model_terms:ir.ui.view,arch_db:portal.side_content
 msgid "Contact"
 msgstr "Kontakt"
 
@@ -410,19 +434,7 @@ msgstr "Opprettet av"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__create_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__create_date
 msgid "Created on"
-msgstr "Opprettet"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-msgid "Currently available to everyone viewing this document, click to restrict to internal employees."
-msgstr ""
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-msgid "Currently restricted to internal employees, click to make it available to everyone viewing this document."
-msgstr ""
+msgstr "Opprettet den"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__portal_allow_api_keys
@@ -462,7 +474,6 @@ msgstr "Beskrivelse"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
-#: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "Details"
 msgstr "Detaljer"
 
@@ -482,8 +493,7 @@ msgid ""
 msgstr ""
 
 #. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Discard"
 msgstr "Avbryt"
 
@@ -493,11 +503,6 @@ msgstr "Avbryt"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__display_name
 msgid "Display Name"
 msgstr "Visningsnavn"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "Documents"
-msgstr "Dokumenter"
 
 #. module: portal
 #. odoo-javascript
@@ -529,12 +534,6 @@ msgstr "E-posttråd"
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-msgid "Employees Only"
-msgstr ""
-
-#. module: portal
-#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Enter a description of and purpose for the key."
 msgstr ""
@@ -543,6 +542,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Forgot password?"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Go Back"
 msgstr ""
 
 #. module: portal
@@ -593,26 +597,14 @@ msgid "Important:"
 msgstr ""
 
 #. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-msgid "Internal Note"
-msgstr "Internt notat"
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Internal User"
 msgstr ""
 
 #. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-msgid "Internal notes are only displayed to internal users."
-msgstr ""
-
-#. module: portal
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__ko
 msgid "Invalid"
-msgstr ""
+msgstr "Ugyldig"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -642,6 +634,12 @@ msgid "Invitation email to contacts to create a user account"
 msgstr ""
 
 #. module: portal
+#. odoo-python
+#: code:addons/portal/wizard/portal_share.py:0
+msgid "Invitation to access %s"
+msgstr ""
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_internal
 msgid "Is Internal"
 msgstr ""
@@ -657,6 +655,12 @@ msgstr ""
 msgid ""
 "It is very important that this description be clear\n"
 "                and complete,"
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "Key Description"
 msgstr ""
 
 #. module: portal
@@ -690,6 +694,19 @@ msgid "Link"
 msgstr "Link"
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/js/portal_security.js:0
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Log out from all devices"
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/js/portal_security.js:0
+msgid "Log out from all devices?"
+msgstr ""
+
+#. module: portal
 #: model:ir.model,name:portal.model_mail_message
 msgid "Message"
 msgstr "Melding"
@@ -697,13 +714,20 @@ msgstr "Melding"
 #. module: portal
 #. odoo-python
 #: code:addons/portal/models/mail_thread.py:0
-msgid "Model %(model_name)s does not support token signature, as it does not have %(field_name)s field."
+msgid ""
+"Model %(model_name)s does not support token signature, as it does not have "
+"%(field_name)s field."
 msgstr ""
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "Multi company reports are not supported."
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_layout
+msgid "My account"
 msgstr ""
 
 #. module: portal
@@ -719,7 +743,7 @@ msgstr ""
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "New API Key"
 msgstr "Ny API nøkkel"
@@ -732,14 +756,8 @@ msgstr ""
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
-#: model_terms:ir.ui.view,arch_db:portal.pager
 msgid "Next"
 msgstr "Neste"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "No Documents to display"
-msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
@@ -832,25 +850,16 @@ msgid "Powered by"
 msgstr "Drevet av"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.pager
-msgid "Prev"
-msgstr "Forrige"
-
-#. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 msgid "Previous"
 msgstr "Tilbake"
 
 #. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/js/portal_chatter.js:0
-msgid "Published on %s"
-msgstr "Publisert %s"
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
-msgid "Put my email and phone in a block list to make sure I'm never contacted again"
+msgid ""
+"Put my email and phone in a block list to make sure I'm never contacted "
+"again"
 msgstr ""
 
 #. module: portal
@@ -890,6 +899,16 @@ msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Revoke All Sessions"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Save"
+msgstr "Lagre"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Scope"
 msgstr ""
 
@@ -905,7 +924,8 @@ msgstr "Sikkerhet"
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/js/portal_security.js:0
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Security Control"
 msgstr ""
 
@@ -927,10 +947,15 @@ msgstr ""
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal/static/src/js/portal_composer.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Send"
 msgstr "Send"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_contact
+msgid "Send message"
+msgstr "Send meldinger"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.portal_share_action
@@ -949,9 +974,16 @@ msgid "Sign in"
 msgstr "Logg på"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.frontend_layout
+msgid "Skip to Content"
+msgstr ""
+
+#. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal_composer.js:0
-msgid "Some fields are required. Please make sure to write a message or attach a document"
+msgid ""
+"Some fields are required. Please make sure to write a message or attach a "
+"document"
 msgstr ""
 
 #. module: portal
@@ -976,8 +1008,13 @@ msgid "Street"
 msgstr "Gate"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
+msgid "Street 2"
+msgstr "Adresse 2"
+
+#. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_signature.xml:0
+#: code:addons/portal/static/src/signature_form/signature_form.xml:0
 msgid "Thank You!"
 msgstr "Takk!"
 
@@ -990,20 +1027,17 @@ msgstr "Vedlegget %s kan ikke fjernes, da det er linket til en melding."
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
-msgid "The attachment %s cannot be removed because it is not in a pending state."
+msgid ""
+"The attachment %s cannot be removed because it is not in a pending state."
 msgstr "Vedlegget %s kan ikke fjernes, da det har status som avventende."
 
 #. module: portal
 #. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-msgid "The attachment %s does not exist or you do not have the rights to access it."
-msgstr "Vedlegget %s finnes ikke, eller du mangler tilgangsrettigheter til å vise det."
-
-#. module: portal
-#. odoo-python
 #: code:addons/portal/controllers/portal.py:0
-msgid "The attachment does not exist or you do not have the rights to access it."
-msgstr "Vedlegget finnes ikke, eller du mangler tilgangsrettigheter til å vise det."
+msgid ""
+"The attachment does not exist or you do not have the rights to access it."
+msgstr ""
+"Vedlegget finnes ikke, eller du mangler tilgangsrettigheter til å vise det."
 
 #. module: portal
 #. odoo-python
@@ -1016,12 +1050,6 @@ msgstr ""
 #: code:addons/portal/wizard/portal_wizard.py:0
 msgid "The contact \"%s\" has the same email as an existing user"
 msgstr ""
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/portal.py:0
-msgid "The document does not exist or you do not have the rights to access it."
-msgstr "Dokumentet finnes ikke, eller du mangler tilgangsrettigheter til å vise det."
 
 #. module: portal
 #. odoo-javascript
@@ -1038,7 +1066,8 @@ msgstr "Det nye passordet og bekreftelsen må være identiske."
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
-msgid "The old password you provided is incorrect, your password was not changed."
+msgid ""
+"The old password you provided is incorrect, your password was not changed."
 msgstr "Det gamle passordet du oppga, var feil, og passordet ble ikke endret."
 
 #. module: portal
@@ -1056,14 +1085,10 @@ msgstr ""
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
-msgid "The template \"Portal: new user\" not found for sending email to the portal user."
+msgid ""
+"The template \"Portal: new user\" not found for sending email to the portal "
+"user."
 msgstr ""
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-msgid "There are no comments for now."
-msgstr "Det er så langt ingen kommentarer."
 
 #. module: portal
 #. odoo-python
@@ -1078,23 +1103,33 @@ msgstr "Dette er en forhåndsvisning av kundeportalen."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
-msgid "This partner is linked to an internal User and already has access to the Portal."
+msgid ""
+"This partner is linked to an internal User and already has access to the "
+"Portal."
 msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
-msgid "This text is included at the end of the email sent to new portal users."
+msgid ""
+"This text is included at the end of the email sent to new portal users."
 msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
 msgid "This text is included in the email sent to new users of the portal."
-msgstr "Denne teksten blir med i e-postmeldingen som sendes til nye portalbrukere."
+msgstr ""
+"Denne teksten blir med i e-postmeldingen som sendes til nye portalbrukere."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Toggle filters"
 msgstr "Skru av/på filtre"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "Type in your password to confirm :"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
@@ -1132,12 +1167,6 @@ msgid "View"
 msgstr "Vis"
 
 #. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-msgid "Visible"
-msgstr "Synlig"
-
-#. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_calendar_event__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_crm_team__website_message_ids
@@ -1146,16 +1175,10 @@ msgstr "Synlig"
 #: model:ir.model.fields,field_description:portal.field_fleet_vehicle__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_contract__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_services__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_fleet_vehicle_model__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_gamification_badge__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_gamification_challenge__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_contract__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_department__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_employee__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_job__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_leave__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_leave_allocation__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_plan_employee_activity__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_loyalty_card__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_iap_account__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_lunch_supplier__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread__website_message_ids
@@ -1166,8 +1189,9 @@ msgstr "Synlig"
 #: model:ir.model.fields,field_description:portal.field_maintenance_equipment__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_maintenance_equipment_category__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_maintenance_request__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_note_note__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_phone_blacklist__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_product_category__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_product_pricelist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_product_product__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_product_template__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_rating_mixin__website_message_ids
@@ -1185,16 +1209,10 @@ msgstr "Meldinger fra nettsted"
 #: model:ir.model.fields,help:portal.field_fleet_vehicle__website_message_ids
 #: model:ir.model.fields,help:portal.field_fleet_vehicle_log_contract__website_message_ids
 #: model:ir.model.fields,help:portal.field_fleet_vehicle_log_services__website_message_ids
+#: model:ir.model.fields,help:portal.field_fleet_vehicle_model__website_message_ids
 #: model:ir.model.fields,help:portal.field_gamification_badge__website_message_ids
 #: model:ir.model.fields,help:portal.field_gamification_challenge__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_contract__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_department__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_employee__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_job__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_leave__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_leave_allocation__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_plan_employee_activity__website_message_ids
-#: model:ir.model.fields,help:portal.field_loyalty_card__website_message_ids
+#: model:ir.model.fields,help:portal.field_iap_account__website_message_ids
 #: model:ir.model.fields,help:portal.field_lunch_supplier__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread__website_message_ids
@@ -1205,8 +1223,9 @@ msgstr "Meldinger fra nettsted"
 #: model:ir.model.fields,help:portal.field_maintenance_equipment__website_message_ids
 #: model:ir.model.fields,help:portal.field_maintenance_equipment_category__website_message_ids
 #: model:ir.model.fields,help:portal.field_maintenance_request__website_message_ids
-#: model:ir.model.fields,help:portal.field_note_note__website_message_ids
 #: model:ir.model.fields,help:portal.field_phone_blacklist__website_message_ids
+#: model:ir.model.fields,help:portal.field_product_category__website_message_ids
+#: model:ir.model.fields,help:portal.field_product_pricelist__website_message_ids
 #: model:ir.model.fields,help:portal.field_product_product__website_message_ids
 #: model:ir.model.fields,help:portal.field_product_template__website_message_ids
 #: model:ir.model.fields,help:portal.field_rating_mixin__website_message_ids
@@ -1234,6 +1253,12 @@ msgstr "Skriv en melding ..."
 
 #. module: portal
 #. odoo-javascript
+#: code:addons/portal/static/src/chatter/core/composer_patch.js:0
+msgid "Write a message…"
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Write down your key"
 msgstr ""
@@ -1244,21 +1269,18 @@ msgid "Wrong password."
 msgstr ""
 
 #. module: portal
-#. odoo-python
-#: code:addons/portal/wizard/portal_share.py:0
-msgid "You are invited to access %s"
-msgstr "Du har fått tilgang til %s"
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid ""
+"You are about to log out from all devices that currently have access to this"
+" user's account."
+msgstr ""
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "You cannot leave any password empty."
 msgstr "Du kan ikke ha tomme passord."
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_share_template
-msgid "You have been invited to access the following document:"
-msgstr "Du har fått tilgang til følgende dokument:"
 
 #. module: portal
 #. odoo-javascript
@@ -1294,26 +1316,13 @@ msgstr "Postnummer"
 
 #. module: portal
 #. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-msgid "avatar"
-msgstr "avatar"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-msgid "comment"
-msgstr "kommentar"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-msgid "comments"
-msgstr "kommentarer"
-
-#. module: portal
-#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "full access"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_share_template
+msgid "has invited you to access the following"
 msgstr ""
 
 #. module: portal
@@ -1338,6 +1347,12 @@ msgstr "odoo"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "password"
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+msgid "revoke"
 msgstr ""
 
 #. module: portal

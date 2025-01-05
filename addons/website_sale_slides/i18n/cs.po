@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_slides
-#
+# 
 # Translators:
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
-# Martin Trigaux, 2022
-# Jiří Podhorecký, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Jiří Podhorecký, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: cs\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: website_sale_slides
@@ -32,32 +30,20 @@ msgid "<i class=\"fa fa-shopping-cart\"/> Add to Cart"
 msgstr "<i class=\"fa fa-shopping-cart\"/> Přidat do košíku"
 
 #. module: website_sale_slides
-#: model:ir.model.fields,help:website_sale_slides.field_product_product__detailed_type
-#: model:ir.model.fields,help:website_sale_slides.field_product_template__detailed_type
-msgid ""
-"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
-"A consumable product is a product for which stock is not managed.\n"
-"A service is a non-material product you provide."
-msgstr ""
-"Skladovatelný produkt je výrobek, pro který spravujete sklad. Musí být nainstalována aplikace Inventory. \n"
-"Spotřební materiál je výrobek, pro který není spravován sklad.\n"
-"Služba je nehmotný produkt, který poskytujete."
-
-#. module: website_sale_slides
 #. odoo-python
 #: code:addons/website_sale_slides/models/product_product.py:0
-msgid "Access to: %s%s"
+msgid "Access to: %(new_line)s%(channel_list)s"
 msgstr ""
 
 #. module: website_sale_slides
 #: model:product.template,name:website_sale_slides.product_course_channel_5_product_template
 msgid "Basics of Furniture Creation"
-msgstr ""
+msgstr "Základy tvorby nábytku"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.snippet_options
 msgid "Buy Now Button"
-msgstr ""
+msgstr "Tlačítko Koupit nyní"
 
 #. module: website_sale_slides
 #. odoo-javascript
@@ -69,7 +55,7 @@ msgstr "Kupte si kurz a ověřte své odpovědi!"
 #. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/slide_course_join.xml:0
 msgid "Buy this Course"
-msgstr ""
+msgstr "Koupit tento kurz"
 
 #. module: website_sale_slides
 #: model_terms:ir.actions.act_window,help:website_sale_slides.sale_report_action_slides
@@ -78,11 +64,11 @@ msgstr ""
 
 #. module: website_sale_slides
 #: model:ir.model,name:website_sale_slides.model_slide_channel
-#: model:ir.model.fields.selection,name:website_sale_slides.selection__product_template__detailed_type__course
 msgid "Course"
-msgstr "Kurs"
+msgstr "Kurz"
 
 #. module: website_sale_slides
+#: model:ir.model.fields.selection,name:website_sale_slides.selection__product_template__service_tracking__course
 #: model:product.template,name:website_sale_slides.default_product_course_product_template
 msgid "Course Access"
 msgstr ""
@@ -103,6 +89,12 @@ msgid "Courses"
 msgstr "Kurzy"
 
 #. module: website_sale_slides
+#: model:ir.model.fields,field_description:website_sale_slides.field_product_product__service_tracking
+#: model:ir.model.fields,field_description:website_sale_slides.field_product_template__service_tracking
+msgid "Create on Order"
+msgstr ""
+
+#. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__currency_id
 msgid "Currency"
 msgstr "Měna"
@@ -115,7 +107,7 @@ msgstr "Kurz vlastní výroby nábytku"
 #. module: website_sale_slides
 #: model:ir.model.fields,help:website_sale_slides.field_slide_channel__enroll
 msgid "Defines how people can enroll to your Course."
-msgstr ""
+msgstr "Definuje, jak se lidé mohou přihlásit do vašeho kurzu."
 
 #. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__enroll
@@ -129,20 +121,30 @@ msgid "Free Preview"
 msgstr "Náhled zdarma"
 
 #. module: website_sale_slides
+#. odoo-python
+#: code:addons/website_sale_slides/models/product_template.py:0
+msgid "Grant access to the eLearning course linked to this product."
+msgstr ""
+
+#. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_link
 msgid "Join this Course"
-msgstr ""
+msgstr "Připojit se k tomuto kurzu"
 
 #. module: website_sale_slides
 #. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/website_slides_unsubscribe.xml:0
-msgid "Leaving the course and re-enrolling afterwards means that you'll be charged again."
-msgstr "Opuštění kurzu a následná opětovná registrace znamená, že vám bude znovu účtováno."
+msgid ""
+"Leaving the course and re-enrolling afterwards means that you'll be charged "
+"again."
+msgstr ""
+"Opuštění kurzu a následná opětovná registrace znamená, že vám bude znovu "
+"účtováno."
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_button
 msgid "Log in"
-msgstr ""
+msgstr "Přihlásit se"
 
 #. module: website_sale_slides
 #: model_terms:ir.actions.act_window,help:website_sale_slides.sale_report_action_slides
@@ -176,15 +178,9 @@ msgid "Product"
 msgstr "Produkt"
 
 #. module: website_sale_slides
-#: model:ir.model.fields,field_description:website_sale_slides.field_product_product__detailed_type
-#: model:ir.model.fields,field_description:website_sale_slides.field_product_template__detailed_type
-msgid "Product Type"
-msgstr "Typ výrobku"
-
-#. module: website_sale_slides
 #: model:ir.model,name:website_sale_slides.model_product_product
 msgid "Product Variant"
-msgstr "Varianta výrobku"
+msgstr "Produktová varianta"
 
 #. module: website_sale_slides
 #: model:ir.model.constraint,message:website_sale_slides.constraint_slide_channel_product_id_check
@@ -194,7 +190,7 @@ msgstr "U platebních kanálů je vyžadován produkt."
 #. module: website_sale_slides
 #: model:ir.ui.menu,name:website_sale_slides.website_slides_menu_report_revenues
 msgid "Revenues"
-msgstr "Příjmy"
+msgstr "Tržby"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.slide_channel_view_form
@@ -222,12 +218,12 @@ msgstr "Přihlaste se a kupte si kurz, abyste mohli absolvovat kvíz"
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_button
 msgid "Sign up"
-msgstr ""
+msgstr "Přihlásit se"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
 msgid "Start Learning"
-msgstr ""
+msgstr "Začněte cvičit"
 
 #. module: website_sale_slides
 #: model:product.template,name:website_sale_slides.product_course_channel_1_product_template
@@ -237,7 +233,7 @@ msgstr "Kurz péče o stromy"
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_button
 msgid "There are some"
-msgstr ""
+msgstr "Tam jsou nějací"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_main
@@ -261,15 +257,14 @@ msgid "Total revenues"
 msgstr "Celkové příjmy"
 
 #. module: website_sale_slides
-#: model:ir.model,name:website_sale_slides.model_website
-msgid "Website"
-msgstr "Webstránka"
-
-#. module: website_sale_slides
 #. odoo-python
 #: code:addons/website_sale_slides/models/slide_channel.py:0
-msgid "You are not allowed to add members to this course. Please contact the course responsible or an administrator."
+msgid ""
+"You are not allowed to add members to this course. Please contact the course"
+" responsible or an administrator."
 msgstr ""
+"Nemáte povolení přidávat členy do tohoto kurzu. Obraťte se prosím na "
+"odpovědnou osobu kurzu nebo administrátora."
 
 #. module: website_sale_slides
 #. odoo-python
@@ -280,7 +275,7 @@ msgstr ""
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
 msgid "You have gained access to the following course(s):"
-msgstr ""
+msgstr "Získali jste přístup k následujícím lekcím"
 
 #. module: website_sale_slides
 #: model:ir.actions.act_window,name:website_sale_slides.sale_report_action_slides
@@ -295,7 +290,7 @@ msgstr "Analýza prodeje eLearningu"
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_main
 msgid "is not published."
-msgstr ""
+msgstr "není zveřejněno."
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_button
@@ -305,9 +300,9 @@ msgstr ""
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
 msgid "step(s)"
-msgstr ""
+msgstr "krok(y)"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_link
 msgid "to access resources"
-msgstr ""
+msgstr "pro přístup ke zdrojům"

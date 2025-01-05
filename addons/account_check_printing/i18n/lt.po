@@ -1,35 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_check_printing
-#
+# 
 # Translators:
-# Rytis Štreimikis <r.streimikis@hotmail.lt>, 2022
-# grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
-# Arunas V. <arunas@devoro.com>, 2022
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2022
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Linas Versada <linaskrisiukenas@gmail.com>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
-"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: lt\n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
-msgid ": Check Number Sequence"
+msgid "%(journal)s: Check Number Sequence"
+msgstr ""
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
+msgid "<span>&amp;nbsp;</span>"
 msgstr ""
 
 #. module: account_check_printing
@@ -39,8 +37,12 @@ msgstr ""
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_left
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_right
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_top
-msgid "Adjust the margins of generated checks to make it fit your printer's settings."
-msgstr "Nustatykite sugeneruotų čekių paraštes, kad jos tiktų prie jūsų spausdintuvo nustatymų."
+msgid ""
+"Adjust the margins of generated checks to make it fit your printer's "
+"settings."
+msgstr ""
+"Nustatykite sugeneruotų čekių paraštes, kad jos tiktų prie jūsų spausdintuvo"
+" nustatymų."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
@@ -53,6 +55,7 @@ msgid "Cancel"
 msgstr "Atšaukti"
 
 #. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__bank_check_printing_layout
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid "Check Layout"
@@ -108,6 +111,8 @@ msgid "Check to print"
 msgstr "Kvitas spausdinimui"
 
 #. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
 #: model:account.payment.method,name:account_check_printing.account_payment_method_check
 msgid "Checks"
 msgstr "Kvitai"
@@ -140,11 +145,6 @@ msgid "Config Settings"
 msgstr "Konfigūracijos nustatymai"
 
 #. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_res_partner
-msgid "Contact"
-msgstr "Kontaktas"
-
-#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_uid
 msgid "Created by"
 msgstr "Sukūrė"
@@ -155,7 +155,17 @@ msgid "Created on"
 msgstr "Sukurta"
 
 #. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
+msgid "Default"
+msgstr "Numatytasis"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment_method__display_name
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Rodomas pavadinimas"
 
@@ -166,25 +176,34 @@ msgid "Go to the configuration panel"
 msgstr "Eiti į nustatymų skydelį"
 
 #. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_layout_available
+msgid "Has Check Layout"
+msgstr ""
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__id
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__id
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment_method__id
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__id
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__id
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "In order to print multiple checks at once, they must belong to the same bank journal."
-msgstr "Norint atspausdinti daugiau nei vieną kvitą vienu metu, jie turi priklausyti tam pačiam bankiniam žurnalui."
+msgid ""
+"In order to print multiple checks at once, they must belong to the same bank"
+" journal."
+msgstr ""
+"Norint atspausdinti daugiau nei vieną kvitą vienu metu, jie turi priklausyti"
+" tam pačiam bankiniam žurnalui."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
 msgid "Journal"
 msgstr "Žurnalas"
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_move
-msgid "Journal Entry"
-msgstr "Žurnalo įrašas"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_uid
@@ -212,6 +231,12 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"Rankinis: gaukite mokėjimą bet kokiu būdu ne „Odoo“.\n"
+"Mokėjimo Tiekėjai: Kiekvienas mokėjimo tiekėjas turi savo mokėjimo būdą. Pateikite operaciją kortele naudodami mokėjimo žetoną, kurį partneris išsaugo pirkimo ar prenumeratos metu internete.\n"
+"Čekis: Apmokėkite sąskaitas čekiu ir atsispausdinkite jį iš Odoo.\n"
+"Grupinis Depozitas: Surinkite kelis klientų čekius vienu metu, generuodami ir pateikdami grupinį depozitą savo bankui. Reikalingas modulis account_batch_payment.\n"
+"SEPA Kreditinis Pervedimas: Atlikite mokėjimus SEPA zonoje pateikdami SEPA Kreditinio Pervedimo failą savo bankui. Reikalingas modulis account_sepa.\n"
+"SEPA Tiesioginis Debetas: Gaukite mokėjimus SEPA zonoje naudodamiesi mandatu, kurį jums suteikė jūsų partneris. Reikalingas modulis account_sepa.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -239,8 +264,6 @@ msgstr "Nieko"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_line_id
-#: model:ir.model.fields,field_description:account_check_printing.field_res_partner__property_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_res_users__property_payment_method_id
 msgid "Payment Method"
 msgstr "Mokėjimo būdas"
 
@@ -257,26 +280,21 @@ msgstr "Mokėjimai"
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "Payments to print as a checks must have 'Check' selected as payment method and not have already been reconciled"
-msgstr "Mokėjimai, kuriuos spausdinsite kaip kvitus, turi turėti pažymėtą mokėjimo būdą \"Kvitas\" ir jis neturi būti sudengtas"
+msgid ""
+"Payments to print as a checks must have 'Check' selected as payment method "
+"and not have already been reconciled"
+msgstr ""
+"Mokėjimai, kuriuos spausdinsite kaip kvitus, turi turėti pažymėtą mokėjimo "
+"būdą \"Kvitas\" ir jis neturi būti sudengtas"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid "Please enter the number of the first pre-printed check that you are about to print on."
-msgstr "Įveskite pirmojo iš anksto atspausdinto kvito, kurį rengiatės spausdinti, numerį."
-
-#. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_bank_statement_line__preferred_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
-msgid "Preferred Payment Method"
+msgid ""
+"Please enter the number of the first pre-printed check that you are about to"
+" print on."
 msgstr ""
-
-#. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
-#: model:ir.model.fields,help:account_check_printing.field_res_users__property_payment_method_id
-msgid "Preferred payment method when paying this vendor. This is used to filter vendor bills by preferred payment method to register payments in mass. Use cases: create bank files for batch wires, check runs."
-msgstr ""
+"Įveskite pirmojo iš anksto atspausdinto kvito, kurį rengiatės spausdinti, "
+"numerį."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -306,11 +324,6 @@ msgstr "Spausdinti datos etiketę"
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid "Print Pre-numbered Checks"
 msgstr "Spausdinti iš anksto sunumeruotus kvitus"
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_payment_register
-msgid "Register Payment"
-msgstr "Užregistruoti mokėjimą"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
@@ -345,7 +358,9 @@ msgstr ""
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "Something went wrong with Check Layout, please select another layout in Invoicing/Accounting Settings and try again."
+msgid ""
+"Something went wrong with Check Layout, please select another layout in "
+"Invoicing/Accounting Settings and try again."
 msgstr ""
 
 #. module: account_check_printing
@@ -359,19 +374,33 @@ msgstr ""
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
-msgid "The last check number was %s. In order to avoid a check being rejected by the bank, you can only use a greater number."
-msgstr "Paskutinio kvito numeris buvo %s. Norėdami išvengti banko čekio atmetimo, galite naudoti tik didesnį numerį."
+msgid ""
+"The last check number was %s. In order to avoid a check being rejected by "
+"the bank, you can only use a greater number."
+msgstr ""
+"Paskutinio kvito numeris buvo %s. Norėdami išvengti banko čekio atmetimo, "
+"galite naudoti tik didesnį numerį."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
-msgid "The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers or if the current numbering is wrong, you can change it in the journal configuration page."
-msgstr "Pasirinktas žurnalas yra nustatytas kvitų spausdinimui. Jei jūsų iš anksto atspausdinti kvitai jau turi numerius ar jie yra neteisingi, galite juos pakeisti žurnalo nustatymų puslapyje."
+msgid ""
+"The selected journal is configured to print check numbers. If your pre-"
+"printed check paper already has numbers or if the current numbering is "
+"wrong, you can change it in the journal configuration page."
+msgstr ""
+"Pasirinktas žurnalas yra nustatytas kvitų spausdinimui. Jei jūsų iš anksto "
+"atspausdinti kvitai jau turi numerius ar jie yra neteisingi, galite juos "
+"pakeisti žurnalo nustatymų puslapyje."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
-msgid "This option allows you to print check details (stub) on multiple pages if they don't fit on a single page."
-msgstr "Šis pasirinkimas leidžia jums spausdinti čekio informaciją (šaknelę) keliuose puslapiuose, jei ji netelpa viename."
+msgid ""
+"This option allows you to print check details (stub) on multiple pages if "
+"they don't fit on a single page."
+msgstr ""
+"Šis pasirinkimas leidžia jums spausdinti čekio informaciją (šaknelę) "
+"keliuose puslapiuose, jei ji netelpa viename."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -383,7 +412,8 @@ msgstr ""
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid "This will allow to save on payments the number of the corresponding check."
+msgid ""
+"This will allow to save on payments the number of the corresponding check."
 msgstr "Tai leis mokėjimuose išsaugoti susijusio kvito numerį."
 
 #. module: account_check_printing
@@ -399,5 +429,7 @@ msgstr ""
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "You have to choose a check layout. For this, go in Invoicing/Accounting Settings, search for 'Checks layout' and set one."
+msgid ""
+"You have to choose a check layout. For this, go in Invoicing/Accounting "
+"Settings, search for 'Checks layout' and set one."
 msgstr ""

@@ -1,46 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_slides
-#
+# 
 # Translators:
-# Sandra Franch <sandra.franch@upc.edu>, 2022
-# ericrolo, 2022
-# José Cabrera Lozano <jose.cabrera@edukative.es>, 2022
-# Susanna Pujol, 2022
-# Mohamed Sallam, 2022
-# Eric Antones <eantones@users.noreply.github.com>, 2022
-# Jonatan Gk, 2022
-# Harcogourmet, 2022
-# CristianCruzParra, 2022
-# Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
-# Quim - eccit <quim@eccit.com>, 2022
-# M Palau <mpalau@tda.ad>, 2022
-# Carles Antoli <carlesantoli@hotmail.com>, 2022
-# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
-# Martin Trigaux, 2022
-# RGB Consulting <odoo@rgbconsulting.com>, 2022
-# oscaryuu, 2022
-# eriiikgt, 2022
-# marcescu, 2022
-# Arnau Ros, 2022
-# Cristian Cruz, 2022
-# jabelchi, 2022
-# jabiri7, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
-# martioodo hola, 2023
-#
+# Wil Odoo, 2024
+# Jonatan Gk, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: martioodo hola, 2023\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Jonatan Gk, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
-"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_slides
@@ -154,7 +131,7 @@ msgstr "(buit)"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid ". This way, they will be secured."
 msgstr ". D'aquesta manera, estaran segurs."
 
@@ -182,8 +159,11 @@ msgstr "<b>Ordena per</b>"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
-msgid "<b>Save & Publish</b> your lesson to make it available to your attendees."
-msgstr "<b>Desar & Publicar</b> la vostra lliçó per posar-la a disposició dels vostres assistents."
+msgid ""
+"<b>Save & Publish</b> your lesson to make it available to your attendees."
+msgstr ""
+"<b>Desar & Publicar</b> la vostra lliçó per posar-la a disposició dels "
+"vostres assistents."
 
 #. module: website_slides
 #. odoo-javascript
@@ -201,7 +181,7 @@ msgstr "<b>Sense categoria</b>"
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hello<br><br>\n"
+"        Hello<br/><br/>\n"
 "        You have been enrolled to a new course: <t t-out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
@@ -213,7 +193,7 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hello<br><br>\n"
+"        Hello<br/><br/>\n"
 "        You have been invited to check out this course: <t t-out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
@@ -225,10 +205,10 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                        <p style=\"margin: 0px;\">Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br>\n"
+"                        <p style=\"margin: 0px;\">Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
 "                        <p><b>Congratulations!</b></p>\n"
 "                        <p>You've completed the course <b t-out=\"object.channel_id.name or ''\">Basics of Gardening</b></p>\n"
-"                        <p>Check out the other available courses.</p><br>\n"
+"                        <p>Check out the other available courses.</p><br/>\n"
 "\n"
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
 "                            <a href=\"/slides/all\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
@@ -236,9 +216,9 @@ msgid ""
 "                            </a>\n"
 "                        </div>\n"
 "                        Enjoy this exclusive content!\n"
-"                        <t t-if=\"object.channel_id.user_id.signature\">\n"
-"                            <br>\n"
-"                            <t t-out=\"object.channel_id.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"                        <t t-if=\"object.channel_id.user_id.signature\" data-o-mail-quote-container=\"1\">\n"
+"                            <br/>\n"
+"                            <t t-out=\"object.channel_id.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "                        </t>\n"
 "                    </div>\n"
 "                </div>\n"
@@ -250,22 +230,22 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                        Hello<br><br>\n"
+"                        Hello<br/><br/>\n"
 "                        <t t-out=\"user.name or ''\">Mitchell Admin</t> shared the <strong t-out=\"object.name or ''\">document</strong> with you!\n"
-"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                        </p><div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
 "                            <a t-att-href=\"object.website_url\">\n"
-"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.channel/{{ object.id }}/image_256\" style=\"height:auto; width:150px; margin: 16px;\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.channel/{{ object.id }}/image_256\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
 "                            </a>\n"
 "                        </div>\n"
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
 "                            <a t-att-href=\"object.website_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px;                                 text-decoration: none; color: #fff; border-radius: 5px;\">\n"
 "                                View <strong t-out=\"object.name or ''\">Document</strong></a>\n"
 "                        </div>\n"
-"                        <t t-if=\"user.signature\">\n"
-"                            <br>\n"
-"                            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"                        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"                            <br/>\n"
+"                            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "                        </t>\n"
-"                    </p>\n"
+"                    \n"
 "                </div>\n"
 "            "
 msgstr ""
@@ -275,21 +255,21 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                        Hello<br><br>\n"
+"                        Hello<br/><br/>\n"
 "                        <t t-out=\"user.name or ''\">Mitchell Admin</t> shared the <t t-out=\"object.slide_category or ''\">document</t> <strong t-out=\"object.name or ''\">Trees</strong> with you!\n"
-"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                        </p><div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
 "                            <a t-att-href=\"(object.website_share_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\">\n"
-"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
 "                            </a>\n"
 "                        </div>\n"
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
 "                            <a t-att-href=\"(object.website_share_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">View <strong t-out=\"object.name or ''\">Trees</strong></a>\n"
 "                        </div>\n"
-"                        <t t-if=\"user.signature\">\n"
-"                            <br>\n"
-"                            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"                        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"                            <br/>\n"
+"                            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "                        </t>\n"
-"                    </p>\n"
+"                    \n"
 "                </div>\n"
 "            "
 msgstr ""
@@ -299,13 +279,13 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                        Hello<br><br>\n"
-"                        There is something new in the course <strong t-out=\"object.channel_id.name or ''\">Trees, Wood and Gardens</strong> you are following:<br><br>\n"
-"                        <center><strong t-out=\"object.name or ''\">Trees</strong></center>\n"
+"                        Hello<br/><br/>\n"
+"                        There is something new in the course <strong t-out=\"object.channel_id.name or ''\">Trees, Wood and Gardens</strong> you are following:<br/><br/>\n"
+"                        </p><center><strong t-out=\"object.name or ''\">Trees</strong></center>\n"
 "                        <t t-if=\"object.image_1024\">\n"
 "                            <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
 "                                <a t-att-href=\"object.website_share_url\">\n"
-"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
 "                            </a>\n"
 "                        </div>\n"
 "                        </t>\n"
@@ -313,13 +293,18 @@ msgid ""
 "                            <a t-att-href=\"object.website_share_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">View content</a>\n"
 "                        </div>\n"
 "                        Enjoy this exclusive content!\n"
-"                        <t t-if=\"user.signature\">\n"
-"                            <br>\n"
-"                            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"                        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"                            <br/>\n"
+"                            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "                        </t>\n"
-"                    </p>\n"
+"                    \n"
 "                </div>\n"
 "            "
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
+msgid "<i class=\"fa fa-arrow-right\"/> Start Learning"
 msgstr ""
 
 #. module: website_slides
@@ -329,8 +314,12 @@ msgstr "<i class=\"fa fa-bar-chart\"/> Estadístiques"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
-msgid "<i class=\"fa fa-bars\"/><span class=\"d-none d-md-inline-block ms-1\">Lessons</span>"
-msgstr "<i class=\"fa fa-bars\"/><span class=\"d-none d-md-inline-block ms-1\">Lliçons</span>"
+msgid ""
+"<i class=\"fa fa-bars\"/><span class=\"d-none d-md-inline-block "
+"ms-1\">Lessons</span>"
+msgstr ""
+"<i class=\"fa fa-bars\"/><span class=\"d-none d-md-inline-block "
+"ms-1\">Lliçons</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
@@ -346,7 +335,8 @@ msgstr "<i class=\"fa fa-check\"/> completat"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "<i class=\"fa fa-circle-o-notch fa-spin me-2\"/><b>Loading...</b>"
-msgstr "<i class=\"fa fa-circle-o-notch fa-spin me-2\"/><b>S'està carregant...</b>"
+msgstr ""
+"<i class=\"fa fa-circle-o-notch fa-spin me-2\"/><b>S'està carregant...</b>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
@@ -360,8 +350,12 @@ msgstr "<i class=\"fa fa-clipboard\"/> Copia l'enllaç"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid "<i class=\"fa fa-clock-o me-2\" aria-label=\"Duration\" role=\"img\" title=\"Duration\"/>"
-msgstr "<i class=\"fa fa-clock-o me-2\" aria-label=\"Duration\" role=\"img\" title=\"Duration\"/>"
+msgid ""
+"<i class=\"fa fa-clock-o me-2\" aria-label=\"Duration\" role=\"img\" "
+"title=\"Duration\"/>"
+msgstr ""
+"<i class=\"fa fa-clock-o me-2\" aria-label=\"Duration\" role=\"img\" "
+"title=\"Duration\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -376,11 +370,9 @@ msgstr "<i class=\"fa fa-comments\"/> Comentaris ("
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid ""
-"<i class=\"fa fa-desktop me-2\"/>\n"
-"                <span class=\"d-none d-sm-inline-block\">Fullscreen</span>"
+"<i class=\"fa fa-desktop me-xl-2 my-1\"/>\n"
+"                <span class=\"d-none d-xl-inline-block\">Fullscreen</span>"
 msgstr ""
-"<i class=\"fa fa-desktop me-2\"/>\n"
-"                <span class=\"d-none d-sm-inline-block\">Pantalla completa</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -399,8 +391,12 @@ msgstr "<i class=\"fa fa-eraser\"/> Netejar filtres"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
-msgid "<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-label=\"Attention\" title=\"Attention\"/> This document is private."
-msgstr "<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-label=\"Attention\" title=\"Attention\"/> Aquest document es privat."
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
+"label=\"Attention\" title=\"Attention\"/> This document is private."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
+"label=\"Attention\" title=\"Attention\"/> Aquest document es privat."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -409,23 +405,39 @@ msgstr "<i class=\"fa fa-eye me-2\" aria-label=\"Views\" role=\"img\" title=\"Vi
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid "<i class=\"fa fa-file-code-o me-2\" aria-label=\"article\" role=\"img\" title=\"Article\"/>"
-msgstr "<i class=\"fa fa-file-code-o me-2\" aria-label=\"article\" role=\"img\" title=\"Article\"/>"
+msgid ""
+"<i class=\"fa fa-file-code-o me-2\" aria-label=\"article\" role=\"img\" "
+"title=\"Article\"/>"
+msgstr ""
+"<i class=\"fa fa-file-code-o me-2\" aria-label=\"article\" role=\"img\" "
+"title=\"Article\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid "<i class=\"fa fa-file-image-o me-2\" aria-label=\"Infographic\" role=\"img\" title=\"Infographic\"/>"
-msgstr "<i class=\"fa fa-file-image-o me-2\" aria-label=\"Infographic\" role=\"img\" title=\"Infographic\"/>"
+msgid ""
+"<i class=\"fa fa-file-image-o me-2\" aria-label=\"Infographic\" role=\"img\""
+" title=\"Infographic\"/>"
+msgstr ""
+"<i class=\"fa fa-file-image-o me-2\" aria-label=\"Infographic\" role=\"img\""
+" title=\"Infographic\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid "<i class=\"fa fa-file-pdf-o me-2\" aria-label=\"Document\" role=\"img\" title=\"Document\"/>"
-msgstr "<i class=\"fa fa-file-pdf-o me-2\" aria-label=\"Document\" role=\"img\" title=\"Document\"/>"
+msgid ""
+"<i class=\"fa fa-file-pdf-o me-2\" aria-label=\"Document\" role=\"img\" "
+"title=\"Document\"/>"
+msgstr ""
+"<i class=\"fa fa-file-pdf-o me-2\" aria-label=\"Document\" role=\"img\" "
+"title=\"Document\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid "<i class=\"fa fa-file-video-o me-2\" aria-label=\"Video\" role=\"img\" title=\"Video\"/>"
-msgstr "<i class=\"fa fa-file-video-o me-2\" aria-label=\"Video\" role=\"img\" title=\"Video\"/>"
+msgid ""
+"<i class=\"fa fa-file-video-o me-2\" aria-label=\"Video\" role=\"img\" "
+"title=\"Video\"/>"
+msgstr ""
+"<i class=\"fa fa-file-video-o me-2\" aria-label=\"Video\" role=\"img\" "
+"title=\"Video\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -439,8 +451,8 @@ msgstr "<i class=\"fa fa-flag text-warning\"/> Questionari"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen_sidebar_category
-msgid "<i class=\"fa fa-flag-checkered text-warning me-2\"/>Quiz"
-msgstr "<i class=\"fa fa-flag-checkered text-warning me-2\"/>Qüestionari"
+msgid "<i class=\"fa fa-flag-checkered text-warning\"/>Quiz"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
@@ -474,8 +486,12 @@ msgstr "<i class=\"fa fa-home\"/> Curs"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
-msgid "<i class=\"fa fa-home\"/><span class=\"d-none d-md-inline-block ms-1\">Back to course</span>"
-msgstr "<i class=\"fa fa-home\"/><span class=\"d-none d-md-inline-block ms-1\">Torna al curs</span>"
+msgid ""
+"<i class=\"fa fa-home\"/><span class=\"d-none d-md-inline-block ms-1\">Back "
+"to course</span>"
+msgstr ""
+"<i class=\"fa fa-home\"/><span class=\"d-none d-md-inline-block ms-1\">Torna"
+" al curs</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
@@ -486,8 +502,12 @@ msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
-msgid "<i class=\"fa fa-plus me-1\"/> <span class=\"d-none d-md-inline-block\">Add Content</span>"
-msgstr "<i class=\"fa fa-plus me-1\"/> <span class=\"d-none d-md-inline-block\">Afegeix contingut</span>"
+msgid ""
+"<i class=\"fa fa-plus me-1\"/> <span class=\"d-none d-md-inline-block\">Add "
+"Content</span>"
+msgstr ""
+"<i class=\"fa fa-plus me-1\"/> <span class=\"d-none d-md-inline-"
+"block\">Afegeix contingut</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
@@ -514,17 +534,19 @@ msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid "<i class=\"fa fa-question me-2\" aria-label=\"Number of Questions\" role=\"img\" title=\"Number of Questions\"/>"
-msgstr "<i class=\"fa fa-question me-2\" aria-label=\"Number of Questions\" role=\"img\" title=\"Number of Questions\"/>"
+msgid ""
+"<i class=\"fa fa-question me-2\" aria-label=\"Number of Questions\" "
+"role=\"img\" title=\"Number of Questions\"/>"
+msgstr ""
+"<i class=\"fa fa-question me-2\" aria-label=\"Number of Questions\" "
+"role=\"img\" title=\"Number of Questions\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid ""
-"<i class=\"fa fa-share-alt me-2\"/>\n"
-"                <span class=\"d-none d-sm-inline-block\">Share</span>"
+"<i class=\"fa fa-share-alt me-xl-2 my-1\"/>\n"
+"                <span class=\"d-none d-xl-inline-block\">Share</span>"
 msgstr ""
-"<i class=\"fa fa-share-alt me-2\"/>\n"
-"                <span class=\"d-none d-sm-inline-block\">Comparteix</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -551,8 +573,12 @@ msgstr "<i class=\"fa fa-share-alt\"/> Compartir"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
-msgid "<i class=\"fa fa-sign-out\"/><span class=\"d-none d-md-inline-block ms-1\">Exit Fullscreen</span>"
-msgstr "<i class=\"fa fa-sign-out\"/><span class=\"d-none d-md-inline-block ms-1\">Surt de la pantalla completa</span>"
+msgid ""
+"<i class=\"fa fa-sign-out\"/><span class=\"d-none d-md-inline-block "
+"ms-1\">Exit Fullscreen</span>"
+msgstr ""
+"<i class=\"fa fa-sign-out\"/><span class=\"d-none d-md-inline-block "
+"ms-1\">Surt de la pantalla completa</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -570,7 +596,9 @@ msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid "<i class=\"oi oi-chevron-left me-2\"/> <span class=\"d-none d-sm-inline-block\">Prev</span>"
+msgid ""
+"<i class=\"oi oi-chevron-left me-2\"/> <span class=\"d-none d-sm-inline-"
+"block\">Prev</span>"
 msgstr ""
 
 #. module: website_slides
@@ -586,48 +614,57 @@ msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_main
-msgid "<small><span class=\"badge rounded-pill text-bg-success fw-normal\"><i class=\"fa fa-check\"/> Completed</span></small>"
-msgstr "<small><span class=\"badge rounded-pill text-bg-success fw-normal\"><i class=\"fa fa-check\"/> Completat</span></small>"
+msgid ""
+"<small><span class=\"badge text-bg-success fw-normal\"><i class=\"fa fa-"
+"check\"/> Completed</span></small>"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid ""
-"<span class=\"badge fw-bold px-2 py-1 m-1 text-bg-warning\">\n"
+"<span class=\"badge fw-bold m-1 text-bg-warning\">\n"
 "                            <i class=\"fa fa-fw fa-flag\"/> 10 xp\n"
 "                        </span>"
 msgstr ""
-"<span class=\"badge fw-bold px-2 py-1 m-1 text-bg-warning\">\n"
-"                            <i class=\"fa fa-fw fa-flag\"/> 10 xp\n"
-"                        </span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
+msgid ""
+"<span class=\"badge text-bg-info badge-arrow-right fw-normal "
+"m-1\">New</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
+msgid ""
+"<span class=\"badge text-bg-primary badge-hide fw-normal m-1\">Add "
+"Quiz</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
+msgid ""
+"<span class=\"badge text-bg-success fw-normal "
+"m-1\"><span>Preview</span></span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
+msgid "<span class=\"badge text-bg-success fw-normal m-1\">Preview</span>"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card
-msgid "<span class=\"badge rounded-pill text-bg-success pull-right py-1 px-2\"><i class=\"fa fa-check\"/> Completed</span>"
-msgstr "<span class=\"badge rounded-pill text-bg-success pull-right py-1 px-2\"><i class=\"fa fa-check\"/> completat</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
-msgid "<span class=\"badge text-bg-info badge-arrow-right fw-normal px-2 py-1 m-1\">New</span>"
-msgstr "<span class=\"badge text-bg-info badge-arrow-right fw-normal px-2 py-1 m-1\">Nou</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
-msgid "<span class=\"badge text-bg-light badge-hide border fw-normal px-2 py-1 m-1\">Add Quiz</span>"
-msgstr "<span class=\"badge text-bg-light badge-hide border fw-normal px-2 py-1 m-1\">Afegeix un qüestionari</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
-msgid "<span class=\"badge text-bg-success fw-normal px-2 py-1 m-1\"><span>Preview</span></span>"
-msgstr "<span class=\"badge text-bg-success fw-normal px-2 py-1 m-1\"><span>Previsualització</span></span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
-msgid "<span class=\"badge text-bg-success fw-normal px-2 py-1 m-1\">Preview</span>"
-msgstr "<span class=\"badge text-bg-success fw-normal px-2 py-1 m-1\">Previsualització</span>"
+msgid ""
+"<span class=\"badge text-bg-success pull-right\"><i class=\"fa fa-check\"/> "
+"Completed</span>"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid "<span class=\"d-none d-sm-inline-block\">Next</span> <i class=\"oi oi-chevron-right ms-2\"/>"
+msgid ""
+"<span class=\"d-none d-sm-inline-block\">Next</span> <i class=\"oi oi-"
+"chevron-right ms-2\"/>"
 msgstr ""
 
 #. module: website_slides
@@ -657,6 +694,11 @@ msgstr ""
 msgid ""
 "<span class=\"o_form_label\">Slides</span>\n"
 "                    <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "<span class=\"o_stat_text\">Attendees</span>"
 msgstr ""
 
 #. module: website_slides
@@ -692,16 +734,6 @@ msgid "<span class=\"text-500 mx-2\">•</span>"
 msgstr "<span class=\"text-500 mx-2\">•</span>"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
-msgid "<span class=\"text-bg-danger\">Archived</span>"
-msgstr ""
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
-msgid "<span class=\"text-bg-success\">Published</span>"
-msgstr ""
-
-#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid ""
 "<span class=\"text-muted fw-bold col-4 col-md-3\">\n"
@@ -720,19 +752,28 @@ msgid "<span class=\"text-muted fw-bold me-3\">Rating</span>"
 msgstr "<span class=\"text-muted fw-bold me-3\">Valoració</span>"
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
+msgid ""
+"<span class=\"text-muted text-truncate mw-100\" "
+"title=\"Invited\">Invited</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
+msgid ""
+"<span class=\"text-muted text-truncate mw-100\" "
+"title=\"Ongoing\">Ongoing</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
+msgid "<span class=\"text-muted text-truncate mw-100\" title=\"Total\">Total</span>"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid "<span class=\"text-muted\">Common tasks for a computer scientist</span>"
 msgstr "<span class=\"text-muted\">Tasques habituals d'un informátic</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
-msgid "<span class=\"text-muted\">Invited</span>"
-msgstr ""
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
-msgid "<span class=\"text-muted\">Ongoing</span>"
-msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
@@ -740,11 +781,6 @@ msgid "<span class=\"text-muted\">Parts of computer science</span>"
 msgstr "<span class=\"text-muted\">Parts de l'informática</span>"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
-msgid "<span class=\"text-muted\">Total</span>"
-msgstr ""
-
-#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
 "<span id=\"first\" class=\"me-1 me-sm-2\" title=\"First slide\" aria-label=\"First slide\" role=\"button\"><i class=\"fa fa-step-backward\"/></span>\n"
@@ -787,18 +823,29 @@ msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
-msgid "<span name=\"done_members_count_label\" class=\"text-muted\">Finished</span>"
-msgstr "<span name=\"done_members_count_label\" class=\"text-muted\">Acabat</span>"
+msgid ""
+"<span name=\"done_members_count_label\" class=\"text-muted text-truncate "
+"mw-100\" title=\"Finished\">Finished</span>"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
-msgid "<span name=\"members_completed_count_label\" class=\"o_stat_text\">Finished</span>"
+msgid ""
+"<span name=\"members_completed_count_label\" "
+"class=\"o_stat_text\">Finished</span>"
 msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "<span> hours</span>"
 msgstr "<span> hores</span>"
+
+#. module: website_slides
+#: model_terms:web_tour.tour,rainbow_man_message:website_slides.slides_tour
+msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
+msgstr ""
+"<span><b>Bona feina!</b> Has completat tots els passos d'aquest "
+"recorregut.</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
@@ -886,8 +933,9 @@ msgstr "Una fruita"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
-msgid "A good course has a structure. Pick a name for your first section and click <b>Save</b> to create it."
-msgstr "Un bon curs té una estructura. Triï un nom per a la seva primera secció i faci clic en <b>Guardar</b> per a crear-lo."
+msgid ""
+"A good course has a structure. Pick a name for your first <b>Section</b>."
+msgstr ""
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_4
@@ -897,8 +945,12 @@ msgstr "Un xat petit amb Harry Potted"
 #. module: website_slides
 #: model_terms:slide.channel,description:website_slides.slide_channel_demo_2_gard2
 #: model_terms:slide.channel,description_short:website_slides.slide_channel_demo_2_gard2
-msgid "A lot of nice documentation: trees, wood, gardens. A gold mine for references."
-msgstr "Molta documentació bonica: arbres, fusta, jardins. Una mina d'or per a les referències."
+msgid ""
+"A lot of nice documentation: trees, wood, gardens. A gold mine for "
+"references."
+msgstr ""
+"Molta documentació bonica: arbres, fusta, jardins. Una mina d'or per a les "
+"referències."
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_channel_partner_channel_partner_uniq
@@ -942,13 +994,21 @@ msgstr "Un resum del saber fer: com i què."
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_0_0
-msgid "A summary of know-how: how and what. All the basics for this course about gardening."
-msgstr "Un resum del saber fer: com i què. Tot el bàsic per a aquest curs sobre jardineria."
+msgid ""
+"A summary of know-how: how and what. All the basics for this course about "
+"gardening."
+msgstr ""
+"Un resum del saber fer: com i què. Tot el bàsic per a aquest curs sobre "
+"jardineria."
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_2_0
-msgid "A summary of know-how: what are the main trees categories and how to differentiate them."
-msgstr "Un resum dels coneixements tècnics: quines són les principals categories d'arbres i com diferenciar-les."
+msgid ""
+"A summary of know-how: what are the main trees categories and how to "
+"differentiate them."
+msgstr ""
+"Un resum dels coneixements tècnics: quines són les principals categories "
+"d'arbres i com diferenciar-les."
 
 #. module: website_slides
 #: model:slide.answer,text_value:website_slides.slide_slide_demo_0_4_question_0_2
@@ -1036,9 +1096,14 @@ msgid "Activities"
 msgstr "Activitats"
 
 #. module: website_slides
+#: model:ir.model,name:website_slides.model_mail_activity
+msgid "Activity"
+msgstr "Activitat"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Decoració de l'activitat d'excepció"
+msgstr "Activitat d'excepció de decoració"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_state
@@ -1052,7 +1117,7 @@ msgstr "Icona de tipus d'activitat"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
+#: code:addons/website_slides/static/src/js/public/components/course_tag_add_dialog/course_tag_add_dialog.xml:0
 msgid "Add"
 msgstr "Afegir"
 
@@ -1069,8 +1134,9 @@ msgstr "Afegir comentari"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.js:0
 #: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Add Content"
 msgstr "Afegir contingut"
@@ -1087,6 +1153,8 @@ msgid "Add Section"
 msgstr "Afegir secció"
 
 #. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/course_tag_add_dialog/course_tag_add_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "Add Tag"
@@ -1099,8 +1167,6 @@ msgid "Add a section"
 msgstr "Afegir una secció"
 
 #. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
 msgid "Add a tag"
 msgstr "Afegir etiqueta"
@@ -1120,7 +1186,12 @@ msgstr "Afegir un comentari en aquesta resposta"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
 msgid "Add contacts..."
-msgstr ""
+msgstr "Afegeix contactes..."
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
+msgid "Add quiz"
+msgstr "Afegeix qüestionari"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -1130,7 +1201,7 @@ msgstr "Afegeix el contingut aquí..."
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
 msgid "Added On"
-msgstr ""
+msgstr "Afegit el"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_resource_ids
@@ -1154,14 +1225,9 @@ msgid "Advanced"
 msgstr "Avançat"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel__partner_all_ids
-msgid "All Attendees"
-msgstr ""
-
-#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__channel_partner_all_ids
 msgid "All Attendees Information"
-msgstr ""
+msgstr "Informació de tots els assistents"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_channel_action_overview
@@ -1171,14 +1237,29 @@ msgstr "Tots els cursos"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_unsubscribe.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_unsubscribe_dialog/slide_unsubscribe_dialog.xml:0
 msgid "All progress will be lost until you rejoin this course."
-msgstr ""
+msgstr "Es perdrà tot el progrès fins que us torneu a unir a aquest curs."
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 msgid "All questions must be answered!"
+msgstr "S'han de respondre totes les preguntes."
+
+#. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/models/slide_question.py:0
+msgid ""
+"All questions must have at least one correct answer and one incorrect answer: \n"
+"%s\n"
+msgstr ""
+"Totes les preguntes han de tenir almenys una resposta correcta i una incorrecta: \n"
+"%s\n"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
+msgid "All the courses you attend will appear here. <br/>"
 msgstr ""
 
 #. module: website_slides
@@ -1190,8 +1271,12 @@ msgstr "Tot el que necessita saber sobre la creació de mobles."
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__allow_comment
 #: model:ir.model.fields,help:website_slides.field_slide_slide__channel_allow_comment
-msgid "Allow Attendees to like and comment your content and to submit reviews on your course."
-msgstr "Permet que als assistents els agradi i comenti el contingut i els envii comentaris al curs."
+msgid ""
+"Allow Attendees to like and comment your content and to submit reviews on "
+"your course."
+msgstr ""
+"Permet que als assistents els agradi i comenti el contingut i els envii "
+"comentaris al curs."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_resource_downloadable
@@ -1235,12 +1320,6 @@ msgid "Already Requested"
 msgstr "Ja solicitat"
 
 #. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
-msgid "Already installing \"%s\"."
-msgstr "Ja s'està instal·lant \"%s\"."
-
-#. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/models/slide_channel.py:0
 msgid "Already member"
@@ -1248,7 +1327,7 @@ msgstr "Ja és membre"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_quiz_finish_dialog/slide_quiz_finish_dialog.js:0
 msgid "Amazing!"
 msgstr "Increïble!"
 
@@ -1288,6 +1367,7 @@ msgstr "Arxiva el contingut"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_search
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -1297,25 +1377,27 @@ msgstr "Arxivat"
 
 #. module: website_slides
 #. odoo-javascript
+#: code:addons/website_slides/static/src/js/slides_slide_archive.js:0
 #: code:addons/website_slides/static/src/xml/slide_management.xml:0
 msgid "Are you sure you want to archive this content?"
 msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
+#: code:addons/website_slides/static/src/js/slides_category_delete.js:0
 #: code:addons/website_slides/static/src/xml/slide_management.xml:0
 msgid "Are you sure you want to delete this category?"
 msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
-msgid "Are you sure you want to delete this question:"
+#: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
+msgid "Are you sure you want to delete this question \"<strong>%s</strong>\"?"
 msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.js:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_category__article
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__article
 msgid "Article"
@@ -1355,7 +1437,7 @@ msgstr "Assistent"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__member_status
 msgid "Attendee Status"
-msgstr ""
+msgstr "Estat dels Assistents"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_channel_partner_action
@@ -1369,7 +1451,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_tree
-#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Attendees"
 msgstr "Assistents"
@@ -1396,12 +1477,22 @@ msgid "Average Review"
 msgstr "Revisió mitjana"
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "BUILDING BLOCKS DROPPED HERE WILL BE SHOWN ACROSS ALL LESSONS"
+msgstr ""
+
+#. module: website_slides
 #. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/course_tag_add_dialog/course_tag_add_dialog.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 #: code:addons/website_slides/static/src/js/slides_category_add.js:0
-#: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
 msgid "Back"
 msgstr "Enrere"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
+msgid "Back to course"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_default_background_image_url
@@ -1430,13 +1521,13 @@ msgstr "Bàsics de la jardineria"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_unsubscribe.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_unsubscribe_dialog/slide_unsubscribe_dialog.xml:0
 msgid "Be notified when a new content is added."
 msgstr "Notificat quan s'afegeix un contingut nou."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__body_has_template_value
-msgid "Body content is the same as tmeplate"
+msgid "Body content is the same as the template"
 msgstr ""
 
 #. module: website_slides
@@ -1447,7 +1538,7 @@ msgstr "Pot Comentar"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__can_edit_body
 msgid "Can Edit Body"
-msgstr "Pot editar el cos del email"
+msgstr "Pot modificar el cos del email"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__can_self_mark_completed
@@ -1497,14 +1588,11 @@ msgstr "No es pot marcar com a no fet"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_category_delete.js:0
-#: code:addons/website_slides/static/src/js/slides_course_enroll_email.js:0
-#: code:addons/website_slides/static/src/js/slides_slide_archive.js:0
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
 msgid "Cancel"
-msgstr "Cancel·lar"
+msgstr "Cancel·la"
 
 #. module: website_slides
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_role_carpenter
@@ -1548,7 +1636,7 @@ msgstr "Coneixement certificat"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Change video privacy settings"
 msgstr "Canvia la configuració de privadesa del vídeo"
 
@@ -1605,7 +1693,7 @@ msgstr "full de trucs"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_quiz_finish_dialog/slide_quiz_finish_dialog.xml:0
 msgid "Check Profile"
 msgstr "Comprova el perfil"
 
@@ -1629,7 +1717,7 @@ msgstr "Tria un <b>fitxer</b> del teu equip."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.js:0
 msgid "Choose a PDF"
 msgstr "Trieu un PDF"
 
@@ -1640,7 +1728,7 @@ msgstr "Trieu una disposició"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.js:0
 msgid "Choose an Image"
 msgstr "Trieu una imatge"
 
@@ -1653,6 +1741,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "Clear filters"
 msgstr "Neteja els filtres"
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+msgid "Click <b>Save</b> to create it."
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
@@ -1668,18 +1762,24 @@ msgstr "Feu clic aquí per iniciar el curs"
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Click on \"New\" in the top-right corner to write your first course."
-msgstr "Feu clic a \"Nou\" a la cantonada superior dreta per escriure el vostre primer curs."
+msgstr ""
+"Feu clic a \"Nou\" a la cantonada superior dreta per escriure el vostre "
+"primer curs."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid "Click on the \"Edit\" button in the top corner of the screen to edit your slide content."
-msgstr "Feu clic al botó «Modificar» de la cantonada superior de la pantalla per a editar el contingut de la diapositiva."
+msgid ""
+"Click on the \"Edit\" button in the top corner of the screen to edit your "
+"slide content."
+msgstr ""
+"Feu clic al botó «Modificar» de la cantonada superior de la pantalla per a "
+"editar el contingut de la diapositiva."
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
-msgid "Click on the <b>Create</b> button to create your first course."
-msgstr "Feu clic al botó <b>Crea</b> per crear el vostre primer curs."
+msgid "Click on the <b>Save</b> button to create your first course."
+msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
@@ -1689,7 +1789,8 @@ msgstr "Feu clic a <b>Curs</b> per tornar a la taula de continguts."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_quiz_finish_dialog/slide_quiz_finish_dialog.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_modal_header
@@ -1715,12 +1816,14 @@ msgstr "Colorit"
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.rating_rating_action_slide_channel
 msgid "Come back later to check the feedbacks given by your Attendees."
-msgstr "Torneu més tard per comprovar els comentaris donats pels vostres assistents."
+msgstr ""
+"Torneu més tard per comprovar els comentaris donats pels vostres assistents."
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_question_action_report
 msgid "Come back later to oversee how well your Attendees are doing."
-msgstr "Torna més tard per supervisar com de bé estan fent els teus assistents."
+msgstr ""
+"Torna més tard per supervisar com de bé estan fent els teus assistents."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__comment
@@ -1739,13 +1842,23 @@ msgstr "Comentaris"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
-msgid "Common tasks for a computer scientist is asking the right questions and answering questions. In this course, you'll study those topics with activities about mathematics, science and logic."
-msgstr "Les tasques habituals d'un informàtic són fer les preguntes adequades i respondre preguntes. En aquest curs, estudiaràs aquests temes amb activitats sobre matemàtiques, ciències i lògica."
+msgid ""
+"Common tasks for a computer scientist is asking the right questions and "
+"answering questions. In this course, you'll study those topics with "
+"activities about mathematics, science and logic."
+msgstr ""
+"Les tasques habituals d'un informàtic són fer les preguntes adequades i "
+"respondre preguntes. En aquest curs, estudiaràs aquests temes amb activitats"
+" sobre matemàtiques, ciències i lògica."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_form_add
-msgid "Common tasks for a computer scientist is asking the right questions and answering questions..."
-msgstr "Tasques comunes per a un informàtic és fer les preguntes correctes i respondre preguntes..."
+msgid ""
+"Common tasks for a computer scientist is asking the right questions and "
+"answering questions..."
+msgstr ""
+"Tasques comunes per a un informàtic és fer les preguntes correctes i "
+"respondre preguntes..."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -1825,7 +1938,7 @@ msgstr "Redactar correu electrònic"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_config_settings
 msgid "Config Settings"
-msgstr "Ajustos de configuració"
+msgstr "Paràmetres de configuració"
 
 #. module: website_slides
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_configuration
@@ -1835,13 +1948,19 @@ msgstr "Configuració"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.mail_template_channel_completed
 msgid "Congratulations! You completed {{ object.channel_id.name }}"
-msgstr "Felicitats! Heu completat {{ object.channelid.name }}"
+msgstr "Felicitats! Heu completat {{ object.channel_id.name }}"
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
-msgid "Congratulations! Your first lesson is available. Let's see the options available here. The tag \"<b>New</b>\" indicates that this lesson was created less than 7 days ago."
-msgstr "Felicitats! La teva primera lliçó està disponible. Vegem aquí les opcions disponibles. L'etiqueta \"<b>Nou</b>\" indica que aquesta lliçó es va crear fa menys de 7 dies."
+msgid ""
+"Congratulations! Your first lesson is available. Let's see the options "
+"available here. The tag \"<b>New</b>\" indicates that this lesson was "
+"created less than 7 days ago."
+msgstr ""
+"Felicitats! La teva primera lliçó està disponible. Vegem aquí les opcions "
+"disponibles. L'etiqueta \"<b>Nou</b>\" indica que aquesta lliçó es va crear "
+"fa menys de 7 dies."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
@@ -1851,14 +1970,22 @@ msgstr "Enhorabona, has arribat a l'última classificació!"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
-msgid "Congratulations, you've created your first course.<br/>Click on the title of this content to see it in fullscreen mode."
-msgstr "Enhorabona, has creat el teu primer curs.<br/>Feu clic al títol d'aquest contingut per veure'l en mode de pantalla completa."
+msgid ""
+"Congratulations, you've created your first course.<br/>Click on the title of"
+" this content to see it in fullscreen mode."
+msgstr ""
+"Enhorabona, has creat el teu primer curs.<br/>Feu clic al títol d'aquest "
+"contingut per veure'l en mode de pantalla completa."
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
-msgid "Congratulations, your course has been created, but there isn't any content yet. First, let's add a <b>Section</b> to give your course a structure."
-msgstr "Enhorabona, el teu curs s'ha creat, però encara no hi ha cap contingut. Primer, afegim una <b>secció</b> per estructurar el vostre curs."
+msgid ""
+"Congratulations, your course has been created, but there isn't any content "
+"yet. First, let's add a <b>Section</b> to give your course a structure."
+msgstr ""
+"Enhorabona, el teu curs s'ha creat, però encara no hi ha cap contingut. "
+"Primer, afegim una <b>secció</b> per estructurar el vostre curs."
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_partner
@@ -1905,7 +2032,7 @@ msgstr "Contingut"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
 msgid "Content Preview"
 msgstr "Vista prèvia del contingut"
 
@@ -1960,7 +2087,19 @@ msgstr "Continuar"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.js:0
+msgid "Copied"
+msgstr "Copiat"
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.js:0
+msgid "Copy Embed Code"
+msgstr ""
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.js:0
 msgid "Copy Link"
 msgstr "Copiar enllaç"
 
@@ -1994,8 +2133,12 @@ msgstr ""
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/controllers/main.py:0
-msgid "Could not find your video. Please check if your link is correct and if the video can be accessed."
-msgstr "No s'ha pogut trobar el vídeo. Comproveu si l'enllaç és correcte i si es pot accedir al vídeo."
+msgid ""
+"Could not find your video. Please check if your link is correct and if the "
+"video can be accessed."
+msgstr ""
+"No s'ha pogut trobar el vídeo. Comproveu si l'enllaç és correcte i si es pot"
+" accedir al vídeo."
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel
@@ -2069,7 +2212,7 @@ msgstr ""
 
 #. module: website_slides
 #. odoo-python
-#: code:addons/website_slides/controllers/mail.py:0
+#: code:addons/website_slides/models/slide_channel.py:0
 msgid "Course Ranked"
 msgstr ""
 
@@ -2176,6 +2319,18 @@ msgid "Cover Properties"
 msgstr "Propietats de la coberta"
 
 #. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
+msgid "Create New Category \""
+msgstr ""
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
+msgid "Create New Tag \""
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_slide_tag
 msgid "Create a Content Tag"
 msgstr "Crea una etiqueta de contingut"
@@ -2188,19 +2343,26 @@ msgstr "Crea un grup de cursos"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Create a community and let Attendees answer each others' questions."
-msgstr "Creeu una comunitat i deixeu que els assistents responguin les preguntes dels altres."
-
-#. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
-msgid "Create new %s '%s'"
-msgstr "Crea un nou %s '%s'"
+msgstr ""
+"Creeu una comunitat i deixeu que els assistents responguin les preguntes "
+"dels altres."
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action_report
 msgid "Create new content for your eLearning"
 msgstr "Creeu contingut nou per al vostre eLearning"
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/course_tag_add_dialog/course_tag_add_dialog.xml:0
+msgid "Create this tag \""
+msgstr ""
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/course_tag_add_dialog/course_tag_add_dialog.xml:0
+msgid "Create this tag group\""
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__create_uid
@@ -2235,14 +2397,11 @@ msgid "Created on"
 msgstr "Creat el"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_search_slide_channel
-msgid "Creation Date"
-msgstr "Data de creació"
-
-#. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__html_content
 msgid "Custom HTML content for slides of category 'Article'."
-msgstr "Contingut HTML personalitzat per a les diapositives de la categoria «Article»."
+msgstr ""
+"Contingut HTML personalitzat per a les diapositives de la categoria "
+"«Article»."
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.slide_channel_demo_6_furn3
@@ -2260,6 +2419,11 @@ msgid "Date (old to new)"
 msgstr "Data (antiga a nova)"
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid "Default training image"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_gamification_challenge__challenge_category
 msgid "Define the visibility of the challenge through menus"
 msgstr "Defineix la visibilitat del repte mitjançant els menús"
@@ -2273,17 +2437,26 @@ msgstr "Defineix com la gent pot inscriure's al vostre curs."
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__promote_strategy
 msgid "Defines the content that will be promoted on the course home page"
-msgstr "Defineix el contingut que es promocionarà a la pàgina d'inici del curs"
+msgstr ""
+"Defineix el contingut que es promocionarà a la pàgina d'inici del curs"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__publish_template_id
-msgid "Defines the email your Attendees will receive each time you upload new content."
-msgstr "Defineix el correu electrònic que rebran els assistents cada vegada que pugeu contingut nou."
+msgid ""
+"Defines the email your Attendees will receive each time you upload new "
+"content."
+msgstr ""
+"Defineix el correu electrònic que rebran els assistents cada vegada que "
+"pugeu contingut nou."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__completed_template_id
-msgid "Defines the email your Attendees will receive once they reach the end of your course."
-msgstr "Defineix el correu electrònic que rebran els assistents un cop arribin al final del curs."
+msgid ""
+"Defines the email your Attendees will receive once they reach the end of "
+"your course."
+msgstr ""
+"Defineix el correu electrònic que rebran els assistents un cop arribin al "
+"final del curs."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__visibility
@@ -2295,6 +2468,7 @@ msgstr "Defineix qui pot accedir als vostres cursos i el seu contingut."
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/slides_category_delete.js:0
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 msgid "Delete"
 msgstr "Eliminar"
@@ -2333,7 +2507,7 @@ msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
+#: code:addons/website_slides/static/src/js/public/components/slide_unsubscribe_dialog/slide_unsubscribe_dialog.xml:0
 msgid "Discard"
 msgstr "Descartar"
 
@@ -2364,6 +2538,13 @@ msgid "Display"
 msgstr "Mostrar "
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_gamification_challenge__display_name
+#: model:ir.model.fields,field_description:website_slides.field_gamification_karma_tracking__display_name
+#: model:ir.model.fields,field_description:website_slides.field_mail_activity__display_name
+#: model:ir.model.fields,field_description:website_slides.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_slides.field_res_groups__display_name
+#: model:ir.model.fields,field_description:website_slides.field_res_partner__display_name
+#: model:ir.model.fields,field_description:website_slides.field_res_users__display_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__display_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__display_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__display_name
@@ -2376,8 +2557,9 @@ msgstr "Mostrar "
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__display_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__display_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag__display_name
+#: model:ir.model.fields,field_description:website_slides.field_website__display_name
 msgid "Display Name"
-msgstr "Nom a mostrar"
+msgstr "Nom mostrat"
 
 #. module: website_slides
 #: model:slide.question,question:website_slides.slide_slide_demo_2_0_question_0
@@ -2391,7 +2573,7 @@ msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_unsubscribe.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_unsubscribe_dialog/slide_unsubscribe_dialog.xml:0
 msgid "Do you really want to leave the course?"
 msgstr "De debò vols deixar el curs?"
 
@@ -2402,9 +2584,9 @@ msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
-msgid "Do you want to install the \"%s\" app?"
-msgstr "Vols instal·lar la \"%s\" aplicació?"
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_install_module.js:0
+msgid "Do you want to install \"%s\"?"
+msgstr ""
 
 #. module: website_slides
 #: model:slide.question,question:website_slides.slide_slide_demo_5_3_question_0
@@ -2413,13 +2595,13 @@ msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
+#: code:addons/website_slides/static/src/js/slides_course_enroll_email.js:0
 msgid "Do you want to request access to this course?"
 msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.js:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_category__document
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Document"
@@ -2432,14 +2614,14 @@ msgstr "Document (Word, Google Doc, ...)"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.js:0
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__document_google_url
 msgid "Document Link"
 msgstr "Enllaç al document"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.js:0
 msgid "Document Source"
 msgstr "Origen del document"
 
@@ -2463,7 +2645,7 @@ msgstr "Admeten gossos"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 msgid "Don't have an account?"
-msgstr ""
+msgstr "No disposeu d'un compte?"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__completed
@@ -2480,7 +2662,7 @@ msgstr "Compte fet"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 msgid "Done!"
-msgstr ""
+msgstr "Fet"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -2521,6 +2703,7 @@ msgid "Earn more Karma to leave a comment."
 msgstr "Aneu més Karma per a deixar un comentari."
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 msgid "Edit"
 msgstr "Modificar"
@@ -2528,7 +2711,7 @@ msgstr "Modificar"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
 msgid "Edit in backend"
-msgstr "Editar el backend"
+msgstr "Modificar el backend"
 
 #. module: website_slides
 #: model:mail.template,name:website_slides.mail_template_slide_channel_enroll
@@ -2569,11 +2752,12 @@ msgstr "Plantilla de correu electrònic utilitzada en compartir un canal"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__share_slide_template_id
 msgid "Email template used when sharing a slide"
-msgstr "Plantilla de correu electrònic per utilitzar al compartir una diapositiva"
+msgstr ""
+"Plantilla de correu electrònic per utilitzar al compartir una diapositiva"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
 msgid "Email(s) sent."
 msgstr "S'han enviat els correus electrònics."
 
@@ -2589,6 +2773,14 @@ msgid "Embed Views"
 msgstr "Incrusta vistes"
 
 #. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/models/slide_slide.py:0
+msgid "Embed code"
+msgstr ""
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
 msgid "Embed in another Website"
 msgstr "Incrusta en un altre lloc web"
@@ -2600,7 +2792,7 @@ msgstr "Comptador de visualitzacions foranes de la diapositiva"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_quiz_finish_dialog/slide_quiz_finish_dialog.xml:0
 msgid "End course"
 msgstr "Final de curs"
 
@@ -2659,15 +2851,22 @@ msgid "Enter your <b>Question</b>. Be clear and concise."
 msgstr "Introduïu la vostra <b>Pregunta</b>. Sigues clar i concís."
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_question__answers_validation_error
+msgid "Error on Answers"
+msgstr ""
+
+#. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
 msgid "Estimated Completion Time"
 msgstr "Temps estimat de compleció"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Evaluate the knowledge of your Attendees and certify their skills."
-msgstr "Avalua els coneixements dels vostres assistents i certifica les seves habilitats."
+msgstr ""
+"Avalua els coneixements dels vostres assistents i certifica les seves "
+"habilitats."
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__visibility__public
@@ -2678,6 +2877,11 @@ msgstr "Tothom"
 #: model:slide.tag,name:website_slides.slide_tag_demo_exercises
 msgid "Exercises"
 msgstr "exercicis"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
+msgid "Exit Fullscreen"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_code_external
@@ -2701,9 +2905,9 @@ msgstr "Lloc web extern"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
-msgid "Failed to install \"%s\"."
-msgstr "No s'ha pogut instal·lar «%s»."
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_install_module.js:0
+msgid "Failed to install \"%s\""
+msgstr "Instal·lació fallida \"%s\""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__promote_strategy
@@ -2722,10 +2926,10 @@ msgid "File Name"
 msgstr "Nom del fitxer"
 
 #. module: website_slides
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_slides/controllers/main.py:0
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.js:0
 msgid "File is too big. File size cannot exceed 25MB"
 msgstr "L'arxiu és massa gran. L'arxiu no pot excedir els 25MB"
 
@@ -2738,12 +2942,13 @@ msgstr "Filtre i ordre"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 msgid "Finally you can click here to enjoy your content in fullscreen"
-msgstr "Finalment podeu fer clic aquí per gaudir del contingut a pantalla completa"
+msgstr ""
+"Finalment podeu fer clic aquí per gaudir del contingut a pantalla completa"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
 msgid "Finish"
-msgstr ""
+msgstr "Finalitzar"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -2753,7 +2958,7 @@ msgstr "Finalitza el curs"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel_partner__member_status__completed
 msgid "Finished"
-msgstr ""
+msgstr "Finalitzada"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -2762,9 +2967,13 @@ msgstr "Primer intent"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-msgid "First, create your lesson, then edit it with the website builder. You'll be able to drop building blocks on your page and edit them."
-msgstr "Primer, creeu la lliçó i després editeu-la amb el constructor del lloc web. Podreu deixar anar blocs de construcció a la pàgina i editar-los."
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
+msgid ""
+"First, create your lesson, then edit it with the website builder. You'll be "
+"able to drop building blocks on your page and edit them."
+msgstr ""
+"Primer, creeu la lliçó i després editeu-la amb el constructor del lloc web. "
+"Podreu deixar anar blocs de construcció a la pàgina i editar-los."
 
 #. module: website_slides
 #. odoo-javascript
@@ -2774,19 +2983,19 @@ msgstr "Primer, afegirem un document <b></b>. Ha de ser un fitxer .pdf."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "First, upload the file on your Google Drive account."
 msgstr "Primer, carregueu el fitxer al vostre compte de Google Drive."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "First, upload your videos on Vimeo and mark them as"
 msgstr "Primer, carregueu els vostres vídeos al Vimeo i marqueu-los com a"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "First, upload your videos on YouTube and mark them as"
 msgstr "Primer, carregueu els vostres vídeos a YouTube i marqueu-los com a"
 
@@ -2816,7 +3025,8 @@ msgstr "Prefaci"
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_4_0
 msgid "Foreword for this documentation: how to use it, main attention points"
-msgstr "Prefaci per a aquesta documentació: com usar-la, punts d'atenció principals"
+msgstr ""
+"Prefaci per a aquesta documentació: com usar-la, punts d'atenció principals"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_website_slides_forum
@@ -2839,8 +3049,14 @@ msgstr "D'un tros de fusta a un moble completament funcional, pas a pas."
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_partner_action
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_partner_action_report
 #: model_terms:ir.actions.act_window,help:website_slides.slide_slide_partner_action_from_slide
-msgid "From here you'll be able to monitor attendees and to track their progress."
+msgid ""
+"From here you'll be able to monitor attendees and to track their progress."
 msgstr "Des d'aquí podreu controlar els assistents i seguir el seu progrés."
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "Fullscreen"
+msgstr "Pantalla Complerta"
 
 #. module: website_slides
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_role_furniture
@@ -2897,12 +3113,19 @@ msgid "Give your course an engaging <b>Title</b>."
 msgstr "Doneu al vostre curs un <b>Títol</b>atractiu."
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
+msgid "Go through all its content to see a Course in this section. <br/>"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__website_slide_google_app_key
 #: model:ir.model.fields,field_description:website_slides.field_website__website_slide_google_app_key
 msgid "Google Doc Key"
 msgstr "Clau de document de Google"
 
 #. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/models/slide_slide.py:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__video_source_type__google_drive
 msgid "Google Drive"
 msgstr "Google Drive"
@@ -2953,7 +3176,8 @@ msgstr "Nom del Grup"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__upload_group_ids
 msgid "Group of users allowed to publish contents on a documentation course."
-msgstr "Grup d'usuaris autoritzats a publicar contingut en un curs de documentació"
+msgstr ""
+"Grup d'usuaris autoritzats a publicar contingut en un curs de documentació"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__group_sequence
@@ -3005,11 +3229,12 @@ msgstr "Jardí domèstic"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_5_2
 msgid "How To Build a HIGH QUALITY Dining Table with LIMITED TOOLS"
-msgstr "Com construir una taula de menjador d'alta qualitat amb eines limitades"
+msgstr ""
+"Com construir una taula de menjador d'alta qualitat amb eines limitades"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "How do I add new content?"
 msgstr "Com puc afegir contingut nou?"
 
@@ -3020,12 +3245,13 @@ msgstr "Com fer créixer i collir els millors maduixes i conceptes bàsics"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_6
-msgid "How to Grow and Harvest The Best Strawberries | Gardening Tips and Tricks"
+msgid ""
+"How to Grow and Harvest The Best Strawberries | Gardening Tips and Tricks"
 msgstr "Com fer créixer i collir les millors maduixes i trucs de jardineria"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "How to create a Lesson as an Article?"
 msgstr "Com crear una lliçó com a article?"
 
@@ -3036,24 +3262,24 @@ msgstr "Com trobar fusta de qualitat"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_3
-msgid "How to plant a potted tree"
-msgstr "Com plantar un arbre tacat"
+msgid "How to plant a potted.list"
+msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "How to upload your PowerPoint Presentations or Word Documents?"
 msgstr "Com pujar les presentacions de PowerPoint o Documents de Word?"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "How to upload your videos?"
 msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "How to use Google Drive?"
 msgstr "Com utilitzar Google Drive?"
 
@@ -3068,6 +3294,13 @@ msgid "HowTo"
 msgstr "Com es fa"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_gamification_challenge__id
+#: model:ir.model.fields,field_description:website_slides.field_gamification_karma_tracking__id
+#: model:ir.model.fields,field_description:website_slides.field_mail_activity__id
+#: model:ir.model.fields,field_description:website_slides.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_slides.field_res_groups__id
+#: model:ir.model.fields,field_description:website_slides.field_res_partner__id
+#: model:ir.model.fields,field_description:website_slides.field_res_users__id
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__id
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__id
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__id
@@ -3080,6 +3313,7 @@ msgstr "Com es fa"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__id
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag__id
+#: model:ir.model.fields,field_description:website_slides.field_website__id
 msgid "ID"
 msgstr "ID"
 
@@ -3097,7 +3331,8 @@ msgstr "Icona que indica una activitat d'excepció."
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Si està marcat, hi ha nous missatges que requereixen la vostra atenció."
+msgstr ""
+"Si està marcat, hi ha nous missatges que requereixen la vostra atenció."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_has_error
@@ -3110,24 +3345,37 @@ msgstr "Si està marcat, alguns missatges tenen un error d'entrega."
 #. module: website_slides
 #: model_terms:slide.channel,description:website_slides.slide_channel_demo_4_furn1
 #: model_terms:slide.channel,description_short:website_slides.slide_channel_demo_4_furn1
-msgid "If you are looking for technical specifications, have a look at this documentation."
-msgstr "Si esteu buscant especificacions tècniques, doneu un cop d'ull a aquesta documentació."
+msgid ""
+"If you are looking for technical specifications, have a look at this "
+"documentation."
+msgstr ""
+"Si esteu buscant especificacions tècniques, doneu un cop d'ull a aquesta "
+"documentació."
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
-msgid "If you want to be sure that attendees have understood and memorized the content, you can add a Quiz on the lesson. Click on <b>Add Quiz</b>."
-msgstr "Si voleu estar segur que els assistents han entès i memoritzat el contingut, podeu afegir un qüestionari a la lliçó. Feu clic a <b>Afegeix el qüestionari</b>."
+msgid ""
+"If you want to be sure that attendees have understood and memorized the "
+"content, you can add a Quiz on the lesson. Click on <b>Add Quiz</b>."
+msgstr ""
+"Si voleu estar segur que els assistents han entès i memoritzat el contingut,"
+" podeu afegir un qüestionari a la lliçó. Feu clic a <b>Afegeix el "
+"qüestionari</b>."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-msgid "If you want to use other types of files, you may want to use an external source (Google Drive) instead."
-msgstr "Si voleu utilitzar altres tipus de fitxers, és possible que vulgueu utilitzar una font externa (Google Drive)."
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
+msgid ""
+"If you want to use other types of files, you may want to use an external "
+"source (Google Drive) instead."
+msgstr ""
+"Si voleu utilitzar altres tipus de fitxers, és possible que vulgueu "
+"utilitzar una font externa (Google Drive)."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.js:0
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_1920
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_1920
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_category__infographic
@@ -3139,7 +3387,7 @@ msgstr "Imatge"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_1024
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_1024
 msgid "Image 1024"
-msgstr "Imatge 1024Comment"
+msgstr "Imatge 1024"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_128
@@ -3166,16 +3414,32 @@ msgstr "Contingut de la imatge"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.js:0
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_google_url
 msgid "Image Link"
 msgstr "Enllaç a la imatge"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.js:0
 msgid "Image Source"
 msgstr "Origen de la imatge"
+
+#. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/models/slide_channel.py:0
+msgid ""
+"Impossible to send emails. Select a \"Channel Share Template\" for courses "
+"%(course_names)s first"
+msgstr ""
+
+#. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/models/slide_slide.py:0
+msgid ""
+"Impossible to send emails. Select a \"Share Template\" for courses "
+"%(course_names)s first"
+msgstr ""
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_0_1
@@ -3226,21 +3490,21 @@ msgstr "Infografia"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_install_module.xml:0
 msgid "Install"
 msgstr "Instal·lar "
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog_select.xml:0
 msgid "Install the"
 msgstr "Instal·la el"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
-msgid "Installing \"%s\"."
-msgstr "S'està instal·lant «%s»."
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_install_module.js:0
+msgid "Installing \"%s\"..."
+msgstr ""
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_1_0
@@ -3249,8 +3513,8 @@ msgstr "Fets interessants"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_1
-msgid "Interesting Tree Facts"
-msgstr "Fets d'arbre interessants"
+msgid "Interesting List Facts"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_0_1
@@ -3274,20 +3538,21 @@ msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.js:0
 msgid "Invalid file type. Please select pdf or image file"
-msgstr "Tipus d'arxiu invàlid. Si us plau, seleccioni un pdf o un arxiu d'imatge"
+msgstr ""
+"Tipus d'arxiu invàlid. Si us plau, seleccioni un pdf o un arxiu d'imatge"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__invitation_link
 msgid "Invitation Link"
-msgstr ""
+msgstr "Enllaç d' invitació"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Invite"
-msgstr "Invitar"
+msgstr "Convidar"
 
 #. module: website_slides
 #. odoo-python
@@ -3299,6 +3564,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel_partner__member_status__invited
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_search
 msgid "Invite Sent"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_has_completed_category
+msgid "Is Category Completed"
 msgstr ""
 
 #. module: website_slides
@@ -3315,7 +3585,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_is_follower
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_is_follower
 msgid "Is Follower"
-msgstr "És seguidor"
+msgstr "És un seguidor"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_member_invited
@@ -3362,14 +3632,18 @@ msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "It should look similar to"
 msgstr "Hauria de ser similar a"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_1_3
-msgid "Jim and Todd plant a potted tree for a customer of Knecht's Nurseries and Landscaping. Narrated by Leif Knecht, owner."
-msgstr "Jim i Todd planten un arbre per a un client de les infermeries de Knecht i Landscaping. Narrat per Leif Knecht, propietari."
+msgid ""
+"Jim and Todd plant a potted tree for a customer of Knecht's Nurseries and "
+"Landscaping. Narrated by Leif Knecht, owner."
+msgstr ""
+"Jim i Todd planten un arbre per a un client de les infermeries de Knecht i "
+"Landscaping. Narrat per Leif Knecht, propietari."
 
 #. module: website_slides
 #. odoo-javascript
@@ -3387,7 +3661,8 @@ msgstr "Uneix-te al curs"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 msgid "Join the course to take the quiz and verify your answers!"
-msgstr "Uniu-vos al curs per fer el qüestionari i verificar les vostres respostes!"
+msgstr ""
+"Uniu-vos al curs per fer el qüestionari i verificar les vostres respostes!"
 
 #. module: website_slides
 #. odoo-javascript
@@ -3426,7 +3701,8 @@ msgstr "Karma"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__karma_slide_comment
 msgid "Karma needed to add a comment on a slide of this course"
-msgstr "Cal que el Karma afegeixi un comentari a una diapositiva d'aquest curs"
+msgstr ""
+"Cal que el Karma afegeixi un comentari a una diapositiva d'aquest curs"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__karma_review
@@ -3436,7 +3712,8 @@ msgstr "El Karma necessita afegir una revisió al curs"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__karma_slide_vote
 msgid "Karma needed to like/dislike a slide of this course."
-msgstr "El Karma necessitava agradar/desagradar una diapositiva d'aquest curs."
+msgstr ""
+"El Karma necessitava agradar/desagradar una diapositiva d'aquest curs."
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_profile
@@ -3456,8 +3733,12 @@ msgstr ""
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_2_3
-msgid "Knowing wood characteristics is a requirement in order to know which kind of wood to use in a given situation."
-msgstr "Conèixer les característiques de la fusta és un requisit per saber quin tipus de fusta utilitzar en una situació donada."
+msgid ""
+"Knowing wood characteristics is a requirement in order to know which kind of"
+" wood to use in a given situation."
+msgstr ""
+"Conèixer les característiques de la fusta és un requisit per saber quin "
+"tipus de fusta utilitzar en una situació donada."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__lang
@@ -3536,8 +3817,12 @@ msgstr "Taula de classificació"
 #. module: website_slides
 #: model_terms:slide.channel,description:website_slides.slide_channel_demo_1_gard1
 #: model_terms:slide.channel,description_short:website_slides.slide_channel_demo_1_gard1
-msgid "Learn how to take care of your favorite trees. Learn when to plant, how to manage potted trees, ..."
-msgstr "Apreneu a cuidar dels vostres arbres preferits. Apreneu quan plantar, com gestionar els arbres en testa..."
+msgid ""
+"Learn how to take care of your favorite trees. Learn when to plant, how to "
+"manage potted trees, ..."
+msgstr ""
+"Apreneu a cuidar dels vostres arbres preferits. Apreneu quan plantar, com "
+"gestionar els arbres en testa..."
 
 #. module: website_slides
 #: model_terms:slide.channel,description:website_slides.slide_channel_demo_0_gard_0
@@ -3552,7 +3837,8 @@ msgstr "Aprendre a identificar fusta de qualitat per crear mobles sòlids."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
+#: code:addons/website_slides/static/src/js/public/components/slide_unsubscribe_dialog/slide_unsubscribe_dialog.js:0
+#: code:addons/website_slides/static/src/js/public/components/slide_unsubscribe_dialog/slide_unsubscribe_dialog.xml:0
 msgid "Leave the course"
 msgstr "Surt del curs"
 
@@ -3573,7 +3859,7 @@ msgstr "Lliçons"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_course_quiz_finish.js:0
+#: code:addons/website_slides/static/src/js/public/components/slide_quiz_finish_dialog/slide_quiz_finish_dialog.js:0
 msgid "Level up!"
 msgstr "Aixeca't!"
 
@@ -3600,29 +3886,43 @@ msgstr "Enllaç"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__document_google_url
-msgid "Link of the document (we currently only support Google Drive as source)"
-msgstr "Enllaç del document (actualment només admetem Google Drive com a origen)"
+msgid ""
+"Link of the document (we currently only support Google Drive as source)"
+msgstr ""
+"Enllaç del document (actualment només admetem Google Drive com a origen)"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__image_google_url
 msgid "Link of the image (we currently only support Google Drive as source)"
-msgstr "Enllaç de la imatge (actualment només admetem Google Drive com a origen)"
+msgstr ""
+"Enllaç de la imatge (actualment només admetem Google Drive com a origen)"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__video_url
-msgid "Link of the video (we support YouTube, Google Drive and Vimeo as sources)"
+msgid ""
+"Link of the video (we support YouTube, Google Drive and Vimeo as sources)"
 msgstr "Enllaç del vídeo (admetem YouTube, Google Drive i Vimeo com a fonts)"
 
 #. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_1_0
+msgid "List Infographic"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_slide_demo_2_2
+msgid "List planting in hanging bottles on wall"
+msgstr ""
+
+#. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
 msgid "Loading content..."
 msgstr "S'està carregant el contingut..."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
 msgid "Log in"
-msgstr ""
+msgstr "Iniciar sessió"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__template_id
@@ -3642,7 +3942,7 @@ msgstr "Categories dels arbres principals"
 #. module: website_slides
 #: model:res.groups,name:website_slides.group_website_slides_manager
 msgid "Manager"
-msgstr "Director"
+msgstr "Gestor"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -3688,8 +3988,11 @@ msgstr "Vistes de membres"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__enroll_group_ids
-msgid "Members of those groups are automatically added as members of the channel."
-msgstr "Els membres d'aquests grups s'afegeixen automàticament com a membres del canal."
+msgid ""
+"Members of those groups are automatically added as members of the channel."
+msgstr ""
+"Els membres d'aquests grups s'afegeixen automàticament com a membres del "
+"canal."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
@@ -3726,12 +4029,16 @@ msgstr "Carrots poderosos"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_2_1
-msgid "Mighty forest just don't appear in a few weeks. Learn how time made our forests mighty and mysterious."
-msgstr "El bosc no apareix d'aquí a unes setmanes. Apreneu com el temps va fer els nostres boscos poderosos i misteriosos."
+msgid ""
+"Mighty forest just don't appear in a few weeks. Learn how time made our "
+"forests mighty and mysterious."
+msgstr ""
+"El bosc no apareix d'aquí a unes setmanes. Apreneu com el temps va fer els "
+"nostres boscos poderosos i misteriosos."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
 msgid "Minutes"
 msgstr "Minuts"
 
@@ -3817,12 +4124,6 @@ msgid "New"
 msgstr "Nou"
 
 #. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
-msgid "New Certification"
-msgstr "Certificació nova"
-
-#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__publish_template_id
 msgid "New Content Notification"
 msgstr "Notificació de contingut nou"
@@ -3839,8 +4140,10 @@ msgstr "Nou curs"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_published
-msgid "New {{ object.slide_category }} published on {{ object.channel_id.name }}"
-msgstr "{{ object.slidecategory }} nou publicat a {{ object.channelid.name }}"
+msgid ""
+"New {{ object.slide_category }} published on {{ object.channel_id.name }}"
+msgstr ""
+"{{ object.slide_category }} nou publicat a {{ object.channel_id.name }}"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -3854,7 +4157,8 @@ msgstr "Cursos més nous"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_quiz_finish_dialog/slide_quiz_finish_dialog.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Next"
 msgstr "Següent"
 
@@ -4006,7 +4310,7 @@ msgstr "No teniu prou karma per a revisar"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
+#: code:addons/website_slides/static/src/js/public/components/slide_unsubscribe_dialog/slide_unsubscribe_dialog.js:0
 msgid "Notifications"
 msgstr "Notificacions"
 
@@ -4061,7 +4365,7 @@ msgstr "Nombre d'errors"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction_counter
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Nombre de missatges que requereixen una acció"
 
 #. module: website_slides
@@ -4094,7 +4398,7 @@ msgstr "Responsable"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "On Google Drive"
 msgstr "Al Google Drive"
 
@@ -4105,13 +4409,13 @@ msgstr "En la invitació"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "On Vimeo"
 msgstr "Sobre Vimeo"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "On YouTube"
 msgstr "Al YouTube"
 
@@ -4125,7 +4429,7 @@ msgstr "Un cop hàgiu acabat, no oblideu <b>Publicar</b> el vostre curs."
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel_partner__member_status__ongoing
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_search
 msgid "Ongoing"
-msgstr ""
+msgstr "En marxa"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
@@ -4133,14 +4437,34 @@ msgid "Ongoing Courses"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__enroll__public
-msgid "Open"
+#. odoo-python
+#: code:addons/website_slides/models/slide_channel.py:0
+msgid "Only a single review can be posted per course."
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__enroll__public
+msgid "Open"
+msgstr "Oberts"
+
+#. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/models/slide_channel.py:0
+msgid "Operation not supported"
+msgstr "Operació no admesa"
+
+#. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__lang
-msgid "Optional translation language (ISO code) to select when sending out an email. If not set, the english version will be used. This should usually be a placeholder expression that provides the appropriate language, e.g. {{ object.partner_id.lang }}."
-msgstr "Idioma opcional de traducció (ISO codi) per a seleccionar en enviar un correu electrònic. Si no està establerta, s' usarà la versió anglesa. Això normalment hauria de ser una expressió de substitució que proveeix el llenguatge apropiat, p. ex. {{ object.partner_id.lang }}."
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+"Idioma opcional de traducció (codi ISO) per a seleccionar en enviar un "
+"correu electrònic. Si no està establert, s'usarà la versió anglesa. Això "
+"normalment hauria de ser una expressió de substitució que proveeixi l'idioma"
+" apropiat, p. ex. {{ object.partner_id.lang }}."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -4174,20 +4498,15 @@ msgid "Partner Has New Content"
 msgstr "El soci té un contingut nou"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel__partner_all_ids
-msgid "Partners in the course (both enrolled and invited)"
-msgstr ""
-
-#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_pivot
 msgid "Pivot"
 msgstr "Pivot"
 
 #. module: website_slides
 #. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
 #: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "Please"
@@ -4196,14 +4515,19 @@ msgstr "Si us plau"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:0
-msgid "Please <a href=\"/web/login?redirect=%s\">login</a> or <a href=\"/web/signup?redirect=%s\">create an account</a> to vote for this lesson"
-msgstr "Si us plau <a href=\"/web/login?redirect=%s\">login</a> o <a href=\"/web/signup?redirect=%s\">create an account</a> to vote for this lesson"
+msgid ""
+"Please <a href=\"/web/login?redirect=%(url)s\">login</a> or <a "
+"href=\"/web/signup?redirect=%(url)s\">create an account</a> to vote for this"
+" lesson"
+msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:0
-msgid "Please <a href=\"/web/login?redirect=%s\">login</a> to vote for this lesson"
-msgstr "Si us plau <a href=\"/web/login?redirect=%s\">inicieu la sessió</a> per votar aquesta lliçó"
+msgid ""
+"Please <a href=\"/web/login?redirect=%(url)s\">login</a> to vote for this "
+"lesson"
+msgstr ""
 
 #. module: website_slides
 #. odoo-python
@@ -4219,8 +4543,7 @@ msgstr "Introduïu un enllaç vàlid de Google Drive"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_course_fullscreen_player.js:0
-#: code:addons/website_slides/static/src/js/slides_share.js:0
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.js:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "Please enter valid email(s)"
 msgstr "Introduïu correus electrònics vàlids"
@@ -4281,14 +4604,20 @@ msgid "Presentation Published"
 msgstr "Presentació publicada"
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Preview"
 msgstr "Vista prèvia"
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "Previous"
+msgstr "Anterior"
+
+#. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Private"
 msgstr "Privat"
 
@@ -4301,6 +4630,16 @@ msgstr "Canal Privat"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
 msgid "Progress"
 msgstr "Progrés"
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/slide_quiz_finish_dialog/slide_xp_progress_bar.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.course_card
+#: model_terms:ir.ui.view,arch_db:website_slides.course_join
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_main
+msgid "Progress bar"
+msgstr "Barra de progrès"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__promoted_slide_id
@@ -4324,6 +4663,7 @@ msgstr "Data de publicació"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_pages_kanban_view
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -4345,26 +4685,18 @@ msgstr "Data de publicació"
 #. odoo-python
 #: code:addons/website_slides/models/slide_channel.py:0
 #: code:addons/website_slides/models/slide_slide.py:0
-msgid "Publishing is restricted to the responsible of training courses or members of the publisher group for documentation courses"
-msgstr "La publicació es limita al responsable dels cursos de formació o als membres del grup editor dels cursos de documentació"
+msgid ""
+"Publishing is restricted to the responsible of training courses or members "
+"of the publisher group for documentation courses"
+msgstr ""
+"La publicació es limita al responsable dels cursos de formació o als membres"
+" del grup editor dels cursos de documentació"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__question_id
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Question"
 msgstr "Qüestió"
-
-#. module: website_slides
-#. odoo-python
-#: code:addons/website_slides/models/slide_question.py:0
-msgid "Question \"%s\" must have 1 correct answer"
-msgstr "La pregunta «%s» ha de tenir 1 resposta correcta"
-
-#. module: website_slides
-#. odoo-python
-#: code:addons/website_slides/models/slide_question.py:0
-msgid "Question \"%s\" must have 1 correct answer and at least 1 incorrect answer"
-msgstr "La pregunta «%s» ha de tenir 1 resposta correcta i almenys 1 resposta incorrecta"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__question
@@ -4380,7 +4712,7 @@ msgstr "Preguntes"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.js:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_category__quiz
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__quiz
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_other_0
@@ -4398,7 +4730,7 @@ msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Quiz Demo Data"
 msgstr "Dades de prova del qüestionari"
 
@@ -4543,6 +4875,11 @@ msgid "Request sent!"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_mail_activity__request_partner_id
+msgid "Requesting Partner"
+msgstr "S' està sol· licitant la parella"
+
+#. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 msgid "Reset"
@@ -4558,8 +4895,11 @@ msgstr "Recurs"
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/models/slide_slide_resource.py:0
-msgid "Resource %(resource_name)s is a link and should not contain a data file"
-msgstr "El recurs %(resource_name)s és un enllaç i no hauria de contenir un fitxer de dades"
+msgid ""
+"Resource %(resource_name)s is a link and should not contain a data file"
+msgstr ""
+"El recurs %(resource_name)s és un enllaç i no hauria de contenir un fitxer "
+"de dades"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__resource_type
@@ -4590,24 +4930,24 @@ msgstr "Ja s'ha contactat amb el responsable."
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_id
 #: model:ir.model.fields,help:website_slides.field_slide_channel_partner__channel_website_id
 #: model:ir.model.fields,help:website_slides.field_slide_slide__website_id
-msgid "Restrict publishing to this website."
-msgstr "Restringir les publicacions en aquest portal web."
+msgid "Restrict to a specific website."
+msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_source_types.xml:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__source_type__external
 msgid "Retrieve from Google Drive"
 msgstr "Recupera de Google Drive"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_install_module.xml:0
 msgid "Retry"
 msgstr "Reintentar"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.private_profile
+#: model_terms:ir.ui.view,arch_db:website_slides.profile_access_denied
 msgid "Return to the course."
 msgstr "Torna al curs."
 
@@ -4631,12 +4971,6 @@ msgstr "Data de la revisió"
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Reviews"
 msgstr "Ressenyes"
-
-#. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/js/portal_chatter.js:0
-msgid "Reviews (%s)"
-msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_fourth_attempt_reward
@@ -4677,8 +5011,11 @@ msgstr "Error de lliurament SMS"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__embed_code_external
-msgid "Same as 'Embed Code' but used to embed the content on an external website."
-msgstr "Igual que el \"Codi d'origen\", però utilitzat per a incloure el contingut en un lloc web extern."
+msgid ""
+"Same as 'Embed Code' but used to embed the content on an external website."
+msgstr ""
+"Igual que el \"Codi d'origen\", però utilitzat per a incloure el contingut "
+"en un lloc web extern."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
@@ -4687,24 +5024,26 @@ msgstr "Mostra"
 
 #. module: website_slides
 #. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/slide_unsubscribe_dialog/slide_unsubscribe_dialog.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
 #: code:addons/website_slides/static/src/js/slides_category_add.js:0
-#: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 msgid "Save"
 msgstr "Desar"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
-msgid "Save & Publish"
-msgstr "Desar la publicació"
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
+msgid "Save and Publish"
+msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Save your presentations or documents as PDF files and upload them."
-msgstr "Deseu les vostres presentacions o documents com a fitxers PDF i els carregueu."
+msgstr ""
+"Deseu les vostres presentacions o documents com a fitxers PDF i els "
+"carregueu."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_tree_slide_channel
@@ -4712,6 +5051,7 @@ msgid "Score"
 msgstr "Puntuació"
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "Search"
 msgstr "Cercar"
@@ -4740,8 +5080,7 @@ msgstr "Segon intent"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__category_id
 msgid "Section"
 msgstr "Secció"
@@ -4755,7 +5094,7 @@ msgstr "Secció subtítol "
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/slide_management.xml:0
+#: code:addons/website_slides/static/src/js/public/components/category_add_dialog/category_add_dialog.xml:0
 msgid "Section name"
 msgstr "Nom de secció"
 
@@ -4783,6 +5122,30 @@ msgstr "Selecciona manualment"
 
 #. module: website_slides
 #. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.js:0
+msgid "Select or create a category"
+msgstr ""
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/course_tag_add_dialog/course_tag_add_dialog.js:0
+msgid "Select or create a tag"
+msgstr ""
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/course_tag_add_dialog/course_tag_add_dialog.js:0
+msgid "Select or create a tag group"
+msgstr ""
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_select_tags.xml:0
+msgid "Select or create tags"
+msgstr ""
+
+#. module: website_slides
+#. odoo-javascript
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 msgid "Select the correct answer below:"
 msgstr ""
@@ -4790,7 +5153,9 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Sell access to your courses on your website and track revenues."
-msgstr "Veneu l'accés als vostres cursos al vostre lloc web i feu un seguiment dels ingressos."
+msgstr ""
+"Veneu l'accés als vostres cursos al vostre lloc web i feu un seguiment dels "
+"ingressos."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_website_sale_slides
@@ -4804,7 +5169,7 @@ msgstr "Enviar"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__send_email
 msgid "Send Email"
 msgstr "Enviar correu"
@@ -4847,6 +5212,7 @@ msgstr "Nom SEO"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__sequence
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__sequence
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__sequence
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__sequence
 msgid "Sequence"
 msgstr "Seqüència"
 
@@ -4857,6 +5223,7 @@ msgid "Settings"
 msgstr "Configuració"
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid "Share"
 msgstr "Compartir"
@@ -4868,7 +5235,7 @@ msgstr "Comparteix el canal"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_link
 msgid "Share Link"
 msgstr "Compartir enllaç"
@@ -4879,16 +5246,9 @@ msgid "Share Template"
 msgstr "Compartir plantilla"
 
 #. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_course_fullscreen_player.js:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_modal_header
 msgid "Share This Content"
 msgstr "Comparteix aquest contingut"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
-msgid "Share This Course"
-msgstr "Comparteix aquest curs"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_share_url
@@ -4897,56 +5257,68 @@ msgstr "Comparteix l'URL"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "Share by Email"
 msgstr "Comparteix per correu electrònic"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
 msgid "Share on Facebook"
 msgstr "Compartir a Facebook"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
 msgid "Share on LinkedIn"
 msgstr "Compartir a LinkedIn"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
 msgid "Share on Pinterest"
 msgstr "Comparteix amb el Pinterest"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_modal_body
 msgid "Share on Social Media"
 msgstr "Comparteix a les xarxes socials"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
-msgid "Share on Twitter"
-msgstr "Compartir a Twitter"
-
-#. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
 msgid "Share on Whatsapp"
 msgstr "Comparteix amb Whatsapp"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
+msgid "Share on X"
+msgstr ""
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
+msgid "Share this Content"
+msgstr ""
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
+msgid "Share this Course"
+msgstr ""
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
 msgid "Sharing is caring!"
 msgstr "Compartir és important!"
 
@@ -4982,21 +5354,24 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 msgid "Sign in and join the course to verify your answers!"
-msgstr "Inicieu la sessió i uniu-vos al curs per verificar les vostres respostes!"
+msgstr ""
+"Inicieu la sessió i uniu-vos al curs per verificar les vostres respostes!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
 msgid "Sign up"
-msgstr ""
+msgstr "Registrar-se"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__visibility__connected
 msgid "Signed In"
-msgstr ""
+msgstr "Sessió iniciada"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
-msgid "Skill up and have an impact! Your business career starts here.<br/>Time to start a course."
+msgid ""
+"Skill up and have an impact! Your business career starts here.<br/>Time to "
+"start a course."
 msgstr "Acabeu i impacteu! La teva carrera empresarial comença aquí."
 
 #. module: website_slides
@@ -5008,6 +5383,11 @@ msgstr "Diapositiva"
 #: model:ir.model,name:website_slides.model_slide_slide_partner
 msgid "Slide / Partner decorated m2m"
 msgstr "Diapositiva / Partner decorada m2m"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_icon_class
+msgid "Slide Icon fa-class"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_answer
@@ -5039,10 +5419,16 @@ msgstr "Imatge de les presentacions"
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/controllers/main.py:0
-msgid "Slide with questions must be marked as done when submitting all good answers "
-msgstr "La diapositiva amb preguntes s'ha de marcar com a fet en enviar totes les respostes bones"
+msgid ""
+"Slide with questions must be marked as done when submitting all good answers"
+" "
+msgstr ""
+"La diapositiva amb preguntes s'ha de marcar com a fet en enviar totes les "
+"respostes bones"
 
 #. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/xml/website_slides_fullscreen.xml:0
 #: model:ir.model,name:website_slides.model_slide_slide
 msgid "Slides"
 msgstr "Diapositives"
@@ -5079,6 +5465,12 @@ msgid "Start Course"
 msgstr "Curs d'inici"
 
 #. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
+msgid "Start at Page"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
 msgid "Start this Course"
 msgstr ""
@@ -5099,7 +5491,7 @@ msgstr "Inicia el teu curs en línia avui!"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
 msgid "Status"
-msgstr ""
+msgstr "Estat"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__activity_state
@@ -5110,7 +5502,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Estat basat en activitats\n"
-"Sobrepassat: La data límit ja ha passat\n"
+"Vençuda: La data límit ja ha passat\n"
 "Avui: La data de l'activitat és avui\n"
 "Planificat: Activitats futures."
 
@@ -5126,7 +5518,7 @@ msgstr "Assumpte..."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
+#: code:addons/website_slides/static/src/js/public/components/slide_unsubscribe_dialog/slide_unsubscribe_dialog.js:0
 msgid "Subscribe"
 msgstr "Subscriure's"
 
@@ -5152,8 +5544,12 @@ msgstr "Informació dels subscriptors"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__slide_type
-msgid "Subtype of the slide category, allows more precision on the actual file type / source type."
-msgstr "Subtipus de la categoria de diapositiva, permet més precisió sobre el tipus de fitxer / tipus de font real."
+msgid ""
+"Subtype of the slide category, allows more precision on the actual file type"
+" / source type."
+msgstr ""
+"Subtipus de la categoria de diapositiva, permet més precisió sobre el tipus "
+"de fitxer / tipus de font real."
 
 #. module: website_slides
 #. odoo-javascript
@@ -5163,23 +5559,16 @@ msgstr "S'ha aconseguit i guanyat el karma"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
-#: code:addons/website_slides/static/src/xml/website_slides_channel_tag.xml:0
+#: code:addons/website_slides/static/src/js/public/components/course_tag_add_dialog/course_tag_add_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_tag_form
 msgid "Tag"
 msgstr "Etiqueta"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_channel_tag.xml:0
+#: code:addons/website_slides/static/src/js/public/components/course_tag_add_dialog/course_tag_add_dialog.xml:0
 msgid "Tag Group"
 msgstr "Grup d'etiquetes"
-
-#. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
-msgid "Tag Group (required for new tags)"
-msgstr "Grup d'etiquetes (necessari per a etiquetes noves)"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
@@ -5188,13 +5577,18 @@ msgstr "Nom de l'etiqueta"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_tag__color
-msgid "Tag color used in both backend and website. No color means no display in kanban or front-end, to distinguish internal tags from public categorization tags"
-msgstr "Color de l'etiqueta utilitzat tant al dorsal com al lloc web. Sense color significa no mostrar-se en kanban o frontal, per a distingir etiquetes internes d'etiquetes de categorització pública"
+msgid ""
+"Tag color used in both backend and website. No color means no display in "
+"kanban or front-end, to distinguish internal tags from public categorization"
+" tags"
+msgstr ""
+"Color de l'etiqueta utilitzat tant al dorsal com al lloc web. Sense color "
+"significa no mostrar-se en kanban o frontal, per a distingir etiquetes "
+"internes d'etiquetes de categorització pública"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__tag_ids
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__tag_ids
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__tag_ids
@@ -5250,43 +5644,69 @@ msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Test your students with small Quizzes"
 msgstr "Proveu els vostres estudiants amb qüestionaris petits"
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
-msgid "The <b>Duration</b> of the lesson is based on the number of pages of your document. You can change this number if your attendees will need more time to assimilate the content."
-msgstr "La duració <b></b> de la lliçó es basa en el nombre de pàgines del document. Podeu canviar aquest número si els assistents necessitaran més temps per assimilar el contingut."
+msgid ""
+"The <b>Duration</b> of the lesson is based on the number of pages of your "
+"document. You can change this number if your attendees will need more time "
+"to assimilate the content."
+msgstr ""
+"La duració <b></b> de la lliçó es basa en el nombre de pàgines del document."
+" Podeu canviar aquest número si els assistents necessitaran més temps per "
+"assimilar el contingut."
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
-msgid "The <b>Title</b> of your lesson is autocompleted but you can change it if you want.</br>A <b>Preview</b> of your file is available on the right side of the screen."
-msgstr "El <b>Títol</b> de la lliçó s'ha completat automàticament, però el podeu canviar si voleu. Hi ha disponible una vista prèvia <b></b> del fitxer a la part dreta de la pantalla."
+msgid ""
+"The <b>Title</b> of your lesson is autocompleted but you can change it if "
+"you want.</br>A <b>Preview</b> of your file is available on the right side "
+"of the screen."
+msgstr ""
+"El <b>Títol</b> de la lliçó s'ha completat automàticament, però el podeu "
+"canviar si voleu. Hi ha disponible una vista prèvia <b></b> del fitxer a la "
+"part dreta de la pantalla."
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_channel_check_enroll
-msgid "The Enroll Policy should be set to 'On Invitation' when visibility is set to 'Course Attendees'"
+msgid ""
+"The Enroll Policy should be set to 'On Invitation' when visibility is set to"
+" 'Course Attendees'"
 msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-msgid "The Google Drive link can be obtained by using the 'share' button in the Google interface."
-msgstr "L'enllaç Google Drive es pot obtenir utilitzant el botó 'compartir' de la interfície de Google."
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
+msgid ""
+"The Google Drive link can be obtained by using the 'share' button in the "
+"Google interface."
+msgstr ""
+"L'enllaç Google Drive es pot obtenir utilitzant el botó 'compartir' de la "
+"interfície de Google."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-msgid "The Google Drive link to use here can be obtained by clicking the \"Share\" button in the Google interface."
-msgstr "L'enllaç Google Drive que s'utilitzarà aquí es pot obtenir fent clic al botó \"Compartir\" a la interfície de Google."
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
+msgid ""
+"The Google Drive link to use here can be obtained by clicking the \"Share\" "
+"button in the Google interface."
+msgstr ""
+"L'enllaç Google Drive que s'utilitzarà aquí es pot obtenir fent clic al botó"
+" \"Compartir\" a la interfície de Google."
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_channel_partner_check_completion
-msgid "The completion of a channel is a percentage and should be between 0% and 100."
-msgstr "La finalització d'un canal és un percentatge i hauria d'estar entre 0% i 100."
+msgid ""
+"The completion of a channel is a percentage and should be between 0% and "
+"100."
+msgstr ""
+"La finalització d'un canal és un percentatge i hauria d'estar entre 0% i "
+"100."
 
 #. module: website_slides
 #. odoo-python
@@ -5296,8 +5716,12 @@ msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__is_preview
-msgid "The course is accessible by anyone : the users don't need to join the channel to access the content of the course."
-msgstr "Qualsevol persona pot accedir al curs: els usuaris no necessiten entrar al canal per accedir al contingut del curs."
+msgid ""
+"The course is accessible by anyone : the users don't need to join the "
+"channel to access the content of the course."
+msgstr ""
+"Qualsevol persona pot accedir al curs: els usuaris no necessiten entrar al "
+"canal per accedir al contingut del curs."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__description_short
@@ -5306,20 +5730,25 @@ msgstr "La descripció que es mostra a la targeta del curs"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__description
-msgid "The description that is displayed on top of the course page, just below the title"
-msgstr "La descripció que es mostra a la part superior de la pàgina del curs, just a sota del títol"
+msgid ""
+"The description that is displayed on top of the course page, just below the "
+"title"
+msgstr ""
+"La descripció que es mostra a la part superior de la pàgina del curs, just a"
+" sota del títol"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_url
 #: model:ir.model.fields,help:website_slides.field_slide_channel_tag_group__website_url
 #: model:ir.model.fields,help:website_slides.field_slide_slide__website_url
 msgid "The full URL to access the document through the website."
-msgstr "URL completa per accedir al document a través del lloc web."
+msgstr "L'URL completa per accedir al document a través del lloc web."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__can_self_mark_completed
 msgid "The slide can be marked as completed even without opening it"
-msgstr "La diapositiva es pot marcar com a completada fins i tot sense obrir-la"
+msgstr ""
+"La diapositiva es pot marcar com a completada fins i tot sense obrir-la"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__can_self_mark_uncompleted
@@ -5328,9 +5757,13 @@ msgstr "La diapositiva es pot marcar com a no completada i la progressió"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-msgid "The video link to input here can be obtained by using the 'share' button in the Vimeo interface."
-msgstr "L'enllaç de vídeo a l'entrada aquí es pot obtenir utilitzant el botó 'compartir' a la interfície Vimeo."
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
+msgid ""
+"The video link to input here can be obtained by using the 'share' button in "
+"the Vimeo interface."
+msgstr ""
+"L'enllaç de vídeo a l'entrada aquí es pot obtenir utilitzant el botó "
+"'compartir' a la interfície Vimeo."
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_partner_check_vote
@@ -5339,9 +5772,11 @@ msgstr "La votació ha de ser 1, 0 o -1."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Then, go into the file permissions and set it as \"Anyone with the link\"."
-msgstr "Després, aneu als permisos del fitxer i establiu-lo com a «Qualsevol persona amb l'enllaç»."
+msgstr ""
+"Després, aneu als permisos del fitxer i establiu-lo com a «Qualsevol persona"
+" amb l'enllaç»."
 
 #. module: website_slides
 #: model:slide.tag,name:website_slides.slide_tag_demo_theory
@@ -5355,8 +5790,12 @@ msgstr "Actualment no hi ha comentaris."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid "There are no comments for now. Earn more Karma to be the first to leave a comment."
-msgstr "De moment no hi ha comentaris. Aneu més Karma per ser el primer a deixar un comentari."
+msgid ""
+"There are no comments for now. Earn more Karma to be the first to leave a "
+"comment."
+msgstr ""
+"De moment no hi ha comentaris. Aneu més Karma per ser el primer a deixar un "
+"comentari."
 
 #. module: website_slides
 #. odoo-javascript
@@ -5377,7 +5816,8 @@ msgstr "Tercer intent"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_answer__comment
 msgid "This comment will be displayed to the user if they select this answer"
-msgstr "Aquest comentari es mostrarà a l'usuari si selecciona aquesta resposta"
+msgstr ""
+"Aquest comentari es mostrarà a l'usuari si selecciona aquesta resposta"
 
 #. module: website_slides
 #. odoo-python
@@ -5387,7 +5827,9 @@ msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
-msgid "This course is not published. Attendees may not be able to access its contents."
+msgid ""
+"This course is not published. Attendees may not be able to access its "
+"contents."
 msgstr ""
 
 #. module: website_slides
@@ -5433,6 +5875,16 @@ msgid "This is the correct answer, congratulations"
 msgstr "Aquesta és la resposta correcta, felicitats"
 
 #. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/models/slide_question.py:0
+msgid ""
+"This question must have at least one correct answer and one incorrect "
+"answer."
+msgstr ""
+"Aquesta pregunta ha de tenir almenys una resposta correcta i una "
+"d'incorrecta."
+
+#. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 msgid "This quiz is already done. Retaking it is not possible."
@@ -5458,17 +5910,15 @@ msgstr "Aquest vídeo ja existeix en aquest canal en el contingut següent: %s"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid ""
 "Through Google Drive, we support most common types of documents.\n"
-"                                        Including regular documents (Google Doc, .docx), Sheets (Google Sheet, .xlsx), PowerPoints, ..."
+"            Including regular documents (Google Doc, .docx), Sheets (Google Sheet, .xlsx), PowerPoints, ..."
 msgstr ""
-"A través de Google Drive, admetem els tipus més comuns de documents.\n"
-"                                        Incloent documents regulars (Google Doc, .docx), fulls (Google Sheet, .xlsx), PowerPoints, ..."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__name
 msgid "Title"
 msgstr "Títol"
@@ -5535,22 +5985,12 @@ msgstr "Visualitzacions totals"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_gamification_karma_tracking
 msgid "Track Karma Changes"
-msgstr ""
+msgstr "Segueix els canvis del Karma"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__channel_type__training
 msgid "Training"
 msgstr "Formació"
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_slide_demo_1_0
-msgid "Tree Infographic"
-msgstr "Infografia de l'arbre"
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_slide_demo_2_2
-msgid "Tree planting in hanging bottles on wall"
-msgstr "Plantació d'arbres en ampolles penjades a la paret"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_2_0
@@ -5561,6 +6001,12 @@ msgstr "Arbres"
 #: model:slide.channel,name:website_slides.slide_channel_demo_2_gard2
 msgid "Trees, Wood and Gardens"
 msgstr "Arbres, fusta i jardins"
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/slide_quiz_finish_dialog/slide_quiz_finish_dialog.xml:0
+msgid "Triumphant hero"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -5582,12 +6028,14 @@ msgstr "URL del fitxer Google Drive o URL del vídeo de YouTube"
 #. odoo-python
 #: code:addons/website_slides/wizard/slide_channel_invite.py:0
 msgid "Unable to post message, please configure the sender's email address."
-msgstr "No s' ha pogut publicar el missatge, si us plau configureu l' adreça de correu del remitent."
+msgstr ""
+"No s'ha pogut publicar el missatge, si us plau configureu l'adreça de correu"
+" del remitent."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
 msgid "Unarchive"
-msgstr ""
+msgstr "Desarxivar"
 
 #. module: website_slides
 #. odoo-python
@@ -5636,11 +6084,11 @@ msgstr "Actualitza"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Update all your Attendees at once through mass mailings."
-msgstr "Actualitzeu tots els vostres assistents alhora a través de correus massius."
+msgstr ""
+"Actualitzeu tots els vostres assistents alhora a través de correus massius."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
 msgid "Upload Document"
 msgstr "Puja el document"
 
@@ -5651,7 +6099,7 @@ msgstr "Carregar grups"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_source_types.xml:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__source_type__local_file
 msgid "Upload from Device"
 msgstr "Puja des del dispositiu"
@@ -5663,7 +6111,7 @@ msgstr "Carregat per"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Uploading document ..."
 msgstr "S'està pujant el document..."
 
@@ -5675,7 +6123,13 @@ msgstr "Utilitzeu les etiquetes de contingut per classificar el contingut."
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_tag_group_action
 msgid "Use Course Groups to classify and organize your Courses."
-msgstr "Utilitzeu grups de cursos per classificar i organitzar els vostres cursos."
+msgstr ""
+"Utilitzeu grups de cursos per classificar i organitzar els vostres cursos."
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
+msgid "Use template"
+msgstr "Utilitzar plantilla"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
@@ -5698,15 +6152,20 @@ msgid "User vote"
 msgstr "Vot d'usuari"
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_form
+msgid "Validation error"
+msgstr ""
+
+#. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.js:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_category__video
 msgid "Video"
 msgstr "Vídeo"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.js:0
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__video_url
 msgid "Video Link"
 msgstr "Enllaç de vídeo"
@@ -5761,6 +6220,8 @@ msgid "Views •"
 msgstr "Vistes s"
 
 #. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/models/slide_slide.py:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__video_source_type__vimeo
 msgid "Vimeo"
 msgstr "Vimeo"
@@ -5818,7 +6279,9 @@ msgstr "Veure el/s mestre/s a la feina"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_1_4
-msgid "We had a little chat with Harry Potted, sure he had interesting things to say!"
+msgid ""
+"We had a little chat with Harry Potted, sure he had interesting things to "
+"say!"
 msgstr ""
 
 #. module: website_slides
@@ -5846,7 +6309,7 @@ msgstr "Missatges del lloc web"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__website_url
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_url
 msgid "Website URL"
-msgstr "URL del lloc web"
+msgstr "L'URL del lloc web"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_message_ids
@@ -5881,12 +6344,16 @@ msgstr "Imatge del lloc web"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
-msgid "Welcome on your course's home page. It's still empty for now. Click on \"<b>New</b>\" to write your first course."
-msgstr "Benvingut a la pàgina d'inici del vostre curs. Encara està buit de moment. Feu clic a \"<b>New</b>\" per escriure el vostre primer curs."
+msgid ""
+"Welcome on your course's home page. It's still empty for now. Click on "
+"\"<b>New</b>\" to write your first course."
+msgstr ""
+"Benvingut a la pàgina d'inici del vostre curs. Encara està buit de moment. "
+"Feu clic a \"<b>New</b>\" per escriure el vostre primer curs."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "What does"
 msgstr "Què fa"
 
@@ -5902,7 +6369,7 @@ msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "What types of documents do we support?"
 msgstr "Quin tipus de documents secundem?"
 
@@ -5913,25 +6380,33 @@ msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "When using local files, we only support PDF files."
 msgstr "Quan s'utilitzen fitxers locals, només s'admeten fitxers PDF."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__enroll_mode
-msgid "Whether invited partners will be added as enrolled. Otherwise, they will be added as invited."
+msgid ""
+"Whether invited partners will be added as enrolled. Otherwise, they will be "
+"added as invited."
 msgstr ""
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_4_1
-msgid "Which wood type is best for my solid wood furniture? That's the question we help you answer in this video!"
+msgid ""
+"Which wood type is best for my solid wood furniture? That's the question we "
+"help you answer in this video!"
 msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-msgid "With Quizzes you can keep your students focused and motivated by answering some questions and gaining some karma points"
-msgstr "Amb Qüestionaris podeu mantenir els vostres estudiants enfocats i motivats responent algunes preguntes i obtenint alguns punts del karma"
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
+msgid ""
+"With Quizzes you can keep your students focused and motivated by answering "
+"some questions and gaining some karma points"
+msgstr ""
+"Amb Qüestionaris podeu mantenir els vostres estudiants enfocats i motivats "
+"responent algunes preguntes i obtenint alguns punts del karma"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_2_1
@@ -5962,18 +6437,30 @@ msgstr "Treballar amb Wood"
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_2_1
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_4_0
-msgid "Write one or two paragraphs describing your product or services. <br>To be successful your content needs to be useful to your readers."
-msgstr "Escriviu un o dos paràgrafs que descriguin el vostre producte o serveis. <br>Per tenir èxit el vostre contingut ha de ser útil per als vostres lectors."
+msgid ""
+"Write one or two paragraphs describing your product or services. <br>To be "
+"successful your content needs to be useful to your readers."
+msgstr ""
+"Escriviu un o dos paràgrafs que descriguin el vostre producte o serveis. "
+"<br>Per tenir èxit el vostre contingut ha de ser útil per als vostres "
+"lectors."
 
 #. module: website_slides
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_2_1
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_4_0
-msgid "Write one or two paragraphs describing your product, services or a specific feature.<br> To be successful your content needs to be useful to your readers."
-msgstr "Escriviu un o dos paràgrafs que descriguin el vostre producte, serveis o una característica específica. Per a tenir èxit, el vostre contingut ha de ser útil per als vostres lectors."
+msgid ""
+"Write one or two paragraphs describing your product, services or a specific "
+"feature.<br> To be successful your content needs to be useful to your "
+"readers."
+msgstr ""
+"Escriviu un o dos paràgrafs que descriguin el vostre producte, serveis o una"
+" característica específica. Per a tenir èxit, el vostre contingut ha de ser "
+"útil per als vostres lectors."
 
 #. module: website_slides
 #. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/slide_quiz_finish_dialog/slide_quiz_finish_dialog.xml:0
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 msgid "XP"
 msgstr "XP"
@@ -5993,14 +6480,22 @@ msgstr "Sí"
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/models/slide_channel.py:0
-msgid "You are not allowed to add members to this course. Please contact the course responsible or an administrator."
+msgid ""
+"You are not allowed to add members to this course. Please contact the course"
+" responsible or an administrator."
 msgstr ""
+"No teniu permís per afegir membres a aquest curs. Contacteu amb el "
+"responsable del curs o amb un administrador."
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
-msgid "You can add <b>comments</b> on answers. This will be visible with the results if the user select this answer."
-msgstr "Podeu afegir <b>comentaris</b> a les respostes. Això serà visible amb els resultats si l'usuari selecciona aquesta resposta."
+msgid ""
+"You can add <b>comments</b> on answers. This will be visible with the "
+"results if the user select this answer."
+msgstr ""
+"Podeu afegir <b>comentaris</b> a les respostes. Això serà visible amb els "
+"resultats si l'usuari selecciona aquesta resposta."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -6009,13 +6504,17 @@ msgstr "Podeu afegir preguntes a aquest qüestionari a la pestanya «Quiz»."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-msgid "You can either upload a file from your computer or insert a Google Drive link."
-msgstr "Podeu pujar un fitxer des del vostre ordinador o inserir un enllaç al Google Drive."
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
+msgid ""
+"You can either upload a file from your computer or insert a Google Drive "
+"link."
+msgstr ""
+"Podeu pujar un fitxer des del vostre ordinador o inserir un enllaç al Google"
+" Drive."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.js:0
 msgid "You can not upload password protected file."
 msgstr "No es poden carregar fitxers protegits amb contrasenya"
 
@@ -6029,31 +6528,46 @@ msgstr "No podeu afegir etiquetes a aquest curs."
 #. odoo-python
 #: code:addons/website_slides/models/slide_slide.py:0
 msgid "You cannot mark a slide as completed if you are not among its members."
-msgstr "No podeu marcar una diapositiva com a completada si no esteu entre els seus membres."
+msgstr ""
+"No podeu marcar una diapositiva com a completada si no esteu entre els seus "
+"membres."
 
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/models/slide_slide.py:0
-msgid "You cannot mark a slide as uncompleted if you are not among its members."
-msgstr "No podeu marcar una diapositiva com a incompleta si no sou entre els seus membres."
+msgid ""
+"You cannot mark a slide as uncompleted if you are not among its members."
+msgstr ""
+"No podeu marcar una diapositiva com a incompleta si no sou entre els seus "
+"membres."
 
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/models/slide_slide.py:0
 msgid "You cannot mark a slide as viewed if you are not among its members."
-msgstr "No podeu marcar una diapositiva com a visualitzada si no esteu entre els seus membres."
+msgstr ""
+"No podeu marcar una diapositiva com a visualitzada si no esteu entre els "
+"seus membres."
 
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/models/slide_slide.py:0
-msgid "You cannot mark a slide quiz as completed if you are not among its members or it is unpublished."
+msgid ""
+"You cannot mark a slide quiz as completed if you are not among its members "
+"or it is unpublished."
 msgstr ""
+"No podeu marcar un qüestionari de diapositiva com a completat si no sou "
+"entre els seus membres o no està publicat."
 
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/models/slide_slide.py:0
-msgid "You cannot mark a slide quiz as not completed if you are not among its members or it is unpublished."
+msgid ""
+"You cannot mark a slide quiz as not completed if you are not among its "
+"members or it is unpublished."
 msgstr ""
+"No podeu marcar un qüestionari de diapositiva com a no completat si no sou "
+"entre els seus membres o no està publicat."
 
 #. module: website_slides
 #. odoo-python
@@ -6063,7 +6577,7 @@ msgstr "No podeu pujar en aquest canal."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_quiz_finish_dialog/slide_quiz_finish_dialog.xml:0
 msgid "You did it!"
 msgstr "Ho has fet!"
 
@@ -6087,7 +6601,7 @@ msgstr "No teniu prou karma per votar"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_quiz_finish_dialog/slide_quiz_finish_dialog.xml:0
 msgid "You gained"
 msgstr "Heu guanyat"
 
@@ -6105,7 +6619,7 @@ msgstr ""
 #. module: website_slides
 #: model:mail.template,subject:website_slides.mail_template_slide_channel_enroll
 msgid "You have been invited to join {{ object.channel_id.name }}"
-msgstr "Heu estat convidat a unir-vos a {{ object.channelid.name }}"
+msgstr "Heu estat convidat a unir-vos a {{ object.channel_id.name }}"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
@@ -6152,6 +6666,8 @@ msgid "You're enrolled"
 msgstr "Esteu inscrit"
 
 #. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/models/slide_slide.py:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__video_source_type__youtube
 msgid "YouTube"
 msgstr "YouTube"
@@ -6189,26 +6705,44 @@ msgstr ""
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/models/slide_slide.py:0
-msgid "Your file could not be found on Google Drive, please check the link and/or privacy settings"
-msgstr "No s'ha pogut trobar el vostre fitxer a Google Drive, si us plau, comproveu l'enllaç i/o la configuració de privadesa"
+msgid ""
+"Your file could not be found on Google Drive, please check the link and/or "
+"privacy settings"
+msgstr ""
+"No s'ha pogut trobar el vostre fitxer a Google Drive, si us plau, comproveu "
+"l'enllaç i/o la configuració de privadesa"
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
-msgid "Your first section is created, now it's time to add lessons to your course. Click on <b>Add Content</b> to upload a document, create an article or link a video."
-msgstr "S'ha creat la primera secció, ara és el moment d'afegir lliçons al vostre curs. Feu clic a <b>Afegeix contingut</b> per pujar un document, crear un article o enllaçar un vídeo."
+msgid ""
+"Your first section is created, now it's time to add lessons to your course. "
+"Click on <b>Add Content</b> to upload a document, create an article or link "
+"a video."
+msgstr ""
+"S'ha creat la primera secció, ara és el moment d'afegir lliçons al vostre "
+"curs. Feu clic a <b>Afegeix contingut</b> per pujar un document, crear un "
+"article o enllaçar un vídeo."
 
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/models/slide_slide.py:0
-msgid "Your video could not be found on Vimeo, please check the link and/or privacy settings"
-msgstr "No s'ha pogut trobar el vostre vídeo al Vimeo, si us plau, comproveu l'enllaç i/o la configuració de privacitat"
+msgid ""
+"Your video could not be found on Vimeo, please check the link and/or privacy"
+" settings"
+msgstr ""
+"No s'ha pogut trobar el vostre vídeo al Vimeo, si us plau, comproveu "
+"l'enllaç i/o la configuració de privacitat"
 
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/models/slide_slide.py:0
-msgid "Your video could not be found on YouTube, please check the link and/or privacy settings"
-msgstr "No s'ha pogut trobar el vostre vídeo a YouTube, si us plau, comproveu l'enllaç i/o la configuració de privacitat"
+msgid ""
+"Your video could not be found on YouTube, please check the link and/or "
+"privacy settings"
+msgstr ""
+"No s'ha pogut trobar el vostre vídeo a YouTube, si us plau, comproveu "
+"l'enllaç i/o la configuració de privacitat"
 
 #. module: website_slides
 #. odoo-python
@@ -6234,7 +6768,7 @@ msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog_select.xml:0
 msgid "app."
 msgstr "app."
 
@@ -6245,15 +6779,21 @@ msgstr "fil d'Ariadna"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "by email."
 msgstr "per correu electrònic."
 
 #. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
+msgid "course"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
 msgid "courses"
-msgstr ""
+msgstr "cursos"
 
 #. module: website_slides
 #. odoo-javascript
@@ -6268,14 +6808,14 @@ msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_source_types.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "e.g \"https://drive.google.com/file/...\""
 msgstr "p. ex. \"https://drive.google.com/file/...\""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_source_types.xml:0
 msgid "e.g \"https://www.youtube.com/watch?v=ebBez6bcSEc\""
 msgstr "p. ex. \"https://www.youtube.com/watch?v=ebBez6bcSEc\""
 
@@ -6291,7 +6831,7 @@ msgstr "p. ex. 'HowTo'"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
 msgid "e.g. \"15\""
 msgstr "p. ex. \"15\""
 
@@ -6302,7 +6842,7 @@ msgstr "p. ex. \"Científica computacional per a nens\""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/slide_management.xml:0
+#: code:addons/website_slides/static/src/js/public/components/category_add_dialog/category_add_dialog.xml:0
 msgid "e.g. \"Introduction\""
 msgstr "p. ex. \"Introducció\""
 
@@ -6313,14 +6853,25 @@ msgid "e.g. \"Which animal cannot fly?\""
 msgstr "Per exemple, \"Quin animal no pot volar?\""
 
 #. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
+msgid "e.g. \"{{placeholder || \"another animal\"}}\""
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_form_add
 msgid "e.g. Computer Science for kids"
 msgstr "P. ex. Informàtica per a infants"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
-msgid "e.g. In this video, we'll give you the keys on how Odoo can help you to grow your business. At the end, we'll propose you a quiz to test your knowledge."
-msgstr "Per exemple, en aquest vídeo, us donarem les claus de com l'Odoo us pot ajudar a fer créixer el vostre negoci. Al final, et proposarem un qüestionari per provar el teu coneixement."
+msgid ""
+"e.g. In this video, we'll give you the keys on how Odoo can help you to grow"
+" your business. At the end, we'll propose you a quiz to test your knowledge."
+msgstr ""
+"Per exemple, en aquest vídeo, us donarem les claus de com l'Odoo us pot "
+"ajudar a fer créixer el vostre negoci. Al final, et proposarem un "
+"qüestionari per provar el teu coneixement."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -6350,49 +6901,43 @@ msgid "eLearning Courses"
 msgstr "Cursos d'elearning"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_res_partner__slide_channel_all_ids
-#: model:ir.model.fields,field_description:website_slides.field_res_users__slide_channel_all_ids
-msgid "eLearning Courses and Invitations"
-msgstr ""
-
-#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 msgid "eLearning Overview"
 msgstr "Vista general d'elearning"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "for 'Private' videos and similar to"
 msgstr "per a vídeos «Privats» i similars a"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "for public ones."
 msgstr "pels públics."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
 msgid "friend1@email.com, friend2@email.com"
 msgstr "friend1@email.com, friend2@email.com"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "https://drive.google.com/file/d/ABC/view?usp=sharing"
 msgstr "https://drive.google.com/file/d/ABC/view?usp=sharing"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "https://vimeo.com/558907333/30da9ff3d8"
 msgstr "https://vimeo.com/558907333/30da9ff3d8"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "https://vimeo.com/558907555"
 msgstr "https://vimeo.com/558907555"
 
@@ -6403,38 +6948,42 @@ msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
 #: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "login"
 msgstr "iniciar sessió"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid ""
 "mean? The Vimeo \"Private\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
-"                                    Your video will never come up in the search results nor on your channel."
+"                Your video will never come up in the search results nor on your channel."
 msgstr ""
-"Vols dir? La configuració de privacitat \"Privada\" de Vimeo significa que és un vídeo que només poden veure els usuaris amb l'enllaç.\n"
-"                                    El vostre vídeo mai apareixerà als resultats de cerca ni al canal."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-msgid "means? The YouTube \"unlisted\" means it is a video which can be viewed only by the users with the link to it. Your video will never come up in the search results nor on your channel."
-msgstr "Vol dir? YouTube \"sense llistar\" significa que és un vídeo que només poden veure els usuaris amb l'enllaç. El vostre vídeo mai apareixerà als resultats de cerca ni al canal."
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
+msgid ""
+"means? The YouTube \"unlisted\" means it is a video which can be viewed only"
+" by the users with the link to it. Your video will never come up in the "
+"search results nor on your channel."
+msgstr ""
+"Vol dir? YouTube \"sense llistar\" significa que és un vídeo que només poden"
+" veure els usuaris amb l'enllaç. El vostre vídeo mai apareixerà als "
+"resultats de cerca ni al canal."
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
 msgid "or"
-msgstr ""
+msgstr "o"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
+#: code:addons/website_slides/static/src/js/public/components/slide_unsubscribe_dialog/slide_unsubscribe_dialog.xml:0
 msgid "or Leave the course"
 msgstr "o surt del curs"
 
@@ -6499,7 +7048,7 @@ msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "to share this"
 msgstr "per compartir-ho"
@@ -6511,7 +7060,7 @@ msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "unlisted"
 msgstr "sense llistar"
 
@@ -6535,9 +7084,9 @@ msgstr "{{ user.name }} ha compartit un curs"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_shared
 msgid "{{ user.name }} shared a {{ object.slide_category }} with you!"
-msgstr "{{ user.name }} us ha compartit {{ object.slidecategory }}!"
+msgstr "{{ user.name }} us ha compartit {{ object.slide_category }}!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "└<span class=\"ms-1\">Uncategorized</span>"
-msgstr "<span class=\"ms-1\">Sense categoria</span>"
+msgstr "└<span class=\"ms-1\">Sense categoria</span>"

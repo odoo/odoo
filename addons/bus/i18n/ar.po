@@ -1,29 +1,43 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* bus
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Malaz Abuidris <msea@odoo.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
-"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: bus
+#: model:ir.model,name:bus.model_res_groups
+msgid "Access Groups"
+msgstr "مجموعات الوصول"
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_attachment
+msgid "Attachment"
+msgstr "مرفق"
 
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
 msgid "Away"
 msgstr "بعيد"
+
+#. module: bus
+#: model:ir.model,name:bus.model_bus_listener_mixin
+msgid "Can send messages via bus.bus"
+msgstr "يمكن إرسال الرسائل عن طريق bus.bus "
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__channel
@@ -55,6 +69,11 @@ msgstr "أنشئ في"
 #: model:ir.model.fields,field_description:bus.field_bus_presence__display_name
 msgid "Display Name"
 msgstr "اسم العرض "
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_http
+msgid "HTTP Routing"
+msgstr "مسار HTTP"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__id
@@ -92,12 +111,12 @@ msgstr "آخر تحديث في"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__message
 msgid "Message"
-msgstr "رسالة "
+msgstr "الرسالة"
 
 #. module: bus
 #: model:ir.model,name:bus.model_ir_model
 msgid "Models"
-msgstr "النماذج "
+msgstr "النماذج"
 
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__offline
@@ -112,14 +131,31 @@ msgstr "عبر الإنترنت "
 #. module: bus
 #. odoo-javascript
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
 msgid "Refresh"
 msgstr "تحديث "
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid ""
+"Save your work and refresh to get the latest updates and avoid potential "
+"issues."
+msgstr ""
+"احفظ عملك ثم قم بالتحديث حتى تحصل على آخر التحديثات ولتجنب وقوع أي مشاكل "
+"محتملة. "
 
 #. module: bus
 #. odoo-javascript
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
 msgid "The page appears to be out of date."
 msgstr "يبدو أن هذه الصفحة قديمة. "
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid "The page is out of date"
+msgstr "هذه الصفحة غير محدثة "
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
@@ -132,15 +168,26 @@ msgid "User Presence"
 msgstr "وجود المستخدم"
 
 #. module: bus
+#: model:ir.model,name:bus.model_res_users_settings
+msgid "User Settings"
+msgstr "إعدادات المستخدم "
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__user_id
 msgid "Users"
-msgstr "المستخدمين "
+msgstr "المستخدمون"
 
 #. module: bus
 #. odoo-python
 #: code:addons/bus/controllers/home.py:0
-msgid "Your password is the default (admin)! If this system is exposed to untrusted users it is important to change it immediately for security reasons. I will keep nagging you about it!"
+msgid ""
+"Your password is the default (admin)! If this system is exposed to untrusted"
+" users it is important to change it immediately for security reasons. I will"
+" keep nagging you about it!"
 msgstr ""
+"كلمة المرور الخاصة بك هي كلمة المرور الافتراضية (admin)! إذا كان هذا النظام "
+"معرضااً للمستخدمين غير الموثوقين، من المهم تغييرها فورا لأسباب أمنية. سأظل "
+"ألح عليك حول هذا الموضوع! "
 
 #. module: bus
 #: model:ir.model,name:bus.model_ir_websocket

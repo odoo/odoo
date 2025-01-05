@@ -1,34 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import
-#
+# 
 # Translators:
-# İmat Yahya Çataklı <yahyacatakli@gmail.com>, 2022
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
-# Martin Trigaux, 2022
-# Cem Uygur <cemuygur.beb@gmail.com>, 2022
-# Umur Akın <umura@projetgrup.com>, 2022
-# Levent Karakaş <levent@mektup.at>, 2022
-# Murat Kaplan <muratk@projetgrup.com>, 2022
-# abc Def <hdogan1974@gmail.com>, 2022
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2022
-# Ediz Duman <neps1192@gmail.com>, 2022
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2022
-# Tugay Hatıl <tugayh@projetgrup.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2023\n"
+"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
-"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
+msgid "%(number)s file(s) selected"
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "%(property_string)s (%(parent_name)s)"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -45,7 +46,9 @@ msgstr ""
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "A single column was found in the file, this often means the file separator is incorrect."
+msgid ""
+"A single column was found in the file, this often means the file separator "
+"is incorrect."
 msgstr ""
 
 #. module: base_import
@@ -62,6 +65,13 @@ msgstr "Gelişmiş"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid ""
+"After each batch import, this delay is applied to avoid unthrottled calls"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Allow matching with subfields"
 msgstr "Alt alanlarla eşleştirmeye izin ver"
@@ -69,8 +79,16 @@ msgstr "Alt alanlarla eşleştirmeye izin ver"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "An unknown issue occurred during import (possibly lost connection, data limit exceeded or memory limits exceeded). Please retry in case the issue is transient. If the issue still occurs, try to split the file rather than import it at once."
-msgstr "İçe aktarım sırasında bilinmeyen bir durum meydana geldi ( muhtemelen bağlantı kayboldu, veri veya hafıza sınırları aşıldı). Lütfen sorunun geçici olması durumunda tekrar deneyin. Sorun devam ederse, dosyayı bir kerede içe aktarmak yerine bölmeyi deneyin."
+msgid ""
+"An unknown issue occurred during import (possibly lost connection, data "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is"
+" transient. If the issue still occurs, try to split the file rather than "
+"import it at once."
+msgstr ""
+"İçe aktarım sırasında bilinmeyen bir durum meydana geldi ( muhtemelen "
+"bağlantı kayboldu, veri veya hafıza sınırları aşıldı). Lütfen sorunun geçici"
+" olması durumunda tekrar deneyin. Sorun devam ederse, dosyayı bir kerede içe"
+" aktarmak yerine bölmeyi deneyin."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -91,7 +109,7 @@ msgstr "İçe Aktarım Haritalaması"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Batch"
-msgstr ""
+msgstr "Batch"
 
 #. module: base_import
 #. odoo-javascript
@@ -108,6 +126,12 @@ msgstr "Parti limiti"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "But, you can also use .csv files"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Cancel"
 msgstr "İptal"
 
@@ -120,14 +144,16 @@ msgstr ""
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Column %s contains incorrect values (value: %s)"
-msgstr "%s.sütun yanlış değerler içeriyor (değer: %s)"
+msgid "Column %(column)s contains incorrect values (value: %(value)s)"
+msgstr ""
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr "%s sütunu yanlış değerler içeriyor. %d satırında hata: %s"
+msgid ""
+"Column %(column)s contains incorrect values. Error in line %(line)d: "
+"%(error)s"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -149,7 +175,9 @@ msgstr "Yorumlar"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
+msgid ""
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 msgstr "URL alınamadı: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 
 #. module: base_import
@@ -162,13 +190,19 @@ msgstr "Yeni değerler oluştur"
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__create_uid
 msgid "Created by"
-msgstr "Oluşturan"
+msgstr "Tarafından oluşturuldu"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__create_date
 msgid "Created on"
-msgstr "Oluşturulma"
+msgstr "Oluşturuldu"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Data to import"
+msgstr "İçe aktarılacak veriler"
 
 #. module: base_import
 #. odoo-python
@@ -192,13 +226,25 @@ msgstr "Tarih Saat Biçimi:"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Decimals Separator:"
+msgstr "Ondalık Ayırıcı:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Defines how many megabytes can be imported in each batch import"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Delay after each batch"
 msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__display_name
 msgid "Display Name"
-msgstr "Görünüm Adı"
+msgstr "İsim Göster"
 
 #. module: base_import
 #. odoo-javascript
@@ -215,6 +261,12 @@ msgstr "İndir"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Drop or upload a file to import"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Encoding:"
 msgstr "Kodlama:"
@@ -222,13 +274,29 @@ msgstr "Kodlama:"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Error Parsing Date [%s:L%d]: %s"
-msgstr "Tarihi ayrıştırma hatası [%s: L %d]: %s"
+msgid "Error Parsing Date [%(field)s:L%(line)d]: %(error)s"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Error at row %s: \"%s\""
+msgid "Error at row %(row)s: \"%(error)s\""
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %(title_row_entries)d entries while the first row has "
+"%(first_row_entries)d. You may need to change the separator character."
 msgstr ""
 
 #. module: base_import
@@ -279,7 +347,7 @@ msgstr "Dosya Adı"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_type
 msgid "File Type"
-msgstr "Dosya Tipi"
+msgstr "Dosya Türü"
 
 #. module: base_import
 #. odoo-python
@@ -290,7 +358,14 @@ msgstr "Dosya boyutu maksimum miktarı aşıyor (%s byte)"
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr "Denetlenecek ve/veya içeaktarılacak dosya, ikili sıralı (base64 değil)"
+msgstr ""
+"Denetlenecek ve/veya içeaktarılacak dosya, ikili sıralı (base64 değil)"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Files to import"
+msgstr "İçe aktarılacak dosyalar"
 
 #. module: base_import
 #. odoo-javascript
@@ -313,8 +388,12 @@ msgstr "Biçimlendirme"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Found invalid image data, images should be imported as either URLs or base64-encoded data."
-msgstr "Geçersiz resim verileri bulundu, resimler URL veya base64 kodlu veri olarak içe aktarılmalıdır."
+msgid ""
+"Found invalid image data, images should be imported as either URLs or "
+"base64-encoded data."
+msgstr ""
+"Geçersiz resim verileri bulundu, resimler URL veya base64 kodlu veri olarak "
+"içe aktarılmalıdır."
 
 #. module: base_import
 #. odoo-javascript
@@ -348,13 +427,30 @@ msgid ""
 "                    the column names, Odoo can try auto-detecting the\n"
 "                    field corresponding to the column. This makes imports\n"
 "                    simpler especially when the file has many columns."
-msgstr "Dosya sütun adlarını içeriyorsa, Odoo sütuna karşılık gelen alanı otomatik olarak algılamayı deneyebilir. Bu, özellikle dosyada çok sayıda sütun olduğunda içe aktarmayı kolaylaştırır."
+msgstr ""
+"Dosya sütun adlarını içeriyorsa, Odoo sütuna karşılık gelen alanı otomatik "
+"olarak algılamayı deneyebilir. Bu, özellikle dosyada çok sayıda sütun "
+"olduğunda içe aktarmayı kolaylaştırır."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid ""
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
+msgstr ""
+"Model openchatter kullanıyorsa, geçmiş izleme abonelikler kuracak ve içe "
+"aktarma sırasında bildirim gönderecek, ancak daha yavaş bir içe aktarmaya "
+"yol açacaktır."
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Image size excessive, imported images must be smaller than 42 million pixel"
-msgstr "Görüntü boyutu çok yüksek, içe aktarılan görüntüler 42 milyon pikselden küçük olmalıdır"
+msgid ""
+"Image size excessive, imported images must be smaller than 42 million pixel"
+msgstr ""
+"Görüntü boyutu çok yüksek, içe aktarılan görüntüler 42 milyon pikselden "
+"küçük olmalıdır"
 
 #. module: base_import
 #. odoo-javascript
@@ -394,27 +490,24 @@ msgstr "Kayıtları İçe Aktar"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_model.js:0
-msgid "Import timed out. Please retry. If you still encounter this issue, the file may be too big for the system's configuration, try to split it (import less records per file)."
-msgstr "İçe aktarma zaman aşımına uğradı. Lütfen tekrar deneyiniz. Bu sorunla karşılaşmaya devam ediyorsanız, dosya sistem yapılandırması için çok büyük olabilir, bölmeyi deneyin (dosya başına daha az kayıt alın)."
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Imported file"
-msgstr "İçe aktarılan dosya"
-
-#. module: base_import
-#. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Importing"
-msgstr "içe aktarılıyor"
+msgstr "İçe aktarılıyor"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
+"format: %(cell_format)s, as (%(format_type)s) formats are not supported."
+msgstr ""
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
-msgstr "%(col)s.sütun %(row)s.satırdaki hücre değeri geçersiz : %(cell_value)s"
+msgstr ""
+"%(col)s.sütun %(row)s.satırdaki hücre değeri geçersiz : %(cell_value)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
@@ -431,8 +524,8 @@ msgstr "Son Güncelleme"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Load File"
-msgstr "Dosya Yükle"
+msgid "Load Data File"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -444,6 +537,18 @@ msgstr "Dosya yükleniyor..."
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_block_ui.xml:0
 msgid "Loading..."
+msgstr "Yükleniyor..."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Max size per batch"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Mb"
 msgstr ""
 
 #. module: base_import
@@ -471,6 +576,12 @@ msgstr "Ayraç Yok"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
+msgid "No file selected"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "No matching records found for the following name"
 msgstr ""
@@ -483,6 +594,20 @@ msgstr "Odoo Alanı"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Please upload a single file."
+msgstr "Lütfen tek bir dosya yükleyin."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Please upload an Excel (.xls or .xlsx) or .csv file to import."
+msgstr ""
+"Lütfen içe aktarmak için bir Excel (.xls veya .xlsx) veya .csv dosyası "
+"yükleyin."
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Prevent import"
 msgstr "Aktarmayı engelle"
@@ -492,6 +617,12 @@ msgstr "Aktarmayı engelle"
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Preview"
 msgstr "Önizle"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Progress bar"
+msgstr "İlerleme Çubuğu"
 
 #. module: base_import
 #. odoo-javascript
@@ -514,13 +645,13 @@ msgstr "Res Model"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Resume"
-msgstr "Devam Et"
+msgstr "Özgeçmiş"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Search a field..."
-msgstr ""
+msgstr "Bir alanda arayın..."
 
 #. module: base_import
 #. odoo-javascript
@@ -574,7 +705,7 @@ msgstr "Değeri boş ayarla"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Sheet:"
-msgstr "Çizelge"
+msgstr "Çizelge:"
 
 #. module: base_import
 #. odoo-javascript
@@ -682,13 +813,18 @@ msgstr "İçe aktarma sırasında geçmişi izle"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
-msgstr "\"{extension}\" dosyası yüklenemiyor: \"{modname}\" Python modülü gerektiriyor"
+msgstr ""
+"\"{extension}\" dosyası yüklenemiyor: \"{modname}\" Python modülü "
+"gerektiriyor"
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
-msgstr "Desteklenmeyen dosya biçimi \"{}\", Sadece CSV, ODS, XLS ve XLSX dosyaları aktarılabilir."
+msgid ""
+"Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
+msgstr ""
+"Desteklenmeyen dosya biçimi \"{}\", Sadece CSV, ODS, XLS ve XLSX dosyaları "
+"aktarılabilir."
 
 #. module: base_import
 #. odoo-javascript
@@ -699,25 +835,32 @@ msgstr "Başlıksız"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Upload File"
-msgstr "Dosya Yükleme"
+msgid "Upload Data File"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Upload an Excel or CSV file to import"
-msgstr "İçe aktarmak için bir Excel veya CSV dosyası yükleyin"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_model.js:0
-msgid "Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h system. You can use a custom format in addition to the suggestions provided. Leave empty to let Odoo guess the format (recommended)"
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Upload your files"
 msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Use YYYY to represent the year, MM for the month and DD for the day. Include separators such as a dot, forward slash or dash. You can use a custom format in addition to the suggestions provided. Leave empty to let Odoo guess the format (recommended)"
+msgid ""
+"Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
+"system. You can use a custom format in addition to the suggestions provided."
+" Leave empty to let Odoo guess the format (recommended)"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid ""
+"Use YYYY to represent the year, MM for the month and DD for the day. Include"
+" separators such as a dot, forward slash or dash. You can use a custom "
+"format in addition to the suggestions provided. Leave empty to let Odoo "
+"guess the format (recommended)"
 msgstr ""
 
 #. module: base_import
@@ -733,6 +876,16 @@ msgstr "Kullanıcı"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid ""
+"Warning: ignores the labels line, empty lines and lines composed only of "
+"empty cells"
+msgstr ""
+"Uyarı: etiket satırını, boş satırları ve yalnızca boş hücrelerden oluşan "
+"satırları yok sayar"
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.xml:0
 msgid "When a value cannot be matched:"
 msgstr "Bir değer eşleştirilemediğinde:"
@@ -740,14 +893,20 @@ msgstr "Bir değer eşleştirilemediğinde:"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "You can not import images via URL, check with your administrator or support for the reason."
-msgstr "URL yolu ile görüntüleri içeri aktaramazsınız, nedeni için yöneticinizle ya da destek ekibi ile kontrol edin. (Erişim Hakları yetkisini almalısınız)"
+msgid ""
+"You can not import images via URL, check with your administrator or support "
+"for the reason."
+msgstr ""
+"URL yolu ile görüntüleri içeri aktaramazsınız, nedeni için yöneticinizle ya "
+"da destek ekibi ile kontrol edin. (Erişim Hakları yetkisini almalısınız)"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "You can test or reload your file before resuming the import."
-msgstr "İçe aktarmaya devam etmeden önce dosyanızı test edebilir veya yeniden yükleyebilirsiniz."
+msgstr ""
+"İçe aktarmaya devam etmeden önce dosyanızı test edebilir veya yeniden "
+"yükleyebilirsiniz."
 
 #. module: base_import
 #. odoo-python
@@ -783,7 +942,7 @@ msgstr "dakika"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "more"
-msgstr ""
+msgstr "daha"
 
 #. module: base_import
 #. odoo-javascript
@@ -794,8 +953,9 @@ msgstr "out of"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "seconds"
-msgstr ""
+msgstr "saniye"
 
 #. module: base_import
 #. odoo-python

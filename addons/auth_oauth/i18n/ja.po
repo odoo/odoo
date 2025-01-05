@@ -1,33 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_oauth
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.providers
 msgid "- or -"
-msgstr ""
-
-#. module: auth_oauth
-#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
-msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Tutorial"
-msgstr ""
+msgstr "- または -"
 
 #. module: auth_oauth
 #. odoo-python
@@ -43,7 +38,7 @@ msgstr "Googleでのサインインを許可"
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Allow users to sign in with their Google account"
-msgstr ""
+msgstr "Googleアカウントでのサインインを許可"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__enabled
@@ -53,7 +48,7 @@ msgstr "許可"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__auth_endpoint
 msgid "Authorization URL"
-msgstr ""
+msgstr "認証URL"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__css_class
@@ -69,7 +64,7 @@ msgstr "クライアントID"
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Client ID:"
-msgstr ""
+msgstr "クライアントID"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_config_settings
@@ -89,20 +84,26 @@ msgstr "作成日"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__data_endpoint
 msgid "Data Endpoint"
-msgstr ""
+msgstr "データエンドポイント"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__display_name
 msgid "Display Name"
 msgstr "表示名"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Google Authentication"
-msgstr ""
+msgstr "Google認証"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__id
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -119,26 +120,32 @@ msgstr "最終更新日"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_auth_oauth_provider__body
 msgid "Link text in Login Dialog"
-msgstr ""
+msgstr "ログインダイアログのリンクテキスト"
 
 #. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_facebook
 msgid "Log in with Facebook"
-msgstr ""
+msgstr "Facebookでログイン"
 
 #. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_google
 msgid "Log in with Google"
-msgstr ""
+msgstr "Googleでログイン"
 
 #. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_openerp
 msgid "Log in with Odoo.com"
-msgstr ""
+msgstr "Odoo.comでログイン"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
 msgid "Login button label"
+msgstr "ログインボタンラベル"
+
+#. module: auth_oauth
+#. odoo-python
+#: code:addons/auth_oauth/models/res_users.py:0
+msgid "Missing subject identity"
 msgstr ""
 
 #. module: auth_oauth
@@ -149,18 +156,18 @@ msgstr "OAuthアクセストークン"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_provider_id
 msgid "OAuth Provider"
-msgstr "OAuthプロバイダ"
+msgstr "OAuthプロバイダー"
 
 #. module: auth_oauth
 #: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "OAuth Providers"
-msgstr "OAuthプロバイダ"
+msgstr "OAuthプロバイダー"
 
 #. module: auth_oauth
 #: model:ir.model.constraint,message:auth_oauth.constraint_res_users_uniq_users_oauth_provider_oauth_uid
 msgid "OAuth UID must be unique per provider"
-msgstr "OAuth UID はプロバイダごとにユニークでなくてはなりません"
+msgstr "OAuth UID はプロバイダーごとにユニークでなくてはなりません"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_uid
@@ -170,7 +177,7 @@ msgstr "OAuthユーザID"
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_auth_oauth_provider
 msgid "OAuth2 provider"
-msgstr "OAuth2プロバイダ"
+msgstr "OAuth2プロバイダー"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_users_form
@@ -180,17 +187,17 @@ msgstr "Oauth"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users__oauth_uid
 msgid "Oauth Provider user_id"
-msgstr "OAuthプロバイダユーザ"
+msgstr "OAuthプロバイダーユーザ"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__name
 msgid "Provider name"
-msgstr "プロバイダ名"
+msgstr "プロバイダー名"
 
 #. module: auth_oauth
 #: model:ir.actions.act_window,name:auth_oauth.action_oauth_provider
 msgid "Providers"
-msgstr "プロバイダ"
+msgstr "プロバイダー"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__scope
@@ -200,7 +207,7 @@ msgstr "スコープ"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__sequence
 msgid "Sequence"
-msgstr "付番"
+msgstr "シーケンス"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__server_uri_google
@@ -219,6 +226,11 @@ msgid "System Parameter"
 msgstr "システムパラメタ"
 
 #. module: auth_oauth
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+msgid "Tutorial"
+msgstr "チュートリアル"
+
+#. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
 msgid "User"
 msgstr "ユーザ"
@@ -226,12 +238,15 @@ msgstr "ユーザ"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__validation_endpoint
 msgid "UserInfo URL"
-msgstr ""
+msgstr "ユーザ情報URL"
 
 #. module: auth_oauth
 #. odoo-python
 #: code:addons/auth_oauth/controllers/main.py:0
-msgid "You do not have access to this database or your invitation has expired. Please ask for an invitation and be sure to follow the link in your invitation email."
+msgid ""
+"You do not have access to this database or your invitation has expired. "
+"Please ask for an invitation and be sure to follow the link in your "
+"invitation email."
 msgstr "このデータベースにアクセスできないか、招待状の有効期限が切れています。 招待状を依頼し、招待状メールのリンクに必ず従ってください。"
 
 #. module: auth_oauth

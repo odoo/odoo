@@ -1,28 +1,52 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_org_chart
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:01+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
-"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
+msgid "<span class=\"o_stat_text\">Org Chart</span>"
+msgstr "<span class=\"o_stat_text\">조직도</span>"
+
+#. module: hr_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
+msgid "Add a new employee"
+msgstr "새 직원 추가"
 
 #. module: hr_org_chart
 #: model:ir.model,name:hr_org_chart.model_hr_employee_base
 msgid "Basic Employee"
 msgstr "기본 직원"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__department_color
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__department_color
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__department_color
+msgid "Department Color"
+msgstr "부서 색상"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_count
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_count
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_count
+msgid "Direct Subordinates Count"
+msgstr "직속 부하 직원 수"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,help:hr_org_chart.field_hr_employee__subordinate_ids
@@ -42,17 +66,30 @@ msgid "Employee"
 msgstr "임직원"
 
 #. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_department_hierarchy_view
+msgid "Employees"
+msgstr "직원"
+
+#. module: hr_org_chart
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 msgid "In order to get an organigram, set a manager and save the record."
 msgstr "조직도를 가져 오려면 관리자를 설정하고 기록을 저장하십시오."
 
 #. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_controller.xml:0
+msgid ""
+"In the Organigram you will have a clear overview of the hierarchy of "
+"employees."
+msgstr "조직도에서 직원 직급 체계의 명확한 레이아웃을 볼 수 있습니다."
+
+#. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_all_count
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_all_count
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_all_count
 msgid "Indirect Subordinates Count"
-msgstr ""
+msgstr "전체 부하 직원 수"
 
 #. module: hr_org_chart
 #. odoo-javascript
@@ -64,7 +101,7 @@ msgstr "관련 부하 직원"
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__is_subordinate
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__is_subordinate
 msgid "Is Subordinate"
-msgstr ""
+msgstr "부하 직원"
 
 #. module: hr_org_chart
 #. odoo-javascript
@@ -74,15 +111,27 @@ msgstr "관리자 더보기"
 
 #. module: hr_org_chart
 #. odoo-javascript
+#: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_controller.xml:0
+msgid "No Data"
+msgstr "데이터 없음"
+
+#. module: hr_org_chart
+#. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 msgid "No hierarchy position."
-msgstr "계층 구조가 없습니다."
+msgstr "아직 조직도가 정의되지 않았습니다."
 
 #. module: hr_org_chart
 #. odoo-python
 #: code:addons/hr_org_chart/models/hr_org_chart_mixin.py:0
 msgid "Operation not supported"
-msgstr ""
+msgstr "지원되지 않는 작업"
+
+#. module: hr_org_chart
+#: model:ir.actions.act_window,name:hr_org_chart.action_hr_employee_org_chart
+#: model:ir.ui.menu,name:hr_org_chart.menu_hr_employee_org_chart
+msgid "Org Chart"
+msgstr "조직도"
 
 #. module: hr_org_chart
 #: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
@@ -97,6 +146,13 @@ msgid "Public Employee"
 msgstr "일반 직원"
 
 #. module: hr_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
+msgid ""
+"Quickly find all the information you need for your employees such as contact"
+" data, job position, availability, etc."
+msgstr "연락처 정보, 직위, 근무 가능 여부 등 직원에 대한 모든 필수 정보에 빠르게 액세스할 수 있습니다."
+
+#. module: hr_org_chart
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 msgid "Redirect"
@@ -106,7 +162,7 @@ msgstr "리디렉션"
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 msgid "See All"
-msgstr ""
+msgstr "모두 보기"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__subordinate_ids
@@ -116,7 +172,7 @@ msgstr "부하 직원"
 
 #. module: hr_org_chart
 #. odoo-javascript
-#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.js:0
+#: code:addons/hr_org_chart/static/src/fields/hooks.js:0
 msgid "Team"
 msgstr "팀"
 
@@ -130,4 +186,10 @@ msgstr "이 직원에게는 관리자 또는 부하 직원이 없습니다."
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 msgid "Total"
-msgstr "합계"
+msgstr "총계"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_card.xml:0
+msgid "people"
+msgstr "사용자"

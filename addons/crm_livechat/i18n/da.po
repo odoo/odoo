@@ -1,39 +1,39 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* crm_livechat
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.3\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
-"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: crm_livechat
 #. odoo-python
 #: code:addons/crm_livechat/models/chatbot_script_step.py:0
 msgid "%s's New Lead"
-msgstr ""
+msgstr "%s's nye kundeemne"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_chatbot_script
 msgid "Chatbot Script"
-msgstr ""
+msgstr "Chatbot Script"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_chatbot_script_step
 msgid "Chatbot Script Step"
-msgstr ""
+msgstr "Chatbot Script Step"
 
 #. module: crm_livechat
 #: model:ir.model.fields.selection,name:crm_livechat.selection__chatbot_script_step__step_type__create_lead
@@ -41,12 +41,18 @@ msgid "Create Lead"
 msgstr ""
 
 #. module: crm_livechat
-#. odoo-python
 #. odoo-javascript
-#: code:addons/crm_livechat/models/discuss_channel.py:0
 #: code:addons/crm_livechat/static/src/core/channel_commands.js:0
 msgid "Create a new lead (/lead lead title)"
 msgstr "Opret et nyt kundeemne (/titel på kundeemne)"
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/discuss_channel.py:0
+msgid ""
+"Create a new lead: %(pre_start)s%(lead_command)s %(i_start)slead "
+"title%(i_end)s%(pre_end)s"
+msgstr ""
 
 #. module: crm_livechat
 #. odoo-python
@@ -92,7 +98,7 @@ msgstr "Salgsteam"
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__step_type
 msgid "Step Type"
-msgstr ""
+msgstr "Trin type"
 
 #. module: crm_livechat
 #: model:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_just_looking

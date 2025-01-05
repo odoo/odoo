@@ -1,24 +1,89 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_vat
-#
+# 
 # Translators:
-# Thi Huong Nguyen, 2023
-# Martin Trigaux, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"POT-Creation-Date: 2024-12-23 21:07+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "'219999830019' (should be 12 digits)"
+msgstr "'219999830019' (phải bao gồm 12 ký tự)"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid ""
+"10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
+msgstr ""
+"10XXXXXXXXY hoặc 20XXXXXXXXY hoặc 15XXXXXXXXY hoặc 16XXXXXXXXY hoặc "
+"17XXXXXXXXY"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "17291716060 (NIN) or 1729171602 (VKN)"
+msgstr "17291716060 (NIN) hoặc 1729171602 (VKN)"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "1792060346001 or 1792060346"
+msgstr "1792060346001 hoặc 1792060346"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "3101012009"
+msgstr "3101012009"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "310175397400003 [Fifteen digits, first and last digits should be \"3\"]"
+msgstr ""
+"310175397400003 [Mười lăm chữ số, chữ số đầu tiên và cuối cùng phải là "
+"\"3\"]"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "49-098-576 or 49098576"
+msgstr "49-098-576 hoặc 49098576"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "AR200-5536168-2 or 20055361682"
+msgstr "AR200-5536168-2 hoặc 20055361682"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
+msgstr ""
+"CHE-123.456.788 TVA hoặc CHE-123.456.788 MWST hoặc CHE-123.456.788 IVA"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "CO213123432-1 or CO213.123.432-1"
+msgstr "CO213123432-1 hoặc CO213.123.432-1"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -28,7 +93,17 @@ msgstr "Công ty"
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
-msgstr "Cấu hình"
+msgstr "Cài đặt cấu hình"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid ""
+"Connection with the VIES server failed. The VAT number %s could not be "
+"validated."
+msgstr ""
+"Kết nối với máy chủ VIES không thành công. Không thể xác thực mã số thuế "
+"GTGT %s."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -36,20 +111,80 @@ msgid "Contact"
 msgstr "Liên hệ"
 
 #. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "DE123456788 or 12/345/67890"
+msgstr "DE123456788 hoặc 12/345/67890"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "DO1-01-85004-3 or 101850043"
+msgstr "DO1-01-85004-3 hoặc 101850043"
+
+#. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
+#: model:ir.model.fields,help:base_vat.field_res_users__vies_valid
+msgid "European VAT numbers are automatically checked on the VIES database."
+msgstr ""
+"Mã số thuế GTGT Châu Âu được tự động kiểm tra trên cơ sở dữ liệu VIES."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"
+msgstr ""
+
+#. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
 msgid "Fiscal Position"
-msgstr "Vị thế tài chính"
+msgstr "Vị trí tài chính"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "GB123456782 or XI123456782"
+msgstr "GB123456782 hoặc XI123456782"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "HU12345676 or 12345678-1-11 or 8071592153"
+msgstr "HU12345676 hoặc 12345678-1-11 hoặc 8071592153"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
-msgid "If this checkbox is ticked, you will not be able to save a contact if its VAT number cannot be verified by the European VIES service."
-msgstr "Nếu ô này được đánh dấu, bạn sẽ không thể lưu danh bạ nếu mã số thuế không tồn tại và không thể xác thực được với European VIES (một hệ thống trao đổi thông tin mã số thuế của châu Âu)"
+msgid ""
+"If this checkbox is ticked, the default fiscal position that applies will "
+"depend upon the output of the verification by the European VIES Service."
+msgstr ""
+"Nếu hộp kiểm này được đánh dấu, vị trí tài chính mặc định được áp dụng sẽ "
+"phụ thuộc vào kết quả xác minh của Dịch vụ VIES Châu Âu."
 
 #. module: base_vat
-#: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_failed_message
-#: model:ir.model.fields,field_description:base_vat.field_res_users__vies_failed_message
-msgid "Technical field display a message to the user if the VIES check fails."
-msgstr ""
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
+#: model:ir.model.fields,field_description:base_vat.field_res_users__vies_valid
+msgid "Intra-Community Valid"
+msgstr "Hợp lệ trong cộng đồng"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "MXGODE561231GR8 or GODE561231GR8"
+msgstr "MXGODE561231GR8 hoặc GODE561231GR8"
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__perform_vies_validation
+#: model:ir.model.fields,field_description:base_vat.field_res_users__perform_vies_validation
+msgid "Perform Vies Validation"
+msgstr "Tiến hành xác thực VIES"
+
+#. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
+msgid "Tax ID"
+msgstr "Mã số thuế"
 
 #. module: base_vat
 #. odoo-python
@@ -58,6 +193,8 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+"Mã số %(vat_label)s  [%(wrong_vat)s] có vẻ không hợp lệ. \n"
+"Lưu ý: định dạng hợp lệ là %(expected_format)s"
 
 #. module: base_vat
 #. odoo-python
@@ -66,18 +203,45 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+"Mã số %(vat_label)s [%(wrong_vat)s] cho %(record_label)s có vẻ không hợp lệ. \n"
+"Lưu ý: định dạng hợp lệ là %(expected_format)s"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The VAT number %s failed the VIES VAT validation check."
-msgstr ""
+msgid "The VAT number %s could not be interpreted by the VIES server."
+msgstr "Máy chủ VIES không thể phiên dịch mã số thuế GTGT %s. "
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/account_fiscal_position.py:0
-msgid "The country detected for this foreign VAT number does not match the one set on this fiscal position."
+msgid ""
+"The country detected for this foreign VAT number does not match any of the "
+"countries composing the country group set on this fiscal position."
 msgstr ""
+"Quốc gia được phát hiện cho mã số thuế GTGT nước ngoài này không khớp với "
+"bất kỳ quốc gia nào trong nhóm quốc gia được thiết lập trên vị trí tài chính"
+" này."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+msgid ""
+"The country of the foreign VAT number could not be detected. Please assign a"
+" country to the fiscal position or set a country group"
+msgstr ""
+"Không thể phát hiện quốc gia của mã số thuế GTGT nước ngoài. Vui lòng chỉ "
+"định quốc gia cho vị trí tài chính hoặc thiết lập nhóm quốc gia"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid ""
+"The request for VAT validation was not processed. VIES service has responded"
+" with the following error: %s"
+msgstr ""
+"Yêu cầu xác thực thuế GTGT không được xử lý. Dịch vụ VIES gửi thông tin lỗi "
+"sau: %s"
 
 #. module: base_vat
 #. odoo-python
@@ -89,21 +253,39 @@ msgstr "Mã số thuế"
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr "Xác thực mã số thuế"
+msgstr "Xác minh mã số thuế"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr "Xác thực mã số thuế bằng dịch vụ European VIES"
+msgstr "Xác minh mã số thuế bằng dịch vụ European VIES"
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_vat_to_check
+#: model:ir.model.fields,field_description:base_vat.field_res_users__vies_vat_to_check
+msgid "Vies Vat To Check"
+msgstr "Mã số thuế GTGT VIES cần kiểm tra"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
+msgstr "XXXXXXXXX [9 chữ số] và phải tuân thủ checksum thuật toán Luhn"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "either 11 digits for CPF or 14 digits for CNPJ"
+msgstr "11 chữ số cho CPF hoặc 14 chữ số cho CNPJ"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 msgid "fiscal position [%s]"
-msgstr ""
+msgstr "vị trí tài chính [%s]"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
-msgstr ""
+msgstr "đối tác [%s]"

@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_crm
-#
+# 
 # Translators:
-# Friederike Fasterling-Nesselbosch, 2022
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_crm
@@ -34,7 +33,7 @@ msgstr "# Seitenansichten"
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Assign leads/opportunities to a sales team."
-msgstr "Weisen Sie Leads/Verkaufschancen einem Vertriebsteam zu."
+msgstr "Weisen Sie Leads/Verkaufschancen einem Verkaufsteam zu."
 
 #. module: website_crm
 #. odoo-javascript
@@ -46,30 +45,44 @@ msgstr "Weisen Sie Leads/Verkaufschancen einem Vertriebsmitarbeiter zu."
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
 msgid "Default Sales Team for new leads created through the Contact Us form."
 msgstr ""
-"Standardverkaufsteam für neue Leads, die über das Kontaktformular erstellt "
+"Standard-Verkaufsteam für neue Leads, die über das Kontaktformular erstellt "
 "wurden."
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_team_id
 msgid "Default Sales Teams"
-msgstr "Standard Verkaufsteam"
+msgstr "Standard-Verkaufsteam"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_user_id
 msgid "Default Salesperson"
-msgstr "Standard Vertriebsunternehmer"
+msgstr "Standard-Vertriebsmitarbeiter"
 
 #. module: website_crm
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_user_id
 msgid "Default salesperson for new leads created through the Contact Us form."
 msgstr ""
-"Standard-Verkäufer für neue Interessenten, die über das Kontaktformular "
+"Standard-Vertriebsmitarbeiter für neue Leads, die über das Kontaktformular "
 "erstellt werden."
 
 #. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__display_name
+#: model:ir.model.fields,field_description:website_crm.field_website__display_name
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__display_name
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__id
+#: model:ir.model.fields,field_description:website_crm.field_website__id
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_crm
 #: model:ir.model,name:website_crm.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "Lead/Verkaufschance"
+msgid "Lead"
+msgstr "Lead"
 
 #. module: website_crm
 #: model:ir.actions.act_window,name:website_crm.crm_lead_action_from_visitor
@@ -82,7 +95,7 @@ msgstr "Leads"
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_kanban
 msgid "Leads / Opportunities"
-msgstr "Interessenten / Chancen"
+msgstr "Leads/Verkaufschancen"
 
 #. module: website_crm
 #: model_terms:ir.actions.act_window,help:website_crm.crm_lead_action_from_visitor
@@ -98,7 +111,7 @@ msgstr "Seitenansichten"
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Phone Number"
-msgstr ""
+msgstr "Telefonnummer"
 
 #. module: website_crm
 #. odoo-javascript
@@ -110,13 +123,13 @@ msgstr "Verkaufsteam"
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Salesperson"
-msgstr "Verkäufer"
+msgstr "Vertriebsmitarbeiter"
 
 #. module: website_crm
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Subject"
-msgstr ""
+msgstr "Betreff"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_ids
@@ -126,7 +139,7 @@ msgstr "Web-Besucher"
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.crm_lead_merge_summary_inherit_website
 msgid "Web Visitors:"
-msgstr "Webbesucher:"
+msgstr "Web-Besucher:"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website
@@ -136,7 +149,7 @@ msgstr "Website"
 #. module: website_crm
 #: model:ir.actions.act_url,name:website_crm.action_open_website
 msgid "Website Contact Form"
-msgstr "Website Kontaktformular"
+msgstr "Website-Kontaktformular"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website_visitor
@@ -147,22 +160,22 @@ msgstr "Website-Besucher"
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Your Company"
-msgstr ""
+msgstr "Ihr Unternehmen"
 
 #. module: website_crm
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Your Email"
-msgstr ""
+msgstr "Ihre E-Mail"
 
 #. module: website_crm
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Your Name"
-msgstr ""
+msgstr "Ihr Name"
 
 #. module: website_crm
 #. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Your Question"
-msgstr ""
+msgstr "Ihre Frage"

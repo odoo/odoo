@@ -1,37 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sales_team
-#
+# 
 # Translators:
-# Nisrine Tagri <nta@odoo.com>, 2022
-# Martin Trigaux, 2022
-# Niyas Raphy, 2022
-# Malaz Abuidris <msea@odoo.com>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
-"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"البريد الإلكتروني \"/>"
-
-#. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
-msgid "<span class=\"text-bg-danger\">Archived</span>"
 msgstr ""
+"<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
+"title=\"البريد الإلكتروني \"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
@@ -52,7 +46,7 @@ msgstr "<span>عرض</span>"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_needaction
 msgid "Action Needed"
-msgstr "يتطلب اتخاذ إجراء "
+msgstr "إجراء مطلوب"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__active
@@ -72,26 +66,54 @@ msgstr "أضف عضو فريق"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__crm_team_member_ids
-msgid "Add members to automatically assign their documents to this sales team."
+msgid ""
+"Add members to automatically assign their documents to this sales team."
 msgstr "قم بإضافة أعضاء لإسناد مستنداتهم إلى فريق المبيعات هذا تلقائياً. "
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
-msgid "Adding %(user_name)s in this team would remove him/her from its current team %(team_name)s."
-msgstr "سينتج عن إضافة %(user_name)s إلى هذه الفريق إزالته/إزالتها من فريقه/فريقها الحالي %(team_name)s. "
+msgid ""
+"Adding %(user_name)s in this team would remove him/her from its current team"
+" %(team_name)s."
+msgstr ""
+"سينتج عن إضافة %(user_name)s إلى هذه الفريق إزالته/إزالتها من فريقه/فريقها "
+"الحالي %(team_name)s. "
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team_member.py:0
-msgid "Adding %(user_name)s in this team would remove him/her from its current teams %(team_names)s."
-msgstr "سينتج عن إضافة %(user_name)s إلى هذه الفريق إزالته/إزالتها من فريقه/فريقها الحالي %(team_names)s. "
+msgid ""
+"Adding %(user_name)s in this team would remove him/her from its current "
+"teams %(team_names)s."
+msgstr ""
+"سينتج عن إضافة %(user_name)s إلى هذه الفريق إزالته/إزالتها من فريقه/فريقها "
+"الحالي %(team_names)s. "
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
-msgid "Adding %(user_names)s in this team would remove them from their current teams (%(team_names)s)."
-msgstr "سينتج عن إضافة %(user_names)s إلى هذه الفريق إزالتهم من فريقهم الحالي (%(team_names)s). "
+msgid ""
+"Adding %(user_names)s in this team would remove them from their current "
+"teams (%(team_names)s)."
+msgstr ""
+"سينتج عن إضافة %(user_names)s إلى هذه الفريق إزالتهم من فريقهم الحالي "
+"(%(team_names)s). "
+
+#. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team_member.py:0
+msgid ""
+"Adding %(user_name)s in this team will remove them from %(team_names)s. "
+"Working in multiple teams? Activate the option under Configuration>Settings."
+msgstr ""
+
+#. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team.py:0
+msgid ""
+"Adding %(user_names)s in this team will remove them from %(team_names)s."
+msgstr ""
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
@@ -100,6 +122,7 @@ msgstr "المدير "
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
@@ -143,7 +166,7 @@ msgstr "اللون"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__color
 msgid "Color Index"
-msgstr "معرف اللون"
+msgstr "مؤشر اللون "
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__company_id
@@ -161,11 +184,6 @@ msgstr "التهيئة "
 #: model:crm.tag,name:sales_team.categ_oppor7
 msgid "Consulting"
 msgstr "استشارة"
-
-#. module: sales_team
-#: model:ir.model,name:sales_team.model_res_partner
-msgid "Contact"
-msgstr "جهة الاتصال"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
@@ -241,19 +259,15 @@ msgstr "الأعضاء المفضلين"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
-msgid "Favorite teams to display them in the dashboard and access them easily."
+msgid ""
+"Favorite teams to display them in the dashboard and access them easily."
 msgstr "الفرق المفضلة لعرضها في لوحة البيانات للوصول إليها بسهولة. "
-
-#. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "Follow this salesteam to automatically track the events associated to users of this team."
-msgstr "قم بمتابعة فريق المبيعات هذا حتى تتمكن من تعقب الفعاليات المتعلقة بمستخدمي هذا الفريق. "
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_follower_ids
 msgid "Followers"
-msgstr "المتابعين "
+msgstr "المتابعين"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_partner_ids
@@ -264,12 +278,12 @@ msgstr "المتابعين (الشركاء) "
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
 msgid "Group By"
-msgstr "التجميع حسب "
+msgstr "تجميع حسب"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
 msgid "Group By..."
-msgstr "التجميع حسب.."
+msgstr "تجميع حسب.."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__has_message
@@ -287,14 +301,18 @@ msgstr "المُعرف"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_membership_multi
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__is_membership_multi
-msgid "If True, users may belong to several sales teams. Otherwise membership is limited to a single sales team."
-msgstr "إذا كانت القيمة صحيحة، سيكون بإمكان المستخدمين أن ينتموا إلى عدة فرق مبيعات، وإلا فستكون العضوية مقتصرة على فريق مبيعات واحد. "
+msgid ""
+"If True, users may belong to several sales teams. Otherwise membership is "
+"limited to a single sales team."
+msgstr ""
+"إذا كانت القيمة صحيحة، سيكون بإمكان المستخدمين أن ينتموا إلى عدة فرق مبيعات،"
+" وإلا فستكون العضوية مقتصرة على فريق مبيعات واحد. "
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "إذا كان محددًا، فهناك رسائل جديدة تحتاج لرؤيتها."
+msgstr "إذا كان محددًا، فهناك رسائل جديدة عليك رؤيتها. "
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
@@ -303,15 +321,12 @@ msgid "If checked, some messages have a delivery error."
 msgstr "إذا كان محددًا، فقد حدث خطأ في تسليم بعض الرسائل."
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_res_partner__team_id
-#: model:ir.model.fields,help:sales_team.field_res_users__team_id
-msgid "If set, this Sales Team will be used for sales and assignments related to this partner"
-msgstr "إذا كان محدداً، فسوف يُستخدَم فريق المبيعات هذا للمبيعات والتعيينات المتعلقة بهذا الشريك "
-
-#. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
-msgid "If the active field is set to false, it will allow you to hide the Sales Team without removing it."
-msgstr "إذا تم تحويل قيمة الحقل نشط إلى خطأ، يمكنك إخفاء فريق المبيعات دون إزالته."
+msgid ""
+"If the active field is set to false, it will allow you to hide the Sales "
+"Team without removing it."
+msgstr ""
+"إذا تم تحويل قيمة الحقل نشط إلى خطأ، يمكنك إخفاء فريق المبيعات دون إزالته."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_1920
@@ -350,8 +365,12 @@ msgstr "آخر تحديث في"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_users__sale_team_id
-msgid "Main user sales team. Used notably for pipeline, or to set sales team in invoicing or subscription."
-msgstr "فريق المبيعات للمستخدم الرئيسي. يُستخدم لمخطط سير العمل بشكل كبير أو لتعيين فريق المبيعات في الفوترة أو الاشتراك. "
+msgid ""
+"Main user sales team. Used notably for pipeline, or to set sales team in "
+"invoicing or subscription."
+msgstr ""
+"فريق المبيعات للمستخدم الرئيسي. يُستخدم لمخطط سير العمل بشكل كبير أو لتعيين "
+"فريق المبيعات في الفوترة أو الاشتراك. "
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
@@ -411,13 +430,13 @@ msgstr "عدد الإجراءات"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error_counter
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_has_error_counter
 msgid "Number of errors"
-msgstr "عدد الاخطاء"
+msgstr "عدد الأخطاء "
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction_counter
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "عدد الرسائل التي تتطلب اتخاذ إجراء "
+msgid "Number of messages requiring action"
+msgstr "عدد الرسائل التي تتطلب اتخاذ إجراء"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error_counter
@@ -454,7 +473,7 @@ msgstr "المنتج"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__rating_ids
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "التقييمات "
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
@@ -476,8 +495,6 @@ msgstr "مندوب مبيعات"
 #: model:ir.model,name:sales_team.model_crm_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__name
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__crm_team_id
-#: model:ir.model.fields,field_description:sales_team.field_res_partner__team_id
-#: model:ir.model.fields,field_description:sales_team.field_res_users__team_id
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_tree
@@ -531,7 +548,7 @@ msgstr "عينة المعلومات"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__sequence
 msgid "Sequence"
-msgstr "التسلسل "
+msgstr "تسلسل "
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor3
@@ -556,7 +573,7 @@ msgstr "اسم علامة التصنيف "
 #. module: sales_team
 #: model:ir.model.constraint,message:sales_team.constraint_crm_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "اسم علامة التصنيف مستخدم بالفعل! "
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.sales_team_crm_tag_action
@@ -603,14 +620,22 @@ msgstr "الشركة الافتراضية لهذا المستخدم. "
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
-msgid "Those represent the different categories of things you have to do (e.g. \"Call\" or \"Prepare meeting\")."
-msgstr "يمثلون الفئات المختلفة للأشياء التي عليك القيام بها (مثال: \"اتصال\" أو \"التحضير لاجتماع\"). "
+msgid ""
+"Those represent the different categories of things you have to do (e.g. "
+"\"Call\" or \"Prepare meeting\")."
+msgstr ""
+"يمثلون الفئات المختلفة للأشياء التي عليك القيام بها (مثال: \"اتصال\" أو "
+"\"التحضير لاجتماع\"). "
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
-msgid "To add a Salesperson into multiple Teams, activate the Multi-Team option in settings."
-msgstr "لإضافة مندوب مبيعات إلى عدة فرق، قم بتفعيل خيار الفرق المتعددة من الإعدادات. "
+msgid ""
+"To add a Salesperson into multiple Teams, activate the Multi-Team option in "
+"settings."
+msgstr ""
+"لإضافة مندوب مبيعات إلى عدة فرق، قم بتفعيل خيار الفرق المتعددة من الإعدادات."
+" "
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor6
@@ -619,8 +644,11 @@ msgstr "التدريب"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_in_teams_ids
-msgid "UX: Give users not to add in the currently chosen team to avoid duplicates"
-msgstr "تجربة المستخدم: امنح المستخدمين حتى لا يقوموا بالإضافة إلى فريق محدد بالفعل لتجنب وجود النسخ "
+msgid ""
+"UX: Give users not to add in the currently chosen team to avoid duplicates"
+msgstr ""
+"تجربة المستخدم: امنح المستخدمين حتى لا يقوموا بالإضافة إلى فريق محدد بالفعل "
+"لتجنب وجود النسخ "
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
@@ -636,7 +664,8 @@ msgstr "نموذج رسم بياني غير محدد لفريق المبيعات
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
-msgid "Use Sales Teams to organize your sales departments and draw up reports."
+msgid ""
+"Use Sales Teams to organize your sales departments and draw up reports."
 msgstr "استخدم فرق المبيعات لتنظيم أقسام المبيعات لديك وسحب التقارير. "
 
 #. module: sales_team
@@ -651,8 +680,12 @@ msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
-msgid "Use Tags to manage and track your Opportunities (product structure, sales type, ...)"
-msgstr "استخدم علامات التصنيف لإدارة وتتبع فرصك (هيكل المنتج، نوع المبيعات، وما إلى ذلك) "
+msgid ""
+"Use Tags to manage and track your Opportunities (product structure, sales "
+"type, ...)"
+msgstr ""
+"استخدم علامات التصنيف لإدارة وتتبع فرصك (هيكل المنتج، نوع المبيعات، وما إلى "
+"ذلك) "
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
@@ -696,9 +729,20 @@ msgstr "الموقع الإلكتروني"
 
 #. module: sales_team
 #. odoo-python
+#: code:addons/sales_team/models/crm_team.py:0
+msgid ""
+"Working in multiple teams? Activate the option under Configuration>Settings."
+msgstr ""
+
+#. module: sales_team
+#. odoo-python
 #: code:addons/sales_team/models/crm_team_member.py:0
-msgid "You are trying to create duplicate membership(s). We found that %(duplicates)s already exist(s)."
-msgstr "أنت تحاول إنشاء عضوية (عضويات) متكررة. لقد وجدنا أن %(duplicates)s موجودة بالفعل. "
+msgid ""
+"You are trying to create duplicate membership(s). We found that "
+"%(duplicates)s already exist(s)."
+msgstr ""
+"أنت تحاول إنشاء عضوية (عضويات) متكررة. لقد وجدنا أن %(duplicates)s موجودة "
+"بالفعل. "
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -711,13 +755,10 @@ msgid "e.g. Services"
 msgstr "مثال: الخدمات "
 
 #. module: sales_team
-#: model:crm.team,name:sales_team.ebay_sales_team
-msgid "eBay"
-msgstr "eBay"
-
-#. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
-msgid "the user will have access to all records of everyone in the sales application."
+msgid ""
+"the user will have access to all records of everyone in the sales "
+"application."
 msgstr "سيملك المستخدم صلاحية الوصول لكافة سجلات مستخدمي تطبيق المبيعات."
 
 #. module: sales_team
@@ -727,5 +768,9 @@ msgstr "سيملك المستخدم صلاحية الوصول لبياناته �
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager
-msgid "the user will have an access to the sales configuration as well as statistic reports."
-msgstr "سيملك المستخدم صلاحية الوصول لتهيئة المبيعات، بالإضافة إلى تقارير الإحصائيات. "
+msgid ""
+"the user will have an access to the sales configuration as well as statistic"
+" reports."
+msgstr ""
+"سيملك المستخدم صلاحية الوصول لتهيئة المبيعات، بالإضافة إلى تقارير "
+"الإحصائيات. "

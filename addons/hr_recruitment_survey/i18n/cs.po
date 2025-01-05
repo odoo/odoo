@@ -1,25 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_recruitment_survey
-#
+# 
 # Translators:
-# Jiří Podhorecký, 2022
-# Martin Trigaux, 2022
-# Ladislav Tomm <tomm@helemik.cz>, 2022
-# karolína schusterová <karolina.schusterova@vdp.sk>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: cs\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: hr_recruitment_survey
@@ -50,6 +47,11 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_recruitment_survey_button_form_view
+msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Go to Recruitment"
+msgstr ""
+
+#. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid ""
 "<span class=\"o_stat_text\">Consult</span>\n"
@@ -69,11 +71,16 @@ msgid "Activities"
 msgstr "Aktivity"
 
 #. module: hr_recruitment_survey
+#: model_terms:ir.actions.act_window,help:hr_recruitment_survey.survey_survey_action_recruitment
+msgid "Add a new survey"
+msgstr "Přidat nový průzkum"
+
+#. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_applicant
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_invite__applicant_id
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__applicant_id
 msgid "Applicant"
-msgstr "Žadatel"
+msgstr "Uchazeč"
 
 #. module: hr_recruitment_survey
 #: model:mail.template,name:hr_recruitment_survey.mail_template_applicant_interview_invite
@@ -83,8 +90,13 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_job__survey_id
-msgid "Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"
-msgstr "Vyberte si formulář pohovoru pro tuto pracovní pozici a budete si moci vytisknout / odpovědět na tento pohovor od všech uchazečů, kteří se ucházejí o tuto práci"
+msgid ""
+"Choose an interview form for this job position and you will be able to "
+"print/answer this interview from all applicants who apply for this job"
+msgstr ""
+"Vyberte si formulář pohovoru pro tuto pracovní pozici a budete si moci "
+"vytisknout / odpovědět na tento pohovor od všech uchazečů, kteří se ucházejí"
+" o tuto práci"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
@@ -146,15 +158,18 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
 msgid "Interview Survey"
-msgstr ""
+msgstr "Průzkum pohovoru"
 
 #. module: hr_recruitment_survey
+#: model:ir.actions.act_window,name:hr_recruitment_survey.survey_survey_action_recruitment
+#: model:ir.ui.menu,name:hr_recruitment_survey.menu_hr_recruitment_config_surveys
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Interviews"
-msgstr ""
+msgstr "Pohovory"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_job
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__hr_job_ids
 msgid "Job Position"
 msgstr "Pracovní pozice"
 
@@ -190,8 +205,12 @@ msgstr "Minulé pracovní zkušenosti"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.survey,description:hr_recruitment_survey.survey_recruitment_form
-msgid "Please answer those questions to help recruitment officers to preprocess your application."
+msgid ""
+"Please answer those questions to help recruitment officers to preprocess "
+"your application."
 msgstr ""
+"Odpovězte prosím na tyto otázky, abyste pomohli personalistům s přípravou "
+"vaší žádosti."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
@@ -199,6 +218,8 @@ msgid ""
 "Please fill information about you: who you are, what are your education, experience, and activities.\n"
 "    It will help us managing your application."
 msgstr ""
+"Vyplňte prosím své údaje: kdo jste, jaké máte vzdělání, zkušenosti a aktivity.\n"
+"    Pomůže nám to při správě vaší aplikace."
 
 #. module: hr_recruitment_survey
 #. odoo-python
@@ -209,13 +230,21 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q5
-msgid "Please summarize your education history: schools, location, diplomas, ..."
-msgstr ""
+msgid ""
+"Please summarize your education history: schools, location, diplomas, ..."
+msgstr "Shrňte prosím svou historii vzdělávání: školy, umístění, diplomy, ..."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
-msgid "Please tell us a bit more about yourself: what are your main activities, ..."
+msgid ""
+"Please tell us a bit more about yourself: what are your main activities, ..."
 msgstr ""
+"Řekněte nám prosím něco více o sobě: jaké jsou vaše hlavní činnosti, ..."
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields.selection,name:hr_recruitment_survey.selection__survey_survey__survey_type__recruitment
+msgid "Recruitment"
+msgstr "Nábor"
 
 #. module: hr_recruitment_survey
 #: model:survey.survey,title:hr_recruitment_survey.survey_recruitment_form
@@ -246,19 +275,25 @@ msgstr ""
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
+#: model:ir.model,name:hr_recruitment_survey.model_survey_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__survey_id
 msgid "Survey"
-msgstr "Průzkum"
+msgstr "Dotazník"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_survey_invite
 msgid "Survey Invitation Wizard"
-msgstr "Průvodce pozváním k průzkumu"
+msgstr "Průvodce pozváním k dotazníku"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__survey_type
+msgid "Survey Type"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_survey_user_input
 msgid "Survey User Input"
-msgstr "Záznam uživatele průzkumu"
+msgstr "Odpovědi uživatele na dotazník"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.survey,description_done:hr_recruitment_survey.survey_recruitment_form
@@ -269,13 +304,13 @@ msgstr "Děkujeme za odpověď na tento průzkum. Brzy se k vám vrátíme."
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/survey_user_input.py:0
 msgid "The applicant \"%s\" has finished the survey."
-msgstr ""
+msgstr "Žadatel „%s“ dokončil průzkum."
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/wizard/survey_invite.py:0
 msgid "The survey %(survey_link)s has been sent to %(partner_link)s"
-msgstr ""
+msgstr "Průzkum %(survey_link)s byl odeslán na adresu %(partner_link)s"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col3
@@ -306,3 +341,10 @@ msgstr ""
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row4
 msgid "Working with state of the art technology"
 msgstr "Práce s nejmodernější technologií"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.actions.act_window,help:hr_recruitment_survey.survey_survey_action_recruitment
+msgid ""
+"You can create surveys used for recruitments. Design easily your interview,\n"
+"                send invitations and analyze answers."
+msgstr ""

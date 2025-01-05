@@ -1,40 +1,53 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* product_expiry
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Friederike Fasterling-Nesselbosch, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:06+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: it\n"
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
-msgid "<span class=\"badge text-bg-danger\" attrs=\"{'invisible': [('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
+msgid ""
+"<span class=\"badge text-bg-danger\" invisible=\"not "
+"product_expiry_alert\">Expiration Alert</span>"
 msgstr ""
+"<span class=\"badge text-bg-danger\" invisible=\"not "
+"product_expiry_alert\">Avviso di scadenza</span>"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
+msgid ""
+"<span title=\"Alert\" class=\"fa fa-exclamation-triangle text-danger ms-2\" "
+"invisible=\"product_qty &lt;= 0 or not product_expiry_alert or not "
+"expiration_date\"/>"
+msgstr ""
+"<span title=\"Alert\" class=\"fa fa-exclamation-triangle text-danger ms-2\" "
+"invisible=\"product_qty &lt;= 0 or not product_expiry_alert or not "
+"expiration_date\"/>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "<span> days after receipt</span>"
-msgstr ""
+msgstr "<span> giorni che seguono la ricezione</span>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "<span> days before expiration date</span>"
-msgstr ""
+msgstr "<span> giorni che precedono la data di scadenza</span>"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
@@ -51,23 +64,18 @@ msgstr "Data di avviso raggiunta"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
 msgid "B.b."
-msgstr ""
+msgstr "TMC"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__use_time
 msgid "Best Before Date"
-msgstr ""
+msgstr "Data di preferibile consumo"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__use_date
 msgid "Best before Date"
-msgstr "Data di scadenza"
-
-#. module: product_expiry
-#: model:ir.model,name:product_expiry.model_stock_quant_reserve_line
-msgid "Choose quantity to reserve from each stock quant"
-msgstr ""
+msgstr "Data di preferibile consumo"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_res_config_settings
@@ -103,8 +111,12 @@ msgstr "Data creazione"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__alert_date
-msgid "Date to determine the expired lots and serial numbers using the filter \"Expiration Alerts\"."
-msgstr "Data utilizzata per determinare i numeri di lotti e di serie scaduti con il filtro \"Avvisi di scadenza\"."
+msgid ""
+"Date to determine the expired lots and serial numbers using the filter "
+"\"Expiration Alerts\"."
+msgstr ""
+"Data utilizzata per determinare i numeri di lotti e di serie scaduti con il "
+"filtro \"Avvisi di scadenza\"."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
@@ -135,7 +147,7 @@ msgstr "Nome visualizzato"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
 msgid "Exp."
-msgstr ""
+msgstr "Scad."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.quant_search_view_inherit_product_expiry
@@ -149,7 +161,6 @@ msgstr "Avvisi di scadenza"
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__expiration_date
 #: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__expiration_date
 #: model:ir.model.fields,field_description:product_expiry.field_stock_quant__expiration_date
-#: model:ir.model.fields,field_description:product_expiry.field_stock_quant_reserve_line__expiration_date
 #: model_terms:ir.ui.view,arch_db:product_expiry.stock_report_delivery_document_inherit_product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "Expiration Date"
@@ -161,6 +172,11 @@ msgid "Expiration dates will appear on the delivery slip"
 msgstr "Le date di scadenza compaiono nella distinta di consegna"
 
 #. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
+msgid "Expiration:"
+msgstr "Scadenza:"
+
+#. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
 msgid "Expired Lot(s)"
 msgstr "Lotti scaduti"
@@ -169,6 +185,11 @@ msgstr "Lotti scaduti"
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__product_expiry_reminded
 msgid "Expiry has been reminded"
 msgstr "La scadenza è stata ricordata"
+
+#. module: product_expiry
+#: model:product.removal,name:product_expiry.removal_fefo
+msgid "First Expiry First Out (FEFO)"
+msgstr "First Expiry First Out (FEFO)"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
@@ -201,33 +222,50 @@ msgid "Lot/Serial"
 msgstr "Lotto/Serie"
 
 #. module: product_expiry
-#: model:ir.model,name:product_expiry.model_stock_quant_reserve
-msgid "Manually reserve stock"
-msgstr ""
-
-#. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__expiration_time
 #: model:ir.model.fields,help:product_expiry.field_product_template__expiration_time
-msgid "Number of days after the receipt of the products (from the vendor or in stock after production) after which the goods may become dangerous and must not be consumed. It will be computed on the lot/serial number."
-msgstr "Numero di giorni dopo il ricevimento dei prodotti (dal venditore o in magazzino dopo la produzione) dopo i quali la merce può diventare pericolosa e non deve essere consumata. Sarà calcolato sul numero di lotto/seriale."
+msgid ""
+"Number of days after the receipt of the products (from the vendor or in "
+"stock after production) after which the goods may become dangerous and must "
+"not be consumed. It will be computed on the lot/serial number."
+msgstr ""
+"Numero di giorni dopo il ricevimento dei prodotti (dal venditore o in "
+"magazzino dopo la produzione) dopo i quali la merce può diventare pericolosa"
+" e non deve essere consumata. Sarà calcolato sul numero di lotto/seriale."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
 #: model:ir.model.fields,help:product_expiry.field_product_template__alert_time
-msgid "Number of days before the Expiration Date after which an alert should be raised on the lot/serial number. It will be computed on the lot/serial number."
-msgstr "Numero di giorni prima della data di scadenza dopo i quali dovrebbe essere generato un allarme sul lotto/numero di serie. Sarà calcolato sul numero di lotto/seriale."
+msgid ""
+"Number of days before the Expiration Date after which an alert should be "
+"raised on the lot/serial number. It will be computed on the lot/serial "
+"number."
+msgstr ""
+"Numero di giorni prima della data di scadenza dopo i quali dovrebbe essere "
+"generato un allarme sul lotto/numero di serie. Sarà calcolato sul numero di "
+"lotto/seriale."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
 #: model:ir.model.fields,help:product_expiry.field_product_template__removal_time
-msgid "Number of days before the Expiration Date after which the goods should be removed from the stock. It will be computed on the lot/serial number."
-msgstr "Numero di giorni prima della data di scadenza dopo i quali la merce deve essere rimossa dallo stock. Sarà calcolato sul numero di lotto/seriale."
+msgid ""
+"Number of days before the Expiration Date after which the goods should be "
+"removed from the stock. It will be computed on the lot/serial number."
+msgstr ""
+"Numero di giorni prima della data di scadenza dopo i quali la merce deve "
+"essere rimossa dallo stock. Sarà calcolato sul numero di lotto/seriale."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
 #: model:ir.model.fields,help:product_expiry.field_product_template__use_time
-msgid "Number of days before the Expiration Date after which the goods starts deteriorating, without being dangerous yet. It will be computed on the lot/serial number."
-msgstr "Numero di giorni prima della data di scadenza dopo i quali la merce inizia a deteriorarsi, senza essere ancora pericolosa. Sarà calcolato sul numero di lotto/seriale."
+msgid ""
+"Number of days before the Expiration Date after which the goods starts "
+"deteriorating, without being dangerous yet. It will be computed on the "
+"lot/serial number."
+msgstr ""
+"Numero di giorni prima della data di scadenza dopo i quali la merce inizia a"
+" deteriorarsi, senza essere ancora pericolosa. Sarà calcolato sul numero di "
+"lotto/seriale."
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__picking_ids
@@ -279,6 +317,11 @@ msgid "Removal Date"
 msgstr "Data di rimozione"
 
 #. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
+msgid "Removal:"
+msgstr "Rimozione:"
+
+#. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__show_lots
 msgid "Show Lots"
 msgstr "Mostra lotti"
@@ -298,38 +341,38 @@ msgstr "È stata raggiunta la data di scadenza."
 #. odoo-python
 #: code:addons/product_expiry/models/production_lot.py:0
 msgid "The alert date has been reached for this lot/serial number"
-msgstr "La data di avviso è stata raggiunta per questo numero di lotto/di serie"
+msgstr ""
+"La data di avviso è stata raggiunta per questo numero di lotto/di serie"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_move_line__expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_quant__expiration_date
-#: model:ir.model.fields,help:product_expiry.field_stock_quant_reserve_line__expiration_date
-msgid "This is the date on which the goods with this Serial Number may become dangerous and must not be consumed."
-msgstr "In questa data l'uso dei beni con questo Numero di Serie diventa potenzialmente pericoloso, e non devono essere consumati."
+msgid ""
+"This is the date on which the goods with this Serial Number may become "
+"dangerous and must not be consumed."
+msgstr ""
+"In questa data l'uso dei beni con questo Numero di Serie diventa "
+"potenzialmente pericoloso, e non devono essere consumati."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__removal_date
 #: model:ir.model.fields,help:product_expiry.field_stock_quant__removal_date
-msgid "This is the date on which the goods with this Serial Number should be removed from the stock. This date will be used in FEFO removal strategy."
-msgstr "Data nella quale la merce con questo numero di serie deve essere rimossa dalla giacenza. Viene utilizzata nella strategia di rimozione FEFO."
+msgid ""
+"This is the date on which the goods with this Serial Number should be "
+"removed from the stock. This date will be used in FEFO removal strategy."
+msgstr ""
+"Data nella quale la merce con questo numero di serie deve essere rimossa "
+"dalla giacenza. Viene utilizzata nella strategia di rimozione FEFO."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__use_date
-msgid "This is the date on which the goods with this Serial Number start deteriorating, without being dangerous yet."
-msgstr "In questa data i beni con questo Numero di Serie iniziano a deteriorarsi, senza tuttavia essere pericolosi."
-
-#. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_detailed_operation_tree_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_operation_tree_expiry
-msgid "This lot is expired"
+msgid ""
+"This is the date on which the goods with this Serial Number start "
+"deteriorating, without being dangerous yet."
 msgstr ""
-
-#. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_detailed_operation_tree_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_operation_tree_expiry
-msgid "This lot is expired."
-msgstr ""
+"In questa data i beni con questo Numero di Serie iniziano a deteriorarsi, "
+"senza tuttavia essere pericolosi."
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_picking
@@ -343,7 +386,6 @@ msgstr "Trasferimento"
 #: model:ir.model.fields,field_description:product_expiry.field_stock_move__use_expiration_date
 #: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__use_expiration_date
 #: model:ir.model.fields,field_description:product_expiry.field_stock_quant__use_expiration_date
-#: model:ir.model.fields,field_description:product_expiry.field_stock_quant_reserve__show_expiry
 msgid "Use Expiration Date"
 msgstr "Usa data di scadenza"
 
@@ -354,9 +396,14 @@ msgstr "Usa data di scadenza"
 #: model:ir.model.fields,help:product_expiry.field_stock_move__use_expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_move_line__use_expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_quant__use_expiration_date
-#: model:ir.model.fields,help:product_expiry.field_stock_quant_reserve__show_expiry
-msgid "When this box is ticked, you have the possibility to specify dates to manage product expiration, on the product and on the corresponding lot/serial numbers"
-msgstr "Quando questa casella è spuntata, si ha la possibilità di specificare le date per gestire la scadenza del prodotto, sul prodotto e sui numeri di lotto/serie corrispondenti"
+msgid ""
+"When this box is ticked, you have the possibility to specify dates to manage"
+" product expiration, on the product and on the corresponding lot/serial "
+"numbers"
+msgstr ""
+"Quando questa casella è spuntata, si ha la possibilità di specificare le "
+"date per gestire la scadenza del prodotto, sul prodotto e sui numeri di "
+"lotto/serie corrispondenti"
 
 #. module: product_expiry
 #. odoo-python
@@ -365,6 +412,8 @@ msgid ""
 "You are going to deliver some product expired lots.\n"
 "Do you confirm you want to proceed?"
 msgstr ""
+"Stai per consegnare alcuni lotti del prodotto scaduti.\n"
+"Confermi di voler procedere?"
 
 #. module: product_expiry
 #. odoo-python
@@ -373,11 +422,13 @@ msgid ""
 "You are going to deliver the product %(product_name)s, %(lot_name)s which is expired.\n"
 "Do you confirm you want to proceed?"
 msgstr ""
+"Stai per consegnare il prodotto %(product_name)s, %(lot_name)s che è scaduto.\n"
+"Confermi di voler procedere?"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
 msgid "^A0N,44,33^FDUse by:"
-msgstr ""
+msgstr "^A0N,44,33^FDUtilizzato da:"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -385,11 +436,13 @@ msgid ""
 "^BCN,100,Y,N,N\n"
 "^FD"
 msgstr ""
+"^BCN,100,Y,N,N\n"
+"^FD"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
 msgid "^FO100,150"
-msgstr ""
+msgstr "^FO100,150"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -397,6 +450,8 @@ msgid ""
 "^FO100,150\n"
 "^A0N,44,33^FDBest before:"
 msgstr ""
+"^FO100,150\n"
+"^A0N,44,33^FDConsumarsi preferibilmente entro:"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -404,11 +459,13 @@ msgid ""
 "^FO100,150\n"
 "^A0N,44,33^FDUse by:"
 msgstr ""
+"^FO100,150\n"
+"^A0N,44,33^FDUtilizzato da:"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
 msgid "^FO100,200"
-msgstr ""
+msgstr "^FO100,200"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -416,11 +473,13 @@ msgid ""
 "^FO100,200\n"
 "^A0N,44,33^FDUse by:"
 msgstr ""
+"^FO100,200\n"
+"^A0N,44,33^FDUse by:"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
 msgid "^FO100,200^BY3"
-msgstr ""
+msgstr "^FO100,200^BY3"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -428,6 +487,8 @@ msgid ""
 "^FO100,50\n"
 "^A0N,44,33^FD"
 msgstr ""
+"^FO100,50\n"
+"^A0N,44,33^FD"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -441,6 +502,9 @@ msgid ""
 "^FO100,100\n"
 "^A0N,44,33^FDLN/SN:"
 msgstr ""
+"^FS\n"
+"^FO100,100\n"
+"^A0N,44,33^FDLN/SN:"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -450,6 +514,10 @@ msgid ""
 "^BCN,100,Y,N,N\n"
 "^FD"
 msgstr ""
+"^FS\n"
+"^FO100,200^BY3\n"
+"^BCN,100,Y,N,N\n"
+"^FD"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -457,3 +525,10 @@ msgid ""
 "^FS\n"
 "^FO100,250^BY3"
 msgstr ""
+"^FS\n"
+"^FO100,250^BY3"
+
+#. module: product_expiry
+#: model:product.removal,method:product_expiry.removal_fefo
+msgid "fefo"
+msgstr "fefo"

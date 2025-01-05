@@ -1,29 +1,43 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* bus
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Wichanon Jamwutthipreecha, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
-"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: bus
+#: model:ir.model,name:bus.model_res_groups
+msgid "Access Groups"
+msgstr "กลุ่มการเข้าถึง"
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_attachment
+msgid "Attachment"
+msgstr "การแนบ"
 
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
 msgid "Away"
 msgstr "ห่างออกไป"
+
+#. module: bus
+#: model:ir.model,name:bus.model_bus_listener_mixin
+msgid "Can send messages via bus.bus"
+msgstr "สามารถส่งข้อความผ่าน bus.bus ได้"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__channel
@@ -33,7 +47,7 @@ msgstr "ช่อง"
 #. module: bus
 #: model:ir.model,name:bus.model_bus_bus
 msgid "Communication Bus"
-msgstr ""
+msgstr "รถบัสสื่อสาร"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_partner
@@ -57,6 +71,11 @@ msgid "Display Name"
 msgstr "แสดงชื่อ"
 
 #. module: bus
+#: model:ir.model,name:bus.model_ir_http
+msgid "HTTP Routing"
+msgstr "การกำหนด HTTP"
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__id
 #: model:ir.model.fields,field_description:bus.field_bus_presence__id
 msgid "ID"
@@ -67,17 +86,17 @@ msgstr "ไอดี"
 #: model:ir.model.fields,field_description:bus.field_res_partner__im_status
 #: model:ir.model.fields,field_description:bus.field_res_users__im_status
 msgid "IM Status"
-msgstr ""
+msgstr "สถานะ IM"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__last_poll
 msgid "Last Poll"
-msgstr ""
+msgstr "โพลครั้งล่าสุด"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__last_presence
 msgid "Last Presence"
-msgstr ""
+msgstr "การแสดงตนครั้งสุดท้าย"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__write_uid
@@ -112,14 +131,30 @@ msgstr "ออนไลน์"
 #. module: bus
 #. odoo-javascript
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
 msgid "Refresh"
 msgstr "รีเฟรช"
 
 #. module: bus
 #. odoo-javascript
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid ""
+"Save your work and refresh to get the latest updates and avoid potential "
+"issues."
+msgstr ""
+"บันทึกงานของคุณและรีเฟรชเพื่อรับการอัปเดตล่าสุดและหลีกเลี่ยงปัญหาที่อาจเกิดขึ้น"
+
+#. module: bus
+#. odoo-javascript
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
 msgid "The page appears to be out of date."
-msgstr ""
+msgstr "ดูเหมือนเพจจะล้าสมัยแล้ว"
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid "The page is out of date"
+msgstr "หน้านี้เลิกใช้งานแล้ว"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
@@ -129,7 +164,12 @@ msgstr "ผู้ใช้"
 #. module: bus
 #: model:ir.model,name:bus.model_bus_presence
 msgid "User Presence"
-msgstr ""
+msgstr "การแสดงตนของผู้ใช้"
+
+#. module: bus
+#: model:ir.model,name:bus.model_res_users_settings
+msgid "User Settings"
+msgstr "การตั้งค่าผู้ใช้"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__user_id
@@ -139,10 +179,16 @@ msgstr "ผู้ใช้"
 #. module: bus
 #. odoo-python
 #: code:addons/bus/controllers/home.py:0
-msgid "Your password is the default (admin)! If this system is exposed to untrusted users it is important to change it immediately for security reasons. I will keep nagging you about it!"
+msgid ""
+"Your password is the default (admin)! If this system is exposed to untrusted"
+" users it is important to change it immediately for security reasons. I will"
+" keep nagging you about it!"
 msgstr ""
+"รหัสผ่านของคุณเป็นค่าเริ่มต้น (admin+)! "
+"หากระบบนี้เปิดเผยต่อผู้ใช้ที่ไม่น่าเชื่อถือสิ่งสำคัญคือต้องเปลี่ยนทันทีด้วยเหตุผลด้านความปลอดภัย"
+" ฉันจะจู้จี้คุณเกี่ยวกับเรื่องนี้!"
 
 #. module: bus
 #: model:ir.model,name:bus.model_ir_websocket
 msgid "websocket message handling"
-msgstr ""
+msgstr "การจัดการข้อความของ websocket"

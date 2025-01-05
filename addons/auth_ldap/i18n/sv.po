@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * auth_ldap
-#
+# 	* auth_ldap
+# 
 # Translators:
-# Martin Trigaux, 2018
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2018
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
-# Johan Bergquist <johan.bergquist@netip.se>, 2018
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Johan Bergquist <johan.bergquist@netip.se>, 2018\n"
-"Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
-"Language: sv\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 16:05+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: auth_ldap
@@ -37,36 +35,52 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"    Filter som används för att söka upp användarkonton i LDAP-databasen. Det är ett godtyckligt LDAP-filter i strängrepresentation. Alla `%s` platshållare kommer att ersättas av inloggningen (identifieraren) som tillhandahålls av användaren, filtret bör innehålla minst en sådan platshållare.\n"
+"\n"
+"    Filtret måste resultera i exakt ett (1) resultat, annars kommer inloggningen att anses vara ogiltig.\n"
+"\n"
+"    Exempel (aktuella attribut beror på LDAP-server och inställningar):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    eller\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
-msgid "Automatically create local user accounts for new users authenticating via LDAP"
-msgstr "Skapa automatiskt lokala användarkonton för att nya användare som ska autentisera via LDAP"
+msgid ""
+"Automatically create local user accounts for new users authenticating via "
+"LDAP"
+msgstr ""
+"Skapa automatiskt lokala användarkonton för att nya användare som ska "
+"autentisera via LDAP"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
 msgid "Companies"
-msgstr "Bolag"
+msgstr "Företag"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__company
 msgid "Company"
-msgstr "Bolag"
+msgstr "Företag"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
 msgid "Company LDAP configuration"
-msgstr ""
+msgstr "Företagets LDAP-konfiguration"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Inställningar"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
 msgid "Create User"
-msgstr ""
+msgstr "Skapa användare"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_uid
@@ -80,16 +94,26 @@ msgstr "Skapad den"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_base
-msgid "DN of the user search scope: all descendants of this base will be searched for users."
+msgid ""
+"DN of the user search scope: all descendants of this base will be searched "
+"for users."
 msgstr ""
+"DN för användarsökningens omfattning: alla ättlingar till denna bas kommer "
+"att sökas efter användare."
 
 #. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__display_name
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_ldap.field_res_users__display_name
 msgid "Display Name"
 msgstr "Visningsnamn"
 
 #. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__id
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__id
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_ldap.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -108,7 +132,7 @@ msgstr "LDAP-parametrar"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
 msgid "LDAP Server"
-msgstr ""
+msgstr "LDAP-server"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
@@ -141,11 +165,6 @@ msgid "LDAP password"
 msgstr "LDAP-lösenord"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap____last_update
-msgid "Last Modified on"
-msgstr "Senast redigerad"
-
-#. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
 msgid "Last Updated by"
 msgstr "Senast uppdaterad av"
@@ -153,7 +172,7 @@ msgstr "Senast uppdaterad av"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_date
 msgid "Last Updated on"
-msgstr "Senast uppdaterad"
+msgstr "Senast uppdaterad den"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -161,9 +180,12 @@ msgid "Login Information"
 msgstr "Inloggningsuppgifter"
 
 #. module: auth_ldap
+#. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "No local user found for LDAP login and not configured to create one"
 msgstr ""
+"Ingen lokal användare hittades för LDAP-inloggning och det är inte "
+"konfigurerat att skapa en"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -172,8 +194,14 @@ msgstr "Processparameter"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
-msgid "Request secure TLS/SSL encryption when connecting to the LDAP server. This option requires a server with STARTTLS enabled, otherwise all authentication attempts will fail."
-msgstr "Begär säker TLS / SSL-kryptering vid anslutning till LDAP-servern. Det här alternativet kräver en server med STARTTLS aktiverad, annars kommer alla autentiseringsförsök att misslyckas."
+msgid ""
+"Request secure TLS/SSL encryption when connecting to the LDAP server. This "
+"option requires a server with STARTTLS enabled, otherwise all authentication"
+" attempts will fail."
+msgstr ""
+"Begär säker TLS / SSL-kryptering vid anslutning till LDAP-servern. Det här "
+"alternativet kräver en server med STARTTLS aktiverad, annars kommer alla "
+"autentiseringsförsök att misslyckas."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
@@ -197,18 +225,31 @@ msgstr "Mallanvändare"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
-msgid "The password of the user account on the LDAP server that is used to query the directory."
-msgstr "Lösenordet för användarkontot på LDAP-servern som används för att fråga katalogen."
+msgid ""
+"The password of the user account on the LDAP server that is used to query "
+"the directory."
+msgstr ""
+"Lösenordet för användarkontot på LDAP-servern som används för att fråga "
+"katalogen."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
-msgid "The user account on the LDAP server that is used to query the directory. Leave empty to connect anonymously."
-msgstr "Lösenordet för användarkontot på LDAP-servern som används för att fråga katalogen. Lämna blankt för att ansluta anonymt."
+msgid ""
+"The user account on the LDAP server that is used to query the directory. "
+"Leave empty to connect anonymously."
+msgstr ""
+"Lösenordet för användarkontot på LDAP-servern som används för att fråga "
+"katalogen. Lämna blankt för att ansluta anonymt."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
 msgid "Use TLS"
 msgstr "Använd TLS"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_users
+msgid "User"
+msgstr "Användare"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -218,9 +259,4 @@ msgstr "Användarinformation"
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__user
 msgid "User to copy when creating new users"
-msgstr "Användare att kopiera när nya användare skapas."
-
-#. module: auth_ldap
-#: model:ir.model,name:auth_ldap.model_res_users
-msgid "Users"
-msgstr "Användare"
+msgstr "Användare att kopiera när nya användare skapas"
