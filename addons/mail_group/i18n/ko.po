@@ -3,8 +3,8 @@
 # 	* mail_group
 # 
 # Translators:
-# Daye Jeong, 2024
 # Wil Odoo, 2024
+# Daye Jeong, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Daye Jeong, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,6 +43,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                안녕하세요,<br/><br/>\n"
+"                메일링 리스트 구독을 신청하셨습니다<strong t-out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                확인하려면 다음 링크를 눌러주세요: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>\n"
+"                <br/><br/>\n"
+"                구독을 요청하지 않으셨거나 실수로 누르신 경우 이 메시지는 무시하셔도 됩니다.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
@@ -57,6 +66,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                안녕하세요,<br/><br/>\n"
+"                메일링 리스트 구독 해지를 신청하셨습니다<strong t-out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                확인하려면 다음 링크를 눌러주세요: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
+"                <br/><br/>\n"
+"                구독 취소를 요청하지 않으셨거나 실수로 누르신 경우 이 메시지는 무시하셔도 됩니다.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines

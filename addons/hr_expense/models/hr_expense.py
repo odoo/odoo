@@ -103,6 +103,7 @@ class HrExpense(models.Model):
         domain="[('employee_id', '=', employee_id), ('company_id', '=', company_id)]",
         readonly=True,
         copy=False,
+        index=True,
     )
     approved_by = fields.Many2one(comodel_name='res.users', string="Approved By", related='sheet_id.user_id', tracking=False)
     approved_on = fields.Datetime(string="Approved On", related='sheet_id.approval_date')
