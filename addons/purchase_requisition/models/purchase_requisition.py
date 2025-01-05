@@ -168,7 +168,7 @@ class PurchaseRequisitionLine(models.Model):
 
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], required=True)
     product_uom_id = fields.Many2one(
-        'uom.uom', 'Product Unit of Measure',
+        'uom.uom', 'Unit',
         compute='_compute_product_uom_id', store=True, readonly=False, precompute=True)
     product_qty = fields.Float(string='Quantity', digits='Product Unit')
     product_description_variants = fields.Char('Description')

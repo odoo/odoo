@@ -86,7 +86,7 @@ class MrpProduction(models.Model):
         compute='_compute_product_qty', store=True, copy=True)
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     product_uom_id = fields.Many2one(
-        'uom.uom', 'Product Unit of Measure', domain="[('id', 'in', allowed_uom_ids)]",
+        'uom.uom', 'Unit', domain="[('id', 'in', allowed_uom_ids)]",
         readonly=False, required=True, compute='_compute_uom_id', store=True, copy=True, precompute=True)
     lot_producing_id = fields.Many2one(
         'stock.lot', string='Lot/Serial Number', copy=False,

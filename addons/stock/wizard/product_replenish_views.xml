@@ -27,6 +27,7 @@
                             <field name="product_uom_id" groups="!uom.group_uom" invisible="1"/>
                             <field name="product_uom_id"
                                 groups="uom.group_uom"
+                                widget="many2one_uom"
                                 options="{'no_open': 1, 'no_create': 1}"/>
                         </div>
                         <field name="date_planned"/>

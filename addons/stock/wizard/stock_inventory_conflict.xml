@@ -33,7 +33,7 @@
                             <field name="quantity" string="Quantity"/>
                             <field name="inventory_quantity" string="Counted Quantity" decoration-muted="inventory_quantity == 0" readonly="0"/>
                             <field name="inventory_diff_quantity" string="Difference" decoration-muted="inventory_quantity == 0" decoration-danger="inventory_diff_quantity &lt; 0" decoration-success="inventory_diff_quantity &gt; 0" decoration-bf="inventory_diff_quantity != 0"/>
-                            <field name="product_uom_id" groups="uom.group_uom"/>
+                            <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                             <field name='company_id' groups="base.group_multi_company" optional="show"/>
                         </list>
                     </field>

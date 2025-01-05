@@ -247,10 +247,11 @@
                                     <field name="qty_received_method" column_invisible="True"/>
                                     <field name="qty_received" string="Received" column_invisible="parent.state not in ('purchase', 'done')" readonly="qty_received_method != 'manual' or is_downpayment" optional="show"/>
                                     <field name="qty_invoiced" string="Billed" column_invisible="parent.state not in ('purchase', 'done')" optional="show"/>
-                                    <field name="product_uom_id" string="UoM" groups="uom.group_uom"
+                                    <field name="product_uom_id" groups="uom.group_uom"
                                         readonly="state in ('purchase', 'done', 'cancel') or is_downpayment"
                                         required="not display_type and not is_downpayment"
                                         options="{'no_open': True}"
+                                        widget="many2one_uom"
                                         force_save="1" optional="show"/>
                                     <field name="price_unit" readonly="qty_invoiced != 0"/>
                                     <button name="action_purchase_history" type="object" icon="fa-history" title="Purchase History" invisible="not id"/>
@@ -274,7 +275,7 @@
                                                 <label for="product_qty"/>
                                                 <div class="o_row">
                                                     <field name="product_qty"/>
-                                                    <field name="product_uom_id" groups="uom.group_uom" required="not display_type and not is_downpayment"/>
+                                                    <field name="product_uom_id" groups="uom.group_uom" required="not display_type and not is_downpayment" widget="many2one_uom"/>
                                                 </div>
                                                 <field name="qty_received_method" invisible="1"/>
                                                 <field name="qty_received" string="Received Quantity" invisible="parent.state not in ('purchase', 'done')" readonly="qty_received_method != 'manual'"/>
@@ -689,7 +690,7 @@
                     <field name="product_id"/>
                     <field name="price_unit"/>
                     <field name="product_qty"/>
-                    <field name="product_uom_id" groups="uom.group_uom"/>
+                    <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                     <field name="price_subtotal" widget="monetary"/>
                     <field name="currency_id" column_invisible="True"/>
                     <field name="date_planned"/>

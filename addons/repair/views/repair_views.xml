@@ -40,7 +40,7 @@
                     decoration-warning="parts_availability_state == 'expected'"
                     decoration-danger="parts_availability_state == 'late'"/>
                 <field name="product_qty" optional="hide" string="Quantity" readonly="state != 'draft'"/>
-                <field name="product_uom" string="Unit of Measure" readonly="1" groups="uom.group_uom" optional="hide"/>
+                <field name="product_uom" readonly="1" groups="uom.group_uom" widget="many2one_uom" optional="hide"/>
                 <field name="user_id" optional="hide" widget='many2one_avatar_user'/>
                 <field name="partner_id" readonly="1" optional="show"/>
                 <field name="picking_id" optional="hide"/>
@@ -114,7 +114,7 @@
                             <label for="product_qty" invisible="not product_id"/>
                             <div class="o_row" invisible="not product_id">
                                 <field name="product_qty" readonly="tracking == 'serial' or state in ('done', 'cancel')"/>
-                                <field name="product_uom" groups="uom.group_uom" readonly="state != 'draft'"/>
+                                <field name="product_uom" groups="uom.group_uom" widget="many2one_uom" readonly="state != 'draft'"/>
                             </div>
                             <field name="picking_id" options="{'no_create': True}"/>
                             <field name="under_warranty" readonly="state in ['cancel', 'done']"/>
@@ -170,7 +170,7 @@
                                 <field name="forecast_availability" string="Forecasted" column_invisible="parent.state in ('draft', 'done')" widget="forecast_widget"/>
                                 <field name="product_qty" readonly="1" column_invisible="True"/>
                                 <field name="quantity" string="Done" readonly="not product_id"/>
-                                <field name="product_uom" readonly="state != 'draft' and not additional" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
+                                <field name="product_uom" readonly="state != 'draft' and not additional" options="{'no_open': True, 'no_create': True}" widget="many2one_uom" groups="uom.group_uom"/>
                                 <field name="picked" string="Used"/>
                                 <field name="lot_ids" widget="many2many_tags"
                                     groups="stock.group_production_lot"

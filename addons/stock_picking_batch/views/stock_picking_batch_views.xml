@@ -55,7 +55,7 @@
                 <field name="location_dest_id"/>
                 <field name="package_id" groups="stock.group_tracking_lot"/>
                 <field name="result_package_id" groups="stock.group_tracking_lot"/>
-                <field name="product_uom_id" options="{'no_create': True}"
+                <field name="product_uom_id" options="{'no_create': True}" widget="many2one_uom"
                     groups="uom.group_uom" readonly="1" force_save="1"/>
                 <field name="quantity"/>
                 <field name="company_id" groups="base.group_multi_company" force_save="1"/>

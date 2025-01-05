@@ -59,7 +59,7 @@ class HrExpense(models.Model):
     product_description = fields.Html(compute='_compute_product_description')
     product_uom_id = fields.Many2one(
         comodel_name='uom.uom',
-        string="Unit of Measure",
+        string="Unit",
         compute='_compute_uom_id', precompute=True, store=True,
         copy=True,
     )

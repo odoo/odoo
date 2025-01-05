@@ -235,7 +235,7 @@
                          name="o_kanban_qty_available">
                         <span>On Hand: </span>
                         <field name="qty_available"/>
-                        <field name="uom_id" class="ms-1" groups="uom.group_uom"/>
+                        <field name="uom_id" widget="many2one_uom" class="ms-1" groups="uom.group_uom"/>
                     </div>
                 </div>
                 <a role="menuitem" type="open" position="after">
@@ -523,7 +523,7 @@
                     <field name="incoming_qty" optional="show" sum="Total Incoming"/>
                     <field name="outgoing_qty" optional="show" sum="Total Outgoing"/>
                     <field name="virtual_available" string="Forecasted" optional="hide" sum="Total Forecasted"/>
-                    <field name="uom_id" string="Unit" groups="uom.group_uom" options="{'no_create': True}"/>
+                    <field name="uom_id" widget="many2one_uom" groups="uom.group_uom" options="{'no_create': True}"/>
                     <button name="%(stock_move_line_action)d" string="History" type="action" class="btn-link"
                         icon="fa-history" context="{'search_default_product_id': id, 'default_product_id': id}"/>
                     <button name="action_view_orderpoints" string="Replenishment" type="object" class="btn-link"

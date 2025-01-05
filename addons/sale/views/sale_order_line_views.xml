@@ -14,7 +14,7 @@
                 <field name="qty_delivered"/>
                 <field name="qty_invoiced"/>
                 <field name="qty_to_invoice"/>
-                <field name="product_uom_id" string="Unit of Measure" groups="uom.group_uom"/>
+                <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                 <field name="price_subtotal" sum="Total" widget="monetary"/>
                 <field name="currency_id" column_invisible="True"/>
             </list>
@@ -54,6 +54,7 @@
                             <field name="product_uom_id"
                                 force_save="1"
                                 groups="uom.group_uom"
+                                widget="many2one_uom"
                                 readonly="product_uom_readonly"
                                 required="not display_type"/>
                             <field name="product_uom_id" groups="!uom.group_uom" invisible="1"/>

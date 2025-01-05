@@ -41,7 +41,7 @@ class AccountInvoiceReport(models.Model):
     # ==== Invoice line fields ====
     quantity = fields.Float(string='Product Quantity', readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
-    product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', readonly=True)
+    product_uom_id = fields.Many2one('uom.uom', string='Unit', readonly=True)
     product_categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
     invoice_date_due = fields.Date(string='Due Date', readonly=True)
     account_id = fields.Many2one('account.account', string='Revenue/Expense Account', readonly=True, domain=[('deprecated', '=', False)])
