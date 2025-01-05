@@ -14,7 +14,7 @@ class StockChangeProductQty(models.TransientModel):
     product_variant_count = fields.Integer('Variant Count', related='product_tmpl_id.product_variant_count')
     new_quantity = fields.Float(
         'New Quantity on Hand', default=1,
-        digits='Product Unit of Measure', required=True,
+        digits='Product Unit', required=True,
         help='This quantity is expressed in the Default Unit of Measure of the product.')
     product_uom_id = fields.Many2one(related='product_tmpl_id.uom_id')
 

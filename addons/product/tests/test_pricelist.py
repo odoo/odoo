@@ -85,8 +85,6 @@ class TestPricelist(ProductCommon):
 
         tonne_price = 100
 
-        # make sure 'tonne' resolves down to 1 'kg'.
-        self.uom_ton.write({'rounding': 0.001})
         # setup product stored in 'tonnes', with a discounted pricelist for qty > 3 tonnes
         spam = self.env['product.product'].create({
             'name': '1 tonne of spam',

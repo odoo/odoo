@@ -42,7 +42,7 @@ class MrpBom(models.Model):
     byproduct_ids = fields.One2many('mrp.bom.byproduct', 'bom_id', 'By-products', copy=True)
     product_qty = fields.Float(
         'Quantity', default=1.0,
-        digits='Product Unit of Measure', required=True,
+        digits='Product Unit', required=True,
         help="This should be the smallest quantity that this product can be produced in. If the BOM contains operations, make sure the work center capacity is accurate.")
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
@@ -526,7 +526,7 @@ class MrpBomLine(models.Model):
         related='bom_id.company_id', store=True, index=True, readonly=True)
     product_qty = fields.Float(
         'Quantity', default=1.0,
-        digits='Product Unit of Measure', required=True)
+        digits='Product Unit', required=True)
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     product_uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
@@ -720,7 +720,7 @@ class MrpBomByproduct(models.Model):
     company_id = fields.Many2one(related='bom_id.company_id', store=True, index=True, readonly=True)
     product_qty = fields.Float(
         'Quantity',
-        default=1.0, digits='Product Unit of Measure', required=True)
+        default=1.0, digits='Product Unit', required=True)
     product_uom_id = fields.Many2one('uom.uom', 'Unit', required=True,
                                      compute="_compute_product_uom_id", store=True, readonly=False, precompute=True)
     bom_id = fields.Many2one('mrp.bom', 'BoM', ondelete='cascade', index=True)

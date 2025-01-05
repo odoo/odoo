@@ -75,7 +75,7 @@ export class PosOrderline extends Base {
         if (unit) {
             if (unit.rounding) {
                 const decimals = this.models["decimal.precision"].find(
-                    (dp) => dp.name === "Product Unit of Measure"
+                    (dp) => dp.name === "Product Unit"
                 ).digits;
 
                 if (this.qty % 1 === 0) {
@@ -253,7 +253,7 @@ export class PosOrderline extends Base {
         if (unit) {
             if (unit.rounding) {
                 const decimals = this.models["decimal.precision"].find(
-                    (dp) => dp.name === "Product Unit of Measure"
+                    (dp) => dp.name === "Product Unit"
                 ).digits;
                 const rounding = Math.max(unit.rounding, Math.pow(10, -decimals));
                 this.qty = roundPrecision(quant, rounding);

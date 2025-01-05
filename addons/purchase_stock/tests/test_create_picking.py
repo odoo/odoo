@@ -323,8 +323,9 @@ class TestCreatePicking(common.TestProductCommon):
         """ We set the Unit(s) rounding to 1.0 and ensure buying 1.2 units in a PO is rounded to 1.0
             at reception.
         """
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
         uom_unit = self.env.ref('uom.product_uom_unit')
-        uom_unit.rounding = 1.0
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
 
         # buy a dozen
         po = self.env['purchase.order'].create(self.po_vals)
@@ -356,10 +357,11 @@ class TestCreatePicking(common.TestProductCommon):
         """ We set the Unit(s) and Dozen(s) rounding to 1.0 and ensure buying 1.3 dozens in a PO is
             rounded to 1.0 at reception.
         """
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
+
         uom_unit = self.env.ref('uom.product_uom_unit')
         uom_dozen = self.env.ref('uom.product_uom_dozen')
-        uom_unit.rounding = 1.0
-        uom_dozen.rounding = 1.0
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
 
         # buy 1.3 dozen
         po = self.env['purchase.order'].create(self.po_vals)

@@ -11,7 +11,7 @@ from dateutil.relativedelta import relativedelta
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    purchased_product_qty = fields.Float(compute='_compute_purchased_product_qty', string='Purchased', digits='Product Unit of Measure')
+    purchased_product_qty = fields.Float(compute='_compute_purchased_product_qty', string='Purchased', digits='Product Unit')
     purchase_method = fields.Selection([
         ('purchase', 'On ordered quantities'),
         ('receive', 'On received quantities'),
@@ -58,7 +58,7 @@ class ProductProduct(models.Model):
     _inherit = 'product.product'
 
     purchased_product_qty = fields.Float(compute='_compute_purchased_product_qty', string='Purchased',
-        digits='Product Unit of Measure')
+        digits='Product Unit')
 
     is_in_purchase_order = fields.Boolean(
         compute='_compute_is_in_purchase_order',

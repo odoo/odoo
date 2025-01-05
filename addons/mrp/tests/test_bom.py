@@ -401,15 +401,13 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(product_unit.qty_available, 12.0)
 
     def test_13_negative_on_hand_qty(self):
-        # We set the Product Unit of Measure digits to 5.
+        # We set the Product Unit digits to 5.
         # Because float_round(-384.0, 5) = -384.00000000000006
         # And float_round(-384.0, 2) = -384.0
-        precision = self.env.ref('product.decimal_product_uom')
+        precision = self.env.ref('uom.decimal_product_uom')
         precision.digits = 5
 
-        # We set the Unit(s) rounding to 0.0001 (digit = 4)
         uom_unit = self.env.ref('uom.product_uom_unit')
-        uom_unit.rounding = 0.0001
 
         _ = self.env['mrp.bom'].create({
             'product_id': self.product_2.id,

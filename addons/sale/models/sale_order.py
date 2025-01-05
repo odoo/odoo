@@ -1441,7 +1441,7 @@ class SaleOrder(models.Model):
         down_payment_line_ids = []
         invoiceable_line_ids = []
         pending_section = None
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
 
         for line in self.order_line:
             if line.display_type == 'line_section':

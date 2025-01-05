@@ -95,8 +95,6 @@ class TestManualConsumption(TestMrpCommon):
     def test_manual_consumption_split_merge_00(self):
         """Test manual consumption is correctly set after split or merge.
         """
-        # Change 'Units' rounding to 1 (integer only quantities)
-        self.uom_unit.rounding = 1
         # Create a mo for 10 products
         mo, _, _, p1, p2 = self.generate_mo('none', 'lot', 'none', qty_final=10)
         self.assertTrue(mo.move_raw_ids.filtered(lambda m: m.product_id == p1).manual_consumption)

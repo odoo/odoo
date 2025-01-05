@@ -55,12 +55,12 @@ class StockWarehouseOrderpoint(models.Model):
         'uom.uom', 'Unit of Measure', related='product_id.uom_id')
     product_uom_name = fields.Char(string='Product unit of measure label', related='product_uom.display_name', readonly=True)
     product_min_qty = fields.Float(
-        'Min Quantity', digits='Product Unit of Measure', required=True, default=0.0,
+        'Min Quantity', digits='Product Unit', required=True, default=0.0,
         compute='_compute_product_min_qty', readonly=False, store=True,
         help="When the virtual stock goes below the Min Quantity specified for this field, Odoo generates "
              "a procurement to bring the forecasted quantity above of this Min Quantity.")
     product_max_qty = fields.Float(
-        'Max Quantity', digits='Product Unit of Measure', required=True, default=0.0,
+        'Max Quantity', digits='Product Unit', required=True, default=0.0,
         compute='_compute_product_max_qty', readonly=False, store=True,
         help="When the virtual stock goes below the Min Quantity, Odoo generates "
              "a procurement to bring the forecasted quantity up to (or near to) the Max Quantity specified for this field (or to Min Quantity, whichever is bigger).")
@@ -80,11 +80,11 @@ class StockWarehouseOrderpoint(models.Model):
     lead_days_date = fields.Date(compute='_compute_lead_days')
     route_id = fields.Many2one(
         'stock.route', string='Route', domain="[('product_selectable', '=', True)]")
-    qty_on_hand = fields.Float('On Hand', readonly=True, compute='_compute_qty', digits='Product Unit of Measure')
-    qty_forecast = fields.Float('Forecast', readonly=True, compute='_compute_qty', digits='Product Unit of Measure')
-    qty_to_order = fields.Float('To Order', compute='_compute_qty_to_order', inverse='_inverse_qty_to_order', search='_search_qty_to_order', digits='Product Unit of Measure')
-    qty_to_order_computed = fields.Float('To Order Computed', compute='_compute_qty_to_order_computed', digits='Product Unit of Measure')
-    qty_to_order_manual = fields.Float('To Order Manual', digits='Product Unit of Measure')
+    qty_on_hand = fields.Float('On Hand', readonly=True, compute='_compute_qty', digits='Product Unit')
+    qty_forecast = fields.Float('Forecast', readonly=True, compute='_compute_qty', digits='Product Unit')
+    qty_to_order = fields.Float('To Order', compute='_compute_qty_to_order', inverse='_inverse_qty_to_order', search='_search_qty_to_order', digits='Product Unit')
+    qty_to_order_computed = fields.Float('To Order Computed', compute='_compute_qty_to_order_computed', digits='Product Unit')
+    qty_to_order_manual = fields.Float('To Order Manual', digits='Product Unit')
 
     days_to_order = fields.Float(compute='_compute_days_to_order', help="Numbers of days  in advance that replenishments demands are created.")
     visibility_days = fields.Float(
@@ -496,7 +496,7 @@ class StockWarehouseOrderpoint(models.Model):
         # Remove incoming quantity from other origin than moves (e.g RFQ)
         product_ids, location_ids = zip(*to_refill)
         qty_by_product_loc, dummy = self.env['product.product'].browse(product_ids)._get_quantity_in_progress(location_ids=location_ids)
-        rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        rounding = self.env['decimal.precision'].precision_get('Product Unit')
         # Group orderpoint by product-location
         orderpoint_by_product_location = self.env['stock.warehouse.orderpoint']._read_group(
             [('id', 'in', orderpoints.ids)],

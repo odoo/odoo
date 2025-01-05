@@ -31,7 +31,7 @@ class SaleOrderOption(models.Model):
     quantity = fields.Float(
         string="Quantity",
         required=True,
-        digits='Product Unit of Measure',
+        digits='Product Unit',
         default=1)
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     uom_id = fields.Many2one(

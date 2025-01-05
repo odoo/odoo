@@ -28,12 +28,12 @@
                     <tbody>
                         <tr>
                             <td name="td_mrp_bom" t-esc="data['name']"/>
-                            <td class="text-end" t-esc="data['quantity']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
+                            <td class="text-end" t-esc="data['quantity']" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/>
                             <td class="text-start" groups="uom.group_uom" t-esc="data['uom_name']"/>
                             <td t-if="data['show_availabilities']" class="text-end" t-esc="data['producible_qty']" t-options="{'widget': 'float', 'precision': 0}"/>
                             <td t-if="data['show_availabilities']" class="text-end">
-                                <t t-esc="data['quantity_available']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/> /
-                                <t t-esc="data['quantity_on_hand']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
+                                <t t-esc="data['quantity_available']" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/> /
+                                <t t-esc="data['quantity_on_hand']" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/>
                             </td>
                             <td t-if="data['show_availabilities']" class="text-center">
                                 <t t-if="data.get('components_available', None) != None">
@@ -103,7 +103,7 @@
                 </td>
                 <td class="text-end">
                     <t t-if="l['type'] == 'operation'" t-esc="l['quantity']" t-options='{"widget": "float_time"}'/>
-                    <t t-else="" t-esc="l['quantity']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
+                    <t t-else="" t-esc="l['quantity']" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/>
                 </td>
                 <td class="text-start" groups="uom.group_uom">
                     <t t-esc="l['uom']"/>
@@ -113,8 +113,8 @@
                 </td>
                 <td t-if="data['show_availabilities']" class="text-end">
                     <t t-if="l.get('quantity_available', False) is not False">
-                        <t t-esc="l['quantity_available']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/> /
-                        <t t-esc="l['quantity_on_hand']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
+                        <t t-esc="l['quantity_available']" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/> /
+                        <t t-esc="l['quantity_on_hand']" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/>
                     </t>
                 </td>
                 <td t-if="data['show_availabilities']" class="text-center">
