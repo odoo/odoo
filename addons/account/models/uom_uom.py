@@ -20,6 +20,7 @@ class UomUom(models.Model):
         mapping = {
             'uom.product_uom_unit': 'C62',
             'uom.product_uom_dozen': 'DZN',
+            'uom.product_uom_pack_6': 'HD',
             'uom.product_uom_kgm': 'KGM',
             'uom.product_uom_gram': 'GRM',
             'uom.product_uom_day': 'DAY',

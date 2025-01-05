@@ -16,4 +16,7 @@
     'installable': True,
     'auto_install': ['account'],
     'license': 'LGPL-3',
+    'data': [
+        'data/uom_data.xml',
+    ],
 }
