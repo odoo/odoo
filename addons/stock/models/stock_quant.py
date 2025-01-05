@@ -844,7 +844,7 @@ class StockQuant(models.Model):
             else:
                 return sum([available_quantity for available_quantity in availaible_quantities.values() if float_compare(available_quantity, 0, precision_rounding=rounding) > 0])
 
-    def _get_reserve_quantity(self, product_id, location_id, quantity, product_packaging_id=None, uom_id=None, lot_id=None, package_id=None, owner_id=None, strict=False):
+    def _get_reserve_quantity(self, product_id, location_id, quantity, uom_id=None, lot_id=None, package_id=None, owner_id=None, strict=False):
         """ Get the quantity available to reserve for the set of quants
         sharing the combination of `product_id, location_id` if `strict` is set to False or sharing
         the *exact same characteristics* otherwise. If no quants are in self, `_gather` will do a search to fetch the quants
@@ -861,10 +861,6 @@ class StockQuant(models.Model):
 
         # avoid quants with negative qty to not lower available_qty
         available_quantity = quants._get_available_quantity(product_id, location_id, lot_id, package_id, owner_id, strict)
-
-        # do full packaging reservation when it's needed
-        if product_packaging_id and product_id.product_tmpl_id.categ_id.packaging_reserve_method == "full":
-            available_quantity = product_packaging_id._check_qty(available_quantity, product_id.uom_id, "DOWN")
 
         quantity = min(quantity, available_quantity)
 

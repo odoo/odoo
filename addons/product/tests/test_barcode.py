@@ -79,20 +79,27 @@ class TestProductBarcode(TransactionCase):
             assert 'Barcode "4" already assigned to product(s): BC5 and BC6' in exc.args[0]
             assert 'Barcode "1" already assigned to product(s): BC1' in exc.args[0]
 
-    def test_delete_package_and_use_its_barcode_in_product(self):
-        """ Test that the barcode of the package can be used when the package is removed from the product."""
+    def test_delete_packaging_and_use_its_barcode_in_product(self):
+        """ Test that the barcode of the packaging can be used when the packaging is removed from the product."""
+        pack_uom = self.env['uom.uom'].create({
+            'name': 'Pack of 10',
+            'relative_factor': 10,
+            'relative_uom_id': self.env.ref('uom.product_uom_unit').id,
+        })
         product = self.env['product.product'].create({
             'name': 'product',
-            'packaging_ids': [(0, 0, {
-                'name': 'packing',
-                'barcode': '1234',
-            })]
+            'uom_ids': [Command.link(pack_uom.id)],
         })
-        package = product.packaging_ids
-        self.assertTrue(package.exists())
-        self.assertEqual(package.barcode, '1234')
-        product.packaging_ids = False
-        self.assertFalse(package.exists())
+        packaging_barcode = self.env['product.uom'].create({
+            'barcode': '1234',
+            'product_id': product.id,
+            'uom_id': pack_uom.id,
+        })
+        packaging = product.product_uom_ids
+        self.assertTrue(packaging.exists())
+        self.assertEqual(packaging.barcode, '1234')
+        packaging_barcode.unlink()
+        self.assertFalse(packaging.exists())
         product.barcode = '1234'
 
     def test_duplicated_barcodes_are_allowed_for_different_companies(self):

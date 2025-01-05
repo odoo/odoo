@@ -44,6 +44,7 @@ class ProductProduct(models.Model):
     barcode = fields.Char(
         'Barcode', copy=False, index='btree_not_null',
         help="International Article Number used for product identification.")
+    product_uom_ids = fields.One2many('product.uom', 'product_id', 'Unit Barcode', store=True)
     product_template_attribute_value_ids = fields.Many2many('product.template.attribute.value', relation='product_variant_combination', string="Attribute Values", ondelete='restrict')
     product_template_variant_value_ids = fields.Many2many('product.template.attribute.value', relation='product_variant_combination',
                                                           domain=[('attribute_line_id.value_count', '>', 1)], string="Variant Values", ondelete='restrict')
@@ -69,10 +70,6 @@ class ProductProduct(models.Model):
         domain=lambda self: [('res_model', '=', self._name)])
     product_document_count = fields.Integer(
         string="Documents Count", compute='_compute_product_document_count')
-
-    packaging_ids = fields.One2many(
-        'product.packaging', 'product_id', 'Product Packages',
-        help="Gives the different ways to package the same product.")
 
     additional_product_tag_ids = fields.Many2many(
         string="Variant Tags",
@@ -231,7 +228,7 @@ class ProductProduct(models.Model):
 
     def _check_duplicated_packaging_barcodes(self, barcodes_within_company, company_id):
         packaging_domain = self._get_barcode_search_domain(barcodes_within_company, company_id)
-        if self.env['product.packaging'].sudo().search_count(packaging_domain, limit=1):
+        if self.env['product.uom'].sudo().search_count(packaging_domain, limit=1):
             raise ValidationError(_("A packaging already uses the barcode"))
 
     @api.constrains('barcode')
