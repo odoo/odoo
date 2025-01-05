@@ -52,7 +52,7 @@ class StockWarehouseOrderpoint(models.Model):
         ondelete='cascade', required=True, check_company=True)
     product_category_id = fields.Many2one('product.category', name='Product Category', related='product_id.categ_id')
     product_uom = fields.Many2one(
-        'uom.uom', 'Unit of Measure', related='product_id.uom_id')
+        'uom.uom', 'Unit', related='product_id.uom_id')
     product_uom_name = fields.Char(string='Product unit of measure label', related='product_uom.display_name', readonly=True)
     product_min_qty = fields.Float(
         'Min Quantity', digits='Product Unit', required=True, default=0.0,

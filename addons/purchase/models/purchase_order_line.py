@@ -31,7 +31,7 @@ class PurchaseOrderLine(models.Model):
         store=True, readonly=False)
     taxes_id = fields.Many2many('account.tax', string='Taxes', context={'active_test': False})
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
-    product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('id', 'in', allowed_uom_ids)]")
+    product_uom_id = fields.Many2one('uom.uom', string='Unit', domain="[('id', 'in', allowed_uom_ids)]")
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, index='btree_not_null', ondelete='restrict')
     product_type = fields.Selection(related='product_id.type', readonly=True)
     price_unit = fields.Float(

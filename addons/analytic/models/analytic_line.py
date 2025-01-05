@@ -161,7 +161,7 @@ class AccountAnalyticLine(models.Model):
     )
     product_uom_id = fields.Many2one(
         'uom.uom',
-        string='Unit of Measure',
+        string='Unit',
     )
     partner_id = fields.Many2one(
         'res.partner',

@@ -45,7 +45,7 @@ class MrpBom(models.Model):
         digits='Product Unit', required=True,
         help="This should be the smallest quantity that this product can be produced in. If the BOM contains operations, make sure the work center capacity is accurate.")
     product_uom_id = fields.Many2one(
-        'uom.uom', 'Unit of Measure',
+        'uom.uom', 'Unit',
         default=_get_default_product_uom_id, required=True,
         help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control")
     sequence = fields.Integer('Sequence')
@@ -529,7 +529,7 @@ class MrpBomLine(models.Model):
         digits='Product Unit', required=True)
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     product_uom_id = fields.Many2one(
-        'uom.uom', 'Product Unit of Measure',
+        'uom.uom', 'Unit',
         default=_get_default_product_uom_id,
         domain="[('id', 'in', allowed_uom_ids)]", required=True)
     sequence = fields.Integer(

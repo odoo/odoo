@@ -26,7 +26,7 @@
                             <field name="product_id" readonly="state == 'done'"/>
                             <field name="product_uom_qty" readonly="state == 'done'"/>
                             <field name="quantity"/>
-                            <field name="product_uom" groups="uom.group_uom"/>
+                            <field name="product_uom" groups="uom.group_uom" widget="many2one_uom"/>
                             <field name="state" column_invisible="True"/>
                         </list>
                     </field>
@@ -37,7 +37,7 @@
                             <field name="lot_name" column_invisible="not parent.show_lots_text" groups="stock.group_production_lot"/>
                             <field name="owner_id" groups="stock.group_tracking_owner"/>
                             <field name="quantity"/>
-                            <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" readonly="quantity != 0.0" string="Unit of Measure" groups="uom.group_uom"/>
+                            <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" widget="many2one_uom" readonly="quantity != 0.0" groups="uom.group_uom"/>
                             <field name="state" column_invisible="True"/>
                         </list>
                     </field>

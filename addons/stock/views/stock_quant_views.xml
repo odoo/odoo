@@ -145,7 +145,7 @@
                 <field name="inventory_quantity_auto_apply" string="On Hand Quantity" readonly="0" sum="Total On Hand"/>
                 <field name="reserved_quantity" optional="show" sum="Total Reserved"/>
                 <field name="available_quantity" optional="hide" sum="Total Available"/>
-                <field name="product_uom_id" string="Unit" groups="uom.group_uom"/>
+                <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                 <field name="lot_properties" optional="hide"/>
                 <button name="action_view_stock_moves" string="History" type="object" class="btn-link" icon="fa-history"/>
                 <button name="action_view_orderpoints" string="Replenishment" type="object" context="{'default_product_id': product_id, 'search_default_location_id': location_id}" class="btn-link" icon="fa-refresh"/>
@@ -168,7 +168,7 @@
                 <field name="owner_id" groups="stock.group_tracking_owner"/>
                 <field name="quantity" string="On Hand"/>
                 <field name="available_quantity" string="Available"/>
-                <field name="product_uom_id" groups="uom.group_uom" string="Unit"/>
+                <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hidden"/>
             </list>
         </field>
@@ -294,7 +294,7 @@
                             <field name="product_id"/>
                             <field name="lot_id" groups="stock.group_production_lot"/>
                             <field name="quantity"/>
-                            <field name="product_uom_id" groups="uom.group_uom"/>
+                            <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                         </list>
                         <kanban class="o_kanban_mobile">
                             <templates>
@@ -448,7 +448,7 @@ in this location. That leads to a negative stock.
                 <field name="last_count_date" optional='hidden' readonly='1'/>
                 <field name="available_quantity" string="Available Quantity" decoration-danger="available_quantity &lt; 0" optional="hidden"/>
                 <field name="quantity" optional="show" decoration-warning="quantity &lt; 0" string="On Hand Quantity"/>
-                <field name="product_uom_id" groups="uom.group_uom" string="UoM"/>
+                <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                 <field name="inventory_quantity" widget="counted_quantity_widget"/>
                 <field name="inventory_diff_quantity" string="Difference"  invisible="not inventory_quantity_set" decoration-muted="inventory_diff_quantity == 0" decoration-danger="inventory_diff_quantity &lt; 0" decoration-success="inventory_diff_quantity &gt; 0" decoration-bf="inventory_diff_quantity != 0"/>
                 <field name="inventory_date" optional="show"/>

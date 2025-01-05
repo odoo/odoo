@@ -117,7 +117,7 @@
                                         >
                                             per
                                             <field
-                                                name="uom_id"
+                                                name="uom_id" widget="many2one_uom"
                                                 class="oe_inline" style="max-width:136px"
                                                 options="{'no_create': True}"
                                             />
@@ -151,7 +151,11 @@
                                         />
                                         <span groups="uom.group_uom">
                                             per
-                                            <field name="uom_name" class="oe_inline"/>
+                                            <field
+                                                name="uom_id" widget="many2one_uom"
+                                                class="oe_inline" style="max-width:136px"
+                                                options="{'no_create': True}"
+                                            />
                                         </span>
                                     </div>
                                     <field name="categ_id" string="Category"/>
@@ -173,6 +177,7 @@
                                 <group string="Upsell &amp; Cross-Sell" name="upsell" invisible="1">
                                     <field
                                         name="uom_ids"
+                                        widget="many2many_uom_tags"
                                         options="{'no_quick_create': True, 'edit_tags': True}"
                                         groups="uom.group_uom"
                                         force_save="1"
@@ -386,6 +391,7 @@
                             <group name="sales" string="Sales">
                                 <field
                                     name="uom_ids"
+                                    widget="many2many_uom_tags"
                                     options="{'no_quick_create': True, 'edit_tags': True}"
                                     groups="uom.group_uom"
                                     force_save="1"
@@ -442,7 +448,7 @@
                     <field name="product_tag_ids" widget="many2many_tags" readonly="1" optional="hide"/>
                     <field name="additional_product_tag_ids" widget="many2many_tags" optional="hide"/>
                     <field name="type" optional="hide" readonly="1"/>
-                    <field name="uom_id" string="Unit" groups="uom.group_uom" optional="show" readonly="1"/>
+                    <field name="uom_id" widget="many2one_uom" groups="uom.group_uom" optional="show" readonly="1"/>
                     <field name="product_tmpl_id" readonly="1" column_invisible="True"/>
                     <field name="active" column_invisible="True"/>
                 </list>
