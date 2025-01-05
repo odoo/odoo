@@ -179,12 +179,12 @@ msgstr "Мастер выбора курьера доставки"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_package
 msgid "Delivery Package Selection Wizard"
-msgstr "Мастер выбора упаковки"
+msgstr "Мастер выбора посылки для доставки"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__delivery_package_type_id
 msgid "Delivery Package Type"
-msgstr "Тип упаковки для доставки"
+msgstr "Тип посылки для доставки"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.vpicktree_view_tree
@@ -277,27 +277,27 @@ msgstr "Происхождение товаров"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
 msgid "Package"
-msgstr "Упаковка"
+msgstr "Посылка"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 #, python-format
 msgid "Package Details"
-msgstr "Детали упаковки"
+msgstr "Детали посылки"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/wizard/choose_delivery_package.py:0
 #, python-format
 msgid "Package too heavy!"
-msgstr "Упаковка слишком тяжелая!"
+msgstr "Посылка слишком тяжелая!"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_quant_package
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__package_ids
 msgid "Packages"
-msgstr "Упаковки"
+msgstr "Посылки"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__picking_id
@@ -439,7 +439,7 @@ msgstr "Движение запасов"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_package_type
 msgid "Stock package type"
-msgstr "Тип складской упаковки"
+msgstr "Тип посылки на складе"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_rounding
@@ -472,7 +472,8 @@ msgid ""
 "The package cannot be created because the total weight of the products in "
 "the picking is 0.0 %s"
 msgstr ""
-"Упаковку нельзя создать, так как общий вес товаров в сборке равен 0 %s"
+"Невозможно создать посылку, так как общий вес товаров в отгрузке равен 0.0 "
+"%s"
 
 #. module: stock_delivery
 #. odoo-python
@@ -490,8 +491,8 @@ msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
 msgstr ""
-"Вес вашей упаковки превышает максимальный допустимый вес для этого типа "
-"упаковки. Пожалуйста, выберите другой тип упаковки."
+"Вес вашей посылки превышает максимальный допустимый вес для этого типа "
+"посылки. Пожалуйста, выберите другой тип посылки."
 
 #. module: stock_delivery
 #. odoo-python
@@ -503,7 +504,7 @@ msgstr "Нет подходящего правила доставки."
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_quant_package__weight
 msgid "Total weight of all the products contained in the package."
-msgstr "Общий вес всех товаров в упаковке."
+msgstr "Общий вес всех товаров, содержащихся в посылке."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__shipping_weight
@@ -512,18 +513,19 @@ msgid ""
 "shipping weight specified will default to their products' total weight. This"
 " is the weight used to compute the cost of the shipping."
 msgstr ""
-"Общий вес упаковок и товаров без упаковки. Если вес упаковки не указан, "
-"используется вес товаров. Этот вес нужен для расчета стоимости доставки."
+"Общий вес посылок и товаров, не упакованных в посылки. Если вес доставки не "
+"указан, используется общий вес товаров. Этот вес используется для расчета "
+"стоимости доставки."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight_bulk
 msgid "Total weight of products which are not in a package."
-msgstr "Общий вес товаров, которые не находятся в упаковке."
+msgstr "Общий вес товаров, не упакованных в посылки."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_quant_package__shipping_weight
 msgid "Total weight of the package."
-msgstr "Общий вес упаковки."
+msgstr "Общий вес посылки."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight
@@ -565,7 +567,7 @@ msgstr "Отслеживание:"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_picking
 msgid "Transfer"
-msgstr "Перевод"
+msgstr "Отгрузка"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move__weight
@@ -606,9 +608,8 @@ msgid ""
 "carriers (i.e. check that all of their transfers have a carrier assigned and"
 " are using the same carrier)."
 msgstr ""
-"Нельзя упаковать товары в одну упаковку, если у них разные перевозчики "
-"(убедитесь, что все их перемещения имеют назначенного перевозчика и "
-"используют одного и того же перевозчика)."
+"Вы не можете упаковать товары в одну посылку, если у них разные перевозчики."
+" Убедитесь, что все товары имеют одного и того же перевозчика."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
