@@ -120,9 +120,3 @@ class ProductSupplierinfo(models.Model):
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
-
-
-class ProductPackaging(models.Model):
-    _inherit = 'product.packaging'
-
-    purchase = fields.Boolean("Purchase", default=True, help="If true, the packaging can be used for purchase orders")

@@ -956,61 +956,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertTrue(sale_order4.picking_ids)
         self.assertEqual(sale_order4.picking_ids.state, 'assigned')
 
-    def test_packaging_propagation(self):
-        """Create a SO with lines using packaging, check the packaging propagate
-        to its move.
-        """
-        warehouse = self.company_data['default_warehouse']
-        warehouse.delivery_steps = 'pick_pack_ship'
-        product = self.env['product.product'].create({
-            'name': 'Product with packaging',
-            'is_storable': True,
-        })
-
-        packOf10 = self.env['product.packaging'].create({
-            'name': 'PackOf10',
-            'product_id': product.id,
-            'qty': 10
-        })
-
-        packOf20 = self.env['product.packaging'].create({
-            'name': 'PackOf20',
-            'product_id': product.id,
-            'qty': 20
-        })
-
-        so = self.env['sale.order'].create({
-            'partner_id': self.partner_a.id,
-            'warehouse_id': self.warehouse_3_steps_pull.id,
-            'order_line': [
-                (0, 0, {
-                    'product_id': product.id,
-                    'product_uom_qty': 10.0,
-                    'product_packaging_id': packOf10.id,
-                })],
-        })
-        so.action_confirm()
-        ship = so.order_line.move_ids
-        pack = ship.move_orig_ids
-        pick = pack.move_orig_ids
-        self.assertEqual(pick.product_packaging_id, packOf10)
-        self.assertEqual(pack.product_packaging_id, packOf10)
-        self.assertEqual(ship.product_packaging_id, packOf10)
-
-        so.order_line[0].write({
-            'product_packaging_id': packOf20.id,
-            'product_uom_qty': 20
-        })
-        self.assertEqual(so.order_line.move_ids.product_packaging_id, packOf20)
-        self.assertEqual(pick.product_packaging_id, packOf20)
-        self.assertEqual(pack.product_packaging_id, packOf20)
-        self.assertEqual(ship.product_packaging_id, packOf20)
-
-        so.order_line[0].write({'product_packaging_id': False})
-        self.assertFalse(pick.product_packaging_id)
-        self.assertFalse(pack.product_packaging_id)
-        self.assertFalse(ship.product_packaging_id)
-
     def test_15_cancel_delivery(self):
         """ Suppose the option "Lock Confirmed Sales" enabled and a product with the invoicing
         policy set to "Delivered quantities". When cancelling the delivery of such a product, the
@@ -1387,29 +1332,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         ret_pack_sm.picking_id.action_assign()
         self.assertEqual(ret_pack_sm.state, 'assigned')
         self.assertEqual(ret_pack_sm.move_line_ids.quantity, 2)
-
-    def test_packaging_and_qty_decrease(self):
-        packaging = self.env['product.packaging'].create({
-            'name': "Super Packaging",
-            'product_id': self.product_a.id,
-            'qty': 10.0,
-        })
-
-        so_form = Form(self.env['sale.order'])
-        so_form.partner_id = self.partner_a
-        with so_form.order_line.new() as line:
-            line.product_id = self.product_a
-            line.product_uom_qty = 10
-        so = so_form.save()
-        so.action_confirm()
-
-        self.assertEqual(so.order_line.product_packaging_id, packaging)
-
-        with Form(so) as so_form:
-            with so_form.order_line.edit(0) as line:
-                line.product_uom_qty = 8
-
-        self.assertEqual(so.picking_ids.move_ids.product_uom_qty, 8)
 
     def test_backorder_and_decrease_sol_qty(self):
         """
@@ -2102,50 +2024,3 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         error_message = "You must set a warehouse on your sale order to proceed."
         with self.assertRaisesRegex(UserError, error_message), self.env.cr.savepoint():
             so.with_company(new_company).action_confirm()
-
-    def test_package_with_moves_to_different_location_dest(self):
-        """
-        Create a two-step delivery with two products, and package both products together.
-        Ensure that the destination location is different for the two moves in the second
-        picking. check that the first picking can be validated.
-        """
-        # Set-up multi-step routes
-        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
-        warehouse = self.company_data['default_warehouse']
-        # Create two child locations.
-        parent_location = self.partner_a.property_stock_customer
-        child_location_1 = self.env['stock.location'].create({
-                'name': 'child_1',
-                'location_id': parent_location.id,
-        })
-        child_location_2 = self.env['stock.location'].create({
-                'name': 'child_2',
-                'location_id': parent_location.id,
-        })
-        # Enable 2-steps delivery
-        with Form(warehouse) as w:
-            w.delivery_steps = 'pick_ship'
-        delivery_route = warehouse.delivery_route_id
-        delivery_route.rule_ids[0].write({
-            'location_dest_id': delivery_route.rule_ids[1].location_src_id.id,
-        })
-        delivery_route.rule_ids[1].write({'action': 'pull'})
-        so = self._get_new_sale_order(product=self.product_a)
-        self.env['sale.order.line'].create({
-            'product_id': self.product_b.id,
-            'order_id': so.id,
-        })
-        self.assertEqual(len(so.order_line), 2)
-        so.action_confirm()
-        self.assertEqual(len(so.picking_ids), 2)
-        so.picking_ids[1].move_ids[0].location_dest_id = child_location_1
-        so.picking_ids[1].move_ids[1].location_dest_id = child_location_2
-        # Pack the moves of the first picking together.
-        package = so.picking_ids[0].action_put_in_pack()
-        # a new package is made and done quantities should be in same package
-        self.assertTrue(package)
-        so.picking_ids[0].button_validate()
-        self.assertEqual(so.picking_ids[0].state, 'done')
-        self.assertEqual(so.picking_ids[1].move_ids.move_line_ids[0].location_dest_id, child_location_1)
-        self.assertEqual(so.picking_ids[1].move_ids.move_line_ids[1].location_dest_id, child_location_2)

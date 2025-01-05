@@ -97,10 +97,10 @@ class PurchaseOrderLine(models.Model):
         lines = self.filtered(lambda l: l.order_id.state == 'purchase'
                                         and not l.display_type)
 
-        if 'product_packaging_id' in values:
+        if 'product_uom_id' in values and values['product_uom_id'] != self.product_id.uom_id.id:
             self.move_ids.filtered(
                 lambda m: m.state not in ['cancel', 'done']
-            ).product_packaging_id = values['product_packaging_id']
+            ).product_uom = values['product_uom_id']
 
         previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
         previous_product_qty = {line.id: line.product_qty for line in lines}
@@ -307,7 +307,6 @@ class PurchaseOrderLine(models.Model):
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
             'product_uom_qty': product_uom_qty,
             'product_uom': product_uom.id,
-            'product_packaging_id': self.product_packaging_id.id,
             'sequence': self.sequence,
         }
 

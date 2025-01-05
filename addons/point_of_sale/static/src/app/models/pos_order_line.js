@@ -43,8 +43,8 @@ export class PosOrderline extends Base {
         if (options.code) {
             const code = options.code;
             const blockMerge = ["weight", "quantity", "discount"];
-            const product_packaging_by_barcode =
-                this.models["product.packaging"].getAllBy("barcode");
+            const product_packaging_by_barcode = this.models["product.uom"].getAllBy("barcode");
+            const uom_by_id = this.models["uom.uom"].getAllBy("id");
 
             if (blockMerge.includes(code.type)) {
                 this.setQuantity(code.value);
@@ -54,7 +54,9 @@ export class PosOrderline extends Base {
             }
 
             if (product_packaging_by_barcode[code.code]) {
-                this.setQuantity(product_packaging_by_barcode[code.code].qty);
+                this.setQuantity(
+                    uom_by_id[product_packaging_by_barcode[code.code].uom_id.id].factor
+                );
             }
         }
 

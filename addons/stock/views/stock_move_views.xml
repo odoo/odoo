@@ -40,9 +40,6 @@
                         decoration-muted="location_usage not in ('internal','transit')"/>
                     <field name="location_dest_id" options="{'no_create': True}" string="To"
                         decoration-muted="location_dest_usage not in ('internal','transit')"/>
-                    <field name="product_packaging_id" groups="product.group_stock_packaging"
-                        optional="hide" context="{'default_product_id': product_id}"
-                        readonly="not product_id"/>
                     <field name="product_uom_qty" sum="Total Demand" readonly="state == 'done'"/>
                     <field name="quantity" string="Quantity" sum="Total Quantity"
                         decoration-danger="(location_usage in ('internal','transit')) and (location_dest_usage not in ('internal','transit'))"
@@ -79,6 +76,8 @@
                     <field name="move_lines_count" column_invisible="True"/>
                     <field name="is_locked" column_invisible="True"/>
                     <field name="product_id" required="1" readonly="(state != 'draft' and not additional) or move_lines_count &gt; 0"/>
+                    <field name="packaging_uom_qty" optional="hide"/>
+                    <field name="packaging_uom_id" optional="hide"/>
                     <field name="is_initial_demand_editable" column_invisible="True"/>
                     <field name="is_quantity_done_editable" column_invisible="True"/>
                     <field name="product_uom_qty" string="Demand" readonly="not is_initial_demand_editable"/>

@@ -1107,18 +1107,11 @@ class ProductCategory(models.Model):
         return []
 
 
-class ProductPackaging(models.Model):
-    _inherit = "product.packaging"
-
-    package_type_id = fields.Many2one('stock.package.type', 'Package Type')
-    route_ids = fields.Many2many(
-        'stock.route', 'stock_route_packaging', 'packaging_id', 'route_id', 'Routes',
-        domain=[('packaging_selectable', '=', True)],
-        help="Depending on the modules installed, this will allow you to define the route of the product in this packaging: whether it will be bought, manufactured, replenished on order, etc.")
-
-
 class UomUom(models.Model):
     _inherit = 'uom.uom'
+
+    package_type_id = fields.Many2one('stock.package.type', string='Package Type')
+    route_ids = fields.Many2many(related='package_type_id.route_ids', string='Routes', help='Routes propagated from the package type')
 
     def write(self, values):
         # Users can not update the factor if open stock moves are based on it

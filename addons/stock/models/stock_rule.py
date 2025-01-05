@@ -366,7 +366,6 @@ class StockRule(models.Model):
             'description_picking': picking_description,
             'priority': values.get('priority', "0"),
             'orderpoint_id': values.get('orderpoint_id') and values['orderpoint_id'].id,
-            'product_packaging_id': values.get('product_packaging_id') and values['product_packaging_id'].id,
         }
         if self.location_dest_from_rule:
             move_values['location_dest_id'] = self.location_dest_id.id
@@ -507,14 +506,14 @@ class ProcurementGroup(models.Model):
         return True
 
     @api.model
-    def _search_rule_for_warehouses(self, route_ids, packaging_id, product_id, warehouse_ids, domain):
+    def _search_rule_for_warehouses(self, route_ids, packaging_uom_id, product_id, warehouse_ids, domain):
         if warehouse_ids:
             domain = expression.AND([['|', ('warehouse_id', 'in', warehouse_ids.ids), ('warehouse_id', '=', False)], domain])
         valid_route_ids = set()
         if route_ids:
             valid_route_ids |= set(route_ids.ids)
-        if packaging_id:
-            packaging_routes = packaging_id.route_ids
+        if packaging_uom_id:
+            packaging_routes = packaging_uom_id.package_type_id.route_ids
             valid_route_ids |= set(packaging_routes.ids)
         valid_route_ids |= set((product_id.route_ids | product_id.categ_id.total_route_ids).ids)
         if warehouse_ids:
@@ -532,7 +531,7 @@ class ProcurementGroup(models.Model):
             rule_dict[group[0].id, group[2].id][group[1].id] = group[3].sorted(lambda rule: (rule.route_sequence, rule.sequence))[0]
         return rule_dict
 
-    def _search_rule(self, route_ids, packaging_id, product_id, warehouse_id, domain):
+    def _search_rule(self, route_ids, packaging_uom_id, product_id, warehouse_id, domain):
         """ First find a rule among the ones defined on the procurement
         group, then try on the routes defined for the product, finally fallback
         on the default behavior
@@ -543,8 +542,8 @@ class ProcurementGroup(models.Model):
         res = self.env['stock.rule']
         if route_ids:
             res = Rule.search(expression.AND([[('route_id', 'in', route_ids.ids)], domain]), order='route_sequence, sequence', limit=1)
-        if not res and packaging_id:
-            packaging_routes = packaging_id.route_ids
+        if not res and packaging_uom_id:
+            packaging_routes = packaging_uom_id.package_type_id.route_ids
             if packaging_routes:
                 res = Rule.search(expression.AND([[('route_id', 'in', packaging_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
         if not res:
@@ -573,7 +572,7 @@ class ProcurementGroup(models.Model):
         # Get a mapping (location_id, route_id) -> warehouse_id -> rule_id
         rule_dict = self._search_rule_for_warehouses(
             values.get("route_ids", False),
-            values.get("product_packaging_id", False),
+            values.get("packaging_uom_id", False),
             product_id,
             values.get("warehouse_id", locations.warehouse_id),
             domain,
@@ -594,12 +593,12 @@ class ProcurementGroup(models.Model):
                     break
             return rule
 
-        def get_rule_for_routes(rule_dict, route_ids, packaging_id, product_id, warehouse_id, location_dest_id):
+        def get_rule_for_routes(rule_dict, route_ids, packaging_uom_id, product_id, warehouse_id, location_dest_id):
             res = self.env['stock.rule']
             if route_ids:
                 res = extract_rule(rule_dict, route_ids, warehouse_id, location_dest_id)
-            if not res and packaging_id:
-                res = extract_rule(rule_dict, packaging_id.route_ids, warehouse_id, location_dest_id)
+            if not res and packaging_uom_id:
+                res = extract_rule(rule_dict, packaging_uom_id.package_type_id.route_ids, warehouse_id, location_dest_id)
             if not res:
                 res = extract_rule(rule_dict, product_id.route_ids | product_id.categ_id.total_route_ids, warehouse_id, location_dest_id)
             if not res and warehouse_id:
@@ -622,7 +621,7 @@ class ProcurementGroup(models.Model):
                 result = get_rule_for_routes(
                     rule_dict,
                     values.get("route_ids", self.env['stock.route']),
-                    values.get("product_packaging_id", self.env['product.packaging']),
+                    values.get("packaging_uom_id", self.env['uom.uom']),
                     product_id,
                     values.get("warehouse_id", candidate_location.warehouse_id),
                     candidate_location,
@@ -668,7 +667,7 @@ class ProcurementGroup(models.Model):
             domain = [('location_src_id', '=', location.id), ('action', 'in', ('push', 'pull_push'))]
             if values.get('domain'):
                 domain = expression.AND([domain, values['domain']])
-            found_rule = self._search_rule(values.get('route_ids'), values.get('product_packaging_id'), product_id, values.get('warehouse_id'), domain)
+            found_rule = self._search_rule(values.get('route_ids'), values.get('packaging_uom_id'), product_id, values.get('warehouse_id'), domain)
             location = location.location_id
         return found_rule
 

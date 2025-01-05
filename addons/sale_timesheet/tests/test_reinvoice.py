@@ -68,11 +68,13 @@ class TestReInvoice(TestCommonSaleTimesheet):
         sale_order_line1 = self.env['sale.order.line'].create({
             'product_id': self.company_data['product_order_cost'].id,
             'product_uom_qty': 2,
+            'product_uom_id': self.env.ref('uom.product_uom_hour').id,
             'order_id': self.sale_order.id,
         })
         sale_order_line2 = self.env['sale.order.line'].create({
             'product_id': self.company_data['product_delivery_cost'].id,
             'product_uom_qty': 4,
+            'product_uom_id': self.env.ref('uom.product_uom_hour').id,
             'order_id': self.sale_order.id,
         })
 
@@ -162,12 +164,14 @@ class TestReInvoice(TestCommonSaleTimesheet):
         sale_order_line1 = self.env['sale.order.line'].create({
             'product_id': self.company_data['product_delivery_sales_price'].id,
             'product_uom_qty': 2,
+            'product_uom_id': self.env.ref('uom.product_uom_hour').id,
             'qty_delivered': 1,
             'order_id': self.sale_order.id,
         })
         sale_order_line2 = self.env['sale.order.line'].create({
             'product_id': self.company_data['product_order_sales_price'].id,
             'product_uom_qty': 3,
+            'product_uom_id': self.env.ref('uom.product_uom_hour').id,
             'qty_delivered': 1,
             'order_id': self.sale_order.id,
         })
@@ -251,6 +255,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
         sale_order_line = self.env['sale.order.line'].create({
             'product_id': self.company_data['product_order_no'].id,
             'product_uom_qty': 2,
+            'product_uom_id': self.env.ref('uom.product_uom_hour').id,
             'qty_delivered': 1,
             'order_id': self.sale_order.id,
         })

@@ -123,9 +123,6 @@ class ProductTemplate(models.Model):
     uom_ids = fields.Many2many('uom.uom', string='Packagings', help="Packagings which can be used for sales")
     company_id = fields.Many2one(
         'res.company', 'Company', index=True)
-    packaging_ids = fields.One2many(
-        'product.packaging', string="Product Packages", compute="_compute_packaging_ids", inverse="_set_packaging_ids",
-        help="Gives the different ways to package the same product.")
     seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id', 'Vendors', depends_context=('company',))
     variant_seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id')
 
@@ -438,19 +435,6 @@ class ProductTemplate(models.Model):
     def _set_default_code(self):
         self._set_product_variant_field('default_code')
 
-    @api.depends('product_variant_ids', 'product_variant_ids.packaging_ids')
-    def _compute_packaging_ids(self):
-        for p in self:
-            if len(p.product_variant_ids) == 1:
-                p.packaging_ids = p.product_variant_ids.packaging_ids
-            else:
-                p.packaging_ids = False
-
-    def _set_packaging_ids(self):
-        for p in self:
-            if len(p.product_variant_ids) == 1:
-                p.product_variant_ids.packaging_ids = p.packaging_ids
-
     @api.depends('type')
     def _compute_product_tooltip(self):
         self.product_tooltip = False
@@ -508,7 +492,7 @@ class ProductTemplate(models.Model):
 
     def _get_related_fields_variant_template(self):
         """ Return a list of fields present on template and variants models and that are related"""
-        return ['barcode', 'default_code', 'standard_price', 'volume', 'weight', 'packaging_ids', 'product_properties']
+        return ['barcode', 'default_code', 'standard_price', 'volume', 'weight', 'product_properties']
 
     @api.model_create_multi
     def create(self, vals_list):

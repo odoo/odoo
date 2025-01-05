@@ -77,8 +77,9 @@
                                 <td class="text-end">
                                     <span t-field="line.product_qty"/>
                                     <span t-field="line.product_uom_id.name" groups="uom.group_uom"/>
-                                    <span t-if="line.product_packaging_id">
-                                        (<span t-field="line.product_packaging_qty" t-options='{"widget": "integer"}'/> <span t-field="line.product_packaging_id"/>)
+                                    <span t-if="line.product_uom_id != line.product_id.uom_id" class="text-muted small">
+                                        <br/>
+                                        <span t-field="line.product_uom_qty" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit'}"/> <span t-field="line.product_id.uom_id"/>
                                     </span>
                                 </td>
                                 <td class="text-end">
