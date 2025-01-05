@@ -81,7 +81,7 @@ class MrpProduction(models.Model):
     product_tracking = fields.Selection(related='product_id.tracking')
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id')
     product_qty = fields.Float(
-        'Quantity To Produce', digits='Product Unit of Measure',
+        'Quantity To Produce', digits='Product Unit',
         readonly=False, required=True, tracking=True, precompute=True,
         compute='_compute_product_qty', store=True, copy=True)
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
@@ -91,7 +91,7 @@ class MrpProduction(models.Model):
     lot_producing_id = fields.Many2one(
         'stock.lot', string='Lot/Serial Number', copy=False,
         domain="[('product_id', '=', product_id)]", check_company=True)
-    qty_producing = fields.Float(string="Quantity Producing", digits='Product Unit of Measure', copy=False)
+    qty_producing = fields.Float(string="Quantity Producing", digits='Product Unit', copy=False)
     product_uom_qty = fields.Float(string='Total Quantity', compute='_compute_product_uom_qty', store=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type', copy=True, readonly=False,
@@ -2731,7 +2731,6 @@ class MrpProduction(models.Model):
         for move in self.move_raw_ids:
             if move.state in ('done', 'cancel') or not move.product_uom_qty:
                 continue
-            rounding = move.product_uom.rounding
             if move.manual_consumption:
                 if move.has_tracking in ('serial', 'lot') and (not move.picked or any(not line.lot_id for line in move.move_line_ids if line.quantity and line.picked)):
                     missing_lot_id_products += "\n  - %s" % move.product_id.display_name

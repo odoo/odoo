@@ -812,7 +812,7 @@ will update the cost of every lot/serial number in stock."),
                       'category. You must define one before processing this operation.')
                 )
 
-            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            precision = self.env['decimal.precision'].precision_get('Product Unit')
             orig_qtys = self.env.context.get('products_orig_quantity_svl')
             if orig_qtys and float_compare(orig_qtys[product.id], 0, precision_digits=precision) < 1:
                 debit_account_id = product_accounts[product.id]['stock_valuation'].id
@@ -859,7 +859,7 @@ will update the cost of every lot/serial number in stock."),
                       'category. You must define one before processing this operation.')
                 )
 
-            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            precision = self.env['decimal.precision'].precision_get('Product Unit')
             if float_compare(out_stock_valuation_layer.quantity, 0, precision_digits=precision) == 1:
                 debit_account_id = product_accounts[product.id]['stock_valuation'].id
                 credit_account_id = product_accounts[product.id]['stock_input'].id

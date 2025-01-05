@@ -42,7 +42,7 @@ class PurchaseOrder(models.Model):
 
     @api.depends('state', 'order_line.qty_to_invoice')
     def _get_invoiced(self):
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
         for order in self:
             if order.state not in ('purchase', 'done'):
                 order.invoice_status = 'no'
@@ -638,7 +638,7 @@ class PurchaseOrder(models.Model):
     def action_create_invoice(self):
         """Create the invoice associated to the PO.
         """
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
 
         # 1) Prepare invoice vals and clean-up the section lines
         invoice_vals_list = []
@@ -1002,7 +1002,7 @@ class PurchaseOrder(models.Model):
         return {
             **super()._get_action_add_from_catalog_extra_context(),
             'display_uom': self.env.user.has_group('uom.group_uom'),
-            'precision': self.env['decimal.precision'].precision_get('Product Unit of Measure'),
+            'precision': self.env['decimal.precision'].precision_get('Product Unit'),
             'product_catalog_currency_id': self.currency_id.id,
             'product_catalog_digits': self.order_line._fields['price_unit'].get_digits(self.env),
             'search_default_seller_ids': self.partner_id.name,

@@ -41,7 +41,7 @@ class SaleOrderLine(models.Model):
 
     def _get_displayed_quantity(self):
         rounded_uom_qty = round(self.product_uom_qty,
-                                self.env['decimal.precision'].precision_get('Product Unit of Measure'))
+                                self.env['decimal.precision'].precision_get('Product Unit'))
         return int(rounded_uom_qty) == rounded_uom_qty and int(rounded_uom_qty) or rounded_uom_qty
 
     def _show_in_cart(self):

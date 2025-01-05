@@ -17,17 +17,15 @@ class UomUom(models.Model):
     def _unprotected_uom_xml_ids(self):
         return [
             "product_uom_hour",  # NOTE: this uom is protected when hr_timesheet is installed.
+            "product_uom_dozen",
             "product_uom_pack_6",
         ]
 
-    rounding = fields.Float(
-        'Rounding Precision', default=0.01, digits=0, required=True,
-        help="The computed quantity will be a multiple of this value. "
-             "Use 1.0 for a Unit of Measure that cannot be further split, such as a piece.")
     name = fields.Char('Unit Name', required=True, translate=True)
     relative_factor = fields.Float(
         'Contains', default=1.0, digits=0, required=True,  # force NUMERIC with unlimited precision
         help='How much bigger or smaller this unit is compared to the reference UoM for this unit')
+    rounding = fields.Float('Rounding Precision', compute="_compute_rounding")
     active = fields.Boolean('Active', default=True, help="Uncheck the active field to disable a unit of measure without deleting it.")
     relative_uom_id = fields.Many2one('uom.uom', 'Reference Unit', ondelete='cascade')
     related_uom_ids = fields.One2many('uom.uom', 'relative_uom_id', 'Related UoMs')
@@ -39,7 +37,7 @@ class UomUom(models.Model):
         'The conversion ratio for a unit of measure cannot be 0!',
     )
 
-    @api.onchange('relative_factor', 'rounding')
+    @api.onchange('relative_factor')
     def _onchange_critical_fields(self):
         if self._filter_protected_uoms() and self.create_date < (fields.Datetime.now() - timedelta(days=1)):
             return {
@@ -49,7 +47,6 @@ class UomUom(models.Model):
                         "Some critical fields have been modified on %s.\n"
                         "Note that existing data WON'T be updated by this change.\n\n"
                         "As units of measure impact the whole system, this may cause critical issues.\n"
-                        "E.g. modifying the rounding could disturb your inventory balance.\n\n"
                         "Therefore, changing core units of measure in a running database is not recommended.",
                         self.name,
                     )
@@ -111,6 +108,13 @@ class UomUom(models.Model):
                 uom.factor = uom.relative_factor * uom.relative_uom_id.factor
             else:
                 uom.factor = uom.relative_factor
+
+    def _compute_rounding(self):
+        """ All Units of Measure share the same rounding precision defined in 'Product Unit'.
+            Set in a compute to ensure compatibility with previous calls to `uom.rounding`.
+        """
+        decimal_precision = self.env['decimal.precision'].precision_get('Product Unit')
+        self.rounding = 10 ** -decimal_precision
 
     def _filter_protected_uoms(self):
         """Verifies self does not contain protected uoms."""
