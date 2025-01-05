@@ -87,7 +87,7 @@ class RepairOrder(models.Model):
         check_company=True)
     product_qty = fields.Float(
         'Product Quantity', compute='_compute_product_qty', readonly=False, store=True,
-        default=1.0, digits='Product Unit of Measure')
+        default=1.0, digits='Product Unit')
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     product_uom = fields.Many2one(
         'uom.uom', 'Product Unit of Measure', domain="[('id', 'in', allowed_uom_ids)]",
@@ -481,7 +481,7 @@ class RepairOrder(models.Model):
         @return: True
         """
 
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
         product_move_vals = []
 
         # Cancel moves with 0 quantity
@@ -587,7 +587,7 @@ class RepairOrder(models.Model):
             raise UserError(_("You can not enter negative quantities."))
         if not self.product_id or not self.product_id.is_storable:
             return self._action_repair_confirm()
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
         available_qty_owner = sum(self.env['stock.quant'].search([
             ('product_id', '=', self.product_id.id),
             ('location_id', '=', self.product_location_src_id.id),
