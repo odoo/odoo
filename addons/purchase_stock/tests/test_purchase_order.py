@@ -28,7 +28,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                     'name': cls.product_id_1.name,
                     'product_id': cls.product_id_1.id,
                     'product_qty': 5.0,
-                    'product_uom_id': cls.product_id_1.uom_po_id.id,
+                    'product_uom_id': cls.product_id_1.uom_id.id,
                     'price_unit': 500.0,
                     'date_planned': datetime.today().replace(hour=9).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 }),
@@ -36,7 +36,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                     'name': cls.product_id_2.name,
                     'product_id': cls.product_id_2.id,
                     'product_qty': 5.0,
-                    'product_uom_id': cls.product_id_2.uom_po_id.id,
+                    'product_uom_id': cls.product_id_2.uom_id.id,
                     'price_unit': 250.0,
                     'date_planned': datetime.today().replace(hour=9).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 })],
@@ -64,7 +64,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         self.assertTrue(self.product_id_2.seller_ids.filtered(lambda r: r.partner_id == self.partner_a), 'Purchase: the partner should be in the list of the product suppliers')
 
-        seller = self.product_id_2._select_seller(partner_id=self.partner_a, quantity=2.0, date=self.po.date_planned, uom_id=self.product_id_2.uom_po_id)
+        seller = self.product_id_2._select_seller(partner_id=self.partner_a, quantity=2.0, date=self.po.date_planned, uom_id=self.product_id_2.uom_id)
         price_unit = seller.price if seller else 0.0
         if price_unit and seller and self.po.currency_id and seller.currency_id != self.po.currency_id:
             price_unit = seller.currency_id._convert(price_unit, self.po.currency_id, self.po.company_id, self.po.date_order)
@@ -366,7 +366,11 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         })
         self.product_id_2.write({
             'uom_id': self.env.ref('uom.product_uom_meter').id,
-            'uom_po_id': yards_uom.id,
+            'seller_ids': [Command.create({
+                'partner_id': self.partner_a.id,
+                'min_qty': 1,
+                'product_uom_id': yards_uom.id,
+            })]
         })
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
@@ -375,7 +379,6 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                     'name': self.product_id_2.name,
                     'product_id': self.product_id_2.id,
                     'product_qty': 4.0,
-                    'product_uom_id': self.product_id_2.uom_po_id.id,
                     'price_unit': 1.0,
                     'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 })
@@ -615,7 +618,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                 'name': self.product_id_2.name,
                 'product_id': self.product_id_2.id,
                 'product_qty': -5.0,
-                'product_uom_id': self.product_id_2.uom_po_id.id,
+                'product_uom_id': self.product_id_2.uom_id.id,
                 'price_unit': 250.0,
             })],
         }
