@@ -39,7 +39,7 @@
                                 <list editable="bottom">
                                     <field name="product_id" required="1" context="{'default_is_storable': True}"/>
                                     <field name="quantity"/>
-                                    <field name="product_uom_id" groups="uom.group_uom" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="product_uom_id" groups="uom.group_uom" options="{'no_create': True, 'no_open': True}" widget="many2one_uom"/>
                                     <field name="company_id" column_invisible="True"/>
                                 </list>
                             </field>
@@ -84,7 +84,7 @@
                 <field name="product_id" column_invisible="context.get('default_product_id')" readonly="package_type_id" required="not package_type_id"/>
                 <field name="package_type_id" column_invisible="context.get('hide_package_type', False)" readonly="product_id" required="not product_id" groups="stock.group_tracking_lot"/>
                 <field name="quantity"/>
-                <field name="product_uom_id" groups="uom.group_uom" options="{'no_create': True, 'no_open': True}"/>
+                <field name="product_uom_id" groups="uom.group_uom" options="{'no_create': True, 'no_open': True}" widget="many2one_uom"/>
                 <field name="company_id" column_invisible="True"/>
                 <field name="package_type_id" column_invisible="True"/>
             </list>

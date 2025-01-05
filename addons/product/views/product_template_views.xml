@@ -24,7 +24,7 @@
                 <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id'}" optional="show" readonly="1"/>
                 <field name="categ_id" optional="hide"/>
                 <field name="type" optional="hide" readonly="1"/>
-                <field name="uom_id" string="Unit" readonly="1" optional="show" groups="uom.group_uom"/>
+                <field name="uom_id" widget="many2one_uom" readonly="1" optional="show" groups="uom.group_uom"/>
                 <field name="active" column_invisible="True"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </list>
