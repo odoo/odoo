@@ -7,8 +7,8 @@
 # Interactive AV-IT, 2024
 # Janusz Harkot <jh@trilab.pl>, 2024
 # Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2024
-# Marta Wacławek, 2024
 # Wil Odoo, 2024
+# Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-19 11:52+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -220,7 +220,7 @@ msgstr "%<span class=\"px-3\"/>("
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "%d moves"
-msgstr "%d wpisy"
+msgstr "%d ruchów"
 
 #. module: account
 #. odoo-python
@@ -621,6 +621,37 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Drogi/Droga\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Oto Twoja\n"
+"        <t t-if=\"object.name\">\n"
+"            nota kredytowa <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Nota kredytowa\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (o numerze referencyjnym: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        na kwotę <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        od <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        W razie jakichkolwiek pytań, prosimy nie wahać się z nami kontaktować.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -675,6 +706,55 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Drogi/Droga\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Oto Twoja\n"
+"        <t t-if=\"object.name\">\n"
+"            faktura <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Faktura\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (o numerze referencyjnym: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        na kwotę <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        od <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            Ta faktura jest już opłacona.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            rosimy o dokonanie płatności w najbliższym dogodnym terminie.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br/><br/>\n"
+"                Prosimy o załączenie niniejszej informacji do płatności: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                    na konto <strong t-out=\"object.partner_bank_id.acc_number\"/>\n"
+"                </t>\n"
+"                .\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+"            <br/><br/>\n"
+"            PS: ewidencja czasu pracy może zostać skontrolowana <a t-att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">z pozycji portalu.</a>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        W razie jakichkolwiek pytań, prosimy nie wahać się z nami kontaktować.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -696,6 +776,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Drogi/Droga <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
+"        Dziękujemy za wpłatę.\n"
+"        Oto potwierdzenie płatności <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> na kwotę\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> od <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        W razie jakichkolwiek pytań prosimy nie wahać się z nami kontaktować.\n"
+"        <br/><br/>\n"
+"        Z pozdrowieniami,\n"
+"        <t t-if=\"not is_html_empty(user.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -1029,6 +1125,8 @@ msgstr "<span class=\"text-warning\">Średnie ryzyko</span>: Iban"
 msgid ""
 "<span invisible=\"name or name_placeholder or quick_edit_mode\">Draft</span>"
 msgstr ""
+"<span invisible=\"name or name_placeholder or quick_edit_mode\">Wersja "
+"robocza</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -2335,7 +2433,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Add a description to your item."
-msgstr ""
+msgstr "Dodaj opis do elementu."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -4393,7 +4491,7 @@ msgstr "Klik"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Click here to add a description to your product."
-msgstr ""
+msgstr "Kliknij tutaj by dodać nowy opis produktu."
 
 #. module: account
 #. odoo-javascript
@@ -4626,7 +4724,7 @@ msgstr "Firma związana z tym dziennikiem"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Complete the partner data with email."
-msgstr ""
+msgstr "Dopełnij dane partnera e-mailem."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
@@ -5079,7 +5177,7 @@ msgstr "Utwórz pierwsze zaokrąglenie gotówki"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Create the product."
-msgstr ""
+msgstr "Utwórz produkt."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -7202,7 +7300,7 @@ msgstr "Typ wykresu"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Fill in the details of the product or see the suggestion."
-msgstr ""
+msgstr "Wypełnij szczegóły dotyczące produktu lub zobacz sugestię."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_fiscal_position
@@ -9149,7 +9247,7 @@ msgstr "Jest pomiędzy"
 #: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
 #: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
 msgid "Is Coa Installed"
-msgstr ""
+msgstr "Czy zainstalowano plan kont"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
@@ -10551,7 +10649,7 @@ msgstr "Nazwa"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__name_placeholder
 #: model:ir.model.fields,field_description:account.field_account_move__name_placeholder
 msgid "Name Placeholder"
-msgstr ""
+msgstr "Element zastępczy nazwy"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name_searchable
@@ -11538,7 +11636,7 @@ msgstr "PDF bez płatności"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "PEPPOL Electronic Invoicing"
-msgstr ""
+msgstr "PEPPOL Elektroniczne fakturowanie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_peppol
@@ -13911,7 +14009,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Set a price."
-msgstr ""
+msgstr "Ustaw cenę."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -17586,7 +17684,7 @@ msgstr "Dostawcy"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Verify the price and update if necessary."
-msgstr ""
+msgstr "Zweryfikuj cenę i zaktualizuj, jeśli jest taka potrzeba."
 
 #. module: account
 #. odoo-javascript
@@ -18768,7 +18866,7 @@ msgstr "rachunki dla"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "by %s"
-msgstr ""
+msgstr "przez %s"
 
 #. module: account
 #. odoo-python

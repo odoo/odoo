@@ -521,15 +521,16 @@ msgstr ""
 "Resumen:\n"
 "---------\n"
 "\n"
-"* Plantilla del plan de cuentas e impuestos para empresas en Japón.\n"
-"* Es probable que esto no cubra todas las cuentas necesarias para una empresa. Se espera que usted agregue, elimine o modifique cuentas tomando en cuenta esta plantilla.\n"
+"* Plantilla del plan de cuentas e impuestos para las empresas en Japón.\n"
+"* Es probable que este módulo no cubra todas las cuentas necesarias para una empresa. Se espera que usted agregue, elimine o modifique cuentas de acuerdo con esta plantilla.\n"
 "\n"
 "Nota:\n"
 "-----\n"
 "\n"
-"* Agregamos las posiciones fiscales ''内税'' y ''外税'' para gestionar los requisitos especiales que podrían surgir al implementar el PdV. [1] En circunstancias normales, es posible que no necesite usarlos.\n"
+"* Agregamos las posiciones fiscales ''内税'' y ''外税'' para gestionar los requisitos especiales que podrían surgir al implementar el PdV. [1] Es posible que no necesite usarlos en circunstancias normales.\n"
 "\n"
-"[1] Consulte https://github.com/odoo/odoo/pull/6470 para más detalles.\n"
+"[1] Consulte https://github.com/odoo/odoo/pull/6470 para obtener más detalles.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_sale
@@ -629,7 +630,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"            Integración del dispositivo eTIMS para EDI de Kenya\n"
+"            Integración del dispositivo eTIMS para EDI de Kenia\n"
 "        "
 
 #. module: base
@@ -640,7 +641,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"            Integración del dispositivo eTIMS para EDI de Inventario de Kenya\n"
+"            Integración del dispositivo eTIMS para EDI de Inventario de Kenia\n"
 "        "
 
 #. module: base
@@ -662,7 +663,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"            Integración del dispositivo eTIMS para EDI de Fabricación de Kenya\n"
+"            Integración del dispositivo eTIMS para EDI de Fabricación de Kenia\n"
 "        "
 
 #. module: base
@@ -1165,7 +1166,7 @@ msgstr ""
 "\n"
 "Datos de contabilidad para las reglas de nómina de Francia.\n"
 "\n"
-"Este módulo está basado en un módulo francés sin soporte. Tome en cuenta que no le daremos soporte a este módulo.\n"
+"Este módulo está basado en un módulo francés que ya no es compatible. Tome en cuenta que no le daremos soporte a este módulo.\n"
 "--------------------------------------------------------------------------------------------------------\n"
 
 #. module: base
@@ -1554,7 +1555,7 @@ msgstr ""
 "Reportes contables para Ecuador\n"
 "==============================\n"
 "* Agrega el reporte del balance general adaptado para Ecuador\n"
-"* Agrega el reporte del estado resultados adaptado para Ecuador\n"
+"* Agrega el reporte del estado de resultados adaptado para Ecuador\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fi_reports
@@ -1843,9 +1844,9 @@ msgid ""
 "Source: https://www.paragraf.rs/propisi/pravilnik-o-kontnom-okviru-sadrzini-racuna-za-privredna-drustva-zadruge.html\n"
 msgstr ""
 "\n"
-"        Reportes contables para Serbia.\n"
-"        Este módulo está basado en el documento oficial \"Pravilnik o kontnom okviru i sadržini računa u kontnom okviru za privredna društva, zadruge i preduzetnike (\"Sl. glasnik RS\", br. 89/2020)\"\n"
-"        Fuente: https://www.paragraf.rs/propisi/pravilnik-o-kontnom-okviru-sadrzini-racuna-za-privredna-drustva-zadruge.html\n"
+"Reportes contables para Serbia.\n"
+"Este módulo está basado en el documento oficial \"Pravilnik o kontnom okviru i sadržini računa u kontnom okviru za privredna društva, zadruge i preduzetnike (\"Sl. glasnik RS\", br. 89/2020)\"\n"
+"Fuente: https://www.paragraf.rs/propisi/pravilnik-o-kontnom-okviru-sadrzini-racuna-za-privredna-drustva-zadruge.html\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sg_reports
@@ -1958,10 +1959,10 @@ msgid ""
 "MTD-VAT API to HMRC.\n"
 msgstr ""
 "\n"
-"Informes contables para el Reino Unido\n"
+"Reportes contables para el Reino Unido\n"
 "\n"
 "Permite enviar la declaración de impuestos por medio de \n"
-"la API MTD-VAT al HMRC.\n"
+"la API de MTD-VAT al HMRC.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_reports
@@ -2166,17 +2167,17 @@ msgid ""
 "- the option 'automatic_invoice' is enabled in the website settings (\"Generate the invoice automatically when the online payment is confirmed\")\n"
 msgstr ""
 "\n"
-"    Agregue una pestaña adicional al proceso de pago de Sitio web o Comercio electrónico con los campos mexicanos:\n"
-"    \n"
-"    - l10n_mx_edi_cfdi_to_public (sale.order/account.move)\n"
-"    - l10n_mx_edi_fiscal_regime (res.partner)\n"
-"    - l10n_mx_edi_usage (sale.order/account.move)\n"
-"    - l10n_mx_edi_no_tax_breakdown (res.partner)\n"
-"    \n"
-"    La pestaña adicional solo aparecerá si:\n"
-"    \n"
-"    - la empresa vinculada al sitio web es mexicana\n"
-"    - la opción 'automatic_invoice' está habilitada en los ajustes del sitio web (\"Generar la factura en automático al confirmar el pago en línea\")\n"
+"Agregue una pestaña adicional al proceso de pago de Sitio web o Comercio electrónico con los campos mexicanos:\n"
+"\n"
+"- l10n_mx_edi_cfdi_to_public (sale.order/account.move)\n"
+"- l10n_mx_edi_fiscal_regime (res.partner)\n"
+"- l10n_mx_edi_usage (sale.order/account.move)\n"
+"- l10n_mx_edi_no_tax_breakdown (res.partner)\n"
+"\n"
+"La pestaña adicional solo aparecerá si:\n"
+"\n"
+"- la empresa vinculada al sitio web es mexicana\n"
+"- la opción 'automatic_invoice' está habilitada en los ajustes del sitio web (\"Generar la factura en automático al confirmar el pago en línea\")\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm
@@ -2226,7 +2227,7 @@ msgid ""
 "Add support for the Declaration of Intent (Dichiarazione di Intento) to the Italian localization.\n"
 msgstr ""
 "\n"
-"Agregar soporte para la declaración de intenciones (Dichiarazione di Intento) a la localización italiana.\n"
+"Agrega compatibilidad con la declaración de intenciones (Dichiarazione di Intento) a la localización italiana.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_facturx_chorus_pro
@@ -11037,9 +11038,9 @@ msgid ""
 "available for generating a payment on the selected invoice.\n"
 msgstr ""
 "\n"
-"Este módulo permite generar archivos XML compatibles con con la domiciliación bancaria SEPA (SDD) (de acuerdo\n"
+"Este módulo permite generar archivos XML compatibles con la domiciliación bancaria SEPA (SDD) (de acuerdo\n"
 "a la especificación pain.008.001.02) que podrá enviar a su banco\n"
-"para cobrar un conjunto de pagos. \n"
+"para cobrar varios pagos. \n"
 "\n"
 "\n"
 "Para ser elegible para utilizar este método de pago, el cliente primero debió\n"
@@ -28674,12 +28675,12 @@ msgstr "Kenia - Nómina y contabilidad"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_edi_oscu_mrp
 msgid "Kenya ETIMS EDI Manufacturing Integration"
-msgstr " Integración de eTIMS para EDI de Fabricación de Kenya"
+msgstr "Integración de eTIMS para EDI de Fabricación de Kenia"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_edi_oscu_stock
 msgid "Kenya ETIMS EDI Stock Integration"
-msgstr " Integración de eTIMS para EDI de existencias de Kenya"
+msgstr "Integración de eTIMS para EDI de existencias de Kenia"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_edi_tremol

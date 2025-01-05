@@ -7,9 +7,9 @@
 # Nadia Martynova, 2024
 # Malaz Abuidris <msea@odoo.com>, 2024
 # Larissa Manderfeld, 2024
-# Ilya Rozhkov, 2024
 # ILMIR <karamov@it-projects.info>, 2024
 # Wil Odoo, 2024
+# Ilya Rozhkov, 2025
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-19 11:52+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Ilya Rozhkov, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -177,7 +177,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(ref)s (%(currency_amount)s)"
-msgstr ""
+msgstr "%(ref)s (%(currency_amount)s)"
 
 #. module: account
 #. odoo-python
@@ -338,7 +338,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/components/x2many_buttons/x2many_buttons.xml:0
 msgid "... (View all)"
-msgstr ""
+msgstr "... (Посмотреть все)"
 
 #. module: account
 #. odoo-python
@@ -1218,6 +1218,7 @@ msgstr "<span>Посмотреть</span>"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span>Warning: this document might be a duplicate of</span>"
 msgstr ""
+"<span>Предупреждение: возможно, этот документ является дубликатом</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1525,29 +1526,29 @@ msgstr "Предупреждение может быть установлено 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__aba_routing
 msgid "ABA/Routing"
-msgstr ""
+msgstr "ABA/Роутинг"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_amount_partner_ids
 msgid "Abnormal Amount Partner"
-msgstr ""
+msgstr "Партнёр с аномальной суммой"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__abnormal_amount_warning
 #: model:ir.model.fields,field_description:account.field_account_move__abnormal_amount_warning
 msgid "Abnormal Amount Warning"
-msgstr ""
+msgstr "Предупреждение об аномальной сумме"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_date_partner_ids
 msgid "Abnormal Date Partner"
-msgstr ""
+msgstr "Партнёр с аномальной датой"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__abnormal_date_warning
 #: model:ir.model.fields,field_description:account.field_account_move__abnormal_date_warning
 msgid "Abnormal Date Warning"
-msgstr ""
+msgstr "Предупреждение об аномальной дате"
 
 #. module: account
 #: model:ir.model,name:account.model_res_groups
@@ -2594,7 +2595,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__aba_routing
 msgid "American Bankers Association Routing Number"
-msgstr ""
+msgstr "Номер маршрута Ассоциации американских банкиров"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__amount
@@ -2745,6 +2746,7 @@ msgid ""
 "An error occurred when computing the inalterability. A gap has been detected"
 " in the sequence."
 msgstr ""
+"Ошибка при вычислении неизменности. Обнаружен пропуск в последовательности."
 
 #. module: account
 #. odoo-python
@@ -3235,13 +3237,13 @@ msgstr "БИЛЛ"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Bill"
-msgstr ""
+msgstr "Назад к счёту"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Invoice"
-msgstr ""
+msgstr "Назад к счёту"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4614,12 +4616,12 @@ msgstr "Подтвердить"
 #: model:ir.actions.act_window,name:account.action_validate_account_move
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Confirm Entries"
-msgstr ""
+msgstr "Подтвердить записи"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Confirm them now"
-msgstr ""
+msgstr "Подтвердить их сейчас"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5544,7 +5546,7 @@ msgstr "Проверка неизменности данных"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Data Inalterability Check Report -"
-msgstr ""
+msgstr "Отчёт проверки неизменности данных —"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -6182,7 +6184,7 @@ msgstr "Отображение дней в следующем месяце"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_force_post
 msgid "Display Force Post"
-msgstr ""
+msgstr "Показать принудительную публикацию"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__display_inactive_currency_warning
@@ -6421,7 +6423,7 @@ msgstr "Черновик"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Draft (%(currency_amount)s)"
-msgstr ""
+msgstr "Черновик (%(currency_amount)s)"
 
 #. module: account
 #. odoo-python
@@ -6503,7 +6505,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Drop to create journal entries with attachments."
-msgstr ""
+msgstr "Перетащите, чтобы создать записи журнала с вложениями."
 
 #. module: account
 #. odoo-python
@@ -6564,7 +6566,7 @@ msgstr "Дублирование банковских счетов партне�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Duplicated Documents"
-msgstr ""
+msgstr "Дубликаты документов"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -6794,7 +6796,7 @@ msgstr "Количество записей"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Entries are correctly hashed"
-msgstr ""
+msgstr "Записи успешно хешированы"
 
 #. module: account
 #. odoo-python
@@ -7872,6 +7874,8 @@ msgid ""
 "date are secured. Only journal entries after the hard lock date are "
 "considered."
 msgstr ""
+"Самая поздняя дата, до которой все размещённые записи журнала защищены. "
+"Учитываются только записи после даты окончательной блокировки."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highest_name
@@ -7882,7 +7886,7 @@ msgstr "Высшее имя"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__horizontal_split_side
 msgid "Horizontal Split Side"
-msgstr ""
+msgstr "Горизонтальное разделение"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8201,29 +8205,29 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__ignore_abnormal_amount
 msgid "Ignore Abnormal Amount"
-msgstr ""
+msgstr "Игнорировать аномальную сумму"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__ignore_abnormal_date
 msgid "Ignore Abnormal Date"
-msgstr ""
+msgstr "Игнорировать аномальную дату"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__ignore_abnormal_invoice_amount
 #: model:ir.model.fields,field_description:account.field_res_users__ignore_abnormal_invoice_amount
 msgid "Ignore Abnormal Invoice Amount"
-msgstr ""
+msgstr "Игнорировать аномальную сумму счёта"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__ignore_abnormal_invoice_date
 #: model:ir.model.fields,field_description:account.field_res_users__ignore_abnormal_invoice_date
 msgid "Ignore Abnormal Invoice Date"
-msgstr ""
+msgstr "Игнорировать аномальную дату счёта"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Ignore future alerts"
-msgstr ""
+msgstr "Игнорировать будущие уведомления"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -8336,7 +8340,7 @@ msgstr "Неизменяемость хэша"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__secure_sequence_number
 #: model:ir.model.fields,field_description:account.field_account_move__secure_sequence_number
 msgid "Inalterability No Gap Sequence #"
-msgstr ""
+msgstr "Неизменность: непрерывная последовательность #"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_method__payment_type__inbound
@@ -9014,7 +9018,7 @@ msgstr "Наследие приложений для выставления сч
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_with_gaps_in_sequence_filter
 msgid "Irregular Sequences"
-msgstr ""
+msgstr "Неправильные последовательности"
 
 #. module: account
 #. odoo-python
@@ -9023,6 +9027,8 @@ msgid ""
 "Irregularities due to draft, cancelled or deleted bills with a sequence "
 "number since last lock date."
 msgstr ""
+"Несоответствия из-за черновиков, отменённых или удалённых счетов с номерами "
+"после даты блокировки."
 
 #. module: account
 #. odoo-python
@@ -9031,6 +9037,8 @@ msgid ""
 "Irregularities due to draft, cancelled or deleted invoices with a sequence "
 "number since last lock date."
 msgstr ""
+"Несоответствия из-за черновиков, отменённых или удалённых счетов с номерами "
+"после последней даты блокировки."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_being_sent
@@ -9262,7 +9270,7 @@ msgstr "Записи в журнале по дате"
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Journal Entries to Hash"
-msgstr ""
+msgstr "Записи журнала для хеширования"
 
 #. module: account
 #. odoo-javascript
@@ -10659,7 +10667,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "No payment journal entries"
-msgstr ""
+msgstr "Нет записей журнала платежей"
 
 #. module: account
 #. odoo-python
@@ -13430,7 +13438,7 @@ msgstr ""
 #: model:ir.model,name:account.model_account_secure_entries_wizard
 #: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
 msgid "Secure Journal Entries"
-msgstr ""
+msgstr "Защитить записи журнала"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -14204,7 +14212,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_statusbar_secured/account_move_statusbar_secured.js:0
 msgid "Status with secured indicator for Journal Entries"
-msgstr ""
+msgstr "Статус с индикатором защиты для записей журнала"
 
 #. module: account
 #: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_sales_tax
@@ -15949,6 +15957,8 @@ msgid ""
 "The entries from journal prefixes containing them will not be secured: "
 "%(prefix_info)s"
 msgstr ""
+"До выбранной даты есть несведённые строки банковской выписки. Записи из "
+"журналов с этими префиксами не будут защищены: %(prefix_info)s"
 
 #. module: account
 #. odoo-python
@@ -18419,7 +18429,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "You must select at least 2 accounts."
-msgstr ""
+msgstr "Вы должны выбрать как минимум 2 счета."
 
 #. module: account
 #. odoo-python

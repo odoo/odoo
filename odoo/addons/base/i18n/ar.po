@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
-# Malaz Abuidris <msea@odoo.com>, 2024
+# Malaz Abuidris <msea@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-19 13:06+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11058,6 +11058,28 @@ msgid ""
 "Payment' wizard. An error message will appear if no valid mandate is\n"
 "available for generating a payment on the selected invoice.\n"
 msgstr ""
+"\n"
+"This module enables the generation of SEPA Direct Debit (SDD)-compliant XML files (consistent\n"
+"with pain.008.001.02 specification) to send to your bank in order to\n"
+"collect a set of payments.\n"
+"\n"
+"To be eligible for this payment method, a customer must have first\n"
+"returned a mandate to the company, giving their consent to use direct debit.\n"
+"This consent must have been encoded as a 'customer mandate' in Odoo.\n"
+"\n"
+"You also need to meet the following requirements in order to properly\n"
+"generate an SDD file:\n"
+"- Your company account must be set to a valid IBAN number\n"
+"- Your company must have been given a creditor identifier (this can be done in Settings - General Settings - Accounting section)\n"
+"- Your company must have defined a journal to receive SDD payments (again, in 'settings' of accounting module)\n"
+"- Every customer for whom you generate a payment must have a valid IBAN account number.\n"
+"\n"
+"Odoo will let you know if any of these requirements are not satisfied.\n"
+"\n"
+"To register a payment for open invoices, you can use the dedicated\n"
+"'SEPA Direct Debit' option by selecting a bank account in the 'Register\n"
+"Payment' wizard. An error message will appear if no valid mandate is\n"
+"available for generating a payment on the selected invoice.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp_zengin
