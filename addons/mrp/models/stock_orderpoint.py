@@ -139,16 +139,6 @@ class StockWarehouseOrderpoint(models.Model):
                         prod.product_qty, orderpoint.product_uom, round=False)
         return res
 
-    def _get_qty_multiple_to_order(self):
-        """ Calculates the minimum quantity that can be ordered according to the qty and UoM of the BoM
-        """
-        self.ensure_one()
-        qty_multiple_to_order = super()._get_qty_multiple_to_order()
-        if 'manufacture' in self.rule_ids.mapped('action'):
-            bom = self.env['mrp.bom']._bom_find(self.product_id, bom_type='normal')[self.product_id]
-            return bom.product_uom_id._compute_quantity(bom.product_qty, self.product_uom)
-        return qty_multiple_to_order
-
     def _set_default_route_id(self):
         route_ids = self.env['stock.rule'].search([
             ('action', '=', 'manufacture')
