@@ -36,6 +36,7 @@
 # Miika Nissi <miika.nissi@tawasta.fi>, 2024
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
@@ -43,7 +44,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:23+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,7 +67,7 @@ msgstr "\" varoitus jossa"
 #. odoo-python
 #: code:addons/website/controllers/form.py:0
 msgid "\"%(company)s form submission\" <%(email)s>"
-msgstr ""
+msgstr "\"%(company)s lomakkeen lähettäminen\" <%(email)s>"
 
 #. module: website
 #. odoo-python
@@ -554,7 +555,7 @@ msgstr "<b>Lisää</b> valittu kuva."
 #. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 msgid "<b>Click Edit</b> dropdown"
-msgstr ""
+msgstr "<b>Klikkaa \"Muokkaa\"</b>-valintaluetteloa"
 
 #. module: website
 #. odoo-javascript
@@ -994,6 +995,9 @@ msgid ""
 "                                        Block 3rd-party services that track users (e.g. YouTube, Google Maps, Facebook...) when the user has not given their consent.\n"
 "                                    </small>"
 msgstr ""
+"<small class=\"text-muted\">\n"
+"                                        Estä kolmannen osapuolen palvelut, jotka seuraavat käyttäjiä (esim. YouTube, Google Maps, Facebook...), jos käyttäjä ei ole antanut suostumustaan.\n"
+"                                    </small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1418,18 +1422,24 @@ msgid ""
 "<strong>Google services:</strong> Google Maps, Google Analytics, Google Tag "
 "Manager, etc."
 msgstr ""
+"<strong>Google palvelut:</strong> Google Maps, Google Analytics, Google Tag "
+"Manager, jne."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
 msgid ""
 "<strong>Social platforms:</strong> Facebook, Instagram, Twitter, TikTok"
 msgstr ""
+"<strong>Sosiaalisen median alustat:</strong> Facebook, Instagram, Twitter, "
+"TikTok"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
 msgid ""
 "<strong>Video hosting platforms:</strong> YouTube, Vimeo, Dailymotion, Youku"
 msgstr ""
+"<strong>Videopalveluiden alustat:</strong> YouTube, Vimeo, Dailymotion, "
+"Youku"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1503,6 +1513,8 @@ msgid ""
 "A font with the same name already exists.\n"
 "Try renaming the uploaded file."
 msgstr ""
+"Samanniminen fontti on jo olemassa.\n"
+"Yritä nimetä ladattu tiedosto uudelleen."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_alternation_image_text_template
@@ -1723,6 +1735,8 @@ msgid ""
 "Add 3rd-party service domains <em>(\"www.example.com\" or "
 "\"example.com\")</em>, one per line."
 msgstr ""
+"Lisää kolmannen osapuolen palveluiden verkkotunnukset "
+"<em>(\"www.example.com\" or \"example.com\")</em>, yksi per rivi."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.grid_layout_options
@@ -1803,13 +1817,13 @@ msgstr "Lisää vuosi"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "Add a Custom Font"
-msgstr ""
+msgstr "Lisää mukautettu fontti"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 msgid "Add a Google font or upload a custom font"
-msgstr ""
+msgstr "Lisää Google fontti tai lataa mukautettu fontti."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -1856,13 +1870,13 @@ msgstr "Lisää uusi kenttä loppuu"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Add domains to the block list"
-msgstr ""
+msgstr "Lisää verkkotunnuksiä estetyt-listalle"
 
 #. module: website
 #. odoo-python
 #: code:addons/website/models/res_config_settings.py:0
 msgid "Add external websites"
-msgstr ""
+msgstr "Lisää ulkoisia verkkosivuja"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
@@ -1884,7 +1898,7 @@ msgstr "Lisää uusi %s"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
 msgid "Add other domains here"
-msgstr ""
+msgstr "Lisää muut verkkotunnukset tähän"
 
 #. module: website
 #. odoo-javascript
@@ -1898,6 +1912,8 @@ msgid ""
 "Add this page to the \"+New\" page templates. It will be added to the "
 "\"Custom\" category."
 msgstr ""
+"Lisää tämä sivu \"+Uusi\"-sivujen mallipohjiin. Se lisätään "
+"\"Mukauta\"-kategoriaan."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
@@ -2103,7 +2119,7 @@ msgstr "Sallii massapostituskampanjoiden lähettäminen yhteystietoihin"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Allows your visitors to chat with you"
-msgstr ""
+msgstr "Kävijäsi voivat keskustella kanssasi"
 
 #. module: website
 #. odoo-javascript
@@ -2598,7 +2614,7 @@ msgstr "Lohko"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_block_third_party_domains
 #: model:ir.model.fields,field_description:website.field_website__block_third_party_domains
 msgid "Block 3rd-party domains"
-msgstr ""
+msgstr "Estä kolmannen osapuolen verkkotunnukset"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__website_block_third_party_domains
@@ -2606,11 +2622,13 @@ msgstr ""
 msgid ""
 "Block 3rd-party domains that may track users (YouTube, Google Maps, etc.)."
 msgstr ""
+"Estä kolmannen osapuolen verkkotunnukset, jotka saattavat seurata käyttäjiä "
+"(YouTube, Google Maps, jne.)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Block tracking 3rd-party services"
-msgstr ""
+msgstr "Estä kolmannen osapuolen palvelut "
 
 #. module: website
 #. odoo-javascript
@@ -2825,7 +2843,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
 msgid "By default, the domains of the following services are already blocked:"
-msgstr ""
+msgstr "Seuraavien palveluiden verkkotunnukset on jo estetty oletuksena:"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_url
@@ -3113,7 +3131,7 @@ msgstr "Valitse toinen teema"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "Choose from list"
-msgstr ""
+msgstr "Valitse listalta"
 
 #. module: website
 #. odoo-javascript
@@ -3264,7 +3282,7 @@ msgstr "Väri"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "Color Filter"
-msgstr ""
+msgstr "Värisuodatin"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3587,7 +3605,7 @@ msgstr "Tekijänoikeus"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 msgid "Could be used in many places, see here:"
-msgstr ""
+msgstr "Sopii moniin käyttötarkoituksiin, katso lisää täältä:"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -3789,7 +3807,7 @@ msgstr "Mukautettu kenttä"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "Custom Font"
-msgstr ""
+msgstr "Mukautettu fontti"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4477,7 +4495,7 @@ msgstr "Alasveto"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Dropdown List"
-msgstr ""
+msgstr "Pudotusvalikko"
 
 #. module: website
 #. odoo-javascript
@@ -4547,7 +4565,7 @@ msgstr "Esim. https://www.minunverkkosivuni.fi"
 #. odoo-python
 #: code:addons/website/controllers/form.py:0
 msgid "EXTERNAL SUBMISSION - Customer not verified"
-msgstr ""
+msgstr "ULKOINEN LÄHETYS - Asiakas ei ole vahvistettu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -4596,7 +4614,7 @@ msgstr "Muokkaa %s"
 #. odoo-javascript
 #: code:addons/website/static/src/systray_items/edit_website.xml:0
 msgid "Edit -"
-msgstr ""
+msgstr "Muokkaa -"
 
 #. module: website
 #. odoo-javascript
@@ -4759,7 +4777,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website/models/website_snippet_filter.py:0
 msgid "Empty field name in “%s”"
-msgstr ""
+msgstr "Tyhjä kentän nimi “%s”"
 
 #. module: website
 #. odoo-javascript
@@ -4949,7 +4967,7 @@ msgstr "Tutki"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "Explore on"
-msgstr ""
+msgstr "Katso tarkemmin"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_gallery_s_text_block_2nd
@@ -4985,7 +5003,7 @@ msgstr "Extra suuri"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
 msgid "Extra Link"
-msgstr ""
+msgstr "Lisälinkki"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.layout
@@ -5100,7 +5118,7 @@ msgstr "Ominaisuuksien ruudukko"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
 msgid "Fetched Elements"
-msgstr ""
+msgstr "Noudetut elementit"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__field_names
@@ -5121,13 +5139,13 @@ msgstr "Kentät"
 #. odoo-python
 #: code:addons/website/controllers/main.py:0
 msgid "File '%s' exceeds maximum allowed file size"
-msgstr ""
+msgstr "Tiedosto '%s' ylittää suurimman sallitun tiedoston koon."
 
 #. module: website
 #. odoo-python
 #: code:addons/website/controllers/main.py:0
 msgid "File '%s' is not recognized as a font"
-msgstr ""
+msgstr "Tiedostoa '%s' ei voida tunnistaa fontiksi"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -5162,7 +5180,7 @@ msgstr "Täytä"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 msgid "Fill and Justify"
-msgstr ""
+msgstr "Täydennä ja perustele"
 
 #. module: website
 #. odoo-javascript
@@ -5343,19 +5361,19 @@ msgstr "Fontin koko"
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 msgid "Font access"
-msgstr ""
+msgstr "Fontin käyttö"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 msgid "Font exists"
-msgstr ""
+msgstr "Fontti on olemassa"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 msgid "Font name already used"
-msgstr ""
+msgstr "Fontin nimi on jo käytössä"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__footer_visible
@@ -5624,7 +5642,7 @@ msgstr "Siirry"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
 msgid "Go to Homepage"
-msgstr ""
+msgstr "Siirry etusivulle"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
@@ -6017,7 +6035,7 @@ msgstr "Korostus"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "Highlight Animated Text"
-msgstr ""
+msgstr "Korosta animoitua tekstiä"
 
 #. module: website
 #. odoo-javascript
@@ -6118,12 +6136,12 @@ msgstr "Miten voimme palvella?"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "How to create my Plausible Shared Link"
-msgstr ""
+msgstr "Miten luon Plausible jaettavan linkin"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "How to get my Measurement ID"
-msgstr ""
+msgstr "Miten löydän mittaustunnukseni"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
