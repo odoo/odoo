@@ -314,7 +314,6 @@ class TestReorderingRule(TransactionCase):
             'product_id': self.product_01.id,
             'product_min_qty': 0,
             'product_max_qty': 0,
-            'qty_multiple': 1,
         })
 
         delivery = self.env['stock.picking'].create({
