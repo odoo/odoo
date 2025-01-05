@@ -25,7 +25,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'is_storable': True,
             'available_in_pos': True,
             'uom_id': self.env.ref('uom.product_uom_gram').id,
-            'uom_po_id': self.env.ref('uom.product_uom_gram').id,
             'lst_price': 10.0,
         })
         self.location = self.env['stock.location'].create({
@@ -312,7 +311,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'is_storable': True,
             'lst_price': 10.0,
             'uom_id': uom.id,
-            'uom_po_id': uom.id,
         })
         #create a sale order with product_a
         sale_order = self.env['sale.order'].create({

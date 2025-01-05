@@ -262,8 +262,11 @@ class TestPurchase(AccountTestInvoicingCommon):
             'name': 'SuperProduct',
             'type': 'consu',
             'uom_id': uom_units.id,
-            'uom_po_id': uom_pairs.id,
-            'standard_price': 100
+            'seller_ids': [Command.create({
+                'partner_id': self.partner_a.id,
+                'product_uom_id': uom_pairs.id,
+                'price': 200,
+            })]
         }
         product_01 = self.env['product.product'].create(product_data)
         product_02 = self.env['product.product'].create(product_data)
@@ -416,7 +419,7 @@ class TestPurchase(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
             'order_line': [Command.create({
                 'product_id': product.id,
-                'product_uom_id': product.uom_po_id.id,
+                'product_uom_id': product.uom_id.id,
             })],
         })
         po_line = purchase_order.order_line

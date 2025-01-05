@@ -1358,7 +1358,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             'taxes_id': False,
             'available_in_pos': True,
             'uom_id': self.env.ref('uom.product_uom_kgm').id,
-            'uom_po_id': self.env.ref('uom.product_uom_kgm').id
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()

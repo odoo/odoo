@@ -91,9 +91,9 @@ class PurchaseOrder(models.Model):
             taxes_ids = fpos.map_tax(line.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == requisition.company_id)).ids
 
             # Compute quantity and price_unit
-            if line.product_uom_id != line.product_id.uom_po_id:
-                product_qty = line.product_uom_id._compute_quantity(line.product_qty, line.product_id.uom_po_id)
-                price_unit = line.product_uom_id._compute_price(line.price_unit, line.product_id.uom_po_id)
+            if line.product_uom_id != line.product_id.uom_id:
+                product_qty = line.product_uom_id._compute_quantity(line.product_qty, line.product_id.uom_id)
+                price_unit = line.product_uom_id._compute_price(line.price_unit, line.product_id.uom_id)
             else:
                 product_qty = line.product_qty
                 price_unit = line.price_unit

@@ -82,7 +82,6 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
             'type': 'consu',
             'categ_id': cls.stock_account_product_categ.id,
             'uom_id': uom_unit.id,
-            'uom_po_id': uom_unit.id,
         })
 
     def test_shipment_invoice(self):
@@ -195,7 +194,7 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
                     'name': product.name,
                     'product_id': product.id,
                     'product_uom_qty': 2,
-                    'product_uom_id': product.uom_po_id.id,
+                    'product_uom_id': product.uom_id.id,
                     'price_unit': 10.0,
                 }) for product in 2 * [product_1] + [product_2]],
             'date_order': '2021-01-01',

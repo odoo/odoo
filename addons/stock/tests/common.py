@@ -122,7 +122,6 @@ class TestStockCommon(TestProductCommon):
         cls.product_3 = cls.env['product.product'].create({
             'name': 'Stone',  # product_3
             'uom_id': cls.uom_dozen.id,
-            'uom_po_id': cls.uom_dozen.id,
         })
 
         # Existing data

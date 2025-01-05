@@ -183,16 +183,18 @@ class SaleOrderLine(models.Model):
         if quantity:
             product_quantity = quantity
 
-        purchase_qty_uom = self.product_uom_id._compute_quantity(product_quantity, self.product_id.uom_po_id)
+        purchase_qty_uom = self.product_uom_id._compute_quantity(product_quantity, self.product_id.uom_id)
 
         # determine vendor (real supplier, sharing the same partner as the one from the PO, but with more accurate informations like validity, quantity, ...)
         # Note: one partner can have multiple supplier info for the same product
         supplierinfo = self.product_id._select_seller(
             partner_id=purchase_order.partner_id,
             quantity=purchase_qty_uom,
-            date=purchase_order.date_order and purchase_order.date_order.date(), # and purchase_order.date_order[:10],
-            uom_id=self.product_id.uom_po_id
+            date=purchase_order.date_order and purchase_order.date_order.date(),  # and purchase_order.date_order[:10],
+            uom_id=self.product_id.uom_id
         )
+        if supplierinfo and supplierinfo.product_uom_id != self.product_id.uom_id:
+            purchase_qty_uom = self.product_id.uom_id._compute_quantity(purchase_qty_uom, supplierinfo.product_uom_id)
 
         price_unit, taxes = self._purchase_service_get_price_unit_and_taxes(supplierinfo, purchase_order)
         name = self._purchase_service_get_product_name(supplierinfo, purchase_order, quantity)
@@ -205,7 +207,7 @@ class SaleOrderLine(models.Model):
             'name': name,
             'product_qty': purchase_qty_uom,
             'product_id': self.product_id.id,
-            'product_uom_id': self.product_id.uom_po_id.id,
+            'product_uom_id': supplierinfo.product_uom_id.id or self.product_id.uom_id.id,
             'price_unit': price_unit,
             'date_planned': purchase_order.date_order + relativedelta(days=int(supplierinfo.delay)),
             'taxes_id': [(6, 0, taxes.ids)],

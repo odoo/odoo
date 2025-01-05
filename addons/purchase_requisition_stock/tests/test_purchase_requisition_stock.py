@@ -25,7 +25,6 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'name': 'Usb Keyboard',
             'is_storable': True,
             'uom_id': unit,
-            'uom_po_id': unit,
             'seller_ids': [(6, 0, [supplier_info1.id])],
             'route_ids': [(6, 0, [route_buy, route_mto])]
         })
@@ -50,7 +49,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         self.assertEqual(purchase1.order_line.price_unit, 50, 'The price on the purchase order is not the supplierinfo one')
 
         # Blanket order creation
-        line1 = (0, 0, {'product_id': product_test.id, 'product_qty': 18, 'product_uom_id': product_test.uom_po_id.id, 'price_unit': 50})
+        line1 = (0, 0, {'product_id': product_test.id, 'product_qty': 18, 'product_uom_id': product_test.uom_id.id, 'price_unit': 50})
         requisition_blanket = self.env['purchase.requisition'].create({
             'line_ids': [line1],
             'requisition_type': 'blanket_order',
@@ -118,7 +117,6 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'name': 'product1',
             'is_storable': True,
             'uom_id': unit,
-            'uom_po_id': unit,
             'seller_ids': [(6, 0, [supplier_info1.id])],
             'route_ids': [(6, 0, [route_buy, route_mto])]
         })
@@ -126,13 +124,12 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'name': 'product2',
             'is_storable': True,
             'uom_id': unit,
-            'uom_po_id': unit,
             'seller_ids': [(6, 0, [supplier_info1.id])],
             'route_ids': [(6, 0, [route_buy, route_mto])]
         })
         # Blanket orders creation
-        line1 = (0, 0, {'product_id': product_1.id, 'product_qty': 18, 'product_uom_id': product_1.uom_po_id.id, 'price_unit': 41})
-        line2 = (0, 0, {'product_id': product_2.id, 'product_qty': 18, 'product_uom_id': product_2.uom_po_id.id, 'price_unit': 42})
+        line1 = (0, 0, {'product_id': product_1.id, 'product_qty': 18, 'product_uom_id': product_1.uom_id.id, 'price_unit': 41})
+        line2 = (0, 0, {'product_id': product_2.id, 'product_qty': 18, 'product_uom_id': product_2.uom_id.id, 'price_unit': 42})
         requisition_1 = self.env['purchase.requisition'].create({
             'line_ids': [line1],
             'requisition_type': 'blanket_order',
@@ -181,7 +178,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
                 'name': product_2.name,
                 'product_id': product_2.id,
                 'product_qty': 5.0,
-                'product_uom_id': product_2.uom_po_id.id,
+                'product_uom_id': product_2.uom_id.id,
             })
         ]})
         order_line = self.env['purchase.order.line'].search([
