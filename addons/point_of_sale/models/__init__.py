@@ -18,7 +18,6 @@ from . import pos_session
 from . import product_pricelist
 from . import product_attribute
 from . import product_category
-from . import product_packaging
 from . import product_product
 from . import product_template
 from . import uom
@@ -49,3 +48,4 @@ from . import ir_ui_view
 from . import pos_preset
 from . import product_tag
 from . import resource_calendar_attendance
+from . import product_uom

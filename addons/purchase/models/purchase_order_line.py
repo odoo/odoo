@@ -18,8 +18,7 @@ class PurchaseOrderLine(models.Model):
     name = fields.Text(
         string='Description', required=True, compute='_compute_price_unit_and_date_planned_and_name', store=True, readonly=False)
     sequence = fields.Integer(string='Sequence', default=10)
-    product_qty = fields.Float(string='Quantity', digits='Product Unit', required=True,
-                               compute='_compute_product_qty', store=True, readonly=False)
+    product_qty = fields.Float(string='Quantity', digits='Product Unit', required=True)
     product_uom_qty = fields.Float(string='Total Quantity', compute='_compute_product_uom_qty', store=True)
     date_planned = fields.Datetime(
         string='Expected Arrival', index=True,
@@ -67,9 +66,6 @@ class PurchaseOrderLine(models.Model):
     currency_id = fields.Many2one(related='order_id.currency_id', string='Currency')
     date_order = fields.Datetime(related='order_id.date_order', string='Order Date', readonly=True)
     date_approve = fields.Datetime(related="order_id.date_approve", string='Confirmation Date', readonly=True)
-    product_packaging_id = fields.Many2one('product.packaging', string='Packaging', domain="[('purchase', '=', True), ('product_id', '=', product_id)]", check_company=True,
-                                           compute="_compute_product_packaging_id", store=True, readonly=False)
-    product_packaging_qty = fields.Float('Packaging Quantity', compute="_compute_product_packaging_qty", store=True, readonly=False)
     tax_calculation_rounding_method = fields.Selection(
         related='company_id.tax_calculation_rounding_method',
         string='Tax calculation rounding method', readonly=True)
@@ -374,54 +370,10 @@ class PurchaseOrderLine(models.Model):
                 product_ctx = {'seller_id': seller.id, 'lang': get_lang(line.env, line.partner_id.lang).code}
                 line.name = line._get_product_purchase_description(line.product_id.with_context(product_ctx))
 
-    @api.depends('product_id', 'product_qty', 'product_uom_id')
-    def _compute_product_packaging_id(self):
+    @api.depends('product_id')
+    def _compute_product_uom_id(self):
         for line in self:
-            # remove packaging if not match the product
-            if line.product_packaging_id.product_id != line.product_id:
-                line.product_packaging_id = False
-            # suggest biggest suitable packaging matching the PO's company
-            if line.product_id and line.product_qty and line.product_uom_id:
-                suggested_packaging = line.product_id.packaging_ids\
-                        .filtered(lambda p: p.purchase and (p.product_id.company_id <= p.company_id <= line.company_id))\
-                        ._find_suitable_product_packaging(line.product_qty, line.product_uom_id)
-                line.product_packaging_id = suggested_packaging or line.product_packaging_id
-
-    @api.onchange('product_packaging_id')
-    def _onchange_product_packaging_id(self):
-        if self.product_packaging_id and self.product_qty:
-            newqty = self.product_packaging_id._check_qty(self.product_qty, self.product_uom_id, "UP")
-            if float_compare(newqty, self.product_qty, precision_rounding=self.product_uom_id.rounding) != 0:
-                return {
-                    'warning': {
-                        'title': _('Warning'),
-                        'message': _(
-                            "This product is packaged by %(pack_size).2f %(pack_name)s. You should purchase %(quantity).2f %(unit)s.",
-                            pack_size=self.product_packaging_id.qty,
-                            pack_name=self.product_id.uom_id.name,
-                            quantity=newqty,
-                            unit=self.product_uom_id.name
-                        ),
-                    },
-                }
-
-    @api.depends('product_packaging_id', 'product_uom_id', 'product_qty')
-    def _compute_product_packaging_qty(self):
-        self.product_packaging_qty = 0
-        for line in self:
-            if not line.product_packaging_id:
-                continue
-            line.product_packaging_qty = line.product_packaging_id._compute_qty(line.product_qty, line.product_uom_id)
-
-    @api.depends('product_packaging_qty')
-    def _compute_product_qty(self):
-        for line in self:
-            if line.product_packaging_id:
-                packaging_uom = line.product_packaging_id.product_uom_id
-                qty_per_packaging = line.product_packaging_id.qty
-                product_qty = packaging_uom._compute_quantity(line.product_packaging_qty * qty_per_packaging, line.product_uom_id)
-                if float_compare(product_qty, line.product_qty, precision_rounding=line.product_uom_id.rounding) != 0:
-                    line.product_qty = product_qty
+            line.product_uom_id = line.product_id.seller_ids.filtered(lambda s: s.partner_id == line.partner_id).product_uom_id or line.product_id.uom_id if line.product_id else False
 
     @api.depends('product_uom_id', 'product_qty', 'product_id.uom_id')
     def _compute_product_uom_qty(self):
@@ -524,13 +476,6 @@ class PurchaseOrderLine(models.Model):
                 'display_name': self.product_uom_id.display_name,
                 'id': self.product_uom_id.id,
             }
-            if self.product_packaging_id:
-                packaging = self.product_packaging_id
-                catalog_info['packaging'] = {
-                    'id': packaging.id,
-                    'name': packaging.display_name,
-                    'qty': packaging.product_uom_id._compute_quantity(packaging.qty, self.product_uom_id),
-                }
             return catalog_info
         elif self:
             self.product_id.ensure_one()
