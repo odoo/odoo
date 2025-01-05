@@ -38,6 +38,14 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    <t t-out=\"object.name or ''\">Abigail Peterson</t>様、<br/><br/>\n"
+"お疲れ様です。現在、出社されておらず、休暇申請の記録もありません。本日の欠勤がこちらの見落としである場合には、混乱をさせてしまい申し訳ありません。\n"
+"の無断欠勤に対処するために必要なご対応をお願いします。質問やサポートが必要な場合は、遠慮なく上司または人事部までご連絡下さい。\n"
+"迅速なご対応をお願いします。\n"
+"                    <br/>宜しくお願い致します。<br/><br/>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
@@ -214,7 +222,7 @@ msgstr "予想外の欠勤"
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 msgid "Unplanned Absence"
-msgstr ""
+msgstr "予定外の欠勤"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log

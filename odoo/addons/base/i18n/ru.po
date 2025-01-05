@@ -10,7 +10,7 @@
 # Malaz Abuidris <msea@odoo.com>, 2024
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2024
 # Wil Odoo, 2024
-# Ilya Rozhkov, 2024
+# Ilya Rozhkov, 2025
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-19 13:06+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Ilya Rozhkov, 2024\n"
+"Last-Translator: Ilya Rozhkov, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1599,6 +1599,8 @@ msgid ""
 "\n"
 "Accounting reports for Hong Kong\n"
 msgstr ""
+"\n"
+"Бухгалтерские отчёты для Гонконга\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hu_reports
@@ -1970,6 +1972,8 @@ msgid ""
 "\n"
 "Accounting reports for the United Arab Emirates\n"
 msgstr ""
+"\n"
+"Бухгалтерские отчёты для ОАЭ\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_vn_reports
@@ -3505,6 +3509,10 @@ msgid ""
 "It allows importing of received Peppol documents\n"
 "within the Documents app.\n"
 msgstr ""
+"\n"
+"Модуль-мост между приложениями «Документы» и Peppol. \n"
+"Позволяет импортировать полученные документы Peppol \n"
+"в приложение «Документы».\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_account
@@ -3595,6 +3603,8 @@ msgid ""
 "\n"
 "Bridge module to manage time off based on contracts.\n"
 msgstr ""
+"\n"
+"Модуль-мост для управления отгулами на основе контрактов.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_automation_hr_contract
@@ -4990,6 +5000,8 @@ msgid ""
 "\n"
 "Export payments as CPA 005 files for use in Canada.\n"
 msgstr ""
+"\n"
+"Экспортировать платежи в файлы CPA 005 для использования в Канаде.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_payment_nacha
@@ -5602,6 +5614,8 @@ msgid ""
 "\n"
 "Generate tasks in Project app from a form published on your website. This module requires the use of the *Form Builder* module in order to build the form.\n"
 msgstr ""
+"\n"
+"Создавайте задачи в приложении «Проекты» из формы, опубликованной на вашем сайте. Этот модуль требует использования модуля *Конструктор форм* для создания формы.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_intrastat
@@ -5609,6 +5623,8 @@ msgid ""
 "\n"
 "Generates Intrastat XML report (DEBWEB2) for declaration based on invoices for France.\n"
 msgstr ""
+"\n"
+"Генерирует отчёт Intrastat в формате XML (DEBWEB2) для декларации на основе счетов-фактур для Франции.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_intrastat
@@ -6271,6 +6287,11 @@ msgid ""
 "-Profit and Loss\n"
 "-Balance Sheet\n"
 msgstr ""
+"\n"
+"Бухгалтерские отчёты для Латвии:\n"
+"====================================================\n"
+"- Отчёт о прибылях и убытках\n"
+"- Баланс\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_board
@@ -6360,6 +6381,10 @@ msgid ""
 "=================\n"
 "Keeps track of loans, and creates corresponding journal entries.\n"
 msgstr ""
+"\n"
+"Управление кредитами\n"
+"=================\n"
+"Отслеживайте кредиты и создавайте соответствующие записи журнала.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu_hr_payroll
@@ -8184,6 +8209,8 @@ msgid ""
 "\n"
 "Search project tasks according to the assignees' skills\n"
 msgstr ""
+"\n"
+"Поиск задач проекта в зависимости от навыков исполнителей\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_sale
@@ -8524,6 +8551,20 @@ msgid ""
 "The generation of the QR-bill is automatic if you meet the previous criteria. The QR-bill will be appended after the invoice when printing or sending by mail.\n"
 "\n"
 msgstr ""
+"\n"
+"Локализация для Швейцарии\n"
+"==================\n"
+"Этот модуль определяет план счетов для Швейцарии (Swiss PME/KMU 2015), налоги и позволяет генерировать QR-счёт при печати или отправке счёта-фактуры по почте.\n"
+"QR-счёт прикрепляется к счёту-фактуре и облегчает его оплату.\n"
+"\n"
+"QR-счёт будет сгенерирован, если:\n"
+"- Контрагент, указанный в вашем счёте-фактуре, имеет полный адрес (улица, город, почтовый индекс и страна) в Швейцарии\n"
+"- Выбрана опция для генерации швейцарского QR-кода на счёте-фактуре (по умолчанию)\n"
+"- На вашем банковском журнале установлен правильный номер счёта/QR IBAN\n"
+"- (при использовании QR-IBAN): платёжная ссылка счёта-фактуры является QR-ссылкой\n"
+"\n"
+"Генерация QR-счёта происходит автоматически, если выполнены вышеуказанные критерии. QR-счёт будет добавлен после счёта-фактуры при печати или отправке по почте.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch_hr_payroll
@@ -9364,6 +9405,8 @@ msgid ""
 "\n"
 "This is the base module to manage the accounting chart for Republic of Ireland in Odoo.\n"
 msgstr ""
+"\n"
+"Это базовый модуль для управления планом счетов для Республики Ирландия в Odoo.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tw
@@ -9658,6 +9701,17 @@ msgid ""
 "\n"
 "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 msgstr ""
+"\n"
+"Модуль для управления планом счетов во Франции в Odoo\n"
+"========================================================================\n"
+"\n"
+"Этот модуль предназначен для компаний, расположенных на материковой части Франции. Он не применяется к компаниям, базирующимся в заморских департаментах и территориях (DOM-TOM), таких как Гваделупа, Мартиника, Гвиана, Реюньон и Майотта.\n"
+"\n"
+"Модуль локализации создаёт налог на добавленную стоимость (НДС) типа «налог включён» для покупок, что особенно полезно при использовании модуля ‘hr_expense’. Обратите внимание, что НДС с типом «налог включён» не управляется фискальными позициями, предоставляемыми данным модулем, поскольку это усложнило бы обработку как для сценариев «налог исключён», так и для «налог включён» в фискальных позициях.\n"
+"\n"
+"Этот модуль не полностью охватывает ситуацию, когда компания на материковой части Франции продаёт услуги компаниям, расположенным в DOM. Хотя это можно было бы учесть в фискальных позициях, такой подход потребует различения НДС на «товары» и НДС на «услуги». Мы считаем, что добавление этого функционала в рамках l10n_fr_account будет чрезмерно сложным. Поэтому компании, продающие услуги компаниям в DOM, должны вручную настроить налоговые категории и фискальные позиции.\n"
+"\n"
+"**Авторы:** Sistheo, Zeekom, CrysaLEAD, Akretion и Camptocamp.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mn
@@ -22990,177 +23044,177 @@ msgstr "Эсватини"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt
 msgid "Etc/GMT"
-msgstr ""
+msgstr "Etc/GMT"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt+0
 msgid "Etc/GMT+0"
-msgstr ""
+msgstr "Etc/GMT+0"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt+1
 msgid "Etc/GMT+1"
-msgstr ""
+msgstr "Etc/GMT+1"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt+10
 msgid "Etc/GMT+10"
-msgstr ""
+msgstr "Etc/GMT+10"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt+11
 msgid "Etc/GMT+11"
-msgstr ""
+msgstr "Etc/GMT+11"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt+12
 msgid "Etc/GMT+12"
-msgstr ""
+msgstr "Etc/GMT+12"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt+2
 msgid "Etc/GMT+2"
-msgstr ""
+msgstr "Etc/GMT+2"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt+3
 msgid "Etc/GMT+3"
-msgstr ""
+msgstr "Etc/GMT+3"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt+4
 msgid "Etc/GMT+4"
-msgstr ""
+msgstr "Etc/GMT+4"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt+5
 msgid "Etc/GMT+5"
-msgstr ""
+msgstr "Etc/GMT+5"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt+6
 msgid "Etc/GMT+6"
-msgstr ""
+msgstr "Etc/GMT+6"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt+7
 msgid "Etc/GMT+7"
-msgstr ""
+msgstr "Etc/GMT+7"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt+8
 msgid "Etc/GMT+8"
-msgstr ""
+msgstr "Etc/GMT+8"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt+9
 msgid "Etc/GMT+9"
-msgstr ""
+msgstr "Etc/GMT+9"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt-0
 msgid "Etc/GMT-0"
-msgstr ""
+msgstr "Etc/GMT-0"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt-1
 msgid "Etc/GMT-1"
-msgstr ""
+msgstr "Etc/GMT-1"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt-10
 msgid "Etc/GMT-10"
-msgstr ""
+msgstr "Etc/GMT-10"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt-11
 msgid "Etc/GMT-11"
-msgstr ""
+msgstr "Etc/GMT-11"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt-12
 msgid "Etc/GMT-12"
-msgstr ""
+msgstr "Etc/GMT-12"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt-13
 msgid "Etc/GMT-13"
-msgstr ""
+msgstr "Etc/GMT-13"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt-14
 msgid "Etc/GMT-14"
-msgstr ""
+msgstr "Etc/GMT-14"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt-2
 msgid "Etc/GMT-2"
-msgstr ""
+msgstr "Etc/GMT-2"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt-3
 msgid "Etc/GMT-3"
-msgstr ""
+msgstr "Etc/GMT-3"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt-4
 msgid "Etc/GMT-4"
-msgstr ""
+msgstr "Etc/GMT-4"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt-5
 msgid "Etc/GMT-5"
-msgstr ""
+msgstr "Etc/GMT-5"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt-6
 msgid "Etc/GMT-6"
-msgstr ""
+msgstr "Etc/GMT-6"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt-7
 msgid "Etc/GMT-7"
-msgstr ""
+msgstr "Etc/GMT-7"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt-8
 msgid "Etc/GMT-8"
-msgstr ""
+msgstr "Etc/GMT-8"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt-9
 msgid "Etc/GMT-9"
-msgstr ""
+msgstr "Etc/GMT-9"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt0
 msgid "Etc/GMT0"
-msgstr ""
+msgstr "Etc/GMT0"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/greenwich
 msgid "Etc/Greenwich"
-msgstr ""
+msgstr "Etc/Greenwich"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/uct
 msgid "Etc/UCT"
-msgstr ""
+msgstr "Etc/UCT"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/utc
 msgid "Etc/UTC"
-msgstr ""
+msgstr "Etc/UTC"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/universal
 msgid "Etc/Universal"
-msgstr ""
+msgstr "Etc/Universal"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/zulu
 msgid "Etc/Zulu"
-msgstr ""
+msgstr "Etc/Зулу"
 
 #. module: base
 #: model:res.country,name:base.et
