@@ -737,8 +737,6 @@ class PurchaseOrder(models.Model):
                 for rfq_line in rfqs.order_line:
                     existing_line = oldest_rfq.order_line.filtered(lambda l: l.product_id == rfq_line.product_id and
                                                                                 l.product_uom_id == rfq_line.product_uom_id and
-                                                                                l.product_packaging_id == rfq_line.product_packaging_id and
-                                                                                l.product_packaging_qty == rfq_line.product_packaging_qty and
                                                                                 l.analytic_distribution == rfq_line.analytic_distribution and
                                                                                 l.discount == rfq_line.discount and
                                                                                 abs(l.date_planned - rfq_line.date_planned).total_seconds() <= 86400  # 24 hours in seconds
@@ -1064,19 +1062,7 @@ class PurchaseOrder(models.Model):
                 price=seller.price_discounted,
                 min_qty=seller.min_qty,
             )
-        # Check if the product uses some packaging.
-        packaging = self.env['product.packaging'].search(
-            [('product_id', '=', product.id), ('purchase', '=', True)], limit=1
-        )
-        if packaging:
-            qty = packaging.product_uom_id._compute_quantity(packaging.qty, product.uom_po_id)
-            product_infos.update(
-                packaging={
-                    'id': packaging.id,
-                    'name': packaging.display_name,
-                    'qty': qty,
-                }
-            )
+
         return product_infos
 
     def get_confirm_url(self, confirm_type=None):
@@ -1178,14 +1164,9 @@ class PurchaseOrder(models.Model):
         :rtype: float
         """
         self.ensure_one()
-        product_packaging_qty = kwargs.get('product_packaging_qty', False)
-        product_packaging_id = kwargs.get('product_packaging_id', False)
         pol = self.order_line.filtered(lambda line: line.product_id.id == product_id)
         if pol:
-            if product_packaging_qty:
-                pol.product_packaging_id = product_packaging_id
-                pol.product_packaging_qty = product_packaging_qty
-            elif quantity != 0:
+            if quantity != 0:
                 pol.product_qty = quantity
             elif self.state in ['draft', 'sent']:
                 price_unit = self._get_product_price_and_data(pol.product_id)['price']

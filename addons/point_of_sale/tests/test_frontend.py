@@ -1047,21 +1047,27 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_pos_tour('chrome_without_cash_move_permission', login="accountman")
 
-    def test_09_pos_barcodes_scan_product_pacaging(self):
+    def test_09_pos_barcodes_scan_product_packaging(self):
+        pack_of_10 = self.env['uom.uom'].create({
+            'name': 'Pack of 10',
+            'relative_factor': 10,
+            'relative_uom_id': self.env.ref('uom.product_uom_unit').id,
+            'is_pos_groupable': True,
+        })
         product = self.env['product.product'].create({
             'name': 'Packaging Product',
             'available_in_pos': True,
             'list_price': 10,
             'taxes_id': False,
             'barcode': '12345601',
+            'uom_ids': [Command.link(pack_of_10.id)],
+        })
+        self.env['product.uom'].create({
+            'barcode': '12345610',
+            'product_id': product.id,
+            'uom_id': pack_of_10.id,
         })
 
-        self.env['product.packaging'].create({
-            'name': 'Product Packaging 10 Products',
-            'qty': 10,
-            'product_id': product.id,
-            'barcode': '12345610',
-        })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'BarcodeScanningProductPackagingTour', login="pos_user")
 
