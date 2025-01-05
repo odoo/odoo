@@ -212,3 +212,78 @@ Hello, I want to work for you.
             application_3.candidate_id,
             "Application 1 and 3 should not have the same candidate",
         )
+
+    def test_single_candidate_per_company(self):
+        other_company = self.env['res.company'].create({'name': 'Other Company'})
+        job_developer_company_1, job_plumber_company_1, job_developer_company_2 = self.env["hr.job"].create(
+            [
+                {
+                    "name": "Experienced Developer (Company 1)",
+                },
+                {
+                    "name": "Plumber (Company 1)",
+                },
+                {
+                    'name': 'Experienced Developer (Company 2)',
+                    'company_id': other_company.id,
+                },
+            ]
+        )
+
+        applicant_1_msg = """MIME-Version: 1.0
+Date: Thu, 19 Dec 2024 10:30:45 +0100
+Message-ID: <application1>
+Subject: Developer Application
+From:  Applicant 1 <applicant_1@example.com>
+To: hr@mycompany.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello, I want to be a developer.
+        """
+
+        applicant_2_msg = """MIME-Version: 1.0
+Date: Thu, 19 Dec 2024 15:30:00 +0100
+Message-ID: <application2>
+Subject: Plumber Application
+From:  Applicant 1 <applicant_1@example.com>
+To: hr@mycompany.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello, I want to be a plumber.
+        """
+
+        applicant_3_msg = """MIME-Version: 1.0
+Date: Thu, 19 Dec 2024 15:30:00 +0100
+Message-ID: <application3>
+Subject: Developer Application
+From:  Applicant 3 <applicant_1@example.com>
+To: hr@mycompany.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello, I want to be a developer in other company.
+        """
+        application_1_id = self.env["mail.thread"].message_process(
+            "hr.applicant", applicant_1_msg, custom_values={"job_id": job_developer_company_1.id}
+        ) # Company_1 developer
+        application_2_id = self.env["mail.thread"].message_process(
+            "hr.applicant", applicant_2_msg, custom_values={"job_id": job_plumber_company_1.id}
+        ) # Company_1 plumber 
+        application_3_id = self.env["mail.thread"].message_process(
+            "hr.applicant", applicant_3_msg, custom_values={"job_id": job_developer_company_2.id}
+        ) # Company_2 developer
+
+        application_1 = self.env["hr.applicant"].browse(application_1_id)
+        application_2 = self.env["hr.applicant"].browse(application_2_id)
+        application_3 = self.env["hr.applicant"].browse(application_3_id)
+
+        self.assertEqual(
+            application_1.candidate_id,
+            application_2.candidate_id,
+            "Application 1 and 2 should have the same candidate",
+        )
+
+        self.assertNotEqual(
+            application_1.candidate_id,
+            application_3.candidate_id,
+            "Application 1 and 3 should not have the same candidate",
+        )

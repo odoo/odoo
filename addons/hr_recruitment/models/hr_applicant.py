@@ -591,15 +591,18 @@ class Applicant(models.Model):
         self = self.with_context(default_user_id=False, mail_notify_author=True)  # Allows sending stage updates to the author
         stage = False
         candidate_defaults = {}
+        company_id = self.env.company
         if custom_values and 'job_id' in custom_values:
             job = self.env['hr.job'].browse(custom_values['job_id'])
             stage = job._get_first_stage()
             candidate_defaults['company_id'] = job.company_id.id
+            company_id = job.company_id
 
         partner_name, email_from_normalized = tools.parse_contact_from_email(msg.get('from'))
         candidate = self.env["hr.candidate"].search(
             [
                 ("email_from", "=", email_from_normalized),
+                ("company_id", "=", company_id.id)
             ],
             limit=1,
         ) or self.env["hr.candidate"].create(
