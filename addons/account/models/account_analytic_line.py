@@ -69,8 +69,8 @@ class AccountAnalyticLine(models.Model):
         prod_accounts = self.product_id.product_tmpl_id.with_company(self.company_id)._get_product_accounts()
         unit = self.product_uom_id
         account = prod_accounts['expense']
-            unit = self.product_id.uom_po_id
         if not unit:
+            unit = self.product_id.uom_id
 
         # Compute based on pricetype
         amount_unit = self.product_id._price_compute('standard_price', uom=unit)[self.product_id.id]

@@ -336,16 +336,6 @@ class ProductProduct(models.Model):
             return [('product_tag_ids', operator, operand), ('additional_product_tag_ids', operator, operand)]
         return ['|', ('product_tag_ids', operator, operand), ('additional_product_tag_ids', operator, operand)]
 
-    @api.onchange('uom_id')
-    def _onchange_uom_id(self):
-        if self.uom_id:
-            self.uom_po_id = self.uom_id.id
-
-    @api.onchange('uom_po_id')
-    def _onchange_uom(self):
-        if self.uom_id and self.uom_po_id:
-            self.uom_po_id = self.uom_id
-
     @api.onchange('default_code')
     def _onchange_default_code(self):
         if not self.default_code:

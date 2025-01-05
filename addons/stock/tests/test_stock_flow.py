@@ -858,7 +858,7 @@ class TestStockFlow(TestStockCommon):
         # Create product in kg and receive in ton.
         # -----------------------------------------
 
-        productKG = self.ProductObj.create({'name': 'Product KG', 'uom_id': self.uom_kg.id, 'uom_po_id': self.uom_kg.id, 'is_storable': True})
+        productKG = self.ProductObj.create({'name': 'Product KG', 'uom_id': self.uom_kg.id, 'is_storable': True})
         picking_in = self.PickingObj.create({
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
@@ -1019,8 +1019,8 @@ class TestStockFlow(TestStockCommon):
         # TEST EMPTY INVENTORY WITH PACKS and LOTS
         # ---------------------------------------------------------
 
-        packproduct = self.ProductObj.create({'name': 'Pack Product', 'uom_id': self.uom_unit.id, 'uom_po_id': self.uom_unit.id, 'is_storable': True})
-        lotproduct = self.ProductObj.create({'name': 'Lot Product', 'uom_id': self.uom_unit.id, 'uom_po_id': self.uom_unit.id, 'is_storable': True})
+        packproduct = self.ProductObj.create({'name': 'Pack Product', 'uom_id': self.uom_unit.id, 'is_storable': True})
+        lotproduct = self.ProductObj.create({'name': 'Lot Product', 'uom_id': self.uom_unit.id, 'is_storable': True})
         quant_obj = self.env['stock.quant'].with_context(inventory_mode=True)
         pack_obj = self.env['stock.quant.package']
         lot_obj = self.env['stock.lot']

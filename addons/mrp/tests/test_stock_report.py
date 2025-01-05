@@ -229,7 +229,6 @@ class TestMrpStockReports(TestReportsCommon):
             'name': n,
             'is_storable': True,
             'uom_id': self.env.ref('uom.product_uom_meter').id,
-            'uom_po_id': self.env.ref('uom.product_uom_meter').id,
         } for n in ['Compo 01', 'Compo 02']])
 
         self.env['mrp.bom'].create({

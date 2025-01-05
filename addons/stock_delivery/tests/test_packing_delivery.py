@@ -18,14 +18,12 @@ class TestPacking(TestPackingCommon):
             'is_storable': True,
             'weight': 2.4,
             'uom_id': cls.uom_kg.id,
-            'uom_po_id': cls.uom_kg.id
         })
         cls.product_bw = cls.env['product.product'].create({
             'name': 'Product BW',
             'is_storable': True,
             'weight': 0.3,
             'uom_id': cls.uom_kg.id,
-            'uom_po_id': cls.uom_kg.id
         })
         test_carrier_product = cls.env['product.product'].create({
             'name': 'Test carrier product',

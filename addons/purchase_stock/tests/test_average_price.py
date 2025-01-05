@@ -25,7 +25,6 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
             'list_price': 100.0,
             'standard_price': 60.0,
             'uom_id': self.env.ref('uom.product_uom_kgm').id,
-            'uom_po_id': self.env.ref('uom.product_uom_kgm').id,
             'supplier_taxes_id': [],
             'description': 'FIFO Ice Cream',
         })

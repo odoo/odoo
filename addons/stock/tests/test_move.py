@@ -6307,7 +6307,6 @@ class StockMove(TransactionCase):
             'name': 'product1',
             'is_storable': True,
             'uom_id': uom_kg.id,
-            'uom_po_id': uom_kg.id
         })
         move.product_id = product1
         self.assertEqual(move.product_uom, product1.uom_id)
