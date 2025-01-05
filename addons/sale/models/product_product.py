@@ -10,7 +10,7 @@ from odoo.tools import float_round
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
-    sales_count = fields.Float(compute='_compute_sales_count', string='Sold', digits='Product Unit of Measure')
+    sales_count = fields.Float(compute='_compute_sales_count', string='Sold', digits='Product Unit')
 
     # Catalog related fields
     product_catalog_product_is_in_sale_order = fields.Boolean(

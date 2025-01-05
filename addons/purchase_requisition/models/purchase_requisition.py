@@ -170,7 +170,7 @@ class PurchaseRequisitionLine(models.Model):
     product_uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
         compute='_compute_product_uom_id', store=True, readonly=False, precompute=True)
-    product_qty = fields.Float(string='Quantity', digits='Product Unit of Measure')
+    product_qty = fields.Float(string='Quantity', digits='Product Unit')
     product_description_variants = fields.Char('Description')
     price_unit = fields.Float(
         string='Unit Price', digits='Product Price', default=0.0,

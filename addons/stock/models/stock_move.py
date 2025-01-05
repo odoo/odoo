@@ -59,7 +59,7 @@ class StockMove(models.Model):
         help='Quantity in the default UoM of the product')
     product_uom_qty = fields.Float(
         'Demand',
-        digits='Product Unit of Measure',
+        digits='Product Unit',
         default=0, required=True,
         help="This is the quantity of product that is planned to be moved."
              "Lowering this quantity does not generate a backorder."
@@ -167,7 +167,7 @@ class StockMove(models.Model):
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help="the warehouse to consider for the route selection on the next procurement (if any).")
     has_tracking = fields.Selection(related='product_id.tracking', string='Product with Tracking')
     quantity = fields.Float(
-        'Quantity', compute='_compute_quantity', digits='Product Unit of Measure', inverse='_set_quantity', store=True)
+        'Quantity', compute='_compute_quantity', digits='Product Unit', inverse='_set_quantity', store=True)
     # TODO: delete this field `show_operations`
     show_operations = fields.Boolean(related='picking_id.picking_type_id.show_operations')
     picking_code = fields.Selection(related='picking_id.picking_type_id.code', readonly=True)
@@ -186,7 +186,7 @@ class StockMove(models.Model):
     next_serial = fields.Char('First SN/Lot')
     next_serial_count = fields.Integer('Number of SN/Lots')
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Original Reordering Rule', index=True)
-    forecast_availability = fields.Float('Forecast Availability', compute='_compute_forecast_information', digits='Product Unit of Measure', compute_sudo=True)
+    forecast_availability = fields.Float('Forecast Availability', compute='_compute_forecast_information', digits='Product Unit', compute_sudo=True)
     forecast_expected_date = fields.Datetime('Forecasted Expected date', compute='_compute_forecast_information', compute_sudo=True)
     lot_ids = fields.Many2many('stock.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', string='Serial Numbers', readonly=False)
     reservation_date = fields.Date('Date to Reserve', compute='_compute_reservation_date', store=True, help="Computes when a move should be reserved")
@@ -429,15 +429,14 @@ class StockMove(models.Model):
             move._set_quantity_done(move.quantity)
 
         err = []
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit')
         for move in self:
-            uom_qty = float_round(move.quantity, precision_rounding=move.product_uom.rounding, rounding_method='HALF-UP')
-            precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            qty = float_round(move.quantity, precision_digits=precision_digits, rounding_method='HALF-UP')
-            if float_compare(uom_qty, qty, precision_digits=precision_digits) != 0:
+            rounded_qty = float_round(move.quantity, precision_digits=precision_digits, rounding_method='HALF-UP')
+            if float_compare(rounded_qty, move.quantity, precision_digits=precision_digits) != 0:
                 err.append(_("""
-The quantity done for the product %(product)s doesn't respect the rounding precision defined on the unit of measure %(unit)s.
-Please change the quantity done or the rounding precision of your unit of measure.""",
-                             product=move.product_id.display_name, unit=move.product_uom.display_name))
+The quantity done for the product %(product)s doesn't respect the rounding precision defined on the system.
+Please change the quantity done or the rounding precision in your settings.""",
+                             product=move.product_id.display_name))
                 continue
             delta_qty = move.quantity - move._quantity_sml()
             if float_compare(delta_qty, 0, precision_rounding=move.product_uom.rounding) > 0:
@@ -1633,7 +1632,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         }
         if quantity:
             # TODO could be also move in create/write
-            rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            rounding = self.env['decimal.precision'].precision_get('Product Unit')
             uom_quantity = self.product_id.uom_id._compute_quantity(quantity, self.product_uom, rounding_method='HALF-UP')
             uom_quantity = float_round(uom_quantity, precision_digits=rounding)
             uom_quantity_back_to_product_uom = self.product_uom._compute_quantity(uom_quantity, self.product_id.uom_id, rounding_method='HALF-UP')
@@ -1672,7 +1671,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             uom_id=self.product_uom, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
 
         taken_quantity = 0
-        rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        rounding = self.env['decimal.precision'].precision_get('Product Unit')
         # Find a candidate move line to update or create a new one.
         candidate_lines = {}
         for line in self.move_line_ids:
@@ -2030,7 +2029,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         for move in self:
             # To know whether we need to create a backorder or not, round to the general product's
             # decimal precision and not the product's UOM.
-            rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            rounding = self.env['decimal.precision'].precision_get('Product Unit')
             if float_compare(move.quantity, move.product_uom_qty, precision_digits=rounding) < 0:
                 # Need to do some kind of conversion here
                 qty_split = move.product_uom._compute_quantity(move.product_uom_qty - move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
@@ -2083,7 +2082,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         if float_is_zero(qty, precision_rounding=self.product_id.uom_id.rounding):
             return []
 
-        decimal_precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        decimal_precision = self.env['decimal.precision'].precision_get('Product Unit')
 
         # `qty` passed as argument is the quantity to backorder and is always expressed in the
         # quants UOM. If we're able to convert back and forth this quantity in the move's and the
@@ -2107,7 +2106,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         # precision and not the move's UOM to handle case where the `quantity_done` is not
         # compatible with the move's UOM.
         new_product_qty = self.product_id.uom_id._compute_quantity(max(0, self.product_qty - qty), self.product_uom, round=False)
-        new_product_qty = float_round(new_product_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure'))
+        new_product_qty = float_round(new_product_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit'))
         self.with_context(do_not_unreserve=True).write({'product_uom_qty': new_product_qty})
         return new_move_vals
 

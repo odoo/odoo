@@ -36,7 +36,7 @@ class ProductTemplate(models.Model):
     visible_expense_policy = fields.Boolean(
         string="Re-Invoice Policy visible", compute='_compute_visible_expense_policy')
     sales_count = fields.Float(
-        string="Sold", compute='_compute_sales_count', digits='Product Unit of Measure')
+        string="Sold", compute='_compute_sales_count', digits='Product Unit')
     invoice_policy = fields.Selection(
         selection=[
             ('order', "Ordered quantities"),

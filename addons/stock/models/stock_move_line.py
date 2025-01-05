@@ -34,10 +34,10 @@ class StockMoveLine(models.Model):
     )
     product_category_name = fields.Char(related="product_id.categ_id.complete_name", string="Product Category")
     quantity = fields.Float(
-        'Quantity', digits='Product Unit of Measure', copy=False, store=True,
+        'Quantity', digits='Product Unit', copy=False, store=True,
         compute='_compute_quantity', readonly=False)
     quantity_product_uom = fields.Float(
-        'Quantity in Product UoM', digits='Product Unit of Measure',
+        'Quantity in Product UoM', digits='Product Unit',
         copy=False, compute='_compute_quantity_product_uom', store=True)
     picked = fields.Boolean('Picked', compute='_compute_picked', store=True, readonly=False, copy=False)
     package_id = fields.Many2one(
@@ -558,7 +558,7 @@ class StockMoveLine(models.Model):
                 raise UserError(_('You can not delete product moves if the picking is done. You can only correct the done quantities.'))
 
     def unlink(self):
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
         for ml in self:
             # Unlinking a move line should unreserve.
             if not float_is_zero(ml.quantity_product_uom, precision_digits=precision) and ml.move_id and not ml.move_id._should_bypass_reservation(ml.location_id):
@@ -602,7 +602,7 @@ class StockMoveLine(models.Model):
         for ml in self:
             # Check here if `ml.quantity` respects the rounding of `ml.product_uom_id`.
             uom_qty = float_round(ml.quantity, precision_rounding=ml.product_uom_id.rounding, rounding_method='HALF-UP')
-            precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            precision_digits = self.env['decimal.precision'].precision_get('Product Unit')
             quantity = float_round(ml.quantity, precision_digits=precision_digits, rounding_method='HALF-UP')
             if float_compare(uom_qty, quantity, precision_digits=precision_digits) != 0:
                 raise UserError(_('The quantity done for the product "%(product)s" doesn\'t respect the rounding precision '

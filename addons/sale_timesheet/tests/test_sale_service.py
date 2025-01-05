@@ -828,7 +828,7 @@ class TestSaleService(TestCommonSaleTimesheet):
         """
         Ensure hours are rounded consistently on SO & invoice.
         """
-        self.env.company.project_time_mode_id.rounding = 1.0
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
         self.env['sale.order.line'].create({
             'name': self.product_delivery_timesheet3.name,
             'product_id': self.product_delivery_timesheet3.id,
