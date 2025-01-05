@@ -285,7 +285,10 @@ class MrpBom(models.Model):
     @api.depends('code')
     def _compute_display_name(self):
         for bom in self:
-            bom.display_name = f"{bom.code + ': ' if bom.code else ''}{bom.product_tmpl_id.display_name}"
+            display_name = f"{bom.code + ': ' if bom.code else ''}{bom.product_tmpl_id.display_name}"
+            if self.env.context.get('display_bom_uom_qty') and (bom.product_qty > 1 or bom.product_uom_id != bom.product_tmpl_id.uom_id):
+                display_name += f" ({bom.product_qty} {bom.product_uom_id.name})"
+            bom.display_name = _('%(display_name)s', display_name=display_name)
 
     def action_compute_bom_days(self):
         company_id = self.env.context.get('default_company_id', self.env.company.id)
