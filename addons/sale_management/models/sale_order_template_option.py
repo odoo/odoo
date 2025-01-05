@@ -39,7 +39,7 @@ class SaleOrderTemplateOption(models.Model):
     quantity = fields.Float(
         string="Quantity",
         required=True,
-        digits='Product Unit of Measure',
+        digits='Product Unit',
         default=1)
 
     #=== COMPUTE METHODS ===#

@@ -20,7 +20,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
             'doc_ids': docids,
             'doc_model': 'product.product',
             'docs': self._get_report_data(product_ids=docids),
-            'precision': self.env['decimal.precision'].precision_get('Product Unit of Measure'),
+            'precision': self.env['decimal.precision'].precision_get('Product Unit'),
         }
 
     def _product_domain(self, product_template_ids, product_ids):
@@ -450,5 +450,5 @@ class StockForecasted_Product_Template(models.AbstractModel):
             'doc_ids': docids,
             'doc_model': 'product.template',
             'docs': self._get_report_data(product_template_ids=docids),
-            'precision': self.env['decimal.precision'].precision_get('Product Unit of Measure'),
+            'precision': self.env['decimal.precision'].precision_get('Product Unit'),
         }

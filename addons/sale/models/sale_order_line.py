@@ -124,7 +124,7 @@ class SaleOrderLine(models.Model):
     product_uom_qty = fields.Float(
         string="Quantity",
         compute='_compute_product_uom_qty',
-        digits='Product Unit of Measure', default=1.0,
+        digits='Product Unit', default=1.0,
         store=True, readonly=False, required=True, precompute=True)
     product_uom_id = fields.Many2one(
         comodel_name='uom.uom',
@@ -238,23 +238,23 @@ class SaleOrderLine(models.Model):
         string="Delivery Quantity",
         compute='_compute_qty_delivered',
         default=0.0,
-        digits='Product Unit of Measure',
+        digits='Product Unit',
         store=True, readonly=False, copy=False)
 
     # Analytic & Invoicing fields
     qty_invoiced = fields.Float(
         string="Invoiced Quantity",
         compute='_compute_qty_invoiced',
-        digits='Product Unit of Measure',
+        digits='Product Unit',
         store=True)
     qty_invoiced_posted = fields.Float(
         string="Invoiced Quantity (posted)",
         compute='_compute_qty_invoiced_posted',
-        digits='Product Unit of Measure')
+        digits='Product Unit')
     qty_to_invoice = fields.Float(
         string="Quantity To Invoice",
         compute='_compute_qty_to_invoice',
-        digits='Product Unit of Measure',
+        digits='Product Unit',
         store=True)
 
     analytic_line_ids = fields.One2many(
@@ -964,7 +964,7 @@ class SaleOrderLine(models.Model):
           occurs only in state 'sale', the upselling opportunity is removed from the list.
         - invoiced: the quantity invoiced is larger or equal to the quantity ordered.
         """
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
         for line in self:
             if line.state != 'sale':
                 line.invoice_status = 'no'
@@ -1214,7 +1214,7 @@ class SaleOrderLine(models.Model):
             raise UserError(_("You cannot change the type of a sale order line. Instead you should delete the current line and create a new line of the proper type."))
 
         if 'product_uom_qty' in values:
-            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            precision = self.env['decimal.precision'].precision_get('Product Unit')
             self.filtered(
                 lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) != 0)._update_line_quantity(values)
 

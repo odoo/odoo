@@ -694,7 +694,7 @@ class ProductProduct(models.Model):
         self.ensure_one()
         if not date:
             date = fields.Date.context_today(self)
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
 
         sellers_filtered = self._prepare_sellers(params)
         sellers_filtered = sellers_filtered.filtered(lambda s: not s.company_id or s.company_id.id == self.env.company.id)

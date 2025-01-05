@@ -334,7 +334,6 @@ class TestPacking(TestPackingCommon):
         355.4 rounded with 0.01 precision is 355.4.
         check that nonetheless, moving a picking is accepted
         """
-        self.assertEqual(self.productA.uom_id.rounding, 0.01)
         location_dict = {
             'location_id': self.stock_location.id,
         }
