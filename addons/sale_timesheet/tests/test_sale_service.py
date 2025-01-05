@@ -62,7 +62,6 @@ class TestSaleService(TestCommonSaleTimesheet):
             'type': 'service',
             'invoice_policy': 'delivery',
             'uom_id': self.env.ref('uom.product_uom_hour').id,
-            'uom_po_id': self.env.ref('uom.product_uom_hour').id,
             'default_code': 'SERV-DELI',
             'service_type': 'timesheet',
             'service_tracking': 'task_global_project',
@@ -282,7 +281,6 @@ class TestSaleService(TestCommonSaleTimesheet):
             'type': 'service',
             'invoice_policy': 'delivery',
             'uom_id': self.env.ref('uom.product_uom_hour').id,
-            'uom_po_id': self.env.ref('uom.product_uom_hour').id,
             'default_code': 'SERV-DELI4',
             'service_type': 'timesheet',
             'service_tracking': 'project_only',
@@ -570,8 +568,6 @@ class TestSaleService(TestCommonSaleTimesheet):
 
             product_vals.update({
                 'name': uom_name,
-                'uom_id': uom_id.id,
-                'uom_po_id': uom_id.id,
             })
             product = Product.create(product_vals)
 

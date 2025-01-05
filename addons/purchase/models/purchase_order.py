@@ -564,8 +564,8 @@ class PurchaseOrder(models.Model):
             if line.product_id and not already_seller and len(line.product_id.seller_ids) <= 10:
                 price = line.price_unit
                 # Compute the price for the template's UoM, because the supplier's UoM is related to that UoM.
-                if line.product_id.product_tmpl_id.uom_po_id != line.product_uom_id:
-                    default_uom = line.product_id.product_tmpl_id.uom_po_id
+                if line.product_id.product_tmpl_id.uom_id != line.product_uom_id:
+                    default_uom = line.product_id.product_tmpl_id.uom_id
                     price = line.product_uom_id._compute_price(price, default_uom)
 
                 supplierinfo = self._prepare_supplier_info(partner, line, price, line.currency_id)
@@ -579,6 +579,7 @@ class PurchaseOrder(models.Model):
                 if seller:
                     supplierinfo['product_name'] = seller.product_name
                     supplierinfo['product_code'] = seller.product_code
+                    supplierinfo['product_uom_id'] = line.product_uom.id
                 vals = {
                     'seller_ids': [(0, 0, supplierinfo)],
                 }
@@ -1042,11 +1043,6 @@ class PurchaseOrder(models.Model):
             product_infos['warning'] = product.purchase_line_warn_msg
         if product.purchase_line_warn == "block":
             product_infos['readOnly'] = True
-        if product.uom_id != product.uom_po_id:
-            product_infos['purchase_uom'] = {
-                'display_name': product.uom_po_id.display_name,
-                'id': product.uom_po_id.id,
-            }
         params = {'order_id': self}
         # Check if there is a price and a minimum quantity for the order's vendor.
         seller = product._select_seller(
