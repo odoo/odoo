@@ -563,7 +563,8 @@ class TestMrpOrder(TestMrpCommon):
         """ Checks we round up when bringing goods to produce and round half-up when producing.
         This implementation allows to implement an efficiency notion (see rev 347f140fe63612ee05e).
         """
-        self.product_6.uom_id.rounding = 1.0
+        # FIXME QUWO: Still needs to production of bom from bigger uom with no decimals
+        # Only consider whole units
         bom_eff = self.env['mrp.bom'].create({
             'product_id': self.product_6.id,
             'product_tmpl_id': self.product_6.product_tmpl_id.id,
@@ -575,6 +576,7 @@ class TestMrpOrder(TestMrpCommon):
                 (0, 0, {'product_id': self.product_8.id, 'product_qty': 4.16})
             ]
         })
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
         production_form = Form(self.env['mrp.production'])
         production_form.product_id = self.product_6
         production_form.bom_id = bom_eff
@@ -2054,8 +2056,6 @@ class TestMrpOrder(TestMrpCommon):
             'relative_factor': 0.01,
             'relative_uom_id': uom_L.id,
         })
-        uom_units.rounding = 1
-        uom_L.rounding = 0.01
 
         product = self.env['product.product'].create({
             'name': 'SuperProduct',
@@ -3470,6 +3470,8 @@ class TestMrpOrder(TestMrpCommon):
             'relative_factor': 250.0,
             'relative_uom_id': self.uom_unit.id,
         })
+        # Only consider whole units
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
 
         test_bom = self.env['mrp.bom'].create({
             'product_tmpl_id': self.product_7_template.id,
@@ -3513,7 +3515,6 @@ class TestMrpOrder(TestMrpCommon):
         consumed quantity is updated again. The test ensures that this update
         respects the rounding precisions
         """
-        self.uom_dozen.rounding = 1
         self.bom_4.product_uom_id = self.uom_dozen
 
         mo_form = Form(self.env['mrp.production'])

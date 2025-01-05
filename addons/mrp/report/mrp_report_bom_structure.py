@@ -137,7 +137,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             'bom_qty': bom_quantity,
             'is_variant_applied': self.env.user.has_group('product.group_product_variant') and len(bom_product_variants) > 1,
             'is_uom_applied': self.env.user.has_group('uom.group_uom'),
-            'precision': self.env['decimal.precision'].precision_get('Product Unit of Measure'),
+            'precision': self.env['decimal.precision'].precision_get('Product Unit'),
         }
 
     @api.model

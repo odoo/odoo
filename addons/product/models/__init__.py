@@ -7,7 +7,6 @@
 from . import product_template
 from . import product_product
 
-from . import decimal_precision
 from . import ir_attachment
 from . import product_attribute
 from . import product_attribute_custom_value
@@ -30,4 +29,3 @@ from . import res_config_settings
 from . import res_country_group
 from . import res_currency
 from . import res_partner
-from . import uom_uom

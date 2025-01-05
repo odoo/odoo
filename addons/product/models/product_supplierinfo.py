@@ -34,7 +34,7 @@ class ProductSupplierinfo(models.Model):
         'uom.uom', 'Unit of Measure',
         related='product_tmpl_id.uom_po_id')
     min_qty = fields.Float(
-        'Quantity', default=0.0, required=True, digits="Product Unit of Measure",
+        'Quantity', default=0.0, required=True, digits="Product Unit",
         help="The quantity to purchase from this vendor to benefit from the price, expressed in the vendor Product Unit of Measure if not any, in the default unit of measure of the product otherwise.")
     price = fields.Float(
         'Price', default=0.0, digits='Product Price',

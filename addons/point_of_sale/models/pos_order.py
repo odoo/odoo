@@ -353,7 +353,7 @@ class PosOrder(models.Model):
 
     @api.depends('lines.refunded_qty', 'lines.qty')
     def _compute_has_refundable_lines(self):
-        digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        digits = self.env['decimal.precision'].precision_get('Product Unit')
         for order in self:
             order.has_refundable_lines = any([float_compare(line.qty, line.refunded_qty, digits) > 0 for line in order.lines])
 
@@ -1287,7 +1287,7 @@ class PosOrderLine(models.Model):
         string="Custom Values",
         store=True, readonly=False)
     price_unit = fields.Float(string='Unit Price', digits=0)
-    qty = fields.Float('Quantity', digits='Product Unit of Measure', default=1)
+    qty = fields.Float('Quantity', digits='Product Unit', default=1)
     price_subtotal = fields.Float(string='Tax Excl.', digits=0,
         readonly=True, required=True)
     price_subtotal_incl = fields.Float(string='Tax Incl.', digits=0,

@@ -2068,8 +2068,7 @@ class StockMove(TransactionCase):
         quantity available is not enough to reserve the move. Check also that it is not possible
         to set `quantity` with a value not honouring the UOM's rounding.
         """
-        # on the dozen uom, set the rounding set 1.0
-        self.uom_dozen.rounding = 1
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
 
         # 6 units are available in stock
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 6.0)
@@ -2112,8 +2111,6 @@ class StockMove(TransactionCase):
         and this uom only allows entire numbers, we only reserve quantity honouring the uom's
         rounding even if the quantity is set across multiple quants.
         """
-        # on the dozen uom, set the rounding set 1.0
-        self.uom_dozen.rounding = 1
 
         # make 12 quants of 1
         for i in range(1, 13):
@@ -2843,12 +2840,6 @@ class StockMove(TransactionCase):
         self.assertEqual(move_stock_stock_2.state, 'waiting')
 
     def test_link_assign_7(self):
-        # on the dozen uom, set the rounding set 1.0
-        self.uom_dozen.rounding = 1
-
-        # 6 units are available in stock
-        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 6.0)
-
         # create pickings and moves for a pick -> pack mto scenario
         picking_stock_pack = self.env['stock.picking'].create({
             'location_id': self.stock_location.id,
@@ -2884,7 +2875,7 @@ class StockMove(TransactionCase):
         move_pack_cust.write({'move_orig_ids': [(4, move_stock_pack.id, 0)]})
         (move_stock_pack + move_pack_cust)._action_confirm()
 
-        # the pick should not be reservable because of the rounding of the dozen
+        # the pick should not be reservable because of the rounding precision
         move_stock_pack._action_assign()
         self.assertEqual(move_stock_pack.state, 'confirmed')
         move_pack_cust._action_assign()
@@ -2913,7 +2904,7 @@ class StockMove(TransactionCase):
         self.assertEqual(move_stock_pack.quantity, 0.5)
         self.assertEqual(move_stock_pack.product_uom_qty, 0.5)
 
-        # the second move should not be reservable because of the rounding on the dozen
+        # the second move should not be reservable because of the rounding precision
         move_pack_cust._action_assign()
         self.assertEqual(move_pack_cust.state, 'partially_available')
         move_line_pack_cust = move_pack_cust.move_line_ids
@@ -2937,23 +2928,21 @@ class StockMove(TransactionCase):
         backorder.button_validate()
         backorder_move = backorder.move_ids
         self.assertEqual(backorder_move.state, 'done')
-        self.assertEqual(backorder_move.quantity, 12.0)
-        self.assertEqual(backorder_move.product_uom_qty, 6.0)
-        self.assertEqual(backorder_move.product_uom, self.uom_unit)
+        self.assertEqual(backorder_move.quantity, 1)
+        self.assertEqual(backorder_move.product_uom_qty, 0.5)
+        self.assertEqual(backorder_move.product_uom, self.uom_dozen)
 
         # the second move should now be reservable
         move_pack_cust._action_assign()
         self.assertEqual(move_pack_cust.state, 'assigned')
-        self.assertEqual(move_line_pack_cust.quantity, 12)
-        self.assertEqual(move_line_pack_cust.product_uom_id.id, self.uom_unit.id)
+        self.assertEqual(move_line_pack_cust.quantity, 1)
+        self.assertEqual(move_line_pack_cust.product_uom_id.id, self.uom_dozen.id)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, move_stock_pack.location_dest_id), 6)
 
     def test_link_assign_8(self):
         """ Set the rounding of the dozen to 1.0, create a chain of two move for a dozen, the product
         concerned is tracked by serial number. Check that the flow is ok.
         """
-        # on the dozen uom, set the rounding set 1.0
-        self.uom_dozen.rounding = 1
 
         # 6 units are available in stock
         for i in range(1, 13):

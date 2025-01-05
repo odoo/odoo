@@ -14,7 +14,7 @@ class ChangeProductionQty(models.TransientModel):
         required=True, ondelete='cascade')
     product_qty = fields.Float(
         'Quantity To Produce',
-        digits='Product Unit of Measure', required=True)
+        digits='Product Unit', required=True)
 
     @api.model
     def default_get(self, fields):
@@ -55,7 +55,7 @@ class ChangeProductionQty(models.TransientModel):
         return move.move_dest_ids and not float_is_zero(qty, precision_rounding=move.product_uom.rounding)
 
     def change_prod_qty(self):
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
         for wizard in self:
             production = wizard.mo_id
             old_production_qty = production.product_qty
