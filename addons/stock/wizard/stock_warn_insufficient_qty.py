@@ -12,7 +12,7 @@ class StockWarnInsufficientQty(models.AbstractModel):
     location_id = fields.Many2one('stock.location', 'Location', domain="[('usage', '=', 'internal')]", required=True)
     quant_ids = fields.Many2many('stock.quant', compute='_compute_quant_ids')
     quantity = fields.Float(string="Quantity", required=True)
-    product_uom_name = fields.Char("Unit of Measure", required=True)
+    product_uom_name = fields.Char("Unit", required=True)
 
     def _get_reference_document_company_id(self):
         raise NotImplementedError()

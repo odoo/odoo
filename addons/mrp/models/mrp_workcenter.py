@@ -34,7 +34,7 @@ class MrpWorkcenter(models.Model):
         'Description')
     default_capacity = fields.Float(
         'Capacity', default=1.0,
-        help="Default number of pieces (in product UoM) that can be produced in parallel (at the same time) at this work center. For example: the capacity is 5 and you need to produce 10 units, then the operation time listed on the BOM will be multiplied by two. However, note that both time before and after production will only be counted once.")
+        help="Default number of pieces (in product unit) that can be produced in parallel (at the same time) at this work center. For example: the capacity is 5 and you need to produce 10 units, then the operation time listed on the BOM will be multiplied by two. However, note that both time before and after production will only be counted once.")
     sequence = fields.Integer(
         'Sequence', default=1, required=True,
         help="Gives the sequence order when displaying a list of work centers.")
@@ -593,7 +593,7 @@ class MrpWorkcenterCapacity(models.Model):
 
     workcenter_id = fields.Many2one('mrp.workcenter', string='Work Center', required=True)
     product_id = fields.Many2one('product.product', string='Product', required=True)
-    product_uom_id = fields.Many2one('uom.uom', string='Product UoM', related='product_id.uom_id')
+    product_uom_id = fields.Many2one('uom.uom', string='Product Unit', related='product_id.uom_id')
     capacity = fields.Float('Capacity', default=1.0, help="Number of pieces that can be produced in parallel for this product.")
     time_start = fields.Float('Setup Time (minutes)', default=_default_time_start, help="Time in minutes for the setup.")
     time_stop = fields.Float('Cleanup Time (minutes)', default=_default_time_stop, help="Time in minutes for the cleaning.")

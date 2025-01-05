@@ -44,7 +44,7 @@ class SaleOrderTemplateLine(models.Model):
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     product_uom_id = fields.Many2one(
         comodel_name='uom.uom',
-        string="Unit of Measure",
+        string="Unit",
         domain="[('id', 'in', allowed_uom_ids)]",
         compute='_compute_product_uom_id',
         store=True, readonly=False, precompute=True)

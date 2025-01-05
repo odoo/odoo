@@ -37,7 +37,7 @@ class MrpWorkorder(models.Model):
         string='Workcenter Status', related='workcenter_id.working_state') # technical: used in views only
     product_id = fields.Many2one(related='production_id.product_id')
     product_tracking = fields.Selection(related="product_id.tracking")
-    product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True, readonly=True)
+    product_uom_id = fields.Many2one('uom.uom', 'Unit', required=True, readonly=True)
     production_id = fields.Many2one('mrp.production', 'Manufacturing Order', required=True, check_company=True, readonly=True, index='btree')
     production_availability = fields.Selection(
         string='Stock Availability', readonly=True,

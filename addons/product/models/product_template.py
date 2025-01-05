@@ -112,11 +112,11 @@ class ProductTemplate(models.Model):
     sale_ok = fields.Boolean('Sales', default=True)
     purchase_ok = fields.Boolean('Purchase', default=True, compute='_compute_purchase_ok', store=True, readonly=False)
     uom_id = fields.Many2one(
-        'uom.uom', 'Unit of Measure',
+        'uom.uom', 'Unit',
         default=_get_default_uom_id, required=True,
         help="Default unit of measure used for all stock operations.")
-    uom_name = fields.Char(string='Unit of Measure Name', related='uom_id.name', readonly=True)
     uom_ids = fields.Many2many('uom.uom', string='Packagings', help="Packagings which can be used for sales")
+    uom_name = fields.Char(string='Unit Name', related='uom_id.name', readonly=True)
     company_id = fields.Many2one(
         'res.company', 'Company', index=True)
     seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id', 'Vendors', depends_context=('company',))
