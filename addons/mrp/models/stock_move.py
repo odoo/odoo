@@ -91,15 +91,6 @@ class StockMoveLine(models.Model):
         kit_moves = defaultdict(lambda: self.env['stock.move'])
         kit_qty = {}
 
-        for line in aggregated_move_lines.values():
-            if line['packaging']:
-                bom_id = line['bom']
-                if bom_id and bom_id.type == "phantom":
-                    kit_aggregated_ml.add(line['line_key'])
-                    kit_moves[bom_id] |= line['move']
-                else:
-                    non_kit_ml[line['line_key']] = line
-
         filters = {'incoming_moves': lambda m: True, 'outgoing_moves': lambda m: False}
         for bom, moves in kit_moves.items():
             if moves.picking_id.backorder_ids:
@@ -219,6 +210,13 @@ class StockMove(models.Model):
         'Manual Consumption', compute='_compute_manual_consumption', store=True, readonly=False,
         help="When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
              "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also.")
+
+    @api.depends('production_id')
+    def _compute_packaging_uom_id(self):
+        super()._compute_packaging_uom_id()
+        for move in self:
+            if move.production_id:
+                move.packaging_uom_id = move.production_id.product_uom_id
 
     @api.depends('product_id')
     def _compute_manual_consumption(self):

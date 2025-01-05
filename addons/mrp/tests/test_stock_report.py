@@ -218,10 +218,11 @@ class TestMrpStockReports(TestReportsCommon):
         superkit = self.env['product.product'].create({
             'name': 'Super Kit',
             'type': 'consu',
-            'packaging_ids': [(0, 0, {
+            'uom_id': self.env['uom.uom'].create({
                 'name': '6-pack',
-                'qty': 6,
-            })],
+                'relative_factor': 6,
+                'relative_uom_id': self.env.ref('uom.product_uom_unit').id,
+            }).id,
         })
 
         compo01, compo02 = self.env['product.product'].create([{
@@ -235,22 +236,21 @@ class TestMrpStockReports(TestReportsCommon):
             'product_tmpl_id': superkit.product_tmpl_id.id,
             'product_qty': 1,
             'type': 'phantom',
+            'product_uom_id': superkit.uom_id.id,
             'bom_line_ids': [
-                (0, 0, {'product_id': compo01.id, 'product_qty': 1}),
-                (0, 0, {'product_id': compo02.id, 'product_qty': 1}),
+                (0, 0, {'product_id': compo01.id, 'product_qty': 6}),
+                (0, 0, {'product_id': compo02.id, 'product_qty': 6}),
             ],
         })
 
-        for back_order, expected_vals in [('never', [12, 12, 2, 2]), ('always', [24, 12, 4, 2])]:
+        for back_order, expected_vals in [('never', [12, 12]), ('always', [24, 12])]:
             picking_form = Form(self.env['stock.picking'])
             picking_form.picking_type_id = self.picking_type_in
             picking_form.partner_id = self.partner
             with picking_form.move_ids_without_package.new() as move:
                 move.product_id = superkit
-                move.product_uom = self.env.ref('uom.product_uom_dozen')
-                move.product_uom_qty = 2
+                move.product_uom_qty = 4
             picking = picking_form.save()
-            picking.move_ids.product_packaging_id = superkit.packaging_ids
             picking.action_confirm()
 
             picking.move_ids.write({'quantity': 12, 'picked': True})
@@ -260,7 +260,7 @@ class TestMrpStockReports(TestReportsCommon):
             self.assertFalse(non_kit_aggregate_values)
             aggregate_values = picking.move_line_ids._get_aggregated_product_quantities(kit_name=superkit.display_name)
             for line in aggregate_values.values():
-                self.assertItemsEqual([line[val] for val in ['qty_ordered', 'quantity', 'packaging_qty', 'packaging_quantity']], expected_vals)
+                self.assertItemsEqual([line[val] for val in ['qty_ordered', 'quantity']], expected_vals)
 
             html_report = self.env['ir.actions.report']._render_qweb_html('stock.report_deliveryslip', picking.ids)[0]
             self.assertTrue(html_report, "report generated successfully")

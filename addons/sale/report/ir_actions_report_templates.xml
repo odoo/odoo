@@ -109,8 +109,9 @@
                                 <td name="td_quantity" class="text-end text-nowrap">
                                     <span t-field="line.product_uom_qty">3</span>
                                     <span t-field="line.product_uom_id">units</span>
-                                    <span t-if="line.product_packaging_id">
-                                        (<span t-field="line.product_packaging_qty" t-options='{"widget": "integer"}'/> <span t-field="line.product_packaging_id"/>)
+                                    <span t-if="line.product_uom_id != line.product_id.uom_id" class="text-muted small">
+                                        <t t-set="quantity_in_product_uom" t-value="line.product_uom_id._compute_quantity(line.product_uom_qty, line.product_id.uom_id)"/>
+                                        <br/><span t-esc="quantity_in_product_uom" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit'}"/> <span t-field="line.product_id.uom_id"/>
                                     </span>
                                 </td>
                                 <td name="td_priceunit" class="text-end text-nowrap">

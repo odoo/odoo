@@ -134,8 +134,8 @@
                                             <td class="text-end">
                                                 <span t-out="format_number(move.quantity)">3.00</span>
                                                 <span t-field="move.product_uom" groups="uom.group_uom">units</span>
-                                                <span t-if="move.product_packaging_id">
-                                                    (<span t-field="move.product_packaging_qty" t-options='{"widget": "integer"}'/> <span t-field="move.product_packaging_id.name"/>)
+                                                <span t-if="move.packaging_uom_id and move.packaging_uom_id != move.product_uom">
+                                                    (<span t-field="move.packaging_uom_qty" t-options='{"widget": "integer"}'/> <span t-field="move.packaging_uom_id.name"/>)
                                                 </span>
                                             </td>
                                             <!-- If a move contains only one move line, the move is summarized in the heading only -->
