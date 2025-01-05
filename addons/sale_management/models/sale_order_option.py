@@ -36,7 +36,7 @@ class SaleOrderOption(models.Model):
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     uom_id = fields.Many2one(
         comodel_name='uom.uom',
-        string="Unit of Measure",
+        string="Unit",
         compute='_compute_uom_id',
         domain="[('id', 'in', allowed_uom_ids)]",
         store=True, readonly=False,

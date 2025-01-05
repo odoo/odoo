@@ -13,7 +13,7 @@
                             <field name="product_id"/>
                             <field name="product_qty"/>
                             <field name="production_capacity"/>
-                            <field name="product_uom_id" groups="uom.group_uom"/>
+                            <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                             <button name="action_prepare_split" type="object" icon="fa-scissors" title="Split Production"/>
                         </list>
                     </field>
@@ -38,7 +38,7 @@
                             <label for="product_qty"/>
                             <div class="o_row">
                                 <span><field name="product_qty"/></span>
-                                <span><field name="product_uom_id" groups="uom.group_uom"/></span>
+                                <span><field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/></span>
                             </div>
                         </group>
                         <group>

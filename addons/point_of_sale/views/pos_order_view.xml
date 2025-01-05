@@ -88,7 +88,7 @@
                                 <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
                                 <field name="qty"/>
                                 <field name="customer_note" optional="hide"/>
-                                <field name="product_uom_id" string="UoM" groups="uom.group_uom"/>
+                                <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                                 <field name="price_unit" widget="monetary"/>
                                 <field name="is_total_cost_computed" column_invisible="True"/>
                                 <field name="total_cost" invisible="not is_total_cost_computed" optional="hide" widget="monetary"/>

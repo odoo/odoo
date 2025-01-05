@@ -17,7 +17,7 @@
                                     domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                 <field name="name"/>
                                 <field name="quantity"/>
-                                <field name="uom_id" groups="uom.group_uom"/>
+                                <field name="uom_id" widget="many2one_uom" groups="uom.group_uom"/>
                                 <field name="price_unit"/>
                                 <field name="discount" groups="sale.group_discount_per_so_line"/>
                                 <field name="is_present" />
@@ -38,7 +38,7 @@
                                     <div class="text-muted">
                                         Quantity:
                                         <field name="quantity"/>
-                                        <field name="uom_id" groups="uom.group_uom"/>
+                                        <field name="uom_id" widget="many2one_uom" groups="uom.group_uom"/>
                                     </div>
                                     <div class="text-muted">
                                         Unit Price:
@@ -58,7 +58,7 @@
                                 domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                             <field name="name" optional="show"/>
                             <field name="quantity"/>
-                            <field name="uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
+                            <field name="uom_id" widget="many2one_uom" groups="uom.group_uom" optional="show"/>
                             <field name="price_unit"/>
                             <field name="discount"
                                 width="50px"

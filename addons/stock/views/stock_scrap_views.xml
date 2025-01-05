@@ -55,7 +55,7 @@
                                 <label for="scrap_qty"/>
                                 <div class="o_row">
                                     <field name="scrap_qty" readonly="state == 'done' or tracking == 'serial'"/>
-                                    <field name="product_uom_id" readonly="state == 'done' or tracking == 'serial'" groups="uom.group_uom" force_save="1"/>
+                                    <field name="product_uom_id" readonly="state == 'done' or tracking == 'serial'" widget="many2one_uom" groups="uom.group_uom" force_save="1"/>
                                 </div>
                                 <field name="lot_id" context="{'default_product_id': product_id}" invisible="not product_id or tracking == 'none'" readonly="state == 'done'" required="tracking != 'none'" groups="stock.group_production_lot"/>
                                 <field name="should_replenish" readonly="state == 'done'"/>
@@ -115,7 +115,7 @@
                     <field name="date_done"/>
                     <field name="product_id" readonly="1"/>
                     <field name="scrap_qty" readonly="state == 'done'"/>
-                    <field name="product_uom_id" groups="uom.group_uom" readonly="state == 'done'"/>
+                    <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom" readonly="state == 'done'"/>
                     <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" readonly="state == 'done'"/>
                     <field name="scrap_location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" readonly="state == 'done'"/>
                     <field name="company_id" readonly="1" groups="base.group_multi_company"/>
@@ -151,7 +151,7 @@
                             <label for="scrap_qty"/>
                             <div class="o_row">
                                 <field name="scrap_qty" readonly="tracking == 'serial'"/>
-                                <field name="product_uom_id" readonly="tracking == 'serial'" groups="uom.group_uom"/>
+                                <field name="product_uom_id" readonly="tracking == 'serial'" groups="uom.group_uom" widget="many2one_uom"/>
                             </div>
                             <field name="lot_id" groups="stock.group_production_lot"
                                 context="{'default_product_id': product_id}"

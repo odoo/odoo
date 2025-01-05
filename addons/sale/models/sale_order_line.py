@@ -128,7 +128,7 @@ class SaleOrderLine(models.Model):
         store=True, readonly=False, required=True, precompute=True)
     product_uom_id = fields.Many2one(
         comodel_name='uom.uom',
-        string="Unit of Measure",
+        string="Unit",
         compute='_compute_product_uom_id',
         domain='[("id", "in", allowed_uom_ids)]',
         store=True, readonly=False, precompute=True, ondelete='restrict')

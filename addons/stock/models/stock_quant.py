@@ -51,7 +51,7 @@ class StockQuant(models.Model):
         'product.template', string='Product Template',
         related='product_id.product_tmpl_id')
     product_uom_id = fields.Many2one(
-        'uom.uom', 'Unit of Measure',
+        'uom.uom', 'Unit',
         readonly=True, related='product_id.uom_id')
     is_favorite = fields.Boolean(related='product_tmpl_id.is_favorite')
     company_id = fields.Many2one(related='location_id.company_id', string='Company', store=True, readonly=True)

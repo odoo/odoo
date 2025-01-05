@@ -320,7 +320,7 @@ class AccountMoveLine(models.Model):
     )
     product_uom_id = fields.Many2one(
         comodel_name='uom.uom',
-        string='Unit of Measure',
+        string='Unit',
         compute='_compute_product_uom_id', store=True, readonly=False, precompute=True,
         ondelete="restrict",
     )

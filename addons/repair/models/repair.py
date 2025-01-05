@@ -90,7 +90,7 @@ class RepairOrder(models.Model):
         default=1.0, digits='Product Unit')
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     product_uom = fields.Many2one(
-        'uom.uom', 'Product Unit of Measure', domain="[('id', 'in', allowed_uom_ids)]",
+        'uom.uom', 'Unit', domain="[('id', 'in', allowed_uom_ids)]",
         compute='compute_product_uom', store=True, precompute=True)
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial',

@@ -67,7 +67,7 @@ class StockMove(models.Model):
              "the product reservation, and should be done with care.")
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     product_uom = fields.Many2one(
-        'uom.uom', "UoM", required=True, domain="[('id', 'in', allowed_uom_ids)]",
+        'uom.uom', "Unit", required=True, domain="[('id', 'in', allowed_uom_ids)]",
         compute="_compute_product_uom", store=True, readonly=False, precompute=True,
     )
     # TDE FIXME: make it stored, otherwise group will not work

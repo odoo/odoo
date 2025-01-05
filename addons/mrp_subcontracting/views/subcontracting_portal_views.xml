@@ -32,7 +32,7 @@
                                     <field name="product_uom_qty" string="Demand" readonly="1"/>
                                     <field name="product_qty" readonly="1" column_invisible="True"/>
                                     <field name="quantity" string="Done"/>
-                                    <field name="product_uom" groups="uom.group_uom"/>
+                                    <field name="product_uom" groups="uom.group_uom" widget="many2one_uom"/>
                                     <button name="action_show_details" type="object" icon="fa-list" title="Details"
                                                 invisible="not show_details_visible" context="{'is_subcontracting_portal': 1}"/>
                                     <field name="show_subcontracting_details_visible" column_invisible="True"/>

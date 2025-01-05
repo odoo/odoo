@@ -23,7 +23,7 @@
                     required="tracking in ('serial', 'lot')"
                     context="{'default_product_id': product_id}"/>
                 <field name="quantity"/>
-                <field name="product_uom_id" groups="uom.group_uom"/>
+                <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
             </list>
         </field>
     </record>
@@ -88,7 +88,7 @@
                     <field name="product_uom_qty" invisible="1" readonly="state == 'done'"/>
                     <group>
                         <field name="order_finished_lot_id"/>
-                        <field name="product_uom" groups="uom.group_uom"/>
+                        <field name="product_uom" groups="uom.group_uom" widget="many2one_uom"/>
                         <field name="quantity" string="Total Consumed" readonly="1"/>
                     </group>
                     <field name="move_line_ids"
@@ -155,7 +155,7 @@
                 <field name="product_id" required="1" readonly="state == 'done'"/>
                 <field name="order_finished_lot_id"/>
                 <field name="quantity" string="Consumed" readonly="1"/>
-                <field name="product_uom" groups="uom.group_uom"/>
+                <field name="product_uom" groups="uom.group_uom" widget="many2one_uom"/>
             </list>
         </field>
     </record>

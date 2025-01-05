@@ -10,7 +10,7 @@ class ProjectUpdate(models.Model):
     allocated_time = fields.Integer("Allocated Time", readonly=True)
     timesheet_time = fields.Integer("Timesheet Time", readonly=True)
     timesheet_percentage = fields.Integer(compute="_compute_timesheet_percentage", export_string_translation=False)
-    uom_id = fields.Many2one("uom.uom", "Unit Of Measure", readonly=True, export_string_translation=False)
+    uom_id = fields.Many2one("uom.uom", "Unit", readonly=True, export_string_translation=False)
 
     def _compute_timesheet_percentage(self):
         for update in self:
