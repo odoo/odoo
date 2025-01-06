@@ -655,7 +655,6 @@ class AccountMoveSend(models.AbstractModel):
         This is a security in case the method is called directly without going through the wizards.
         """
         self._check_move_constrains(moves)
-        assert all(self._get_default_pdf_report_id(move).is_invoice_report for move in moves)
         assert custom_settings['pdf_report'].is_invoice_report if custom_settings.get('pdf_report') else True
         assert all(
             sending_method in dict(self.env['res.partner']._fields['invoice_sending_method'].selection)
