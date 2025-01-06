@@ -49,7 +49,7 @@
                                 </div>
                             </div>
                         </div>
-                        <t t-set="splittedOrder" t-value="this.currentOrder.originalSplittedOrder and !this.currentOrder.originalSplittedOrder.finalized"/>
+                        <t t-set="splittedOrder" t-value="isContinueSplitting()"/>
                         <div id="action_btn_desktop" t-if="!ui.isSmall" class="validation-buttons d-flex w-100 gap-2 p-2 sticky-bottom">
                             <button class="button next validation btn btn-primary btn-lg w-100 py-4 lh-lg" t-att-class="{ highlight: !locked }" t-if="!splittedOrder" t-on-click="orderDone" name="done">
                                 New Order

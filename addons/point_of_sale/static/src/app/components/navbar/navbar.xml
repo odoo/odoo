@@ -10,7 +10,7 @@
                             <span t-if="!ui.isSmall">Register</span>
                             <i t-else="" class="fa fa-fw fa-pencil" t-att-class="{'fa-lg' : !ui.isSmall}"/>
                         </button>
-                        <button class="orders-button btn btn-lg lh-lg" t-att-class="{'text-primary fw-bolder': mainButton === 'order'}" t-on-click="() => this.pos.onTicketButtonClick()">
+                        <button class="orders-button btn btn-lg lh-lg" t-att-class="{'text-primary fw-bolder': mainButton === 'order'}" t-on-click="() => this.pos.showScreen('TicketScreen')">
                             <t t-if="!ui.isSmall">
                                 <span>Orders</span>
                             </t>
