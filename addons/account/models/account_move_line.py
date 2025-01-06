@@ -2,12 +2,13 @@ from collections import defaultdict
 from contextlib import contextmanager
 from datetime import date
 import logging
+from math import copysign
 import re
 
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
-from odoo.tools import frozendict, format_date, float_compare, Query
+from odoo.tools import frozendict, format_date, float_compare, float_is_zero, Query
 from odoo.tools.sql import create_index, SQL
 from odoo.addons.web.controllers.utils import clean_action
 
@@ -1567,7 +1568,12 @@ class AccountMoveLine(models.Model):
                 and 'balance' not in protected.get(line, {})
                 and (not changed('balance') or (line not in before and not line.balance))
             ):
-                balance = line.company_id.currency_id.round(line.amount_currency / line.currency_rate)
+                if not float_is_zero(line.discount, precision_rounding=self.env['decimal.precision'].precision_get('Discount')):
+                    discounted_pu = line.price_unit * (1 - (line.discount / 100.0))
+                    balance = line.currency_id._convert(discounted_pu * line.quantity, line.company_id.currency_id, date=line.date)
+                    balance = copysign(balance, line.amount_currency)
+                else:
+                    balance = line.company_id.currency_id.round(line.amount_currency / line.currency_rate)
                 line.balance = balance
         # Since this method is called during the sync, inside of `create`/`write`, these fields
         # already have been computed and marked as so. But this method should re-trigger it since
