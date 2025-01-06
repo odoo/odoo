@@ -29,7 +29,6 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         guest = self.env['mail.guest'].create({'name': 'Guest Mario'})
 
         self.channel = self.env['discuss.channel']._create_channel(group_id=None, name='Test channel')
-        self.channel.allow_public_upload = True
         self.channel.add_members(portal_user.partner_id.ids)
         self.channel.add_members(internal_user.partner_id.ids)
         self.channel.add_members(guest_ids=[guest.id])
@@ -38,8 +37,6 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
 
         self.group = self.env['discuss.channel']._create_group(partners_to=(internal_user + portal_user).partner_id.ids, name="Test group")
         self.group.add_members(guest_ids=[guest.id])
-        self.group.allow_public_upload = True
-
         self.tour = "discuss_channel_public_tour.js"
 
     def _open_channel_page_as_user(self, login):
@@ -61,7 +58,6 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         self._open_group_page_as_user('admin')
 
     def test_discuss_channel_public_page_as_guest(self):
-        self.channel.allow_public_upload = True
         self.start_tour(self.channel.invitation_url, "discuss_channel_as_guest_tour.js")
         guest = self.env['mail.guest'].search([('channel_ids', 'in', self.channel.id)], limit=1, order='id desc')
         self.assertIn("joined the channel", self.channel.message_ids[0].body)
@@ -73,7 +69,6 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         self.start_tour(self.channel.invitation_url, "discuss_channel_call_public_tour.js")
 
     def test_mail_group_public_page_as_guest(self):
-        self.channel.allow_public_upload = True
         self.start_tour(self.group.invitation_url, "discuss_channel_as_guest_tour.js")
         guest = self.env['mail.guest'].search([('channel_ids', 'in', self.channel.id)], limit=1, order='id desc')
         self.start_tour(self.group.invitation_url, self.tour, cookies={guest._cookie_name: guest._format_auth_cookie()})

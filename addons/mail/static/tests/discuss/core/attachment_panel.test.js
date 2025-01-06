@@ -52,27 +52,3 @@ test("Attachment panel sort by date", async () => {
         after: [".o-mail-DateSection", { text: "August, 2023" }],
     });
 });
-
-test("Can toggle allow public upload", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const env1 = await start({ asTab: true });
-    const env2 = await start({ asTab: true });
-    await openDiscuss(channelId, { target: env1 });
-    await click(".o-mail-Discuss-header button[title='Attachments']", { target: env1 });
-    await contains(".o-mail-ActionPanel", {
-        contains: ["label", { text: "File upload is disabled for external users" }],
-        target: env1,
-    });
-    await openDiscuss(channelId, { target: env2 });
-    await click(".o-mail-Discuss-header button[title='Attachments']", { target: env2 });
-    await contains(".o-mail-ActionPanel", {
-        contains: ["label", { text: "File upload is disabled for external users" }],
-        target: env2,
-    });
-    await click(".o-mail-ActionPanel input[type='checkbox']", { target: env1 });
-    await contains(".o-mail-ActionPanel", {
-        contains: ["label", { text: "File upload is enabled for external users" }],
-        target: env2,
-    });
-});

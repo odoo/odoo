@@ -555,7 +555,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         last_interest_dt = fields.Datetime.to_string(channel.last_interest_dt)
         if channel == self.channel_general:
             return {
-                "allow_public_upload": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
                 "authorizedGroupFullName": self.group_user.full_name,
@@ -590,7 +589,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_public_1:
             return {
-                "allow_public_upload": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
                 "authorizedGroupFullName": False,
@@ -625,7 +623,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_public_2:
             return {
-                "allow_public_upload": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
                 "authorizedGroupFullName": False,
@@ -660,7 +657,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_group_1:
             return {
-                "allow_public_upload": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
                 "authorizedGroupFullName": self.group_user.full_name,
@@ -698,7 +694,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_group_2:
             return {
-                "allow_public_upload": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
                 "authorizedGroupFullName": self.group_user.full_name,
@@ -733,7 +728,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_group_1:
             return {
-                "allow_public_upload": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
                 "authorizedGroupFullName": False,
@@ -768,7 +762,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_1:
             return {
-                "allow_public_upload": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
                 "authorizedGroupFullName": False,
@@ -803,7 +796,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_2:
             return {
-                "allow_public_upload": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
                 "authorizedGroupFullName": False,
@@ -838,7 +830,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_3:
             return {
-                "allow_public_upload": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
                 "authorizedGroupFullName": False,
@@ -873,7 +864,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_4:
             return {
-                "allow_public_upload": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
                 "authorizedGroupFullName": False,
@@ -908,7 +898,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_livechat_1:
             return {
-                "allow_public_upload": False,
                 "anonymous_country": self.env.ref("base.in").id,
                 "anonymous_name": False,
                 "authorizedGroupFullName": False,
@@ -943,7 +932,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_livechat_2:
             return {
-                "allow_public_upload": False,
                 "anonymous_country": self.env.ref("base.be").id,
                 "anonymous_name": "anon 2",
                 "authorizedGroupFullName": False,
