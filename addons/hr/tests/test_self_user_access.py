@@ -19,6 +19,7 @@ class TestSelfAccessProfile(TestHrCommon):
         self.env['hr.employee'].create({
             'name': 'James',
             'user_id': james.id,
+            'bank_account_id': self.env['res.partner.bank'].create({'acc_number': 'BE1234567890', 'partner_id': james.partner_id.id}).id
         })
         view = self.env.ref('hr.res_users_view_form_profile')
         view_infos = james.get_view(view.id)
@@ -230,3 +231,24 @@ class TestSelfAccessRights(TestHrCommon):
             # triggering an onchange should not trigger some access error
             form.lang = "fr_FR"
             form.tz = "Europe/Brussels"
+
+    def test_access_employee_account(self):
+        hubert = new_test_user(self.env, login='hubert', groups='base.group_user', name='Hubert Bonisseur de La Bath', email='hubert@oss.fr')
+        hubert = hubert.with_user(hubert)
+        hubert_acc = self.env['res.partner.bank'].create({'acc_number': 'FR1234567890', 'partner_id': hubert.partner_id.id})
+        hubert_emp = self.env['hr.employee'].create({
+            'name': 'Hubert',
+            'user_id': hubert.id,
+            'bank_account_id': hubert_acc.id
+        })
+        hubert.partner_id.sudo().employee_ids = hubert_emp
+
+        self.assertFalse(hubert.user_has_groups('hr.group_hr_user'))
+        self.assertFalse(hubert.env.su)
+
+        self.assertEqual(hubert.read(['employee_bank_account_id'])[0]['employee_bank_account_id'][1], 'FR******7890')
+        self.assertEqual(hubert.sudo().employee_bank_account_id.display_name, 'FR******7890')
+        self.assertEqual(hubert_emp.with_user(hubert).sudo().bank_account_id.display_name, 'FR******7890')
+
+        hubert_acc.invalidate_recordset(["display_name"])
+        self.assertEqual(hubert_emp.with_user(hubert).sudo().bank_account_id.sudo(False).display_name, 'FR******7890')

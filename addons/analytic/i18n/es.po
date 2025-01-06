@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Lucia Pacheco, 2023
-# Wil Odoo, 2023
+# Wil Odoo, 2024
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
@@ -81,13 +82,13 @@ msgstr "Cuenta activa"
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #, python-format
 msgid "Add a Line"
-msgstr "Agregar una línea"
+msgstr "Añadir una línea"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.action_account_analytic_account_form
 #: model_terms:ir.actions.act_window,help:analytic.action_analytic_account_form
 msgid "Add a new analytic account"
-msgstr "Agregar una nueva cuenta analítica"
+msgstr "Añadir una nueva cuenta analítica"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_administratif
@@ -317,7 +318,7 @@ msgstr "Hijos"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_plan_action
 msgid "Click to add a new analytic account plan."
-msgstr "Haga clic para agregar un nuevo plan de cuenta analítica."
+msgstr "Haga clic para añadir un nuevo plan de cuenta analítica."
 
 #. module: analytic
 #. odoo-javascript
@@ -381,8 +382,8 @@ msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
 msgstr ""
-"Los costes se crearán automáticamente cuando registre las facturas de "
-"proveedor, gastos o hojas de asistencia."
+"Los costes se crearán automáticamente cuando registre facturas de proveedor "
+"gastos o partes de horas."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_uid
@@ -406,7 +407,7 @@ msgstr "Creado el"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__credit
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Credit"
-msgstr "Crédito"
+msgstr "Haber"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__currency_id
@@ -434,7 +435,7 @@ msgstr "Desactive la cuenta."
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__debit
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Debit"
-msgstr "Débito"
+msgstr "Debe"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_agrolait
@@ -633,6 +634,13 @@ msgid "Nebula"
 msgstr "Nebula"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+#, python-format
+msgid "New Model"
+msgstr "Nuevo modelo"
+
+#. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet"
 msgstr "Sin actividad "
@@ -781,9 +789,8 @@ msgid ""
 msgstr ""
 "Los ingresos se crearán automáticamente cuando crea facturas para el "
 "cliente. Las facturas de cliente se pueden crear a partir de los pedidos de "
-"venta (facturas de precio fijo), en hojas de asistencia (dependiendo el "
-"trabajo realizado) o en los gastos (por ejemplo, refacturación de gastos de "
-"viaje)."
+"venta (facturas de precio fijo), en partes de horas (dependiendo el trabajo "
+"realizado) o en los gastos (por ejemplo, refacturación de gastos de viaje)."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__root_id
@@ -909,6 +916,13 @@ msgid ""
 msgstr ""
 "No puede establecer una empresa diferente en su cuenta analítica ya que hay "
 "algunos apuntes analíticos vinculados a ella."
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_plan.py:0
+#, python-format
+msgid "You cannot add a parent to the base plan '%s'"
+msgstr "No puede añadir un plan principal al plan base \"%s\""
 
 #. module: analytic
 #. odoo-python

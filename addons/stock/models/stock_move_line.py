@@ -5,6 +5,7 @@ from collections import Counter, defaultdict
 
 from odoo import _, api, fields, tools, models, Command
 from odoo.exceptions import UserError, ValidationError
+from odoo.osv import expression
 from odoo.tools import OrderedSet, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
@@ -263,7 +264,8 @@ class StockMoveLine(models.Model):
                     excluded_smls.discard(sml.id)
                     used_locations.add(sml.location_dest_id)
                 if len(used_locations) > 1:
-                    smls.location_dest_id = smls.move_id.location_dest_id
+                    for move, grouped_smls in smls.grouped('move_id').items():
+                        grouped_smls.location_dest_id = move.location_dest_id
                 else:
                     smls.package_level_id.location_dest_id = smls.location_dest_id
             else:
@@ -288,6 +290,43 @@ class StockMoveLine(models.Model):
             qty = ml.product_uom_id._compute_quantity(ml.quantity, ml.product_id.uom_id)
             addtional_qty[ml.location_dest_id.id] = addtional_qty.get(ml.location_dest_id.id, 0) - qty
         return addtional_qty
+
+    def get_move_line_quant_match(self, move_id, dirty_move_line_ids, dirty_quant_ids):
+        # Since the quant_id field is neither stored nor computed, this method is used to compute the match if it exists
+        move = self.env['stock.move'].browse(move_id)
+        deleted_move_lines = move.move_line_ids - self
+        dirty_move_lines = self.env['stock.move.line'].browse(dirty_move_line_ids)
+        quants_data = []
+        move_lines_data = []
+        domain = [("id", "in", dirty_quant_ids)]
+        for move_line in dirty_move_lines | deleted_move_lines:
+            move_line_domain = [
+                ("product_id", "=", move_line.product_id.id),
+                ("lot_id", "=", move_line.lot_id.id),
+                ("location_id", "=", move_line.location_id.id),
+                ("package_id", "=", move_line.package_id.id),
+                ("owner_id", "=", move_line.owner_id.id),
+            ]
+            domain = expression.OR([domain, move_line_domain])
+        if domain:
+            quants = self.env['stock.quant'].search(domain)
+            for quant in quants:
+                dirty_lines = dirty_move_lines.filtered(lambda ml: ml.product_id == quant.product_id
+                    and ml.lot_id == quant.lot_id
+                    and ml.location_id == quant.location_id
+                    and ml.package_id == quant.package_id
+                    and ml.owner_id == quant.owner_id
+                )
+                deleted_lines = deleted_move_lines.filtered(lambda ml: ml.product_id == quant.product_id
+                    and ml.lot_id == quant.lot_id
+                    and ml.location_id == quant.location_id
+                    and ml.package_id == quant.package_id
+                    and ml.owner_id == quant.owner_id
+                )
+                quants_data.append((quant.id, {"available_quantity": quant.available_quantity + sum(ml.quantity_product_uom for ml in deleted_lines), "move_line_ids": dirty_lines.ids}))
+                move_lines_data += [(ml.id, {"quantity": ml.quantity, "quant_id": quant.id}) for ml in dirty_lines]
+        return [quants_data, move_lines_data]
+
 
     def init(self):
         if not tools.index_exists(self._cr, 'stock_move_line_free_reservation_index'):
@@ -323,13 +362,15 @@ class StockMoveLine(models.Model):
             if move_line.move_id or not move_line.picking_id:
                 continue
             if move_line.picking_id.state != 'done':
-                moves = move_line.picking_id.move_ids.filtered(lambda x: x.product_id == move_line.product_id)
-                moves = sorted(moves, key=lambda m: m.quantity < m.product_qty, reverse=True)
+                moves = move_line._get_linkable_moves()
                 if moves:
-                    move_line.write({
+                    vals = {
                         'move_id': moves[0].id,
                         'picking_id': moves[0].picking_id.id,
-                    })
+                    }
+                    if moves[0].picked:
+                        vals['picked'] = True
+                    move_line.write(vals)
                 else:
                     create_move(move_line)
             else:
@@ -380,6 +421,9 @@ class StockMoveLine(models.Model):
     def write(self, vals):
         if 'product_id' in vals and any(vals.get('state', ml.state) != 'draft' and vals['product_id'] != ml.product_id.id for ml in self):
             raise UserError(_("Changing the product is only allowed in 'Draft' state."))
+
+        if ('lot_id' in vals or 'quant_id' in vals) and len(self.product_id) > 1:
+            raise UserError(_("Changing the Lot/Serial number for move lines with different products is not allowed."))
 
         moves_to_recompute_state = self.env['stock.move']
         triggers = [
@@ -512,6 +556,9 @@ class StockMoveLine(models.Model):
             # which is clear by the unlink of move line
             moves.with_prefetch()._recompute_state()
         return res
+
+    def _sorting_move_lines(self):
+        return (self.id,)
 
     def _action_done(self):
         """ This method is called during a move's `action_done`. It'll actually move a quant from
@@ -675,7 +722,7 @@ class StockMoveLine(models.Model):
         lots = self.env['stock.lot'].create(lot_vals)
         for key, mls in key_to_mls.items():
             lot = lots[key_to_index[key]].with_prefetch(lots._ids)   # With prefetch to reconstruct the ones broke by accessing by index
-            mls.write({'lot_id': lot.id})
+            mls.with_prefetch(self._prefetch_ids).write({'lot_id': lot.id})
 
     def _reservation_is_updatable(self, quantity, reserved_quant):
         # To remove in master
@@ -735,8 +782,8 @@ class StockMoveLine(models.Model):
             return (
                 cand.picking_id != self.move_id.picking_id,
                 -(cand.picking_id.scheduled_date or cand.move_id.date).timestamp()
-                if cand.picking_id or cand.move_id
-                else -cand.id)
+                if cand.picking_id or cand.move_id else 0,
+                -cand.id)
 
         outdated_candidates = self.env['stock.move.line'].search(outdated_move_lines_domain).sorted(current_picking_first)
 
@@ -984,3 +1031,8 @@ class StockMoveLine(models.Model):
                 'message': _("The inventory adjustments have been reverted."),
             }
         }
+
+    def _get_linkable_moves(self):
+        self.ensure_one()
+        moves = self.picking_id.move_ids.filtered(lambda x: x.product_id == self.product_id)
+        return sorted(moves, key=lambda m: m.quantity < m.product_qty, reverse=True)

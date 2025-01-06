@@ -7,15 +7,17 @@
 # Cozmin Candea <office@terrabit.ro>, 2024
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Martin Trigaux, 2024
+# Alin Miclea, 2024
 # Dorin Hongu <dhongu@gmail.com>, 2024
+# Lyall Kindmurr, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2024\n"
+"Last-Translator: Lyall Kindmurr, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,14 +30,14 @@ msgstr ""
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "%s at multiple rows"
-msgstr ""
+msgstr "%s la mai multe rânduri"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 #, python-format
 msgid "%s records successfully imported"
-msgstr ""
+msgstr "%s înregistrări importate cu succes"
 
 #. module: base_import
 #. odoo-javascript
@@ -45,6 +47,8 @@ msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect."
 msgstr ""
+"În fișier a fost găsită o singură coloană, ceea ce înseamnă adesea că "
+"separatorul de fișiere este incorect."
 
 #. module: base_import
 #. odoo-javascript
@@ -96,7 +100,7 @@ msgstr "Import baza"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
 msgid "Base Import Mapping"
-msgstr ""
+msgstr "Mapare import de bază"
 
 #. module: base_import
 #. odoo-javascript
@@ -110,7 +114,7 @@ msgstr "Lot"
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Batch Import"
-msgstr ""
+msgstr "Importați în masă"
 
 #. module: base_import
 #. odoo-javascript
@@ -132,6 +136,8 @@ msgstr "Anulează"
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line %s."
 msgstr ""
+"Faceți clic pe „Reluare” pentru a continua cu importul, reluând la rândul "
+"%s."
 
 #. module: base_import
 #. odoo-python
@@ -196,7 +202,7 @@ msgstr "Creat de"
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__create_date
 msgid "Created on"
-msgstr "Creat în"
+msgstr "Creat pe"
 
 #. module: base_import
 #. odoo-python
@@ -225,7 +231,7 @@ msgstr "Format datetimp:"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Decimals Separator:"
-msgstr ""
+msgstr "Separator zecimale"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -244,6 +250,8 @@ msgstr "Punct"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Download"
@@ -268,7 +276,7 @@ msgstr "Eroare procesare Dată  [%s:L%d]: %s"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Error at row %s: \"%s\""
-msgstr ""
+msgstr "Eroare la rândul%s: \"%s”"
 
 #. module: base_import
 #. odoo-python
@@ -277,6 +285,8 @@ msgstr ""
 msgid ""
 "Error while importing records: Text Delimiter should be a single character."
 msgstr ""
+"Eroare la importul înregistrărilor: Delimitatorul de text trebuie să fie un "
+"singur caracter."
 
 #. module: base_import
 #. odoo-python
@@ -287,6 +297,9 @@ msgid ""
 "title row has %d entries while the first row has %d. You may need to change "
 "the separator character."
 msgstr ""
+"Eroare la importul înregistrărilor: toate rândurile trebuie să aibă aceeași "
+"dimensiune, dar rândul de titlu are %d intrări în timp ce primul rând are%d."
+" Poate fi necesar să schimbați caracterul separatorului."
 
 #. module: base_import
 #. odoo-javascript
@@ -434,6 +447,18 @@ msgstr ""
 "mai ușor de efectuat, mai ales atunci când fișierul are multe coloane."
 
 #. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid ""
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
+msgstr ""
+"Dacă modelul folosește openchatter, urmărirea istoricului va seta abonamente"
+" și va trimite notificări în timpul importului, dar va duce la un import mai"
+" lent."
+
+#. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
@@ -476,7 +501,7 @@ msgstr "Fișierul de import nu are conținut sau este corupt"
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 #, python-format
 msgid "Import preview failed due to: \""
-msgstr ""
+msgstr "Previzualizarea importului a eșuat din cauza: \""
 
 #. module: base_import
 #. odoo-javascript
@@ -501,6 +526,7 @@ msgstr "Importă"
 
 #. module: base_import
 #. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
@@ -572,7 +598,7 @@ msgstr "Fără separator"
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 #, python-format
 msgid "No matching records found for the following name"
-msgstr ""
+msgstr "Nu s-au găsit înregistrări potrivite pentru următorul nume"
 
 #. module: base_import
 #. odoo-javascript
@@ -607,7 +633,7 @@ msgstr "Bară de progres"
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Reimport"
-msgstr ""
+msgstr "Reimportă"
 
 #. module: base_import
 #. odoo-javascript
@@ -633,7 +659,7 @@ msgstr "Reluare"
 #: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 #, python-format
 msgid "Search a field..."
-msgstr ""
+msgstr "Căutați un câmp..."
 
 #. module: base_import
 #. odoo-javascript
@@ -668,7 +694,7 @@ msgstr "Separator:"
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
 msgid "Set to: %s"
-msgstr ""
+msgstr "Setați la: %s"
 
 #. module: base_import
 #. odoo-javascript
@@ -803,7 +829,7 @@ msgstr "Separator mii:"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "To import multiple values, separate them by a comma."
-msgstr ""
+msgstr "Pentru a importa mai multe valori, separați-le printr-o virgulă."
 
 #. module: base_import
 #. odoo-javascript
@@ -868,6 +894,10 @@ msgid ""
 "system. You can use a custom format in addition to the suggestions provided."
 " Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
+"Utilizați HH timp de ore într-un sistem de 24 de ore, utilizați II în "
+"combinație cu „p” pentru un sistem de 12 ore. Puteți utiliza un format "
+"personalizat în plus față de sugestiile furnizate. Lăsați gol pentru a lăsa "
+"Odoo să ghicească formatul (recomandat)"
 
 #. module: base_import
 #. odoo-javascript
@@ -879,6 +909,10 @@ msgid ""
 "format in addition to the suggestions provided. Leave empty to let Odoo "
 "guess the format (recommended)"
 msgstr ""
+"Utilizați aaaa pentru a reprezenta anul, LL pentru lună și ZZ pentru zi. "
+"Include separatoare, cum ar fi un punct, o bară oblică înainte sau o bară "
+"oblică. Puteți utiliza un format personalizat în plus față de sugestiile "
+"furnizate. Lăsați gol pentru a lăsa Odoo să ghicească formatul (recomandat)"
 
 #. module: base_import
 #. odoo-javascript
@@ -891,6 +925,17 @@ msgstr "Utilizați primul rând ca antet"
 #: model:ir.model,name:base_import.model_res_users
 msgid "User"
 msgstr "Utilizator"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid ""
+"Warning: ignores the labels line, empty lines and lines composed only of "
+"empty cells"
+msgstr ""
+"Atenție: ignoră linia de etichete, liniile goale și liniile compuse numai "
+"din celule goale"
 
 #. module: base_import
 #. odoo-javascript

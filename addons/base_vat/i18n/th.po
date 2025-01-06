@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-12-23 21:07+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -19,6 +19,13 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "'219999830019' (should be 12 digits)"
+msgstr "'219999830019' (ควรมี 12 หลัก)"
 
 #. module: base_vat
 #. odoo-python
@@ -34,8 +41,22 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
+msgid "17291716060 (NIN) or 1729171602 (VKN)"
+msgstr "17291716060 (NIN) หรือ 1729171602 (VKN)"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
 msgid "1792060346001 or 1792060346"
 msgstr "1792060346001 หรือ 1792060346"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "3101012009"
+msgstr "3101012009"
 
 #. module: base_vat
 #. odoo-python
@@ -119,6 +140,14 @@ msgid "European VAT numbers are automatically checked on the VIES database."
 msgstr "หมายเลข VAT ของยุโรปจะถูกตรวจสอบโดยอัตโนมัติในฐานข้อมูล VIES"
 
 #. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"
+msgstr ""
+
+#. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
 msgid "Fiscal Position"
 msgstr "ฐานะทางการเงิน"
@@ -167,13 +196,6 @@ msgid "Perform Vies Validation"
 msgstr "ดำเนินการตรวจสอบ Vies"
 
 #. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-#, python-format
-msgid "TR1234567890 (VERGINO) or TR17291716060 (TCKIMLIKNO)"
-msgstr "TR1234567890 (VERGINO) หรือ TR17291716060 (TCKIMLIKNO)"
-
-#. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
 msgid "Tax ID"
 msgstr "เลขประจำตัวผู้เสียภาษี"
@@ -212,11 +234,22 @@ msgstr "หมายเลข VAT %s ไม่สามารถตีควา�
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
-"The country detected for this foreign VAT number does not match the one set "
-"on this fiscal position."
+"The country detected for this foreign VAT number does not match any of the "
+"countries composing the country group set on this fiscal position."
 msgstr ""
-"ประเทศที่ตรวจพบสำหรับหมายเลข VAT "
-"ต่างประเทศนี้ไม่ตรงกับประเทศที่ตั้งไว้ในสถานะทางบัญชีนี้"
+"ประเทศที่ตรวจพบสำหรับหมายเลขภาษีมูลค่าเพิ่มต่างประเทศนี้ไม่ตรงกับประเทศใดๆ "
+"ที่ประกอบเป็นกลุ่มประเทศที่กำหนดไว้สำหรับตำแหน่งทางการเงินนี้"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+#, python-format
+msgid ""
+"The country of the foreign VAT number could not be detected. Please assign a"
+" country to the fiscal position or set a country group"
+msgstr ""
+"ไม่สามารถตรวจพบหมายเลขภาษีมูลค่าเพิ่มของประเทศต่างประเทศได้ "
+"โปรดกำหนดประเทศให้กับสถานะทางการเงินหรือตั้งค่ากลุ่มประเทศ"
 
 #. module: base_vat
 #. odoo-python
@@ -252,6 +285,13 @@ msgstr "ตรวจสอบหมายเลข VAT โดยใช้บร�
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_vat_to_check
 msgid "Vies Vat To Check"
 msgstr "Vies Vat เพื่อตรวจสอบ"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
+msgstr "XXXXXXXXX [9 หลัก] และควรปฏิบัติตามผลรวมการตรวจสอบของอัลกอริทึม Luhn"
 
 #. module: base_vat
 #. odoo-python

@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 from collections import OrderedDict
 from zlib import error as zlib_error
-try:
-    from PyPDF2.errors import PdfStreamError, PdfReadError
-except ImportError:
-    from PyPDF2.utils import PdfStreamError, PdfReadError
 
 from odoo import api, models, _
 from odoo.exceptions import UserError
 from odoo.tools import pdf
+from odoo.tools.pdf import PdfReadError, PdfStreamError
 
 
 class IrActionsReport(models.Model):

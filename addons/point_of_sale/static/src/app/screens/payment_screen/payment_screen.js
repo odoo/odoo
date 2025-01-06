@@ -17,7 +17,8 @@ import { PaymentScreenStatus } from "@point_of_sale/app/screens/payment_screen/p
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, useState, onMounted } from "@odoo/owl";
 import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
-import { floatIsZero } from "@web/core/utils/numbers";
+import { floatIsZero, roundPrecision as round_pr } from "@web/core/utils/numbers";
+import { sprintf } from "@web/core/utils/strings";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 
 export class PaymentScreen extends Component {
@@ -123,6 +124,9 @@ export class PaymentScreen extends Component {
     addNewPaymentLine(paymentMethod) {
         // original function: click_paymentmethods
         const result = this.currentOrder.add_paymentline(paymentMethod);
+        if (!this.pos.get_order().check_paymentlines_rounding()) {
+            this._display_popup_error_paymentlines_rounding();
+        }
         if (result) {
             this.numberBuffer.reset();
             return true;
@@ -239,12 +243,7 @@ export class PaymentScreen extends Component {
         this.numberBuffer.capture();
         if (this.pos.config.cash_rounding) {
             if (!this.pos.get_order().check_paymentlines_rounding()) {
-                this.popup.add(ErrorPopup, {
-                    title: _t("Rounding error in payment lines"),
-                    body: _t(
-                        "The amount of your payment lines must be rounded to validate the transaction."
-                    ),
-                });
+                this._display_popup_error_paymentlines_rounding();
                 return;
             }
         }
@@ -597,6 +596,49 @@ export class PaymentScreen extends Component {
     }
     async sendForceDone(line) {
         line.set_payment_status("done");
+    }
+
+    _display_popup_error_paymentlines_rounding() {
+        if (this.pos.config.cash_rounding) {
+            const orderlines = this.paymentLines;
+            const cash_rounding = this.pos.cash_rounding[0].rounding;
+            const default_rounding = this.pos.currency.rounding;
+            for (var id in orderlines) {
+                var line = orderlines[id];
+                var diff = round_pr(
+                    round_pr(line.amount, cash_rounding) - round_pr(line.amount, default_rounding),
+                    default_rounding
+                );
+
+                if (
+                    diff &&
+                    (line.payment_method.is_cash_count || !this.pos.config.only_round_cash_method)
+                ) {
+                    const upper_amount = round_pr(
+                        round_pr(line.amount, default_rounding) + cash_rounding / 2,
+                        cash_rounding
+                    );
+                    const lower_amount = round_pr(
+                        round_pr(line.amount, default_rounding) - cash_rounding / 2,
+                        cash_rounding
+                    );
+                    this.popup.add(ErrorPopup, {
+                        title: _t("Rounding error in payment lines"),
+                        body: sprintf(
+                            _t(
+                                "The amount of your payment lines must be rounded to validate the transaction.\n" +
+                                    "The rounding precision is %s so you should set %s or %s as payment amount instead of %s."
+                            ),
+                            cash_rounding.toFixed(this.pos.currency.decimal_places),
+                            lower_amount.toFixed(this.pos.currency.decimal_places),
+                            upper_amount.toFixed(this.pos.currency.decimal_places),
+                            line.amount.toFixed(this.pos.currency.decimal_places)
+                        ),
+                    });
+                    return;
+                }
+            }
+        }
     }
 }
 

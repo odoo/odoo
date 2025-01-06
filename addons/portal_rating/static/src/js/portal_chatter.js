@@ -150,6 +150,11 @@ PortalChatter.include({
         var params = this._super.apply(this, arguments);
         if (this.options['display_rating']) {
             params['rating_include'] = true;
+
+            const ratingValue = this.get('rating_value');
+            if (ratingValue !== false) {
+                params['rating_value'] = ratingValue;
+            }
         }
         return params;
     },
@@ -363,6 +368,7 @@ PortalChatter.include({
     _onChangeRatingDomain: function () {
         var domain = [];
         if (this.get('rating_value')) {
+            // TODO dead code: remove in master
             domain = [['rating_value', '=', this.get('rating_value')]];
         }
         this._changeCurrentPage(1, domain);

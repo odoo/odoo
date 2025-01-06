@@ -688,6 +688,29 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(po.order_line[0].qty_received, 5)
         self.assertEqual(po.order_line[1].qty_received, 5)
 
+    def test_receive_negative_quantity(self):
+        """
+        Receive a negative quantity, the picking should be a delivery and the quantity received
+        negative. """
+        po_vals = {
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'name': self.product_id_2.name,
+                'product_id': self.product_id_2.id,
+                'product_qty': -5.0,
+                'product_uom': self.product_id_2.uom_po_id.id,
+                'price_unit': 250.0,
+            })],
+        }
+        po = self.env['purchase.order'].create(po_vals)
+        po.button_confirm()
+
+        # one delivery, one receipt
+        self.assertEqual(len(po.picking_ids), 1)
+        self.assertEqual(po.picking_ids.picking_type_id.code, 'outgoing')
+        po.picking_ids.button_validate()
+        self.assertEqual(po.order_line.qty_received, po.order_line.product_qty)
+
     def test_receive_qty_invoiced_but_no_posted(self):
         """
         Create a purchase order, confirm it, invoice it, but don't post the invoice.

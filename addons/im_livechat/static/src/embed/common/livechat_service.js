@@ -1,4 +1,5 @@
 /* @odoo-module */
+import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
 
 import { Record } from "@mail/core/common/record";
 import { reactive } from "@odoo/owl";
@@ -9,6 +10,8 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
+
+session.websocket_worker_version ??= session.livechatData?.options?.websocket_worker_version;
 
 /**
  * @typedef LivechatRule
@@ -37,6 +40,8 @@ export const ODOO_VERSION_KEY = `${location.origin.replace(
 export class LivechatService {
     static TEMPORARY_ID = "livechat_temporary_thread";
     SESSION_COOKIE = "im_livechat_session";
+    LIVECHAT_UUID_COOKIE = "im_livechat_uuid";
+    SESSION_STORAGE_KEY = "im_livechat_session";
     OPERATOR_COOKIE = "im_livechat_previous_operator_pid";
     GUEST_TOKEN_STORAGE_KEY = "im_livechat_guest_token";
     /** @type {keyof typeof SESSION_STATE} */
@@ -86,10 +91,7 @@ export class LivechatService {
             const currOdooVersion = init?.odoo_version;
             const visitorUid = this.visitorUid || false;
             const userId = session.user_id || false;
-            if (
-                prevOdooVersion !== currOdooVersion ||
-                (this.sessionCookie && visitorUid !== userId)
-            ) {
+            if (prevOdooVersion !== currOdooVersion || (this.savedState && visitorUid !== userId)) {
                 this.leaveSession({ notifyServer: false });
             }
             browser.localStorage.setItem(ODOO_VERSION_KEY, currOdooVersion);
@@ -109,14 +111,24 @@ export class LivechatService {
         if (Record.isRecord(values?.channel)) {
             values.channel = values.channel.toData();
         }
-        const session = JSON.parse(cookie.get(this.SESSION_COOKIE) ?? "{}");
+        const ONE_DAY_TTL = 60 * 60 * 24;
+        if (this.thread?.uuid) {
+            if (this.thread.uuid) {
+                cookie.set(this.LIVECHAT_UUID_COOKIE, this.thread.uuid, ONE_DAY_TTL);
+            }
+        }
+        const session = this.savedState || {};
         Object.assign(session, {
             visitor_uid: this.visitorUid,
             ...values,
         });
-        cookie.delete(this.SESSION_COOKIE);
+        expirableStorage.removeItem(this.SESSION_STORAGE_KEY);
         cookie.delete(this.OPERATOR_COOKIE);
-        cookie.set(this.SESSION_COOKIE, JSON.stringify(session).replaceAll("→", " "), 60 * 60 * 24); // 1 day cookie.
+        expirableStorage.setItem(
+            this.SESSION_STORAGE_KEY,
+            JSON.stringify(session).replaceAll("→", " "),
+            ONE_DAY_TTL
+        );
         if (session?.operator_pid) {
             cookie.set(this.OPERATOR_COOKIE, session.operator_pid[0], 7 * 24 * 60 * 60); // 1 week cookie.
         }
@@ -129,14 +141,14 @@ export class LivechatService {
      * never be called if the session was not persisted.
      */
     async leaveSession({ notifyServer = true } = {}) {
-        const session = JSON.parse(cookie.get(this.SESSION_COOKIE) ?? "{}");
+        const session = JSON.parse(expirableStorage.getItem(this.SESSION_STORAGE_KEY) ?? "{}");
         try {
             if (session?.uuid && notifyServer) {
                 this.busService.deleteChannel(session.uuid);
                 await this.rpc("/im_livechat/visitor_leave_session", { uuid: session.uuid });
             }
         } finally {
-            cookie.delete(this.SESSION_COOKIE);
+            expirableStorage.removeItem(this.SESSION_STORAGE_KEY);
             this.state = SESSION_STATE.NONE;
             this.sessionInitialized = false;
         }
@@ -182,11 +194,11 @@ export class LivechatService {
      * @returns {Promise<import("models").Thread>|undefined"}
      */
     async getOrCreateThread({ persist = false } = {}) {
-        let threadData = this.sessionCookie;
+        let threadData = this.savedState;
         let isNewlyCreated = false;
         if (!threadData || (!threadData.uuid && persist)) {
-            const chatbotScriptId = this.sessionCookie
-                ? this.sessionCookie.chatbot_script_id
+            const chatbotScriptId = this.savedState
+                ? this.savedState.chatbot_script_id
                 : this.rule.chatbot?.scriptId;
             threadData = await this.rpc(
                 "/im_livechat/get_session",
@@ -240,15 +252,29 @@ export class LivechatService {
         return true;
     }
 
+    /** @deprecated use savedState instead */
     get sessionCookie() {
-        return JSON.parse(cookie.get(this.SESSION_COOKIE) ?? "false");
+        try {
+            return cookie.get(this.SESSION_COOKIE)
+                ? JSON.parse(decodeURI(cookie.get(this.SESSION_COOKIE)))
+                : false;
+        } catch {
+            // Cookies are not supposed to contain non-ASCII characters.
+            // However, some were set in the past. Let's clean them up.
+            cookie.delete(this.SESSION_COOKIE);
+            return false;
+        }
+    }
+
+    get savedState() {
+        return JSON.parse(expirableStorage.getItem(this.SESSION_STORAGE_KEY) ?? false);
     }
 
     get shouldRestoreSession() {
         if (this.state !== SESSION_STATE.NONE) {
             return false;
         }
-        return Boolean(cookie.get(this.SESSION_COOKIE));
+        return Boolean(this.savedState);
     }
 
     /**
@@ -264,16 +290,13 @@ export class LivechatService {
     get thread() {
         return Object.values(this.store.Thread.records).find(
             ({ id, type }) =>
-                type === "livechat" &&
-                id === (this.sessionCookie?.id ?? LivechatService.TEMPORARY_ID)
+                type === "livechat" && id === (this.savedState?.id ?? LivechatService.TEMPORARY_ID)
         );
     }
 
     get visitorUid() {
-        const sessionCookie = this.sessionCookie;
-        return sessionCookie && "visitor_uid" in sessionCookie
-            ? sessionCookie.visitor_uid
-            : session.user_id;
+        const savedState = this.savedState;
+        return savedState && "visitor_uid" in savedState ? savedState.visitor_uid : session.user_id;
     }
 }
 

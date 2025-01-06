@@ -5,15 +5,16 @@
 # Translators:
 # Lasse L, 2023
 # Martin Trigaux, 2023
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Simon S, 2023
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-15 06:37+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-12-23 23:00+0000\n"
 "Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
@@ -22,6 +23,19 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_account_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_account_id
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Account"
+msgstr "Konto"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_display_name
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_display_name
+msgid "Account Audit Log Display Name"
+msgstr ""
 
 #. module: account_audit_trail
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
@@ -36,6 +50,11 @@ msgstr "Aktivera spårningskedja"
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
 msgid "Audit Trail"
 msgstr "Spårningskedja"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "Bankutdrag-rad"
 
 #. module: account_audit_trail
 #. odoo-python
@@ -58,9 +77,25 @@ msgid "Companies"
 msgstr "Bolag"
 
 #. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Company"
+msgstr "Företag"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_company_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_company_id
+msgid "Company "
+msgstr "Företag"
+
+#. module: account_audit_trail
 #: model:ir.model,name:account_audit_trail.model_res_config_settings
 msgid "Config Settings"
 msgstr "Inställningar"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Create Only"
+msgstr "Skapa endast"
 
 #. module: account_audit_trail
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
@@ -92,6 +127,16 @@ msgid "Journal Entry"
 msgstr "Verifikat"
 
 #. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_mail_tracking_value
+msgid "Mail Tracking Value"
+msgstr "Spårningsvärde för post"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Guide för att sammanfoga partners"
+
+#. module: account_audit_trail
 #: model:ir.model,name:account_audit_trail.model_mail_message
 msgid "Message"
 msgstr "Meddelande"
@@ -102,6 +147,11 @@ msgid "Messages Search"
 msgstr "Meddelandesökning"
 
 #. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log
+msgid "Name"
+msgstr "Namn"
+
+#. module: account_audit_trail
 #. odoo-python
 #: code:addons/account_audit_trail/models/mail_message.py:0
 #: code:addons/account_audit_trail/models/mail_message.py:0
@@ -110,10 +160,37 @@ msgid "Operation not supported"
 msgstr "Åtgärd stöds inte"
 
 #. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_partner_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_partner_id
+msgid "Partner"
+msgstr "Kontakt"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Partners"
+msgstr "Kontakter"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Record"
+msgstr "Post"
+
+#. module: account_audit_trail
 #: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__show_audit_log
 #: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__show_audit_log
 msgid "Show Audit Log"
 msgstr "Visa spårningslogg"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_tax_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_tax_id
+msgid "Tax"
+msgstr "Skatt"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Taxes"
+msgstr "Skatter"
 
 #. module: account_audit_trail
 #. odoo-python
@@ -147,6 +224,10 @@ msgid "Updated"
 msgstr "Uppdaterad"
 
 #. module: account_audit_trail
-#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
-msgid "date"
-msgstr "datum"
+#. odoo-python
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#, python-format
+msgid ""
+"You cannot remove parts of the audit trail. Archive the record instead."
+msgstr ""
+"Du kan inte ta bort delar av verifieringskedjan. Arkivera posten istället."

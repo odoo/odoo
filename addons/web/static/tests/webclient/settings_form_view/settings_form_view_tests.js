@@ -1129,6 +1129,62 @@ QUnit.module("SettingsFormView", (hooks) => {
     });
 
     QUnit.test("clicking a button with dirty settings -- discard", async (assert) => {
+        serverData.models["res.config.settings"].fields.product_ids = {
+            string: "Products",
+            type: "many2many",
+            relation: "product",
+        };
+        serverData.models.product = {
+            fields: {
+                name: { string: "Product Name", type: "char" },
+                color: { type: "integer" },
+            },
+            records: [
+                {
+                    id: 37,
+                    name: "xphone",
+                    color: 1,
+                },
+                {
+                    id: 41,
+                    name: "xpad",
+                    color: 2,
+                },
+            ],
+        };
+        // Initial onchanges !
+        serverData.models["res.config.settings"].onchanges = {
+            product_ids(obj) {
+                obj.product_ids = [
+                    [
+                        4,
+                        37,
+                        {
+                            id: 37,
+                            display_name: "xphone",
+                        },
+                    ],
+                    [
+                        4,
+                        41,
+                        {
+                            id: 41,
+                            display_name: "xpad",
+                        },
+                    ],
+                    [
+                        1,
+                        41,
+                        {
+                            color: 3,
+                        },
+                    ],
+                ];
+            },
+            bar(obj) {
+                obj.bar = true;
+            },
+        };
         registry.category("services").add(
             "action",
             {
@@ -1147,6 +1203,8 @@ QUnit.module("SettingsFormView", (hooks) => {
             arch: `
                 <form js_class="base_settings">
                     <app string="CRM" name="crm">
+                        <field name="product_ids" widget="many2many_tags" options="{ 'color_field': 'color' }"/>
+                        <field name="bar" />
                         <field name="foo" />
                         <button type="object" name="mymethod" class="myBtn"/>
                     </app>
@@ -1154,18 +1212,43 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData,
             resModel: "res.config.settings",
             mockRPC(route, args) {
+                if (args.method === "web_save") {
+                    assert.step(args.method + " - " + JSON.stringify(args.args[1]));
+                    return;
+                }
                 assert.step(args.method);
             },
         });
 
         assert.verifySteps(["get_views", "onchange"]);
-        await click(target, ".o_field_boolean input[type='checkbox']");
+        // Initial State:
+        // The first checkbox "bar" is checked.
+        // Two tags on the many2many : xphone and xpad.
+        // The colors are 1 and 3 (the onchange is correctly apply)
+        assert.containsOnce(
+            target,
+            ".o_field_boolean[name='bar'] input:checked",
+            "checkbox should be checked"
+        );
+        assert.deepEqual(target.querySelector(".o_field_tags").innerText, "xphone\nxpad");
+        assert.containsOnce(target, ".o_tag_color_1");
+        assert.containsOnce(target, ".o_tag_color_3");
+        await click(target, ".o_field_boolean[name='foo'] input[type='checkbox']");
         await click(target, ".myBtn");
         await click(target.querySelectorAll(".modal .btn-secondary")[1]);
         assert.verifySteps([
-            "web_save",
+            'web_save - {"product_ids":[[4,37],[4,41],[1,41,{"color":3}]],"bar":true,"foo":false}',
             'action executed {"context":{"lang":"en","uid":7,"tz":"taht"},"type":"object","name":"mymethod","resModel":"res.config.settings","resId":1,"resIds":[1],"buttonContext":{}}',
         ]);
+        // We came back to the same initial state.
+        assert.containsOnce(
+            target,
+            ".o_field_boolean[name='bar'] input:checked",
+            "checkbox should be checked"
+        );
+        assert.deepEqual(target.querySelector(".o_field_tags").innerText, "xphone\nxpad");
+        assert.containsOnce(target, ".o_tag_color_1");
+        assert.containsOnce(target, ".o_tag_color_3");
     });
 
     QUnit.test(

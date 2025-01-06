@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -54,6 +54,13 @@ msgstr ""
 "%s trong số %s Tin nhắn văn bản SMS được chọn đã được gửi lại thành công."
 
 #. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
+#, python-format
+msgid ", fits in"
+msgstr ", có chứa"
+
+#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid ""
 "<span class=\"o_stat_text\">Add</span>\n"
@@ -80,8 +87,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
 msgstr ""
-"<span class=\"text-warning\" invisible=\"not no_record\">Không có tập dữ "
-"liệu nào</span>"
+"<span class=\"text-warning\" invisible=\"not no_record\">Không có bản ghi "
+"nào</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
@@ -131,12 +138,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.constraint,message:sms.constraint_sms_tracker_sms_uuid_unique
 msgid "A record for this UUID already exists"
-msgstr "Một tập dữ liệu cho UUID này đã tồn tại"
+msgstr "Một bản ghi cho UUID này đã tồn tại"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Tác vụ cần thiết"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -151,7 +158,7 @@ msgstr ""
 #: model:ir.model.fields,help:sms.field_sms_sms__uuid
 msgid "Alternate way to identify a SMS record, used for delivery reports"
 msgstr ""
-"Cách khác để xác định tập dữ liệu SMS, được sử dụng cho báo cáo gửi tin nhắn"
+"Cách khác để xác định bản ghi SMS, được sử dụng cho báo cáo gửi tin nhắn"
 
 #. module: sms
 #. odoo-javascript
@@ -748,7 +755,7 @@ msgstr "Number Field"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng tác vụ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error_counter
@@ -1220,7 +1227,7 @@ msgstr "Đã gửi"
 #. module: sms
 #: model:ir.model,name:sms.model_ir_actions_server
 msgid "Server Action"
-msgstr "Hành động phía máy chủ"
+msgstr "Tác vụ phía máy chủ"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_server
@@ -1236,7 +1243,7 @@ msgstr "Set up an account"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sidebar_action_id
 msgid "Sidebar action"
-msgstr "Thanh hành động"
+msgstr "Thanh tác vụ"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__sidebar_action_id
@@ -1383,15 +1390,15 @@ msgid ""
 "- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
 "- 'Execute Existing Actions': define an action that triggers several other server actions\n"
 msgstr ""
-"Loại hành động máy chủ. Các giá trị sau đây khả dụng:\n"
-"- 'Cập nhật tập dữ liệu': cập nhật giá trị của tập dữ liệu\n"
+"Loại tác vụ máy chủ. Các giá trị sau đây khả dụng:\n"
+"- 'Cập nhật bản ghi': cập nhật giá trị của bản ghi\n"
 "- 'Tạo hoạt động': tạo một hoạt động (Thảo luận)\n"
 "- 'Gửi email': gửi tin nhắn, ghi chú hoặc email (Thảo luận)\n"
-"- 'Gửi SMS': gửi SMS, thêm chúng vào tài liệu (SMS)- 'Thêm/Xóa người theo dõi': thêm hoặc xóa người theo dõi vào/khỏi một tập dữ liệu (Thảo luận)\n"
-"- 'Tạo tập dữ liệu': tạo một tập dữ liệu mới với các giá trị mới\n"
+"- 'Gửi SMS': gửi SMS, thêm chúng vào tài liệu (SMS)- 'Thêm/Xóa người theo dõi': thêm hoặc xóa người theo dõi vào/khỏi một bản ghi (Thảo luận)\n"
+"- 'Tạo bản ghi': tạo một bản ghi mới với các giá trị mới\n"
 "- 'Thực thi mã': một khối mã Python sẽ được thực thi\n"
 "- 'Gửi thông báo Webhook': gửi yêu cầu POST tới hệ thống bên ngoài, hay còn gọi là Webhook\n"
-"- 'Thực thi hành động hiện có': xác định một hành động kích hoạt một số hành động máy chủ khác\n"
+"- 'Thực thi tác vụ hiện có': xác định một tác vụ kích hoạt một số tác vụ máy chủ khác\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__uuid
@@ -1521,8 +1528,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 #, python-format
-msgid "characters, fits in"
-msgstr "ký tự, khớp với"
+msgid "characters"
+msgstr "ký tự"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1561,4 +1568,4 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "record:"
-msgstr "tập dữ liệu:"
+msgstr "bản ghi:"

@@ -258,3 +258,8 @@ class AccountMove(models.Model):
                                'rec': tax})
         return {'iva_values': iva_values,
                 'amount_total': amount_total}
+
+    def _refunds_origin_required(self):
+        if self.l10n_es_tbai_is_required:
+            return True
+        return super()._refunds_origin_required()

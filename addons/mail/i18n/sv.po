@@ -20,26 +20,26 @@
 # 03992e16f8df6e39b9d1cc0ff635887e, 2023
 # lasch a <bmail440@gmail.com>, 2023
 # Robin Calvin, 2023
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Simon S, 2023
 # Moa Nicklasson <Moa.nicklasson@hotmail.se>, 2023
 # Mikael Carlsson <mikael.carlsson@vertel.se>, 2024
 # Lasse L, 2024
 # Kristoffer Grundström <lovaren@gmail.com>, 2024
-# Kim Asplund <kim.asplund@gmail.com>, 2024
-# Martin Trigaux, 2024
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Björn Hayer, 2024
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2024
+# Kim Asplund <kim.asplund@gmail.com>, 2024
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -435,7 +435,7 @@ msgstr "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
 #: code:addons/mail/static/src/core/common/composer.js:0
 #, python-format
 msgid "<samp>%(send_keybind)s</samp><i> to send</i>"
-msgstr "<samp>%(send_keybind)s</samp><i> att skicka</i>"
+msgstr "<samp>%(send_keybind)s</samp><i> för att skicka</i>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -571,6 +571,16 @@ msgstr ""
 "när nya poster skapas för detta alias."
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_bus_presence_partner_or_guest_exists
+msgid "A bus presence must have a user or a guest."
+msgstr "En bussnärvaro måste ha en användare eller en gäst."
+
+#. module: mail
+#: model:ir.model.constraint,message:mail.constraint_discuss_channel_member_partner_or_guest_exists
+msgid "A channel member must be a partner or a guest."
+msgstr "En kanalmedlem måste vara en partner eller gäst."
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
@@ -588,6 +598,11 @@ msgstr ""
 "En chatt bör inte skapas med fler än 2 personer. Skapa en grupp istället."
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_mail_message_reaction_partner_or_guest_exists
+msgid "A message reaction must be from a partner or from a guest."
+msgstr "En meddelandereaktion måste vara från en partner eller en gäst."
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_actions_server.py:0
 #, python-format
@@ -603,6 +618,11 @@ msgid ""
 msgstr ""
 "En giltig Google API-nyckel krävs för att aktivera översättning av "
 "meddelanden. https://cloud.google.com/translate/docs/setup"
+
+#. module: mail
+#: model:ir.model.constraint,message:mail.constraint_res_users_settings_volumes_partner_or_guest_exists
+msgid "A volume setting must have a partner or a guest."
+msgstr "En volyminställning måste ha en partner eller en gäst."
 
 #. module: mail
 #. odoo-javascript
@@ -668,6 +688,14 @@ msgid "Action Window View"
 msgstr "Vy för åtgärdsfönster"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#, python-format
+msgid "Actions"
+msgstr "Åtgärder"
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_category
 #: model:ir.model.fields,help:mail.field_mail_activity_schedule__activity_category
 #: model:ir.model.fields,help:mail.field_mail_activity_type__category
@@ -729,6 +757,11 @@ msgstr "Aktiviteter"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "Activities To Generate"
 msgstr "Aktiviteter att generera"
+
+#. module: mail
+#: model:ir.model.constraint,message:mail.constraint_mail_activity_check_res_id_is_set
+msgid "Activities have to be linked to records with a not null res_id."
+msgstr "Aktiviteter måste länkas till poster med ett res_id som inte är noll."
 
 #. module: mail
 #. odoo-javascript
@@ -1649,6 +1682,11 @@ msgstr ""
 "Använd en annan bounce eller använd helt enkelt den andra aliasdomänen."
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_bounce_email_uniques
+msgid "Bounce emails should be unique"
+msgstr "Bounce-mail ska vara unika"
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 #, python-format
@@ -1678,6 +1716,15 @@ msgstr ""
 #, python-format
 msgid "Bounced"
 msgstr "Studsade"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/webclient/web/webclient.js:0
+#, python-format
+msgid ""
+"Brave: enable 'Google Services for Push Messaging' to enable push "
+"notifications"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -1864,6 +1911,11 @@ msgstr ""
 "Catchall-aliaset %(catchall)s används redan för en annan domän med samma "
 "namn. Använd en annan catchall eller använd helt enkelt den andra "
 "aliasdomänen."
+
+#. module: mail
+#: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_catchall_email_uniques
+msgid "Catchall emails should be unique"
+msgstr "Catchall-e-postmeddelanden bör vara unika"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_cc
@@ -2141,8 +2193,10 @@ msgstr "Bolag"
 
 #. module: mail
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/static/src/core/common/composer.js:0
 #: code:addons/mail/static/src/core/web/activity_mail_template.js:0
+#: code:addons/mail/wizard/mail_compose_message.py:0
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
@@ -2350,6 +2404,13 @@ msgstr "Antal studsade e-post för denna kontakt"
 #: model:ir.model.fields,field_description:mail.field_mail_guest__country_id
 msgid "Country"
 msgstr "Land"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/web/activity/activity_renderer.xml:0
+#, python-format
+msgid "Create"
+msgstr "Skapa"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__next_activity
@@ -2564,6 +2625,11 @@ msgstr "Anpassade mallar"
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__custom_channel_name
 msgid "Custom channel name"
 msgstr "Anpassat namn på kanalen"
+
+#. module: mail
+#: model:ir.model.constraint,message:mail.constraint_mail_notification_notification_partner_required
+msgid "Customer is required for inbox / email notification"
+msgstr "Kund krävs för notis i inkorg/e-post"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -3066,7 +3132,7 @@ msgstr "Klart och schemalägg nästa"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#: code:addons/mail/static/src/core/common/attachment_list.js:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -3332,6 +3398,11 @@ msgid "Email Thread"
 msgstr "E-posttråd"
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_mail_blacklist_unique_email
+msgid "Email address already exists!"
+msgstr "E-postadressen finns redan!"
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__email_from
 #: model:ir.model.fields,help:mail.field_mail_mail__email_from
 #: model:ir.model.fields,help:mail.field_mail_message__email_from
@@ -3531,6 +3602,11 @@ msgstr ""
 "utan beräknade mottagare."
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_mail_followers_mail_followers_res_partner_res_model_id_uniq
+msgid "Error, a partner cannot follow twice the same object."
+msgstr "Fel, en partner kan inte följa samma objekt två gånger."
+
+#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__everyone
 msgid "Everyone"
 msgstr "Alla"
@@ -3577,6 +3653,13 @@ msgstr "Misslyckades"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/webclient/web/webclient.js:0
+#, python-format
+msgid "Failed to enable push notifications"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "Failed to load gifs..."
@@ -3608,6 +3691,13 @@ msgstr ""
 #, python-format
 msgid "Failed to render inline_template template: %(template_txt)s)"
 msgstr "Det gick inte att rendera inline_template-mallen: %(template_txt)s)"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, python-format
+msgid "Failed to render inline_template template: %(template_txt)s"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -3676,15 +3766,6 @@ msgstr "Fält"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/mail_tracking_duration_mixin.py:0
-#, python-format
-msgid ""
-"Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
-"tracking=True for the computation of duration."
-msgstr ""
-
-#. module: mail
-#. odoo-python
 #: code:addons/mail/models/ir_model.py:0
 #, python-format
 msgid "Field \"Mail Activity\" cannot be changed to \"False\"."
@@ -3724,6 +3805,17 @@ msgstr ""
 "Fält som används för att länka den relaterade modellen till subtypsmodellen "
 "när automatisk prenumeration används på ett relaterat dokument. Fältet "
 "används för att beräkna getattr(related_document.relation_field)."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_tracking_duration_mixin.py:0
+#, python-format
+msgid ""
+"Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
+"tracking=True for the computation of duration."
+msgstr ""
+"Fält \"%(field)s\" på modell \"%(model)s\" måste vara av typen Many2one och "
+"ha tracking=True för beräkning av varaktighet."
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_model_fields
@@ -4029,6 +4121,15 @@ msgid "Group Name"
 msgstr "Gruppnamn"
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_discuss_channel_group_public_id_check
+msgid ""
+"Group authorization and group auto-subscription are only supported on "
+"channels."
+msgstr ""
+"Gruppauktorisering och automatisk prenumeration på grupper stöds endast på "
+"kanaler."
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Group by..."
 msgstr "Gruppera efter ..."
@@ -4046,8 +4147,10 @@ msgid "Groups"
 msgstr "Grupper"
 
 #. module: mail
+#. odoo-javascript
 #. odoo-python
 #: code:addons/mail/controllers/discuss/public_page.py:0
+#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 #: model:ir.model,name:mail.model_mail_guest
 #: model:ir.model.fields,field_description:mail.field_bus_presence__guest_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__guest_id
@@ -5909,7 +6012,7 @@ msgid ""
 msgstr ""
 "Meddelandeundertyp ger en mer exakt typ av meddelande, särskilt för "
 "systemmeddelanden. Det kan till exempel vara ett meddelande om en ny post "
-"(Ny) eller om en stegändring i en process (Stegändring). Undertyper för "
+"(Ny) eller om en etappändring i en process (Etappändring). Undertyper för "
 "meddelanden gör det möjligt att exakt ställa in de meddelanden som "
 "användaren vill få på sin vägg."
 
@@ -6126,6 +6229,8 @@ msgstr "Mina mallar"
 #: model:ir.model.fields,field_description:mail.field_mail_followers__name
 #: model:ir.model.fields,field_description:mail.field_mail_guest__name
 #: model:ir.model.fields,field_description:mail.field_mail_template__name
+#: model:ir.model.fields,field_description:mail.field_res_partner__name
+#: model:ir.model.fields,field_description:mail.field_res_users__name
 msgid "Name"
 msgstr "Namn"
 
@@ -6712,6 +6817,11 @@ msgid "Only custom models can be modified."
 msgstr "Endast anpassade modeller kan modifieras."
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_res_users_notification_type
+msgid "Only internal user can receive notifications in Odoo"
+msgstr "Endast interna användare kan ta emot aviseringar i Odoo"
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
@@ -6769,6 +6879,14 @@ msgstr "Öppna dokument"
 #, python-format
 msgid "Open Form View"
 msgstr "Öppna formulärvy"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#, python-format
+msgid "Open Link"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_tree
@@ -7654,8 +7772,7 @@ msgstr "Relationsfält"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#: code:addons/mail/static/src/core/common/attachment_list.js:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: code:addons/mail/static/src/core/common/link_preview.xml:0
@@ -9096,6 +9213,16 @@ msgid "The avatar has been updated!"
 msgstr "Avataren har uppdaterats!"
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_discuss_channel_uuid_unique
+msgid "The channel UUID must be unique"
+msgstr "Kanalens UUID måste vara unikt"
+
+#. module: mail
+#: model:ir.model.constraint,message:mail.constraint_discuss_channel_channel_type_not_null
+msgid "The channel type cannot be empty"
+msgstr "Kanaltypen får inte vara tom"
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__can_write
 msgid "The current user can edit the template."
 msgstr "Den aktuella användaren kan redigera mallen."
@@ -9111,6 +9238,11 @@ msgstr "Röstmeddelanden får inte vara längre än 1 minut."
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The email sent to"
 msgstr "Det e-postmeddelande som skickades till"
+
+#. module: mail
+#: model:ir.model.constraint,message:mail.constraint_mail_partner_device_endpoint_unique
+msgid "The endpoint must be unique !"
+msgstr "Slutpunkten måste vara unik!"
 
 #. module: mail
 #. odoo-python
@@ -9261,6 +9393,11 @@ msgid "There are no messages in this conversation."
 msgstr "Inga meddelanden ännu i denna konversation."
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_discuss_channel_rtc_session_channel_member_unique
+msgid "There can only be one rtc session per channel member"
+msgstr "Det kan bara finnas en rtc-session per kanalmedlem"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "This"
 msgstr "Detta"
@@ -9278,6 +9415,13 @@ msgstr "Denna åtgärd kan endast utföras på en posttrådsmodell"
 #, python-format
 msgid "This action cannot be done on transient models."
 msgstr "Denna åtgärd kan inte göras på transienta modeller."
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/web/activity/activity_renderer.xml:0
+#, python-format
+msgid "This action will send an email."
+msgstr "Denna åtgärd skickar ett e-postmeddelande."
 
 #. module: mail
 #. odoo-javascript
@@ -10072,6 +10216,11 @@ msgid "User is online"
 msgstr "Användaren är online"
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_discuss_gif_favorite_user_gif_favorite
+msgid "User should not have duplicated favorite GIF"
+msgstr "Användaren bör inte ha duplicerat favorit-GIF"
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_message.py:0
 #: code:addons/mail/models/mail_message.py:0
@@ -10169,13 +10318,6 @@ msgstr "Visa reaktioner"
 #: model:ir.model.fields,field_description:mail.field_ir_ui_view__type
 msgid "View Type"
 msgstr "Typ av vy"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
-#, python-format
-msgid "View image"
-msgstr "Visa bild"
 
 #. module: mail
 #. odoo-javascript
@@ -10591,17 +10733,6 @@ msgstr ""
 #, python-format
 msgid "You may not define a template on an abstract model: %s"
 msgstr "Du får inte definiera en mall på en abstrakt modell: %s"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/ir_attachment.py:0
-#, python-format
-msgid ""
-"You may not unlink or modify the content of attachments from other people's "
-"messages"
-msgstr ""
-"Du får inte ta bort länken eller ändra innehållet i bilagor från andras "
-"meddelanden"
 
 #. module: mail
 #. odoo-javascript
@@ -11122,6 +11253,13 @@ msgstr "månader"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
+#, python-format
+msgid "ms"
+msgstr "ms"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 #, python-format
@@ -11344,6 +11482,13 @@ msgstr "ditt alias"
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "{{ object.partner_id.lang }}"
 msgstr "{{ object.partner_id.lang }}"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/autoresize_input.xml:0
+#, python-format
+msgid "{{ props.placeholder }}"
+msgstr ""
 
 #. module: mail
 #. odoo-python

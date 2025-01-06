@@ -46,13 +46,17 @@ class AccountFiscalPosition(models.Model):
     zip_to = fields.Char(string='Zip Range To')
     # To be used in hiding the 'Federal States' field('attrs' in view side) when selected 'Country' has 0 states.
     states_count = fields.Integer(compute='_compute_states_count')
-    foreign_vat = fields.Char(string="Foreign Tax ID", help="The tax ID of your company in the region mapped by this fiscal position.")
+    foreign_vat = fields.Char(string="Foreign Tax ID", inverse="_inverse_foreign_vat", help="The tax ID of your company in the region mapped by this fiscal position.")
 
     # Technical field used to display a banner on top of foreign vat fiscal positions,
     # in order to ease the instantiation of foreign taxes when possible.
     foreign_vat_header_mode = fields.Selection(
         selection=[('templates_found', "Templates Found"), ('no_template', "No Template")],
         compute='_compute_foreign_vat_header_mode')
+
+    def _inverse_foreign_vat(self):
+        # Hook for extension
+        pass
 
     def _compute_states_count(self):
         for position in self:
@@ -84,14 +88,9 @@ class AccountFiscalPosition(models.Model):
         for record in self:
             if record.foreign_vat:
                 if record.country_id == record.company_id.account_fiscal_country_id:
-                    if record.foreign_vat == record.company_id.vat:
-                        raise ValidationError(_("You cannot create a fiscal position within your fiscal country with the same VAT number as the main one set on your company."))
-
                     if not record.state_ids:
                         if record.company_id.account_fiscal_country_id.state_ids:
                             raise ValidationError(_("You cannot create a fiscal position with a foreign VAT within your fiscal country without assigning it a state."))
-                        else:
-                            raise ValidationError(_("You cannot create a fiscal position with a foreign VAT within your fiscal country."))
                 if record.country_group_id and record.country_id:
                     if record.country_id not in record.country_group_id.country_ids:
                         raise ValidationError(_("You cannot create a fiscal position with a country outside of the selected country group."))
@@ -269,11 +268,11 @@ class AccountFiscalPosition(models.Model):
             return manual_fiscal_position
 
         # First search only matching VAT positions
-        vat_valid = self._get_vat_valid(delivery, company)
-        fp = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, vat_valid)
+        vat_required = bool(partner.vat)
+        fp = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, vat_required)
 
         # Then if VAT required found no match, try positions that do not require it
-        if not fp and vat_valid:
+        if not fp and vat_required:
             fp = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, False)
 
         return fp or self.env['account.fiscal.position']
@@ -608,6 +607,7 @@ class ResPartner(models.Model):
     duplicated_bank_account_partners_count = fields.Integer(
         compute='_compute_duplicated_bank_account_partners_count',
     )
+    is_coa_installed = fields.Boolean(store=False, default=lambda partner: bool(partner.env.company.chart_template))
 
     def _compute_bank_count(self):
         bank_data = self.env['res.partner.bank']._read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['__count'])
@@ -758,6 +758,7 @@ class ResPartner(models.Model):
                     """).format(field=sql.Identifier(field))
                     self.env.cr.execute(query, {'partner_ids': tuple(self.ids), 'n': n})
                     self.invalidate_recordset([field])
+                    self.modified([field])
             except DatabaseError as e:
                 # 55P03 LockNotAvailable
                 # 40001 SerializationFailure
@@ -912,6 +913,10 @@ class ResPartner(models.Model):
                 [('company_id', '=', False)],
             ):
                 partner = search_method(extra_domain)
+
+                # The VAT should be a sufficiently distinctive criterion
+                if partner and search_method == search_with_vat:
+                    return partner[:1]
                 if partner and len(partner) == 1:
                     return partner
         return self.env['res.partner']

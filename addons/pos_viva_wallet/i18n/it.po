@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-30 14:16+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2024-02-07 08:49+0000\n"
 "Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -53,13 +53,6 @@ msgid ""
 msgstr ""
 "Impossibile connettersi al server Odoo, controlla la tua connessione "
 "internet e riprova."
-
-#. module: pos_viva_wallet
-#. odoo-python
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-#, python-format
-msgid "Do not have access to fetch token from Viva Wallet"
-msgstr "Non si ha accesso al token di recupero di Viva Wallet"
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -199,6 +192,14 @@ msgstr "Endpoint Webhook Viva Wallet"
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_webhook_verification_key
 msgid "Viva Wallet Webhook Verification Key"
 msgstr "Chiave di verifica Webhook Viva Wallet"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+#, python-format
+msgid "Your transaction with Viva Wallet failed. Please try again later."
+msgstr ""
+"La tua transazione con Viva Wallet non è riuscita. Prova di nuovo più tardi."
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_terminal_id

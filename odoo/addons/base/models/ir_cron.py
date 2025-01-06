@@ -90,9 +90,9 @@ class ir_cron(models.Model):
             self = self.with_context(default_state='code')
         return super(ir_cron, self).default_get(fields_list)
 
-    @api.onchange('active', 'interval_number')
+    @api.onchange('active', 'interval_number', 'interval_type')
     def _onchange_interval_number(self):
-        if self.active and self.interval_number <= 0:
+        if self.active and (self.interval_number <= 0 or not self.interval_type):
             self.active = False
             return {'warning': {
                 'title': _("Scheduled action disabled"),
@@ -552,4 +552,8 @@ class ir_cron_trigger(models.Model):
 
     @api.autovacuum
     def _gc_cron_triggers(self):
-        self.search([('call_at', '<', datetime.now() + relativedelta(weeks=-1))]).unlink()
+        domain = [('call_at', '<', datetime.now() + relativedelta(weeks=-1))]
+        records = self.search(domain, limit=models.GC_UNLINK_LIMIT)
+        if len(records) >= models.GC_UNLINK_LIMIT:
+            self.env.ref('base.autovacuum_job')._trigger()
+        return records.unlink()

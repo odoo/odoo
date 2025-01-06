@@ -832,16 +832,14 @@ class IrActionsServer(models.Model):
 
         If applicable, link active_id.<self.link_field_id> to the new record.
         """
-        res = {'name': self.value}
-
-        res = self.env[self.crud_model_id.model].create(res)
+        res_id, _res_name = self.env[self.crud_model_id.model].name_create(self.value)
 
         if self.link_field_id:
             record = self.env[self.model_id.model].browse(self._context.get('active_id'))
             if self.link_field_id.ttype in ['one2many', 'many2many']:
-                record.write({self.link_field_id.name: [Command.link(res.id)]})
+                record.write({self.link_field_id.name: [Command.link(res_id)]})
             else:
-                record.write({self.link_field_id.name: res.id})
+                record.write({self.link_field_id.name: res_id})
 
     def _get_eval_context(self, action=None):
         """ Prepare the context used when evaluating python code, like the

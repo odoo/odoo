@@ -114,6 +114,24 @@ class TestStructure(TransactionCase):
             doc = Document(location=None, transport=Transport())
             new_get_soap_client(doc, 30)
 
+    def test_rut_uy(self):
+        test_partner = self.env["res.partner"].create({"name": "UY Company", "country_id": self.env.ref("base.uy").id})
+        # Set a valid Number
+        test_partner.write({"vat": "215521750017"})
+        test_partner.write({"vat": "220018800014"})
+        test_partner.write({"vat": "21-55217500-17"})
+        test_partner.write({"vat": "21 55217500 17"})
+        test_partner.write({"vat": "UY215521750017"})
+
+        # Test invalid VAT (should raise a ValidationError)
+        msg = "The VAT number.*does not seem to be valid"
+        with self.assertRaisesRegex(ValidationError, msg):
+            test_partner.vat = "215521750018"
+        with self.assertRaisesRegex(ValidationError, msg):
+            test_partner.vat = "21.55217500.17"
+        with self.assertRaisesRegex(ValidationError, msg):
+            test_partner.vat = "2155 ABC 21750017"
+
 
 @tagged('-standard', 'external')
 class TestStructureVIES(TestStructure):

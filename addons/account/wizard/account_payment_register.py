@@ -51,6 +51,10 @@ class AccountPaymentRegister(models.TransientModel):
     )
     company_currency_id = fields.Many2one('res.currency', string="Company Currency",
         related='company_id.currency_id')
+    qr_code = fields.Html(
+        string="QR Code URL",
+        compute="_compute_qr_code",
+    )
 
     # == Fields given through the context ==
     line_ids = fields.Many2many('account.move.line', 'account_payment_register_move_line_rel', 'wizard_id', 'line_id',
@@ -175,9 +179,7 @@ class AccountPaymentRegister(models.TransientModel):
         payment_values = batch_result['payment_values']
         foreign_currency_id = payment_values['currency_id']
         partner_bank_id = payment_values['partner_bank_id']
-        company = batch_result['lines'].company_id
-        if len(company) > 1:
-            company = company._accessible_branches()[:1]
+        company = min(batch_result['lines'].company_id, key=lambda c: len(c.parent_ids))
 
         currency_domain = [('currency_id', '=', foreign_currency_id)]
         partner_bank_domain = [('bank_account_id', '=', partner_bank_id)]
@@ -211,13 +213,13 @@ class AccountPaymentRegister(models.TransientModel):
     @api.model
     def _get_batch_available_partner_banks(self, batch_result, journal):
         payment_values = batch_result['payment_values']
-        company = batch_result['lines'].company_id._accessible_branches()[:1]
 
         # A specific bank account is set on the journal. The user must use this one.
         if payment_values['payment_type'] == 'inbound':
             # Receiving money on a bank account linked to the journal.
             return journal.bank_account_id
         else:
+            company = min(batch_result['lines'].company_id, key=lambda c: len(c.sudo().parent_ids))
             # Sending money to a bank account owned by a partner.
             return batch_result['lines'].partner_id.bank_ids.filtered(lambda x: x.company_id.id in (False, company.id))._origin
 
@@ -255,6 +257,8 @@ class AccountPaymentRegister(models.TransientModel):
 
         if len(lines.company_id.root_id) > 1:
             raise UserError(_("You can't create payments for entries belonging to different companies."))
+        if len(lines.company_id.filtered(lambda c: c.root_id not in lines.company_id)) > 1:
+            raise UserError(_("You can't create payments for entries belonging to different branches."))
         if not lines:
             raise UserError(_("You can't open the register payment wizard without at least one receivable/payable line."))
 
@@ -315,7 +319,7 @@ class AccountPaymentRegister(models.TransientModel):
         '''
         payment_values = batch_result['payment_values']
         lines = batch_result['lines']
-        company = lines[0].company_id._accessible_branches()[:1]
+        company = min(lines.company_id, key=lambda c: len(c.parent_ids))
 
         source_amount = abs(sum(lines.mapped('amount_residual')))
         if payment_values['currency_id'] == company.currency_id.id:
@@ -377,7 +381,7 @@ class AccountPaymentRegister(models.TransientModel):
             else:
                 # == Multiple batches: The wizard is not editable  ==
                 wizard.update({
-                    'company_id': batches[0]['lines'][0].company_id._accessible_branches()[:1].id,
+                    'company_id': min(batches, key=lambda batch: len(batch['lines'].company_id.parent_ids))['lines'].company_id.id,
                     'partner_id': False,
                     'partner_type': False,
                     'payment_type': wizard_values_from_batch['payment_type'],
@@ -612,6 +616,31 @@ class AccountPaymentRegister(models.TransientModel):
     def _compute_hide_writeoff_section(self):
         for wizard in self:
             wizard.hide_writeoff_section = wizard.early_payment_discount_mode
+
+    @api.depends('partner_bank_id', 'amount', 'currency_id', 'payment_method_line_id', 'payment_type', 'communication')
+    def _compute_qr_code(self):
+        for pay in self:
+            qr_html = False
+            if pay.partner_bank_id \
+               and pay.partner_bank_id.allow_out_payment \
+               and pay.payment_method_line_id.code == 'manual' \
+               and pay.payment_type == 'outbound' \
+               and pay.amount \
+               and pay.currency_id:
+                b64_qr = pay.partner_bank_id.build_qr_code_base64(
+                    amount=pay.amount,
+                    free_communication=pay.communication,
+                    structured_communication=pay.communication,
+                    currency=pay.currency_id,
+                    debtor_partner=pay.partner_id,
+                )
+                if b64_qr:
+                    qr_html = f'''
+                        <img class="border border-dark rounded" src="{b64_qr}"/>
+                        <br/>
+                        <strong>{_('Scan me with your banking app.')}</strong>
+                    '''
+            pay.qr_code = qr_html
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS

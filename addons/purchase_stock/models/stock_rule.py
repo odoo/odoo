@@ -60,7 +60,7 @@ class StockRule(models.Model):
                 supplier = procurement.values['orderpoint_id'].supplier_id
             else:
                 supplier = procurement.product_id.with_company(procurement.company_id.id)._select_seller(
-                    partner_id=procurement.values.get("supplierinfo_name") or (procurement.values.get("group_id") and procurement.values.get("group_id").partner_id),
+                    partner_id=self._get_partner_id(procurement.values, rule),
                     quantity=procurement.product_qty,
                     date=max(procurement_date_planned.date(), fields.Date.today()),
                     uom_id=procurement.product_uom)
@@ -251,7 +251,7 @@ class StockRule(models.Model):
             date=line.order_id.date_order and line.order_id.date_order.date(),
             uom_id=product_id.uom_po_id)
 
-        price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.taxes_id, company_id) if seller else 0.0
+        price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.sudo().taxes_id, company_id) if seller else 0.0
         if price_unit and seller and line.order_id.currency_id and seller.currency_id != line.order_id.currency_id:
             price_unit = seller.currency_id._convert(
                 price_unit, line.order_id.currency_id, line.order_id.company_id, fields.Date.today())
@@ -331,3 +331,6 @@ class StockRule(models.Model):
         if self.location_dest_id.usage == "supplier":
             res['purchase_line_id'], res['partner_id'] = move_to_copy._get_purchase_line_and_partner_from_chain()
         return res
+
+    def _get_partner_id(self, values, rule):
+        return values.get("supplierinfo_name") or (values.get("group_id") and values.get("group_id").partner_id)

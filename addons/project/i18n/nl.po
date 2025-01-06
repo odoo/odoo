@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# Wil Odoo, 2024
 # Jolien De Paepe, 2024
+# Wil Odoo, 2024
 # Manon Rondou, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -865,6 +865,7 @@ msgid "Allocated Time"
 msgstr "Toegewezen tijd"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task_allocated_hours_template
 msgid "Allocated Time:"
 msgstr "Toegewezen tijd:"
@@ -1025,8 +1026,6 @@ msgid "Assigned to"
 msgstr "Toegewezen aan"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
@@ -1034,7 +1033,6 @@ msgstr "Toegewezen aan"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
-#, python-format
 msgid "Assignees"
 msgstr "Toegewezen aan"
 
@@ -2072,6 +2070,11 @@ msgid "Email cc"
 msgstr "E-mail cc"
 
 #. module: project
+#: model:ir.model.fields,help:project.field_project_project__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "E-maildomein bijv. 'example.com' in 'odoo@example.com'"
+
+#. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "Emails sent to"
 msgstr "E-mails verstuurd naar"
@@ -2671,7 +2674,7 @@ msgstr "Laatste projectupdatekleur"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__last_update_status
 msgid "Last Update Status"
-msgstr "Laatst status bijgewerkt"
+msgstr "Laatst updatestatus"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__write_date
@@ -3206,7 +3209,7 @@ msgstr "Geen projecten gevonden. Maak er één aan!"
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 #: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
 msgid "No stages found. Let's create one!"
-msgstr "Geen labels gevonden. Maak er één aan!"
+msgstr "Geen fases gevonden. Maak er één aan!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
@@ -3334,6 +3337,15 @@ msgstr "Op schema"
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
 msgid "Once a Month"
 msgstr "Eenmaal per maand"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
+msgstr ""
+"Alleen jpeg-, png-, bmp- en tiff-afbeeldingen zijn toegestaan ​​als "
+"bijlagen."
 
 #. module: project
 #. odoo-javascript
@@ -4186,6 +4198,20 @@ msgstr "Ongelukkig gezicht"
 
 #. module: project
 #. odoo-javascript
+#: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
+#, python-format
+msgid "Save the task to be able to drag images in description"
+msgstr "Sla de taak op om afbeeldingen in de beschrijving te slepen"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
+#, python-format
+msgid "Save the task to be able to paste images in description"
+msgstr "Sla de taak op om afbeeldingen in de beschrijving te kunnen plakken"
+
+#. module: project
+#. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Schedule your activity once it is ready."
@@ -4227,7 +4253,7 @@ msgstr "Zoek in alle"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Assignees"
-msgstr "Zoeken in toegewezen personen"
+msgstr "Zoek in toegewezen personen"
 
 #. module: project
 #. odoo-python
@@ -4255,7 +4281,7 @@ msgstr "Zoeken in milestone"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Priority"
-msgstr "Zoeken in prioriteit"
+msgstr "Zoek in prioriteit"
 
 #. module: project
 #. odoo-python
@@ -4283,7 +4309,7 @@ msgstr "Zoek in fases"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Status"
-msgstr "Zoeken in status"
+msgstr "Zoek in status"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
@@ -4311,7 +4337,7 @@ msgstr "Verzend e-mail"
 #: model:ir.model.fields,field_description:project.field_project_task__sequence
 #: model:ir.model.fields,field_description:project.field_project_task_type__sequence
 msgid "Sequence"
-msgstr "Reeks"
+msgstr "Volgorde"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -4797,6 +4823,7 @@ msgstr "Taak: beoordelingsverzoek"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #: code:addons/project/models/project_project.py:0
+#: code:addons/project/models/project_project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.actions.act_window,name:project.action_view_task_from_milestone
@@ -4883,6 +4910,14 @@ msgstr "De persoonlijke fase van de huidige gebruiker."
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
 msgid "The current user's personal task stage."
 msgstr "De persoonlijke taakfase van de huidige gebruiker."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid ""
+"The document does not exist or you do not have the rights to access it."
+msgstr "Het document bestaat niet of je hebt geen rechten om het te bekijken."
 
 #. module: project
 #. odoo-python
@@ -5971,6 +6006,13 @@ msgstr "status om de taak als voltooid te markeren."
 
 #. module: project
 #. odoo-javascript
+#: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
+#, python-format
+msgid "state.message"
+msgstr "status.bericht"
+
+#. module: project
+#. odoo-javascript
 #: code:addons/project/static/src/components/project_task_name_with_subtask_count_char_field/project_task_name_with_subtask_count_char_field.xml:0
 #, python-format
 msgid "sub-tasks)"
@@ -6030,8 +6072,12 @@ msgstr "genereert taken in je"
 
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
-msgid "{{ object.project_id.company_id.name }}: Satisfaction Survey"
-msgstr "{{ object.project_id.company_id.name }}: Tevredenheidsonderzoek"
+msgid ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: "
+"Satisfaction Survey"
+msgstr ""
+"{{ object.project_id.company_id.name of user.env.company.name }}: "
+"Tevredenheidsonderzoek"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban

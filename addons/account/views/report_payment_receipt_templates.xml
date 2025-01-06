@@ -21,7 +21,7 @@
                             </t>
                             <t t-else="o.partner_type == 'supplier'">
                                 Vendor:
-                            </t><span t-field="o.partner_id">Marc Demo</span>
+                            </t><span t-field="o.partner_id" data-oe-demo="Marc Demo"/>
                         </div>
                         <div name="payment_method"
                              t-if="values['display_payment_method'] and o.payment_method_id"
@@ -44,8 +44,7 @@
                 <table name="invoices"
                        t-if="values['display_invoices']"
                        class="table table-sm">
-                    <t t-set="partials" t-value="o.move_id._get_reconciled_invoices_partials()[0]"/>
-                    <t t-set="invoices" t-value="{partial[2].move_id for partial in partials}"/>
+                    <t t-set="invoices" t-value="o.reconciled_invoice_ids or o.reconciled_bill_ids"/>
                     <!-- Check if invoices include different currencies -->
                     <t t-foreach="invoices" t-as="inv">
                         <t t-if="any(inv.currency_id != par[2].currency_id for par in inv._get_reconciled_invoices_partials()[0])" t-set="otherCurrency" t-value="True"/>
@@ -67,7 +66,7 @@
                                 <tr>
                                     <td><span t-field="inv.invoice_date">2023-01-01</span></td>
                                     <td><span t-field="inv.name">INV001</span></td>
-                                    <td><span t-field="inv.ref">Sample Ref</span></td>
+                                    <td><span t-field="inv.ref" data-oe-demo="Sample Ref"/></td>
                                     <td t-if="otherCurrency"/>
                                     <td class="text-end"><span t-field="inv.amount_total">100.00 USD</span></td>
                                 </tr>
@@ -76,8 +75,8 @@
                                     <t t-set="payment" t-value="par[2].move_id"/>
                                     <td><span t-field="payment.date">2023-01-05</span></td>
                                     <td><span t-field="payment.name">PAY001</span></td>
-                                    <td><span t-field="payment.ref">Payment Ref</span></td>
-                                    <t t-set="amountPayment" t-value="-payment.amount_total"/>
+                                    <td><span t-field="payment.ref" data-oe-demo="Payment Ref"/></td>
+                                    <t t-set="amountPayment" t-value="-par[0].amount"/>
                                     <t t-set="amountInvoice" t-value="-par[1]"/>
                                     <t t-set="currencyPayment" t-value="payment.currency_id"/>
                                     <t t-set="currencyInvoice" t-value="inv.currency_id"/>

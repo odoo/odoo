@@ -17,14 +17,15 @@
                             t-foreach="printItems"
                             t-as="item"
                             t-key="item.key"
-                            class="'o_menu_item'"
+                            class="'text-truncate o_menu_item'"
+                            title="item.description"
                             onSelected="() => this.onItemSelected(item)"
                             >
                             <t t-esc="item.description"/>
                         </DropdownItem>
                     </Dropdown>
 
-                    <DropdownItem t-else="" class="'o_menu_item'" onSelected="() => this.onItemSelected(printItems[0])">
+                    <DropdownItem t-else="" class="'text-truncate o_menu_item'" title="printItems[0].description" onSelected="() => this.onItemSelected(printItems[0])">
                         <i class="fa fa-print me-1"/> <t t-out="printItems[0].description"/>
                     </DropdownItem>
                 </t>
@@ -36,7 +37,7 @@
 
                     <t t-if="item.Component" t-component="item.Component" t-props="item.props"/>
 
-                    <DropdownItem t-else="" class="'o_menu_item'" onSelected="() => this.onItemSelected(item)">
+                    <DropdownItem t-else="" class="'text-truncate o_menu_item'" title="item.description" onSelected="() => this.onItemSelected(item)">
                         <i t-if="item.icon" t-att-class="item.icon" class="fa-fw oi-fw me-1"/>
                         <t t-esc="item.description"/>
                     </DropdownItem>

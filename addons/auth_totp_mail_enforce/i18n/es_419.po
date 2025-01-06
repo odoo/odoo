@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Fernanda Alvarez, 2023
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,13 +70,13 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    Apreciable <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
-"    <p>Alguien está intentando iniciar sesión en su cuenta con un dispositivo nuevo.</p>\n"
+"    <p>Alguien está intentando iniciar sesión con su cuenta en un dispositivo nuevo.</p>\n"
 "    <ul>\n"
 "        <t t-set=\"not_available\">N/A</t>\n"
 "        <li>Ubicación: <t t-out=\"ctx.get('location') or not_available\"></t></li>\n"
 "        <li>Dispositivo: <t t-out=\"ctx.get('device') or not_available\"></t></li>\n"
 "        <li>Navegador: <t t-out=\"ctx.get('browser') or not_available\"></t></li>\n"
-"        <li>Dirección IP : <t t-out=\"ctx.get('ip') or not_available\"></t></li>\n"
+"        <li>Dirección IP: <t t-out=\"ctx.get('ip') or not_available\"></t></li>\n"
 "    </ul>\n"
 "    <p>Si es usted, ingrese el siguiente código para poder iniciar sesión:</p>\n"
 "    <t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"></t>\n"
@@ -88,12 +88,12 @@ msgstr ""
 "    <small>Tenga en cuenta que este código vence en <t t-out=\"expiration\"></t>.</small>\n"
 "\n"
 "    <p style=\"margin: 16px 0px 16px 0px;\">\n"
-"        Si NO es usted quien está tratando de iniciar sesión,\n"
-"        cambie su contraseña inmediatamente para garantizar la seguridad de su cuenta.\n"
+"        Si NO es usted\n"
+"        cambie su contraseña ahora mismo para garantizar la seguridad de su cuenta.\n"
 "    </p>\n"
 "\n"
 "    <p style=\"margin: 16px 0px 16px 0px;\">\n"
-"        También le recomendamos que active la autenticación de dos factores mediante una aplicación de autenticación para ayudarle a asegurar su cuenta.\n"
+"        También le recomendamos que active la autenticación de dos factores. Use una aplicación de autenticación, le ayudará a proteger su cuenta.\n"
 "    </p>\n"
 "\n"
 "    <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
@@ -111,7 +111,7 @@ msgid ""
 "                To login, enter below the six-digit authentication code just sent via email to"
 msgstr ""
 "<i class=\"fa fa-envelope-o\"/>\n"
-"                Para iniciar sesión ingrese el código de verificación de seis dígitos que se le envió al correo"
+"                Para iniciar sesión ingrese el código de verificación de seis dígitos que recibió en "
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__res_config_settings__auth_totp_policy__all_required
@@ -221,7 +221,7 @@ msgstr "Enviar correo electrónico"
 #. module: auth_totp_mail_enforce
 #: model:mail.template,name:auth_totp_mail_enforce.mail_template_totp_mail_code
 msgid "Settings: 2Fa New Login"
-msgstr "Configuración: nuevo inicio de sesión A2F"
+msgstr "Ajustes: nuevo inicio de sesión A2F"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model,name:auth_totp_mail_enforce.model_auth_totp_rate_limit_log
@@ -260,15 +260,14 @@ msgstr ""
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "You reached the limit of authentication mails sent for your account"
-msgstr ""
-"Se alcanzó el límite de correos de autenticación enviados a su cuenta."
+msgstr "Alcanzó el límite de correos de autenticación enviados a su cuenta."
 
 #. module: auth_totp_mail_enforce
 #. odoo-python
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "You reached the limit of code verifications for your account"
-msgstr "Se alcanzó el límite de códigos de autenticación para su cuenta."
+msgstr "Alcanzó el límite de códigos de autenticación para su cuenta."
 
 #. module: auth_totp_mail_enforce
 #: model:mail.template,subject:auth_totp_mail_enforce.mail_template_totp_mail_code

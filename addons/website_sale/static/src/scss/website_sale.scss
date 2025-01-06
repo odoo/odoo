@@ -23,6 +23,12 @@ $input-border-color: $gray-400;
             width: if($-list, 100%, 50%);
         }
 
+        @if ($-list == false) {
+            [data-ppr="3"] td.oe_product {
+                width: 100%;
+            }
+        }
+
         .modal-dialog {
             table, tbody, tr, td {
                 display: revert;
@@ -806,13 +812,10 @@ a.no-decoration {
     // bottom of the page.
     @include media-breakpoint-down(lg){
         .o_cta_navigation_container {
+            top: 100%;
+            bottom: auto !important;
             padding: 0 calc(var(--gutter-x) * .5);
         }
-    }
-
-    // TODO This height is arbitrary and the calculation should be improved.
-    .o_cta_navigation_placeholder {
-        height: o-to-rem(111px) + map-get($spacers, 4) + 2rem;
     }
 
     a.disabled {

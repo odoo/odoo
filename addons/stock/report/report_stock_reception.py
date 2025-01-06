@@ -50,21 +50,22 @@ class ReceptionReport(models.AbstractModel):
             product_to_assigned_qty[assigned.product_id] += assigned.product_qty
 
         for move in move_ids:
+            move_quantity = (
+                move.product_qty or
+                move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
+            )
             qty_already_assigned = 0
             if move.move_dest_ids:
-                qty_already_assigned = min(product_to_assigned_qty[move.product_id], move.product_qty)
+                qty_already_assigned = min(product_to_assigned_qty[move.product_id], move_quantity)
                 product_to_assigned_qty[move.product_id] -= qty_already_assigned
             if qty_already_assigned:
                 product_to_total_assigned[move.product_id][0] += qty_already_assigned
                 product_to_total_assigned[move.product_id][1].append(move.id)
-            if move.product_qty != qty_already_assigned:
+            if move_quantity != qty_already_assigned:
                 if move.state == 'draft':
-                    product_to_qty_draft[move.product_id] += move.product_qty - qty_already_assigned
+                    product_to_qty_draft[move.product_id] += move_quantity - qty_already_assigned
                 else:
-                    quantity_to_assign = move.product_qty
-                    if not move.product_qty:
-                        # if immediate transfer is not Done and quantity_done hasn't been edited, then move.product_qty will incorrectly = 1 (due to default)
-                        quantity_to_assign = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
+                    quantity_to_assign = move_quantity
                     product_to_qty_to_assign[move.product_id].append((quantity_to_assign - qty_already_assigned, move))
 
         # only match for non-mto moves in same warehouse
@@ -258,13 +259,14 @@ class ReceptionReport(models.AbstractModel):
                             break
 
             for in_move in reversed(potential_ins):
-                quantity_remaining = in_move.product_qty - sum(in_move.move_dest_ids.mapped('product_qty'))
+                move_quantity = in_move.product_qty or in_move.product_uom._compute_quantity(in_move.quantity, in_move.product_id.uom_id, rounding_method='HALF-UP')
+                quantity_remaining = move_quantity - sum(in_move.move_dest_ids.mapped('product_qty'))
                 if in_move.product_id != out.product_id or float_compare(0, quantity_remaining, precision_rounding=in_move.product_id.uom_id.rounding) >= 0:
                     # in move is already completely linked (e.g. during another assign click) => don't count it again
                     potential_ins = potential_ins[1:]
                     continue
 
-                linked_qty = min(in_move.product_qty, qty_to_link)
+                linked_qty = min(move_quantity, qty_to_link)
                 in_move.move_dest_ids |= out
                 self._action_assign(in_move, out)
                 out.procure_method = 'make_to_order'
@@ -291,9 +293,10 @@ class ReceptionReport(models.AbstractModel):
         for in_move in ins:
             if out.id not in in_move.move_dest_ids.ids:
                 continue
+            move_quantity = in_move.product_qty or in_move.product_uom._compute_quantity(in_move.quantity, in_move.product_id.uom_id, rounding_method='HALF-UP')
             in_move.move_dest_ids -= out
             self._action_unassign(in_move, out)
-            amount_unassigned += min(qty, in_move.product_qty)
+            amount_unassigned += min(qty, move_quantity)
             if float_compare(qty, amount_unassigned, precision_rounding=out.product_id.uom_id.rounding) <= 0:
                 break
         if out.move_orig_ids and out.state != 'done':

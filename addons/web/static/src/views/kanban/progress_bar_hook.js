@@ -188,6 +188,7 @@ class ProgressBarState {
         }
         await Promise.all(proms);
         this.activeBars[group.serverValue] = nextActiveBar;
+        this.updateCounts(group);
     }
 
     _updateAggregateGroup(group, bars, activeBar) {

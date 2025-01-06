@@ -133,7 +133,7 @@ class StockLot(models.Model):
             else:
                 lot.last_delivery_partner_id = False
 
-    @api.depends('quant_ids')
+    @api.depends('quant_ids', 'quant_ids.quantity')
     def _compute_single_location(self):
         for lot in self:
             quants = lot.quant_ids.filtered(lambda q: q.quantity > 0)

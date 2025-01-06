@@ -292,23 +292,19 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         aml_output = aml.filtered(lambda l: l.account_id.id == account_output.id)
         aml_expense = aml.filtered(lambda l: l.account_id.id == expense_account.id)
 
-        self.assertEqual(len(aml_output), 3, "There should be 3 output account move lines")
+        self.assertEqual(len(aml_output), 2, "There should be 2 output account move lines")
         # 2 moves in POS journal (Pos order + manual entry at delivery)
-        self.assertEqual(len(aml_output.move_id.filtered(lambda l: l.journal_id == self.pos_config.journal_id)), 2)
+        self.assertEqual(len(aml_output.move_id.filtered(lambda l: l.journal_id == self.pos_config.journal_id)), 1)
         # 1 move in stock journal (delivery from stock layers)
         self.assertEqual(len(aml_output.move_id.filtered(lambda l: l.journal_id == self.category.property_stock_journal)), 1)
         #Check the lines created after the picking validation
-        self.assertEqual(aml_output[2].credit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
-        self.assertEqual(aml_output[2].debit, 0.0, "Cost of Good Sold entry missing or mismatching")
-        self.assertEqual(aml_output[1].debit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
-        self.assertEqual(aml_output[1].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
-        self.assertEqual(aml_expense[1].debit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
-        self.assertEqual(aml_expense[1].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
-        #Check the lines created by the PoS session
-        self.assertEqual(aml_output[0].debit, 0.0, "Cost of Good Sold entry missing or mismatching")
-        self.assertEqual(aml_output[0].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
+        self.assertEqual(aml_output[1].credit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
+        self.assertEqual(aml_output[1].debit, 0.0, "Cost of Good Sold entry missing or mismatching")
+        self.assertEqual(aml_expense[0].debit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
         self.assertEqual(aml_expense[0].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
-        self.assertEqual(aml_expense[0].debit, 0.0, "Cost of Good Sold entry missing or mismatching")
+        #Check the lines created by the PoS session
+        self.assertEqual(aml_output[0].debit, 100.0, "Cost of Good Sold entry missing or mismatching")
+        self.assertEqual(aml_output[0].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
 
     def test_action_pos_order_invoice(self):
         self.company.point_of_sale_update_stock_quantities = 'closing'
@@ -358,6 +354,12 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         pricelist = self.env['product.pricelist'].create({
             'name': 'Test Pricelist',
             'discount_policy': 'without_discount',
+            'item_ids': [(0, 0, {
+                'compute_price': 'percentage',
+                'percent_price': 5,
+                'min_quantity': 0,
+                'applied_on': '3_global',
+            })]
         })
         self.product.lst_price = 100
         self.pos_order_pos0 = self.PosOrder.create({
@@ -367,14 +369,15 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
             'pricelist_id': pricelist.id,
             'lines': [(0, 0, {
                 'product_id': self.product.id,
-                'price_unit': 100,
+                'price_unit': 95,
                 'qty': 1.0,
-                'price_subtotal': 95,
-                'price_subtotal_incl': 95,
+                'tax_ids': [(6, 0, self.tax_purchase_a.ids)],
+                'price_subtotal': 90.25,
+                'price_subtotal_incl': 103.79,
                 'discount': 5,
             })],
-            'amount_total': 95,
-            'amount_tax': 0,
+            'amount_total': 103.79,
+            'amount_tax': 13.51,
             'amount_paid': 0,
             'amount_return': 0,
             'to_invoice': True,
@@ -390,3 +393,8 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         res = self.pos_order_pos0.action_pos_order_invoice()
         invoice = self.env['account.move'].browse(res['res_id'])
         self.assertTrue('Price discount from 100.00 -> 95.00' in invoice.invoice_line_ids.filtered(lambda l: l.display_type == "line_note").display_name)
+        product_line = invoice.invoice_line_ids.filtered(lambda l: l.display_type == "product")
+        self.assertEqual(product_line.price_unit, 95)  # Only pricelist applies
+        self.assertEqual(product_line.discount, 5)  # Disount is reflected
+        self.assertEqual(product_line.price_subtotal, 90.25)  # Discount applies on price_unit
+        self.assertEqual(product_line.price_total, 103.79)  # Taxes applied with price_total

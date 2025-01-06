@@ -235,9 +235,9 @@ class L10nHuEdiConnection:
                 })
             for message_xml in processing_result_xml.iterfind('api:technicalValidationMessages', namespaces=XML_NAMESPACES):
                 processing_result['technical_validation_messages'].append({
-                    'validation_result_code': message_xml.findtext('api:validationResultCode', namespaces=XML_NAMESPACES),
-                    'validation_error_code': message_xml.findtext('api:validationErrorCode', namespaces=XML_NAMESPACES),
-                    'message': message_xml.findtext('api:message', namespaces=XML_NAMESPACES),
+                    'validation_result_code': message_xml.findtext('common:validationResultCode', namespaces=XML_NAMESPACES),
+                    'validation_error_code': message_xml.findtext('common:validationErrorCode', namespaces=XML_NAMESPACES),
+                    'message': message_xml.findtext('common:message', namespaces=XML_NAMESPACES),
                 })
             if return_original_request:
                 try:
@@ -421,19 +421,13 @@ class L10nHuEdiConnection:
     # === Helpers: Response parsing === #
 
     def _parse_error_response(self, response_xml):
-        if response_xml.tag == '{http://schemas.nav.gov.hu/OSA/3.0/api}GeneralErrorResponse':
-            errors = []
+        error_code = response_xml.findtext('common:result/common:errorCode', namespaces=XML_NAMESPACES)
+        message = response_xml.findtext('common:result/common:message', namespaces=XML_NAMESPACES)
+        if error_code:
+            errors = [f'{error_code}: {message}']
             for message_xml in response_xml.iterfind('api:technicalValidationMessages', namespaces=XML_NAMESPACES):
                 message = message_xml.findtext('api:message', namespaces=XML_NAMESPACES)
                 error_code = message_xml.findtext('api:validationErrorCode', namespaces=XML_NAMESPACES)
                 errors.append(f'{error_code}: {message}')
+
             raise L10nHuEdiConnectionError(errors)
-
-        if response_xml.tag == '{http://schemas.nav.gov.hu/OSA/3.0/api}GeneralExceptionResponse':
-            message = response_xml.findtext('api:message', namespaces=XML_NAMESPACES)
-            code = response_xml.findtext('api:errorCode', namespaces=XML_NAMESPACES)
-            raise L10nHuEdiConnectionError(f'{code}: {message}')
-
-        func_code = response_xml.findtext('common:result/common:funcCode', namespaces=XML_NAMESPACES)
-        if func_code != 'OK':
-            raise L10nHuEdiConnectionError(_('NAV replied with non-OK funcCode: %s', func_code))

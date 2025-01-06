@@ -3,15 +3,15 @@
 # 	* base_vat
 # 
 # Translators:
-# Wil Odoo, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Wil Odoo, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-12-23 21:07+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -25,6 +25,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
+msgid "'219999830019' (should be 12 digits)"
+msgstr "'219999830019' (debe tener 12 dígitos)"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
 msgid ""
 "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
 msgstr "10XXXXXXXXY o 20XXXXXXXXY o 15XXXXXXXXY o 16XXXXXXXXY o 17XXXXXXXXY"
@@ -33,8 +40,22 @@ msgstr "10XXXXXXXXY o 20XXXXXXXXY o 15XXXXXXXXY o 16XXXXXXXXY o 17XXXXXXXXY"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
+msgid "17291716060 (NIN) or 1729171602 (VKN)"
+msgstr "17291716060 (NIN) o 1729171602 (VKN)"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
 msgid "1792060346001 or 1792060346"
 msgstr "1792060346001 o 1792060346"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "3101012009"
+msgstr "3101012009"
 
 #. module: base_vat
 #. odoo-python
@@ -122,6 +143,16 @@ msgstr ""
 "datos VIES."
 
 #. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"
+msgstr ""
+"Por ejemplo: \"219999830019\" (formato: 12 dígitos, todos los números, "
+"dígito de control válido)"
+
+#. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
 msgid "Fiscal Position"
 msgstr "Posición fiscal"
@@ -170,13 +201,6 @@ msgid "Perform Vies Validation"
 msgstr "Realizar validación VIES"
 
 #. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-#, python-format
-msgid "TR1234567890 (VERGINO) or TR17291716060 (TCKIMLIKNO)"
-msgstr "TR1234567890 (VERGINO) o TR17291716060 (TCKIMLIKNO)"
-
-#. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
 msgid "Tax ID"
 msgstr "Número de identificación fiscal"
@@ -215,11 +239,23 @@ msgstr "El número de IVA %s no pudo ser interpretado por el servidor VIES."
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
-"The country detected for this foreign VAT number does not match the one set "
-"on this fiscal position."
+"The country detected for this foreign VAT number does not match any of the "
+"countries composing the country group set on this fiscal position."
 msgstr ""
-"El país detectado para este NIF extranjero no coincide con el establecido en"
-" esta posición fiscal."
+"El país detectado para este número de identificación extranjero no coincide "
+"con ninguno de los países del grupo de países establecido en esta posición "
+"fiscal."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+#, python-format
+msgid ""
+"The country of the foreign VAT number could not be detected. Please assign a"
+" country to the fiscal position or set a country group"
+msgstr ""
+"No se pudo detectar el país del número de identificación extranjero. Asigne "
+"un país a la posición fiscal o establezca un grupo de países."
 
 #. module: base_vat
 #. odoo-python
@@ -255,6 +291,15 @@ msgstr "Verificar números tributarios con el servicio europeo VIES"
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_vat_to_check
 msgid "Vies Vat To Check"
 msgstr "Verificación de número de IVA en VIES"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
+msgstr ""
+"XXXXXXXXX [9 dígitos] que deben cumplir con la suma de verificación del "
+"algoritmo de Luhn."
 
 #. module: base_vat
 #. odoo-python

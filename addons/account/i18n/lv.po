@@ -11,16 +11,17 @@
 # Arnis Putniņš <arnis@allegro.lv>, 2024
 # ievaputnina <ievai.putninai@gmail.com>, 2024
 # Martin Trigaux, 2024
-# Will Sensors, 2024
+# myacc-pro, 2024
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
+# Will Sensors, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2024-09-06 12:08+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024\n"
+"Last-Translator: Will Sensors, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +40,11 @@ msgid ""
 "The total of debits equals %s and the total of credits equals %s.\n"
 "You might want to specify a default account on journal \"%s\" to automatically balance each move."
 msgstr ""
+"\n"
+"\n"
+"Kustība (%s) nav līdzsvarota.\n"
+"Debetu kopsumma ir vienāda ar %s un kredītu kopsumma ir vienāda ar %s.\n"
+"Iespējams, jūs vēlaties norādīt noklusējuma kontu žurnālā \"%s\", lai automātiski sabalansētu katru kustību."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -67,12 +73,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
-msgstr "# Saskaņotas izmaksas"
+msgstr "# Saskaņotie izdevumi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
-msgstr "# Saskaņoti rēķini"
+msgstr "# Saskaņotie rēķini"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
@@ -223,7 +229,6 @@ msgstr "%s.kopija"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-#: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "(Discount)"
 msgstr "(Atlaide)"
@@ -257,12 +262,12 @@ msgstr ").<br/>"
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "- %(name)s in %(company)s"
-msgstr "- %(name)s in %(company)s"
+msgstr "- %(name)s no %(company)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "- A default Customer Invoice / Vendor Bill date will be suggested."
-msgstr "- Noklusējuma rēķina / izmaksas datuma ieteikums."
+msgstr "- Noklusējuma klienta / piegādātāja rēķina datums tiks piedāvāts."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -286,7 +291,7 @@ msgstr "- Dokumentu secība ir rediģējama visiem dokumentiem."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr "->Daļēju saskaņošanu Ierakstu apskats"
+msgstr "-> Skatīt daļēji saskaņotos ierakstus"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -461,7 +466,7 @@ msgstr "30 dienas"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
 msgid "30% Advance End of Following Month"
-msgstr "30% Nākamā Mēneša Iepriekšējas Beigas"
+msgstr "30% avanss nākošā mēneša beigās"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
@@ -489,7 +494,7 @@ msgstr "4.05"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
 msgid "45 Days"
-msgstr "45 Dienas"
+msgstr "45 dienas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -523,15 +528,9 @@ msgstr ""
 "#704A66;'>%(date)s</b>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid ""
-"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<br/> on this account:"
-msgstr ""
+msgstr "<br/> šajā kontā:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -632,7 +631,11 @@ msgid ""
 "            Please remit payment at your earliest convenience.\n"
 "            <t t-if=\"object.payment_reference\">\n"
 "                <br><br>\n"
-"                Please use the following communication for your payment: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005</span>.\n"
+"                Please use the following communication for your payment: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                    on the account <strong t-out=\"object.partner_bank_id.acc_number\"></strong>\n"
+"                </t>\n"
+"                .\n"
 "            </t>\n"
 "        </t>\n"
 "        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
@@ -651,45 +654,49 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dārgais\n"
-"       <t t-if=\"object.partner_id.parent_id\">\n"
-"           <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
-"       </t>\n"
-"       <t t-else=\"\">\n"
-"           <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
-"       </t>\n"
-"       <br><br>\n"
-"        Šeit ir jūsu\n"
-"       <t t-if=\"object.name\">\n"
+"        Cienījamais(-ā)\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br><br>\n"
+"        Šeit ir Jūsu\n"
+"        <t t-if=\"object.name\">\n"
 "            rēķins <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
-"       </t>\n"
-"       <t t-else=\"\">\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
 "            rēķins\n"
-"       </t>\n"
-"       <t t-if=\"object.invoice_origin\">\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
 "            (ar atsauci: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
-"       </t>\n"
-"        par summu <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143 750,00</span>\n"
-"        no <t t-out=\"object.company_id.name or ''\">Jūsuuzņēmuma</t>.\n"
-"       <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"        </t>\n"
+"        ar summu <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        no <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            Šis rēķins jau ir apmaksāts.\n"
-"       </t>\n"
-"       <t t-else=\"\">\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
 "            Lūdzu, veiciet maksājumu pēc iespējas ātrāk.\n"
-"           <t t-if=\"object.payment_reference\">\n"
-"               <br><br>\n"
-"                Maksājumam, lūdzu, izmantojiet šādu saziņas līdzekli: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005</span>.\n"
-"           </t>\n"
-"       </t>\n"
-"       <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
-"           <br><br>\n"
-"            P.S.: darba laika uzskaites lapas var pārskatīt <a t-att-href=\"'my/timesheets?search_in=invoice&amp;search=%s' % object.name\">portālā</a>.\n"
-"       </t>\n"
-"       <br><br>\n"
-"        Ja jums ir kādi jautājumi, sazinieties ar mums.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br><br>\n"
+"                Lūdzu, izmantojiet sekojošo informāciju Jūsu maksājumam: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                    uz kontu <strong t-out=\"object.partner_bank_id.acc_number\"></strong>\n"
+"                </t>\n"
+"                .\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+"            <br><br>\n"
+"            PS: Jūs varat pārskatīt Jūsu darba laika uzskaiti <a t-att-href=\"'my/timesheets?search_in=invoice&amp;search=%s' % object.name\">Portālā.</a>\n"
+"        </t>\n"
+"        <br><br>\n"
+"        Nevilcinieties sazināties ar mums, ja jums ir kādi jautājumi.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell admin</t>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -717,7 +724,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Sveiki <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br><br>\n"
+"        Cienījamais(-ā) <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br><br>\n"
 "        Paldies par maksājumu.\n"
 "        Jūsu rēķins<span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> par summu\n"
 "         <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span>no <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
@@ -854,8 +861,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"Šeit norādītās vērtības ir "
+"specifikas uzņēmumam.\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -953,7 +960,7 @@ msgstr "<span class=\"o_stat_text\">Žurnāla ieraksti</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span class=\"o_stat_text\">Reconciled Items</span>"
-msgstr "<span class=\"o_stat_text\">Saskaņotie vienumi</span>"
+msgstr "<span class=\"o_stat_text\">Saskaņotie ieraksti</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -1074,6 +1081,8 @@ msgid ""
 "<span invisible=\"state != 'draft' or name != '/' or posted_before or "
 "quick_edit_mode\">Draft</span>"
 msgstr ""
+"<span invisible=\"state != 'draft' or name != '/' or posted_before or "
+"quick_edit_mode\">Melnraksts</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1124,6 +1133,12 @@ msgstr "<span>Uz</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span> due on </span>"
 msgstr "<span> līdz </span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
+#: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
+msgid "<span> on </span>"
+msgstr "<span> </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1236,8 +1251,8 @@ msgid ""
 "<span>This entry has been generated through the Invoicing app, before "
 "installing Accounting. Its balance has been imported separately.</span>"
 msgstr ""
-"<span>Šis ieraksts ir izveidots, izmantojot rēķinu sagatavošanas lietotni, "
-"pirms instalēta grāmatvedība. Tā atlikums ir importēts atsevišķi.</span>"
+"<span>Šis ieraksts ir izveidots, izmantojot Rēķinu lietotni, pirms instalēta"
+" Grāmatvedība. Tā atlikums ir importēts atsevišķi.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -1595,6 +1610,20 @@ msgstr ""
 "lai to atļautu."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of payable type, but is used in a sale operation."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of receivable type, but is used in a purchase operation."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
 msgid "Account Avatax"
 msgstr "Konts Avatax"
@@ -1732,7 +1761,7 @@ msgstr "Debitoru konts (PoS)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
 msgid "Account Reconcile"
-msgstr "Kontu saskaņošana"
+msgstr "Konta saskaņošana"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -1806,7 +1835,7 @@ msgstr "Kontu Veidi"
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr "Konta Atsaiste"
+msgstr "Konta atsaiste"
 
 #. module: account
 #: model:ir.model,name:account.model_account_root
@@ -1824,7 +1853,7 @@ msgstr "Starpības summas iegrāmatošana pēc izdevumu atlaides piešķiršanas
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid ""
 "Account for the difference amount after the income discount has been granted"
-msgstr "Starpības summas iegrāmatošana pēc ienākumu atlaides piešķiršanas"
+msgstr "Starpības summas iegrāmatošana pēc peļņas atlaides piešķiršanas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_search
@@ -1937,6 +1966,11 @@ msgstr ""
 "datumu līdz šodienai"
 
 #. module: account
+#: model:res.groups,name:account.group_account_manager
+msgid "Accountant"
+msgstr "Grāmatvedis(-e)"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 #: model:ir.ui.menu,name:account.menu_finance_entries
@@ -1991,22 +2025,22 @@ msgstr "Grāmatvedības atskaite"
 #. module: account
 #: model:ir.model,name:account.model_account_report_column
 msgid "Accounting Report Column"
-msgstr "Grāmatvedības pārskata sleja"
+msgstr "Grāmatvedības atskaites kolonna"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_expression
 msgid "Accounting Report Expression"
-msgstr "Grāmatvedības pārskata izteikšana"
+msgstr "Grāmatvedības atskaites izteikšana"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_external_value
 msgid "Accounting Report External Value"
-msgstr "Grāmatvedības pārskats Ārējā vērtība"
+msgstr "Grāmatvedības atskaites ārējā vērtība"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_line
 msgid "Accounting Report Line"
-msgstr "Grāmatvedības pārskata līnija"
+msgstr "Grāmatvedības atskaites rinda"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -2438,7 +2472,7 @@ msgstr "Atļaut produkta maržu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__reconcile
 msgid "Allow Reconciliation"
-msgstr "Atļaut Sasaisti"
+msgstr "Atļaut saskaņošanu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_check_printing
@@ -2607,7 +2641,7 @@ msgstr "Maksājamā summa (ārvalstu valūtā)"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total_words
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total_words
 msgid "Amount total in words"
-msgstr "Summa vārdos"
+msgstr "Kopsumma vārdos"
 
 #. module: account
 #. odoo-javascript
@@ -2618,8 +2652,6 @@ msgstr "Summa:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_payment_items
-#: model:ir.ui.menu,name:account.menu_action_open_payment_items
-#: model:ir.ui.menu,name:account.menu_action_open_sale_payment_items
 msgid "Amounts to Settle"
 msgstr "Norēķinu summas"
 
@@ -2661,12 +2693,12 @@ msgid ""
 "                account). The annual accounts of a company are required by law\n"
 "                to disclose a certain amount of information."
 msgstr ""
-"An account is part of a ledger allowing your company\n"
-"                to register all kinds of debit and credit transactions.\n"
-"                Companies present their annual accounts in two main parts: the\n"
-"                balance sheet and the income statement (profit and loss\n"
-"                account). The annual accounts of a company are required by law\n"
-"                to disclose a certain amount of information."
+"Konts ir daļa no virsgrāmatas, kas ļauj jūsu uzņēmumam\n"
+"                reģistrēt visu veidu debeta un kredīta darījumus.\n"
+"                Uzņēmumi savus gada pārskatus iesniedz divās galvenajās daļās\n"
+"                bilance un peļņas un zaudējumu pārskats (peļņas un zaudējumu aprēķins)\n"
+"                konts). Uzņēmuma gada pārskati ir obligāti jāsagatavo saskaņā ar likumu\n"
+"                jāatklāj noteikts informācijas apjoms."
 
 #. module: account
 #. odoo-python
@@ -2899,6 +2931,7 @@ msgstr "Perioda sākumā"
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/components/mail_attachments/mail_attachments.xml:0
 #: code:addons/account/static/src/components/mail_attachments/mail_attachments.xml:0
 #, python-format
 msgid "Attach"
@@ -3169,8 +3202,8 @@ msgid ""
 "Partner bank account number."
 msgstr ""
 "Bankas konta numurs, uz kuru tiks apmaksāts rēķins. Uzņēmuma bankas konta "
-"numurs, ja tas ir klienta rēķins vai pārdevēja kredīta paziņojums, citādi - "
-"partnera bankas konta numurs."
+"numurs, ja tas ir klienta rēķins vai piegādātāja kredīta paziņojums, citādi "
+"- partnera bankas konta numurs."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_supplier_accounts
@@ -3279,7 +3312,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_bank_cash
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_cash
 msgid "Bank and Cash"
-msgstr "Banka un Kase"
+msgstr "Banka un skaidrā nauda"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -3421,7 +3454,6 @@ msgid "Billing"
 msgstr "Norēķini"
 
 #. module: account
-#: model:res.groups,name:account.group_account_manager
 msgid "Billing Administrator"
 msgstr "Norēķinu administrators"
 
@@ -3472,6 +3504,11 @@ msgstr "Tukšs ja ir nulle"
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "Bloķēšanas ziņa"
+
+#. module: account
+#: model:res.groups,name:account.group_account_user
+msgid "Bookkeeper"
+msgstr "Grāmatvedis(-e)"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -3686,13 +3723,6 @@ msgstr "Pārnest uz"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_report.py:0
-#, python-format
-msgid "Carryover lines for: %s"
-msgstr "Pārnesuma pozīcijas: %s"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.1_cash_journal_default_account_42
 #: model:account.journal,name:account.1_cash
@@ -3764,7 +3794,7 @@ msgstr "Peļņa no naudas starpības"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_income_account_id
 msgid "Cash Difference Income"
-msgstr "Naudas starpība Ienākumi"
+msgstr "Naudas starpības peļņa"
 
 #. module: account
 #. odoo-python
@@ -3812,6 +3842,11 @@ msgstr "Naudas diskonta norakstīšanas zaudējumu konts"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cash Registers"
 msgstr "Kases Iekārtas"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_48
+msgid "Cash Restaurant"
+msgstr "Skaidrā nauda restorānā"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
@@ -4193,6 +4228,7 @@ msgstr "Partnera uzņēmumi"
 #: model:ir.model.fields,field_description:account.field_account_tax__company_id
 #: model:ir.model.fields,field_description:account.field_account_tax_group__company_id
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__company_id
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -4225,7 +4261,7 @@ msgstr "Uzņēmuma Valūta"
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_company_data
 msgid "Company Data"
-msgstr "Rekvizīti"
+msgstr "Uzņēmuma dati"
 
 #. module: account
 #: model:ir.model,name:account.model_base_document_layout
@@ -4235,7 +4271,7 @@ msgstr "Uzņēmuma dokumentu izkārtojums"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__fiscal_country_codes
 msgid "Company Fiscal Country Code"
-msgstr "Kompānijas valsts kods"
+msgstr "Uzņēmuma valsts kods"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
@@ -4252,7 +4288,7 @@ msgstr "Uzņēmumam ir kontu plāns"
 #: model:ir.model.fields,help:account.field_account_journal__company_id
 #: model:ir.model.fields,help:account.field_account_payment_method_line__company_id
 msgid "Company related to this journal"
-msgstr "Reģistra uzņēmums"
+msgstr "Uzņēmums saistītais ar šo žurnālu"
 
 #. module: account
 #. odoo-javascript
@@ -4394,7 +4430,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_open_payment_items
 msgid "Cool, it looks like you don't have any vendor bills to pay."
-msgstr "Forši, izskatās, ka nav apmaksājami rēķini."
+msgstr "Forši, izskatās, ka nav neapmaksātu piegādātāju rēķinu."
 
 #. module: account
 #. odoo-python
@@ -4656,12 +4692,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice_type
 msgid "Create a vendor bill"
-msgstr "Izveidot iepirkšanas pavadzīmi"
+msgstr "Izveidot piegādātāja rēķinu"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_refund_type
 msgid "Create a vendor credit note"
-msgstr "Izveidot iepirkšanas kredītrēķinu"
+msgstr "Izveidot piegādātāja kredītrēķinu"
 
 #. module: account
 #. odoo-python
@@ -5090,7 +5126,7 @@ msgstr "Klientu rēķini Atlaides konts"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__out_and_in_invoices
 msgid "Customer Invoices and Vendor Bills"
-msgstr "Klientu rēķini un iepirkšanas rēķini"
+msgstr "Klientu rēķini un piegādātāju rēķini"
 
 #. module: account
 #. odoo-python
@@ -5152,7 +5188,7 @@ msgstr "Klienta Nodokļi"
 #: model:ir.model.fields,field_description:account.field_account_payment_register__partner_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Customer/Vendor"
-msgstr "Klients/piegādātājs"
+msgstr "Klients/Piegādātājs"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -5206,11 +5242,6 @@ msgid "DELIVERED DUTY PAID"
 msgstr "PIEGĀDEI NODOKLIS SAMAKSĀTS"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
-msgid "DOWN"
-msgstr "NEDARBOJAS"
-
-#. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
 msgstr "Kopskats"
@@ -5240,6 +5271,7 @@ msgstr "Datu konsekvences pārbaude"
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__date
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__date
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__figure_type__date
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5411,7 +5443,7 @@ msgstr "Noklusējuma izdevumu konts"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Default Income Account"
-msgstr "Noklusējuma ienākumu konts"
+msgstr "Noklusējuma peļņas konts"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5945,6 +5977,11 @@ msgid "Domestic country of your accounting"
 msgstr "Jūsu grāmatvedības valsts"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
+msgid "Down"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__checkbox_download
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_is_download
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -6088,11 +6125,6 @@ msgid "Due Terms"
 msgstr "Parāda nosacījumi"
 
 #. module: account
-#: model:ir.actions.server,name:account.action_duplicate_account
-msgid "Duplicate"
-msgstr "Dublēt"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__duplicated_bank_account_partners_count
 #: model:ir.model.fields,field_description:account.field_res_users__duplicated_bank_account_partners_count
 msgid "Duplicated Bank Account Partners Count"
@@ -6173,6 +6205,11 @@ msgid "Early Payment Discount granted for this payment term"
 msgstr "Šim maksājuma termiņam piešķirtā atlaide par agru maksājumu"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
+msgid "Early Payment Discount of"
+msgstr "Agrīna maksājuma atlaide"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
@@ -6220,7 +6257,7 @@ msgstr "E-pasts pēc noklusējuma"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "E-pasta domēns piem., 'piemers.lv' e-pastā 'odoo@piemers.lv'"
 
 #. module: account
 #: model:account.account,name:account.1_employee_payroll_taxes
@@ -6374,7 +6411,7 @@ msgstr "Pašu kapitāls"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Error importing attachment '%s' as invoice (decoder=%s)"
-msgstr ""
+msgstr "Kļūda importējot pielikumu '%s' kā rēķinu (decoder=%s)"
 
 #. module: account
 #. odoo-python
@@ -6385,7 +6422,7 @@ msgid ""
 "localization app first."
 msgstr ""
 "Kļūda lokalizācijas ielādēšanas laikā. Iespējams, vispirms vajadzētu "
-"atjaunināt lokalizācijas programmu."
+"atjaunināt lokalizācijas lietotni."
 
 #. module: account
 #. odoo-python
@@ -6982,6 +7019,13 @@ msgstr "Formula"
 msgid ""
 "Formula in the form line_code.expression_label. This allows setting the "
 "target of the carryover for this expression (on a _carryover_*-labeled "
+"expression), in case it is different from the parent line."
+msgstr ""
+
+#. module: account
+msgid ""
+"Formula in the form line_code.expression_label. This allows setting the "
+"target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line. 'custom' is also "
 "allowed as value in case the carryover destination requires more complex "
 "logic."
@@ -7044,7 +7088,7 @@ msgid ""
 "reports and so, match this analysis to your needs."
 msgstr ""
 "Šajā pārskatā varat pārskatīt, par kādu summu jums ir izrakstīti rēķini no "
-"jūsu piegādātājiem. Meklēšanas rīku var izmantot arī, lai personalizētu "
+"Jūsu piegādātājiem. Meklēšanas rīku var izmantot arī, lai personalizētu "
 "rēķinu pārskatus un tādējādi pielāgotu šo analīzi savām vajadzībām."
 
 #. module: account
@@ -7226,11 +7270,6 @@ msgid "Growth Comparison"
 msgstr "Izaugsmes salīdzinājums"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
-msgid "HALF-UP"
-msgstr "HALF-UP"
-
-#. module: account
 #: model:ir.model,name:account.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP maršrutēšana"
@@ -7239,6 +7278,13 @@ msgstr "HTTP maršrutēšana"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
 msgid "Has Accounting Entries"
 msgstr "Ir grāmatvedības ieraksti"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_update_fpos
+#: model:ir.model.fields,field_description:account.field_account_move__show_update_fpos
+#: model:ir.model.fields,field_description:account.field_account_payment__show_update_fpos
+msgid "Has Fiscal Position Changed"
+msgstr "Vai ir mainījusies fiskālā pozīcija"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_iban_warning
@@ -7497,8 +7543,8 @@ msgid ""
 "If empty, the discount will be discounted directly on the income/expense "
 "account. If set, discount on invoices will be realized in separate accounts."
 msgstr ""
-"Ja tā ir tukša, atlaide tiks diskontēta tieši ieņēmumu/izdevumu kontā. Ja "
-"tas ir iestatīts, rēķinu atlaides tiks realizētas atsevišķos kontos."
+"Ja tā ir tukša, atlaide tiks diskontēta tieši peļņas/izdevumu kontā. Ja tas "
+"ir iestatīts, rēķinu atlaides tiks realizētas atsevišķos kontos."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_reversal__journal_id
@@ -7675,7 +7721,7 @@ msgstr "Žurnāla elementu importēšanas veidne"
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_setup_bill
 msgid "Import Vendor Bills"
-msgstr "Importēt iepirkšanas rēķinus"
+msgstr "Importēt piegādātāju rēķinus"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_csv
@@ -7793,14 +7839,14 @@ msgstr "Iekļauts Cenā"
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 #, python-format
 msgid "Income"
-msgstr "Ienākumi"
+msgstr "Peļņa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__property_account_income_categ_id
 #: model:ir.model.fields,field_description:account.field_product_product__property_account_income_id
 #: model:ir.model.fields,field_description:account.field_product_template__property_account_income_id
 msgid "Income Account"
-msgstr "Ieņēmumu Konts"
+msgstr "Peļņas konts"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -7987,6 +8033,12 @@ msgid ""
 msgstr "Iekšējais lauks, lai saīsinātu expression_ids izveidi ārējam diskam"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_report_line__tax_tags_formula
+msgid ""
+"Internal field to shorten expression_ids creation for the tax_tags engine"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_incoterm_id
 #: model:ir.model.fields,help:account.field_account_move__invoice_incoterm_id
 #: model:ir.model.fields,help:account.field_account_payment__invoice_incoterm_id
@@ -8017,6 +8069,9 @@ msgid ""
 "Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
 " for the zip range and \"To\" should be greater than \"From\"."
 msgstr ""
+"Nederīgs \"Pasta koda diapazons\", Jums ir jānokonfigurē abas \"No\" un "
+"\"Līdz\" vērtības pasta koda diapazonam un \"Līdz\" jābūt lielākam nekā "
+"\"No\"."
 
 #. module: account
 #. odoo-python
@@ -8031,6 +8086,11 @@ msgstr ""
 #, python-format
 msgid "Invalid fiscal year last day"
 msgstr "Nederīga fiskālā gada pēdējā diena"
+
+#. module: account
+#: model:account.journal,name:account.1_inventory_valuation
+msgid "Inventory Valuation"
+msgstr "Inventarizācija"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
@@ -8313,7 +8373,7 @@ msgstr "Rēķinu Statistika"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Invoices are being sent in the background."
-msgstr ""
+msgstr "Rēķini tiek nosūtīti fonā."
 
 #. module: account
 #. odoo-python
@@ -8321,7 +8381,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Invoices in error"
-msgstr ""
+msgstr "Kļūdaini rēķini"
 
 #. module: account
 #. odoo-python
@@ -8342,7 +8402,7 @@ msgstr "Rēķini nosūtīti"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Invoices sent successfully."
-msgstr ""
+msgstr "Rēķini nosūtīti veiksmīgi."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -8529,6 +8589,7 @@ msgstr "Janvāris"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__linked_journal_id
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -8659,6 +8720,20 @@ msgstr "Žurnālu grupas"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Journal Item"
 msgstr "Kontējums"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Journal Item %s created"
+msgstr "Žurnāla ieraksts %s izveidots"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Journal Item %s deleted"
+msgstr "Žurnāla ieraksts %s izdzēsts"
 
 #. module: account
 #. odoo-python
@@ -9651,7 +9726,7 @@ msgstr "Pārcelt uz kontu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_multi_company
 msgid "Multi-Company"
-msgstr "Vairāku uzņēmumu"
+msgstr "Vairāki uzņēmumi"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__direction_sign
@@ -9692,6 +9767,8 @@ msgstr "Mani rēķini"
 #: model:ir.model.fields,field_description:account.field_account_root__name
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_name
 #: model:ir.model.fields,field_description:account.field_account_tax_group__name
+#: model:ir.model.fields,field_description:account.field_res_partner__name
+#: model:ir.model.fields,field_description:account.field_res_users__name
 #: model_terms:ir.ui.view,arch_db:account.account_tax_view_tree
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Name"
@@ -9707,6 +9784,11 @@ msgstr "Meklēšanas vārds"
 msgid "Navigate easily through reports and see what is behind the numbers"
 msgstr ""
 "Viegli pārvietojieties pa pārskatiem un uzziniet, kas slēpjas aiz skaitļiem"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
+msgid "Nearest"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__need_cancel_request
@@ -9739,6 +9821,13 @@ msgstr "Nodokļu bilances noliegšana"
 msgid "Negative value of amount field if payment_type is outbound"
 msgstr ""
 "Summas lauka negatīvā vērtība, ja maksājuma_tips ir izejošais maksājums"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "Nested group of taxes are not allowed."
+msgstr ""
 
 #. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_net
@@ -9785,6 +9874,16 @@ msgstr "Jaunas vērtības"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 msgid "Newest first"
 msgstr "Vispirms vispirms"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Nākamās darbības kalendāra pasākums"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -10000,8 +10099,8 @@ msgid ""
 "Note that the easiest way to create a vendor credit note is to do it "
 "directly from the vendor bill."
 msgstr ""
-"Ņemiet vērā, ka visvienkāršākais veids, kā izveidot pārdevēja kredīta "
-"paziņojumu, ir to izdarīt tieši no pārdevēja rēķina."
+"Ņemiet vērā, ka visvienkāršākais veids, kā izveidot piegādātāja "
+"kredītrēķinu, ir to izdarīt tieši no piegādātāja rēķina."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__note
@@ -10276,7 +10375,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "One or more invoices couldn't be processed."
-msgstr ""
+msgstr "Viens vai vairāki rēķini nevarēja tikt apstrādāti."
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -10377,7 +10476,7 @@ msgstr "Finanšu gada bilance uz sākumu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_credit
 msgid "Opening Credit"
-msgstr "Kredīts uz sākumu"
+msgstr "Atverošais kredīts"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__opening_date
@@ -10387,7 +10486,7 @@ msgstr "Datums uz sākumu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_debit
 msgid "Opening Debit"
-msgstr "Debets uz sākumu"
+msgstr "Atverošais debits"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_opening_date
@@ -10519,7 +10618,7 @@ msgstr "Cits"
 #: model:account.account,name:account.1_other_income
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__income_other
 msgid "Other Income"
-msgstr "Citi Ienākumi"
+msgstr "Cita peļņa"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -10749,7 +10848,7 @@ msgstr "Daļējs"
 #. module: account
 #: model:ir.model,name:account.model_account_partial_reconcile
 msgid "Partial Reconcile"
-msgstr "Daļēja Sasaiste"
+msgstr "Daļēji saskaņots"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__partial
@@ -10767,6 +10866,7 @@ msgstr "Daļēji apmaksāts"
 #: model:ir.model.fields,field_description:account.field_account_move_line__partner_id
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__partner_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -10843,7 +10943,7 @@ msgstr "Partneru kartēšana saskaņošanas modeļiem"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Partner(s) should have an email address."
-msgstr ""
+msgstr "Parnerim(-iem) jābūt e-pasta adresei."
 
 #. module: account
 #. odoo-python
@@ -11486,7 +11586,7 @@ msgstr "Drukāt uz jaunas lapas"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Print checks to pay your vendors"
-msgstr "Čeku drukāšana, lai samaksātu piegādātājiem"
+msgstr "Drukāt čekus, lai samaksāt Jūsu piegādātājiem"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__problem_description
@@ -11619,6 +11719,7 @@ msgstr "QIF Importēšana"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__qr_code
+#: model:ir.model.fields,field_description:account.field_account_payment_register__qr_code
 msgid "QR Code URL"
 msgstr "QR koda URL"
 
@@ -11668,9 +11769,28 @@ msgid "RD Expenses"
 msgstr "RD izdevumi"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
+msgid "Ratings"
+msgstr "Reitingi"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "Pārkārtot"
+
+#. module: account
+#: model:res.groups,name:account.group_account_readonly
+msgid "Read-only"
+msgstr "Tikai-lasāms"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -11742,15 +11862,21 @@ msgid "Recognition Date"
 msgstr "Apstiprinājuma datums"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Recompute all taxes and accounts based on this fiscal position"
+msgstr ""
+"Pārrēķināt visus nodokļus un kontus, pamatojoties uz šo fiskālo stāvokli"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Reconciled"
-msgstr "Sasaistīts"
+msgstr "Saskaņots"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bill_ids
 msgid "Reconciled Bills"
-msgstr "Saskaņotie rēķini"
+msgstr "Saskaņotie izdevumi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoice_ids
@@ -11760,12 +11886,12 @@ msgstr "Saskaņotie rēķini"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_type
 msgid "Reconciled Invoices Type"
-msgstr "Saskaņotie rēķini Veids"
+msgstr "Saskaņoto rēķinu veids"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
 msgid "Reconciled Statement Lines"
-msgstr "Saskaņotā pārskata rindas"
+msgstr "Saskaņoto izrakstu rindas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconcile_model_id
@@ -11917,7 +12043,7 @@ msgstr "Pārveidojiet žurnāla ierakstu secību."
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "Removed"
-msgstr ""
+msgstr "Noņemts"
 
 #. module: account
 #: model:account.account,name:account.1_expense_rent
@@ -12403,6 +12529,7 @@ msgstr "Saglabāt šo lappusi un atgriezties, lai iestatīt šo funkciju."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "Scan me with your banking app."
 msgstr "Noskenējiet mani ar savu bankas lietotni."
@@ -12537,10 +12664,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
-"Atlasiet \"Pārdošana\", lai atvērtu klientu rēķinu žurnālus.\n"
-"Pārdevēju rēķinu žurnāliem izvēlieties \"Pirkums\".\n"
-"Žurnāliem, kas tiek izmantoti klientu vai pārdevēju maksājumos, izvēlieties \"Nauda\" vai \"Banka\".\n"
-"Dažādu operāciju žurnāliem izvēlieties \"Vispārīgi\"."
+"Izvēlieties 'Tirdzniecība' klientu rēķinu žurnāliem.\n"
+"Izvēlieties 'Pirkšana' piegādātāju rēķinu žurnāliem.\n"
+"Izvēlieties 'Skaidrā nauda' vai 'Banka' žurnāliem, kuri tiek izmantoti klientu vai piegādātāju maksājumos.\n"
+"Izvēlieties 'Vispārīgi' dažādu darbību žurnāliem."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_categ_id
@@ -12569,7 +12696,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Select an old vendor bill"
-msgstr "Izvēlēties vecu iepirkuma rēķinu"
+msgstr "Izvēlieties veco piegādāta rēķinu"
 
 #. module: account
 #. odoo-javascript
@@ -12700,8 +12827,7 @@ msgstr "Automātiska rēķinu nosūtīšana"
 msgid ""
 "Send invoices to your customers in no time with the <b>Invoicing app</b>."
 msgstr ""
-"Nosūtiet rēķinus klientiem īsā laikā, izmantojot <b>rēķinu izrakstīšanas "
-"lietotni</b>."
+"Nosūtiet rēķinus Jūsu klientiem īsākajā laikā ar <b>Rēķinu lietotni</b>."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -12763,8 +12889,8 @@ msgid ""
 "money."
 msgstr ""
 "Viltotu rēķinu sūtīšana ar viltotu konta numuru ir izplatīta pikšķerēšanas "
-"prakse. Lai sevi pasargātu, vienmēr pārbaudiet jaunu bankas konta numuru, "
-"vēlams, zvanot pārdevējam, jo pikšķerēšana parasti notiek, kad tiek "
+"prakse. Lai sevi pasargātu, vienmēr pārbaudiet jauno bankas konta numurus, "
+"vēlams, zvanot piegādātājam, jo pikšķerēšana parasti notiek, kad tiek "
 "apdraudēti viņu e-pasti. Pēc verifikācijas varat aktivizēt iespēju sūtīt "
 "naudu."
 
@@ -12773,7 +12899,7 @@ msgstr ""
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Sending invoices"
-msgstr ""
+msgstr "Nosūta rēķinus"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -12785,7 +12911,7 @@ msgstr "Nosūtīts"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Sent invoices"
-msgstr ""
+msgstr "Nosūtīja rēķinus"
 
 #. module: account
 #: model:mail.template,description:account.mail_template_data_payment_receipt
@@ -12814,7 +12940,7 @@ msgstr "Atsevišķs konts izdevumu atlaidei"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_discount_income_allocation_id
 msgid "Separate account for income discount"
-msgstr "Atsevišķs ienākumu diskonta konts"
+msgstr "Atsevisķš konts peļnas atlaidei"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12975,7 +13101,6 @@ msgstr ""
 "arī tiks nosaukti, izmantojot šo prefiksu."
 
 #. module: account
-#: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
 msgstr "Rādīt grāmatvedības funkcijas - tikai lasāmās versijas"
 
@@ -13010,7 +13135,6 @@ msgid "Show Force Tax Included"
 msgstr "Rādīt Spēka nodoklis iekļauts"
 
 #. module: account
-#: model:res.groups,name:account.group_account_user
 msgid "Show Full Accounting Features"
 msgstr "Rādīt pilnas grāmatvedības funkcijas"
 
@@ -13086,6 +13210,13 @@ msgstr "Rādīt negrāmatotos ierakstus"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_snailmail_account
 msgid "Snailmail"
 msgstr "Snailmail"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Some documents are being sent by another process already."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -13181,7 +13312,7 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Start by checking your company's data."
-msgstr "Iesāciet ar Jūsu kompānijas datu pārbaudi."
+msgstr "Iesāciet ar Jūsu uzņēmuma datu pārbaudi."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
@@ -13542,7 +13673,7 @@ msgstr "Nodokļu grupas"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Tax ID"
-msgstr "Tax ID"
+msgstr "PVN Nr."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__force_tax_included
@@ -13640,6 +13771,11 @@ msgstr "Nodokļu virkne"
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__tax_tags
 msgid "Tax Tags"
 msgstr "Nodokļu Tags"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report_line__tax_tags_formula
+msgid "Tax Tags Formula Shortcut"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__type_tax_use
@@ -13875,7 +14011,7 @@ msgstr "Teksta vērtība"
 #: code:addons/account/static/src/components/document_state/document_state_field.js:0
 #, python-format
 msgid "Text copied"
-msgstr ""
+msgstr "Teksts kopēts"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
@@ -13894,6 +14030,15 @@ msgstr ""
 "%(date_field)s (%(date)s) nesakrīt ar saistītā %(model)s (%(sequence)s) kārtas numuru\n"
 "Lai turpinātu, jums būs jādzēš %(model)s %(sequence_field)s.\n"
 "To darot, jūs, iespējams, vēlēsieties mainīt ierakstu secību, lai saglabātu nepārtrauktu secību pēc datuma."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"The Availability is set to 'Country Matches' but the field Country is not "
+"set."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -13973,8 +14118,8 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
-"The Syscohada chart template shouldn't be selected directly. Instead, you "
-"should directly select the chart template related to your country."
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
 msgstr ""
 
 #. module: account
@@ -14089,7 +14234,7 @@ msgstr "Bankas žurnāla bankas kontam ir piederēt tam pašam uzņēmumam (%s).
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
 msgid "The bank statement used for bank reconciliation"
-msgstr "Bankas Izraksts, kas tiek izmantots kontējumu sasaistei"
+msgstr "Bankas izraksts, kas tiek izmantots bankas saskaņošanai"
 
 #. module: account
 #. odoo-javascript
@@ -14151,6 +14296,15 @@ msgstr "Atsauces modeļa un atsauces tipa kombinācija žurnālā nav ieviesta"
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "Uzņēmums, kuram pieder šī sadales līnija."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid ""
+"The country code of the foreign VAT number does not match any country in the"
+" group."
+msgstr "Valsts kods no ārzemju VAT numura neatbilst nevienai valstij grupā."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -14250,7 +14404,7 @@ msgid ""
 "expense (Cost of Goods Sold account) is recognized at the customer invoice "
 "validation."
 msgstr ""
-"Izdevumus uzskaita, kad tiek apstiprināts pārdevēja rēķins, izņemot "
+"Izdevumus uzskaita, kad tiek apstiprināts piegādātāja rēķins, izņemot "
 "anglosakšu grāmatvedību ar pastāvīgu krājumu novērtēšanu, kurā izdevumus "
 "(Pārdoto preču izmaksu konts) atzīst brīdī, kad tiek apstiprināts klienta "
 "rēķins."
@@ -14285,7 +14439,7 @@ msgstr ""
 msgid ""
 "The field 'Vendor' is required, please complete it to validate the Vendor "
 "Bill."
-msgstr "Jāaizpilda lauks Piegādātājs, lai apstiprinātu iepirkuma rēķinu."
+msgstr "Jāaizpilda lauks 'Piegādātājs', lai apstiprinātu piegādātāja rēķinu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_position_id
@@ -14563,7 +14717,7 @@ msgid ""
 "The reconciliation model will only be applied to the selected "
 "customer/vendor categories."
 msgstr ""
-"Saskaņošanas modelis tiks piemērots tikai atlasītajām klientu/pārdevēju "
+"Saskaņošanas modelis tiks piemērots tikai atlasītajām klientu/piegādātāju "
 "kategorijām."
 
 #. module: account
@@ -14573,7 +14727,7 @@ msgid ""
 "customers/vendors."
 msgstr ""
 "Saskaņošanas modelis tiks piemērots tikai atlasītajiem "
-"klientiem/pārdevējiem."
+"klientiem/piegādātājiem."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_nature
@@ -14594,7 +14748,7 @@ msgid ""
 "The reconciliation model will only be applied when a customer/vendor is set."
 msgstr ""
 "Saskaņošanas modelis tiks piemērots tikai tad, ja ir iestatīts "
-"klients/pārdevējs."
+"klients/piegādātājs."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -14731,6 +14885,8 @@ msgid ""
 "The selected payment method is not available for this payment, please select"
 " the payment method again."
 msgstr ""
+"Izvēlētā maksājumu metode nav pieejama šim maksājumam, lūdzu, izvēlieties "
+"maksājumu metodi atkārtoti."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -15210,6 +15366,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with a payment method. You cannot archive it"
+msgstr "Šis žurnāls ir saistīts ar maksājumu metodi. Jūs nevarat to arhivēt"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "This journal is not in strict mode."
@@ -15275,8 +15439,8 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
 msgstr ""
-"Šis maksājuma termiņš tiks izmantots iepirkuma pasūtījumu un pārdevēju "
-"rēķinu noklusējuma termiņa vietā"
+"Šis maksājums termiņs tiks izmantot noklusējuma termiņa vienā pirkšanas "
+"pasūtījumiem un piegādātāju rēķiniem"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_payment_term_id
@@ -15321,6 +15485,15 @@ msgid "This recurring move will be posted up to and including this date."
 msgstr ""
 "Šis atkārtotais pārcelšanās pasākums tiks publicēts līdz šim datumam "
 "ieskaitot."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid ""
+"This will update all taxes and accounts based on the currently selected "
+"fiscal position."
+msgstr ""
+"Šis atjauninās visus nodokļus un kontus pamatojoties uz pašreizējo fiskālo "
+"pozīciju."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -15539,7 +15712,7 @@ msgstr "Kopējā summa pēc automātiskās ievades."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Total amount in words: <br/>"
-msgstr "Kopā vārdos: <br/>"
+msgstr "Kopsumma vārdos: <br/>"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__display_invoice_amount_total_words
@@ -15557,7 +15730,7 @@ msgstr "Kopējais daudzums, ko klients ir parādā."
 #: model:ir.model.fields,help:account.field_res_partner__debit
 #: model:ir.model.fields,help:account.field_res_users__debit
 msgid "Total amount you have to pay to this vendor."
-msgstr "Kopējā apmaksas summa šim piegādātājam."
+msgstr "Kopsumma, kura Jums jāsamaksā šīm piegādātājam."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
@@ -15666,7 +15839,7 @@ msgstr "Uzticams"
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Try a sample vendor bill"
-msgstr "Izmēģināt iepirkuma rēķina paraugu"
+msgstr "Izmēģināt parauga piegādātāja rēķinu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__account_type
@@ -15715,11 +15888,6 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_partner_bank__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Reģistrētās izņēmuma aktivitātes veids."
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
-msgid "UP"
-msgstr "DARBOJAS"
 
 #. module: account
 #. odoo-python
@@ -15774,6 +15942,13 @@ msgid "Unit of Measure"
 msgstr "Mērvienība"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/template_generic_coa.py:0
+#, python-format
+msgid "United States of America (Generic)"
+msgstr "Amerikas Savienotās Valstis (Vispārīgi)"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Unmark as Sent"
 msgstr "Atcelt atzīmi kā nosūtīts"
@@ -15823,17 +15998,17 @@ msgstr "Atsaistīt"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_unreconcile_view
 msgid "Unreconcile Transactions"
-msgstr "Atcelt grāmatojumu saskaņošanu"
+msgstr "Atsaistīt darījumu"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unreconciled"
-msgstr "Nesaistīts"
+msgstr "Nav saskaņots"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_unreconciled
 msgid "Unreconciled Entries"
-msgstr "Neizlīdzinātie ieraksti"
+msgstr "Nesaskaņotie ieraksti"
 
 #. module: account
 #. odoo-python
@@ -15891,6 +16066,16 @@ msgstr "Neuzticamo maksājumu skaits"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "UoM"
 msgstr "Mērv"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
+msgid "Up"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Update Taxes and Accounts"
+msgstr "Atjaunot nodokļus un kontus"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16171,19 +16356,19 @@ msgstr "Piegādātāja bankas konts"
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_invoice
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Vendor Bill"
-msgstr "Iepirkuma rēķins"
+msgstr "Piegādātāja rēķins"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_account__vendor_bill_count
 msgid "Vendor Bill Count"
-msgstr "Iepirkumu rēķinu skaits"
+msgstr "Piegādātāja rēķinu skaits"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Vendor Bill Created"
-msgstr "Iepirkuma rēķins izveidots"
+msgstr "Piegādātāja rēķins izveidots"
 
 #. module: account
 #. odoo-python
@@ -16196,19 +16381,19 @@ msgstr "Iepirkuma rēķins izveidots"
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
 #, python-format
 msgid "Vendor Bills"
-msgstr "Iepirkumu rēķini"
+msgstr "Piegādātāja rēķini"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_discount_income_allocation_id
 msgid "Vendor Bills Discounts Account"
-msgstr "Iepirkumu rēķinu atlaižu konts"
+msgstr "Piegādātāja rēķinu atlaižu konts"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__in_refund
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_refund
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Vendor Credit Note"
-msgstr "Piegādātāja kredīta piezīme"
+msgstr "Piegādātāja kredītrēķins"
 
 #. module: account
 #. odoo-python
@@ -16270,7 +16455,7 @@ msgstr "Skatījums"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "View Partner(s)"
-msgstr ""
+msgstr "Skatīt partneri(-us)"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__warning
@@ -16402,13 +16587,22 @@ msgstr ""
 "izteiksmes vērtību."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"When targeting an expression for carryover, the label of that expression "
+"must start with _applied_carryover_"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
 msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
 "                vendor payment related to this purchase receipt."
 msgstr ""
-"Kad pirkuma kvīts ir apstiprināta, varat reģistrēt\n"
-"                ar šo pirkuma kvīti saistīto pārdevēja maksājumu."
+"Kad pirkuma kvīts ir apstiprināta, Jūs varat reģistrēt\n"
+"                piegādātāja maksājumu saistīto ar šo pirkuma kvīti."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_receipt_type
@@ -16677,6 +16871,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
+#, python-format
+msgid "You can't create payments for entries belonging to different branches."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid ""
@@ -16781,6 +16982,15 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
+"You can't reset to draft those journal entries. You need to request a "
+"cancellation instead."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s."
 msgstr ""
 "Ierakstus nevar pievienot/mainīt pirms bloķēšanas datuma %s (ieskaitot to)."
@@ -16817,6 +17027,15 @@ msgid ""
 msgstr ""
 "Konta, kas žurnālā iestatīts kā Bankas konts, veidu nevar mainīt uz debitoru"
 " vai kreditoru parādiem."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid ""
+"You cannot create a fiscal position with a country outside of the selected "
+"country group."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -17180,6 +17399,15 @@ msgstr "Jūs nevarat izmantot nodokļus rindās ar ārpusbilances kontu"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"You cannot use the field carryover_target in an expression that does not "
+"have the label starting with _carryover_"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -17516,15 +17744,22 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "for this vendor. You can allocate them to mark this bill as paid."
-msgstr "šim piegādātājam. piešķir, lai atzīmētu kā apmaksātu."
+msgstr ""
+"šim piegādātājam. Jūs varat to piešķirt viņiem, lai atzīmēt šo rēķinu kā "
+"apmaksātu."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "for this vendor. You can allocate them to mark this credit note as paid."
 msgstr ""
-"šim pārdevējam. Varat tos piešķirt, lai atzīmētu šo kredīta paziņojumu kā "
-"apmaksātu."
+"šim piegādātājam. Jūs varat to piešķirt viņiem, lai atzīmēt šo kredītrēķinu "
+"kā apmaksātu."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
+msgid "has been applied."
+msgstr "tika pielietots."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -17555,7 +17790,7 @@ msgstr "procentos"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "invoices"
-msgstr ""
+msgstr "rēķini"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -17564,7 +17799,7 @@ msgid ""
 "                            Double check if the account can be trusted by calling the vendor.<br/>"
 msgstr ""
 "ir naudas pārvedumu pakalpojums, nevis banka.\n"
-"                            Divreiz pārbaudiet, vai kontam var uzticēties, zvanot pārdevējam.<br/>"
+"                            Divreiz pārbaudiet, vai kontam var uzticēties, zvanot piegādātājam.<br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -17598,7 +17833,6 @@ msgid "of tax"
 msgstr "no nodokļa"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "on"
@@ -17813,16 +18047,10 @@ msgstr "{label}: {new_date} koriģējošais ieraksts"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{percent}% recognized on {new_date}"
 msgstr "{percent}% recognized on {new_date}"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-#, python-format
-msgid "{percent}% to recognize on {new_date}"
-msgstr "{percent}% atpazīt {new_date}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note

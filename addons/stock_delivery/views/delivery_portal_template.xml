@@ -25,7 +25,7 @@
                 </t>
             </div>
             <div t-if="picking.carrier_id.get_return_label_from_portal and picking.return_label_ids">
-                <a class="ms-3" t-attf-href="/web/content/#{picking.return_label_ids[:1].id}?access_token=#{i.return_label_ids[:1].access_token}" target="_blank">
+                <a class="ms-3" t-attf-href="/web/content/#{picking.return_label_ids[:1].id}?access_token=#{picking.return_label_ids[:1].access_token}" target="_blank">
                     Print Return Label
                 </a>
             </div>

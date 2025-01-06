@@ -287,13 +287,11 @@
                                         ('requires_allocation', '=', 'no'),
                                         '&amp;',
                                             ('has_valid_allocation', '=', True),
-                                            '&amp;',
-                                                ('max_leaves', '>', '0'),
-                                                '|',
-                                                    ('allows_negative', '=', True),
-                                                    '&amp;',
-                                                        ('virtual_remaining_leaves', '&gt;', 0),
-                                                        ('allows_negative', '=', False),
+                                            '|',
+                                                ('allows_negative', '=', True),
+                                                '&amp;',
+                                                    ('virtual_remaining_leaves', '&gt;', 0),
+                                                    ('allows_negative', '=', False),
                                 ]"
                                 context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to}"
                                 options="{'no_create': True, 'no_open': True, 'request_type': 'leave'}"
@@ -416,8 +414,7 @@
                     show_unusual_days="True"
                     color="color"
                     hide_time="True"
-                    mode="year"
-                    all_day="last_several_days">
+                    mode="year">
                 <field name="display_name"/>
                 <field name="holiday_status_id" filters="1" invisible="1" color="color"/>
                 <field name="state" invisible="1"/>
@@ -442,8 +439,7 @@
                     quick_create="0"
                     show_unusual_days="True"
                     color="color"
-                    hide_time="True"
-                    all_day="last_several_days">
+                    hide_time="True">
                 <field name="display_name"/>
                 <field name="holiday_status_id" filters="1" invisible="1" color="color"/>
                 <field name="state" invisible="1"/>
@@ -499,8 +495,7 @@
                     mode="month"
                     show_unusual_days="True"
                     quick_create="0"
-                    color="color"
-                    all_day="last_several_days">
+                    color="color">
                 <field name="display_name"/>
                 <field name="holiday_status_id" color="color" filters="1" invisible="1"/>
                 <field name="employee_id" filters="1" invisible="1"/>

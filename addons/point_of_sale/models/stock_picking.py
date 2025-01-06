@@ -137,6 +137,7 @@ class StockPicking(models.Model):
                         'journal_id': rec.pos_order_id.sale_journal.id,
                         'date': rec.pos_order_id.date_order,
                         'ref': 'pos_order_'+str(rec.pos_order_id.id),
+                        'partner_id': rec.pos_order_id.partner_id.id,
                         'line_ids': [
                             (0, 0, {
                                 'name': rec.pos_order_id.name,
@@ -169,6 +170,8 @@ class StockPickingType(models.Model):
     @api.constrains('active')
     def _check_active(self):
         for picking_type in self:
+            if picking_type.active:
+                continue
             pos_config = self.env['pos.config'].sudo().search([('picking_type_id', '=', picking_type.id)], limit=1)
             if pos_config:
                 raise ValidationError(_("You cannot archive '%s' as it is used by a POS configuration '%s'.", picking_type.name, pos_config.name))
@@ -241,7 +244,7 @@ class StockMove(models.Model):
 
         # Check for any conversion issues in the moves before setting quantities
         uoms_with_issues = set()
-        for move in moves_to_assign:
+        for move in moves_to_assign.filtered(lambda m: m.product_uom_qty and m.product_uom != m.product_id.uom_id):
             converted_qty = move.product_uom._compute_quantity(
                 move.product_uom_qty,
                 move.product_id.uom_id,

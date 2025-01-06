@@ -7,6 +7,7 @@
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # Martin Trigaux, 2023
 # Wil Odoo, 2023
+# Pilar Vargas, 2024
 # Larissa Manderfeld, 2024
 # 
 msgid ""
@@ -99,13 +100,13 @@ msgid ""
 "'Badge - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), "
 "(object.name or '').replace('/',''))"
 msgstr ""
-"'Pase - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), "
-"(object.name or '').replace('/',''))"
+"'Credencial - %s - %s' % ((object.event_id.name or 'Event').replace('/',''),"
+" (object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_badge
 msgid "'Badge - %s' % (object.name or 'Event').replace('/','')"
-msgstr "'Pase - %s' % (object.name or 'Event').replace('/','')"
+msgstr "'Credencial - %s' % (object.name or 'Event').replace('/','')"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
@@ -377,8 +378,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_badge_card
 msgid "<span class=\"o_event_badge_font_faded\">My Placeholder Company</span>"
 msgstr ""
-"<span class=\"o_event_badge_font_faded\">Marcador de posición de Mi "
-"Compañía</span>"
+"<span class=\"o_event_badge_font_faded\">Marcador de posición de "
+"MiCompañía</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -394,7 +395,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "<span class=\"o_stat_text\">Registration Desk</span>"
-msgstr "<span class=\"o_stat_text\">Mostrador de registro</span>"
+msgstr "<span class=\"o_stat_text\">Escáner de credenciales</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -675,7 +676,7 @@ msgstr ""
 "                    </div>\n"
 "                    <div>\n"
 "                        <br>\n"
-"                        <strong>Agregue este evento a su calendario</strong>\n"
+"                        <strong>Añada este evento a su calendario</strong>\n"
 "                        <a t-attf-href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"> Google</a>\n"
 "                        <a t-attf-href=\"/event/{{ slug(object.event_id) }}/ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"> iCal/Outlook</a>\n"
 "                        <a t-attf-href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
@@ -1072,7 +1073,7 @@ msgstr ""
 "                    </span>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
 "                    <a t-attf-href=\"/event/{{ object.event_id.id }}/my_tickets?badge_mode=1&amp;registration_ids={{ object.ids }}&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(object.ids) }}\" target=\"_blank\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
-"                        Descargar pase\n"
+"                        Descargar credencial\n"
 "                    </a>\n"
 "                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
 "                        <img t-att-src=\"'/logo.png?company=%s' % object.company_id.id\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % object.company_id.name\">\n"
@@ -1091,7 +1092,7 @@ msgstr ""
 "                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
 "                    <div>\n"
 "                        Hola <t t-out=\"object.name or 'Guest'\"></t>,<br>\n"
-"                        Aquí encontrará adjunto su pase para la\n"
+"                        Aquí encontrará adjunto su credencial para la\n"
 "                        <t t-if=\"is_online\">\n"
 "                            <a t-att-href=\"object.event_id.website_url\" style=\"color:#875A7B;text-decoration:none;\" t-out=\"object.event_id.name or ''\">Presentación en línea de la colección OpenWood</a>\n"
 "                        </t>\n"
@@ -1101,7 +1102,7 @@ msgstr ""
 "                    </div>\n"
 "                    <div>\n"
 "                        <br>\n"
-"                        <strong>Agregar este evento a su calendario</strong>\n"
+"                        <strong>Añadir este evento a su calendario</strong>\n"
 "                        <a t-attf-href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"> Google</a>\n"
 "                        <a t-attf-href=\"/event/{{ slug(object.event_id) }}/ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"> iCal/Outlook</a>\n"
 "                        <a t-attf-href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
@@ -1576,7 +1577,7 @@ msgstr ""
 "                    </div>\n"
 "                    <div>\n"
 "                        <br>\n"
-"                        <strong>Agregar este evento a su calendario</strong>\n"
+"                        <strong>Añadir este evento a su calendario</strong>\n"
 "                        <a t-attf-href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"> Google</a>\n"
 "                        <a t-attf-href=\"/event/{{ slug(object.event_id) }}/ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"> iCal/Outlook</a>\n"
 "                        <a t-attf-href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
@@ -1806,7 +1807,7 @@ msgstr "Icono de tipo de actvidad"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "Add a description..."
-msgstr "Agregar una descripción.."
+msgstr "Añadir una descripción.."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -1814,17 +1815,16 @@ msgid ""
 "Add a navigation menu to your event web pages with schedule, tracks, a track"
 " proposal form, etc."
 msgstr ""
-"Agregue un menú de navegación a las páginas web de su evento con los "
-"horarios, sesiones, un formulario para proponer sesiones, entre algunas "
-"otras cosas"
+"Añada un menú de navegación a las páginas web de su evento con los horarios,"
+" sesiones, un formulario para proponer sesiones, entre algunas otras cosas"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Add some internal notes (to do lists, contact info, ...)"
 msgstr ""
-"Agregue algunas notas internas (listas de pendientes, información de "
-"contacto, etc.)"
+"Añada algunas notas internas (listas de pendientes, información de contacto,"
+" etc.)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_search
@@ -2010,29 +2010,29 @@ msgstr "Asientos disponibles"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge
 msgid "Badge"
-msgstr "Pase"
+msgstr "Credencial"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
 msgid "Badge Background"
-msgstr "Fondo del pase"
+msgstr "Fondo de la credencial"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_format
 msgid "Badge Dimension"
-msgstr "Dimensión del pase"
+msgstr "Dimensión de la credencial"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_badge
 msgid "Badge Example"
-msgstr "Pase de ejemplo"
+msgstr "Credencial de ejemplo"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/controllers/main.py:0
 #, python-format
 msgid "Badges"
-msgstr "Pases"
+msgstr "Credenciales"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -2749,7 +2749,7 @@ msgstr "Evento: planificador de correo"
 #. module: event
 #: model:mail.template,name:event.event_registration_mail_template_badge
 msgid "Event: Registration Badge"
-msgstr "Evento: pase de inscripción"
+msgstr "Evento: credencial de inscripción"
 
 #. module: event
 #: model:mail.template,name:event.event_subscription
@@ -3871,7 +3871,7 @@ msgstr "Fecha de inscripción"
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #, python-format
 msgid "Registration Desk"
-msgstr "Mostrador de inscripción"
+msgstr "Escáner de credenciales"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__end_sale_datetime
@@ -4004,7 +4004,7 @@ msgstr "Error de envío del SMS"
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 #, python-format
 msgid "Scan a badge"
-msgstr "Escanear pase"
+msgstr "Escanear credencial"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4249,7 +4249,7 @@ msgstr "Etiquetas"
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Taken"
-msgstr "Tomado"
+msgstr "Ocupado"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_taken
@@ -4516,7 +4516,7 @@ msgid ""
 "Ticket types allow you to distinguish your attendees. Let's <b>create</b> a "
 "new one."
 msgstr ""
-"Los tipos de boletos le permiten distinguir a sus asistentes. Vamos a "
+"Los tipos de entradas le permiten distinguir a sus asistentes. Vamos a "
 "<b>crear</b> uno nuevo."
 
 #. module: event
@@ -4820,8 +4820,8 @@ msgid ""
 "You can also add a description to help your coworkers understand the meaning"
 " and purpose of the stage."
 msgstr ""
-"También puede agregar una descripción para ayudar a sus compañeros de "
-"trabajo a entender el significado y el propósito de esta etapa."
+"También puede añadir una descripción para ayudar a sus compañeros de trabajo"
+" a entender el significado y el propósito de esta etapa."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -4835,7 +4835,7 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
 msgid "Your badge for {{ object.event_id.name }}"
-msgstr "Su pase para {{ object.event_id.name }}"
+msgstr "Su credencial para {{ object.event_id.name }}"
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription

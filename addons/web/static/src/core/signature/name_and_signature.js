@@ -56,6 +56,7 @@ export class NameAndSignature extends Component {
                     this.$signatureField = $(".o_web_sign_signature");
                     this.$signatureField.on("change", () => {
                         this.props.signature.isSignatureEmpty = this.isSignatureEmpty;
+                        this.props.onSignatureChange(this.state.signMode);
                     });
                     this.jSignature();
                     this.resetSignature();
@@ -253,6 +254,7 @@ export class NameAndSignature extends Component {
                 );
                 Object.assign(context, ignoredContext);
                 this.props.signature.isSignatureEmpty = this.isSignatureEmpty;
+                this.props.onSignatureChange(this.state.signMode);
                 return this.isSignatureEmpty;
             }, 0);
         };
@@ -361,6 +363,7 @@ NameAndSignature.props = {
     signatureType: { type: String, optional: true },
     noInputName: { type: Boolean, optional: true },
     mode: { type: String, optional: true },
+    onSignatureChange: { type: Function, optional: true },
 };
 NameAndSignature.defaultProps = {
     defaultFont: "",
@@ -368,4 +371,5 @@ NameAndSignature.defaultProps = {
     fontColor: "DarkBlue",
     signatureType: "signature",
     noInputName: false,
+    onSignatureChange: () => {},
 };

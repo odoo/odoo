@@ -1,10 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from datetime import date
 from markupsafe import Markup
 import json
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.tools.sql import column_exists, create_column
 
@@ -131,11 +132,42 @@ class StockPicking(models.Model):
         for picking in self:
             picking.weight = sum(move.weight for move in picking.move_ids if move.state != 'cancel')
 
+    def _carrier_exception_note(self, exception):
+        self.ensure_one()
+        line_1 = _("Exception occurred with respect to carrier on the transfer")
+        line_2 = _("Manual actions might be needed.")
+        line_3 = _("Exception:")
+        return Markup('<div> {line_1} <a href="#" data-oe-model="stock.picking" data-oe-id="{picking_id}"> {picking_name}</a>. {line_2}<div class="mt16"><p>{line_3} {exception}</p></div></div>').format(line_1=line_1, line_2=line_2, line_3=line_3, picking_id=self.id, picking_name=self.name, exception=exception)
+
     def _send_confirmation_email(self):
+        # The carrier's API processes validity checks and parcels generation one picking at a time.
+        # However, since a UserError of any of the picking will cause a rollback of the entire batch
+        # on Odoo's side and since pickings that were already processed on the carrier's side must
+        # stay validated, UserErrors might need to be replaced by activity warnings.
+
+        processed_carrier_picking = False
+
         for pick in self:
-            if pick.carrier_id and pick.carrier_id.integration_level == 'rate_and_ship' and pick.picking_type_code != 'incoming' and not pick.carrier_tracking_ref and pick.picking_type_id.print_label:
-                pick.sudo().send_to_shipper()
-            pick._check_carrier_details_compliance()
+            try:
+                if pick.carrier_id and pick.carrier_id.integration_level == 'rate_and_ship' and pick.picking_type_code != 'incoming' and not pick.carrier_tracking_ref and pick.picking_type_id.print_label:
+                    pick.sudo().send_to_shipper()
+                pick._check_carrier_details_compliance()
+                if pick.carrier_id:
+                    processed_carrier_picking = True
+            except (UserError) as e:
+                if processed_carrier_picking:
+                    # We can not raise a UserError at this point
+                    exception_message = str(e)
+                    pick.message_post(body=exception_message, message_type='notification')
+                    pick.sudo().activity_schedule(
+                        'mail.mail_activity_data_warning',
+                        date.today(),
+                        note=pick._carrier_exception_note(exception_message),
+                        user_id=pick.user_id.id or self.env.user.id or SUPERUSER_ID,
+                        )
+                else:
+                    raise e
+
         return super(StockPicking, self)._send_confirmation_email()
 
     def _pre_put_in_pack_hook(self, move_line_ids):
@@ -189,7 +221,7 @@ class StockPicking(models.Model):
             amount_without_delivery = self.sale_id._compute_amount_total_without_delivery()
             if self.carrier_id._compute_currency(self.sale_id, amount_without_delivery, 'pricelist_to_company') >= self.carrier_id.amount:
                 res['exact_price'] = 0.0
-        self.carrier_price = self.carrier_id._apply_margins(res['exact_price'])
+        self.carrier_price = self.carrier_id.with_context(order=self.sale_id)._apply_margins(res['exact_price'])
         if res['tracking_number']:
             related_pickings = self.env['stock.picking'] if self.carrier_tracking_ref and res['tracking_number'] in self.carrier_tracking_ref else self
             accessed_moves = previous_moves = self.move_ids.move_orig_ids

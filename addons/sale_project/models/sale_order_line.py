@@ -53,11 +53,11 @@ class SaleOrderLine(models.Model):
 
                 if not sale_order:
                     sale_order = self.env['sale.order'].create(so_create_values)
-                    sale_order.action_confirm()
                 default_values['order_id'] = sale_order.id
             if product_name := self.env.context.get('sol_product_name') or self.env.context.get('default_name'):
                 product = self.env['product.product'].search([
                     ('name', 'ilike', product_name),
+                    ('type', '=', 'service'),
                     ('company_id', 'in', [False, self.env.company.id]),
                 ], limit=1)
                 if product:
@@ -186,7 +186,7 @@ class SaleOrderLine(models.Model):
             'active': True,
             'company_id': self.company_id.id,
             'allow_billable': True,
-            'user_id': False,
+            'user_id': self.product_id.project_template_id.user_id.id,
         }
 
     def _timesheet_create_project(self):
@@ -273,6 +273,12 @@ class SaleOrderLine(models.Model):
         task.message_post(body=task_msg)
         return task
 
+    def _get_so_lines_task_global_project(self):
+        return self.filtered(lambda sol: sol.is_service and sol.product_id.service_tracking == 'task_global_project')
+
+    def _get_so_lines_new_project(self):
+        return self.filtered(lambda sol: sol.is_service and sol.product_id.service_tracking in ['project_only', 'task_in_project'])
+
     def _timesheet_service_generation(self):
         """ For service lines, create the task or the project. If already exists, it simply links
             the existing one to the line.
@@ -280,8 +286,8 @@ class SaleOrderLine(models.Model):
             new project/task. This explains the searches on 'sale_line_id' on project/task. This also
             implied if so line of generated task has been modified, we may regenerate it.
         """
-        so_line_task_global_project = self.filtered(lambda sol: sol.is_service and sol.product_id.service_tracking == 'task_global_project')
-        so_line_new_project = self.filtered(lambda sol: sol.is_service and sol.product_id.service_tracking in ['project_only', 'task_in_project'])
+        so_line_task_global_project = self._get_so_lines_task_global_project()
+        so_line_new_project = self._get_so_lines_new_project()
 
         # search so lines from SO of current so lines having their project generated, in order to check if the current one can
         # create its own project, or reuse the one of its order.

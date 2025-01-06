@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
@@ -359,12 +359,12 @@ msgstr "Asistente para planificar actividades"
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Add a new employee"
-msgstr "Agregar un nuevo empleado"
+msgstr "Añadir un nuevo empleado"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.mail_activity_plan_action
 msgid "Add a new plan"
-msgstr "Agregar un nuevo plan"
+msgstr "Añadir un nuevo plan"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_description
@@ -996,6 +996,8 @@ msgstr ""
 "Mantener una interacción regular con los clientes clave para una mejor extracción y expansión."
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
@@ -1008,6 +1010,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+#, python-format
 msgid "Department"
 msgstr "Departamento"
 
@@ -2221,8 +2224,8 @@ msgid ""
 "                    related to employees by departments: expenses, timesheets,\n"
 "                    leaves, recruitments, etc."
 msgstr ""
-"La estructura del departamento de Odoo se utiliza para administrar todos los documentos.\n"
-"                    relacionados con los empleados por departamentos: gastos, hojas de asistencia,\n"
+"La estructura de departamentos de Odoo se utiliza para administrar todos los documentos.\n"
+"                    relacionados con los empleados por departamentos: gastos, partes de horas,\n"
 "                    permisos, contrataciones, etc."
 
 #. module: hr
@@ -2232,8 +2235,8 @@ msgid ""
 "                related to employees by departments: expenses, timesheets,\n"
 "                time off, recruitments, etc."
 msgstr ""
-"La estructura del departamento de Odoo se utiliza para administrar todos los documentos.\n"
-"                relacionados con los empleados por departamentos: gastos, hojas de asistencia,\n"
+"La estructura de departamentos de Odoo se utiliza para administrar todos los documentos.\n"
+"                relacionados con los empleados por departamentos: gastos, partes de horas,\n"
 "                permisos, contrataciones, etc."
 
 #. module: hr
@@ -2861,6 +2864,13 @@ msgstr "Número de seguridad social"
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Software Developer"
 msgstr "Desarrollador de software"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
+#, python-format
+msgid "Some employee already have a work contact"
+msgstr "Algunos empleados ya tienen un contacto de trabajo"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo

@@ -181,7 +181,7 @@
                     <field name="currency_id" groups="base.group_multi_currency" optional="hide" string="Currency" readonly="1" invisible="is_same_currency"/>
                     <field name="debit" sum="Total Debit" readonly="1"/>
                     <field name="credit" sum="Total Credit" readonly="1"/>
-                    <field name="tax_tag_ids" string="Tax Grids" domain="[('applicability', '=', 'taxes')]" widget="many2many_tags" optional="hide"/>
+                    <field name="tax_tag_ids" string="Tax Grids" options="{'no_create': True, 'no_create_edit': True}" domain="[('applicability', '=', 'taxes')]" widget="many2many_tags" optional="hide"/>
                     <field name="discount_date" string="Discount Date" optional="hide" />
                     <field name="discount_amount_currency" string="Discount Amount" optional="hide" />
                     <field name="tax_line_id" string="Originator Tax" optional="hide" readonly="1"/>
@@ -641,7 +641,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-6">
-                                        <span><field name="amount_total" widget='monetary'/></span>
+                                        <span><field name="amount_total_in_currency_signed" widget='monetary'/></span>
                                         <span><field name="currency_id" invisible="1" readonly="state in ['cancel', 'posted']"/></span>
                                     </div>
                                     <div class="col-6">
@@ -694,7 +694,7 @@
                         <!-- Preview (only customer invoices) -->
                         <button name="preview_invoice" type="object" string="Preview" data-hotkey="o"
                                 title="Preview invoice"
-                                invisible="move_type not in ('out_invoice', 'out_refund')"/>
+                                invisible="move_type not in ('out_invoice', 'out_refund') or state == 'cancel'"/>
                         <!-- Reverse -->
                         <button name="%(action_view_account_move_reversal)d" string="Reverse Entry"
                                 type="action" groups="account.group_account_invoice" data-hotkey="z"
@@ -975,7 +975,7 @@
                                      invisible="context.get('default_journal_id') and context.get('move_type', 'entry') != 'entry'">
                                     <field name="journal_id"
                                         options="{'no_create': True, 'no_open': True}"
-                                        readonly="posted_before"/>
+                                        readonly="posted_before and name not in (False, '', '/')"/>
                                     <span class="oe_inline o_form_label mx-3"
                                           groups="base.group_multi_currency"
                                           invisible="move_type == 'entry'"> in </span>
@@ -1320,7 +1320,7 @@
                                         <field name="invoice_origin" string="Source Document" force_save="1" invisible="1"/>
                                         <field name="partner_bank_id"
                                                context="{'default_partner_id': bank_partner_id, 'display_account_trust': True}"
-                                               domain="[('partner_id', '=', bank_partner_id)]"
+                                               domain="[('partner_id.ref_company_ids', 'parent_of', company_id)]"
                                                readonly="state != 'draft'"/>
                                         <field name="qr_code_method"
                                                invisible="not display_qr_code"/>
@@ -1460,6 +1460,9 @@
                                 ('name', 'ilike', self), ('invoice_origin', 'ilike', self),
                                 ('ref', 'ilike', self), ('payment_reference', 'ilike', self),
                                 ('partner_id', 'child_of', self)]"/>
+                    <field name="name"/>
+                    <field name="ref"/>
+                    <field name="payment_reference"/>
                     <field name="journal_id"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="invoice_user_id" string="Salesperson" domain="[('share', '=', False)]"/>

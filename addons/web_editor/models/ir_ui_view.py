@@ -213,7 +213,7 @@ class IrUiView(models.Model):
 
     @api.model
     def _get_allowed_root_attrs(self):
-        return ['style', 'class']
+        return ['style', 'class', 'target', 'href']
 
     def replace_arch_section(self, section_xpath, replacement, replace_tail=False):
         # the root of the arch section shouldn't actually be replaced as it's
@@ -233,6 +233,8 @@ class IrUiView(models.Model):
         for attribute in self._get_allowed_root_attrs():
             if attribute in replacement.attrib:
                 root.attrib[attribute] = replacement.attrib[attribute]
+            elif attribute in root.attrib:
+                del root.attrib[attribute]
 
         # Note: after a standard edition, the tail *must not* be replaced
         if replace_tail:

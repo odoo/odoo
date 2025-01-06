@@ -108,9 +108,23 @@ class AccountMoveReversal(models.TransientModel):
         moves = self.move_ids
 
         # Create default values.
+        partners = moves.company_id.partner_id + moves.commercial_partner_id
+
+        bank_ids = self.env['res.partner.bank'].search([
+            ('partner_id', 'in', partners.ids),
+            ('company_id', 'in', moves.company_id.ids + [False]),
+        ], order='sequence DESC')
+        partner_to_bank = {bank.partner_id: bank for bank in bank_ids}
         default_values_list = []
         for move in moves:
-            default_values_list.append(self._prepare_default_reversal(move))
+            if move.is_outbound():
+                partner = move.company_id.partner_id
+            else:
+                partner = move.commercial_partner_id
+            default_values_list.append({
+                'partner_bank_id': partner_to_bank.get(partner, self.env['res.partner.bank']).id,
+                **self._prepare_default_reversal(move),
+            })
 
         batches = [
             [self.env['account.move'], [], True],   # Moves to be cancelled by the reverses.
@@ -134,7 +148,7 @@ class AccountMoveReversal(models.TransientModel):
             if is_modify:
                 moves_vals_list = []
                 for move in moves.with_context(include_business_fields=True):
-                    data = move.copy_data({'date': self.date})[0]
+                    data = move.copy_data(self._modify_default_reverse_values(move))[0]
                     data['line_ids'] = [line for line in data['line_ids'] if line[2]['display_type'] in ('product', 'line_section', 'line_note')]
                     moves_vals_list.append(data)
                 new_moves = self.env['account.move'].create(moves_vals_list)
@@ -169,3 +183,8 @@ class AccountMoveReversal(models.TransientModel):
 
     def modify_moves(self):
         return self.reverse_moves(is_modify=True)
+
+    def _modify_default_reverse_values(self, origin_move):
+        return {
+            'date': self.date
+        }

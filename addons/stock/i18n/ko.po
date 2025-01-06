@@ -5,16 +5,16 @@
 # Translators:
 # Martin Trigaux, 2024
 # Sarah Park, 2024
-# Wil Odoo, 2024
 # Daye Jeong, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Daye Jeong, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1035,6 +1035,13 @@ msgid "All at once"
 msgstr "한번에"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"All our contractual relations will be governed exclusively by United States "
+"law."
+msgstr "당사의 모든 계약 관계는 전적으로 미국법에 의거합니다."
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
 msgid "All returned moves"
 msgstr "전체 반품 이동"
@@ -1426,6 +1433,13 @@ msgid "Before scheduled date"
 msgstr "예정일 전"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
+"responsibility."
+msgstr "아래의 내용은 참고용으로만 제시되는 내용이며 Odoo S.A.는 해당 내용에 대한 책임을 지지 않습니다."
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
 msgid "Blocking Message"
 msgstr "차단 메시지"
@@ -1565,6 +1579,21 @@ msgid "Category Routes"
 msgstr "범주 경로"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Certain countries apply withholding at source on the amount of invoices, in "
+"accordance with their internal legislation. Any withholding at source will "
+"be paid by the client to the tax authorities. Under no circumstances can My "
+"Company (Chicago) become involved in costs related to a country's "
+"legislation. The amount of the invoice will therefore be due to My Company "
+"(Chicago) in its entirety and does not include any costs relating to the "
+"legislation of the country in which the client is located."
+msgstr ""
+"일부 국가에서는 국내 법령에 따라 청구서 금액에 대해 원천징수를 적용하고 있습니다. 원천징수액은 고객이 세무 당국에 납부합니다. 어떠한 "
+"경우에도 국가 법령과 관련한 비용에 My Company (Chicago)사는 관여할 수 없습니다. 따라서 청구서 상의 금액 전액을 My "
+"Company (Chicago) 사에 지불하여야 하며, 고객이 위치하고 있는 국가의 법령과 관련된 비용은 이에 포함되지 않습니다. "
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__move_dest_exists
 msgid "Chained Move Exists"
 msgstr "연결된 이동이 있음"
@@ -1574,6 +1603,15 @@ msgstr "연결된 이동이 있음"
 #: model:ir.model,name:stock.model_stock_change_product_qty
 msgid "Change Product Quantity"
 msgstr "품목 수량 변경"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr "다른 제품이 포함된 이동 라인의 로트/일련 번호 변경은 허용되지 않습니다."
 
 #. module: stock
 #. odoo-python
@@ -3667,6 +3705,17 @@ msgid "Icon to indicate an exception activity."
 msgstr "예외 활동을 표시하기 위한 아이콘"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"If a payment is still outstanding more than sixty (60) days after the due "
+"payment date, My Company (Chicago) reserves the right to call on the "
+"services of a debt recovery company. All legal expenses will be payable by "
+"the client."
+msgstr ""
+"지급기일로부터 미결제 상태로 육십(60)일이 경과한 경우 당사 (시카고)는 해당 건에 대해 추심전문업체에 요청할 수 있는 권리를 "
+"가집니다. 관련된 모든 법적인 비용은 고객이 부담합니다."
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__same
 msgid "If all products are same"
 msgstr "모든 품목이 동일한 경우"
@@ -3910,6 +3959,17 @@ msgstr "재고 있음"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
 msgstr "유형 있음"
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"In order for it to be admissible, My Company (Chicago) must be notified of "
+"any claim by means of a letter sent by recorded delivery to its registered "
+"office within 8 days of the delivery of the goods or the provision of the "
+"services."
+msgstr ""
+"승인을 받기 위해서는 상품 배송 또는 서비스 제공 후 8일 이내에 등록된 사무실로 등기 우편을 통해 서신으로 My Company "
+"(Chicago) 사에 청구할 내용을 통지해야만 합니다."
 
 #. module: stock
 #. odoo-javascript
@@ -5109,6 +5169,20 @@ msgid "My Activity Deadline"
 msgstr "내 활동 마감일"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"My Company (Chicago) undertakes to do its best to supply performant services"
+" in due time in accordance with the agreed timeframes. However, none of its "
+"obligations can be considered as being an obligation to achieve results. My "
+"Company (Chicago) cannot under any circumstances, be required by the client "
+"to appear as a third party in the context of any claim for damages filed "
+"against the client by an end consumer."
+msgstr ""
+"My Company (Chicago)는 합의된 기간에 따라 적시에 성능 기준에 맞는 서비스를 제공하기 위해 최선을 다할 것을 약속합니다."
+" 그러나 이러한 의무 중 어떤 것도 결과를 달성하기 위한 의무 사항으로 간주될 수 없습니다. My Company (Chicago)는 어떤"
+" 상황에서도 최종 소비자가 고객에게 제기한 손해 배상 청구와 관련하여 고객이 당사를 제3자 업체로 표시되도록 할 수 없습니다."
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "My Counts"
 msgstr "나의 수치"
@@ -5191,6 +5265,12 @@ msgstr "새 보유 수량"
 #: model:ir.actions.act_window,name:stock.action_picking_form
 msgid "New Transfer"
 msgstr "신규 이송"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_lot__activity_calendar_event_id
+#: model:ir.model.fields,field_description:stock.field_stock_picking__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "다음 활동 캘린더 행사"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_date_deadline
@@ -5294,6 +5374,7 @@ msgstr "작업을 찾을 수 없습니다. 전송 내역을 생성합니다!"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
+#, python-format
 msgid "No product found to generate Serials/Lots for."
 msgstr "일련 번호/로트를 생성할 제품을 찾을 수 없습니다."
 
@@ -5721,6 +5802,20 @@ msgid "Other Information"
 msgstr "기타 정보"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Our invoices are payable within 21 working days, unless another payment "
+"timeframe is indicated on either the invoice or the order. In the event of "
+"non-payment by the due date, My Company (Chicago) reserves the right to "
+"request a fixed interest payment amounting to 10% of the sum remaining due. "
+"My Company (Chicago) will be authorized to suspend any provision of services"
+" without prior warning in the event of late payment."
+msgstr ""
+"청구서나 주문서에 다른 지불 기간이 명시되어 있지 않는 한, 당사의 청구서는 영업일 기준 21일 이내에 지불하도록 되어 있습니다. "
+"기한일까지 결제가 완료되지 않은 경우 My Company (Chicago)는 미납금의 10%에 해당하는 고정 이자를 요청할 권한을 "
+"가집니다. 또한 My Company (Chicago)는 연체 시 사전 경고 없이 서비스 제공을 중단할 권한이 있습니다."
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
 msgid "Out Type"
 msgstr "출력 유형"
@@ -5853,6 +5948,11 @@ msgstr "패키지"
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Package A"
 msgstr "패키지 A"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "Package B"
+msgstr "패키지 B"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
@@ -6950,6 +7050,13 @@ msgid "RETURN OF"
 msgstr "반품"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_lot__rating_ids
+#: model:ir.model.fields,field_description:stock.field_stock_picking__rating_ids
+#: model:ir.model.fields,field_description:stock.field_stock_scrap__rating_ids
+msgid "Ratings"
+msgstr "평가"
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__assigned
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -7617,6 +7724,11 @@ msgid "SSCC:"
 msgstr "SSCC:"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid "STANDARD TERMS AND CONDITIONS OF SALE"
+msgstr "표준 판매 조건"
+
+#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
@@ -7950,11 +8062,6 @@ msgstr "일정 위치에서 생산하는 경우 위치를 설정합니다. 제�
 #: model:ir.ui.menu,name:stock.menu_stock_general_settings
 msgid "Settings"
 msgstr "설정"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid "Shelf 1"
-msgstr "선반 1"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -8597,6 +8704,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr "로트/일련 번호(%s)가 다른 제품에 연결되어 있습니다."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
 msgid ""
 "The Serial Number (%s) is already used in these location(s): %s.\n"
 "\n"
@@ -8617,6 +8731,17 @@ msgstr "%s 이월 주문이 생성되었습니다."
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
 msgid "The barcode for a location must be unique per company!"
 msgstr "위치용 바코드는 회사별로 다르게 지정해야 합니다!"
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"The client explicitly waives its own standard terms and conditions, even if "
+"these were drawn up after these standard terms and conditions of sale. In "
+"order to be valid, any derogation must be expressly agreed to in advance in "
+"writing."
+msgstr ""
+"본 표준 판매 이용약관 이전에 작성되었다 하더라도, 고객의 자체 표준 약관은 명시적으로 철회하기로 합니다. 내용이 효력을 가지려면, 모든"
+" 수정 사항은 사전에 명확히 서면 동의가 있어야 합니다."
 
 #. module: stock
 #. odoo-python
@@ -9667,6 +9792,7 @@ msgid "Used to order the 'All Operations' kanban view"
 msgstr "'모든 작업'의 칸반뷰를 정리하는 데 사용됩니다"
 
 #. module: stock
+#: model:ir.model,name:stock.model_res_users
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__user_id
 #: model:res.groups,name:stock.group_stock_user
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -10241,14 +10367,18 @@ msgstr "이미 품목 유형을 사용한 경우에는 변경할 수 없습니�
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr "수동으로 실행시키지 않으면 일시 중지된 주문 지점을 생성할 수 없습니다."
+
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
-#: code:addons/stock/models/stock_orderpoint.py:0
-#, python-format, python-format
-msgid ""
-"You can not create a snoozed orderpoint that is not manually triggered."
-msgstr ""
+#, python-format
+msgid "You can not delete moves linked to another operation"
+msgstr "다른 작업에 이동이 연결되어 있는 경우에는 삭제할 수 없습니다."
 
 #. module: stock
 #. odoo-python
@@ -10306,6 +10436,7 @@ msgid ""
 "You can only snooze manual orderpoints. You should rather archive 'auto-"
 "trigger' orderpoints if you do not want them to be triggered."
 msgstr ""
+"주문 포인트는 수동 주문 포인트만 일시 중지할 수 있습니다. 자동 체결 주문 포인트를 활성화하지 않으려면 보관처리해야 합니다."
 
 #. module: stock
 #. odoo-python
@@ -10407,6 +10538,15 @@ msgid ""
 "package through this view. Try adding them to a batch picking and pack it "
 "there."
 msgstr ""
+"이 보기를 사용하여 서로 다른 전송의 수량을 동일한 패키지로 통합할 수 없습니다. 대신 일괄 피킹에 수량을 추가하고 그곳에서 포장할 수 "
+"있습니다."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "You cannot duplicate stock quants."
+msgstr "재고량은 중복으로 사용할 수 없습니다."
 
 #. module: stock
 #. odoo-python
@@ -10600,13 +10740,6 @@ msgstr "제품을 보충할 경로를 선택해야 합니다."
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-#, python-format
-msgid "You need to set a Serial Number before generating more."
-msgstr "추가로 생성하기 전에 일련번호를 설정해야 합니다."
-
-#. module: stock
-#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -10622,6 +10755,11 @@ msgstr ""
 #, python-format
 msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "품목 %s의 Lot/Serial 번호를 지정해야 합니다."
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid "You should update this document to reflect your T&amp;C."
+msgstr "귀사의 이용약관을 반영하여 이 문서를 업데이트해야 합니다."
 
 #. module: stock
 #. odoo-python
@@ -10658,6 +10796,15 @@ msgstr ""
 "여기에서 재고 예측을 기반으로 한 스마트 보충 안내를 확인할 수 있습니다.\n"
 "            클릭 한 번으로 구매 또는 제조 수량을 선택하여 재보충 주문을 시작하세요. \n"
 "            규칙을 \"자동\"으로 설정해놓으면 주문에 소요되는 시간을 줄일 수 있습니다. "
+
+#. module: stock
+#: model_terms:res.company,lunch_notify_message:stock.res_company_1
+msgid ""
+"Your lunch has been delivered.\n"
+"Enjoy your meal!"
+msgstr ""
+"점심 식사가 배송되었습니다.\n"
+"맛있게 드세요!"
 
 #. module: stock
 #. odoo-python

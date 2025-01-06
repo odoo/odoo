@@ -7,6 +7,7 @@ from stdnum.fr import siret
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
+from odoo.addons.account.models.company import PEPPOL_DEFAULT_COUNTRIES
 
 
 class ResPartner(models.Model):
@@ -119,13 +120,14 @@ class ResPartner(models.Model):
             ('9949', "9949 - Slovenia VAT number"),
             ('9950', "9950 - Slovakia VAT number"),
             ('9951', "9951 - San Marino VAT number"),
-            ('9952', "9952 - Turkey VAT number"),
+            ('9952', "9952 - Türkiye VAT number"),
             ('9953', "9953 - Holy See (Vatican City State) VAT number"),
             ('9955', "9955 - Swedish VAT number"),
             ('9957', "9957 - French VAT number"),
             ('9959', "9959 - Employer Identification Number (EIN, USA)"),
         ]
     )
+    hide_peppol_fields = fields.Boolean(compute='_compute_hide_peppol_fields')
 
     @api.constrains('peppol_eas')
     def _check_peppol_eas(self):
@@ -168,7 +170,7 @@ class ResPartner(models.Model):
             country_code = partner._deduce_country_code()
             if country_code in format_mapping:
                 partner.ubl_cii_format = format_mapping[country_code]
-            elif country_code in EAS_MAPPING:
+            elif country_code in PEPPOL_DEFAULT_COUNTRIES and country_code in EAS_MAPPING:
                 partner.ubl_cii_format = 'ubl_bis3'
             else:
                 partner.ubl_cii_format = partner.ubl_cii_format
@@ -207,6 +209,12 @@ class ResPartner(models.Model):
                                 new_eas = eas
                                 break
                     partner.peppol_eas = new_eas
+
+    @api.depends('ubl_cii_format')
+    def _compute_hide_peppol_fields(self):
+        """ Hides the people fields depending on the UBL format. Can be extended to add different hiding conditions. """
+        for partner in self:
+            partner.hide_peppol_fields = not partner.ubl_cii_format or partner.ubl_cii_format == 'facturx'
 
     def _build_error_peppol_endpoint(self, eas, endpoint):
         """ This function contains all the rules regarding the peppol_endpoint."""

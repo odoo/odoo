@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -477,7 +477,7 @@ msgstr "如果勾选此项， 某些消息将出现发送错误。"
 msgid ""
 "If ticked, the sales price will be set to 0 for all products transferred "
 "from the repair order."
-msgstr "若勾选，则从维修单转移的所有产品的售价都将设为 0。"
+msgstr "若勾选，则从维修单调拨的所有产品的售价都将设为 0。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__is_repairable
@@ -617,12 +617,9 @@ msgid "My Activity Deadline"
 msgstr "我的活动截止时间"
 
 #. module: repair
-#. odoo-python
-#: code:addons/repair/models/repair.py:0
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__draft
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
-#, python-format
 msgid "New"
 msgstr "新建"
 
@@ -785,6 +782,11 @@ msgstr "产品 B"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Product Moves"
 msgstr "产品移动"
+
+#. module: repair
+#: model:ir.model,name:repair.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "产品移动(移库明细)"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_qty
@@ -1082,7 +1084,7 @@ msgstr "搜索维修单"
 #: code:addons/repair/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence repair"
-msgstr "序列维修"
+msgstr "维修序号"
 
 #. module: repair
 #. odoo-python

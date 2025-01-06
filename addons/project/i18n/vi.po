@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -601,8 +601,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Một từ điển Python sẽ được đánh giá để cung cấp giá trị mặc định khi tạo tập"
-" dữ liệu mới cho bí danh này. "
+"Một từ điển Python sẽ được đánh giá để cung cấp giá trị mặc định khi tạo bản"
+" ghi mới cho bí danh này. "
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_collaborator_unique_collaborator
@@ -672,7 +672,7 @@ msgstr "Cảnh báo truy cập"
 #: model:ir.model.fields,field_description:project.field_project_task__message_needaction
 #: model:ir.model.fields,field_description:project.field_project_update__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Tác vụ cần thiết"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__active
@@ -858,6 +858,7 @@ msgid "Allocated Time"
 msgstr "Thời gian được phân bổ"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task_allocated_hours_template
 msgid "Allocated Time:"
 msgstr "Thời gian đã phân bổ:"
@@ -1017,8 +1018,6 @@ msgid "Assigned to"
 msgstr "Phân công cho"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
@@ -1026,7 +1025,6 @@ msgstr "Phân công cho"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
-#, python-format
 msgid "Assignees"
 msgstr "Người được phân công"
 
@@ -1161,7 +1159,7 @@ msgstr "Số dư"
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 #, python-format
 msgid "Billed"
-msgstr "Đã lập hoá đơn"
+msgstr "Đã tính phí"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__dependent_ids
@@ -2067,6 +2065,11 @@ msgid "Email cc"
 msgstr "Email cc"
 
 #. module: project
+#: model:ir.model.fields,help:project.field_project_project__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "Ví dụ miền email 'example.com' trong 'odoo@example.com'"
+
+#. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "Emails sent to"
 msgstr "Email gửi tới"
@@ -2368,8 +2371,7 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"ID của tập dữ liệu chính chứa bí danh (ví dụ: dự án chứa bí danh tạo nhiệm "
-"vụ)"
+"ID của bản ghi chính chứa bí danh (ví dụ: dự án chứa bí danh tạo nhiệm vụ)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_exception_icon
@@ -3252,7 +3254,7 @@ msgstr "Ghi chú"
 #: model:ir.model.fields,field_description:project.field_project_task__message_needaction_counter
 #: model:ir.model.fields,field_description:project.field_project_update__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng tác vụ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage_delete_wizard__projects_count
@@ -3372,9 +3374,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"ID tùy chọn của một luồng (tập dữ liệu) tập hợp tất cả tin nhắn nhận được, "
-"thậm chí nếu đó là tin nhắn không có phản hồi. Nếu cài đặt, điều này sẽ tắt "
-"hoàn toàn việc tạo các tập dữ liệu mới. "
+"ID tùy chọn của một luồng (bản ghi) tập hợp tất cả tin nhắn nhận được, thậm "
+"chí nếu đó là tin nhắn không có phản hồi. Nếu cài đặt, điều này sẽ tắt hoàn "
+"toàn việc tạo các bản ghi mới. "
 
 #. module: project
 #. odoo-javascript
@@ -3420,7 +3422,7 @@ msgstr "Mô hình chính"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "ID luồng tập dữ liệu chính"
+msgstr "ID luồng bản ghi chính"
 
 #. module: project
 #. odoo-python
@@ -3915,7 +3917,7 @@ msgstr "Thuộc tính"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Published"
-msgstr "Đã công bố"
+msgstr "Đã đăng"
 
 #. module: project
 #. odoo-javascript
@@ -4056,7 +4058,7 @@ msgstr "Người nhận"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "ID luồng tập dữ liệu"
+msgstr "ID luồng bản ghi"
 
 #. module: project
 #. odoo-javascript
@@ -4193,15 +4195,15 @@ msgstr "Mặt buồn"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
 #, python-format
-msgid "Save the task to be able to paste images in description"
-msgstr "Lưu nhiệm vụ để có thể dán hình ảnh vào phần mô tả"
+msgid "Save the task to be able to drag images in description"
+msgstr "Lưu nhiệm vụ để có thể kéo hình ảnh vào phần mô tả"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
 #, python-format
-msgid "Save the task to be able to drag images in Description"
-msgstr "Lưu nhiệm vụ để có thể kéo hình ảnh vào phần mô tả"
+msgid "Save the task to be able to paste images in description"
+msgstr "Lưu nhiệm vụ để có thể dán hình ảnh vào phần mô tả"
 
 #. module: project
 #. odoo-javascript
@@ -4432,8 +4434,7 @@ msgstr "Hiện dự án trên trang chủ"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records which has next action date is before today"
-msgstr ""
-"Hiển thị tất cả tập dữ liệu có ngày xử lý tiếp theo trước ngày hôm nay"
+msgstr "Hiển thị tất cả bản ghi có ngày xử lý tiếp theo trước ngày hôm nay"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4818,6 +4819,7 @@ msgstr "Nhiệm vụ: Yêu cầu đánh giá"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #: code:addons/project/models/project_project.py:0
+#: code:addons/project/models/project_project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.actions.act_window,name:project.action_view_task_from_milestone
@@ -4907,6 +4909,15 @@ msgstr "Giai đoạn nhiệm vụ cá nhân của người dùng hiện tại."
 
 #. module: project
 #. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid ""
+"The document does not exist or you do not have the rights to access it."
+msgstr ""
+"Tài liệu không tồn tại hoặc bạn không có quyền truy cập vào tài liệu đó."
+
+#. module: project
+#. odoo-python
 #: code:addons/project/models/project_task_recurrence.py:0
 #, python-format
 msgid "The end date should be in the future"
@@ -4937,8 +4948,8 @@ msgid ""
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
 "Mô hình (Loại tài liệu Odoo) mà bí danh này tương tác. Mọi email đến mà "
-"không phải là email trả lời một tập dữ liệu hiện có sẽ tạo ra một tập dữ "
-"liệu mới trong mô hình này. (ví dụ: Nhiệm vụ dự án) "
+"không phải là email trả lời một bản ghi hiện có sẽ tạo ra một bản ghi mới "
+"trong mô hình này. (ví dụ: Nhiệm vụ dự án) "
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_name
@@ -5104,7 +5115,7 @@ msgid ""
 msgstr ""
 "Dự án này được liên kết với %s, trong khi giai đoạn đã chọn thuộc về %s. Bạn"
 " có thể cân nhắc một số lựa chọn sau: xóa công ty khỏi dự án hoặc giai đoạn."
-" Ngoài ra, bạn có thể cập nhật thông tin công ty cho các tập dữ liệu này để "
+" Ngoài ra, bạn có thể cập nhật thông tin công ty cho các bản ghi này để "
 "chúng thuộc về cùng một công ty."
 
 #. module: project
@@ -5182,12 +5193,12 @@ msgstr "Tiêu đề"
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 #, python-format
 msgid "To Bill"
-msgstr "Cần lập hoá đơn"
+msgstr "Cần tính phí"
 
 #. module: project
 #: model:project.project.stage,name:project.project_project_stage_0
 msgid "To Do"
-msgstr "Cần làm"
+msgstr "Việc cần làm"
 
 #. module: project
 #. odoo-javascript
@@ -5334,7 +5345,7 @@ msgstr "Hai nhiệm vụ không thể phụ thuộc vào nhau."
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_decoration
 #: model:ir.model.fields,help:project.field_project_update__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Loại hoạt động ngoại lệ trong tập dữ liệu."
+msgstr "Loại hoạt động ngoại lệ trong bản ghi."
 
 #. module: project
 #. odoo-python
@@ -5992,6 +6003,13 @@ msgstr "trạng thái để đánh dấu nhiệm vụ là hoàn thành."
 
 #. module: project
 #. odoo-javascript
+#: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
+#, python-format
+msgid "state.message"
+msgstr "state.message"
+
+#. module: project
+#. odoo-javascript
 #: code:addons/project/static/src/components/project_task_name_with_subtask_count_char_field/project_task_name_with_subtask_count_char_field.xml:0
 #, python-format
 msgid "sub-tasks)"
@@ -6051,8 +6069,12 @@ msgstr "sẽ tạo ra các nhiệm vụ trong"
 
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
-msgid "{{ object.project_id.company_id.name }}: Satisfaction Survey"
-msgstr "{{ object.project_id.company_id.name }}: Khảo sát độ hài lòng"
+msgid ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: "
+"Satisfaction Survey"
+msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: Khảo sát "
+"mức độ hài lòng"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban

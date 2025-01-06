@@ -340,13 +340,24 @@ $-seen-urls: ();
     @include o-add-gradient('menu-gradient');
 }
 
+.navbar-light .o_navbar_mobile {
+    @include o-add-gradient('menu-gradient');
+}
+
 // TODO this should be reviewed. While it allowed to choose a color for the
 // navbar text, there is no :hover effect, the active item is not visible and
 // the selector is probably too specific and should rather be about extending
 // bootstrap if possible.
-#wrapwrap:not(.o_header_overlay) header, header.o_header_is_scrolled {
+#wrapwrap:not(.o_header_overlay) header, header.o_header_is_scrolled, header .o_navbar_mobile {
     .nav-item > .nav-link > *, .nav-item > .nav-link::after, .js_language_selector span, .badge {
-        color: o-website-value('header-text-color') !important;
+        $header-text-color: o-website-value('header-text-color');
+        // Check if the value is wrapped in quotes (initially it wasn't, and it
+        // didn't work) because we don't want the text color of the navbar to
+        // change once the fix is applied for users who tried the option when it
+        // wasn't working.
+        color: if(str-index(inspect($header-text-color), '"') == 1 or str-index(inspect($header-text-color), "'") == 1,
+            o-color($header-text-color),
+            $header-text-color) !important;
     }
 }
 
@@ -1049,6 +1060,9 @@ $-transition-duration: 200ms;
             width: 100%;
             flex: auto;
         }
+        > .o_mega_menu_container_size {
+            transform: unset;
+        }
     }
 }
 
@@ -1340,6 +1354,16 @@ header {
     }
 }
 
+// TODO in master: remove this and create the SCSS file for the "Big Icons
+// Subtitles" mega menu template, as it cannot be added in stable.
+.s_mega_menu_big_icons_subtitles:not([data-vcss]) {
+    @include media-breakpoint-only(md) {
+        .row > div.col-md-6 {
+            min-width: fit-content;
+        }
+    }
+}
+
 #wrapwrap.o_header_overlay {
     > header:not(.o_header_affixed):not(.o_header_sidebar) {
         @include o-position-absolute(0, 0, auto, 0);
@@ -1521,6 +1545,12 @@ span.list-inline-item.o_add_language:last-child {
     #o_footer_scrolltop_wrapper {
         position: relative;
         z-index: 1;
+
+        &:last-child {
+            height: 3rem !important;
+            margin-top: -3rem;
+            margin-bottom: 1rem;
+        }
     }
     #o_footer_scrolltop {
         $-footer-color: o-color('footer-custom') or o-color('footer') or rgba(0, 0, 0, 0);
@@ -1784,6 +1814,7 @@ input[value*="data-oe-translation-initial-sha"] {
         // best workaround for now.
         > main {
             overflow-x: hidden;
+            overflow-y: hidden;
         }
     }
     .o_footer_slideout {
@@ -2535,4 +2566,19 @@ input[value*="data-oe-translation-initial-sha"] {
 // Disables the offset on dropdown to match relative position in mobile/offcanvas.
 .o_dropdown_without_offset {
     transform: none !important;
+}
+
+// o_facebook_page (Facebook page plugin)
+
+// Since October 2024, the Facebook mobile site (m.facebook.com) uses an
+// 'X-Frame-Options' header set to 'deny', preventing iframe embedding across
+// different domains. This header enforces a security policy restricting
+// cross-origin access to the content.
+// Meta has not provided any communication regarding this change. Until it is
+// resolved, we have no choice but to hide the iframe on mobile to prevent users
+// from seeing a "unavailable content" icon.
+@include media-breakpoint-down(md) {
+    .o_facebook_page {
+        display: none;
+    }
 }

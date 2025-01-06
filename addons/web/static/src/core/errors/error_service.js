@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { isBrowserFirefox } from "@web/core/browser/feature_detection";
+import { isBrowserFirefox, isBrowserChrome } from "@web/core/browser/feature_detection";
 import { browser } from "../browser/browser";
 import { registry } from "../registry";
 import { completeUncaughtError, getErrorTechnicalName } from "./error_utils";
@@ -45,6 +45,17 @@ export class UncaughtCorsError extends UncaughtError {
 export const errorService = {
     start(env) {
         function handleError(uncaughtError, retry = true) {
+            function shouldLogError() {
+                // Only log errors that are relevant business-wise, following the heuristics:
+                // Error.event and Error.traceback have been assigned
+                // in one of the two error event listeners below.
+                // If preventDefault was already executed on the event, don't log it.
+                return (
+                    uncaughtError.event &&
+                    !uncaughtError.event.defaultPrevented &&
+                    uncaughtError.traceback
+                );
+            }
             let originalError = uncaughtError;
             while (originalError instanceof Error && "cause" in originalError) {
                 originalError = originalError.cause;
@@ -55,18 +66,18 @@ export const errorService = {
                         break;
                     }
                 } catch (e) {
-                    console.error(
-                        `A crash occured in error handler ${name} while handling ${uncaughtError}:`,
-                        e
-                    );
+                    if (shouldLogError()) {
+                        uncaughtError.event.preventDefault();
+                        console.error(
+                            `@web/core/error_service: handler "${name}" failed with "${
+                                e.cause || e
+                            }" while trying to handle:\n` + uncaughtError.traceback
+                        );
+                    }
                     return;
                 }
             }
-            if (
-                uncaughtError.event &&
-                !uncaughtError.event.defaultPrevented &&
-                uncaughtError.traceback
-            ) {
+            if (shouldLogError()) {
                 // Log the full traceback instead of letting the browser log the incomplete one
                 uncaughtError.event.preventDefault();
                 console.error(uncaughtError.traceback);
@@ -116,9 +127,27 @@ export const errorService = {
 
         browser.addEventListener("unhandledrejection", async (ev) => {
             const error = ev.reason;
+            let traceback;
+            if (isBrowserChrome() && ev instanceof CustomEvent && error === undefined) {
+                // This fix is ad-hoc to a bug in the Honey Paypal extension
+                // They throw a CustomEvent instead of the specified PromiseRejectionEvent
+                // https://developer.mozilla.org/en-US/docs/Web/API/Window/unhandledrejection_event
+                // Moreover Chrome doesn't seem to sandbox enough the extension, as it seems irrelevant
+                // to have extension's errors in the main business page.
+                // We want to ignore those errors as they are not produced by us, and are parasiting
+                // the navigation. We do this according to the heuristic expressed in the if.
+                if (!odoo.debug) {
+                    return;
+                }
+                traceback =
+                    `Uncaught unknown Error\n` +
+                    `An unknown error occured. This may be due to a Chrome extension meddling with Odoo.\n` +
+                    `(Opening your browser console might give you a hint on the error.)`;
+            }
             const uncaughtError = new UncaughtPromiseError();
             uncaughtError.unhandledRejectionEvent = ev;
             uncaughtError.event = ev;
+            uncaughtError.traceback = traceback;
             if (error instanceof Error) {
                 error.errorEvent = ev;
                 const annotated = env.debug && env.debug.includes("assets");

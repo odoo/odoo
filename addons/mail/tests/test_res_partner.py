@@ -485,6 +485,8 @@ class TestPartner(MailCommon):
             'False',
             # (simili) void values
             '', ' ', False, None,
+            # email only
+            'lenny.bar@gmail.com',
         ]
         expected = [
             ('Raoul', 'raoul@grosbedon.fr'),
@@ -493,6 +495,8 @@ class TestPartner(MailCommon):
             ('False', False),
             # (simili) void values: always False
             ('', False), ('', False), ('', False), ('', False),
+            # email only: email used as both name and email
+            ('lenny.bar@gmail.com', 'lenny.bar@gmail.com')
         ]
         for (expected_name, expected_email), sample in zip(expected, samples):
             with self.subTest(sample=sample):

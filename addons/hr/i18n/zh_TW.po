@@ -3,16 +3,16 @@
 # 	* hr
 # 
 # Translators:
-# Tony Ng, 2024
 # Wil Odoo, 2024
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,7 +74,7 @@ msgstr "1 電話"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "12 days / year, including <br>6 of your choice."
-msgstr "12 天/年，包括<br>6 任你選擇。"
+msgstr "每年 12 天，包括 <br>6 天由你選擇。"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
@@ -110,7 +110,7 @@ msgstr "面試後 4 天"
 msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
-msgstr "<b>恭喜你！</b>我可以協助您設置<a href=\"%s\">到職計畫嗎？</a>"
+msgstr "<b>恭喜！</b>現在，你需要設置<a href=\"%s\">入職計劃</a>嗎？"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -410,12 +410,12 @@ msgstr "管理員"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_presence
 msgid "Advanced Presence Control"
-msgstr "高級狀態控制"
+msgstr "進階出勤管理"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Advanced presence of employees"
-msgstr "員工的高級存在"
+msgstr "進階管理員工出勤"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
@@ -491,7 +491,7 @@ msgstr "指派"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_attachment_count
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件數"
+msgstr "附件數目"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -527,7 +527,7 @@ msgstr "自動將這些部門的成員訂閱到道。"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Autonomy"
-msgstr "當責"
+msgstr "自主"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -664,12 +664,12 @@ msgstr "聊天"
 #. module: hr
 #: model:hr.job,name:hr.job_ceo
 msgid "Chief Executive Officer"
-msgstr "首席執行官"
+msgstr "行政總裁"
 
 #. module: hr
 #: model:hr.job,name:hr.job_cto
 msgid "Chief Technical Officer"
-msgstr "首席技術官"
+msgstr "技術總監"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__child_ids
@@ -976,6 +976,8 @@ msgstr ""
 "與重要客戶保持定期互動，以更好地提取和擴展。"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
@@ -988,6 +990,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+#, python-format
 msgid "Department"
 msgstr "部門"
 
@@ -1502,7 +1505,7 @@ msgstr "人力資源員工：檢查工作簽證的有效性"
 #: code:addons/hr/static/src/components/hr_presence_status/hr_presence_status.js:0
 #, python-format
 msgid "HR Presence Status"
-msgstr "人力資源存在狀態"
+msgstr "人力資源出勤狀態"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1557,7 +1560,7 @@ msgstr "小時圖示顯示"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_presence_state
 #: model:ir.model.fields,field_description:hr.field_res_users__hr_presence_state
 msgid "Hr Presence State"
-msgstr "Hr 出席狀態"
+msgstr "人力資源出勤狀態"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -1807,7 +1810,7 @@ msgstr "逾期活動"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Launch Plan"
-msgstr "啟動計畫"
+msgstr "開展計劃"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2102,7 +2105,7 @@ msgstr "沒有愚蠢的管理者，沒有愚蠢的工具，沒有嚴格的工作
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid ""
 "No waste of time in enterprise processes, real responsibilities and autonomy"
-msgstr "在企業流程中聰明工作，真正的自主與當責"
+msgstr "無謂在企業流程上浪費時間，肩負真正責任及自主權"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2755,7 +2758,7 @@ msgstr "序列號"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Set default company schedule to manage your employees working time"
-msgstr "設置預設公司計畫以管理員工工作時間"
+msgstr "設置預設公司計劃，以管理員工工作時間"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
@@ -2802,6 +2805,13 @@ msgstr "社會保障號"
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Software Developer"
 msgstr "軟件開發員"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
+#, python-format
+msgid "Some employee already have a work contact"
+msgstr "部份員工已經有工作聯絡人"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3129,7 +3139,7 @@ msgstr "見習"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Trainings"
-msgstr "培訓計畫"
+msgstr "培訓"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_decoration
@@ -3459,7 +3469,7 @@ msgstr ""
 #: code:addons/hr/models/res_config_settings.py:0
 #, python-format
 msgid "You should select at least one Advanced Presence Control option."
-msgstr "您應該至少選擇一個 Advanced Presence Control 選項。"
+msgstr "你應至少選擇一個「進階出勤管理」選項。"
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_cto

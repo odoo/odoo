@@ -4,6 +4,8 @@
 from odoo import api, fields, models, tools
 from odoo.tools import float_compare, float_is_zero
 
+from itertools import chain
+from odoo.tools import groupby
 from collections import defaultdict
 
 
@@ -75,12 +77,14 @@ class StockValuationLayer(models.Model):
         if am_vals:
             account_moves = self.env['account.move'].sudo().create(am_vals)
             account_moves._post()
-        for svl in self:
-            move = svl.stock_move_id
-            product = svl.product_id
-            if svl.company_id.anglo_saxon_accounting:
-                move._get_related_invoices()._stock_account_anglo_saxon_reconcile_valuation(product=product)
-            for aml in (move | move.origin_returned_move_id)._get_all_related_aml():
+        products_svl = groupby(self, lambda svl: (svl.product_id, svl.company_id.anglo_saxon_accounting))
+        for (product, anglo_saxon_accounting), svls in products_svl:
+            svls = self.browse(svl.id for svl in svls)
+            moves = svls.stock_move_id
+            if anglo_saxon_accounting:
+                moves._get_related_invoices()._stock_account_anglo_saxon_reconcile_valuation(product=product)
+            moves = (moves | moves.origin_returned_move_id).with_prefetch(chain(moves._prefetch_ids, moves.origin_returned_move_id._prefetch_ids))
+            for aml in moves._get_all_related_aml():
                 if aml.reconciled or aml.move_id.state != "posted" or not aml.account_id.reconcile:
                     continue
                 aml_to_reconcile[(product, aml.account_id)].add(aml.id)
@@ -212,3 +216,7 @@ class StockValuationLayer(models.Model):
             new_valuation = unit_cost * new_valued_qty
 
         return new_valued_qty, new_valuation
+
+    def _should_impact_price_unit_receipt_value(self):
+        self.ensure_one()
+        return True

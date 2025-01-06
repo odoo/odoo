@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-30 14:15+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -1196,7 +1196,7 @@ msgstr "Richieste approvate"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__officer
 msgid "Approved by Time Off Officer"
-msgstr "Approvato da Responsabile congedi"
+msgstr "Approvato da Responsabile ferie"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1369,8 +1369,7 @@ msgstr "Da parte dell'approvatore del dipendente"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__both
 msgid "By Employee's Approver and Time Off Officer"
-msgstr ""
-"Da parte dell'approvatore del dipendente e dell'addetto al tempo libero"
+msgstr "Da parte dell'approvatore del dipendente e del responsabile ferie"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__holiday_type
@@ -3567,6 +3566,17 @@ msgstr ""
 " "
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_accrual_plan.py:0
+#, python-format
+msgid ""
+"Some of the accrual plans you're trying to delete are linked to an existing "
+"allocation. Delete or cancel them first."
+msgstr ""
+"Alcuni dei piani di maturazione che stai cercando di eliminare sono legati "
+"ad un'assegnazione esistente. + Prima è necessario cancellarli o annullarli."
+
+#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
 msgid ""
 "Specify if this accrual plan can only be used with this Time Off Type.\n"
@@ -3714,6 +3724,18 @@ msgstr ""
 "La maturazione inizia dopo un determinato periodo di tempo dalla data di "
 "inizio dell'assegnazione. Questo campo indica il numero di giorni, mesi o "
 "anni dopo i quali viene usato l'accumulo."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_type.py:0
+#, python-format
+msgid ""
+"The allocation requirement of a time off type cannot be changed once leaves "
+"of that type have been taken. You should create a new time off type instead."
+msgstr ""
+"I requisiti per l'assegnazione di tipi di ferie non possono essere "
+"modificati una volta che ferie di quel tipo sono state già prese. Devi "
+"creare un nuovo tipo di ferie."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__color
@@ -4687,7 +4709,7 @@ msgstr ""
 msgid ""
 "You cannot have a cap on accrued time without setting a maximum amount."
 msgstr ""
-"Non è possibile fissareun tetto massimo per il tempo maturato senza "
+"Non è possibile fissare un tetto massimo per il tempo maturato senza "
 "stabilire un importo massimo."
 
 #. module: hr_holidays

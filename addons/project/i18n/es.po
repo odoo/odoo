@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
@@ -731,18 +731,18 @@ msgstr "Tipos de actividad"
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Add Milestone"
-msgstr "Agregar hito"
+msgstr "Añadir hito"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_project_task_plan
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_task_plan
 msgid "Add a new plan"
-msgstr "Agregar un nuevo plan"
+msgstr "Añadir un nuevo plan"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Add a note"
-msgstr "Agregar una nota"
+msgstr "Añadir una nota"
 
 #. module: project
 #. odoo-javascript
@@ -753,30 +753,30 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
-"Agregue columnas para organizar sus tareas en <b>etapas</b>, <i>por ejemplo,"
-" Nuevo - En proceso - Hecho</i> ."
+"Añada columnas para organizar sus tareas en <b>etapas</b>, <i>por ejemplo, "
+"Nuevo - En proceso - Hecho</i> ."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Add contacts to share the project..."
-msgstr "Agregue contactos para compartir el proyecto...."
+msgstr "Añada contactos para compartir el proyecto...."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Add details about this task..."
-msgstr "Agregue detalles sobre esta tarea..."
+msgstr "Añada detalles sobre esta tarea..."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__note
 msgid "Add extra content to display in the email"
-msgstr "Agregue contenido adicional para mostrar en el correo electrónico"
+msgstr "Añada contenido adicional para mostrar en el correo electrónico"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Add your task once it is ready."
-msgstr "Agregue su tarea cuando esté lista."
+msgstr "Añada su tarea cuando esté lista."
 
 #. module: project
 #: model:res.groups,name:project.group_project_manager
@@ -860,6 +860,7 @@ msgid "Allocated Time"
 msgstr "Tiempo asignado"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task_allocated_hours_template
 msgid "Allocated Time:"
 msgstr "Tiempo asignado:"
@@ -889,10 +890,10 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
-"La cuenta analítica a la que están vinculados este proyecto, sus tareas y sus hojas de asistencia. \n"
+"La cuenta analítica a la que están vinculados este proyecto, sus tareas y sus partes de horas. \n"
 "Lleve el seguimiento de los costes e ingresos de su proyecto al establecer esta cuenta analítica en sus documentos relacionados (por ejemplo, pedidos de venta, facturas, pedidos de compra, facturas de proveedor, gastos, etc.).\n"
 "Esta cuenta analítica se puede cambiar en cada tarea de forma individual si es necesario.\n"
-"Se necesita una cuenta analítica para usar hojas de asistencia."
+"Se necesita una cuenta analítica para usar partes de horas."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__analytic_account_id
@@ -901,7 +902,7 @@ msgid ""
 "Track the costs and revenues of your task by setting its analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
 "By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary."
 msgstr ""
-"La cuenta analítica a la que están vinculados este proyecto, sus tareas y sus hojas de asistencia. \n"
+"La cuenta analítica a la que están vinculados este proyecto, sus tareas y sus partes de horas. \n"
 "Lleve el seguimiento de los costes e ingresos de su proyecto al establecer esta cuenta analítica en sus documentos relacionados (por ejemplo, pedidos de venta, facturas, pedidos de compra, facturas de proveedor, gastos, etc.).\n"
 "Por defecto, se establece la cuenta analítica de este proyecto. Sin embargo, puede ser cambiada de manera individual en cada tarea si fuera necesario."
 
@@ -1020,8 +1021,6 @@ msgid "Assigned to"
 msgstr "Asignado a"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
@@ -1029,7 +1028,6 @@ msgstr "Asignado a"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
-#, python-format
 msgid "Assignees"
 msgstr "Personas asignadas"
 
@@ -1612,7 +1610,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr "Mensaje devuelto personalizado"
+msgstr "Mensaje rebotado personalizado"
 
 #. module: project
 #. odoo-python
@@ -2073,6 +2071,13 @@ msgid "Email cc"
 msgstr "CC del correo electrónico"
 
 #. module: project
+#: model:ir.model.fields,help:project.field_project_project__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr ""
+"Dominio del correo electrónico, p. ej. \"ejemplo.com\" en "
+"\"odoo@ejemplo.com\""
+
+#. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "Emails sent to"
 msgstr "Correos electrónicos enviados a"
@@ -2261,7 +2266,7 @@ msgid ""
 "Grant employees access to your project or tasks by adding them as followers."
 " Employees automatically get access to the tasks they are assigned to."
 msgstr ""
-"Conceda a los empleados acceso a su proyecto o tareas agregándolos como "
+"Conceda a los empleados acceso a su proyecto o tareas añadiéndolos como "
 "seguidores. Los empleados obtienen automáticamente acceso a las tareas a las"
 " que están asignados."
 
@@ -2274,9 +2279,9 @@ msgid ""
 "followers. Customers automatically get access to their tasks in their "
 "portal."
 msgstr ""
-"Conceda a los usuarios del portal acceso a su proyecto o tareas agregándolos"
-" como seguidores. Los clientes obtienen automáticamente acceso a sus tareas "
-"en su portal."
+"Conceda a los usuarios del portal acceso a su proyecto o tareas  "
+"añadiéndolos como seguidores. Los clientes obtienen automáticamente acceso a"
+" sus tareas en su portal."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_collaborator_view_search
@@ -2842,7 +2847,7 @@ msgid ""
 "Manage the lifecycle of your project using the kanban view. Add newly acquired projects,\n"
 "      assign them and use the"
 msgstr ""
-"Administre el ciclo de vida de su proyecto usando la vista kanban. Agregue proyectos recién adquiridos,\n"
+"Administre el ciclo de vida de su proyecto usando la vista kanban. Añada proyectos recién adquiridos,\n"
 "      asígnelos y use"
 
 #. module: project
@@ -3335,6 +3340,14 @@ msgstr "A tiempo"
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
 msgid "Once a Month"
 msgstr "Una vez al mes"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
+msgstr ""
+"Sólo se permiten imágenes jpeg, png, bmp y tiff como archivos adjuntos."
 
 #. module: project
 #. odoo-javascript
@@ -4182,6 +4195,20 @@ msgstr "Cara triste"
 
 #. module: project
 #. odoo-javascript
+#: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
+#, python-format
+msgid "Save the task to be able to drag images in description"
+msgstr "Guardar la tarea para poder arrastrar imágenes en la descripción"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
+#, python-format
+msgid "Save the task to be able to paste images in description"
+msgstr "Guardar la tarea para poder pegar imágenes en la descripción"
+
+#. module: project
+#. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Schedule your activity once it is ready."
@@ -4797,6 +4824,7 @@ msgstr "Tareas: solicitud de calificación"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #: code:addons/project/models/project_project.py:0
+#: code:addons/project/models/project_project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.actions.act_window,name:project.action_view_task_from_milestone
@@ -4886,6 +4914,15 @@ msgstr "La etapa de la tarea personal del usuario actual."
 
 #. module: project
 #. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid ""
+"The document does not exist or you do not have the rights to access it."
+msgstr ""
+"El documento no existe o no cuenta con los permisos de acceso necesarios."
+
+#. module: project
+#. odoo-python
 #: code:addons/project/models/project_task_recurrence.py:0
 #, python-format
 msgid "The end date should be in the future"
@@ -4894,12 +4931,12 @@ msgstr "La fecha de finalización debe ser en el futuro"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestone has been added:"
-msgstr "Se ha agregado el siguiente hito:"
+msgstr "Se ha añadido el siguiente hito:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestones have been added:"
-msgstr "Se han agregado los siguientes hitos:"
+msgstr "Se han añadido los siguientes hitos:"
 
 #. module: project
 #. odoo-python
@@ -5046,7 +5083,7 @@ msgstr ""
 "Pueden editar tareas compartidas de proyectos y ver documentos específicos "
 "en modo de solo lectura desde su sitio web. Esto incluye leads y "
 "oportunidades, presupuestos y pedidos de venta, pedidos de compra, facturas,"
-" hojas de asistencia y tickets."
+" partes de horas y tickets."
 
 #. module: project
 #. odoo-python
@@ -5283,8 +5320,8 @@ msgid ""
 "belongs to a plan."
 msgstr ""
 "Lleve seguimiento de la rentabilidad de sus proyectos. Cualquier proyecto, "
-"sus tareas y hojas de asistencia están vinculados a una cuenta analítica y "
-"todas las cuentas analíticas pertenecen a un plan."
+"sus tareas y partes de horas están vinculados a una cuenta analítica y todas"
+" las cuentas analíticas pertenecen a un plan."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5457,7 +5494,7 @@ msgid ""
 "main changes about this task."
 msgstr ""
 "Utilice el chatter para <b>enviar correos electrónicos</b> y comunicarse "
-"eficazmente con sus clientes. Agregue nuevas personas en la lista de "
+"eficazmente con sus clientes. Añada nuevas personas en la lista de "
 "seguidores para que conozcan los principales cambios sobre esta tarea."
 
 #. module: project
@@ -5978,6 +6015,13 @@ msgstr "para marcar la tarea como completada."
 
 #. module: project
 #. odoo-javascript
+#: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
+#, python-format
+msgid "state.message"
+msgstr "state.message"
+
+#. module: project
+#. odoo-javascript
 #: code:addons/project/static/src/components/project_task_name_with_subtask_count_char_field/project_task_name_with_subtask_count_char_field.xml:0
 #, python-format
 msgid "sub-tasks)"
@@ -6037,8 +6081,12 @@ msgstr "generarán tareas en su proyecto"
 
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
-msgid "{{ object.project_id.company_id.name }}: Satisfaction Survey"
-msgstr "{{ object.project_id.company_id.name }}: Encuesta de satisfacción"
+msgid ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: "
+"Satisfaction Survey"
+msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: Encuesta "
+"de satisfacción"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban

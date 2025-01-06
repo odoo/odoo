@@ -101,7 +101,7 @@ class ReportBomStructure(models.AbstractModel):
         if searchVariant:
             product = self.env['product.product'].browse(int(searchVariant))
         else:
-            product = bom.product_id or bom.product_tmpl_id.product_variant_id
+            product = bom.product_id or bom.product_tmpl_id.product_variant_id or bom.product_tmpl_id.with_context(active_test=False).product_variant_ids[:1]
 
         if bom:
             bom_uom_name = bom.product_uom_id.name
@@ -485,7 +485,7 @@ class ReportBomStructure(models.AbstractModel):
         if product_id:
             product = self.env['product.product'].browse(int(product_id))
         else:
-            product = bom.product_id or bom.product_tmpl_id.product_variant_id or bom.product_tmpl_id.with_context(active_test=False).product_variant_id
+            product = bom.product_id or bom.product_tmpl_id.product_variant_id or bom.product_tmpl_id.with_context(active_test=False).product_variant_ids[:1]
 
         if self.env.context.get('warehouse'):
             warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse'))

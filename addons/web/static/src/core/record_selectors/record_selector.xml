@@ -2,18 +2,21 @@
 <templates xml:space="preserve">
 
     <t t-name="web.RecordSelector" >
-        <RecordAutocomplete
-            resModel="props.resModel"
-            value="displayName"
-            domain="props.domain"
-            context="props.context"
-            className="'h-100 o_record_selector'"
-            fieldString="props.fieldString"
-            placeholder="props.placeholder"
-            multiSelect="false"
-            getIds="() => []"
-            update.bind="update"
-        />
+        <div class="o_input d-flex flex-wrap gap-1 o_record_selector">
+            <RecordAutocomplete
+                resModel="props.resModel"
+                value="displayName"
+                domain="props.domain"
+                context="props.context"
+                className="'h-100 flex-grow-1'"
+                fieldString="props.fieldString"
+                placeholder="props.placeholder"
+                multiSelect="false"
+                getIds="() => []"
+                update.bind="update"
+            />
+            <span class="o_dropdown_button"/>
+        </div>
     </t>
 
 </templates>

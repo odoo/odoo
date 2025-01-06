@@ -42,7 +42,7 @@ class PickingType(models.Model):
     default_location_return_id = fields.Many2one('stock.location', 'Default returns location', check_company=True,
         help="This is the default location for returns created from a picking with this operation type.",
         domain="[('return_location', '=', 'True')]")
-    code = fields.Selection([('incoming', 'Receipt'), ('outgoing', 'Delivery'), ('internal', 'Internal Transfer')], 'Type of Operation', required=True)
+    code = fields.Selection([('incoming', 'Receipt'), ('outgoing', 'Delivery'), ('internal', 'Internal Transfer')], 'Type of Operation', default='incoming', required=True)
     return_picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type for Returns',
         check_company=True)
@@ -194,6 +194,22 @@ class PickingType(models.Model):
                         'prefix': vals['sequence_code'], 'padding': 5,
                         'company_id': picking_type.env.company.id,
                     })
+        if 'reservation_method' in vals:
+            if vals['reservation_method'] == 'by_date':
+                if picking_types := self.filtered(lambda p: p.reservation_method != 'by_date'):
+                    domain = [('picking_type_id', 'in', picking_types.ids), ('state', 'in', ('draft', 'confirmed', 'waiting', 'partially_available'))]
+                    group_by = ['picking_type_id']
+                    aggregates = ['id:recordset']
+                    for picking_type, moves in self.env['stock.move']._read_group(domain, group_by, aggregates):
+                        common_days = vals.get('reservation_days_before') or picking_type.reservation_days_before
+                        priority_days = vals.get('reservation_days_before_priority') or picking_type.reservation_days_before_priority
+                        for move in moves:
+                            move.reservation_date = fields.Date.to_date(move.date) - timedelta(days=priority_days if move.priority == '1' else common_days)
+            else:
+                if picking_types := self.filtered(lambda p: p.reservation_method == 'by_date'):
+                    moves = self.env['stock.move'].search([('picking_type_id', 'in', picking_types.ids), ('state', 'not in', ('assigned', 'done', 'cancel'))])
+                    moves.reservation_date = False
+
         return super(PickingType, self).write(vals)
 
     @api.depends('code')
@@ -433,7 +449,7 @@ class Picking(models.Model):
         help="Is late or will be late depending on the deadline and scheduled date")
     date = fields.Datetime(
         'Creation Date',
-        default=fields.Datetime.now, tracking=True,
+        default=fields.Datetime.now, tracking=True, copy=False,
         help="Creation Date, usually the time of the order")
     date_done = fields.Datetime('Date of Transfer', copy=False, readonly=True, help="Date at which the transfer has been processed or cancelled.")
     delay_alert_date = fields.Datetime('Delay Alert Date', compute='_compute_delay_alert_date', search='_search_delay_alert_date')
@@ -453,7 +469,7 @@ class Picking(models.Model):
         'Has Scrap Moves', compute='_has_scrap_move')
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
-        required=True, readonly=True, index=True,
+        required=True, index=True,
         default=_default_picking_type_id)
     picking_type_code = fields.Selection(
         related='picking_type_id.code',
@@ -781,10 +797,11 @@ class Picking(models.Model):
     def _onchange_picking_type(self):
         if self.picking_type_id and self.state == 'draft':
             self = self.with_company(self.company_id)
-            (self.move_ids | self.move_ids_without_package).update({
-                "picking_type_id": self.picking_type_id,  # The compute store doesn't work in case of One2many inverse (move_ids_without_package)
-                "company_id": self.company_id,
-            })
+            # The compute store doesn't work in case of One2many inverse (move_ids_without_package)
+            (self.move_ids | self.move_ids_without_package).filtered(
+                lambda m: m.picking_type_id != self.picking_type_id
+            ).picking_type_id = self.picking_type_id
+            (self.move_ids | self.move_ids_without_package).company_id = self.company_id
             for move in (self.move_ids | self.move_ids_without_package):
                 if not move.product_id:
                     continue
@@ -895,7 +912,7 @@ class Picking(models.Model):
 
     def should_print_delivery_address(self):
         self.ensure_one()
-        return self.move_ids and self.move_ids[0].partner_id and self._is_to_external_location()
+        return self.move_ids and (self.move_ids[0].partner_id or self.partner_id) and self._is_to_external_location()
 
     def _is_to_external_location(self):
         self.ensure_one()
@@ -943,6 +960,7 @@ class Picking(models.Model):
             'views': [(view_id, 'tree')],
             'domain': [('id', 'in', self.move_line_ids.ids)],
             'context': {
+                'create': self.state != 'done' or not self.is_locked,
                 'default_picking_id': self.id,
                 'default_location_id': self.location_id.id,
                 'default_location_dest_id': self.location_dest_id.id,

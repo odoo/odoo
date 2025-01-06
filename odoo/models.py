@@ -87,6 +87,7 @@ regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')  # For read_grou
 regex_read_group_spec = re.compile(r'(\w+)(\.(\w+))?(?::(\w+))?$')  # For _read_group
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
+GC_UNLINK_LIMIT = 100_000
 
 INSERT_BATCH_SIZE = 100
 SQL_DEFAULT = psycopg2.extensions.AsIs("DEFAULT")
@@ -1215,6 +1216,7 @@ class BaseModel(metaclass=MetaModel):
             batch_xml_ids.clear()
 
             # try to create in batch
+            global_error_message = None
             try:
                 with cr.savepoint():
                     recs = self._load_records(data_list, mode == 'update')
@@ -1227,7 +1229,7 @@ class BaseModel(metaclass=MetaModel):
                     messages.append(dict(info, type='error', message=_(u"Unknown database error: '%s'", e)))
                 return
             except UserError as e:
-                messages.append(dict(data_list[0]['info'], type='error', message=str(e)))
+                global_error_message = dict(data_list[0]['info'], type='error', message=str(e))
             except Exception:
                 pass
 
@@ -1249,8 +1251,7 @@ class BaseModel(metaclass=MetaModel):
                     errors += 1
                 except UserError as e:
                     info = rec_data['info']
-                    if dict(info, type='error', message=str(e)) not in messages:
-                        messages.append(dict(info, type='error', message=str(e)))
+                    messages.append(dict(info, type='error', message=str(e)))
                     errors += 1
                 except Exception as e:
                     _logger.debug("Error while loading record", exc_info=True)
@@ -1267,6 +1268,9 @@ class BaseModel(metaclass=MetaModel):
                         'message': _(u"Found more than 10 errors and more than one error per 10 records, interrupted to avoid showing too many errors.")
                     })
                     break
+            if errors > 0 and global_error_message and global_error_message not in messages:
+                # If we cannot create the records 1 by 1, we display the error raised when we created the records simultaneously
+                messages.insert(0, global_error_message)
 
         # make 'flush' available to the methods below, in the case where XMLID
         # resolution fails, for instance
@@ -1753,12 +1757,31 @@ class BaseModel(metaclass=MetaModel):
         """
         domain = list(domain or ())
         search_fnames = self._rec_names_search or ([self._rec_name] if self._rec_name else [])
+
         if not search_fnames:
             _logger.warning("Cannot execute name_search, no _rec_name or _rec_names_search defined on %s", self._name)
+
         # optimize out the default criterion of ``like ''`` that matches everything
         elif not (name == '' and operator in ('like', 'ilike')):
             aggregator = expression.AND if operator in expression.NEGATIVE_TERM_OPERATORS else expression.OR
-            domain += aggregator([[(field_name, operator, name)] for field_name in search_fnames])
+            domains = []
+            for field_name in search_fnames:
+                # field_name may be a sequence of field names (partner_id.name)
+                # retrieve the last field in the sequence
+                model = self
+                for fname in field_name.split('.'):
+                    field = model._fields[fname]
+                    model = self.env.get(field.comodel_name)
+                if field.relational:
+                    # relational fields will trigger a _name_search on their comodel
+                    domains.append([(field_name, operator, name)])
+                    continue
+                try:
+                    domains.append([(field_name, operator, field.convert_to_write(name, self))])
+                except ValueError:
+                    pass  # ignore that case if the value doesn't match the field type
+            domain += aggregator(domains)
+
         return self._search(domain, limit=limit, order=order)
 
     @api.model
@@ -2630,6 +2653,25 @@ class BaseModel(metaclass=MetaModel):
                 row['__domain'] = expression.AND([row['__domain'], [(fullname, '=', row[fullname])]])
 
     @api.model
+    def _read_group_get_annoted_groupby(self, groupby, lazy):
+        groupby = [groupby] if isinstance(groupby, str) else groupby
+        lazy_groupby = groupby[:1] if lazy else groupby
+
+        annoted_groupby = {}  # Key as the name in the result, value as the explicit groupby specification
+        for group_spec in lazy_groupby:
+            field_name, property_name, granularity = parse_read_group_spec(group_spec)
+            if field_name not in self._fields:
+                raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
+            field = self._fields[field_name]
+            if property_name and field.type != 'properties':
+                raise ValueError(f"Property name {property_name!r} has to be used on a property field.")
+            if field.type in ('date', 'datetime'):
+                annoted_groupby[group_spec] = f"{field_name}:{granularity or 'month'}"
+            else:
+                annoted_groupby[group_spec] = group_spec
+        return annoted_groupby
+
+    @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         """Get the list of records in list view grouped by the given ``groupby`` fields.
 
@@ -2675,18 +2717,7 @@ class BaseModel(metaclass=MetaModel):
         # - Modify `groupby` default value 'month' into specifique groupby specification
         # - Modify `fields` into aggregates specification of _read_group
         # - Modify the order to be compatible with the _read_group specification
-        annoted_groupby = {}  # Key as the name in the result, value as the explicit groupby specification
-        for group_spec in lazy_groupby:
-            field_name, property_name, granularity = parse_read_group_spec(group_spec)
-            if field_name not in self._fields:
-                raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
-            field = self._fields[field_name]
-            if property_name and field.type != 'properties':
-                raise ValueError(f"Property name {property_name!r} has to be used on a property field.")
-            if field.type in ('date', 'datetime'):
-                annoted_groupby[group_spec] = f"{field_name}:{granularity or 'month'}"
-            else:
-                annoted_groupby[group_spec] = group_spec
+        annoted_groupby = self._read_group_get_annoted_groupby(groupby, lazy=lazy)
 
         annoted_aggregates = {  # Key as the name in the result, value as the explicit aggregate specification
             f"{lazy_groupby[0].split(':')[0]}_count" if lazy and len(lazy_groupby) == 1 else '__count': '__count',
@@ -5064,7 +5095,7 @@ class BaseModel(metaclass=MetaModel):
             existing_modules = self.env['ir.module.module'].sudo().search([]).mapped('name')
             for data in to_create:
                 xml_id = data.get('xml_id')
-                if xml_id:
+                if xml_id and not data.get('noupdate'):
                     module_name, sep, record_id = xml_id.partition('.')
                     if sep and module_name in existing_modules:
                         raise UserError(
@@ -7163,13 +7194,16 @@ class TransientModel(Model):
         # Never delete rows used in last 5 minutes
         seconds = max(seconds, 300)
         self._cr.execute(SQL(
-            "SELECT id FROM %s WHERE %s < %s",
+            "SELECT id FROM %s WHERE %s < %s %s",
             SQL.identifier(self._table),
             SQL("COALESCE(write_date, create_date, (now() AT TIME ZONE 'UTC'))::timestamp"),
             SQL("(now() AT TIME ZONE 'UTC') - interval %s", f"{seconds} seconds"),
+            SQL(f"LIMIT { GC_UNLINK_LIMIT }"),
         ))
         ids = [x[0] for x in self._cr.fetchall()]
         self.sudo().browse(ids).unlink()
+        if len(ids) >= GC_UNLINK_LIMIT:
+            self.env.ref('base.autovacuum_job')._trigger()
 
 
 def itemgetter_tuple(items):

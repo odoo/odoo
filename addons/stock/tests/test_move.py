@@ -2138,6 +2138,59 @@ class StockMove(TransactionCase):
         move_partial._action_assign()
         self.assertEqual(move_partial.state, 'assigned')
 
+    def test_past_quantity(self):
+        """Test the quantity is correct when looking in the past."""
+        # make some stock
+        self.env["stock.quant"].create({
+            "product_id": self.product.id,
+            "location_id": self.stock_location.id,
+            "inventory_quantity": 15.0,
+        }).action_apply_inventory()
+        product_in_past = self.product.with_context(to_date=fields.Date.add(fields.Date.today(), days=-7))
+        self.assertAlmostEqual(self.product.qty_available, 15.0)
+        self.assertAlmostEqual(product_in_past.qty_available, 0)
+
+        # Make a move with a demand of 2, but confirms only 1
+        move_partial = self.env["stock.move"].create({
+            "name": "test_partial",
+            "location_id": self.stock_location.id,
+            "location_dest_id": self.customer_location.id,
+            "product_id": self.product.id,
+            "product_uom": self.uom_unit.id,
+            "product_uom_qty": 2.0,
+        })
+        move_partial._action_confirm()
+        move_partial._action_assign()
+        self.assertEqual(len(move_partial.move_line_ids), 1)
+
+        move_partial.move_line_ids[0].quantity = 1
+        move_partial.picked = True
+        move_partial._action_done(cancel_backorder=True)
+        self.assertEqual(move_partial.state, "done")
+        self.assertAlmostEqual(move_partial.product_qty, 2)
+        self.assertAlmostEqual(move_partial.quantity, 1)
+
+        # Check the quantity in the past is still 0
+        self.assertAlmostEqual(self.product.qty_available, 14.0)
+        self.assertAlmostEqual(product_in_past.qty_available, 0)
+
+        # Make a move with another UoM
+        move = self.env["stock.move"].create({
+            "name": "test_move",
+            "location_id": self.stock_location.id,
+            "location_dest_id": self.customer_location.id,
+            "product_id": self.product.id,
+            "product_uom": self.uom_dozen.id,
+            "product_uom_qty": 1.0,
+        })
+        move._action_confirm()
+        move._action_assign()
+        move.picked = True
+        move._action_done()
+
+        self.assertAlmostEqual(self.product.qty_available, 2.0)  # 14 - a dozen
+        self.assertAlmostEqual(product_in_past.qty_available, 0)
+
     def test_product_tree_views(self):
         """Test to make sure that there are no ACLs errors in users with basic permissions."""
         self.env["stock.quant"]._update_available_quantity(self.product, self.stock_location, 3.0)
@@ -5140,6 +5193,23 @@ class StockMove(TransactionCase):
         self.assertFalse(quant_scrap.reserved_quantity)
         self.assertFalse(quant_scrap.quantity)
 
+    def test_scrap_12_qty_in_sublocation(self):
+        """ Checks that if a product is only available in a sublocation, then trying to validate a scrap order from a
+            parent location should trigger the insufficient quantity warning.
+        """
+        # 10 units are available in Stock/Shelf, none in Stock directly
+        subloc = self.stock_location.child_ids[0]
+        self.env['stock.quant']._update_available_quantity(self.product, subloc, 10)
+
+        with Form(self.env['stock.scrap']) as scrap_form:
+            scrap_form.product_id = self.product
+            scrap_form.scrap_qty = 5
+            scrap_form.location_id = self.stock_location
+            scrap = scrap_form.save()
+
+        warning = scrap.action_validate()
+        self.assertEqual(warning.get('res_model'), 'stock.warn.insufficient.qty.scrap', "Should trigger the warning as no qty in location")
+
     def test_in_date_1(self):
         """ Check that moving a tracked quant keeps the incoming date.
         """
@@ -6216,6 +6286,52 @@ class StockMove(TransactionCase):
         self.assertTrue(warning, 'Reuse of existing serial number (record) not detected')
         self.assertEqual(list(warning.keys())[0], 'warning', 'Warning message was not returned')
 
+    def test_move_sn_redirect(self):
+        """
+        Check that lots can be changed on assigned moves and that sublocations
+        are correclty taken into account.
+        """
+        lots = self.env['stock.lot'].create([
+            {
+                'name': f"SN00{i+1}",
+                'product_id': self.product_serial.id,
+                'company_id': self.env.company.id,
+            } for i in range(5)
+        ])
+        shelf = self.env['stock.location'].create({
+            'name': 'shelf',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        for i in range(5):
+            if i in [0,3]:
+                self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1, lot_id=lots[i])
+            else:
+                self.env['stock.quant']._update_available_quantity(self.product_serial, shelf, 1, lot_id=lots[i])
+        move = self.env['stock.move'].create({
+            'name': 'test sn',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product_serial.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 2.0,
+        })
+        move._action_confirm()
+        move._action_assign()
+        self.assertRecordValues(move.move_line_ids.sorted('lot_id'), [
+            {'lot_id': lots[0].id, 'location_id': self.stock_location.id},
+            {'lot_id': lots[1].id, 'location_id': shelf.id},
+        ])
+        move.lot_ids = lots[2:]
+        warning = move._onchange_lot_ids()
+
+        self.assertFalse(warning, 'Warning should not trigger for sublocation')
+        self.assertRecordValues(move.move_line_ids.sorted('lot_id'), [
+            {'lot_id': lots[2].id, 'location_id': shelf.id},
+            {'lot_id': lots[3].id, 'location_id': self.stock_location.id},
+            {'lot_id': lots[4].id, 'location_id': shelf.id},
+        ])
+
     def test_forecast_availability(self):
         """ Make an outgoing picking in dozens for a product stored in units.
         Check that reserved_availabity is expressed in move uom and forecast_availability is in product base uom
@@ -6672,3 +6788,56 @@ class StockMove(TransactionCase):
         })
         line2.quant_id = quant
         self.assertEqual(move.move_line_ids[1].quantity, 1.0)
+
+    def test_free_reservation(self):
+        """ Checks that the free_reservation uses the latest move line when the picking or date are equal.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 5)
+        # Create two moves using the all available quantity and reserve them
+        move_1, move_2 = self.env['stock.move'].create([{
+            'name': 'New move',
+            'product_id': self.product.id,
+            'product_uom_qty': qty,
+            'product_uom': self.product.uom_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        } for qty in [2, 3]])
+        (move_1 | move_2)._action_confirm()
+        (move_1 | move_2)._action_assign()
+
+        self.assertEqual(move_1.date, move_2.date)
+        self.assertEqual(move_1.state, 'assigned')
+        self.assertEqual(move_2.state, 'assigned')
+
+        # Create a scrap order, that will remove some on the available quantity
+        with Form(self.env['stock.scrap']) as scrap_form:
+            scrap_form.product_id = self.product
+            scrap_form.scrap_qty = 2
+            scrap_form.location_id = self.stock_location
+            scrap = scrap_form.save()
+        scrap.action_validate()
+
+        # Since both moves have the same date, ensure that the reservation is changed on the latest created
+        self.assertEqual(move_1.state, 'assigned')
+        self.assertEqual(move_2.state, 'partially_available')
+
+    def test_recompute_stock_reference(self):
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.customer_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'move_ids': [(0, 0, {
+                'name': self.product.name,
+                'location_id': self.customer_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_id': self.product.id,
+                'product_uom': self.product.uom_id.id,
+                'product_uom_qty': 2.0,
+            })],
+        })
+        old_reference = receipt.move_ids.reference
+        receipt.write({
+            'picking_type_id': self.env.ref('stock.picking_type_internal').id,
+        })
+        receipt.action_confirm()
+        self.assertNotEqual(old_reference, receipt.move_ids.reference)

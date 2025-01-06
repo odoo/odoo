@@ -1,4 +1,5 @@
 from odoo import _, models, tools
+from markupsafe import Markup
 from odoo.tools import html2plaintext
 
 DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID = '320'
@@ -63,6 +64,14 @@ class AccountEdiXmlOIOUBL201(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_20
         vals = super()._export_invoice_vals(invoice)
         vals['PaymentTermsType_template'] = 'l10n_dk_oioubl.oioubl_PaymentTermsType'
+        if self.env.ref('l10n_dk_oioubl.oioubl_PaymentMeansType', raise_if_not_found=False):
+            vals['PaymentMeansType_template'] = 'l10n_dk_oioubl.oioubl_PaymentMeansType'
+        else:
+            module = self.env['ir.module.module']._get('l10n_dk_oioubl')
+            module_url = f"/web#id={module.id}&model={module._name}&view_type=form"
+            message = _("The payment method in the generated XML may be incorrect. Please update the following module ")
+            message += Markup("<a href='%s' style='color:#017e84; font-weight: bold;'>(%s)</a>") % (module_url, _("Denmark E-Invoicing"))
+            invoice.message_post(body=message)
         vals['vals'].update({
             'customization_id': 'OIOUBL-2.01',
             # ProfileID is the property that define which documents the company can send and receive
@@ -84,15 +93,21 @@ class AccountEdiXmlOIOUBL201(models.AbstractModel):
     def _get_partner_party_vals(self, partner, role):
         # EXTENDS account.edi.xml.ubl_20
         vals = super()._get_partner_party_vals(partner, role)
-        endpoint_id = format_vat_number(partner)
-        if endpoint_id[:2] == 'DK':
-            scheme_id = 'DK:CVR'
-        elif endpoint_id[:2] == 'FR':
-            scheme_id = 'FR:SIRET'
-            # SIRET is the french company registry
-            endpoint_id = (partner.company_registry or "").replace(" ", "")
+        if partner.peppol_endpoint:
+            endpoint_id = partner.peppol_endpoint
+            scheme_id = 'GLN'
         else:
-            scheme_id = f'{endpoint_id[:2]}:VAT'
+            endpoint_id = format_vat_number(partner)
+            country_code = endpoint_id[:2]
+            match country_code:
+                case 'DK':
+                    scheme_id = 'DK:CVR'
+                case 'FR':
+                    scheme_id = 'FR:SIRET'
+                    # SIRET is the french company registry
+                    endpoint_id = (partner.company_registry or "").replace(" ", "")
+                case _:
+                    scheme_id = f'{country_code}:VAT'
 
         vals.update({
             # list of possible endpointID available at

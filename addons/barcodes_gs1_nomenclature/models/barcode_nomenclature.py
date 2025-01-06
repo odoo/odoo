@@ -98,9 +98,9 @@ class BarcodeNomenclature(models.Model):
         if self.gs1_separator_fnc1:
             separator_group = "(?:%s)?" % self.gs1_separator_fnc1
         # zxing-library patch, removing GS1 identifiers
-        for identifier in [']C1', ']e0', ']d2', ']Q3', ']J1']:
+        for identifier in [']C1', ']e0', ']d2', ']Q3', ']J1', FNC1_CHAR]:
             if barcode.startswith(identifier):
-                barcode = barcode.replace(identifier, '')
+                barcode = barcode.replace(identifier, '', 1)
                 break
         results = []
         gs1_rules = self.rule_ids.filtered(lambda r: r.encoding == 'gs1-128')

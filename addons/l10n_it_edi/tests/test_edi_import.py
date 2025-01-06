@@ -6,7 +6,7 @@ from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo import fields, sql_db, tools, Command
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
 
@@ -264,3 +264,9 @@ class TestItEdiImport(TestItEdi):
                 }
             ],
         }], applied_xml)
+
+    def test_invoice_user_can_compute_is_self_invoice(self):
+        """Ensure that a user having only group_account_invoice can compute field l10n_it_edi_is_self_invoice"""
+        user = new_test_user(self.env, login='jag', groups='account.group_account_invoice')
+        move = self.env['account.move'].create({'move_type': 'in_invoice'})
+        move.with_user(user).read(['l10n_it_edi_is_self_invoice'])  # should not raise

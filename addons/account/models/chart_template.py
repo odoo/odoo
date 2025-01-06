@@ -16,7 +16,7 @@ from odoo import Command, _, models, api
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessError, UserError
 from odoo.modules import get_resource_from_path
-from odoo.tools import file_open, get_lang, groupby, SQL
+from odoo.tools import file_open, float_compare, get_lang, groupby, SQL
 from odoo.tools.translate import code_translations, TranslationImporter
 
 _logger = logging.getLogger(__name__)
@@ -98,7 +98,7 @@ class AccountChartTemplate(models.AbstractModel):
         field = self.env['ir.module.module']._fields['account_templates']
         modules = (
             self.env.cache.get_records(self.env['ir.module.module'], field)
-            or self.env['ir.module.module'].search([])
+            or self.env['ir.module.module'].sudo().search([])
         )
 
         return {
@@ -140,6 +140,8 @@ class AccountChartTemplate(models.AbstractModel):
             chart template.
         :type install_demo: bool
         """
+        if not self.env.registry.loaded and not install_demo:
+            _logger.warning('Incorrect usage of try_loading without a fully loaded registry. This could lead to issues.')
         if not company:
             return
         if isinstance(company, int):
@@ -147,8 +149,8 @@ class AccountChartTemplate(models.AbstractModel):
 
         template_code = template_code or company and self._guess_chart_template(company.country_id)
 
-        if template_code == 'syscohada' and template_code != company.chart_template:
-            raise UserError(_("The Syscohada chart template shouldn't be selected directly. Instead, you should directly select the chart template related to your country."))
+        if template_code in {'syscohada', 'syscebnl'} and template_code != company.chart_template:
+            raise UserError(_("The %s chart template shouldn't be selected directly. Instead, you should directly select the chart template related to your country.", template_code))
 
         return self._load(template_code, company, install_demo)
 
@@ -296,7 +298,7 @@ class AccountChartTemplate(models.AbstractModel):
             template_line_ids = [x for x in template.get('repartition_line_ids', []) if x[0] != Command.CLEAR]
             return (
                 tax.amount_type != template.get('amount_type', 'percent')
-                or tax.amount != template.get('amount', 0)
+                or float_compare(tax.amount, template.get('amount', 0), precision_digits=4) != 0
                 # Taxes that don't have repartition lines in their templates get theirs created by default
                 or len(template_line_ids) not in (0, len(tax.repartition_line_ids))
             )
@@ -333,10 +335,12 @@ class AccountChartTemplate(models.AbstractModel):
                                       and t.type_tax_use == values.get('type_tax_use')\
                                       and t.tax_scope == values.get('tax_scope', False)
                             )
-                        uniq_key = unique_tax_name_key(oldtax)
-                        rename_idx = len(list(filter(lambda t: re.match(fr"^(?:\[old\d*\] |){uniq_key[0]}$", t[0]) and t[1:] == uniq_key[1:], unique_tax_name_keys)))
-                        if rename_idx:
-                            oldtax.name = f"[old{rename_idx - 1 if rename_idx > 1 else ''}] {oldtax.name}"
+                        uniq_key = unique_tax_name_key(oldtax[0] if len(oldtax) > 1 else oldtax)
+                        matching_names = len(list(filter(lambda t: re.match(fr"^(?:\[old\d*\] |){uniq_key[0]}$", t[0]) and t[1:] == uniq_key[1:], unique_tax_name_keys)))
+                        for index, tax_to_rename in enumerate(oldtax):
+                            rename_idx = index + matching_names
+                            if rename_idx:
+                                tax_to_rename.name = f"[old{rename_idx - 1 if rename_idx > 1 else ''}] {tax_to_rename.name}"
                     else:
                         repartition_lines = values.get('repartition_line_ids')
                         values.clear()
@@ -396,7 +400,10 @@ class AccountChartTemplate(models.AbstractModel):
                     and isinstance(values[fname], (list, tuple))
                 ]
                 if x2manyfields:
-                    rec = self.ref(xmlid, raise_if_not_found=False)
+                    if isinstance(xmlid, int):
+                        rec = self.env[model_name].browse(xmlid).exists()
+                    else:
+                        rec = self.ref(xmlid, raise_if_not_found=False)
                     if rec:
                         for fname in x2manyfields:
                             for i, (line, (command, _id, vals)) in enumerate(zip(rec[fname], values[fname])):
@@ -431,6 +438,9 @@ class AccountChartTemplate(models.AbstractModel):
                 vals['currency_id'] = fiscal_country.currency_id.id
         if not company.country_id:
             vals['country_id'] = fiscal_country.id
+
+        # Ensure that we write on 'anglo_saxon_accounting' when changing to a CoA that relies on the default of `False`.
+        vals.setdefault('anglo_saxon_accounting', False)
 
         # This write method is important because it's overridden and has additional triggers
         # e.g it activates the currency
@@ -496,9 +506,17 @@ class AccountChartTemplate(models.AbstractModel):
                 ):
                     try:
                         values[fname] = self.ref(value).id if value not in ('', 'False', 'None') else False
-                    except ValueError as e:
-                        _logger.warning("Failed when trying to recover %s for field=%s", value, field)
-                        raise e
+                    except ValueError:
+                        if model != self.env['res.company']:
+                            _logger.warning("Failed when trying to recover %s for field=%s", value, field)
+                            raise
+
+                        # We can't find the record referenced in the chart template in our database.
+                        # This might happen when we're creating a branch and the parent company has deleted the
+                        # referenced record and replaced it with something else.
+                        #
+                        # In this case, we try looking for the record already set on the company or its root.
+                        values[fname] = self.env.company[fname] or self.env.company.parent_ids[0][fname] or False
                 elif field.type in ('one2many', 'many2many') and isinstance(value[0], (list, tuple)):
                     for i, (command, _id, *last_part) in enumerate(value):
                         if last_part:
@@ -636,6 +654,20 @@ class AccountChartTemplate(models.AbstractModel):
             company.account_purchase_tax_id = self.env['account.tax'].search([
                 *self.env['account.tax']._check_company_domain(company),
                 ('type_tax_use', 'in', ('purchase', 'all'))], limit=1).id
+        # Set default taxes on products (only on products having already a tax set in another company, as some flows require no tax at all (e.g TIPS in PoS))
+        # We need to browse the product in sudo to check for the taxes_id and supplier_taxes_id fields regardless of the companies record rules
+        # that would, otherwise, just look empty all the time for the current user/company
+        sudoed_products = self.env['product.template'].sudo().search(self.env['product.template']._check_company_domain(company))
+
+        if company.account_sale_tax_id:
+            sudoed_products_sale = sudoed_products.filtered(
+                lambda p: p.taxes_id and not p.taxes_id.filtered_domain(p.taxes_id._check_company_domain(company)))
+            sudoed_products_sale._force_default_sale_tax(company)
+        if company.account_purchase_tax_id:
+            sudoed_products_purchase = sudoed_products.filtered(
+                lambda p: p.supplier_taxes_id and not p.supplier_taxes_id.filtered_domain(p.taxes_id._check_company_domain(company)))
+            sudoed_products_purchase._force_default_purchase_tax(company)
+
         # Display caba fields if there are caba taxes
         if not company.parent_id and self.env['account.tax'].search([('tax_exigibility', '=', 'on_payment')]):
             company.tax_exigibility = True
@@ -1089,12 +1121,17 @@ class AccountChartTemplate(models.AbstractModel):
         assert re.fullmatch(r"[a-z0-9_]+", module)
 
         def evaluate(key, value, model_fields):
+            if not value:
+                return value
             if '@' in key:
                 return value
             if '/' in key:
                 return []
-            if model_fields and model_fields[key].type in ('boolean', 'int', 'float'):
-                return ast.literal_eval(value) if value else False
+            if model_fields:
+                if model_fields[key].type in ('boolean', 'int', 'float'):
+                    return ast.literal_eval(value)
+                if model_fields[key].type == 'char':
+                    return value.strip()
             return value
 
         res = {}

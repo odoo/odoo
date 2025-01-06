@@ -5,17 +5,17 @@
 # Translators:
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2024
 # 湘子 南 <1360857908@qq.com>, 2024
-# Jeffery CHEN <jeffery9@gmail.com>, 2024
-# Chloe Wang, 2024
 # Wil Odoo, 2024
+# Chloe Wang, 2024
+# Jeffery CHEN <jeffery9@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +47,6 @@ msgstr "%s 评价"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Shipping"
 msgstr "&amp; 送货"
 
@@ -124,7 +123,6 @@ msgstr "<b>价格表</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<b>Shipping: </b>"
 msgstr "<b>物流: </b>"
 
@@ -331,7 +329,7 @@ msgid ""
 "name=\"price\">Select to compute delivery rate</span>"
 msgstr ""
 "<span class=\"o_wsale_delivery_badge_price float-end fw-bold\" "
-"name=\"price\">选择计算交付率</span>"
+"name=\"price\">选择计算交货率</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -525,11 +523,6 @@ msgstr ""
 "</tbody>\n"
 "</table>\n"
 "            "
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product
-msgid "<u class=\"h5\">Documents</u>"
-msgstr "<u class=\"h5\">文件</u>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
@@ -900,7 +893,6 @@ msgstr "大的"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Billing"
 msgstr "开账单"
 
@@ -1003,13 +995,6 @@ msgstr "1024图可被缩放"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__can_publish
 msgid "Can Publish"
 msgstr "可以发布"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "You can't use a video as the product's main image."
-msgstr "不能使用视频作为产品的主图。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1257,7 +1242,7 @@ msgstr "计算普通运输成本和Easypost运输成本"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping cost and ship with Shiprocket"
-msgstr ""
+msgstr "使用 Shiprocket 计算运输成本并发货"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1563,7 +1548,7 @@ msgstr "删除徽标"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_delivery
 msgid "Delivery"
-msgstr "发货"
+msgstr "交货"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__amount_delivery
@@ -1695,6 +1680,11 @@ msgid "Do you wish to clear your cart before adding products to it?"
 msgstr "您是否希望在添加产品之前清空购物车？"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "Documents"
+msgstr "文档"
+
+#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/product_document.py:0
 #, python-format
@@ -1804,7 +1794,7 @@ msgstr "嵌入代码"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__enabled_delivery
 msgid "Enable Shipping"
-msgstr "启用送货功能"
+msgstr "启用交货功能"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2185,7 +2175,7 @@ msgstr "禁止修改未处于草稿状态的销售订单。"
 msgid ""
 "It seems that a delivery method is not compatible with your address. Please "
 "refresh the page and try again."
-msgstr "送货方式似乎与您的地址不匹配。 请刷新网页，然后重试。"
+msgstr "交货方式似乎与您的地址不匹配。 请刷新网页，然后重试。"
 
 #. module: website_sale
 #. odoo-python
@@ -2194,7 +2184,7 @@ msgstr "送货方式似乎与您的地址不匹配。 请刷新网页，然后�
 msgid ""
 "It seems that there is already a transaction for your order, you can not "
 "change the delivery method anymore"
-msgstr "您的订单似乎已经有交易，您不能再更改送货方式"
+msgstr "您的订单似乎已经有交易，您不能再更改交货方式"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2498,7 +2488,7 @@ msgstr "未找到遗弃的购物车"
 #: code:addons/website_sale/controllers/delivery.py:0
 #, python-format
 msgid "No pick-up point available for that shipping address"
-msgstr "该送货地址无取货点"
+msgstr "该交货地址无取货点"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -2541,7 +2531,7 @@ msgstr "您当前的订单上没有可供的送货方式及送货地址，请联
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
+#: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "No shipping method is selected."
 msgstr "未选择运送方式。"
@@ -2761,11 +2751,6 @@ msgid "Pay now"
 msgstr "现在支付"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment
-msgid "Pay with"
-msgstr "支付方式"
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #, python-format
@@ -2786,6 +2771,11 @@ msgstr "付款方式"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
 msgid "Payment Providers"
 msgstr "支付提供商"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_token
+msgid "Payment Token"
+msgstr "支付令牌"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
@@ -3586,7 +3576,7 @@ msgstr "送货"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_delivery_invoice_address
 msgid "Shipping Address"
-msgstr "送货地址"
+msgstr "交货地址"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3598,7 +3588,7 @@ msgstr "送货成本"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Shipping Methods"
-msgstr "送货方式"
+msgstr "交货方式"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -4448,6 +4438,13 @@ msgstr ""
 "                                            如果您需要变更送货地址，可以新建一个"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "You can't use a video as the product's main image."
+msgstr "不能使用视频作为产品的主图。"
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
@@ -4494,6 +4491,15 @@ msgstr "您的电子邮件"
 #, python-format
 msgid "Your Name"
 msgstr "您的姓名"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid ""
+"Your account is not allowed to pay in company %s. Please log out and create "
+"a new account for this website, or contact the website administrator."
+msgstr "您的帐户未获准在%s公司付款。请登出，然后为此网站创建一个新帐户，或联系网站管理员。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

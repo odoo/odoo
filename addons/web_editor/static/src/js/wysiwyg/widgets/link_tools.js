@@ -533,5 +533,5 @@ export class LinkTools extends Link {
 }
 
 export function shouldUnlink(link, colorCombinationClass) {
-    return !link.getAttribute('href') && !colorCombinationClass;
+    return (!link.getAttribute("href") && !link.matches(".oe_unremovable")) && !colorCombinationClass;
 }

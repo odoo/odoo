@@ -87,6 +87,7 @@ class AccountMove(models.Model):
             and not self.l10n_es_edi_facturae_xml_id \
             and not self.l10n_es_is_simplified \
             and self.is_invoice(include_receipts=True) \
+            and (self.partner_id.is_company or self.partner_id.vat) \
             and self.company_id.country_code == 'ES' \
             and self.company_id.currency_id.name == 'EUR'
 
@@ -251,7 +252,14 @@ class AccountMove(models.Model):
             tax_withheld_output = [self._l10n_es_edi_facturae_convert_computed_tax_to_template(tax) for tax in taxes_withheld_computed]
             totals['total_taxes_withheld'] += sum((abs(tax["tax_amount"]) for tax in taxes_withheld_computed))
 
+            receiver_transaction_reference = (
+                line.sale_line_ids.order_id.client_order_ref[:20]
+                if 'sale_line_ids' in line._fields and line.sale_line_ids.order_id.client_order_ref
+                else False
+            )
+
             invoice_line_values.update({
+                'ReceiverTransactionReference': receiver_transaction_reference,
                 'FileReference': self.ref[:20] if self.ref else False,
                 'FileDate': fields.Date.context_today(self),
                 'ItemDescription': line.name,
@@ -646,3 +654,8 @@ class AccountMove(models.Model):
         code_and_name = re.match(r"(\[(?P<default_code>.*?)\]\s)?(?P<name>.*)", item_description).groupdict()
         product = self.env['product.product']._retrieve_product(**code_and_name)
         return product
+
+    def _generate_pdf_and_send_invoice(self, template, force_synchronous=True, allow_fallback_pdf=True, bypass_download=False, **kwargs):
+        if self.company_id.country_code == "ES" and not self.company_id.l10n_es_edi_facturae_certificate_id:
+            kwargs['l10n_es_edi_facturae_checkbox_xml'] = False
+        return super()._generate_pdf_and_send_invoice(template, force_synchronous, allow_fallback_pdf, bypass_download, **kwargs)

@@ -2,7 +2,7 @@
 <odoo>
     <template id="product_wishlist" inherit_id="website_sale_wishlist.product_wishlist">
         <xpath expr="//button[hasclass('o_wish_rm')]" position="before">
-            <small class="text-danger d-md-block" t-if="wish.product_id.sudo()._is_sold_out()">Temporarily out of stock</small>
+            <small class="text-danger d-md-block" t-if="wish.product_id._is_sold_out() and not wish.product_id.allow_out_of_stock_order">Temporarily out of stock</small>
         </xpath>
         <xpath expr="//button[hasclass('o_wish_rm')]" position="after">
             <t t-if="not wish.product_id.allow_out_of_stock_order and wish.product_id._is_sold_out()">

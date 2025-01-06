@@ -34,14 +34,6 @@ class AccountEdiXmlCII(models.AbstractModel):
             'seller_postal_address': self._check_required_fields(
                 vals['record']['company_id']['partner_id']['commercial_partner_id'], 'country_id'
             ),
-            # [BR-DE-9] The element "Buyer post code" (BT-53) must be transmitted. (only mandatory in Germany ?)
-            'buyer_postal_address': self._check_required_fields(
-                vals['record']['commercial_partner_id'], 'zip'
-            ),
-            # [BR-DE-4] The element "Seller post code" (BT-38) must be transmitted. (only mandatory in Germany ?)
-            'seller_post_code': self._check_required_fields(
-                vals['record']['company_id']['partner_id']['commercial_partner_id'], 'zip'
-            ),
             # [BR-CO-26]-In order for the buyer to automatically identify a supplier, the Seller identifier (BT-29),
             # the Seller legal registration identifier (BT-30) and/or the Seller VAT identifier (BT-31) shall be present.
             'seller_identifier': self._check_required_fields(
@@ -74,9 +66,9 @@ class AccountEdiXmlCII(models.AbstractModel):
             # [BR-IG-05]-In an Invoice line (BG-25) where the Invoiced item VAT category code (BT-151) is "IGIC" the
             # invoiced item VAT rate (BT-152) shall be greater than 0 (zero).
             'igic_tax_rate': self._check_non_0_rate_tax(vals)
-                if vals['record']['commercial_partner_id']['country_id']['code'] == 'ES'
-                    and vals['record']['commercial_partner_id']['zip']
-                    and vals['record']['commercial_partner_id']['zip'][:2] in ['35', '38'] else None,
+                if vals['record']['partner_id']['country_id']['code'] == 'ES'
+                    and vals['record']['partner_id']['zip']
+                    and vals['record']['partner_id']['zip'][:2] in ['35', '38'] else None,
         })
         return constraints
 
@@ -159,7 +151,7 @@ class AccountEdiXmlCII(models.AbstractModel):
         else:
             seller_siret = invoice.company_id.company_registry
 
-        buyer_siret = False
+        buyer_siret = invoice.commercial_partner_id.company_registry
         if 'siret' in invoice.commercial_partner_id._fields and invoice.commercial_partner_id.siret:
             buyer_siret = invoice.commercial_partner_id.siret
         template_values = {
@@ -181,6 +173,7 @@ class AccountEdiXmlCII(models.AbstractModel):
             'purchase_order_reference': invoice.purchase_order_reference if 'purchase_order_reference' in invoice._fields
                 and invoice.purchase_order_reference else invoice.ref or invoice.name,
             'contract_reference': invoice.contract_reference if 'contract_reference' in invoice._fields and invoice.contract_reference else '',
+            'document_context_id': "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended",
         }
 
         # data used for IncludedSupplyChainTradeLineItem / SpecifiedLineTradeSettlement
@@ -203,14 +196,6 @@ class AccountEdiXmlCII(models.AbstractModel):
                 date_range = self._get_invoicing_period(invoice)
                 template_values['billing_start'] = min(date_range)
                 template_values['billing_end'] = max(date_range)
-
-        # One of the difference between XRechnung and Facturx is the following. Submitting a Facturx to XRechnung
-        # validator raises a warning, but submitting a XRechnung to Facturx raises an error.
-        supplier = invoice.company_id.partner_id.commercial_partner_id
-        if supplier.country_id.code == 'DE':
-            template_values['document_context_id'] = "urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.2"
-        else:
-            template_values['document_context_id'] = "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended"
 
         # Fixed taxes: add them as charges on the invoice lines
         for line_vals in template_values['invoice_line_vals_list']:

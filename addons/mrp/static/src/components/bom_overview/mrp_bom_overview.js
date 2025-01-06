@@ -9,6 +9,7 @@ import { Component, EventBus, onWillStart, useSubEnv, useState } from "@odoo/owl
 export class BomOverviewComponent extends Component {
     setup() {
         this.orm = useService("orm");
+        this.context = this.props.action.context;
         this.actionService = useService("action");
 
         this.variants = [];
@@ -72,7 +73,10 @@ export class BomOverviewComponent extends Component {
             this.state.bomQuantity,
             this.state.currentVariantId,
         ];
-        const context = this.state.currentWarehouse ? { warehouse: this.state.currentWarehouse.id } : {};
+        const context = { ...this.context};
+        if (this.state.currentWarehouse) {
+            context.warehouse = this.state.currentWarehouse.id;
+        }
         const bomData = await this.orm.call(
             "report.mrp.report_bom_structure",
             "get_html",

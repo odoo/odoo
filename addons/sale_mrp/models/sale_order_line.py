@@ -130,7 +130,7 @@ class SaleOrderLine(models.Model):
         # Specific case when we change the qty on a SO for a kit product.
         # We don't try to be too smart and keep a simple approach: we use the quantity of entire
         # kits that are currently in delivery
-        bom = self.env['mrp.bom']._bom_find(self.product_id, bom_type='phantom')[self.product_id]
+        bom = self.env['mrp.bom'].sudo()._bom_find(self.product_id, bom_type='phantom', company_id=self.company_id.id)[self.product_id]
         if bom:
             moves = self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped)
             filters = self._get_incoming_outgoing_moves_filter()

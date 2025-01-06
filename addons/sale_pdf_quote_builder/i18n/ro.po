@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Corina Calin, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
@@ -35,7 +35,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "<i class=\"fa fa-arrow-right\"/> Download examples"
-msgstr ""
+msgstr "Exemple de descărcare"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on
@@ -46,15 +46,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sales order between the header pages and the quote table. "
 msgstr ""
-"Vă permite să partajați documentul cu clienții dvs. în cadrul unei vânzări.\n"
-"Lăsați necompletat dacă nu doriți să partajați acest document cu clientul.\n"
-"Cotație: documentul va fi trimis clienților și accesibil acestora în orice moment.\n"
-"de exemplu: această opțiune poate fi utilă pentru a partaja fișierele cu descrierea produsului.\n"
-"Comandă confirmată: documentul va fi trimis si accesibil clientilor.\n"
-"de exemplu: această opțiune poate fi utilă pentru a partaja manualul de utilizare sau conținutul digital cumpărat de pe e-commerce.\n"
-"Citat intern: Documentul va fi inclus in pdf-ul cotației intre antetul paginilor și tabelul de cotație. "
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_res_company
@@ -67,6 +61,25 @@ msgid "Config Settings"
 msgstr "Setări de configurare"
 
 #. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_footer
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_footer
+msgid "Footer pages"
+msgstr "Pagini de subsol"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_header
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_header
+msgid "Header pages"
+msgstr "Pagini de antet"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on__inside
+msgid "Inside quote"
+msgstr "Ofertă internă"
+
+#. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/utils.py:0
 #, python-format
@@ -74,30 +87,13 @@ msgid ""
 "It seems that we're not able to process this pdf inside a quotation. It is "
 "either encrypted, or encoded in a format we do not support."
 msgstr ""
-
-#. module: sale_pdf_quote_builder
-#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer
-#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_footer
-#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_footer
-msgid "Footer pages"
-msgstr ""
-
-#. module: sale_pdf_quote_builder
-#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header
-#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_header
-#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_header
-msgid "Header pages"
-msgstr ""
-
-#. module: sale_pdf_quote_builder
-#: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on__inside
-msgid "Inside quote"
-msgstr ""
+"Nu putem procesa acest pdf în interiorul unei oferte. Acesta este criptat "
+"sau codificat într-un format care nu este acceptat."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Learn more from the documentation."
-msgstr ""
+msgstr "Aflați mai multe din documentație."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
@@ -113,19 +109,12 @@ msgstr ""
 #: code:addons/sale_pdf_quote_builder/models/product_document.py:0
 #, python-format
 msgid "Only PDF documents can be attached inside a quote."
-msgstr ""
-
-#. module: sale_pdf_quote_builder
-#. odoo-python
-#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
-#, python-format
-msgid "When attached inside a quote, the document must be a file, not a URL."
-msgstr ""
+msgstr "Doar documentele PDF pot fi atașate în cadrul unei oferte."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "PDF Quote Builder"
-msgstr ""
+msgstr "Construire de oferte PDF"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
@@ -146,6 +135,11 @@ msgid ""
 "                            in the quote, if the product has an \"inside quotes\" document, this document\n"
 "                            will be added after header pages and before the quotation details."
 msgstr ""
+"Descrierile produselor sunt documente pdf pe care le puteți adăuga direct pe produse.\n"
+"Pentru a face acest lucru, accesați un produs, găsiți butonul \"documente de produs\", apoi adăugați un\n"
+"nou document pdf cu o vizibilitate setată ca \"Oferte interne\". Pentru fiecare produs\n"
+"din ofertă, dacă produsul are un document cu \"ofertă internă\", acest document\n"
+"va fi adăugat după paginile de antet și înainte de detaliile ofertei."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -156,6 +150,11 @@ msgid ""
 "                            product descriptions, details of the quote and then the footer pages.\n"
 "                            If empty, it will use those define in the company settings.<br/>"
 msgstr ""
+"Furnizați pagini de antet și pagini de subsol pentru a compune o ofertă atractivă\n"
+"cu mai multe informații despre compania dumneavoastră, produsele și serviciile dumneavoastră.\n"
+"PDF-ul ofertelor dvs. va fi construit prin punerea împreună a paginilor de antet,\n"
+"descrierile produselor, detaliile ofertei și apoi paginile de subsol.\n"
+"Dacă sunt goale, se vor utiliza cele definite în setările companiei."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw
@@ -165,7 +164,7 @@ msgstr "Ofertă / Comandă"
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_template
 msgid "Quotation Template"
-msgstr "Formular ofertă"
+msgstr "Șablon ofertă"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_ir_actions_report
@@ -177,14 +176,14 @@ msgstr "Acțiune raport"
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_footer_name
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_footer_name
 msgid "Sale Footer Name"
-msgstr ""
+msgstr "Nume subsol vânzare"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header_name
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_header_name
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_header_name
 msgid "Sale Header Name"
-msgstr ""
+msgstr "Nume antet vânzare"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_order
@@ -198,8 +197,20 @@ msgid ""
 "                            can be injected in these documents using pdf forms.\n"
 "                            Refer to the documentation to know more about this feature."
 msgstr ""
+"Unele informații specifice ofertei (numele clientului, referința ofertei, ... )\n"
+"pot fi inserate în aceste documente cu ajutorul formularelor pdf.\n"
+"Consultați documentația pentru a afla mai multe despre această caracteristică."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on
 msgid "Visible at"
 msgstr "Vizibil la"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+#, python-format
+msgid "When attached inside a quote, the document must be a file, not a URL."
+msgstr ""
+"Atunci când este atașat în cadrul unei oferte, documentul trebuie să fie un "
+"fișier, nu un URL."

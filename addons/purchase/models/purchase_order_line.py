@@ -319,7 +319,7 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             if not line.product_id or line.invoice_lines or not line.company_id:
                 continue
-            params = {'order_id': line.order_id}
+            params = line._get_select_sellers_params()
             seller = line.product_id._select_seller(
                 partner_id=line.partner_id,
                 quantity=line.product_qty,
@@ -332,6 +332,7 @@ class PurchaseOrderLine(models.Model):
 
             # If not seller, use the standard price. It needs a proper currency conversion.
             if not seller:
+                line.discount = 0
                 unavailable_seller = line.product_id.seller_ids.filtered(
                     lambda s: s.partner_id == line.order_id.partner_id)
                 if not unavailable_seller and line.price_unit and line.product_uom == line._origin.product_uom:
@@ -353,13 +354,13 @@ class PurchaseOrderLine(models.Model):
                     False
                 )
                 line.price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
-                continue
 
-            price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.taxes_id, line.company_id) if seller else 0.0
-            price_unit = seller.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order or fields.Date.context_today(line), False)
-            price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
-            line.price_unit = seller.product_uom._compute_price(price_unit, line.product_uom)
-            line.discount = seller.discount or 0.0
+            elif seller:
+                price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.taxes_id, line.company_id) if seller else 0.0
+                price_unit = seller.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order or fields.Date.context_today(line), False)
+                price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
+                line.price_unit = seller.product_uom._compute_price(price_unit, line.product_uom)
+                line.discount = seller.discount or 0.0
 
             # record product names to avoid resetting custom descriptions
             default_names = []
@@ -437,9 +438,8 @@ class PurchaseOrderLine(models.Model):
             price_unit = price_unit * (1 - self.discount / 100)
         if self.taxes_id:
             qty = self.product_qty or 1
-            price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
-            price_unit = self.taxes_id.with_context(round=False).compute_all(price_unit, currency=self.order_id.currency_id, quantity=qty, product=self.product_id)['total_void']
-            price_unit = float_round(price_unit / qty, precision_digits=price_unit_prec)
+            price_unit = self.taxes_id.with_context(round=False, round_base=False).compute_all(price_unit, currency=self.order_id.currency_id, quantity=qty, product=self.product_id)['total_void']
+            price_unit = price_unit / qty
         if self.product_uom.id != self.product_id.uom_id.id:
             price_unit *= self.product_uom.factor / self.product_id.uom_id.factor
         return price_unit
@@ -657,3 +657,9 @@ class PurchaseOrderLine(models.Model):
                 business_domain='purchase_order',
                 company_id=line.company_id.id,
             )
+
+    def _get_select_sellers_params(self):
+        self.ensure_one()
+        return {
+            "order_id": self.order_id,
+        }

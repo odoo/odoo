@@ -15,24 +15,24 @@
 # Martin Trigaux, 2023
 # Peter Wickenberg <peter@wickenberg.nu>, 2023
 # 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2023
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Mikael Carlsson <mikael.carlsson@vertel.se>, 2023
 # Levi Siuzdak (sile), 2023
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Lasse L, 2024
 # Kristoffer Grundström <lovaren@gmail.com>, 2024
 # Björn Hayer, 2024
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
-# Larissa Manderfeld, 2024
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# Larissa Manderfeld, 2024
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
+"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -207,7 +207,7 @@ msgstr "- nått den"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "<b>Drag &amp; drop</b> the card to change your task from stage."
-msgstr "<b>Dra och släpp</b> kortet för att ändra din uppgift från scenen."
+msgstr "<b>Dra och släpp</b> kortet för att ändra din uppgift från etappen."
 
 #. module: project
 #. odoo-javascript
@@ -336,8 +336,7 @@ msgstr ""
 "                                <a t-attf-href=\"/rate/{{ access_token }}/5\">\n"
 "                                    <img alt=\"Nöjd\" src=\"/rating/static/src/img/rating_5.png\" title=\"Nöjd\">\n"
 "                                </a>\n"
-"                            </td> </td> </td\n"
-"                            <td> </a\n"
+"                            </td> </td> </td> </a\n"
 "                                <a t-attf-href=\"/rating/{{ access_token }}/3\">\n"
 "                                    <img alt=\"Okej\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okej\">\n"
 "                                </a>\n"
@@ -355,10 +354,10 @@ msgstr ""
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            Vi uppskattar din feedback. Den hjälper oss att ständigt bli bättre.\n"
 "            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
-"                <br><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Den här nöjdhetsundersökningen har skickats eftersom din uppgift har flyttats till <b t-out=\"object.stage_id.name or ''\">In progress</b> stadiet</span>\n"
+"                <br><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Den här nöjdhetsundersökningen har skickats eftersom din uppgift har flyttats till <b t-out=\"object.stage_id.name or ''\">Pågående</b> etappen</span>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.rating_status == 'periodisk'\">\n"
-"                <br><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Den här nöjdhetsundersökningen skickas <b t-out=\"object.project_id.rating_status_period or ''\">veckovis</b> så länge som uppgiften är i stadiet <b t-out=\"object.stage_id.name or ''\">In progress</b>.</span>\n"
+"                <br><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Den här nöjdhetsundersökningen skickas <b t-out=\"object.project_id.rating_status_period or ''\">veckovis</b> så länge som uppgiften är i etappen <b t-out=\"object.stage_id.name or ''\">Pågående</b>.</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td><br>Med vänlig hälsning,</td></tr>\n"
@@ -401,7 +400,7 @@ msgstr ""
 "        <t t-out=\"user.signature or ''\">—<br>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>\n"
-"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Du får detta e-postmeddelande eftersom ditt projekt har flyttats till fasen <b t-out=\"object.stage_id.name or ''\">Klar</b></span> "
+"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Du får detta e-postmeddelande eftersom ditt projekt har flyttats till etappen <b t-out=\"object.stage_id.name or ''\">Klar</b></span> "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -439,9 +438,9 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"Okay\"/>\n"
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Dissatisfied\"/>"
 msgstr ""
-"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" invisible=\"rating_avg &lt; 3.66\" title=\"Nöjd\"/>\n"
-"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2,33 eller rating_avg &gt;= 3,66\" title=\"Okej\"/>\n"
-"                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Missnöjd\"/>"
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" invisible=\"rating_avg < 3.66\" title=\"Nöjd\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg < 2.33 or rating_avg >= 3.66\" title=\"Okej\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg >= 2.33\" title=\"Missnöjd\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -480,7 +479,7 @@ msgstr "<i title=\"Privat uppgift\" class=\"fa fa-lock\"/>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-end\">Stage:</small>"
-msgstr "<small class=\"text-end\">Steg:</small>"
+msgstr "<small class=\"text-end\">Etapp:</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -571,8 +570,8 @@ msgid ""
 msgstr ""
 "<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
 "                                                    <i class=\"fa fa-lightbulb-o pe-2\"/>\n"
-"                                                    <span invisible=\"rating_status == 'periodic'\">En begäran om bedömning skickas så snart uppgiften når ett stadium där en e-postmall för bedömning har definierats.</span>\n"
-"                                                    <span invisible=\"rating_status == 'stage'\">En begäran om betygsättning skickas så länge som uppgiften befinner sig i ett stadium där en mall för e-post med betygsättning har definierats.</span>\n"
+"                                                    <span invisible=\"rating_status == 'periodic'\">En begäran om bedömning skickas så snart uppgiften når en etapp där en e-postmall för bedömning har definierats.</span>\n"
+"                                                    <span invisible=\"rating_status == 'stage'\">En begäran om betygsättning skickas så länge som uppgiften befinner sig i en etapp där en mall för e-post med betygsättning har definierats.</span>\n"
 "                                                </span>"
 
 #. module: project
@@ -641,7 +640,7 @@ msgid ""
 "A personal stage cannot be linked to a project because it is only visible to"
 " its corresponding user."
 msgstr ""
-"En personlig scen kan inte kopplas till ett projekt eftersom den endast är "
+"En personlig etapp kan inte kopplas till ett projekt eftersom den endast är "
 "synlig för den aktuella användaren."
 
 #. module: project
@@ -662,7 +661,7 @@ msgstr "En tagg med samma namn finns redan."
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
 msgid "A task can only have a single personal stage per user."
-msgstr "En uppgift kan bara ha en enda personlig scen per användare."
+msgstr "En uppgift kan bara ha en enda personlig etapp per användare."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -771,8 +770,8 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
-"Lägg till kolumner för att organisera dina uppgifter i olika <b>steg</b>, "
-"t.ex. <i>Ny - Pågår - Klar</i>."
+"Lägg till kolumner för att organisera dina uppgifter i olika <b>etapper</b>,"
+" t.ex. <i>Ny - Pågår - Klar</i>."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -878,6 +877,7 @@ msgid "Allocated Time"
 msgstr "Tilldelad tid"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task_allocated_hours_template
 msgid "Allocated Time:"
 msgstr "Tilldelad tid:"
@@ -959,7 +959,7 @@ msgstr "Godkänd"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Archive Stages"
-msgstr "Arkivera Lägen"
+msgstr "Arkivera Etapper"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -984,7 +984,7 @@ msgstr "Är du säker på att du vill fortsätta?"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Are you sure you want to delete these stages?"
-msgstr "Är du säker på att du vill ta bort dessa steg?"
+msgstr "Är du säker på att du vill ta bort dessa etapper?"
 
 #. module: project
 #. odoo-javascript
@@ -1038,8 +1038,6 @@ msgid "Assigned to"
 msgstr "Tilldelad till"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
@@ -1047,7 +1045,6 @@ msgstr "Tilldelad till"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
-#, python-format
 msgid "Assignees"
 msgstr "Tilldelad"
 
@@ -1120,7 +1117,7 @@ msgid ""
 " * Good feedback from the customer will update the state to 'Approved' (green bullet).\n"
 " * Neutral or bad feedback will set the kanban state to 'Changes Requested' (orange bullet).\n"
 msgstr ""
-"Ändra automatiskt status när kunden svarar på feedbacken för detta steg.\n"
+"Ändra automatiskt status när kunden svarar på feedbacken för denna etapp.\n"
 " * Bra feedback från kunden uppdaterar statusen till \"Godkänd\" (grön punkt).\n"
 " * Neutral eller dålig feedback gör att kanbanstatus ändras till \"Changes Requested\" (orange punkt).\n"
 
@@ -1359,9 +1356,9 @@ msgid ""
 "Rating when changing stage: an email will be automatically sent when the task reaches the stage on which the rating email template is set.\n"
 "Periodic rating: an email will be automatically sent at regular intervals as long as the task remains in the stage in which the rating email template is set."
 msgstr ""
-"Samla in återkoppling från dina kunder genom att skicka dem en bedömningsförfrågan när en uppgift går in i ett visst skede. För att göra detta, definiera en e-postmall för bedömning på de motsvarande stadierna.\n"
-"Bedömning vid skedeändring: ett e-postmeddelande skickas automatiskt när uppgiften når det skede där e-postmallen för bedömning är inställd.\n"
-"Periodisk bedömning: ett e-postmeddelande skickas automatiskt med regelbundna intervall så länge uppgiften förblir i det skede där e-postmallen för bedömning är inställd."
+"Samla in återkoppling från dina kunder genom att skicka dem en bedömningsförfrågan när en uppgift går in i en viss etapp. För att göra detta, definiera en e-postmall för bedömning i de motsvarande etapperna.\n"
+"Bedömning vid etappändring: ett e-postmeddelande skickas automatiskt när uppgiften når den etapp där e-postmallen för bedömning är inställd.\n"
+"Periodisk bedömning: ett e-postmeddelande skickas automatiskt med regelbundna intervall så länge uppgiften förblir i den etapp där e-postmallen för bedömning är inställd."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
@@ -1415,7 +1412,7 @@ msgstr "Konfiguration"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Configure Stages"
-msgstr "Konfigurera steg"
+msgstr "Konfigurera etapp"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_unarchive_wizard
@@ -1508,7 +1505,7 @@ msgstr "Skapa ett projekt"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
 msgid "Create a new stage in the task pipeline"
-msgstr "Skapa ett nytt skede i uppgiftspipelinen"
+msgstr "Skapa en ny etapp i uppgiftspipelinen"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
@@ -1722,7 +1719,7 @@ msgstr "Datum"
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
 #, python-format
 msgid "Date and Stage"
-msgstr "Datum och skede"
+msgstr "Datum och etapp"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__date_last_stage_update
@@ -1731,7 +1728,7 @@ msgid ""
 "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another."
 msgstr ""
 "Datum då statusen för din uppgift senast ändrades.\n"
-"Baserat på denna information kan du identifiera uppgifter som är fördröjda och få statistik om hur lång tid det vanligtvis tar att flytta uppgifter från ett stadium/tillstånd till ett annat."
+"Baserat på denna information kan du identifiera uppgifter som är fördröjda och få statistik om hur lång tid det vanligtvis tar att flytta uppgifter från en etapp/tillstånd till ett annat."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__date
@@ -1796,7 +1793,7 @@ msgid ""
 msgstr ""
 "Definiera de steg som ska användas i projektet från det att\n"
 "                skapandet av uppgiften, fram till avslutandet av uppgiften eller frågan.\n"
-"                Du kommer att använda dessa steg för att spåra framstegen i\n"
+"                Du kommer att använda dessa etapper för att spåra framstegen i\n"
 "                lösa en uppgift eller ett problem."
 
 #. module: project
@@ -1839,7 +1836,7 @@ msgstr "Radera milstolpar"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
 #, python-format
 msgid "Delete Project Stage"
-msgstr "Radera projektfas"
+msgstr "Radera Projektetapp"
 
 #. module: project
 #. odoo-python
@@ -1850,7 +1847,7 @@ msgstr "Radera projektfas"
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
 #, python-format
 msgid "Delete Stage"
-msgstr "Radera etapper"
+msgstr "Radera Etapper"
 
 #. module: project
 #. odoo-javascript
@@ -2042,7 +2039,7 @@ msgid ""
 "Each user should have at least one personal stage. Create a new stage to "
 "which the tasks can be transferred after the selected ones are deleted."
 msgstr ""
-"Varje användare bör ha minst ett personligt steg. Skapa ett nytt steg till "
+"Varje användare bör ha minst en personligt etapp. Skapa en ny etapp till "
 "vilket uppgifterna kan överföras efter att de valda uppgifterna har tagits "
 "bort."
 
@@ -2090,6 +2087,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_update__email_cc
 msgid "Email cc"
 msgstr "E-post CC"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "E-postdomän, t.ex. \"example.com\" i \"odoo@example.com"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -2441,8 +2443,8 @@ msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban view of "
 "your projects. Projects in a folded stage are considered as closed."
 msgstr ""
-"Om det här steget är aktiverat visas det som vikt i Kanban-vyn för dina "
-"projekt. Projekt i ett vikt stadium betraktas som stängda."
+"Om den här etappen är aktiverat visas det som vikt i Kanban-vyn för dina "
+"projekt. Projekt i en vikt etapp betraktas som stängda."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -2451,8 +2453,8 @@ msgid ""
 "Alternatively, it will be sent at a regular interval as long as the task remains in this stage, depending on the configuration of your project. \n"
 "To use this feature make sure that the 'Customer Ratings' option is enabled on your project."
 msgstr ""
-"Om detta är inställt kommer en begäran om betygsättning automatiskt att skickas via e-post till kunden när uppgiften når detta stadium.\n"
-"Alternativt kommer den att skickas med jämna mellanrum så länge uppgiften befinner sig i detta skede, beroende på konfigurationen för ditt projekt.\n"
+"Om detta är inställt kommer en begäran om betygsättning automatiskt att skickas via e-post till kunden när uppgiften når denna etapp.\n"
+"Alternativt kommer den att skickas med jämna mellanrum så länge uppgiften befinner sig i denna etapp, beroende på konfigurationen för ditt projekt.\n"
 "För att använda den här funktionen måste du se till att alternativet \"Kundbetyg\" är aktiverat i ditt projekt."
 
 #. module: project
@@ -2462,7 +2464,7 @@ msgid ""
 " reaches this stage."
 msgstr ""
 "Om du anger detta kommer ett e-postmeddelande automatiskt att skickas till "
-"kunden när projektet når detta stadium."
+"kunden när projektet når denna etapp."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__mail_template_id
@@ -2471,7 +2473,7 @@ msgid ""
 "reaches this stage."
 msgstr ""
 "Om du anger detta kommer ett e-postmeddelande automatiskt att skickas till "
-"kunden när uppgiften når detta stadium."
+"kunden när uppgiften når denna etapp."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_bounced_content
@@ -2768,7 +2770,7 @@ msgstr "Låt oss skapa ditt första <b>projekt</b>."
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>stage</b>."
-msgstr "Låt oss skapa ditt första <b>steg</b>."
+msgstr "Låt oss skapa din första <b>etapp</b>."
 
 #. module: project
 #. odoo-javascript
@@ -2782,7 +2784,7 @@ msgstr "Låt oss skapa din första <b>uppgift</b>."
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your second <b>stage</b>."
-msgstr "Låt oss skapa ditt andra <b>steg</b>."
+msgstr "Låt oss skapa din andra <b>etapp</b>."
 
 #. module: project
 #. odoo-javascript
@@ -3353,6 +3355,13 @@ msgid "Once a Month"
 msgstr "En gång i månaden"
 
 #. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
+msgstr "Endast jpeg-, png-, bmp- och tiff-bilder tillåts som bilagor."
+
+#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 #, python-format
@@ -3529,22 +3538,22 @@ msgstr "Procentandel positiva betyg"
 #: model_terms:ir.ui.view,arch_db:project.view_task_calendar
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Personal Stage"
-msgstr "Personlig scen"
+msgstr "Personlig etapp"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_id
 msgid "Personal Stage State"
-msgstr "Personligt stadium Stat"
+msgstr "Läge Personligt Etapp"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_ids
 msgid "Personal Stages"
-msgstr "Personliga stadier"
+msgstr "Personliga Etapper"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_stage_personal
 msgid "Personal Task Stage"
-msgstr "Personlig uppgift Steg"
+msgstr "Personlig Uppgift Etapp"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3776,24 +3785,24 @@ msgstr "Projektdelning: Uppgift"
 #. module: project
 #: model:ir.model,name:project.model_project_project_stage
 msgid "Project Stage"
-msgstr "Projektfas"
+msgstr "Projektetapp"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_stage_change
 msgid "Project Stage Changed"
-msgstr "Projektstadium ändrat"
+msgstr "Projektetapp ändrad"
 
 #. module: project
 #: model:ir.model,name:project.model_project_project_stage_delete_wizard
 msgid "Project Stage Delete Wizard"
-msgstr "Guiden Ta bort projektfas"
+msgstr "Guiden ta bort Projektetapp"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_project_stage_configure
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_stages
 #: model:ir.ui.menu,name:project.menu_project_config_project_stage
 msgid "Project Stages"
-msgstr "Projektets olika faser"
+msgstr "Projektets Etapper"
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
@@ -3803,7 +3812,7 @@ msgstr "Projektetiketter"
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
 msgid "Project Task Stage Delete Wizard"
-msgstr "Guiden Ta bort projektuppgift steg"
+msgstr "Guiden Ta bort projektuppgiftsetapp"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
@@ -3910,9 +3919,9 @@ msgid ""
 " several projects, you can share this stage among them and get consolidated "
 "information this way."
 msgstr ""
-"Projekt där detta steg finns. Om du följer ett liknande arbetsflöde i flera "
-"projekt kan du dela detta steg mellan dem och få konsoliderad information på"
-" detta sätt."
+"Projekt där detta etapp finns. Om du följer ett liknande arbetsflöde i flera"
+" projekt kan du dela denna etapp mellan dem och få konsoliderad information "
+"på detta sätt."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__task_properties
@@ -4203,6 +4212,20 @@ msgstr "Sorgset ansikte"
 
 #. module: project
 #. odoo-javascript
+#: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
+#, python-format
+msgid "Save the task to be able to drag images in description"
+msgstr "Spara uppgiften för att kunna dra bilder i beskrivningen"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
+#, python-format
+msgid "Save the task to be able to paste images in description"
+msgstr "Spara uppgiften för att kunna klistra in bilder i beskrivningen"
+
+#. module: project
+#. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Schedule your activity once it is ready."
@@ -4293,7 +4316,7 @@ msgstr "Sök i Ref"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Stages"
-msgstr "Sök i steg"
+msgstr "Sök i Etapper"
 
 #. module: project
 #. odoo-python
@@ -4377,7 +4400,7 @@ msgid ""
 "Set this template on a project stage to request feedback from your "
 "customers. Enable the \"customer ratings\" feature on the project"
 msgstr ""
-"Ställ in denna mall på ett projektstadium för att begära feedback från dina "
+"Ställ in denna mall på ett projektetapp för att begära feedback från dina "
 "kunder. Aktivera funktionen \"kundbetyg\" på projektet"
 
 #. module: project
@@ -4496,41 +4519,41 @@ msgstr "Pågående sprint"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, python-format
 msgid "Stage"
-msgstr "Läge"
+msgstr "Etapp"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr "Ändrad etapp"
+msgstr "Etapp Ändrad"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__user_id
 msgid "Stage Owner"
-msgstr "Scenägare"
+msgstr "Etappägare"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr "Läge ändrad"
+msgstr "Etapp ändrad"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "Stage: %s"
-msgstr "Steg: %s"
+msgstr "Etapp: %s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage_delete_wizard__stages_active
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stages_active
 msgid "Stages Active"
-msgstr "Lägen aktiva"
+msgstr "Etapper aktiva"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage_delete_wizard__stage_ids
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stage_ids
 msgid "Stages To Delete"
-msgstr "Lägen att ta bort"
+msgstr "Etapper att ta bort"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -4764,7 +4787,7 @@ msgstr "Aktivitetsetapp ändrad"
 #: model:ir.actions.act_window,name:project.open_task_type_form_domain
 #: model:ir.ui.menu,name:project.menu_project_config_project
 msgid "Task Stages"
-msgstr "Uppgiftsstadier"
+msgstr "Aktivitetsetapper"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
@@ -4812,6 +4835,7 @@ msgstr "Uppgift: Begäran om betyg"
 
 #. module: project
 #. odoo-python
+#: code:addons/project/models/project_project.py:0
 #: code:addons/project/models/project_project.py:0
 #: code:addons/project/models/project_project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
@@ -4894,12 +4918,20 @@ msgstr "Burndown Chart måste grupperas efter"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_id
 msgid "The current user's personal stage."
-msgstr "Den aktuella användarens personliga scen."
+msgstr "Den aktuella användarens personliga etapp."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
 msgid "The current user's personal task stage."
-msgstr "Den aktuella användarens personliga uppgiftssteg."
+msgstr "Den aktuella användarens personliga aktivitetsetapp."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid ""
+"The document does not exist or you do not have the rights to access it."
+msgstr "Dokumentet finns inte eller så saknar du rättigheter till det."
 
 #. module: project
 #. odoo-python
@@ -5103,7 +5135,7 @@ msgid ""
 msgstr ""
 "Detta projekt är associerat med %s, medan den valda etappen tillhör %s. Det "
 "finns ett par alternativ att överväga: antingen ta bort företagsbeteckningen"
-" från projektet eller från scenen. Alternativt kan du uppdatera "
+" från projektet eller från etappen. Alternativt kan du uppdatera "
 "företagsinformationen för dessa poster för att anpassa dem under samma "
 "företag."
 
@@ -5117,10 +5149,10 @@ msgid ""
 "project's company to align with the stage's company or remove the company "
 "designation from the stage"
 msgstr ""
-"Detta projekt är inte kopplat till något företag, medan scenen är kopplad "
+"Detta projekt är inte kopplat till något företag, medan etappen är kopplad "
 "till %s. Det finns ett par alternativ att överväga: antingen ändra "
-"projektets företag så att det överensstämmer med scenens företag eller ta "
-"bort företagsbeteckningen från scenen"
+"projektets företag så att det överensstämmer med etappen företag eller ta "
+"bort företagsbeteckningen från etappen"
 
 #. module: project
 #. odoo-javascript
@@ -5412,7 +5444,7 @@ msgstr "Använd återkommande aktiviteter"
 #. module: project
 #: model:res.groups,name:project.group_project_stages
 msgid "Use Stages on Project"
-msgstr "Använd stadier i projektet"
+msgstr "Använd Etapper i Projektet"
 
 #. module: project
 #: model:res.groups,name:project.group_project_task_dependencies
@@ -5643,14 +5675,14 @@ msgid ""
 "Would you like to unarchive all of the projects contained in these stages as"
 " well?"
 msgstr ""
-"Skulle du också vilja avarkivera alla projekt som ingår i dessa faser?"
+"Skulle du också vilja avarkivera alla projekt som ingår i dessa etapper?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
 msgid ""
 "Would you like to unarchive all of the tasks contained in these stages as "
 "well?"
-msgstr "Vill du också avarkivera alla uppgifter som ingår i dessa steg?"
+msgstr "Vill du också avarkivera alla uppgifter som ingår i dessa etapper?"
 
 #. module: project
 #. odoo-javascript
@@ -5688,7 +5720,7 @@ msgid ""
 "%(project_company_name)s. Please ensure that this stage exclusively consists"
 " of projects linked to %(company_name)s."
 msgstr ""
-"Du kan inte byta företag för detta steg till %(company_name)s eftersom det "
+"Du kan inte byta företag för denna etapp till %(company_name)s eftersom det "
 "för närvarande innehåller projekt som är associerade med "
 "%(project_company_name)s. Se till att denna etapp endast består av projekt "
 "som är kopplade till %(company_name)s."
@@ -5698,7 +5730,7 @@ msgstr ""
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "You can only set a personal stage on a private task."
-msgstr "Du kan bara ställa in en personlig scen på en privat uppgift."
+msgstr "Du kan bara ställa in en personlig etapp på en privat uppgift."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -5706,8 +5738,8 @@ msgid ""
 "You cannot delete stages containing projects. You can either archive them or"
 " first delete all of their projects."
 msgstr ""
-"Du kan inte radera steg som innehåller projekt. Du kan antingen arkivera dem"
-" eller först radera alla deras projekt."
+"Du kan inte radera etapp som innehåller projekt. Du kan antingen arkivera "
+"dem eller först radera alla deras projekt."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -5715,7 +5747,7 @@ msgid ""
 "You cannot delete stages containing projects. You should first delete all of"
 " their projects."
 msgstr ""
-"Du kan inte radera steg som innehåller projekt. Du bör först radera alla "
+"Du kan inte radera etapp som innehåller projekt. Du bör först radera alla "
 "deras projekt."
 
 #. module: project
@@ -5724,7 +5756,7 @@ msgid ""
 "You cannot delete stages containing tasks. You can either archive them or "
 "first delete all of their tasks."
 msgstr ""
-"Du kan inte radera steg som innehåller uppgifter. Du kan antingen arkivera "
+"Du kan inte radera etapp som innehåller uppgifter. Du kan antingen arkivera "
 "dem eller först radera alla deras uppgifter."
 
 #. module: project
@@ -5733,8 +5765,8 @@ msgid ""
 "You cannot delete stages containing tasks. You should first delete all of "
 "their tasks."
 msgstr ""
-"Du kan inte radera steg som innehåller uppgifter. Du bör först ta bort alla "
-"deras uppgifter."
+"Du kan inte radera etapp som innehåller uppgifter. Du bör först ta bort alla"
+" deras uppgifter."
 
 #. module: project
 #. odoo-python
@@ -5971,7 +6003,7 @@ msgid ""
 "state to inform your colleagues that a task is approved for the next stage."
 msgstr ""
 "ange för att informera dina kollegor om att en uppgift är godkänd för nästa "
-"steg."
+"etapp."
 
 #. module: project
 #. odoo-javascript
@@ -5986,6 +6018,13 @@ msgstr "för att markera uppgiften som avbruten."
 #, python-format
 msgid "state to mark the task as complete."
 msgstr "för att markera uppgiften som slutförd."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
+#, python-format
+msgid "state.message"
+msgstr "tillstånd.meddelande"
 
 #. module: project
 #. odoo-javascript
@@ -6039,7 +6078,7 @@ msgstr "för att signalera vad som är den aktuella statusen för din idé."
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
 msgid "when reaching a given stage"
-msgstr "när man når ett visst givet läge"
+msgstr "när man når en visst givet etapp"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -6048,8 +6087,12 @@ msgstr "kommer att generera uppgifter i din"
 
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
-msgid "{{ object.project_id.company_id.name }}: Satisfaction Survey"
-msgstr "{{ object.project_id.company_id.name }}: Nöjdhetsundersökning"
+msgid ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: "
+"Satisfaction Survey"
+msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: "
+"Undersökning om tillfredsställelse"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban

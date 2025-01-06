@@ -114,7 +114,8 @@ class StockQuant(models.Model):
     inventory_quantity_set = fields.Boolean(store=True, compute='_compute_inventory_quantity_set', readonly=False, default=False)
     is_outdated = fields.Boolean('Quantity has been moved since last count', compute='_compute_is_outdated', search='_search_is_outdated')
     user_id = fields.Many2one(
-        'res.users', 'Assigned To', help="User assigned to do product count.")
+        'res.users', 'Assigned To', help="User assigned to do product count.",
+        domain=lambda self: [('groups_id', 'in', self.env.ref('stock.group_stock_user').id)])
 
     @api.depends('quantity', 'reserved_quantity')
     def _compute_available_quantity(self):
@@ -245,6 +246,9 @@ class StockQuant(models.Model):
             domain_operator = 'in'
         return [('id', domain_operator, quant_query)]
 
+    def copy(self, default=None):
+        raise UserError(_('You cannot duplicate stock quants.'))
+
     @api.model_create_multi
     def create(self, vals_list):
         """ Override to handle the "inventory mode" and create a quant as
@@ -271,6 +275,13 @@ class StockQuant(models.Model):
                     # Merge quants later, to make sure one line = one record during batch import
                     quant = self._gather(product, location, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
                 if lot_id:
+                    if self.env.context.get('import_file') and lot_id.product_id != product:
+                        lot_name = lot_id.name
+                        lot_id = self.env['stock.lot'].search([('product_id', '=', product.id), ('name', '=', lot_name)], limit=1)
+                        if not lot_id:
+                            company_id = location.company_id or self.env.company
+                            lot_id = self.env['stock.lot'].create({'name': lot_name, 'product_id': product.id, 'company_id': company_id.id})
+                        vals['lot_id'] = lot_id.id
                     quant = quant.filtered(lambda q: q.lot_id)
                 if quant:
                     quant = quant[0].sudo()
@@ -311,6 +322,15 @@ class StockQuant(models.Model):
     def _load_records_write(self, values):
         """ Only allowed fields should be modified """
         return super(StockQuant, self.with_context(inventory_mode=True))._load_records_write(values)
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        """
+        Override to display the inventory_quantity_auto_apply:sum in group by of the list view
+        """
+        if 'inventory_quantity_auto_apply' in fields and 'quantity' not in fields:
+            fields.append('inventory_quantity_auto_apply:sum')
+        return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     def _read_group_select(self, aggregate_spec, query):
         if aggregate_spec == 'inventory_quantity:sum' and self.env.context.get('inventory_report_mode'):
@@ -390,7 +410,8 @@ class StockQuant(models.Model):
     def action_view_inventory(self):
         """ Similar to _get_quants_action except specific for inventory adjustments (i.e. inventory counts). """
         self = self._set_view_context()
-        self._quant_tasks()
+        if not self.env['ir.config_parameter'].sudo().get_param('stock.skip_quant_tasks'):
+            self._quant_tasks()
 
         ctx = dict(self.env.context or {})
         ctx['no_at_date'] = True
@@ -612,6 +633,12 @@ class StockQuant(models.Model):
         for quant in self:
             if quant.location_id.usage == 'view':
                 raise ValidationError(_('You cannot take products from or deliver products to a location of type "view" (%s).', quant.location_id.name))
+
+    @api.constrains('lot_id')
+    def check_lot_id(self):
+        for quant in self:
+            if quant.lot_id.product_id and quant.lot_id.product_id != quant.product_id:
+                raise ValidationError(_('The Lot/Serial number (%s) is linked to another product.', quant.lot_id.name))
 
     @api.model
     def _get_removal_strategy(self, product_id, location_id):

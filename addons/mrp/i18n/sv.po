@@ -16,23 +16,23 @@
 # Björn Hayer, 2023
 # Robin Calvin, 2023
 # Kristoffer Grundström <lovaren@gmail.com>, 2023
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Lasse L, 2023
 # Martin Trigaux, 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2023
 # Simon S, 2024
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Jaydeep Radadiya, 2024
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
+"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,12 +74,12 @@ msgstr " När alla komponenter är tillgängliga"
 #: model:ir.model.fields,field_description:mrp.field_product_product__bom_count
 #: model:ir.model.fields,field_description:mrp.field_product_template__bom_count
 msgid "# Bill of Material"
-msgstr "# Produktstruktur"
+msgstr "#  Materialförteckning"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__used_in_bom_count
 msgid "# BoM Where Used"
-msgstr "# BoM där den används"
+msgstr "# Materialförteckning där den används"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_ready_count
@@ -95,7 +95,7 @@ msgstr "# Arbetsorder"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_template__used_in_bom_count
 msgid "# of BoM Where is Used"
-msgstr "# Antal BoM Var används"
+msgstr "# Antal Materialförteckningar där den används"
 
 #. module: mrp
 #. odoo-python
@@ -142,7 +142,7 @@ msgstr "%s kan inte raderas. Försök att avbryta dem innan."
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_bom_structure
 msgid "'Bom Overview - %s' % object.display_name"
-msgstr "'Bom Översikt - %s' % object.display_name"
+msgstr "'Översikt Materialförteckning - %s' % object.display_name"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_finished_product
@@ -294,7 +294,7 @@ msgstr "<span class=\"fw-bold\">Att producera</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"ms-2\">Generate BOM</span>"
-msgstr "<span class=\"ms-2\">Generera BOM</span>"
+msgstr "<span class=\"ms-2\">Generera Materialförteckning</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -304,7 +304,7 @@ msgstr "<span class=\"o_stat_text\">Restorder</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "<span class=\"o_stat_text\">BoM Overview</span>"
-msgstr "<span class=\"o_stat_text\">BoM-översikt</span>"
+msgstr "<span class=\"o_stat_text\">Översikt Materialförteckning</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -572,8 +572,8 @@ msgid ""
 "A BoM of type Kit is not produced with a manufacturing order.<br/>\n"
 "                                Instead, it is used to decompose a BoM into its components when:"
 msgstr ""
-"En BoM av typen Kit produceras inte med en tillverkningsorder.<br/>\n"
-"                                Istället används den för att sönderdela en BoM i dess komponenter när:"
+"En Materialförteckning av typen Kit produceras inte med en tillverkningsorder.<br/>\n"
+"                                Istället används den för att bryta sönder en Materialförteckning i dess komponenter när:"
 
 #. module: mrp
 #. odoo-python
@@ -589,7 +589,7 @@ msgstr "En tillverkningsorder är redan utförd eller annullerad."
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
 msgstr ""
-"En produkt med en stycklista av kit-typ kan inte ha en regel för "
+"En produkt med en materialförteckning av kit-typ kan inte ha en regel för "
 "ombeställning."
 
 #. module: mrp
@@ -683,6 +683,16 @@ msgid "All"
 msgstr "Alla"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__all_move_ids
+msgid "All Move"
+msgstr "Alla rörelser"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__all_move_raw_ids
+msgid "All Move Raw"
+msgstr "All Move Raw"
+
+#. module: mrp
 #. odoo-python
 #: code:addons/mrp/controller/main.py:0
 #, python-format
@@ -698,7 +708,7 @@ msgid ""
 msgstr ""
 "Alla produktkvantiteter måste vara större än eller lika med 0.\n"
 "Rader med 0 kvantiteter kan användas som valfria rader.\n"
-"Du bör installera modulen mrp_byproduct om du vill hantera extra produkter på BoMs!"
+"Du bör installera modulen mrp_byproduct om du vill hantera extra produkter på Materialförteckningar!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -966,10 +976,11 @@ msgid ""
 "case the product is subcontracted, this can be used to determine the date at"
 " which components should be sent to the subcontractor."
 msgstr ""
-"Genomsnittlig ledtid i dagar för att tillverka denna produkt. Vid BOM i "
-"flera nivåer kommer komponenternas ledtider för tillverkning att läggas "
-"till. Om produkten är utlagd på underleverantör kan detta användas för att "
-"bestämma det datum då komponenterna ska skickas till underleverantören."
+"Genomsnittlig ledtid i dagar för att tillverka denna produkt. Vid "
+"Materialförteckningar i flera nivåer kommer komponenternas ledtider för "
+"tillverkning att läggas till. Om produkten är utlagd på underleverantör kan "
+"detta användas för att bestämma det datum då komponenterna ska skickas till "
+"underleverantören."
 
 #. module: mrp
 #. odoo-javascript
@@ -1003,24 +1014,26 @@ msgstr "Väntar på komponenter"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
 msgid "BOM Overview Report"
-msgstr "Översiktsrapport för Materiallista"
+msgstr "Översiktsrapport för Materialförteckning"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__variant_bom_ids
 msgid "BOM Product Variants"
-msgstr "BOM Produktvarianter"
+msgstr "Materialförteckning Produktvarianter"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_byproduct__bom_product_template_attribute_value_ids
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__bom_product_template_attribute_value_ids
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__bom_product_template_attribute_value_ids
 msgid "BOM Product Variants needed to apply this line."
-msgstr "BOM-produktvarianter som behövs för att tillämpa denna rad."
+msgstr ""
+"Produktvarianter på Materialförteckning som behövs för att tillämpa denna "
+"rad."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_line_ids
 msgid "BOM lines of the referred bom"
-msgstr "BOM-linjer för den refererade bomben"
+msgstr "Rader i Materialförteckning för denna Materialförteckning"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_backorder_line
@@ -1079,7 +1092,7 @@ msgstr "Baserad på"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_filter
 msgid "Bill of Material"
-msgstr "Produktstruktur"
+msgstr "Materialförteckning"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_line
@@ -1089,7 +1102,7 @@ msgstr "Materialförteckningsrad"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 msgid "Bill of Material line"
-msgstr "Materialspecifik linje"
+msgstr " Materialförteckningsrad"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__mo_bom_id
@@ -1107,7 +1120,7 @@ msgstr "Materialförteckning som används på produktionsordern"
 #: model_terms:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Bill of Materials"
-msgstr "Materialförteckning"
+msgstr "Materialförteckningar"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
@@ -1189,7 +1202,7 @@ msgstr "Blockeringar"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__bom_id
 msgid "BoM"
-msgstr "Materiallista"
+msgstr "Materialförteckning"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__bom_line_ids
@@ -1197,7 +1210,7 @@ msgstr "Materiallista"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_product_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_template_search_view
 msgid "BoM Components"
-msgstr "BoM-komponenter"
+msgstr "Komponenter i Materialförteckning"
 
 #. module: mrp
 #. odoo-javascript
@@ -1205,30 +1218,30 @@ msgstr "BoM-komponenter"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "BoM Cost"
-msgstr "BoM Kostnad"
+msgstr "Kostnad för Materialförteckning"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__bom_line_id
 msgid "BoM Line"
-msgstr "BoM-linje"
+msgstr "Materialförteckningsrad"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__bom_line_ids
 msgid "BoM Lines"
-msgstr "Materiallisterader"
+msgstr "Materialförteckningsrader"
 
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_report_mrp_bom
 #: model:ir.actions.report,name:mrp.action_report_bom_structure
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "BoM Overview"
-msgstr "Översikt över BoM"
+msgstr "Översikt över Materialförteckning"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__type
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "BoM Type"
-msgstr "Strukturtyp"
+msgstr "Typ av Materialförteckning"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
@@ -1312,6 +1325,17 @@ msgstr "Avbryt"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Cancelled"
 msgstr "Annullerad"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"Cannot compute days to prepare due to missing route info for at least 1 "
+"component or for the final product."
+msgstr ""
+"Det går inte att beräkna dagar för förberedelser eftersom det saknas "
+"ruttinformation för minst 1 komponent eller för slutprodukten."
 
 #. module: mrp
 #. odoo-python
@@ -1507,10 +1531,10 @@ msgid ""
 "purchase security lead times will be added when appropriate."
 msgstr ""
 "Beräkna antalet dagar som krävs för att återanskaffa alla komponenter från "
-"BoM, antingen genom att köpa eller tillverka komponenterna och/eller "
-"underenheterna.                                                       "
-"Observera också att ledtider för inköpssäkerhet kommer att läggas till när "
-"så är lämpligt."
+"Materialförteckning, antingen genom att köpa eller tillverka komponenterna "
+"och/eller underenheterna."
+"                                                       Observera också att "
+"ledtider för inköpssäkerhet kommer att läggas till när så är lämpligt."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1948,8 +1972,8 @@ msgstr ""
 "Standardantal enheter (i produkt UoM) som kan produceras parallellt "
 "(samtidigt) vid denna arbetsstation. Exempel: kapaciteten är 5 och du "
 "behöver producera 10 enheter, då kommer den operationstid som anges på "
-"stycklistan att multipliceras med två. Observera dock att både tiden före "
-"och efter produktionen bara räknas en gång."
+"Materialförteckningen att multipliceras med två. Observera dock att både "
+"tiden före och efter produktionen bara räknas en gång."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_consumption_warning_line__product_uom_id
@@ -1964,7 +1988,7 @@ msgid ""
 "                bill of materials and manufacturing orders."
 msgstr ""
 "Definiera de komponenter och färdiga produkter som du vill använda i\n"
-"                stycklistor och tillverkningsorder."
+"                 materialförteckningar och tillverkningsorder."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__consumption
@@ -1975,11 +1999,11 @@ msgid ""
 "  Note that in the case of component Manual Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
 "  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected."
 msgstr ""
-"Definierar om du kan förbruka fler eller färre komponenter än den kvantitet som definierats på BoM:\n"
+"Definierar om du kan förbruka fler eller färre komponenter än den kvantitet som definierats på Materialförteckning:\n"
 "  * Tillåtet: tillåtet för alla tillverkningsanvändare.\n"
 "  * Tillåtet med varning: tillåtet för alla tillverkningsanvändare med sammanfattning av förbrukningsskillnader när tillverkningsordern stängs.\n"
 "  Observera att vid manuell förbrukning av komponenter, där förbrukningen endast registreras manuellt, kommer förbrukningsvarningar fortfarande att utfärdas när så är lämpligt.\n"
-"  * Blockerad: endast en chef kan stänga en tillverkningsorder när BoM-förbrukningen inte respekteras."
+"  * Blockerad: endast en chef kan stänga en tillverkningsorder när förbrukningen av Materialförteckning inte respekteras."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delay_alert_date
@@ -2487,7 +2511,7 @@ msgstr "Generera serienummer"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Generate a new BoM from this Manufacturing Order"
-msgstr "Generera en ny BoM från denna tillverkningsorder"
+msgstr "Generera en ny Materialförteckning från denna Tillverkningsorder"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__generated_mrp_lot_label_to_print
@@ -2648,8 +2672,8 @@ msgstr "Ikon för att indikera en undantagsaktivitet."
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
 msgstr ""
-"Om en produktvariant har definierats är stycklistan endast tillgänglig för "
-"denna produkt."
+"Om en produktvariant har definierats är Materialförteckning endast "
+"tillgänglig för denna produkt."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction
@@ -2763,7 +2787,7 @@ msgstr "Påverkad(a) överföring(ar):"
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "Import Template for Bills of Materials"
-msgstr "Importmall för materiallistor"
+msgstr "Importmall för Materialförteckningar"
 
 #. module: mrp
 #. odoo-python
@@ -2870,6 +2894,7 @@ msgstr "Den har redan avblockerats."
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_workorder.py:0
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
@@ -3021,7 +3046,7 @@ msgid ""
 "readiness status is ready, as per BOM configuration."
 msgstr ""
 "Senaste status för komponenttillgänglighet för detta MO. Om grön är MO:ts "
-"beredskapsstatus redo, enligt BOM-konfigurationen."
+"beredskapsstatus redo, enligt konfigurationen av Materialförteckningen."
 
 #. module: mrp
 #: model_terms:product.template,description:mrp.product_product_wood_ply_product_template
@@ -3436,7 +3461,7 @@ msgid ""
 "            * Ready: The material is available to start the production.\n"
 "            * Waiting: The material is not available to start the production.\n"
 msgstr ""
-"Tillverkningsberedskap för denna MO, enligt konfigurationen för stycklista:\n"
+"Tillverkningsberedskap för denna MO, enligt konfigurationen för materialförteckning:\n"
 "            * Klar: Materialet är tillgängligt för att starta produktionen.\n"
 "            * Väntar: Materialet är inte tillgängligt för att starta produktionen.\n"
 
@@ -3584,7 +3609,7 @@ msgstr "Ny"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "New BoM from %(mo_name)s"
-msgstr "Ny BoM från %(mo_name)s"
+msgstr "Ny Materialförteckning från %(mo_name)s"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
@@ -3705,7 +3730,9 @@ msgstr "Inte redo"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Note that another version of this BOM is available."
-msgstr "Observera att en annan version av denna BOM finns tillgänglig."
+msgstr ""
+"Observera att en annan version av denna Materialförteckning finns "
+"tillgänglig."
 
 #. module: mrp
 #. odoo-python
@@ -3717,9 +3744,9 @@ msgid ""
 "To prevent this, deletion of the work center is recommended instead."
 msgstr ""
 "Observera att arkiverade arbetscenter: '%s' fortfarande är kopplade till "
-"aktiva produktlistor, vilket innebär att operationer fortfarande kan "
-"planeras på det/dem. För att förhindra detta rekommenderas istället radering"
-" av arbetsstället."
+"aktiva materialförteckningar, vilket innebär att operationer fortfarande kan"
+" planeras på det/dem. För att förhindra detta rekommenderas istället "
+"radering av arbetsstället."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
@@ -3734,9 +3761,9 @@ msgid ""
 "Note that product(s): '%s' is/are still linked to active Bill of Materials, "
 "which means that the product can still be used on it/them."
 msgstr ""
-"Observera att produkt(er): '%s' är fortfarande kopplad till aktiv "
-"produktlista, vilket innebär att produkten fortfarande kan användas på "
-"den/dem."
+"Observera att produkt(er): '%s' är fortfarande kopplad till en aktiv  "
+"materialförteckning, vilket innebär att produkten fortfarande kan användas "
+"på den/dem."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
@@ -3980,7 +4007,7 @@ msgstr "Ursprunglig produktionskvantitet"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_outdated_bom
 msgid "Outdated BoM"
-msgstr "Föråldrad BoM"
+msgstr "Föråldrad Materialförteckning"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__oee_target
@@ -4023,7 +4050,7 @@ msgstr "Paket streckkod"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_id
 msgid "Parent BoM"
-msgstr "Överliggande struktur"
+msgstr "Överliggande Materialförteckning"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__parent_product_tmpl_id
@@ -4680,6 +4707,11 @@ msgid "Quantity that can be produced with the current stock of components"
 msgstr "Kvantitet som kan produceras med nuvarande lager av komponenter"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_quant
+msgid "Quants"
+msgstr "Kvantiteter"
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
 msgid "RAM"
 msgstr "RAM"
@@ -4888,6 +4920,13 @@ msgid "Resupply lead time."
 msgstr "Ledtid för återanskaffning."
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid "Return to Inventory"
+msgstr "Återgå till inventering"
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -4899,12 +4938,6 @@ msgstr "Rutt"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Routing"
 msgstr "Rutter"
-
-#. module: mrp
-#: code:addons/mrp/models/stock_quant.py:0
-#, python-format
-msgid "Return to Inventory"
-msgstr "Återgå till inventering"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__routing_line_ids
@@ -5001,7 +5034,7 @@ msgstr "Sök"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Search Bill Of Material"
-msgstr "Sök Materiallista"
+msgstr "Sök Materialförteckning"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -5101,7 +5134,7 @@ msgid ""
 "within each BoM's Miscellaneous tab"
 msgstr ""
 "Ange i vilken ordning arbetsordrar ska behandlas. Aktivera funktionen under "
-"fliken Övrigt i varje BoM"
+"fliken Övrigt i varje Materialförteckning"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -5143,7 +5176,7 @@ msgstr "Show Backorders"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__show_bom
 msgid "Show BoM column"
-msgstr "Visa BoM-kolumnen"
+msgstr "Visa kolumn för Materialförteckning"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_final_lots
@@ -5452,7 +5485,7 @@ msgstr "Sparat filnamn"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_bom_id
 msgid "Sub BoM"
-msgstr "Under BoM"
+msgstr "Underliggande Materialförteckning"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -5543,7 +5576,7 @@ msgstr "Text"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__is_outdated_bom
 msgid "The BoM has been updated since creation of the MO"
-msgstr "BoM har uppdaterats sedan MO bildades"
+msgstr "Materialförteckning har uppdaterats sedan MO bildades"
 
 #. module: mrp
 #. odoo-python
@@ -5572,7 +5605,7 @@ msgid ""
 "the BoM product %(bom_product)s."
 msgstr ""
 "Attributvärdet %(attribute)s för produkten %(product)s stämmer inte överens "
-"med BoM-produkten %(bom_product)s."
+"med Materialförtecknings-produkten %(bom_product)s."
 
 #. module: mrp
 #. odoo-python
@@ -5721,7 +5754,8 @@ msgstr "Taggnamnet måste vara unikt."
 #, python-format
 msgid "The total cost share for a BoM's by-products cannot exceed 100."
 msgstr ""
-"Den totala kostnadsandelen för en BoM:s biprodukter får inte överstiga 100."
+"Den totala kostnadsandelen för en Materialförtecknings biprodukter får inte "
+"överstiga 100."
 
 #. module: mrp
 #. odoo-python
@@ -5802,7 +5836,7 @@ msgstr ""
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
 #, python-format
 msgid "This is a BoM of type Kit!"
-msgstr "Detta är en BoM av typen Kit!"
+msgstr "Detta är en Materialförteckning av typen Kit!"
 
 #. module: mrp
 #. odoo-javascript
@@ -5812,9 +5846,9 @@ msgid ""
 "This is the cost based on the BoM of the product. It is computed by summing "
 "the costs of the components and operations needed to build the product."
 msgstr ""
-"Detta är den kostnad som baseras på produktens BoM. Den beräknas genom att "
-"summera kostnaderna för de komponenter och operationer som behövs för att "
-"bygga produkten."
+"Detta är den kostnad som baseras på produktens Materialförteckning. Den "
+"beräknas genom att summera kostnaderna för de komponenter och operationer "
+"som behövs för att bygga produkten."
 
 #. module: mrp
 #. odoo-javascript
@@ -5861,8 +5895,8 @@ msgid ""
 "accurate."
 msgstr ""
 "Detta bör vara den minsta kvantitet som denna produkt kan produceras i. Om "
-"stycklistan innehåller operationer, se till att arbetscentrets kapacitet är "
-"korrekt."
+"Materialförteckningen innehåller operationer, se till att arbetscentrets "
+"kapacitet är korrekt."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__time_ids
@@ -6275,7 +6309,7 @@ msgstr "Måttenhet"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Update BoM"
-msgstr "Uppdatering BoM"
+msgstr "Uppdatera Materialförteckning"
 
 #. module: mrp
 #. odoo-javascript
@@ -6505,8 +6539,9 @@ msgid ""
 msgstr ""
 "När en upphandling har en \"producera\"-väg med en fastställd operationstyp,"
 " kommer den att försöka skapa en tillverkningsorder för den produkten med "
-"hjälp av en BoM av samma operationstyp. Detta gör det möjligt att definiera "
-"lagerregler som utlöser olika tillverkningsorder med olika BoM."
+"hjälp av en Materialförteckning av samma operationstyp. Detta gör det "
+"möjligt att definiera lagerregler som utlöser olika tillverkningsorder med "
+"olika Materialförteckningar."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__manual_consumption
@@ -6560,7 +6595,7 @@ msgid ""
 "used for a MO (related to the bom)"
 msgstr ""
 "Wizard vid konsumtion i varning/strikt och mer komponent har använts för ett"
-" MO (relaterat till bom)"
+" MO (relaterat till Materialförteckning)"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split_multi
@@ -6671,7 +6706,8 @@ msgid ""
 msgstr ""
 "Arbetsorderåtgärder låter dig skapa och hantera de tillverkningsåtgärder som"
 " bör följas inom dina produktionsgrupp för att producera en produkt. De är "
-"bifogade till BoM som kommer att definiera de nödvändiga komponenterna."
+"bifogade till materialförteckningar som kommer att definiera de nödvändiga "
+"komponenterna."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__workorder_id
@@ -6722,7 +6758,7 @@ msgid ""
 "                    Operations are defined in the bill of materials or added in the manufacturing order directly."
 msgstr ""
 "Arbetsorder är operationer som ska utföras som en del av en tillverkningsorder.\n"
-"                    Aktiviteterna definieras i materialförteckningen eller läggs till direkt i tillverkningsordern."
+"                    Aktiviteterna definieras i materialförteckningar eller läggs till direkt i tillverkningsordern."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -6734,7 +6770,7 @@ msgid ""
 "            Operations are defined in the bill of materials or added in the manufacturing order directly."
 msgstr ""
 "Arbetsorder är operationer som ska utföras som en del av en tillverkningsorder.\n"
-"            Aktiviteterna definieras i materialförteckningen eller läggs till direkt i tillverkningsordern."
+"            Aktiviteterna definieras i materialförteckningar eller läggs till direkt i tillverkningsordern."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -6849,8 +6885,8 @@ msgid ""
 "You can not create a kit-type bill of materials for products that have at "
 "least one reordering rule."
 msgstr ""
-"Du kan inte skapa en stycklista av kit-typ för produkter som har minst en "
-"ombeställningsregel."
+"Du kan inte skapa materialförteckningar av kit-typ för produkter som har "
+"minst en ombeställningsregel."
 
 #. module: mrp
 #. odoo-python
@@ -6860,7 +6896,7 @@ msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
 msgstr ""
-"Du kan inte radera en produktlista med pågående tillverkningsorder.\n"
+"Du kan inte radera en Materialförteckning med pågående tillverkningsorder.\n"
 "Stäng eller avbryt den först."
 
 #. module: mrp
@@ -6871,7 +6907,7 @@ msgid ""
 "You can only merge manufacturing orders of identical products with same BoM."
 msgstr ""
 "Du kan endast slå samman tillverkningsorder för identiska produkter med "
-"samma BoM."
+"samma Materialförteckning."
 
 #. module: mrp
 #. odoo-python
@@ -6914,7 +6950,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "You cannot create a new Bill of Material from here."
-msgstr "Du kan inte skapa en ny materialförteckning härifrån."
+msgstr "Du kan inte skapa en ny Materialförteckning härifrån."
 
 #. module: mrp
 #. odoo-python
@@ -6963,6 +6999,13 @@ msgstr "Du kan inte producera samma serienummer två gånger."
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid "You cannot start a work order that is already done or cancelled"
+msgstr "Du kan inte starta en arbetsorder som redan är utförd eller avbruten"
+
+#. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
@@ -6977,7 +7020,7 @@ msgid ""
 "create a BoM for a specific variant."
 msgstr ""
 "Du kan inte använda funktionen \"Apply on Variant\" och samtidigt skapa en "
-"BoM för en specifik variant."
+"Materialförteckning för en specifik variant."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
@@ -7223,3 +7266,31 @@ msgstr "split"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "work orders"
 msgstr "arbetsorder"
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/mo_overview_line/mrp_mo_overview_line.xml:0
+#: code:addons/mrp/static/src/components/mo_overview_line/mrp_mo_overview_line.xml:0
+#, python-format
+msgid "{{ foldButtonTitle }}"
+msgstr "{{ foldButtonTitle }}"
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
+#: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
+#: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
+#: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
+#, python-format
+msgid "{{ props.isFolded ? 'Unfold' : 'Fold' }}"
+msgstr "{{ props.isFolded ? \"Fäll ut\" : \"Fäll in\" }}"
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/mo_overview_byproducts_block/mrp_mo_overview_byproducts_block.xml:0
+#: code:addons/mrp/static/src/components/mo_overview_byproducts_block/mrp_mo_overview_byproducts_block.xml:0
+#: code:addons/mrp/static/src/components/mo_overview_operations_block/mrp_mo_overview_operations_block.xml:0
+#: code:addons/mrp/static/src/components/mo_overview_operations_block/mrp_mo_overview_operations_block.xml:0
+#, python-format
+msgid "{{ state.isFolded ? 'Unfold' : 'Fold' }}"
+msgstr "{{ state.isFolded ? \"Fäll ut\" : \"Fäll in\" }}"

@@ -289,6 +289,81 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test("resequence with NULL value", async function (assert) {
+        const mockedActionService = {
+            start() {
+                return {
+                    doActionButton(params) {
+                        if (params.name === "reload") {
+                            params.onClose();
+                        } else {
+                            throw makeServerError();
+                        }
+                    },
+                };
+            },
+        };
+        serviceRegistry.add("action", mockedActionService, { force: true });
+
+        serverData.models.partner.records.push(
+            { id: 10, int_field: 1 },
+            { id: 11, int_field: 2 },
+            { id: 12, int_field: 3 },
+            { id: 13 }
+        );
+        serverData.models.partner.records[0].p = [10, 11, 12, 13];
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                    <form>
+                        <sheet><div name="button_box">
+                            <button name="reload" class="reload" type="object" string="Confirm"/>
+                        </div></sheet>
+                        <field name="foo"/>
+                        <field name="p">
+                            <tree editable="bottom" default_order="int_field">
+                                <field name="int_field" widget="handle"/>
+                                <field name="id"/>
+                            </tree>
+                        </field>
+                    </form>`,
+            async mockRPC(route, args, performRPC) {
+                if (args.method === "web_read") {
+                    const res = await performRPC(route, args);
+                    const serverRecords = Object.fromEntries(
+                        Object.values(serverData.models.partner.records).map((e) => [e.id, e])
+                    );
+                    // when sorted, NULL values are last
+                    const getServerValue = (record) =>
+                        serverRecords[record.id].int_field === false
+                            ? Number.MAX_SAFE_INTEGER
+                            : serverRecords[record.id].int_field;
+                    res[0].p.sort((a, b) => getServerValue(a) - getServerValue(b));
+                    return res;
+                }
+            },
+            resId: 1,
+        });
+        assert.deepEqual(
+            Array.from(target.querySelectorAll(".o_field_cell[name=id]")).map((e) => e.textContent),
+            ["10", "11", "12", "13"]
+        );
+
+        await dragAndDrop("tbody tr:nth-child(4) .o_handle_cell", "tbody tr:nth-child(3)");
+        assert.deepEqual(
+            Array.from(target.querySelectorAll(".o_field_cell[name=id]")).map((e) => e.textContent),
+            ["10", "11", "13", "12"]
+        );
+        await click(target.querySelector("button.reload"));
+        assert.deepEqual(
+            Array.from(target.querySelectorAll(".o_field_cell[name=id]")).map((e) => e.textContent),
+            ["10", "11", "13", "12"]
+        );
+    });
+
     QUnit.test("one2many in a list x2many editable use the right context", async function (assert) {
         await makeView({
             type: "form",
@@ -13534,6 +13609,61 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["onchange partner", "web_save turtle"]);
     });
 
+    QUnit.test(
+        "Boolean toggle in x2many must not be editable if form is not editable",
+        async function (assert) {
+            serverData.views = {
+                "turtle,false,form": `<form>
+                        <field name="turtle_bar" widget="boolean_toggle"/>
+                        <field name="partner_ids">
+                            <tree>
+                                <field name="bar" widget="boolean_toggle"/>
+                            </tree>
+                        </field>
+                    </form>`,
+            };
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form edit="0">
+                        <field name="turtles">
+                            <tree>
+                                <field name="turtle_bar" widget="boolean_toggle"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                resId: 1,
+            });
+
+            assert.hasClass(target.querySelector(".o_form_renderer"), "o_form_readonly");
+            const booleanToggle = target.querySelector(
+                "[name='turtles'] .o_data_row [name='turtle_bar'] .o_boolean_toggle input"
+            );
+            assert.ok(
+                booleanToggle.disabled,
+                "The boolean toggle should be disabled when the form is readonly"
+            );
+
+            await click(target, ".o_data_cell");
+            assert.containsOnce(target, ".modal-dialog");
+            assert.hasClass(target.querySelector(".o_form_renderer"), "o_form_readonly");
+            const booleanToggleInDialog = target.querySelector(".modal [name='turtle_bar'] input");
+            assert.ok(
+                booleanToggleInDialog.disabled,
+                "The boolean toggle in the form view dialog should be disabled when the main form is readonly"
+            );
+            assert.ok(
+                target.querySelector(
+                    ".modal [name='partner_ids'] .o_data_row [name='bar'] .o_boolean_toggle input"
+                ).disabled,
+                "The boolean toggle in x2m in the form view dialog should be disabled when the main form is readonly"
+            );
+        }
+    );
+
     QUnit.test("create a new record with an x2m invisible", async function (assert) {
         await makeView({
             type: "form",
@@ -13788,6 +13918,44 @@ QUnit.module("Fields", (hooks) => {
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), [
             "first record",
             "second record",
+        ]);
+        assert.containsNone(target, ".o_x2m_control_panel .o_pager");
+    });
+
+    QUnit.test("new record, receive more create commands than limit", async function (assert) {
+        serverData.models.partner.fields.sequence = { type: "integer" };
+        serverData.models.partner.onchanges = {
+            p: function (obj) {
+                obj.p = [
+                    [0, 0, { sequence: 1, display_name: "Record 1" }],
+                    [0, 0, { sequence: 2, display_name: "Record 2" }],
+                    [0, 0, { sequence: 3, display_name: "Record 3" }],
+                    [0, 0, { sequence: 4, display_name: "Record 4" }],
+                ];
+            },
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <group>
+                        <field name="p">
+                            <tree limit="2">
+                                <field name="sequence"/>
+                                <field name="display_name"/>
+                            </tree>
+                        </field>
+                    </group>
+                </form>`,
+        });
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell.o_list_char")), [
+            "Record 1",
+            "Record 2",
+            "Record 3",
+            "Record 4",
         ]);
         assert.containsNone(target, ".o_x2m_control_panel .o_pager");
     });
@@ -14978,6 +15146,80 @@ QUnit.module("Fields", (hooks) => {
             await clickSave(target);
             assert.containsN(target, ".o_field_widget[name=turtles] .o_data_row", 1);
             assert.verifySteps(["get_views", "web_read", "onchange", "onchange", "onchange"]);
+        }
+    );
+
+    QUnit.test(
+        "press TAB in editable='top' create='0' one2many list with lines generated by default_get -> onchange",
+        async function (assert) {
+            assert.expect(8);
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="p">
+                        <tree editable="top" create="0">
+                            <field name="foo"/>
+                        </tree>
+                    </field>
+                </form>`,
+                mockRPC(route, args) {
+                    assert.step(args.method);
+                    if (args.method === "onchange") {
+                        assert.deepEqual(args.args, [
+                            [],
+                            {},
+                            [],
+                            {
+                                display_name: {},
+                                p: {
+                                    fields: {
+                                        foo: {},
+                                    },
+                                    limit: 40,
+                                    order: "",
+                                },
+                            },
+                        ]);
+                        return {
+                            value: {
+                                p: [
+                                    [5], // delete all
+                                    [0, 0, { foo: "fu" }], // create new
+                                    [0, 0, { foo: "ber" }],
+                                    [0, 0, { foo: "qux" }],
+                                ],
+                            },
+                        };
+                    }
+                },
+            });
+            await click(target, '.o_data_cell[data-tooltip="qux"]');
+            assert.strictEqual(
+                document.querySelector(".o_selected_row .o_data_cell").dataset.tooltip,
+                "qux"
+            );
+            triggerHotkey("Tab");
+            assert.strictEqual(
+                document.querySelector(".o_selected_row .o_data_cell").dataset.tooltip,
+                "qux"
+            );
+            triggerHotkey("Shift+Tab");
+            await nextTick();
+            assert.strictEqual(
+                document.querySelector(".o_selected_row .o_data_cell").dataset.tooltip,
+                "ber"
+            );
+            triggerHotkey("Shift+Tab");
+            await nextTick();
+            assert.strictEqual(
+                document.querySelector(".o_selected_row .o_data_cell").dataset.tooltip,
+                "fu"
+            );
+            assert.verifySteps(["get_views", "onchange"]);
         }
     );
 });

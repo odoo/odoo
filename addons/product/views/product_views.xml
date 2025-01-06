@@ -55,11 +55,11 @@
                         </h1>
                     </div>
                     <div name="options">
-                        <span class="d-inline-block">
+                        <span class="d-inline-flex">
                             <field name="sale_ok"/>
                             <label for="sale_ok"/>
                         </span>
-                        <span class="d-inline-block">
+                        <span class="d-inline-flex">
                             <field name="purchase_ok"/>
                             <label for="purchase_ok"/>
                         </span>
@@ -80,8 +80,17 @@
                                       <field name="list_price" class="oe_inline" widget='monetary'
                                         options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                                     </div>
-                                    <label for="standard_price" invisible="product_variant_count &gt; 1 and not is_product_variant"/>
-                                    <div name="standard_price_uom" invisible="product_variant_count &gt; 1 and not is_product_variant">
+
+                                    <!--
+                                        `id` condition to prevent invisibility on new products
+                                        when `product_variant_count` is 0.
+                                        `product_variant_count != 1` to handle cases with dynamic
+                                        / multiple variants since id will be set after saving.
+                                        #TODO : revert this and create a compute field in master
+                                        to ensure invisivility for dynamic variants only.
+                                    -->
+                                    <label for="standard_price" invisible="id and product_variant_count != 1 and not is_product_variant"/>
+                                    <div name="standard_price_uom" invisible="id and product_variant_count != 1 and not is_product_variant">
                                         <field name="standard_price" class="oe_inline" widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
                                         <span groups="uom.group_uom" >per
                                             <field name="uom_name" class="oe_inline"/>

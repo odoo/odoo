@@ -278,11 +278,7 @@ export class Powerbox {
      * @private
      */
     _resetPosition() {
-        let options = {};
-        if (this.getContextFromParentRect) {
-            options['parentContextRect'] = this.getContextFromParentRect();
-        }
-        const position = getRangePosition(this.el, this.document, options);
+        const position = getRangePosition(this.el, this.document, { getContextFromParentRect: this.getContextFromParentRect });
         if (position) {
             let { left, top } = position;
             this.el.style.left = `${left}px`;

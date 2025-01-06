@@ -873,6 +873,59 @@ if env.context.get('old_values', None):  # on write
         self.env["base.automation"]._check(False)
         self.assertTrue(automation.last_run)
 
+    def test_005_check_model_with_different_rec_name_char(self):
+        model = self.env["ir.model"]._get("base.automation.model.with.recname.char")
+
+        create_automation(
+            self,
+            model_id=self.project_model.id,
+            trigger='on_create_or_write',
+            _actions={
+                'state': 'object_create',
+                'crud_model_id': model.id,
+                'value': "Test _rec_name Automation",
+            },
+        )
+
+        self.create_project()
+        record_count = self.env[model.model].search_count([('description', '=', 'Test _rec_name Automation')])
+        self.assertEqual(record_count, 1, "Only one record should have been created")
+
+    def test_006_check_model_with_different_m2o_name_create(self):
+        model = self.env["ir.model"]._get("base.automation.model.with.recname.m2o")
+
+        create_automation(
+            self,
+            model_id=self.project_model.id,
+            trigger='on_create_or_write',
+            _actions={
+                'state': 'object_create',
+                'crud_model_id': model.id,
+                'value': "Test _rec_name Automation",
+            },
+        )
+
+        self.create_project()
+        record_count = self.env[model.model].search_count([('user_id', '=', 'Test _rec_name Automation')])
+        self.assertEqual(record_count, 1, "Only one record should have been created")
+
+    def test_140_copy_should_copy_actions(self):
+        """ Copying an automation should copy its actions. """
+        automation = create_automation(
+            self,
+            model_id=self.lead_model.id,
+            trigger='on_change',
+            _actions={'state': 'code', 'code': "record.write({'name': record.name + '!'})"},
+        )
+        action_ids = automation.action_server_ids
+
+        copy_automation = automation.copy()
+        copy_action_ids = copy_automation.action_server_ids
+        # Same number of actions but id should be different
+        self.assertEqual(len(action_ids), 1)
+        self.assertEqual(len(copy_action_ids), len(action_ids))
+        self.assertNotEqual(copy_action_ids, action_ids)
+
 
 @common.tagged('post_install', '-at_install')
 class TestCompute(common.TransactionCase):

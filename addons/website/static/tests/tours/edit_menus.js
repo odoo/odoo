@@ -294,4 +294,119 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
             this.$anchor[0].dispatchEvent(new window.KeyboardEvent("keydown", { key: "ArrowDown" }));
         },
     },
+    ...wTourUtils.clickOnSave(),
+    // Nest and re-arrange menu items for a newly created menu
+    {
+        content: "Open site menu",
+        trigger: 'button[data-menu-xmlid="website.menu_site"]',
+    },
+    {
+        content: "Click on Edit Menu",
+        trigger: 'a[data-menu-xmlid="website.menu_edit_menu"]',
+    },
+    {
+        content: "Trigger link dialog (click 'Add Menu Item')",
+        trigger: '.modal-body a:eq(0)',
+    },
+    {
+        content: "Write a label for the new menu item",
+        trigger: '.modal-dialog .o_website_dialog input:eq(0)',
+        run: 'text new_menu',
+    },
+    {
+        content: "Write a url for the new menu item",
+        trigger: '.modal-dialog .o_website_dialog input:eq(1)',
+        run: 'text #',
+    },
+    {
+        content: "Confirm the new menu entry",
+        trigger: '.modal-footer .btn-primary',
+    },
+    {
+        content: "Check if new menu(new_menu) is added",
+        trigger: ".oe_menu_editor li:contains('new_menu')",
+        run: () => {}, // It's a check.
+    },
+    {
+        content: "Trigger link dialog (click 'Add Menu Item')",
+        trigger: '.modal-body a:eq(0)',
+    },
+    {
+        content: "Write a label for the new menu item",
+        trigger: '.modal-dialog .o_website_dialog input:eq(0)',
+        run: 'text new_nested_menu',
+    },
+    {
+        content: "Write a url for the new menu item",
+        trigger: '.modal-dialog .o_website_dialog input:eq(1)',
+        run: 'text #',
+    },
+    {
+        content: "Confirm the new menu entry",
+        trigger: '.modal-footer .btn-primary',
+    },
+    {
+        content: "Check if new menu(new_nested_menu) is added",
+        trigger: ".oe_menu_editor li:contains('new_nested_menu')",
+        run: () => {}, // It's a check.
+    },
+    {
+        content: "Nest 'new_nested_menu' under 'new_menu'",
+        trigger: ".oe_menu_editor li:contains('new_nested_menu') .fa-bars",
+        run: "drag_and_drop_native .oe_menu_editor li:contains('new_menu') .form-control",
+    },
+    {
+        content: "Drag 'new_menu' above 'Modnar !!'",
+        trigger: ".oe_menu_editor li:contains('new_menu') .fa-bars",
+        run: "drag_and_drop_native .oe_menu_editor li:contains('Modnar !!') .fa-bars",
+    },
+    {
+        content: "Nest 'Modnar !!' under 'new_menu'",
+        trigger: ".oe_menu_editor li:contains('Modnar !!') .fa-bars",
+        run: "drag_and_drop_native .oe_menu_editor li:contains('new_menu') .form-control",
+    },
+
+    {
+        content: "Check if 'nested_menu' and 'Modnar !!' is nested under 'new_menu'",
+        trigger: ".oe_menu_editor li:contains('new_menu') > ul > li:contains('nested_menu') + li:contains('Modnar !!')",
+        run: () => {}, // It's a check.
+    },
+    {
+        content: "Move 'Modnar !!' above 'new_nested_menu' inside the 'new_menu'",
+        trigger: ".oe_menu_editor  li:contains('new_menu') > ul > li:contains('Modnar !!') .fa-bars",
+        run: "drag_and_drop_native .oe_menu_editor  li:contains('new_menu') > ul > li:contains('new_nested_menu') .fa-bars",
+    },
+    {
+        content: "Check if 'Modnar !!' is now above 'new_nested_menu' in 'new_menu'",
+        trigger: ".oe_menu_editor li:contains('new_menu') > ul > li:first:contains('Modnar !!')",
+        run: () => {}, // It's a check.
+    },
 ]);
+
+wTourUtils.registerWebsitePreviewTour(
+    "edit_menus_delete_parent",
+    {
+        test: true,
+        url: "/",
+    },
+    () => [
+        {
+            content: "Open site menu",
+            extra_trigger: "iframe #wrapwrap",
+            trigger: 'button[data-menu-xmlid="website.menu_site"]',
+        },
+        {
+            content: "Click on Edit Menu",
+            trigger: 'a[data-menu-xmlid="website.menu_edit_menu"]',
+        },
+        {
+            content: "Delete Home menu",
+            trigger: ".modal-body ul li:nth-child(1) button.js_delete_menu",
+        },
+        {
+            content: "Save",
+            trigger: ".modal-footer button:first-child",
+            run: "click",
+        },
+    ]
+);

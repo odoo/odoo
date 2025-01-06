@@ -3,20 +3,21 @@
 # 	* base_vat
 # 
 # Translators:
-# abc Def <hdogan1974@gmail.com>, 2023
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # Murat Kaplan <muratk@projetgrup.com>, 2023
-# Levent Karakaş <levent@mektup.at>, 2023
+# abc Def <hdogan1974@gmail.com>, 2023
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
+# Levent Karakaş <levent@mektup.at>, 2023
 # Umur Akın <umura@projetgrup.com>, 2023
+# Ayhan Kızıltan, 2024
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-12-23 21:07+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2023\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,8 +29,24 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
+msgid "'219999830019' (should be 12 digits)"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
 msgid ""
 "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
+msgstr ""
+"10XXXXXXXXY veya 20XXXXXXXXY veya 15XXXXXXXXY veya 16XXXXXXXXY veya "
+"17XXXXXXXXY"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "17291716060 (NIN) or 1729171602 (VKN)"
 msgstr ""
 
 #. module: base_vat
@@ -37,6 +54,13 @@ msgstr ""
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "1792060346001 or 1792060346"
+msgstr "1792060346001 veya 1792060346"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "3101012009"
 msgstr ""
 
 #. module: base_vat
@@ -44,21 +68,21 @@ msgstr ""
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "310175397400003 [Fifteen digits, first and last digits should be \"3\"]"
-msgstr ""
+msgstr "310175397400003 [On beş hane, ilk ve son haneler \"3\" olmalı]"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "49-098-576 or 49098576"
-msgstr ""
+msgstr "49-098-576 veya 49098576"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "AR200-5536168-2 or 20055361682"
-msgstr ""
+msgstr "AR200-5536168-2 veya 20055361682"
 
 #. module: base_vat
 #. odoo-python
@@ -92,11 +116,19 @@ msgid ""
 "Connection with the VIES server failed. The VAT number %s could not be "
 "validated."
 msgstr ""
+"VIES sunucusuyla bağlantı başarısız oldu. Şu KDV numarası %s doğrulanamadı."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
 msgstr "Kontak"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "DE123456788 or 12/345/67890"
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -112,9 +144,17 @@ msgid "European VAT numbers are automatically checked on the VIES database."
 msgstr ""
 
 #. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"
+msgstr ""
+
+#. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
 msgid "Fiscal Position"
-msgstr "Mali Koşul"
+msgstr "Mali Durum"
 
 #. module: base_vat
 #. odoo-python
@@ -157,13 +197,6 @@ msgid "Perform Vies Validation"
 msgstr ""
 
 #. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-#, python-format
-msgid "TR1234567890 (VERGINO) or TR17291716060 (TCKIMLIKNO)"
-msgstr ""
-
-#. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
 msgid "Tax ID"
 msgstr "VKN/TCKN"
@@ -202,11 +235,20 @@ msgstr ""
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
-"The country detected for this foreign VAT number does not match the one set "
-"on this fiscal position."
+"The country detected for this foreign VAT number does not match any of the "
+"countries composing the country group set on this fiscal position."
 msgstr ""
-"Bu yabancı vergi numarası için tespit edilen ülke, bu mali koşulda ayarlanan"
-" ülke ile eşleşmiyor."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+#, python-format
+msgid ""
+"The country of the foreign VAT number could not be detected. Please assign a"
+" country to the fiscal position or set a country group"
+msgstr ""
+"Yabancı KDV numarasının ülkesi tespit edilemedi. Lütfen mali koşula bir ülke"
+" atayın veya bir ülke grubu ayarlayın"
 
 #. module: base_vat
 #. odoo-python
@@ -239,6 +281,13 @@ msgstr "Avrupa VIES servisini kullanarak Vergi No Doğrulama"
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_vat_to_check
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_vat_to_check
 msgid "Vies Vat To Check"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
 msgstr ""
 
 #. module: base_vat

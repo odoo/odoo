@@ -88,16 +88,18 @@ class IrModule(models.Model):
         values = self.get_values_from_terp(terp)
         if 'version' in terp:
             values['latest_version'] = adapt_version(terp['version'])
+        if self.env.context.get('data_module'):
+            values['module_type'] = 'industries'
 
         unmet_dependencies = set(terp.get('depends', [])).difference(installed_mods)
 
         if unmet_dependencies:
-            if (unmet_dependencies == set(['web_studio']) and
-                    _is_studio_custom(path)):
-                err = _("Studio customizations require Studio")
-            else:
-                to_install = known_mods.filtered(lambda mod: mod.name in unmet_dependencies)
-                to_install.button_immediate_install()
+            wrong_dependencies = unmet_dependencies.difference(known_mods.mapped("name"))
+            if wrong_dependencies:
+                err = _("Unknown module dependencies:") + "\n - " + "\n - ".join(wrong_dependencies)
+                raise UserError(err)
+            to_install = known_mods.filtered(lambda mod: mod.name in unmet_dependencies)
+            to_install.button_immediate_install()
         elif 'web_studio' not in installed_mods and _is_studio_custom(path):
             raise UserError(_("Studio customizations require the Odoo Studio app."))
 
@@ -282,7 +284,6 @@ class IrModule(models.Model):
                         path = opj(module_dir, mod_name)
                         self.sudo()._import_module(mod_name, path, force=force, with_demo=with_demo)
                     except Exception as e:
-                        _logger.exception('Error while importing module')
                         raise UserError(_(
                             "Error while importing module '%(module)s'.\n\n %(error_message)s \n\n",
                             module=mod_name, error_message=exception_to_unicode(e),
@@ -444,7 +445,7 @@ class IrModule(models.Model):
 
     @api.model
     def _get_missing_dependencies(self, zip_data):
-        modules, unavailable_modules = self._get_missing_dependencies_modules(zip_data)
+        _modules, unavailable_modules = self._get_missing_dependencies_modules(zip_data)
         description = ''
         if unavailable_modules:
             description = _(
@@ -458,10 +459,11 @@ class IrModule(models.Model):
                 "https://www.odoo.com/pricing-plan for more information.\n"
                 "If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
             )
-        elif modules:
-            description = _("The following modules will also be installed:\n")
-            for mod in modules:
-                description += "- " + mod.shortdesc + "\n"
+        else:
+            description = _(
+                "Load demo data to test the industry's features with sample records. "
+                "Do not load them if this is your production database.",
+            )
         return description, unavailable_modules
 
     def _get_missing_dependencies_modules(self, zip_data):

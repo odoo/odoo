@@ -1,0 +1,23 @@
+[Unit]
+Description=Odoo Open Source ERP and CRM
+After=cups.socket network-online.target NetworkManager.service
+Wants=network-online.target
+
+[Service]
+User=pi
+Group=pi
+ExecStartPre=sudo /bin/mkdir -p /run/odoo
+ExecStartPre=sudo /bin/chown pi:pi /run/odoo
+ExecStartPre=sudo timedatectl set-ntp true
+ExecStart=/usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo.conf
+Restart=on-failure
+RestartSec=5s
+StandardOutput=null
+StandardError=append:/var/log/odoo/odoo-server.log
+
+[Install]
+WantedBy=multi-user.target
+
+# Tip: don't forget to 'systemctl disable' then re 'enable' service if you update the 'WantedBy' line
+# reason is that 'enable' creates a symlink in /etc/systemd/system/multi-user.target.wants/ pointing to this file which does
+# not get updated if you only 'systemctl daemon-reload'

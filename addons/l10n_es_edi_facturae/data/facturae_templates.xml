@@ -104,6 +104,7 @@
         <!-- Sub-template used for every instance of InvoiceLineType -->
         <template id="invoice_line_type">
             <InvoiceLine>
+                <ReceiverTransactionReference t-out="line.get('ReceiverTransactionReference')"/>
                 <FileReference t-out="line.get('FileReference')"/>
                 <FileDate t-out="line.get('FileDate')"/>
                 <SequenceNumber t-out="line.get('SequenceNumber')"/>

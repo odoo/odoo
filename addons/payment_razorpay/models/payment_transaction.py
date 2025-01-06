@@ -41,6 +41,7 @@ class PaymentTransaction(models.Model):
         order_id = self._razorpay_create_order(customer_id)['id']
         return {
             'razorpay_key_id': self.provider_id.razorpay_key_id,
+            'razorpay_public_token': self.provider_id._razorpay_get_public_token(),
             'razorpay_customer_id': customer_id,
             'is_tokenize_request': self.tokenize,
             'razorpay_order_id': order_id,
@@ -310,7 +311,8 @@ class PaymentTransaction(models.Model):
                 raise ValidationError("Razorpay: " + _("Received data with missing reference."))
             tx = self.search([('reference', '=', reference), ('provider_code', '=', 'razorpay')])
         else:  # 'refund'
-            reference = notification_data.get('notes', {}).get('reference')
+            notes = notification_data.get('notes')
+            reference = isinstance(notes, dict) and notes.get('reference')
             if reference:  # The refund was initiated from Odoo.
                 tx = self.search([('reference', '=', reference), ('provider_code', '=', 'razorpay')])
             else:  # The refund was initiated from Razorpay.
@@ -388,7 +390,7 @@ class PaymentTransaction(models.Model):
         # Update the payment method.
         payment_method_type = entity_data.get('method', '')
         if payment_method_type == 'card':
-            payment_method_type = entity_data.get('card', {}).get('network').lower()
+            payment_method_type = entity_data.get('card', {}).get('network', '').lower()
         payment_method = self.env['payment.method']._get_from_code(
             payment_method_type, mapping=const.PAYMENT_METHODS_MAPPING
         )

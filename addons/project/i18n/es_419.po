@@ -3,17 +3,17 @@
 # 	* project
 # 
 # Translators:
-# Wil Odoo, 2023
 # Iran Villalobos López, 2023
 # Lucia Pacheco, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Wil Odoo, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -300,7 +300,7 @@ msgstr ""
 "            <t t-else=\"\">\n"
 "                Hola,<br><br>\n"
 "            </t>\n"
-"            Tómese un momento para calificar nuestros servicios relacionados a la tarea \"<strong t-out=\"object.name or ''\">Planeación y presupuesto</strong>\"\n"
+"            Tómese un momento para calificar nuestros servicios relacionados con la tarea \"<strong t-out=\"object.name or ''\">Planeación y presupuesto</strong>\"\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
 "                asignada a <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br>\n"
 "            </t>\n"
@@ -338,12 +338,12 @@ msgstr ""
 "            </table>\n"
 "        </td></tr>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            Apreciamos sus comentarios, nos ayudan a seguir mejorando.\n"
+"            Agradecemos sus comentarios, nos ayudan a seguir mejorando.\n"
 "            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
 "                <br><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Recibió esta encuesta porque su tarea se movió a la etapa <b t-out=\"object.stage_id.name or ''\">En progreso</b>.</span>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
-"                <br><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Esta encuesta de cliente se envía de forma <b t-out=\"object.project_id.rating_status_period or ''\">semanal</b> si la tarea se encuentra en la etapa <b t-out=\"object.stage_id.name or ''\">En progreso</b>.</span>\n"
+"                <br><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Esta encuesta de cliente se envía de forma <b t-out=\"object.project_id.rating_status_period or ''\">semanal</b> si la tarea está en la etapa <b t-out=\"object.stage_id.name or ''\">En progreso</b>.</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td><br>Saludos,</td></tr>\n"
@@ -866,6 +866,7 @@ msgid "Allocated Time"
 msgstr "Tiempo asignado"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task_allocated_hours_template
 msgid "Allocated Time:"
 msgstr "Tiempo asignado:"
@@ -1026,8 +1027,6 @@ msgid "Assigned to"
 msgstr "Asignada a"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
@@ -1035,9 +1034,8 @@ msgstr "Asignada a"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
-#, python-format
 msgid "Assignees"
-msgstr "Asignados"
+msgstr "Personas asignadas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -1987,8 +1985,8 @@ msgstr "Mostrar el botón de tarea principal"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"No tiene acceso, omita esta información para el correo electrónico del "
-"usuario"
+"No tiene acceso, omita esta información para el correo electrónico de "
+"resumen del usuario"
 
 #. module: project
 #. odoo-javascript
@@ -2074,6 +2072,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_update__email_cc
 msgid "Email cc"
 msgstr "CC del correo electrónico"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr ""
+"Dominio del correo electrónico, por ejemplo, \"ejemplo.com\" en "
+"\"odoo@ejemplo.com\""
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -2812,7 +2817,7 @@ msgstr "En vivo"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_incoming_local
 msgid "Local-part based incoming detection"
-msgstr "Detección de entradas según las partes locales"
+msgstr "Detección entrante basada en la parte local"
 
 #. module: project
 #. odoo-javascript
@@ -4199,15 +4204,15 @@ msgstr "Carita triste"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
 #, python-format
-msgid "Save the task to be able to paste images in description"
-msgstr "Guarde la tarea para poder pegar imágenes en la descripción"
+msgid "Save the task to be able to drag images in description"
+msgstr "Guarde la tarea para poder arrastrar imágenes a la descripción"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
 #, python-format
-msgid "Save the task to be able to drag images in Description"
-msgstr "Guarde la tarea para poder arrastrar imágenes a la descripción"
+msgid "Save the task to be able to paste images in description"
+msgstr "Guarde la tarea para poder pegar imágenes en la descripción"
 
 #. module: project
 #. odoo-javascript
@@ -4826,6 +4831,7 @@ msgstr "Tareas: solicitud de calificación"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #: code:addons/project/models/project_project.py:0
+#: code:addons/project/models/project_project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.actions.act_window,name:project.action_view_task_from_milestone
@@ -4912,6 +4918,15 @@ msgstr "La etapa personal del usuario actual."
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
 msgid "The current user's personal task stage."
 msgstr "La etapa personal de la tarea del usuario actual."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid ""
+"The document does not exist or you do not have the rights to access it."
+msgstr ""
+"El documento no existe o no cuenta con los permisos de acceso necesarios."
 
 #. module: project
 #. odoo-python
@@ -6002,6 +6017,13 @@ msgstr "estado para marcar la tarea como completada."
 
 #. module: project
 #. odoo-javascript
+#: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
+#, python-format
+msgid "state.message"
+msgstr "state.message"
+
+#. module: project
+#. odoo-javascript
 #: code:addons/project/static/src/components/project_task_name_with_subtask_count_char_field/project_task_name_with_subtask_count_char_field.xml:0
 #, python-format
 msgid "sub-tasks)"
@@ -6061,8 +6083,12 @@ msgstr "generará tareas en su"
 
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
-msgid "{{ object.project_id.company_id.name }}: Satisfaction Survey"
-msgstr "{{ object.project_id.company_id.name }}: Encuesta de satisfacción"
+msgid ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: "
+"Satisfaction Survey"
+msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: encuesta "
+"de satisfacción"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban

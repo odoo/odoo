@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 from odoo import api, models
-from odoo.tools.pdf import OdooPdfFileReader
+from odoo.tools.pdf import OdooPdfFileReader, PdfReadError
+from odoo.tools.mimetypes import guess_mimetype
 
 from lxml import etree
 from struct import error as StructError
-try:
-    from PyPDF2.errors import PdfReadError
-except ImportError:
-    from PyPDF2.utils import PdfReadError
 import io
 import logging
 import zipfile
@@ -120,7 +117,7 @@ class IrAttachment(models.Model):
             # XML attachments received by mail have a 'text/plain' mimetype (cfr. context key:
             # 'attachments_mime_plainxml'). Therefore, if content start with '<?xml', or if the filename ends with
             # '.xml', it is considered as XML.
-            is_text_plain_xml = 'text/plain' in attachment.mimetype and (attachment.raw and attachment.raw.startswith(b'<?xml') or attachment.name.endswith('.xml'))
+            is_text_plain_xml = 'text/plain' in attachment.mimetype and (guess_mimetype(attachment.raw).endswith('/xml') or attachment.name.endswith('.xml'))
             return attachment.mimetype.endswith('/xml') or is_text_plain_xml
 
         return [
@@ -175,3 +172,10 @@ class IrAttachment(models.Model):
         # To be extended by localisations, where they can download their necessary XSD files
         # Note: they should always return super().action_download_xsd_files()
         return
+
+    def _post_add_create(self, **kwargs):
+        move_attachments = self.filtered(lambda attachment: attachment.res_model == 'account.move')
+        moves_per_id = self.env['account.move'].browse([attachment.res_id for attachment in move_attachments]).grouped('id')
+        for attachment in move_attachments:
+            moves_per_id[attachment.res_id]._check_and_decode_attachment(attachment)
+        super()._post_add_create(**kwargs)

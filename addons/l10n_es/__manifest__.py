@@ -2,7 +2,7 @@
 {
     'name': 'Spain - Accounting (PGCE 2008)',
     'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations/spain.html',
-    'version': '5.2',
+    'version': '5.4',
     'icon': '/account/static/description/l10n.png',
     'countries': ['es'],
     'author': 'Spanish Localization Team',
@@ -19,6 +19,8 @@ Spanish charts of accounts (PGCE 2008).
     * Defines tax templates
     * Defines fiscal positions for spanish fiscal legislation
     * Defines tax reports mod 111, 115 and 303
+
+5.3: Update taxes starting Q4 2024 according to BOE-A-2024-12944 (Royal Decree 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944
 """,
     'depends': [
         'account',

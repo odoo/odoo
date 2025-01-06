@@ -170,12 +170,16 @@ class ServerActions(models.Model):
                      )
                 )
 
-    @api.constrains('state', 'model_id')
+    @api.constrains('state', 'model_id', 'mail_post_method')
     def _check_mail_model_coherency(self):
         for action in self:
             if action.state in {'mail_post', 'followers', 'remove_followers', 'next_activity'} and action.model_id.transient:
                 raise ValidationError(_("This action cannot be done on transient models."))
-            if action.state in {'mail_post', 'followers', 'remove_followers'} and not action.model_id.is_mail_thread:
+            if (
+                (action.state in {"followers", "remove_followers"}
+                or (action.state == "mail_post" and action.mail_post_method != "email"))
+                and not action.model_id.is_mail_thread
+            ):
                 raise ValidationError(_("This action can only be done on a mail thread models"))
             if action.state == 'next_activity' and not action.model_id.is_mail_activity:
                 raise ValidationError(_("A next activity can only be planned on models that use activities."))

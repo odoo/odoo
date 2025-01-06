@@ -72,3 +72,9 @@ class TOTPWizard(models.TransientModel):
                 }
             }
         raise UserError(_('Verification failed, please double-check the 6-digit code'))
+
+    def create(self, vals_list):
+        rule = self.env.ref('auth_totp.rule_auth_totp_wizard', raise_if_not_found=False)
+        if rule and rule.sudo().groups:
+            rule.sudo().groups = False
+        return super().create(vals_list)

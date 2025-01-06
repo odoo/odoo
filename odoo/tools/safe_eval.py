@@ -175,6 +175,7 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'LOAD_FAST_AND_CLEAR', 'LOAD_FAST_CHECK',
     'POP_JUMP_IF_NOT_NONE', 'POP_JUMP_IF_NONE',
     'CALL_INTRINSIC_1',
+    'STORE_SLICE',
 ])) - _BLACKLIST
 
 
@@ -468,11 +469,14 @@ for mod in mods:
     __import__('dateutil.%s' % mod)
 datetime = wrap_module(__import__('datetime'), ['date', 'datetime', 'time', 'timedelta', 'timezone', 'tzinfo', 'MAXYEAR', 'MINYEAR'])
 dateutil = wrap_module(dateutil, {
-    mod: getattr(dateutil, mod).__all__
-    for mod in mods
+    "tz": ["UTC", "tzutc"],
+    "parser": ["isoparse", "parse"],
+    "relativedelta": ["relativedelta", "MO", "TU", "WE", "TH", "FR", "SA", "SU"],
+    "rrule": ["rrule", "rruleset", "rrulestr", "YEARLY", "MONTHLY", "WEEKLY", "DAILY", "HOURLY", "MINUTELY", "SECONDLY", "MO", "TU", "WE", "TH", "FR", "SA", "SU"],
 })
 json = wrap_module(__import__('json'), ['loads', 'dumps'])
 time = wrap_module(__import__('time'), ['time', 'strptime', 'strftime', 'sleep'])
 pytz = wrap_module(__import__('pytz'), [
     'utc', 'UTC', 'timezone',
 ])
+dateutil.tz.gettz = pytz.timezone

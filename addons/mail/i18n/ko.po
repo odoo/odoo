@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# Wil Odoo, 2024
 # Sarah Park, 2024
 # Daye Jeong, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Daye Jeong, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -533,6 +533,16 @@ msgid ""
 msgstr "이 별칭에 대한 새 레코드를 만들 때 기본값을 제공하도록 평가되는 Python 사전입니다."
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_bus_presence_partner_or_guest_exists
+msgid "A bus presence must have a user or a guest."
+msgstr "Bus Presence 에는 반드시 사용자나 게스트가 있어야 합니다."
+
+#. module: mail
+#: model:ir.model.constraint,message:mail.constraint_discuss_channel_member_partner_or_guest_exists
+msgid "A channel member must be a partner or a guest."
+msgstr "협력사나 게스트만 채널 구성원이 될 수 있습니다."
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
@@ -549,6 +559,11 @@ msgid ""
 msgstr "채팅 사용자 수는 두 명을 넘을 수 없습니다. 대신 그룹을 생성하세요."
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_mail_message_reaction_partner_or_guest_exists
+msgid "A message reaction must be from a partner or from a guest."
+msgstr "메시지 응답은 반드시 협력사나 게스트가 해야만 합니다."
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_actions_server.py:0
 #, python-format
@@ -563,6 +578,11 @@ msgid ""
 msgstr ""
 "메시지 번역을 활성화시키려면 유효한 Google API 키가 있어야 합니다.  "
 "https://cloud.google.com/translate/docs/setup"
+
+#. module: mail
+#: model:ir.model.constraint,message:mail.constraint_res_users_settings_volumes_partner_or_guest_exists
+msgid "A volume setting must have a partner or a guest."
+msgstr "볼륨 설정을 하려면 반드시 협력사나 게스트가 있어야 합니다."
 
 #. module: mail
 #. odoo-javascript
@@ -628,6 +648,14 @@ msgid "Action Window View"
 msgstr "작업 윈도우 보기"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#, python-format
+msgid "Actions"
+msgstr "활동"
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_category
 #: model:ir.model.fields,help:mail.field_mail_activity_schedule__activity_category
 #: model:ir.model.fields,help:mail.field_mail_activity_type__category
@@ -687,6 +715,11 @@ msgstr "활동"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "Activities To Generate"
 msgstr "생성할 활동"
+
+#. module: mail
+#: model:ir.model.constraint,message:mail.constraint_mail_activity_check_res_id_is_set
+msgid "Activities have to be linked to records with a not null res_id."
+msgstr "활동은 null이 아니라 res_id 값을 가진 레코드로 연결되어야 합니다."
 
 #. module: mail
 #. odoo-javascript
@@ -1589,6 +1622,11 @@ msgstr ""
 "사용하세요."
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_bounce_email_uniques
+msgid "Bounce emails should be unique"
+msgstr "반송 이메일은 고유해야 합니다."
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 #, python-format
@@ -1616,6 +1654,15 @@ msgstr ""
 #, python-format
 msgid "Bounced"
 msgstr "반송됨"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/webclient/web/webclient.js:0
+#, python-format
+msgid ""
+"Brave: enable 'Google Services for Push Messaging' to enable push "
+"notifications"
+msgstr "Brave: 푸시 알림을 활성화하려면 '푸시 메시징용 Google 서비스'를 사용 설정하세요."
 
 #. module: mail
 #. odoo-javascript
@@ -1800,6 +1847,11 @@ msgid ""
 msgstr ""
 "%(catchall)s 캐치올 별칭은 같은 이름으로 이미 다른 도메인에서 사용 중입니다. 다른 캐치올 항목을 사용하시거나 다른 별칭 "
 "도메인을 사용하세요."
+
+#. module: mail
+#: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_catchall_email_uniques
+msgid "Catchall emails should be unique"
+msgstr "캐치올 이메일은 고유해야 합니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_cc
@@ -2075,8 +2127,10 @@ msgstr "회사"
 
 #. module: mail
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/static/src/core/common/composer.js:0
 #: code:addons/mail/static/src/core/web/activity_mail_template.js:0
+#: code:addons/mail/wizard/mail_compose_message.py:0
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
@@ -2279,6 +2333,13 @@ msgstr "이 연락처로 반송된  이메일 수 계산"
 #: model:ir.model.fields,field_description:mail.field_mail_guest__country_id
 msgid "Country"
 msgstr "국가"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/web/activity/activity_renderer.xml:0
+#, python-format
+msgid "Create"
+msgstr "생성"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__next_activity
@@ -2492,6 +2553,11 @@ msgstr "맞춤형 서식"
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__custom_channel_name
 msgid "Custom channel name"
 msgstr "맞춤 채널 이름"
+
+#. module: mail
+#: model:ir.model.constraint,message:mail.constraint_mail_notification_notification_partner_required
+msgid "Customer is required for inbox / email notification"
+msgstr "받은 편지함 / 이메일 알림을 받으려면 고객이 필요합니다"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -2987,7 +3053,7 @@ msgstr "완료 및 다음 일정 예약"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#: code:addons/mail/static/src/core/common/attachment_list.js:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -3253,6 +3319,11 @@ msgid "Email Thread"
 msgstr "이메일 스레드"
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_mail_blacklist_unique_email
+msgid "Email address already exists!"
+msgstr "이메일 주소가 이미 존재합니다!"
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__email_from
 #: model:ir.model.fields,help:mail.field_mail_mail__email_from
 #: model:ir.model.fields,help:mail.field_mail_message__email_from
@@ -3440,6 +3511,11 @@ msgid ""
 msgstr "전체에서 오류가 발생했습니다. 지정된 수신자 없이 이메일을 발송하여 발생했을 가능성이 있습니다. "
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_mail_followers_mail_followers_res_partner_res_model_id_uniq
+msgid "Error, a partner cannot follow twice the same object."
+msgstr "오류, 협력사가 동일한 객체를 두 번 팔로우할 수 없습니다."
+
+#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__everyone
 msgid "Everyone"
 msgstr "전체"
@@ -3486,6 +3562,13 @@ msgstr "실패함"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/webclient/web/webclient.js:0
+#, python-format
+msgid "Failed to enable push notifications"
+msgstr "푸시 알림을 사용 설정하지 못함"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "Failed to load gifs..."
@@ -3517,6 +3600,13 @@ msgstr ""
 #, python-format
 msgid "Failed to render inline_template template: %(template_txt)s)"
 msgstr "inline_template 서식 렌더링에 실패하였습니다: %(template_txt)s)"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, python-format
+msgid "Failed to render inline_template template: %(template_txt)s"
+msgstr "inline_template을 렌더링하지 못했습니다: %(template_txt)s"
 
 #. module: mail
 #. odoo-python
@@ -3583,17 +3673,6 @@ msgstr "필드"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/mail_tracking_duration_mixin.py:0
-#, python-format
-msgid ""
-"Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
-"tracking=True for the computation of duration."
-msgstr ""
-"“%(field)s” 필드에 포함되어 있는 “%(model)s” 모델은 반드시 Many2one 유형이여야 하며, 기간을 계산하기 위해 "
-"tracking=True으로 설정되어 있어야 합니다."
-
-#. module: mail
-#. odoo-python
 #: code:addons/mail/models/ir_model.py:0
 #, python-format
 msgid "Field \"Mail Activity\" cannot be changed to \"False\"."
@@ -3632,6 +3711,17 @@ msgid ""
 msgstr ""
 "관련 문서에서 자동 가입을 사용할 때 관련 모델을 하위 유형 모델에 연결하는 데 사용되는 필드입니다. 이 필드는 getattr "
 "(related_document.relation_field)을 계산하는 데 사용됩니다."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_tracking_duration_mixin.py:0
+#, python-format
+msgid ""
+"Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
+"tracking=True for the computation of duration."
+msgstr ""
+"“%(field)s” 필드에 포함되어 있는 “%(model)s” 모델은 반드시 Many2one 유형이여야 하며, 기간을 계산하기 위해 "
+"tracking=True으로 설정되어 있어야 합니다."
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_model_fields
@@ -3936,6 +4026,13 @@ msgid "Group Name"
 msgstr "그룹명"
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_discuss_channel_group_public_id_check
+msgid ""
+"Group authorization and group auto-subscription are only supported on "
+"channels."
+msgstr "그룹 승인이나 그룹 자동 구독은 채널에서만 지원되는 기능입니다."
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Group by..."
 msgstr "그룹별..."
@@ -3953,8 +4050,10 @@ msgid "Groups"
 msgstr "그룹"
 
 #. module: mail
+#. odoo-javascript
 #. odoo-python
 #: code:addons/mail/controllers/discuss/public_page.py:0
+#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 #: model:ir.model,name:mail.model_mail_guest
 #: model:ir.model.fields,field_description:mail.field_bus_presence__guest_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__guest_id
@@ -5965,6 +6064,8 @@ msgstr "나의 서식"
 #: model:ir.model.fields,field_description:mail.field_mail_followers__name
 #: model:ir.model.fields,field_description:mail.field_mail_guest__name
 #: model:ir.model.fields,field_description:mail.field_mail_template__name
+#: model:ir.model.fields,field_description:mail.field_res_partner__name
+#: model:ir.model.fields,field_description:mail.field_res_users__name
 msgid "Name"
 msgstr "이름"
 
@@ -6543,6 +6644,11 @@ msgid "Only custom models can be modified."
 msgstr "사용자 정의 모델만 수정할 수 있습니다."
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_res_users_notification_type
+msgid "Only internal user can receive notifications in Odoo"
+msgstr "내부 사용자만 Odoo 알림을 받을 수 있습니다."
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
@@ -6596,6 +6702,14 @@ msgstr "문서 열기"
 #, python-format
 msgid "Open Form View"
 msgstr "양식 화면 열기"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#, python-format
+msgid "Open Link"
+msgstr "링크 열기"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_tree
@@ -7461,8 +7575,7 @@ msgstr "관계 필드"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#: code:addons/mail/static/src/core/common/attachment_list.js:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: code:addons/mail/static/src/core/common/link_preview.xml:0
@@ -8880,6 +8993,16 @@ msgid "The avatar has been updated!"
 msgstr "아바타가 업데이트되었습니다!"
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_discuss_channel_uuid_unique
+msgid "The channel UUID must be unique"
+msgstr "채널 UUID는 고유해야 합니다."
+
+#. module: mail
+#: model:ir.model.constraint,message:mail.constraint_discuss_channel_channel_type_not_null
+msgid "The channel type cannot be empty"
+msgstr "채널 유형은 공란으로 둘 수 없습니다."
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__can_write
 msgid "The current user can edit the template."
 msgstr "현재 사용자는 서식을 편집할 수 있습니다."
@@ -8895,6 +9018,11 @@ msgstr "음성 메시지의 길이는 1분으로 제한됩니다."
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The email sent to"
 msgstr "다음에게 보낸 이메일"
+
+#. module: mail
+#: model:ir.model.constraint,message:mail.constraint_mail_partner_device_endpoint_unique
+msgid "The endpoint must be unique !"
+msgstr "엔드포인트는 고유해야 합니다!"
 
 #. module: mail
 #. odoo-python
@@ -9040,6 +9168,11 @@ msgid "There are no messages in this conversation."
 msgstr "새로운 메시지가 없습니다."
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_discuss_channel_rtc_session_channel_member_unique
+msgid "There can only be one rtc session per channel member"
+msgstr "채널 구성원 당 RTC 세션은 하나만 허용합니다."
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "This"
 msgstr "해당"
@@ -9057,6 +9190,13 @@ msgstr "이 작업은 메일 스레드 모델에서만 수행할 수 있습니�
 #, python-format
 msgid "This action cannot be done on transient models."
 msgstr "임시 모델에서는 이 작업을 할 수 없습니다."
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/web/activity/activity_renderer.xml:0
+#, python-format
+msgid "This action will send an email."
+msgstr "이 작업은 전자 메일을 보냅니다."
 
 #. module: mail
 #. odoo-javascript
@@ -9835,6 +9975,11 @@ msgid "User is online"
 msgstr "사용자 온라인"
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_discuss_gif_favorite_user_gif_favorite
+msgid "User should not have duplicated favorite GIF"
+msgstr "사용자가 즐겨찾는 GIF는 중복될 수 없습니다."
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_message.py:0
 #: code:addons/mail/models/mail_message.py:0
@@ -9931,13 +10076,6 @@ msgstr "반응 보기"
 #: model:ir.model.fields,field_description:mail.field_ir_ui_view__type
 msgid "View Type"
 msgstr "화면 유형"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
-#, python-format
-msgid "View image"
-msgstr "이미지 보기"
 
 #. module: mail
 #. odoo-javascript
@@ -10328,15 +10466,6 @@ msgstr "이 서식에 파일을 첨부할 수 있습니다. 이 서식으로 작
 #, python-format
 msgid "You may not define a template on an abstract model: %s"
 msgstr "추상 모델에서 템플릿을 정의할 수 없습니다: %s"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/ir_attachment.py:0
-#, python-format
-msgid ""
-"You may not unlink or modify the content of attachments from other people's "
-"messages"
-msgstr "다른 사람의 메시지에 있는 첨부파일의 링크를 해제하거나 첨부파일의 내용을 수정할 수 없습니다."
 
 #. module: mail
 #. odoo-javascript
@@ -10852,6 +10981,13 @@ msgstr "월"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
+#, python-format
+msgid "ms"
+msgstr "ms"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 #, python-format
@@ -11070,6 +11206,13 @@ msgstr "별칭"
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "{{ object.partner_id.lang }}"
 msgstr "{{ object.partner_id.lang }}"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/autoresize_input.xml:0
+#, python-format
+msgid "{{ props.placeholder }}"
+msgstr ""
 
 #. module: mail
 #. odoo-python

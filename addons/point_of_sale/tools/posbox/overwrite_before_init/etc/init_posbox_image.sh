@@ -13,33 +13,79 @@ export DEBIAN_FRONTEND=noninteractive
 
 # set locale to en_US
 echo "set locale to en_US"
+echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
+locale-gen
+# Environment variables
 echo "export LANGUAGE=en_US.UTF-8" >> ~/.bashrc
 echo "export LANG=en_US.UTF-8" >> ~/.bashrc
 echo "export LC_ALL=en_US.UTF-8" >> ~/.bashrc
-locale-gen
+echo "export DISPLAY=:0" | tee -a ~/.bashrc /home/pi/.bashrc
+echo "export XAUTHORITY=/run/lightdm/pi/xauthority" >> /home/pi/.bashrc
+echo "export XAUTHORITY=/run/lightdm/root/:0" >> ~/.bashrc
 # Aliases
 echo  "alias ll='ls -al'" | tee -a ~/.bashrc /home/pi/.bashrc
-echo  "alias odoo='sudo systemctl stop odoo; /usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf --load=hw_drivers,hw_escpos,hw_posbox_homepage,point_of_sale,web'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias odoo='sudo systemctl stop odoo; /usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo.conf --load=hw_drivers,hw_escpos,hw_posbox_homepage,point_of_sale,web'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias odoo_logs='less +F /var/log/odoo/odoo-server.log'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias write_mode='sudo mount -o remount,rw / && sudo mount -o remount,rw /root_bypass_ramdisks'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias odoo_conf='cat /home/pi/odoo.conf'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias read_mode='sudo mount -o remount,ro / && sudo mount -o remount,ro /root_bypass_ramdisks'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias install='sudo mount -o remount,rw / && sudo mount -o remount,rw /root_bypass_ramdisks; sudo chroot /root_bypass_ramdisks/; mount -t proc proc /proc'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias blackbox='ls /dev/serial/by-path/'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias nano='write_mode; nano -l'" | tee -a /home/pi/.bashrc
+echo  "alias vim='write_mode; sudo vim'" | tee -a /home/pi/.bashrc
+echo  "alias odoo_luxe='printf \" ______\n< Luxe >\n ------\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\ \n                ||----w |\n                ||     ||\n\"'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias odoo_start='sudo systemctl start odoo'" >> /home/pi/.bashrc
+echo  "alias odoo_stop='sudo systemctl stop odoo'" >> /home/pi/.bashrc
+echo  "alias odoo_restart='sudo systemctl restart odoo'" >> /home/pi/.bashrc
 echo "
-show_odoo_aliases() {
+odoo_help() {
   echo 'Welcome to Odoo IoTBox tools'
   echo 'odoo                Starts/Restarts Odoo server manually (not through odoo.service)'
   echo 'odoo_logs           Displays Odoo server logs in real time'
+  echo 'odoo_conf           Displays Odoo configuration file content'
   echo 'write_mode          Enables system write mode'
   echo 'read_mode           Switches system to read-only mode'
   echo 'install             Bypasses ramdisks to allow package installation'
   echo 'blackbox            Lists all serial connected devices'
+  echo 'odoo_start          Starts Odoo service'
+  echo 'odoo_stop           Stops Odoo service'
+  echo 'odoo_restart        Restarts Odoo service'
+  echo 'odoo_dev <branch>   Resets Odoo on the specified branch from odoo-dev repository'
 }
-alias odoo_help='show_odoo_aliases'
+
+odoo_dev() {
+  if [ -z \"\$1\" ]; then
+    odoo_help
+    return
+  fi
+  write_mode
+  pwd=\$(pwd)
+  cd /home/pi/odoo
+  git remote add dev https://github.com/odoo-dev/odoo.git
+  git fetch dev \$1 --depth=1 --prune
+  git reset --hard dev/\$1
+  cd \$pwd
+}
+
+pip() {
+  if [[ -z \"\$1\" || -z \"\$2\" ]]; then
+    odoo_help
+    return 1
+  fi
+  additional_arg=\"\"
+  if [ \"\$1\" == \"install\" ]; then
+    additional_arg=\"--user\"
+  fi
+  pip3 \"\$1\" \"\$2\" --break-system-package \"\$additional_arg\"
+}
 " | tee -a ~/.bashrc /home/pi/.bashrc
 
 source ~/.bashrc
 source /home/pi/.bashrc
+
+# copy the odoo.conf file to the overwrite directory
+mv -v "/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf" "/home/pi/"
+chown pi:pi "/home/pi/odoo.conf"
 
 apt-get update
 
@@ -49,6 +95,7 @@ password="$(openssl rand -base64 12)"
 echo "pi:${password}" | chpasswd
 
 PKGS_TO_INSTALL="
+    chromium-browser \
     console-data \
     cups \
     cups-ipp-utils \
@@ -63,6 +110,7 @@ PKGS_TO_INSTALL="
     kpartx \
     libcups2-dev \
     libpq-dev \
+    libffi-dev \
     lightdm \
     localepurge \
     nginx-full \
@@ -94,7 +142,9 @@ PKGS_TO_INSTALL="
     python3-reportlab \
     python3-requests \
     python3-serial \
+    python3-stdnum \
     python3-tz \
+    python3-vobject \
     rsync \
     screen \
     swig \
@@ -102,6 +152,7 @@ PKGS_TO_INSTALL="
     vim \
     x11-utils \
     xdotool \
+    xinput \
     xserver-xorg-input-evdev \
     xserver-xorg-video-dummy \
     xserver-xorg-video-fbdev"
@@ -110,6 +161,7 @@ echo "Acquire::Retries "16";" > /etc/apt/apt.conf.d/99acquire-retries
 # KEEP OWN CONFIG FILES DURING PACKAGE CONFIGURATION
 # http://serverfault.com/questions/259226/automatically-keep-current-version-of-config-files-when-apt-get-install
 apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install ${PKGS_TO_INSTALL}
+apt-get -y autoremove
 
 apt-get clean
 localepurge
@@ -139,7 +191,12 @@ PIP_TO_INSTALL="
     Werkzeug==2.0.2 \
     urllib3==1.26.5 \
     pyOpenssl==22.0.0 \
-    cryptography==36.0.2"
+    cryptography==36.0.2 \
+    screeninfo==0.8.1 \
+    zeep==4.2.1 \
+    num2words==0.5.13 \
+    freezegun==1.2.1 \
+    schedule==1.2.1"
 
 pip3 install ${PIP_TO_INSTALL} --break-system-package
 
@@ -178,6 +235,7 @@ systemctl enable systemd-timesyncd.service
 systemctl unmask hostapd.service
 systemctl disable hostapd.service
 systemctl disable cups-browsed.service
+systemctl enable odoo.service
 
 # disable overscan in /boot/config.txt, we can't use
 # overwrite_after_init because it's on a different device
@@ -186,8 +244,8 @@ systemctl disable cups-browsed.service
 # cf: https://www.raspberrypi.org/documentation/configuration/raspi-config.md
 echo "disable_overscan=1" >> /boot/config.txt
 
-# Separate framebuffers for both screens on RPI4
-sed -i '/dtoverlay/d' /boot/config.txt
+# Use the fkms driver instead of the legacy one (RPI3 requires this)
+sed -i '/dtoverlay/c\dtoverlay=vc4-fkms-v3d' /boot/config.txt
 
 # exclude /drivers folder from git info to be able to load specific drivers
 echo "addons/hw_drivers/iot_devices/" > /home/pi/odoo/.git/info/exclude

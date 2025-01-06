@@ -9,7 +9,6 @@
 # martioodo hola, 2023
 # Eric Antones <eantones@users.noreply.github.com>, 2023
 # Susanna Pujol, 2023
-# Harcogourmet, 2023
 # Jonatan Gk, 2023
 # Sandra Franch <sandra.franch@upc.edu>, 2023
 # jabiri7, 2023
@@ -26,16 +25,18 @@
 # Josep Anton Belchi, 2023
 # Martin Trigaux, 2023
 # Iván Infantes Castarnado, 2024
-# Quim - eccit <quim@eccit.com>, 2024
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2024
 # Santiago Payà <santiagopim@gmail.com>, 2024
+# Raimon Coral, 2024
+# Xavier, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Santiago Payà <santiagopim@gmail.com>, 2024\n"
+"Last-Translator: Xavier, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -102,7 +103,7 @@ msgstr "12 dies / any, incloent <br>6 a la seva elecció."
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "12345678901"
-msgstr ""
+msgstr "12345678901"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -1018,6 +1019,8 @@ msgstr ""
 "Mantenir una interacció regular amb els clients clau per a una millor extracció i expansió."
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
@@ -1030,6 +1033,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+#, python-format
 msgid "Department"
 msgstr "Departament"
 
@@ -2874,6 +2878,13 @@ msgid "Software Developer"
 msgstr " Desarrollador de software"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
+#, python-format
+msgid "Some employee already have a work contact"
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -3240,7 +3251,7 @@ msgstr "Missatges sense llegir"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
 msgid "Use tags to categorize your Employees."
-msgstr ""
+msgstr "Utilitza etiquetes per classficar els teus treballadors"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
@@ -3284,7 +3295,7 @@ msgstr "Permís de treball vàlid per a Bèlgica"
 #: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #, python-format
 msgid "View profile"
-msgstr ""
+msgstr "Veure perfil"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
@@ -3478,7 +3489,7 @@ msgstr "Horari Laboral"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_resource_calendar_view
 msgid "Working Schedules"
-msgstr ""
+msgstr "Horaris de feina"
 
 #. module: hr
 #. odoo-python

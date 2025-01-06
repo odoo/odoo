@@ -106,8 +106,8 @@
                 </t>
             </CabeceraFactura>
             <DatosFactura t-if="is_emission">
-                <FechaOperacion t-out="format_date(invoice.invoice_date) if format_date(datetime_now) != format_date(invoice.invoice_date) else None"/>
-                <DescripcionFactura t-out="invoice.invoice_origin or 'manual'"/>
+                <FechaOperacion t-if="invoice.delivery_date and format_date(invoice.invoice_date) != format_date(invoice.delivery_date)" t-out="format_date(invoice.delivery_date)"/>
+                <DescripcionFactura t-out="invoice.invoice_origin and invoice.invoice_origin[:250] or 'manual'"/>
                 <DetallesFactura>
                     <IDDetalleFactura t-foreach="invoice_lines" t-as="line_values">
                         <t t-set="line" t-value="line_values['line']"/>
@@ -185,7 +185,7 @@
             <NoSujeta t-if="desglose.get('NoSujeta')">
                 <t t-set="no_sujeta" t-value="desglose['NoSujeta']"/>
                 <DetalleNoSujeta>
-                    <Causa>RL</Causa>
+                    <Causa t-out="nosujeto_causa"/>
                     <!-- NOTE: Causa should be 
                         'OT' if 'the' ClaveRegimenIvaOpTrascendencia == 10
                         'RL' if 'some' ClaveRegimenIvaOpTrascendencia == 08

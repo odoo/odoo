@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -241,6 +241,8 @@ msgstr "จุด"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Download"
@@ -431,6 +433,18 @@ msgstr ""
 "                   ง่ายขึ้นโดยเฉพาะเมื่อไฟล์มีหลายคอลัมน์"
 
 #. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid ""
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
+msgstr ""
+"หากโมเดลใช้ openchatter "
+"การติดตามประวัติจะตั้งค่าการสมัครสมาชิกและส่งการแจ้งเตือนในระหว่างการนำเข้า "
+"แต่จะทำให้การนำเข้าช้าลง"
+
+#. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
@@ -497,6 +511,7 @@ msgstr "นำเข้า"
 
 #. module: base_import
 #. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
@@ -888,6 +903,17 @@ msgstr "ใช้แถวแรกเป็นส่วนหัว"
 #: model:ir.model,name:base_import.model_res_users
 msgid "User"
 msgstr "ผู้ใช้"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid ""
+"Warning: ignores the labels line, empty lines and lines composed only of "
+"empty cells"
+msgstr ""
+"คำเตือน: ละเว้นบรรทัดป้ายกำกับ บรรทัดว่าง "
+"และบรรทัดที่ประกอบด้วยเซลล์ว่างเท่านั้น"
 
 #. module: base_import
 #. odoo-javascript

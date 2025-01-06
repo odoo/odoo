@@ -1,7 +1,9 @@
 /** @odoo-module **/
 
-import { getFixture, getNodesTextContent } from "@web/../tests/helpers/utils";
+import { onMounted } from "@odoo/owl";
+import { getFixture, getNodesTextContent, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { GaugeField } from "@web/views/fields/gauge/gauge_field";
 
 let serverData;
 let target;
@@ -60,4 +62,40 @@ QUnit.module("Fields", (hooks) => {
             "4",
         ]);
     });
+
+    QUnit.test("GaugeValue supports max_value option", async function (assert) {
+        patchWithCleanup(GaugeField.prototype, {
+            setup() {
+                super.setup();
+                onMounted(() => {
+                    assert.step("gauge mounted");
+                    assert.strictEqual(this.chart.config.options.plugins.tooltip.callbacks.label({}), "Max: 120");
+                });
+            }
+        });
+
+        serverData.models.partner.records = serverData.models.partner.records.slice(0,1);
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="int_field" widget="gauge" options="{'max_value': 120}"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+        });
+
+        assert.verifySteps(["gauge mounted"]);
+        assert.containsN(target, ".o_field_widget[name=int_field] .oe_gauge canvas", 1);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_gauge_value")), [
+            "10",
+        ]);
+    });
+
 });

@@ -5,20 +5,20 @@
 # Translators:
 # Mads Søndergaard, 2023
 # Morten Paaske, 2024
-# Martin Trigaux, 2024
 # Mads Søndergaard, 2024
-# Sanne Kristensen <sanne@vkdata.dk>, 2024
 # lhmflexerp <lhm@flexerp.dk>, 2024
 # Sammi Iversen <sammi@vkdata.dk>, 2024
 # Ejner Sønniksen <ejner@vkdata.dk>, 2024
+# Martin Trigaux, 2024
+# Sanne Kristensen <sanne@vkdata.dk>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ejner Sønniksen <ejner@vkdata.dk>, 2024\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,7 +52,6 @@ msgstr "%s anmeldelser"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Shipping"
 msgstr "&amp; levering"
 
@@ -129,7 +128,6 @@ msgstr "<b>Prisliste</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<b>Shipping: </b>"
 msgstr "<b>Levering: </b>"
 
@@ -534,11 +532,6 @@ msgstr ""
 "            "
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product
-msgid "<u class=\"h5\">Documents</u>"
-msgstr "<u class=\"h5\">Dokumenter</u>"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
 msgid "<u>Terms and Conditions</u>"
 msgstr "<u>Salgs- og leveringsbetingelser</u>"
@@ -923,7 +916,6 @@ msgstr "Stor"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Billing"
 msgstr "Fakturering"
 
@@ -1028,13 +1020,6 @@ msgstr "Kan billede 1024 zoomes"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__can_publish
 msgid "Can Publish"
 msgstr "Kan udgives "
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "You can't use a video as the product's main image."
-msgstr "Du kan ikke bruge en video som produktets hovedbillede."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1292,7 +1277,7 @@ msgstr "Udregn leveringsomkostninger og lever med Easypost"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping cost and ship with Shiprocket"
-msgstr ""
+msgstr "Beregn forsendelsesomkostninger og send med Shiprocket"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1735,6 +1720,11 @@ msgstr ""
 msgid "Do you wish to clear your cart before adding products to it?"
 msgstr ""
 "Ønsker du at rydde din indkøbskurv, før du tilføjer produkter til den?"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "Documents"
+msgstr "Dokumenter"
 
 #. module: website_sale
 #. odoo-python
@@ -2606,7 +2596,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
+#: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "No shipping method is selected."
 msgstr "Der er ikke valgt nogen forsendelsesmetode."
@@ -2828,11 +2818,6 @@ msgid "Pay now"
 msgstr "Betal nu"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment
-msgid "Pay with"
-msgstr "Betal med"
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #, python-format
@@ -2853,6 +2838,11 @@ msgstr "Betalingsmetoder"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
 msgid "Payment Providers"
 msgstr "Betalingsudbydere"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_token
+msgid "Payment Token"
+msgstr "Betalingstoken"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
@@ -3679,12 +3669,12 @@ msgstr "Leveringsadresse"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Shiprocket"
-msgstr ""
+msgstr "Shiprocket"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Shiprocket Shipping Methods"
-msgstr ""
+msgstr "Shiprocket leveringsmetoder"
 
 #. module: website_sale
 #: model:website.menu,name:website_sale.menu_shop
@@ -3901,7 +3891,7 @@ msgstr "Foreslået tilbehør"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Suggested accessories in the eCommerce cart"
-msgstr "Foreslået tilbehør i e-handelsvognen"
+msgstr "Foreslået tilbehør i e-handelskurven"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4101,9 +4091,9 @@ msgid ""
 "updated on that cart. Also, the cart might not be visible for the customer "
 "until you update the pricelist of that cart."
 msgstr ""
-"Denne partner har en åben vogn. Bemærk venligst, at prislisten ikke vil "
-"blive opdateret på den vogn. Desuden er vognen muligvis ikke synlig for "
-"kunden, før du opdaterer prislisten for den vogn."
+"Denne partner har en åben kurv. Bemærk venligst, at prislisten ikke vil "
+"blive opdateret på denne kurv. Desuden er kurven muligvis ikke synlig for "
+"kunden, før du opdaterer prislisten for kurven."
 
 #. module: website_sale
 #. odoo-javascript
@@ -4453,7 +4443,7 @@ msgstr "Hjemmeside besøgende"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_template__website_message_ids
 msgid "Website communication history"
-msgstr "Website kommunikations historik"
+msgstr "Hjemmesidens kommunikations historik"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_description
@@ -4555,6 +4545,13 @@ msgstr ""
 "                                             Hvis du vil redigere din leveringsadresse, skal du oprette en"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "You can't use a video as the product's main image."
+msgstr "Du kan ikke bruge en video som produktets hovedbillede."
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
@@ -4601,6 +4598,17 @@ msgstr "Din e-mail"
 #, python-format
 msgid "Your Name"
 msgstr "Dit navn"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid ""
+"Your account is not allowed to pay in company %s. Please log out and create "
+"a new account for this website, or contact the website administrator."
+msgstr ""
+"Din konto må ikke betale i selskab %s. Log venligst ud og opret en ny konto "
+"til denne hjemmeside, eller kontakt hjemmesidens administrator."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

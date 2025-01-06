@@ -1,11 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.tests.common import new_test_user
+from odoo.exceptions import AccessError
+from odoo.tests import Form, new_test_user, tagged
+
 from .common import TestSaleProjectCommon
-from odoo.tests import Form
-from odoo.tests.common import tagged
+
 
 @tagged('post_install', '-at_install')
 class TestSaleProject(TestSaleProjectCommon):
@@ -774,3 +774,102 @@ class TestSaleProject(TestSaleProjectCommon):
         })
         action = sale_order_2.action_view_task()
         self.assertEqual(action["context"]["default_project_id"], self.project_global.id)
+
+    def test_task_compute_sale_order_id(self):
+        """
+        Check whether a task's sale_order_id is set iff its partner_id matches
+        the SO's partner_id, partner_invoice_id, or partner_shipping_id fields.
+        """
+        project_user = new_test_user(
+            self.env, groups='project.group_project_user',
+            login='Project user', name='Project user',
+        )
+        partners = [
+            self.partner,
+            self.partner_a,
+            self.partner_b,
+            self.env['res.partner'].create({'name': "unrelated partner"}),
+        ]
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': partners[0].id,
+            'partner_invoice_id': partners[1].id,
+            'partner_shipping_id': partners[2].id,
+            'order_line': [Command.create({'product_id': self.product_order_service1.id})],
+        })
+        sale_order.action_confirm()
+
+        task0, task1, task2, task3 = self.env['project.task'].with_user(project_user).create([{
+            'name': f"Task {i}",
+            'sale_line_id': sale_order.order_line.id,
+            'project_id': self.project_global.id,
+            'partner_id': partner.id,
+        } for i, partner in enumerate(partners)])
+
+        self.assertEqual(task0.sale_order_id, sale_order, "Task matches SO's partner_id")
+        self.assertEqual(task1.sale_order_id, sale_order, "Task matches SO's partner_invoice_id")
+        self.assertEqual(task2.sale_order_id, sale_order, "Task matches SO's partner_shipping_id")
+        self.assertFalse(task3.sale_order_id, "Task partner doesn't match any of the SO partners")
+
+        with self.assertRaises(AccessError):
+            sale_order.with_user(project_user).partner_id
+        task3.with_user(project_user).write({
+            'partner_id': self.partner.id,
+            'sale_line_id': sale_order.order_line.id,
+        })
+        self.assertEqual(task3.sale_order_id, sale_order, "Task matches SO's partner_id")
+
+    def test_action_view_project_ids(self):
+        order = self.env['sale.order'].create({
+            'name': 'Project Order',
+            'partner_id': self.partner.id
+        })
+
+        sol = self.env['sale.order.line'].create({
+            'product_id': self.product_order_service4.id,
+            'order_id': order.id,
+        })
+
+        order.action_confirm()
+        action = order.action_view_project_ids()
+        self.assertEqual(action['type'], 'ir.actions.act_window', 'Should return a window action')
+        self.assertEqual(action['context']['default_sale_line_id'], sol.id, 'The SOL linked to the SO should be chosen as default value')
+
+        self.product_order_service4.type = 'consu'
+        action = order.action_view_project_ids()
+        self.assertEqual(action['type'], 'ir.actions.act_window', 'Should return a window action')
+        self.assertFalse(action['context']['default_sale_line_id'], 'No SOL should be set by default since the product changed')
+
+    def test_confirm_sale_order_on_task_save(self):
+        sale_order = self.env['sale.order'].create({
+            'name': 'Sale Order',
+            'partner_id': self.partner.id,
+        })
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': self.product_order_service1.id,
+        })
+        self.assertEqual(sale_order.state, 'draft')
+
+        task = self.env['project.task'].create({
+            'name': 'Task',
+            'project_id': self.project_global.id,
+        })
+        task.write({'sale_line_id': sale_order_line.id})
+        self.assertEqual(sale_order.state, 'sale')
+
+    def test_confirm_sale_order_on_project_creation(self):
+        sale_order = self.env['sale.order'].create({
+            'name': 'Sale Order',
+            'partner_id': self.partner.id,
+        })
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': self.product_order_service1.id,
+        })
+        self.assertEqual(sale_order.state, 'draft')
+
+        self.env['project.project'].create({
+            'name': 'Project',
+            'sale_line_id': sale_order_line.id,
+        })
+        self.assertEqual(sale_order.state, 'sale')

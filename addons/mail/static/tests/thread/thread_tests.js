@@ -8,6 +8,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 import { config as transitionConfig } from "@web/core/transition";
 import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import {
+    assertSteps,
     click,
     contains,
     createFile,
@@ -15,8 +16,10 @@ import {
     focus,
     insertText,
     scroll,
+    step,
     triggerEvents,
 } from "@web/../tests/utils";
+import { patchWebsocketWorkerWithCleanup } from "@bus/../tests/helpers/mock_websocket";
 
 QUnit.module("thread");
 
@@ -426,6 +429,43 @@ QUnit.test(
         await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 0 });
     }
 );
+
+QUnit.test("can join public channel from channel mention link", async () => {
+    const pyEnv = await startServer();
+    const userId = pyEnv["res.users"].create({ name: "Demo" });
+    const partnerId = pyEnv["res.partner"].create({
+        name: "Demo",
+        user_ids: [userId],
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Channel",
+        channel_member_ids: [Command.create({ partner_id: partnerId })],
+        channel_type: "channel",
+        group_public_id: false,
+    });
+    pyEnv["mail.message"].create({
+        model: "res.partner",
+        message_type: "comment",
+        body: `<p><a class="o_channel_redirect" href="#" data-oe-model="discuss.channel" data-oe-id="${channelId}">#Channel</a></p>`, // simulated channel mention in message
+        author_id: partnerId,
+        res_id: partnerId,
+    });
+    patchWebsocketWorkerWithCleanup({
+        _sendToServer({ event_name, data }) {
+            if (event_name === "subscribe") {
+                const channels = data.channels.filter((subscription) =>
+                    subscription.startsWith("discuss.channel_")
+                );
+                step(`subscribe - [${channels.join(",")}]`);
+            }
+        },
+    });
+    const { openFormView } = await start();
+    await openFormView("res.partner", partnerId);
+    await click(".o-mail-Message-body a", { text: "#Channel" });
+    await contains(".o-mail-ChatWindow-header", { text: "Channel" });
+    await assertSteps([`subscribe - [discuss.channel_${channelId}]`]);
+});
 
 QUnit.test("show empty placeholder when thread contains no message", async () => {
     const pyEnv = await startServer();

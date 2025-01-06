@@ -67,6 +67,7 @@ export class X2ManyField extends Component {
         this.activeActions = useActiveActions({
             crudOptions: Object.assign({}, this.props.crudOptions, {
                 onDelete: removeRecord,
+                edit: this.props.record.isInEdition,
             }),
             fieldType: this.isMany2Many ? "many2many" : "one2many",
             subViewActiveActions,
@@ -252,10 +253,11 @@ export class X2ManyField extends Component {
             return this.selectCreate({ domain, context, title });
         }
         if (editable) {
-            if (this.list.editedRecord) {
+            const editedRecord = this.list.editedRecord;
+            if (editedRecord) {
                 const proms = [];
                 this.list.model.bus.trigger("NEED_LOCAL_CHANGES", { proms });
-                await Promise.all([...proms, this.list.editedRecord._updatePromise]);
+                await Promise.all([...proms, editedRecord._updatePromise]);
                 await this.list.leaveEditMode({ canAbandon: false });
             }
             if (!this.list.editedRecord) {

@@ -10,18 +10,19 @@
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Cozmin Candea <office@terrabit.ro>, 2024
 # Martin Trigaux, 2024
-# Dorin Hongu <dhongu@gmail.com>, 2024
 # Larisa_nexterp, 2024
 # Betty Keresztesi, 2024
 # Corina Calin, 2024
+# Lyall Kindmurr, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Corina Calin, 2024\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -234,7 +235,7 @@ msgstr ""
 "            </t>\n"
 "        </t>\n"
 "        <br><br>\n"
-"        Mulțumesc pentru incredere!\n"
+"        Mulțumesc pentru încredere!\n"
 "        <br>\n"
 "        Nu ezitați să ne contactați dacă aveți întrebări.\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
@@ -1176,15 +1177,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
-"Vă permite să partajați documentul cu clienții dvs. în cadrul unei vânzări.\n"
-"Lăsați necompletat dacă nu doriți să partajați acest document cu clientul.\n"
-"Cotație: documentul va fi trimis clienților și accesibil acestora în orice moment.\n"
-"de exemplu: această opțiune poate fi utilă pentru a partaja fișierele cu descrierea produsului.\n"
-"Comandă confirmată: documentul va fi trimis si accesibil clientilor.\n"
-"de exemplu: această opțiune poate fi utilă pentru a partaja manualul de utilizare sau conținutul digital cumpărat de pe e-commerce.\n"
-"Citat intern: Documentul va fi inclus in pdf-ul cotației intre antetul paginilor și tabelul de cotație. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1771,7 +1766,7 @@ msgstr "Creat de"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__create_date
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__create_date
 msgid "Created on"
-msgstr "Creat în"
+msgstr "Creat pe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__create_date
@@ -2562,7 +2557,7 @@ msgstr "În Comanda"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Incl. tax)"
-msgstr "Incl. impozit)"
+msgstr "Incl. TVA)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deposit_account_id
@@ -3962,7 +3957,7 @@ msgstr "Înregistrare plată"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
 msgid "Regular invoice"
-msgstr "Factură periodică"
+msgstr "Factură normală"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4151,14 +4146,14 @@ msgid "Sales Analysis"
 msgstr "Analiză vânzări"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_customers
-msgid "Sales Analysis By Customers"
-msgstr "Analiza vânzărilor în funcție de clienți"
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
 msgstr "Analiza vânzărilor în funcție de agenții de vânzări"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_customers
+msgid "Sales Analysis Per Customers"
+msgstr "Analiza vânzărilor pe clienți"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
@@ -4234,7 +4229,7 @@ msgstr "Linii de comandă de vânzare legate de o comandă de vânzare a mea"
 #: model_terms:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
 #, python-format
 msgid "Sales Order(s)"
-msgstr "Comandă (enzi) de vânzare "
+msgstr "Comenzi de vânzare "
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
@@ -4244,7 +4239,6 @@ msgstr "Comandă (enzi) de vânzare "
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4982,7 +4976,6 @@ msgstr "Procentul din suma care trebuie plătită pentru confirmarea ofertelor."
 
 #. module: sale
 #. odoo-python
-#. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "The product (%s) has incompatible values: %s"
@@ -5030,11 +5023,6 @@ msgid "The value of the down payment amount must be positive."
 msgstr "Valoarea plății în avans trebuie să fie pozitivă."
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
-msgid "There are currently no orders for your account."
-msgstr "În prezent nu există comenzi pentru contul tau."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
 msgstr "În prezent, nu există oferte pentru contul dvs."
@@ -5048,6 +5036,16 @@ msgstr "În prezent nu există comenzi pentru contul dvs."
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "There are existing"
 msgstr "Există"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5486,6 +5484,7 @@ msgstr "Avertizare"
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/product_template.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
@@ -5618,6 +5617,7 @@ msgstr ""
 "indiferent dacă este un produs stocabil, un consumabil sau un serviciu."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Comenzile dvs."

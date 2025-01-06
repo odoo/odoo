@@ -18,11 +18,13 @@ class TestHrAttendanceOvertime(TransactionCase):
             'overtime_company_threshold': 10,
             'overtime_employee_threshold': 10,
         })
+        cls.company.resource_calendar_id.tz = 'Europe/Brussels'
         cls.company_1 = cls.env['res.company'].create({
             'name': 'Overtime Inc.',
             'hr_attendance_overtime': True,
             'overtime_start_date': datetime(2024, 5, 27),
         })
+        cls.company_1.resource_calendar_id.tz = 'Europe/Brussels'
         cls.user = new_test_user(cls.env, login='fru', groups='base.group_user,hr_attendance.group_hr_attendance_manager', company_id=cls.company.id).with_company(cls.company)
         cls.employee = cls.env['hr.employee'].create({
             'name': "Marie-Edouard De La Court",
@@ -45,7 +47,7 @@ class TestHrAttendanceOvertime(TransactionCase):
             'company_id': cls.company.id,
             'tz': 'Pacific/Honolulu',
         })
-        cls.europe_employee = cls.env['hr.employee'].create({
+        cls.europe_employee = cls.env['hr.employee'].with_company(cls.company_1).create({
             'name': 'Schmitt',
             'company_id': cls.company_1.id,
             'tz': 'Europe/Brussels',

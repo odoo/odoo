@@ -29,11 +29,23 @@ MOUNT_POINT="${__dir}/root_mount"
 OVERWRITE_FILES_BEFORE_INIT_DIR="${__dir}/overwrite_before_init"
 OVERWRITE_FILES_AFTER_INIT_DIR="${__dir}/overwrite_after_init"
 VERSION=17.0
-VERSION_IOTBOX=24.01
-REPO=https://github.com/odoo/odoo.git
+VERSION_IOTBOX=24.10
+
+
+# ask user for the branch/version
+current_branch="$(git branch --show-current)"
+read -p "Enter dev branch [${current_branch}]: " VERSION
+VERSION=${VERSION:-$current_branch}
+
+# ask user for the repository
+current_remote=$(git config branch.$current_branch.remote)
+current_repo="$(git remote get-url $current_remote | sed 's/.*github.com[\/:]//' | sed 's/\/odoo.git//')"
+read -p "Enter repo [${current_repo}]: " REPO
+REPO="https://github.com/${REPO:-$current_repo}/odoo.git"
+echo "Using repo: ${REPO}"
 
 if ! file_exists *raspios*.img ; then
-    wget 'https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2023-12-11/2023-12-11-raspios-bookworm-armhf-lite.img.xz' -O raspios.img.xz
+    wget "https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2024-07-04/2024-07-04-raspios-bookworm-armhf-lite.img.xz" -O raspios.img.xz
     unxz --verbose raspios.img.xz
 fi
 
@@ -67,9 +79,9 @@ tar xvzf ngrok.tgz -C "${USR_BIN}"
 rm -v ngrok.tgz
 cd "${__dir}"
 
-# zero pad the image to be around 4.4 GiB, by default the image is only ~2.2 GiB
+# zero pad the image to be around ~5 GiB, by default the image is only ~2.2 GiB
 echo "Enlarging the image..."
-dd if=/dev/zero bs=1M count=2048 status=progress >> iotbox.img
+dd if=/dev/zero bs=1M count=2560 status=progress >> iotbox.img
 
 # resize partition table
 echo "Fdisking"
@@ -116,7 +128,7 @@ mkfs.ext4 -v "${LOOP_IOT_ROOT}"
 dd if="${LOOP_RASPIOS_ROOT}" of="${LOOP_IOT_ROOT}" bs=4M status=progress
 
 # resize filesystem
-e2fsck -fv "${LOOP_IOT_ROOT}" # resize2fs requires clean fs
+e2fsck -fvy "${LOOP_IOT_ROOT}" # resize2fs requires clean fs
 resize2fs "${LOOP_IOT_ROOT}"
 
 mkdir -pv "${MOUNT_POINT}" #-p: no error if existing
@@ -128,11 +140,17 @@ cp -v "${QEMU_ARM_STATIC}" "${MOUNT_POINT}/usr/bin/"
 
 # 'overlay' the overwrite directory onto the mounted image filesystem
 cp -av "${OVERWRITE_FILES_BEFORE_INIT_DIR}"/* "${MOUNT_POINT}"
+
+# Reload network manager is mandatory in order to apply DNS configurations:
+# it needs to be reloaded after copying the 'overwrite_before_init' files in the new image
+# it needs to be performed in the classic filesystem, as 'systemctl' commands are not available in /root_bypass_ramdisks
+sudo systemctl reload NetworkManager
+
 chroot "${MOUNT_POINT}" /bin/bash -c "/etc/init_posbox_image.sh"
 
 # copy iotbox version
-mkdir -pv "${MOUNT_POINT}"/var/odoo
-echo "${VERSION_IOTBOX}" | tee "${MOUNT_POINT}"/var/odoo/iotbox_version "${MOUNT_POINT}"/home/pi/iotbox_version
+mkdir -pv "${MOUNT_POINT}"/var/odoo/
+echo "${VERSION_IOTBOX}" > "${MOUNT_POINT}"/var/odoo/iotbox_version
 
 # get rid of the git clone
 rm -rf "${CLONE_DIR}"
@@ -160,3 +178,5 @@ sleep 10
 
 kpartx -dv "${LOOP_IOT_PATH}"
 kpartx -dv "${LOOP_RASPIOS_PATH}"
+
+echo "Image build finished."

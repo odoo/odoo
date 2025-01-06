@@ -92,7 +92,7 @@ publicWidget.registry.WebsiteSale.include({
                     'item_name': el.getElementsByClassName('product_display_name')[0].textContent,
                     'quantity': parseFloat(el.getElementsByClassName('js_quantity')[0].value),
                     'currency': currency,
-                    'price': parseFloat(el.getElementsByClassName('oe_price')[0].getElementsByClassName('oe_currency_value')[0].textContent),
+                    'price': parseFloat(el.getElementsByClassName('js_raw_price')[0].textContent),
                 });
             });
             if (productsTrackingInfo.length) {

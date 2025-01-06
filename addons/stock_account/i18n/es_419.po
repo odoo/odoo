@@ -6,16 +6,16 @@
 # Wil Odoo, 2023
 # Iran Villalobos López, 2023
 # Lucia Pacheco, 2024
-# Fernanda Alvarez, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -580,7 +580,7 @@ msgstr "Categoría del producto"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Movimientos de producto (línea de movimiento de inventario)"
+msgstr "Movimientos de producto (línea de movimiento de stock)"
 
 #. module: stock_account
 #. odoo-python
@@ -722,7 +722,7 @@ msgstr "Diario de existencias"
 #: model:ir.model.fields,field_description:stock_account.field_account_payment__stock_move_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_move_id
 msgid "Stock Move"
-msgstr "Movimiento de existencias"
+msgstr "Movimiento de stock"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_output_categ_id
@@ -1022,7 +1022,7 @@ msgstr "Valor"
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
 #, python-format
 msgid "Value On Hand:"
-msgstr "Valor disponible:"
+msgstr "Valor a la mano:"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__value_svl
@@ -1115,22 +1115,22 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
-"You don't have any stock input account defined on your product category. You"
-" must define one before processing this operation."
+"You don't have any output valuation account defined on your product "
+"category. You must define one before processing this operation."
 msgstr ""
-"No tiene ninguna cuenta de entrada de existencias definida en su categoría "
-"de producto. Debe definir una antes de procesar esta operación."
+"No definió ninguna cuenta de valoración de salida en su categoría de "
+"producto. Debe definir una antes de procesar esta operación."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
-"You don't have any output valuation account defined on your product "
-"category. You must define one before processing this operation."
+"You don't have any stock input account defined on your product category. You"
+" must define one before processing this operation."
 msgstr ""
-"No definió ninguna cuenta de valoración de salida en su categoría de "
-"producto. Debe definir una antes de procesar esta operación."
+"No tiene ninguna cuenta de entrada de existencias definida en su categoría "
+"de producto. Debe definir una antes de procesar esta operación."
 
 #. module: stock_account
 #. odoo-python

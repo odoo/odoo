@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -1158,15 +1158,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
-"يتيح لك مشاركة المستند مع عملائك ضمن عملية بيع.\n"
-"اتركه فارغاً إذا كنت لا ترغب في مشاركة هذا المستند مع عميل المبيعات.\n"
-"عرض السعر: سيتم إرسال المستند إلى العملاء وبمقدورهم الوصول إليه في أي وقت.\n"
-"مثال: قد يكون هذا الخيار مفيداً لمشاركة ملفات وصف المنتج.\n"
-"طلب مؤكد: سيتم إرسال المستند إلى العملاء وبمقدورهم الوصول إليه.\n"
-"مثال: قد يكون هذا الخيار مفيداً لمشاركة دليل المستخدم أو المحتوى الرقمي الذي تم شراؤه عن طريق المتجر الإلكتروني. \n"
-"داخل عرض السعر: سيتم تضمين المستند في ملف pdf لعرض السعر بين صفحات الترويسة وجدول عرض السعر. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -2004,7 +1998,7 @@ msgstr "إيداع "
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_down_payment_product_id
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__deposit_default_product_id
 msgid "Deposit Product"
-msgstr "منتج الإيداع "
+msgstr "منتج التأمين "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__name
@@ -4110,14 +4104,14 @@ msgid "Sales Analysis"
 msgstr "تحليل المبيعات"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_customers
-msgid "Sales Analysis By Customers"
-msgstr "تحليل المبيعات حسب العملاء "
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
 msgstr "تحليل المبيعات حسب مندوبي المبيعات "
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_customers
+msgid "Sales Analysis Per Customers"
+msgstr "تحليل المبيعات لكل عميل "
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
@@ -4203,7 +4197,6 @@ msgstr "أوامر البيع"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4832,7 +4825,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "The fixed amount to be invoiced in advance."
-msgstr "المبلغ الثابت لفوترته مسبقاً. "
+msgstr "المبلغ الثابت لفوترته مقدماً. "
 
 #. module: sale
 #. odoo-python
@@ -4930,7 +4923,6 @@ msgstr "النسبة المئوية للمبلغ المطلوب دفعه لتأ�
 
 #. module: sale
 #. odoo-python
-#. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "The product (%s) has incompatible values: %s"
@@ -4976,11 +4968,6 @@ msgid "The value of the down payment amount must be positive."
 msgstr "يجب أن تكون قيمة مبلغ الدفعة المقدّمة قيمة موجبة."
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
-msgid "There are currently no orders for your account."
-msgstr "لا توجد طلبات حاليًا بحسابك."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
 msgstr "لا توجد عروض أسعار حاليًا بحسابك."
@@ -4994,6 +4981,16 @@ msgstr "لا توجد أوامر بيع في حسابك حالياً. "
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "There are existing"
 msgstr "توجد "
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5428,6 +5425,7 @@ msgstr "تحذير"
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/product_template.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
@@ -5556,6 +5554,7 @@ msgstr ""
 "                سواءً كان منتجاً قابلاً للتخزين أو استهلاكي أو خدمة. "
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "طلباتك "

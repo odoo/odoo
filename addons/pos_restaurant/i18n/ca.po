@@ -5,27 +5,28 @@
 # Translators:
 # Bàrbara Partegàs <barbararof@gmail.com>, 2023
 # Eric Rial <erialmedina@gmail.com>, 2023
-# Harcogourmet, 2023
+# Xavier, 2023
 # Óscar Fonseca <tecnico@pyming.com>, 2023
 # Arnau Ros, 2023
 # Carles Antoli <carlesantoli@hotmail.com>, 2023
 # Martin Trigaux, 2023
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2023
 # Ivan Espinola, 2023
-# Quim - eccit <quim@eccit.com>, 2023
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2023
 # marcescu, 2023
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2023
 # oscaryuu, 2023
 # Cristian Cruz, 2024
 # Josep Anton Belchi, 2024
+# EstudiTIC - estuditic.com <odoo@estuditic.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Josep Anton Belchi, 2024\n"
+"Last-Translator: EstudiTIC - estuditic.com <odoo@estuditic.com>, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -142,6 +143,7 @@ msgstr "Permet el desglossament de factures"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_orderline_notes
+#: model:ir.model.fields,help:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
 msgid "Allow custom Internal notes on Orderlines."
 msgstr ""
 
@@ -455,7 +457,7 @@ msgstr "Disseny de sales "
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "Floor name"
-msgstr ""
+msgstr "Nom de la Sala"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -580,6 +582,7 @@ msgstr "Nota interna afegida pel cambrer."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_orderline_notes
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Internal Notes"
 msgstr "Notes internes"
@@ -658,7 +661,7 @@ msgstr "Mozzarella Sandwich"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "New Floor"
-msgstr ""
+msgstr "Nova Sala"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -705,7 +708,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 #, python-format
 msgid "Oops! No floors available."
-msgstr ""
+msgstr "Oops! No hi ha sales disponibles"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -805,11 +808,6 @@ msgid "Point of Sales"
 msgstr "Terminal Punt de Venda"
 
 #. module: pos_restaurant
-#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
-msgid "Pos Iface Orderline Notes"
-msgstr "Pos Iface Orderline Notes"
-
-#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_printbill
 msgid "Pos Iface Printbill"
 msgstr "Pos Iface Printbill"
@@ -856,7 +854,7 @@ msgstr "Vermell"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "Removing a floor cannot be undone. Do you still want to remove %s?"
-msgstr ""
+msgstr "Eliminar una sala no es pot desfer. Segur que vols eliminar %s?"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1285,6 +1283,7 @@ msgstr "Sí"
 msgid ""
 "You cannot delete a floor when orders are still in draft for this floor."
 msgstr ""
+"No pots eliminar la sala quan hi ha comandes en esborrany en aquesta sala."
 
 #. module: pos_restaurant
 #. odoo-javascript

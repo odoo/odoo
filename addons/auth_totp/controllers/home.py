@@ -34,6 +34,8 @@ class Home(web_home.Home):
                     scope="browser", key=key, uid=user.id)
                 if user_match:
                     request.session.finalize(request.env)
+                    request.update_env(user=request.session.uid)
+                    request.update_context(**request.session.context)
                     return request.redirect(self._login_redirect(request.session.uid, redirect=redirect))
 
         elif user and request.httprequest.method == 'POST' and kwargs.get('totp_token'):

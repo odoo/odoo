@@ -388,10 +388,19 @@ class AccountEdiFormat(models.Model):
         # NOTE there's 11 more codes to implement, also there can be up to 3 in total
         # See https://www.gipuzkoa.eus/documents/2456431/13761128/Anexo+I.pdf/2ab0116c-25b4-f16a-440e-c299952d683d
         export_exempts = invoice.invoice_line_ids.tax_ids.filtered(lambda t: t.l10n_es_exempt_reason == 'E2')
-        values['regime_key'] = ['02'] if export_exempts else ['01']
+        # If an invoice line contains an OSS tax, the invoice is considered as an OSS operation
+        is_oss = self._has_oss_taxes(invoice)
+
+        if is_oss:
+            values['regime_key'] = ['17']
+        elif export_exempts:
+            values['regime_key'] = ['02']
+        else:
+            values['regime_key'] = ['01']
 
         if invoice.l10n_es_is_simplified and invoice.company_id.l10n_es_tbai_tax_agency != 'bizkaia':
             values['regime_key'] += ['52']  # code for simplified invoices
+        values['nosujeto_causa'] = 'IE' if is_oss else 'RL'
 
         return values
 

@@ -32,16 +32,17 @@
 # Miku Laitinen <miku.laitinen@gmail.com>, 2023
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2023
 # Mikko Närjänen <mikko.narjanen@web-veistamo.fi>, 2023
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
 # Jolien De Paepe, 2024
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
+# Jessica Jakara, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -1077,6 +1078,14 @@ msgid "All at once"
 msgstr "Kaikki kerralla"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"All our contractual relations will be governed exclusively by United States "
+"law."
+msgstr ""
+"Kaikkiin sopimussuhteisiimme sovelletaan yksinomaan Yhdysvaltojen lakia."
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
 msgid "All returned moves"
 msgstr "Kaikki palautetut siirrot"
@@ -1472,6 +1481,13 @@ msgid "Before scheduled date"
 msgstr "Ennen suunniteltua päivämäärää"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
+"responsibility."
+msgstr "Alla oleva teksti on ehdotus, eikä se ole Odoo S.A.:n vastuulla."
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
 msgid "Blocking Message"
 msgstr "Estoviesti"
@@ -1614,6 +1630,24 @@ msgid "Category Routes"
 msgstr "Reittikategoriat"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Certain countries apply withholding at source on the amount of invoices, in "
+"accordance with their internal legislation. Any withholding at source will "
+"be paid by the client to the tax authorities. Under no circumstances can My "
+"Company (Chicago) become involved in costs related to a country's "
+"legislation. The amount of the invoice will therefore be due to My Company "
+"(Chicago) in its entirety and does not include any costs relating to the "
+"legislation of the country in which the client is located."
+msgstr ""
+"Tietyt maat soveltavat lähdeveroa laskujen määrään sisäisen lainsäädäntönsä "
+"mukaisesti. Asiakas maksaa mahdolliset lähdeveron pidätykset "
+"veroviranomaisille. My Company (Chicago) ei voi missään tapauksessa "
+"osallistua kustannuksiin, jotka liittyvät jonkin maan lainsäädäntöön. My "
+"Company (Chicago) maksaa siis laskun määrän kokonaisuudessaan, eikä se "
+"sisällä asiakkaan sijaintimaan lainsäädäntöön liittyviä kustannuksia."
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__move_dest_exists
 msgid "Chained Move Exists"
 msgstr "Linkitetty siirto on olemassa"
@@ -1623,6 +1657,17 @@ msgstr "Linkitetty siirto on olemassa"
 #: model:ir.model,name:stock.model_stock_change_product_qty
 msgid "Change Product Quantity"
 msgstr "Muuta tuotteen määrää"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
+"Erä-/sarjanumeron muuttaminen eri tuotteita sisältävien siirtorivien osalta "
+"ei ole sallittua."
 
 #. module: stock
 #. odoo-python
@@ -3754,6 +3799,18 @@ msgid "Icon to indicate an exception activity."
 msgstr "Kuvake joka kertoo poikkeustoiminnosta."
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"If a payment is still outstanding more than sixty (60) days after the due "
+"payment date, My Company (Chicago) reserves the right to call on the "
+"services of a debt recovery company. All legal expenses will be payable by "
+"the client."
+msgstr ""
+"Jos maksu on edelleen suorittamatta yli kuudenkymmenen (60) päivän kuluttua "
+"eräpäivästä, My Company (Chicago) pidättää itsellään oikeuden käyttää "
+"perintäyhtiön palveluja. Asiakas maksaa kaikki oikeudenkäyntikulut."
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__same
 msgid "If all products are same"
 msgstr "Jos kaikki tuotteet ovat samoja"
@@ -4032,6 +4089,19 @@ msgstr "Varastossa"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
 msgstr "Saapuvien tyyppi"
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"In order for it to be admissible, My Company (Chicago) must be notified of "
+"any claim by means of a letter sent by recorded delivery to its registered "
+"office within 8 days of the delivery of the goods or the provision of the "
+"services."
+msgstr ""
+"Jotta vaatimus voidaan ottaa käsiteltäväksi, My Company (Chicago) -yhtiölle "
+"on ilmoitettava mahdollisesta vaatimuksesta kirjatulla kirjeellä, joka "
+"lähetetään kirjattuna kirjeenä sen rekisteröityyn toimipaikkaan 8 päivän "
+"kuluessa tavaroiden toimittamisesta tai palvelujen tarjoamisesta."
 
 #. module: stock
 #. odoo-javascript
@@ -5249,6 +5319,23 @@ msgid "My Activity Deadline"
 msgstr "Toimenpiteeni määräaika"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"My Company (Chicago) undertakes to do its best to supply performant services"
+" in due time in accordance with the agreed timeframes. However, none of its "
+"obligations can be considered as being an obligation to achieve results. My "
+"Company (Chicago) cannot under any circumstances, be required by the client "
+"to appear as a third party in the context of any claim for damages filed "
+"against the client by an end consumer."
+msgstr ""
+"Yritykseni (Chicago) sitoutuu tekemään parhaansa tarjotakseen asianmukaiset "
+"palvelut ajallaan ja sovittujen aikataulujen mukaisesti. Mitään sen "
+"velvoitteista ei kuitenkaan voida pitää velvoitteena saavuttaa tuloksia. "
+"Asiakas ei voi missään tapauksessa vaatia My Companya (Chicago) esiintymään "
+"kolmantena osapuolena loppukuluttajan asiakasta vastaan nostamassa "
+"vahingonkorvausvaatimuksessa."
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "My Counts"
 msgstr "Omat inventoinnit"
@@ -5331,6 +5418,12 @@ msgstr "Uusi varastosaldo"
 #: model:ir.actions.act_window,name:stock.action_picking_form
 msgid "New Transfer"
 msgstr "Uusi siirto"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_lot__activity_calendar_event_id
+#: model:ir.model.fields,field_description:stock.field_stock_picking__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Seuraavan toimenpiteen kalenterimerkintä"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_date_deadline
@@ -5434,8 +5527,9 @@ msgstr "Mitään toimintoja ei löytynyt. Luodaan siirto!"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
+#, python-format
 msgid "No product found to generate Serials/Lots for."
-msgstr ""
+msgstr "Ei löytynyt tuotetta, jolle voitaisiin luoda sarja- tai eränumeroita."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -5868,6 +5962,23 @@ msgid "Other Information"
 msgstr "Lisätiedot"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Our invoices are payable within 21 working days, unless another payment "
+"timeframe is indicated on either the invoice or the order. In the event of "
+"non-payment by the due date, My Company (Chicago) reserves the right to "
+"request a fixed interest payment amounting to 10% of the sum remaining due. "
+"My Company (Chicago) will be authorized to suspend any provision of services"
+" without prior warning in the event of late payment."
+msgstr ""
+"Laskumme on maksettava 21 työpäivän kuluessa, ellei laskussa tai tilauksessa"
+" ole ilmoitettu muuta maksuaikaa. Jos maksua ei suoriteta eräpäivään "
+"mennessä, My Company (Chicago) pidättää oikeuden vaatia kiinteää korkoa, "
+"jonka määrä on 10% of jäljellä olevasta erääntyneestä summasta. My Company "
+"(Chicago) on oikeutettu keskeyttämään palvelujen tarjoamisen ilman "
+"ennakkovaroitusta, jos maksu viivästyy."
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
 msgid "Out Type"
 msgstr "Lähtevien tyyppi"
@@ -6000,6 +6111,11 @@ msgstr "Paketti"
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Package A"
 msgstr "Paketti A"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "Package B"
+msgstr "Paketti B"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
@@ -7105,6 +7221,13 @@ msgid "RETURN OF"
 msgstr "PALAUTUS"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_lot__rating_ids
+#: model:ir.model.fields,field_description:stock.field_stock_picking__rating_ids
+#: model:ir.model.fields,field_description:stock.field_stock_scrap__rating_ids
+msgid "Ratings"
+msgstr "Arviointi"
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__assigned
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -7778,6 +7901,11 @@ msgid "SSCC:"
 msgstr "SSCC:"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid "STANDARD TERMS AND CONDITIONS OF SALE"
+msgstr "YLEISET MYYNTIEHDOT"
+
+#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
@@ -8124,11 +8252,6 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_stock_general_settings
 msgid "Settings"
 msgstr "Asetukset"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid "Shelf 1"
-msgstr "Hylly 1"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -8783,6 +8906,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr "Erä- tai sarjanumero (%s) liittyy toiseen tuotteeseen."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
 msgid ""
 "The Serial Number (%s) is already used in these location(s): %s.\n"
 "\n"
@@ -8803,6 +8933,19 @@ msgstr "Jälkitilaus %s on luotu."
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
 msgid "The barcode for a location must be unique per company!"
 msgstr "Paikan viivakoodin on oltava yrityskohtaisesti yksilöllinen!"
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"The client explicitly waives its own standard terms and conditions, even if "
+"these were drawn up after these standard terms and conditions of sale. In "
+"order to be valid, any derogation must be expressly agreed to in advance in "
+"writing."
+msgstr ""
+"Asiakas luopuu nimenomaisesti omista yleisistä sopimusehdoistaan, vaikka ne "
+"olisi laadittu näiden yleisten myyntiehtojen jälkeen. Jotta poikkeukset "
+"olisivat päteviä, niistä on sovittava etukäteen kirjallisesti ja "
+"nimenomaisesti."
 
 #. module: stock
 #. odoo-python
@@ -9916,6 +10059,7 @@ msgid "Used to order the 'All Operations' kanban view"
 msgstr "Käytetään tilaukseen \"Kaikki toiminnot\" kanban-näkymää"
 
 #. module: stock
+#: model:ir.model,name:stock.model_res_users
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__user_id
 #: model:res.groups,name:stock.group_stock_user
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -10510,14 +10654,20 @@ msgstr "Jo käytetyn tuotteen tyyppiä ei voi muuttaa."
 
 #. module: stock
 #. odoo-python
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
 #: code:addons/stock/models/stock_orderpoint.py:0
-#, python-format, python-format
+#, python-format
 msgid ""
 "You can not create a snoozed orderpoint that is not manually triggered."
 msgstr ""
+"Et voi luoda torkutettua tilauspistettä, jota ei ole käynnistetty "
+"manuaalisesti."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You can not delete moves linked to another operation"
+msgstr "Et voi poistaa toiseen operaatioon liittyviä siirtoja"
 
 #. module: stock
 #. odoo-python
@@ -10582,6 +10732,9 @@ msgid ""
 "You can only snooze manual orderpoints. You should rather archive 'auto-"
 "trigger' orderpoints if you do not want them to be triggered."
 msgstr ""
+"Voit torkuttaa vain manuaalisia tilauspisteitä. Sinun pitäisi pikemminkin "
+"arkistoida \"automaattisen käynnistyksen\" tilauspisteet, jos et halua, että"
+" ne käynnistyvät."
 
 #. module: stock
 #. odoo-python
@@ -10697,6 +10850,15 @@ msgid ""
 "package through this view. Try adding them to a batch picking and pack it "
 "there."
 msgstr ""
+"Et voi pakata eri siirtojen määriä suoraan samaan pakettiin tämän näkymän "
+"kautta. Kokeile lisätä ne erän poimintaan ja pakkaa se siellä."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "You cannot duplicate stock quants."
+msgstr "Varaston määrän asetuksen kirjauksia (quants) ei voi monistaa."
 
 #. module: stock
 #. odoo-python
@@ -10913,13 +11075,6 @@ msgstr "Sinun on valittava reitti, jonka kautta täydennät tuotteitasi"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-#, python-format
-msgid "You need to set a Serial Number before generating more."
-msgstr "Sinun on määritettävä sarjanumero, ennen kuin voit luoda lisää."
-
-#. module: stock
-#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -10935,6 +11090,11 @@ msgstr ""
 #, python-format
 msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "Tuotteille %s on annettava erä-/sarjanumero."
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid "You should update this document to reflect your T&amp;C."
+msgstr "Sinun on päivitettävä tämä asiakirja vastaamaan T&amp;C:täsi."
 
 #. module: stock
 #. odoo-python
@@ -10975,6 +11135,15 @@ msgstr ""
 "Löydät täältä älykkäitä täydennysehdotuksia, jotka perustuvat varastoennusteisiin.\n"
 "            Valitse ostettava tai valmistettava määrä ja käynnistä tilaukset yhdellä klikkauksella.\n"
 "            Säästääksesi aikaa tulevaisuudessa, aseta säännöt \"automaattisiksi\"."
+
+#. module: stock
+#: model_terms:res.company,lunch_notify_message:stock.res_company_1
+msgid ""
+"Your lunch has been delivered.\n"
+"Enjoy your meal!"
+msgstr ""
+"Lounaanne on toimitettu.\n"
+"Nauti ateriastasi!"
 
 #. module: stock
 #. odoo-python

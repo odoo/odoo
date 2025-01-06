@@ -74,7 +74,12 @@ class Certificate(models.Model):
         public_key_numbers = cert_public.public_key().public_numbers()
 
         rfc4514_attr = dict(element.rfc4514_string().split("=", 1) for element in cert_public.issuer.rdns)
-        issuer = f"CN={rfc4514_attr['CN']}, OU={rfc4514_attr['OU']}, O={rfc4514_attr['O']}, C={rfc4514_attr['C']}"
+
+        # The 'Organizational Unit' field is optional
+        if 'OU' in rfc4514_attr:
+            issuer = f"CN={rfc4514_attr['CN']}, OU={rfc4514_attr['OU']}, O={rfc4514_attr['O']}, C={rfc4514_attr['C']}"
+        else:
+            issuer = f"CN={rfc4514_attr['CN']}, O={rfc4514_attr['O']}, C={rfc4514_attr['C']}"
 
         # Identifiers
         document_id = f"Document-{sha1(etree.tostring(edi_data)).hexdigest()}"

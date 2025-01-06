@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -129,7 +129,7 @@ msgid ""
 " validate the quote."
 msgstr ""
 "<b>Félicitations</b>, votre premier devis est envoyé ! <br>Vérifiez votre "
-"email pour valider le devis."
+"e-mail pour valider le devis."
 
 #. module: sale
 #. odoo-javascript
@@ -1164,15 +1164,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
-"Vous permet de partager le document avec vos clients dans le cadre d'une vente. \n"
-"Laissez ce champ vide si vous ne voulez pas partager ce document avec vos clients.\n"
-"Devis : le document sera envoyé aux clients et est accessible par eux à tout moment. \n"
-"Par exemple, cette option peut être utile pour partager des fichiers de description de produits. \n"
-"Commande confirmée : le document sera envoyé aux clients et est accessible par eux.\n"
-"Par exemple, cette option peut être utile pour partager des manuels d'utilisation ou des contenus numériques achetés dans le cadre d'un eCommerce.\n"
-"Dans le devis : Le document sera inclus dans le PDF du devis entre les pages d'en-tête et le tableau du devis."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1957,7 +1951,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Deliver Content by Email"
-msgstr "Envoyer le contenu par email."
+msgstr "Envoyer le contenu par e-mail."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2261,12 +2255,12 @@ msgstr "Signature électronique"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__paypal_email_account
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Email sent to the customer once the invoice is available."
-msgstr "Email envoyé au client une fois la facture disponible."
+msgstr "E-mail envoyé au client une fois la facture disponible."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -2623,7 +2617,7 @@ msgstr "Facture créée"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Invoice Email Template"
-msgstr "Modèle d'email de facture"
+msgstr "Modèle d'e-mail de facture"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_lines
@@ -3306,7 +3300,7 @@ msgid ""
 "object.partner_id.lang }}."
 msgstr ""
 "Langue de traduction facultative (code ISO) à sélectionner lors de l'envoi "
-"d'un email. Si aucune langue n'est définie, la version anglaise sera "
+"d'un e-mail. Si aucune langue n'est définie, la version anglaise sera "
 "utilisée. Il doit généralement s'agir d'une expression d'espace réservé qui "
 "fournit le langage approprié, par ex. {{ object.partner_id.lang }}."
 
@@ -4150,14 +4144,14 @@ msgid "Sales Analysis"
 msgstr "Analyse des ventes"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_customers
-msgid "Sales Analysis By Customers"
-msgstr "Analyse des ventes par clients"
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
 msgstr "Analyse des ventes par vendeurs"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_customers
+msgid "Sales Analysis Per Customers"
+msgstr "Analyse des ventes par clients"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
@@ -4243,7 +4237,6 @@ msgstr "Bon(s) de commande"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4426,7 +4419,7 @@ msgstr "Envoyer la facture PRO FORMA"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Send a product-specific email once the invoice is validated"
-msgstr "Envoyer un email spécifique quand la facture est validée"
+msgstr "Envoyer un e-mail spécifique quand la facture est validée"
 
 #. module: sale
 #: model:onboarding.onboarding.step,description:sale.onboarding_onboarding_step_sample_quotation
@@ -4441,7 +4434,7 @@ msgstr "Annuler et notifier client"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send by Email"
-msgstr "Envoyer par email"
+msgstr "Envoyer par e-mail"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4465,10 +4458,10 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Accounting tab)."
 msgstr ""
-"L'envoi d'un email est utile lorsque vous avez besoin de partager du contenu"
-" ou des informations spécifiques sur un produit (instructions, règles, "
-"liens, supports, etc.). Créez et définissez le modèle d'email à partir de la"
-" fiche détaillée du produit (dans l'onglet Comptabilité)."
+"L'envoi d'un e-mail est utile lorsque vous avez besoin de partager du "
+"contenu ou des informations spécifiques sur un produit (instructions, "
+"règles, liens, supports, etc.). Créez et définissez le modèle d'e-mail à "
+"partir de la fiche détaillée du produit (dans l'onglet Comptabilité)."
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_cancellation
@@ -4626,7 +4619,7 @@ msgstr "Document d'origine"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_product_email_template
 msgid "Specific Email"
-msgstr "Email spécifique"
+msgstr "E-mail spécifique"
 
 #. module: sale
 #. odoo-python
@@ -4984,7 +4977,6 @@ msgstr ""
 
 #. module: sale
 #. odoo-python
-#. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "The product (%s) has incompatible values: %s"
@@ -5031,11 +5023,6 @@ msgid "The value of the down payment amount must be positive."
 msgstr "La valeur du montant de l'acompte doit être positive."
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
-msgid "There are currently no orders for your account."
-msgstr "Il n'y a actuellement pas de commandes pour votre compte."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
 msgstr "Il n'y a actuellement pas de devis pour votre compte."
@@ -5049,6 +5036,19 @@ msgstr "Il n'y a actuellement pas de commandes pour votre compte."
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "There are existing"
 msgstr "Il y a des"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
+"Il ne semble pas encore y avoir de produit de réduction configuré pour cette"
+" entreprise. Il est possible d'utiliser une remise par ligne ou de demander "
+"à un administrateur d'accorder la remise la première fois."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5088,7 +5088,7 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
-"Le mode de livraison, par ex. carte postale, email ou bannière publicitaire"
+"Le mode de livraison, par ex. carte postale, e-mail ou bannière publicitaire"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__source_id
@@ -5100,7 +5100,7 @@ msgid ""
 "of email list"
 msgstr ""
 "La source du lien, par ex. moteur de recherche, domaine externe ou nom de la"
-" liste d'adresses email"
+" liste d'adresses e-mail"
 
 #. module: sale
 #. odoo-python
@@ -5487,6 +5487,7 @@ msgstr "Avertissement"
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/product_template.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
@@ -5603,7 +5604,7 @@ msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
-"Vous ne pouvez pas changer le status de cette ligne de commande. Nous vous "
+"Vous ne pouvez pas changer le statut de cette ligne de commande. Nous vous "
 "invitons à supprimer cette ligne et à en créer une nouvelle."
 
 #. module: sale
@@ -5626,6 +5627,7 @@ msgstr ""
 "                que ce soit un produit stockable, consommable ou un service."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Vos commandes"

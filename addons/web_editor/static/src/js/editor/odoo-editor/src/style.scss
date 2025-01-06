@@ -34,8 +34,8 @@
         background-color: transparent !important;
     }
     .o_selected_td {
-        background-color: rgba(117, 167, 249, 0.5) !important; /* #bad3fc equivalent when over white*/
-        cursor: pointer !important;
+        box-shadow: 0 0 0 100vmax rgba(117, 167, 249, 0.5) inset; /* #bad3fc equivalent when over white, overlaying on the bg color*/
+        border-collapse: separate;
     }
 }
 .o_table_ui_container {

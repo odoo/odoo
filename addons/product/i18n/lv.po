@@ -4,16 +4,15 @@
 # 
 # Translators:
 # Vladimirs Malejevs <vladimirs.malejevs@ms-idi.eu>, 2023
-# Aleksejs Ivanovs, 2023
+# InfernalLV <karlisdreizis@gmail.com>, 2023
 # JanisJanis <jbojars@gmail.com>, 2023
 # Anzelika Adejanova, 2023
-# InfernalLV <karlisdreizis@gmail.com>, 2023
 # Konstantins Zabogonskis <inculin4ik@gmail.com>, 2023
 # ievaputnina <ievai.putninai@gmail.com>, 2023
 # Arnis Putniņš <arnis@allegro.lv>, 2023
 # Martin Trigaux, 2023
-# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
-# Will Sensors, 2024
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
+# Will Sensors, 2025
 # 
 msgid ""
 msgstr ""
@@ -21,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Will Sensors, 2024\n"
+"Last-Translator: Will Sensors, 2025\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,27 +37,30 @@ msgid ""
 "\n"
 "Note: products that you don't have access to will not be shown above."
 msgstr ""
+"\n"
+"\n"
+"Piezīme: preces, kurām Jums nav piekļuves tiks rādītas augstāk."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
 #: model:ir.model.fields,field_description:product.field_product_template__product_variant_count
 msgid "# Product Variants"
-msgstr "# Produktu varianti"
+msgstr "# Preču varianti"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__product_count
 msgid "# Products"
-msgstr "# Produkti "
+msgstr "# Preces"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "$14.00"
-msgstr ""
+msgstr "$14.00"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "$15.00"
-msgstr ""
+msgstr "$15.00"
 
 #. module: product
 #. odoo-python
@@ -76,7 +78,7 @@ msgstr ""
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "%(percentage)s %% discount and %(price)s surcharge"
-msgstr ""
+msgstr "%(percentage)s %% atlaide un %(price)s piemaksa"
 
 #. module: product
 #. odoo-python
@@ -89,6 +91,7 @@ msgstr "%s %% atlaide"
 #. odoo-python
 #: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
+#: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopija)"
@@ -98,7 +101,7 @@ msgstr "%s (kopija)"
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "%s: end date (%s) should be greater than start date (%s)"
-msgstr ""
+msgstr "%s: beigu datumam (%s) jābūt lielākam nekā sākuma datumam (%s)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_2x7
@@ -107,26 +110,26 @@ msgstr ""
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_4x7
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_dymo
 msgid "'Products Labels - %s' % (object.name)"
-msgstr ""
+msgstr "'Preču uzlīmes - %s' % (object.name)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_packaging
 msgid "'Products packaging - %s' % (object.name)"
-msgstr ""
+msgstr "'Preču iepakojums - %s' % (object.name)"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "(e.g: product description, ebook, legal notice, ...)."
-msgstr ""
+msgstr "(piem., preces apraksts, e-grāmata, juridiskais paziņojums)"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "- Barcode \"%s\" already assigned to product(s): %s"
-msgstr "- Svītrkods \"%s\" jau ir piešķirts produktam: %s"
+msgstr "- Svītrkods \"%s\" jau ir piešķirts precei: %s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -145,22 +148,22 @@ msgstr "1 gads"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "10"
-msgstr ""
+msgstr "10"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "10 Units"
-msgstr ""
+msgstr "10 vienības"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "123456789012"
-msgstr ""
+msgstr "123456789012"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
 msgid "160x80cm, with large legs."
-msgstr ""
+msgstr "160x80cm, ar garām kājām."
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7xprice
@@ -211,26 +214,32 @@ msgid ""
 "                                        Extra Price\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                        Papildus cenas\n"
+"                                    </span>\n"
+"                                    <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                        Papildus cena\n"
+"                                    </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "<span class=\"o_stat_text\"> Products</span>"
-msgstr "<span class=\"o_stat_text\"> Produkti</span>"
+msgstr "<span class=\"o_stat_text\"> Preces</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "<span class=\"o_stat_text\">Related Products</span>"
-msgstr "<span class=\"o_stat_text\">Saistītie produkti</span>"
+msgstr "<span class=\"o_stat_text\">Saistītās preces</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "<span class=\"text-bg-danger\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-danger\">Arhivēts</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "<span class=\"text-bg-secondary\">Variant</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-secondary\">Variants</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -240,12 +249,12 @@ msgstr "<span>%</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>All general settings about this product are managed on</span>"
-msgstr ""
+msgstr "<span>Visi vispārīgie iestatījumi par šo preci tiek pārvaldīti</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "<span>Variant </span>"
-msgstr ""
+msgstr "<span>Variants </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -258,6 +267,8 @@ msgid ""
 "<strong>Save</strong> this page and come back\n"
 "                                here to set up the feature."
 msgstr ""
+"<strong>Saglabājiet</strong> šo lappusi un atgriezieties\n"
+"                                šeit, lai iestatīt šo funkciju."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -267,13 +278,13 @@ msgid ""
 "                        to the loss of their possible customizations."
 msgstr ""
 "<strong>Brīdinājums</strong>: Atribūtu pievienošana vai noņemšana\n"
-"                        atribūtu pievienošana vai dzēšana izdzēsīs un atjaunos esošos \n"
-"                        variantus un novedīs pie to iespējamo pielāgojumu zaudēšanas."
+"                        izdzēsīs un atjaunos esošos variantus un novedīs \n"
+"                        pie to iespējamo pielāgojumu zaudēšanas."
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_barcode_uniq
 msgid "A barcode can only be assigned to one packaging."
-msgstr "Svīrtkods var tikt piešķirts vienai pakai."
+msgstr "Svīrtkods var tikt piešķirts vienam iepakojumam."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -283,16 +294,16 @@ msgid ""
 " This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
-"Produkta apraksts, kuru vēlaties rādīt saviem klientiem. Šis apraksts tiks "
-"kopēts uz katru pārdošanas pasūtījumu, piegādes pasūtījumu un klienta rēķinu"
-" / kredīta piezīmi"
+"Preces apraksts, kuru vēlaties rādīt saviem klientiem. Šis apraksts tiks "
+"kopēts uz katrā pārdošanas pasūtījumā, piegādes pasūtījumā un klienta "
+"rēķinā/kredītrēķinā"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "A packaging already uses the barcode"
-msgstr "Paka jau izmanto svītrkodu"
+msgstr "Iepakojums jau izmanto svītrkodu"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -306,7 +317,7 @@ msgstr ""
 #: code:addons/product/models/product_packaging.py:0
 #, python-format
 msgid "A product already uses the barcode"
-msgstr "Produkts jau izmanto svītrkodu"
+msgstr "Prece jau izmanto svītrkodu"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__detailed_type
@@ -316,9 +327,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Noliktavas produkts ir produkts, kuram Jūs pārvaldat krājumus. Jābūt instalētam \"Inventory\" modulim.\n"
-"Palīgmateriāls ir produkts, kuram krājumi netiek pārvaldīti.\n"
-"Pakalpojums ir nemateriāls produkts, ko jūs sniedzat."
+"Uzglabājama prece ir prece, kurai Jūs pārvaldat atlikumu. Inventāra lietotnei jābūt uzstādītai.\n"
+"Patērējama prece ir prece, kurai atlikums nav pārvaldams.\n"
+"Pakalpojums ir nemateriāla prece, kuru Jūs nodrošinat."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
@@ -363,7 +374,7 @@ msgstr "Aktīvs"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Active Products"
-msgstr "Aktīvie produkti"
+msgstr "Aktīvā prece"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_ids
@@ -384,7 +395,7 @@ msgstr "Aktivitātes izņēmuma noformējums"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_state
 #: model:ir.model.fields,field_description:product.field_product_template__activity_state
 msgid "Activity State"
-msgstr "Aktivitātes stadija"
+msgstr "Aktivitātes stāvoklis"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_type_icon
@@ -410,7 +421,7 @@ msgstr "Pievienot daudzumu"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__additional_product_tag_ids
 msgid "Additional Product Tags"
-msgstr ""
+msgstr "Papildus preču iezīmes"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
@@ -426,12 +437,12 @@ msgstr "Papildus cenu noteikumi (atlaides, formulas)"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__all_product_tag_ids
 msgid "All Product Tag"
-msgstr "Visu produktu iezīmes"
+msgstr "Visu preču iezīmes"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_ids
 msgid "All Product Variants using this Tag"
-msgstr "Visi produktu varianti, kuri izmanot šo iezīmi"
+msgstr "Visi preču varianti, kuri izmanot šo iezīmi"
 
 #. module: product
 #. odoo-python
@@ -440,20 +451,20 @@ msgstr "Visi produktu varianti, kuri izmanot šo iezīmi"
 #: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 #, python-format
 msgid "All Products"
-msgstr "Visi produkti"
+msgstr "Visas preces"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/controllers/product_document.py:0
 #, python-format
 msgid "All files uploaded"
-msgstr ""
+msgstr "Visi augšupielādētie faili"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__is_custom
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__is_custom
 msgid "Allow users to input custom values for this attribute value"
-msgstr ""
+msgstr "Atļaut lietotājiet ievadīt pielāgotas vērtības šī atribūta vērtībai"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_config_settings__group_sale_pricelist
@@ -462,7 +473,7 @@ msgid ""
 "                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
 "Ļauj pārvaldīt dažādas cenas, pamatojoties uz noteikumiem katrai klientu kategorijai. \n"
-"Piemērs: 10% mazumtirgotājiem, reklamēšana 5 EUR par šo produktu utt."
+"Piemērs: 10% mazumtirgotājiem, reklamēšana 5 EUR par šo preci utt."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
@@ -499,7 +510,7 @@ msgstr "Arhivēts"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__sequence
 msgid "Assigns the priority to the list of product vendor."
-msgstr "Piešķir prioritāti produktu piegādātāja sarakstam."
+msgstr "Piešķir prioritāti preču piegādātāja sarakstam."
 
 #. module: product
 #. odoo-javascript
@@ -530,7 +541,7 @@ msgstr "Pielikumu skaits"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__local_url
 msgid "Attachment URL"
-msgstr "Attachment URL"
+msgstr "Pielikuma URL"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__name
@@ -590,14 +601,14 @@ msgstr "Pieejamība"
 #: code:addons/product/static/src/product_catalog/kanban_controller.js:0
 #, python-format
 msgid "Back to Order"
-msgstr ""
+msgstr "Atpakaļ pie pasūtījuma"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_controller.js:0
 #, python-format
 msgid "Back to Quotation"
-msgstr ""
+msgstr "Atpakaļ pie piedāvājuma"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__barcode
@@ -612,6 +623,9 @@ msgid ""
 "Barcode used for packaging identification. Scan this packaging barcode from "
 "a transfer in the Barcode app to move all the contained units"
 msgstr ""
+"Svītrkods izmantots iepakojumu identifikācijai. Noskenējiet šo iepakojuma "
+"svītrkodu pārvietošanai Svītrkoda lietotnē, lai pārvietot visas saturošās "
+"vienības"
 
 #. module: product
 #. odoo-python
@@ -622,7 +636,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Svīrtkods jau piešķirts:\n"
+"Svīrtkods(-i) jau piešķirts(-i):\n"
 "\n"
 "%s"
 
@@ -659,12 +673,12 @@ msgstr "Skapis ar durvīm"
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_1024_be_zoomed
 #: model:ir.model.fields,field_description:product.field_product_template__can_image_1024_be_zoomed
 msgid "Can Image 1024 be zoomed"
-msgstr ""
+msgstr "Var attēls 1024 tikt pietuvināts"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_variant_1024_be_zoomed
 msgid "Can Variant Image 1024 be zoomed"
-msgstr ""
+msgstr "Var varianta attēls 1024 tik pietuvināts"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__purchase_ok
@@ -705,7 +719,7 @@ msgstr "Apakškategorijas"
 #. module: product
 #: model:ir.actions.act_window,name:product.action_open_label_layout
 msgid "Choose Labels Layout"
-msgstr ""
+msgstr "Izvēlieties uzlīmju izkārtojumu"
 
 #. module: product
 #: model:ir.model,name:product.model_product_label_layout
@@ -808,7 +822,7 @@ msgstr "Konfigurēt"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Configure tags"
-msgstr ""
+msgstr "Konfigurēt iezīmes"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
@@ -829,7 +843,7 @@ msgid ""
 "Consumables are physical products for which you don't manage the inventory "
 "level: they are always available."
 msgstr ""
-"Palīgmateriāli ir fiziski produkti, kuriem Jums nav jāpārvalda krājumi: tie "
+"Palīgmateriāli ir fiziska prece, kurai Jūs nepārvaldat krājumu līmeni: tie "
 "vienmēr ir pieejami."
 
 #. module: product
@@ -840,7 +854,7 @@ msgstr "Kontaktpersona"
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Contact Us"
-msgstr "Kontakti"
+msgstr "Sazināties ar mums"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__qty
@@ -899,21 +913,21 @@ msgstr "Izveidot jaunu cenrādi"
 #: model_terms:ir.actions.act_window,help:product.product_template_action
 #: model_terms:ir.actions.act_window,help:product.product_template_action_all
 msgid "Create a new product"
-msgstr "Izveidot jaunu produktu"
+msgstr "Izveidot jaunu preci"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
 msgid "Create a new product variant"
-msgstr "Izveidot jaunu produkta variantu"
+msgstr "Izveidot jaunu preces variantu"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 #, python-format
 msgid "Create a product"
-msgstr ""
+msgstr "Izveidot preci"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
@@ -1011,12 +1025,12 @@ msgstr "Decimāla precizitāte"
 #: code:addons/product/models/res_company.py:0
 #, python-format
 msgid "Default %s pricelist"
-msgstr ""
+msgstr "Noklusējuma %s cenrādis"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price
 msgid "Default Extra Price"
-msgstr ""
+msgstr "Noklusējuma papildus cena"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -1039,7 +1053,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Define a new tag"
-msgstr ""
+msgstr "Definējiet jaunu iezīmi"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -1076,12 +1090,12 @@ msgstr "Rakstāmgalda kombinācija"
 #. module: product
 #: model:product.template,name:product.product_product_22_product_template
 msgid "Desk Stand with Screen"
-msgstr ""
+msgstr "Datora statīvs ar ekrānu"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_3_product_template
 msgid "Desk combination, black-brown: chair + desk + drawer."
-msgstr ""
+msgstr "Galda kombinācija, melni-brūns: krēsls + galds + plaukts."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__sequence
@@ -1123,7 +1137,7 @@ msgstr "Atlaide rindās"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__price_discounted
 msgid "Discounted Price"
-msgstr ""
+msgstr "Cena ar atlaidi"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_discount_per_so_line
@@ -1184,7 +1198,7 @@ msgstr "Dokumenti"
 #: model:ir.model.fields,field_description:product.field_product_product__product_document_count
 #: model:ir.model.fields,field_description:product.field_product_template__product_document_count
 msgid "Documents Count"
-msgstr ""
+msgstr "Dokumentu skaits"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
@@ -1201,7 +1215,7 @@ msgstr "Lejupielādēt"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Download examples"
-msgstr ""
+msgstr "Lejupielādēt piemērus"
 
 #. module: product
 #: model:product.template,name:product.product_product_27_product_template
@@ -1270,7 +1284,7 @@ msgstr ""
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Ergonomic"
-msgstr ""
+msgstr "Ergonomisks"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
@@ -1299,6 +1313,8 @@ msgid ""
 "Extra price for the variant with this attribute value on sale price. eg. 200"
 " price extra, 1000 + 200 = 1200."
 msgstr ""
+"Papildus cena variantam ar šo atribūta vērtību pie pārdošanas cenas. Piem., "
+"200 papildus cena, 1000 + 200 = 1200."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__priority
@@ -1406,7 +1422,7 @@ msgstr "Ģenerēt cenrāža atskaiti"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Get product pictures using Barcode"
-msgstr ""
+msgstr "Iegūt preces attēlus izmantojot Svītrkodu"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__packaging_ids
@@ -1521,7 +1537,8 @@ msgstr "Ja atzīmēts, dažiem ziņojumiem ir piegādes kļūda."
 msgid ""
 "If not set, the vendor price will apply to all variants of this product."
 msgstr ""
-"Ja naviestatīts, visiem šī produkta variantiem tiks piemērota pārdevēja cena"
+"Ja nav iestatīts, pārdevēja cena tiks pielietota visiem šīs preces "
+"variantiem."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
@@ -1571,17 +1588,17 @@ msgstr "Attēls 512"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__image_height
 msgid "Image Height"
-msgstr ""
+msgstr "Attēla augstums"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__image_src
 msgid "Image Src"
-msgstr ""
+msgstr "Attēla avots"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__image_width
 msgid "Image Width"
-msgstr ""
+msgstr "Attēla platums"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -1838,7 +1855,7 @@ msgstr "Ziņojumi"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__mimetype
 msgid "Mime Type"
-msgstr "Mime Type"
+msgstr "Mime tips"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -1943,7 +1960,7 @@ msgstr ""
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 #, python-format
 msgid "No products could be found."
-msgstr ""
+msgstr "Prece nav atrasta."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -2054,7 +2071,7 @@ msgstr "Cits cenrādis"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "Package Type A"
-msgstr ""
+msgstr "Iepakojuma tips A"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
@@ -2087,14 +2104,14 @@ msgstr "Procentuālā cena"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__pills
 msgid "Pills"
-msgstr ""
+msgstr "Tabletes"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 #, python-format
 msgid "Please enter a positive whole number."
-msgstr ""
+msgstr "Lūdzu, ievadiet pozitīvu veselu skaitli."
 
 #. module: product
 #. odoo-python
@@ -2106,20 +2123,24 @@ msgid ""
 "\n"
 "Invalid URL: %s"
 msgstr ""
+"Lūdzu, ievadiet derīgu URL.\n"
+"Piemērs: https://www.odoo.com\n"
+"\n"
+"Nederīgs URL: %s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "Please specify the category for which this rule should be applied"
-msgstr ""
+msgstr "Lūdzu, norādiet kategoriju, kurai tiks pielietots šis noteikums"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "Please specify the product for which this rule should be applied"
-msgstr ""
+msgstr "Lūdzu, norādiet preci, kurai tiks pielietots šis noteikums"
 
 #. module: product
 #. odoo-python
@@ -2127,7 +2148,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Please specify the product variant for which this rule should be applied"
-msgstr ""
+msgstr "Lūdzu, norādiet preces variantu, kuram tiks pielietots šis noteikums"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__1
@@ -2185,7 +2206,7 @@ msgstr "Cenas uzcenojums"
 #: model:ir.model.fields,help:product.field_product_product__list_price
 #: model:ir.model.fields,help:product.field_product_template__list_price
 msgid "Price at which the product is sold to customers."
-msgstr "Cena, par kādu produkts tiek pārdots klientiem."
+msgstr "Cena, par kādu prece tiek pārdota klientiem."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_kanban_view
@@ -2212,7 +2233,7 @@ msgstr "Cenu lapa"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__applied_on
 msgid "Pricelist Item applicable on selected option"
-msgstr "Cenrāža vienums, kas piemērojams izvēlētajai opcijai"
+msgstr "Cenrāža vienums piemērojams izvēlētajai opcijai"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__name
@@ -2250,7 +2271,7 @@ msgstr "Cenrādis:"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_pricelist
 #: model:ir.model.fields,field_description:product.field_res_country_group__pricelist_ids
 msgid "Pricelists"
-msgstr "Cenu lapas"
+msgstr "Cenrāži"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_pricelist_setting
@@ -2304,35 +2325,35 @@ msgstr "Drukāt uzlīmes"
 #: model_terms:ir.ui.view,arch_db:product.product_view_kanban_catalog
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Product"
-msgstr "Produkts"
+msgstr "Prece"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_form
 msgid "Product Attribute"
-msgstr "Produkta atribūts"
+msgstr "Preces atribūts"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr "Produkta atribūta pielāgota vērtība"
+msgstr "Preces atribūta pielāgota vērtība"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_template_value_ids
 msgid "Product Attribute Values"
-msgstr "Produkta atribūtu vērtības"
+msgstr "Preces atribūta vērtības"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
 msgid "Product Attribute and Values"
-msgstr "Produkta ateibūti un vērtības"
+msgstr "Preces atribūti un vērtības"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_template__attribute_line_ids
 msgid "Product Attributes"
-msgstr "Produkta atribūti"
+msgstr "Preces atribūti"
 
 #. module: product
 #: model:ir.model,name:product.model_product_catalog_mixin
@@ -2344,7 +2365,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_category_list_view
 #: model_terms:ir.ui.view,arch_db:product.product_category_search_view
 msgid "Product Categories"
-msgstr "Produktu kategorijas"
+msgstr "Preču kategorijas"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
@@ -2357,42 +2378,42 @@ msgstr "Produktu kategorijas"
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Product Category"
-msgstr "Produkta Kategorija"
+msgstr "Preces kategorija"
 
 #. module: product
 #: model:ir.model,name:product.model_product_document
 msgid "Product Document"
-msgstr "Produkta dokuments"
+msgstr "Preces dokuments"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_dymo
 msgid "Product Label (PDF)"
-msgstr "Produkta cenu zīme (PDF)"
+msgstr "Preces cenu zīme (PDF)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_2x7
 msgid "Product Label 2x7 (PDF)"
-msgstr ""
+msgstr "Preces cenu zīme 2x7 (PDF)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_4x12
 msgid "Product Label 4x12 (PDF)"
-msgstr ""
+msgstr "Preces cenu zīme 4x12 (PDF)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_4x12_noprice
 msgid "Product Label 4x12 No Price (PDF)"
-msgstr ""
+msgstr "Preces cenu zīme 4x12 Bez cenas (PDF)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_4x7
 msgid "Product Label 4x7 (PDF)"
-msgstr ""
+msgstr "Preces cenu zīme 4x7 (PDF)"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel_dymo
 msgid "Product Label Report"
-msgstr ""
+msgstr "Preces cenu zīmes atskaite"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel2x7
@@ -2419,49 +2440,49 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Product Name"
-msgstr "Produkta nosaukums"
+msgstr "Preces nosaukums"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__packaging_ids
 #: model:ir.model.fields,field_description:product.field_product_template__packaging_ids
 msgid "Product Packages"
-msgstr "Produkta iepakojumi"
+msgstr "Preces iepakojumi"
 
 #. module: product
 #: model:ir.model,name:product.model_product_packaging
 #: model:ir.model.fields,field_description:product.field_product_packaging__name
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Product Packaging"
-msgstr "Produkta iepakojums"
+msgstr "Preces iepakojums"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_packaging
 msgid "Product Packaging (PDF)"
-msgstr "Produkta iepakojums (PDF)"
+msgstr "Preces iepakojums (PDF)"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_stock_packaging
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_tree_view
 msgid "Product Packagings"
-msgstr "Produktu iepakojumi"
+msgstr "Preces iepakojumi"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__product_properties_definition
 msgid "Product Properties"
-msgstr ""
+msgstr "Preces īpašības"
 
 #. module: product
 #: model:ir.model,name:product.model_product_tag
 #: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 msgid "Product Tag"
-msgstr ""
+msgstr "Preces iezīme"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_tag_action
 #: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
 msgid "Product Tags"
-msgstr "Proodukta iezīmes"
+msgstr "Preces iezīmes"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_tmpl_id
@@ -2472,40 +2493,40 @@ msgstr "Proodukta iezīmes"
 #: model_terms:ir.ui.view,arch_db:product.product_search_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Product Template"
-msgstr "Produkta Veidne"
+msgstr "Preces viedne"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_exclusion
 msgid "Product Template Attribute Exclusion"
-msgstr "Produktu veidnes atribūtu izslēgšana"
+msgstr "Prečes veidnes atribūta izslēgšana"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr "Produktu veidnes atribūtu rinda"
+msgstr "Preces veidnes atribūta rinda"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_value
 msgid "Product Template Attribute Value"
-msgstr ""
+msgstr "Preces veidnes atribūta vērtība"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_tag_ids
 #: model:ir.model.fields,field_description:product.field_product_template__product_tag_ids
 msgid "Product Template Tags"
-msgstr ""
+msgstr "Preces veidnes iezīmes"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_template_ids
 #: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_view_tree_tag
 msgid "Product Templates"
-msgstr ""
+msgstr "Preces veidnes"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__product_tmpl_ids
 msgid "Product Tmpl"
-msgstr ""
+msgstr "Produkts Tmpl"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_tooltip
@@ -2519,12 +2540,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Product Type"
-msgstr "Produkta Tips"
+msgstr "Preces tips"
 
 #. module: product
 #: model:ir.model,name:product.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr "Produkta Mērvienība"
+msgstr "Preces mērvienība"
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
@@ -2535,14 +2556,14 @@ msgstr "Produkta Mērvienība"
 #: model_terms:ir.ui.view,arch_db:product.product_normal_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
 msgid "Product Variant"
-msgstr "Produkta variants"
+msgstr "Preces variants"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 #, python-format
 msgid "Product Variant Values"
-msgstr "Produkta variantu vērtības"
+msgstr "Preces varianta vērtības"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
@@ -2554,7 +2575,7 @@ msgstr "Produkta variantu vērtības"
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_tree_tag
 #: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 msgid "Product Variants"
-msgstr "Produktu Varianti"
+msgstr "Preces varianti"
 
 #. module: product
 #. odoo-python
@@ -2562,13 +2583,14 @@ msgstr "Produktu Varianti"
 #, python-format
 msgid "Product model not defined, Please contact your administrator."
 msgstr ""
+"Preces modelis nav definēts, lūdzu, sazinieties ar Jūsu administratoru."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "Product: %s"
-msgstr ""
+msgstr "Prece: %s"
 
 #. module: product
 #. odoo-python
@@ -2584,18 +2606,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 #, python-format
 msgid "Products"
-msgstr "Produkti"
+msgstr "Preces"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
 msgid "Products Price"
-msgstr "Produkta cena"
+msgstr "Preču cena"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_tree
 msgid "Products Price List"
-msgstr "Produktu cenu lapas"
+msgstr "Preču cenrādis"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
@@ -2605,19 +2627,19 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
 msgid "Products Price Search"
-msgstr "Produktu cenu meklēšana"
+msgstr "Preču cenu meklēšana"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "Products: %(category)s"
-msgstr ""
+msgstr "Preces; %(category)s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_loyalty
 msgid "Promotions, Coupons, Gift Card & Loyalty Program"
-msgstr ""
+msgstr "Piedāvājumi, kuponi, dāvanu kartes & lojalitātes programmas"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_properties
@@ -2634,7 +2656,7 @@ msgstr "Pirkšana"
 #: model:ir.model.fields,field_description:product.field_product_product__description_purchase
 #: model:ir.model.fields,field_description:product.field_product_template__description_purchase
 msgid "Purchase Description"
-msgstr "Iepirkuma aprakts"
+msgstr "Pirkuma apraksts"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
@@ -2647,12 +2669,12 @@ msgstr "Pirkšanas mērvienība"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 #, python-format
 msgid "Quantities"
-msgstr "Quantities"
+msgstr "Daudzumi"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Quantities (Price)"
-msgstr ""
+msgstr "Daudzumi (Cena)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__custom_quantity
@@ -2695,17 +2717,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_attribute__product_tmpl_ids
 #, python-format
 msgid "Related Products"
-msgstr ""
+msgstr "Saistītās preces"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__ptav_product_variant_ids
 msgid "Related Variants"
-msgstr ""
+msgstr "Saistītie varianti"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__ir_attachment_id
 msgid "Related attachment"
-msgstr ""
+msgstr "Saistītais pielikums"
 
 #. module: product
 #. odoo-javascript
@@ -2719,7 +2741,7 @@ msgstr "Noņemt"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 #, python-format
 msgid "Remove quantity"
-msgstr ""
+msgstr "Noņemt daudzumu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__res_field
@@ -2751,7 +2773,7 @@ msgstr "Atbildīgie lietotāji"
 #. module: product
 #: model:product.template,name:product.expense_product_product_template
 msgid "Restaurant Expenses"
-msgstr ""
+msgstr "Restorāta izdevumi"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2778,7 +2800,7 @@ msgstr "Tirdzniecība"
 #: model:ir.model.fields,field_description:product.field_product_template__description_sale
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Sales Description"
-msgstr "Tirdzniecības apraksts"
+msgstr "Pārdošanas apraksts"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_sale_product_matrix
@@ -2798,7 +2820,7 @@ msgstr "Pārdošanas cena"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__lst_price
 msgid "Sales Price"
-msgstr ""
+msgstr "Pārdošana Cena"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__select
@@ -2846,7 +2868,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist__discount_policy__without_discount
 msgid "Show public price & discount to the customer"
-msgstr "Show public price & discount to the customer"
+msgstr "Rādīt publisko cenu & atlaidi klientam"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__categ_id
@@ -2854,8 +2876,8 @@ msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
 msgstr ""
-"Norādiet produktu kategoriju, ja šis noteikums attiecas tikai uz produktiem,"
-" kas pieder šai kategorijai vai tās apakškategorijām. Citādi turiet tukšu."
+"Norādiet preces kategoriju, ja šis noteikums pielietojas tikai uz precēm, "
+"kas pieder šai kategorijai vai tās apakškategorijām. Citādi turiet tukšu."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_id
@@ -2863,8 +2885,8 @@ msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
 msgstr ""
-"Norādiet produktu, ja šis noteikums attiecas tikai uz vienu produktu. Citādi"
-" turiet tukšu."
+"Norādiet preci, ja šis noteikums pielietojas tikai uz vienu preci. Citādi "
+"turiet tukšu."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_tmpl_id
@@ -2872,7 +2894,7 @@ msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
 msgstr ""
-"Norādiet veidni, ja šis noteikums attiecas tikai uz vienu produktu veidni. "
+"Norādiet veidni, ja šis noteikums pielietojas tikai uz vienu preces veidni. "
 "Citādi turiet tukšu."
 
 #. module: product
@@ -2901,7 +2923,7 @@ msgstr "Sākuma datums"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__date_start
 msgid "Start date for this vendor price"
-msgstr "Sākuma datums šai pārdošanas cenai"
+msgstr "Sākuma datums šī piegādātāja cenai"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__date_start
@@ -2933,7 +2955,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_7_product_template
 msgid "Storage Box"
-msgstr ""
+msgstr "Uzglabāšanas kaste"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__store_fname
@@ -2948,12 +2970,12 @@ msgstr "Piegādātāja cenrādis"
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Iezīmes nosaukums jau pastāv!"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Tags"
-msgstr "Birkas"
+msgstr "Iezīmes"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
@@ -2996,7 +3018,7 @@ msgstr ""
 msgid ""
 "The computed price is expressed in the default Unit of Measure of the "
 "product."
-msgstr "Aprēķinātā cena tiek izteikta produkta noklusējuma mērvienībā."
+msgstr "Aprēķinātā cena tiek izteikta preces noklusējuma mērvienībā."
 
 #. module: product
 #. odoo-python
@@ -3019,7 +3041,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__sequence
 msgid "The first in the sequence is the default one."
-msgstr "Pirmais secībā ir noklusējuma."
+msgstr "Pirmais secībā ir pēc noklusējuma."
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -3041,7 +3063,7 @@ msgid ""
 "The number of products under this category (Does not consider the children "
 "categories)"
 msgstr ""
-"Šajā kategorijā ietilpstošo produktu skaits (netiek ņemtas vērā "
+"Šajā kategorijā ietilpstošo preču skaits (netiek ņemtas vērā "
 "apakškategorijas)"
 
 #. module: product
@@ -3088,7 +3110,7 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Configure"
 " Variants' button to set the extra attribute prices."
 msgstr ""
-"Pārdošanas cena tiek pārvaldīta no produkta veidnes. Noklikšķiniet uz pogas "
+"Pārdošanas cena tiek pārvaldīta no preces veidnes. Noklikšķiniet uz pogas "
 "“Konfigurēt variantus”, lai iestatītu papildu atribūtu cenas."
 
 #. module: product
@@ -3216,7 +3238,7 @@ msgstr "Reģistrētās izņēmuma aktivitātes veids."
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "UOM"
-msgstr ""
+msgstr "Vienības mērvienība"
 
 #. module: product
 #. odoo-python
@@ -3242,20 +3264,20 @@ msgstr "Vienības cena"
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_uom
 #: model:ir.model.fields,field_description:product.field_product_template__uom_id
 msgid "Unit of Measure"
-msgstr "Mērvienība"
+msgstr "Vienības mērvienība"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__uom_name
 msgid "Unit of Measure Name"
-msgstr "Mērvienības nosaukums"
+msgstr "Vienības mērvienības nosaukums"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 #, python-format
 msgid "Unit price:"
-msgstr ""
+msgstr "Vienības cena:"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -3266,7 +3288,7 @@ msgstr "Vienības"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Units of Measure"
-msgstr "Mērvienības"
+msgstr "Vienību mērvienības"
 
 #. module: product
 #. odoo-javascript
@@ -3280,7 +3302,7 @@ msgstr "Augšupielādēt"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Upload files to your product"
-msgstr ""
+msgstr "Augšupielādējiet failus Jūsu precei"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -3304,7 +3326,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
 msgid "Used on Products"
-msgstr ""
+msgstr "Izmantots Precēs"
 
 #. module: product
 #. odoo-javascript
@@ -3334,12 +3356,12 @@ msgstr "Vērtība"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__value_count
 msgid "Value Count"
-msgstr ""
+msgstr "Vērtības skaits"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
 msgid "Value Price Extra"
-msgstr ""
+msgstr "Vērtības papildus cena"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__standard_price
@@ -3361,7 +3383,7 @@ msgstr "Vērtības"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 msgid "Variant"
-msgstr ""
+msgstr "Variants"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_variant_count
@@ -3376,38 +3398,38 @@ msgstr "Varianta attēls"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1024
 msgid "Variant Image 1024"
-msgstr ""
+msgstr "Varianta attēls 1024"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_128
 msgid "Variant Image 128"
-msgstr ""
+msgstr "Varianta attēls 128"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_256
 msgid "Variant Image 256"
-msgstr ""
+msgstr "Varianta attēls 256"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_512
 msgid "Variant Image 512"
-msgstr ""
+msgstr "Varianta attēls 512"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Variant Information"
-msgstr "Variantu informācija"
+msgstr "Varianta informācija"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__price_extra
 msgid "Variant Price Extra"
-msgstr "Variantu papildus cena"
+msgstr "Varianta papildus cena"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__variant_seller_ids
 #: model:ir.model.fields,field_description:product.field_product_template__variant_seller_ids
 msgid "Variant Seller"
-msgstr "Variantu pārdevējs"
+msgstr "Varianta pārdevējs"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_template_variant_value_ids
@@ -3420,7 +3442,7 @@ msgstr "Varianta vērtības"
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "Variant: %s"
-msgstr ""
+msgstr "Variants: %s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
@@ -3433,7 +3455,7 @@ msgstr "Varianti"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
 msgid "Variants Creation Mode"
-msgstr ""
+msgstr "Variantu izveidošanas režīms"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__partner_id
@@ -3445,13 +3467,13 @@ msgstr "Pārdevējs"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Vendor Bills"
-msgstr "Iepirkumu rēķini"
+msgstr "Piegādātāja rēķini"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 msgid "Vendor Information"
-msgstr "Pārdevēja informācija"
+msgstr "Piegādātāja informācija"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
@@ -3461,18 +3483,18 @@ msgstr "Piegādātāja cenrādis"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_code
 msgid "Vendor Product Code"
-msgstr "Pārdevēja produkta kods"
+msgstr "Piegādātāja preces kods"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_name
 msgid "Vendor Product Name"
-msgstr "Pārdevēja produkta nosaukums"
+msgstr "Piegādātāja preces nosaukums"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__seller_ids
 #: model:ir.model.fields,field_description:product.field_product_template__seller_ids
 msgid "Vendors"
-msgstr "Pārdevēji"
+msgstr "Piegādātāji"
 
 #. module: product
 #: model:product.template,name:product.product_product_2_product_template
@@ -3496,12 +3518,12 @@ msgstr "Balss"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Volume"
-msgstr "Skaļums"
+msgstr "Tilpums"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_volume_volume_in_cubic_feet
 msgid "Volume unit of measure"
-msgstr ""
+msgstr "Tilpuma vienības mērvienība"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__volume_uom_name
@@ -3539,13 +3561,13 @@ msgstr "Svars"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_weight_in_lbs
 msgid "Weight unit of measure"
-msgstr "Svara mērvienība"
+msgstr "Svara vienības mērvienība"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr "Svara mērvienības birka"
+msgstr "Svara vienības mērvienības cenuzīme"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
@@ -3763,6 +3785,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                            whether it's a storable product, a consumable or a service."
 msgstr ""
+"Jums ir jādefinē prece visam ko Jūs pārdodat vai iegādājaties,\n"
+"                             neatkarīgi no tā, vai tā ir uzglabājama prece, patērējama prece vai pakalpojums."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
@@ -3771,8 +3795,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
-"Visam pārdotajam vai iegādātajam produktam ir jādefinē produkts,\n"
-"                neatkarīgi no tā, vai tas ir uzglabājams produkts, patēriņa prece vai pakalpojums."
+"Jums ir jādefinē prece visam ko Jūs pārdodat vai iegādājaties,\n"
+"                neatkarīgi no tā, vai tā ir uzglabājama prece, patērējama prece vai pakalpojums."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
@@ -3782,6 +3806,10 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
+"Jums ir jādefinē prece visam ko Jūs pārdodat vai iegādājaties,\n"
+"                neatkarīgi no tā, vai tā ir uzglabājama prece, patērējama prece vai pakalpojums.\n"
+"                Preces forma satur informāciju, lai atvieglot tirdzniecības procesu:\n"
+"                cena, piezīmes piedāvājumos, grāmatvedības dati, iepirkumu metodes, u.c."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
@@ -3815,7 +3843,7 @@ msgstr "dienas"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "e.g. Cheese Burger"
-msgstr ""
+msgstr "piemēram, Siera burgeris"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view

@@ -628,7 +628,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
         events = recurrence.calendar_event_ids.sorted('start')
         self.assertEqual(len(events), 2)
-        self.assertEqual(recurrence.rrule, 'FREQ=WEEKLY;COUNT=2;BYDAY=WE')
+        self.assertEqual(recurrence.rrule, 'RRULE:FREQ=WEEKLY;COUNT=2;BYDAY=WE')
         self.assertEqual(events[0].start_date, date(2020, 1, 8))
         self.assertEqual(events[1].start_date, date(2020, 1, 15))
         self.assertEqual(events[0].google_id, '%s_20200108' % google_id)
@@ -671,7 +671,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
         events = recurrence.calendar_event_ids.sorted('start')
         self.assertEqual(len(events), 2)
-        self.assertEqual(recurrence.rrule, 'FREQ=WEEKLY;COUNT=2;BYDAY=MO')
+        self.assertEqual(recurrence.rrule, 'RRULE:FREQ=WEEKLY;COUNT=2;BYDAY=MO')
         self.assertEqual(events.mapped('name'), ['coucou again', 'coucou again'])
         self.assertEqual(events[0].start_date, date(2020, 1, 6))
         self.assertEqual(events[1].start_date, date(2020, 1, 13))
@@ -724,7 +724,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
         events = recurrence.calendar_event_ids.sorted('start')
         self.assertEqual(len(events), 3)
-        self.assertEqual(recurrence.rrule, 'FREQ=WEEKLY;COUNT=3;BYDAY=MO')
+        self.assertEqual(recurrence.rrule, 'RRULE:FREQ=WEEKLY;COUNT=3;BYDAY=MO')
         self.assertEqual(events.mapped('name'), ['coucou again', 'coucou again', 'coucou again'])
         self.assertEqual(events[0].start, datetime(2021, 2, 15, 8, 0, 0))
         self.assertEqual(events[1].start, datetime(2021, 2, 22, 16, 0, 0))
@@ -923,7 +923,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'summary': 'Pricing new update',
             'visibility': 'public',
             'recurrence': ['EXDATE;TZID=Europe/Rome:20200113',
-                           'RRULE:FREQ=WEEKLY;COUNT=3;BYDAY=MO'],
+                           'RRULE;X-EVOLUTION-ENDDATE=20200120:FREQ=WEEKLY;COUNT=3;BYDAY=MO;X-RELATIVE=1'],
             'reminders': {'useDefault': True},
             'start': {'date': '2020-01-6'},
             'end': {'date': '2020-01-7'},

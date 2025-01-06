@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-15 06:37+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-12-23 23:00+0000\n"
 "Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -36,7 +36,7 @@ msgstr "Anzeigename des Audit-Protokolls des Kontos"
 #. module: account_audit_trail
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
 msgid "Activate Audit Trail"
-msgstr "Audit Trail aktivieren"
+msgstr "Prüfpfad aktivieren"
 
 #. module: account_audit_trail
 #: model:ir.actions.act_window,name:account_audit_trail.action_account_audit_trail_report
@@ -45,7 +45,7 @@ msgstr "Audit Trail aktivieren"
 #: model:ir.ui.menu,name:account_audit_trail.account_audit_trail_menu
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
 msgid "Audit Trail"
-msgstr "Audit Trail"
+msgstr "Prüfpfad"
 
 #. module: account_audit_trail
 #: model:ir.model,name:account_audit_trail.model_account_bank_statement_line
@@ -58,8 +58,7 @@ msgstr "Kontoauszugszeile"
 #, python-format
 msgid "Can't disable audit trail when there are existing records."
 msgstr ""
-"Audit Trail kann nicht deaktiviert werden, solange es bestehende Einträge "
-"gibt."
+"Prüfpfad kann nicht deaktiviert werden, solange es bestehende Einträge gibt."
 
 #. module: account_audit_trail
 #. odoo-python
@@ -108,7 +107,7 @@ msgstr "Beschreibung"
 #. module: account_audit_trail
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
 msgid "Go to Audit Trail"
-msgstr "Zu Audit Trail gehen"
+msgstr "Zum Prüfpfad gehen"
 
 #. module: account_audit_trail
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
@@ -127,6 +126,11 @@ msgstr "Journalbuchung"
 #: model:ir.model,name:account_audit_trail.model_mail_tracking_value
 msgid "Mail Tracking Value"
 msgstr "Wert für E-Mail-Verfolgung"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Assistent zum Zusammenführen von Partnern"
 
 #. module: account_audit_trail
 #: model:ir.model,name:account_audit_trail.model_mail_message
@@ -192,7 +196,7 @@ msgid ""
 "To keep the audit trail, you can not delete journal entries once they have been posted.\n"
 "Instead, you can cancel the journal entry."
 msgstr ""
-"Um den Audit Trail beizubehalten, können Sie Journalbuchungen nicht mehr löschen, nachdem sie gebucht wurden.\n"
+"Um den Prüfpfad beizubehalten, können Sie Journalbuchungen nicht mehr löschen, nachdem sie gebucht wurden.\n"
 "Stattdessen können Sie die Journalbuchung stornieren."
 
 #. module: account_audit_trail
@@ -200,7 +204,7 @@ msgstr ""
 msgid ""
 "To see the audit log you have to enable the audit trail option from settings"
 msgstr ""
-"Um das Audit-Protokoll zu sehen, müssen Sie die Option Audit Trail in den "
+"Um das Prüfpfad-Protokoll zu sehen, müssen Sie die Option „Prüfpfad“ in den "
 "Einstellungen deaktivieren."
 
 #. module: account_audit_trail
@@ -222,5 +226,5 @@ msgstr "Aktualisiert"
 msgid ""
 "You cannot remove parts of the audit trail. Archive the record instead."
 msgstr ""
-"Sie können diese Teile des Audit Trail nicht entfernen. Archivieren Sie "
+"Sie können diese Teile des Prüfpfad nicht entfernen. Archivieren Sie "
 "stattdessen den Datensatz."

@@ -295,11 +295,13 @@ actual arch.
             arch = False
             if mode == 'soft':
                 arch = view.arch_prev
+                write_dict = {'arch_db': arch}
             elif mode == 'hard' and view.arch_fs:
                 arch = view.with_context(read_arch_from_file=True, lang=None).arch
+                write_dict = {'arch_db': arch, 'arch_prev': False, 'arch_updated': False}
             if arch:
                 # Don't save current arch in previous since we reset, this arch is probably broken
-                view.with_context(no_save_prev=True, lang=None).write({'arch_db': arch})
+                view.with_context(no_save_prev=True, lang=None).write(write_dict)
 
     @api.depends('write_date')
     def _compute_model_data_id(self):
@@ -376,7 +378,7 @@ actual arch.
                 err = ValidationError(_(
                     "Error while parsing or validating view:\n\n%(error)s",
                     error=tools.ustr(e),
-                    view=self.key or self.id,
+                    view=view.key or view.id,
                 )).with_traceback(e.__traceback__)
                 err.context = getattr(e, 'context', None)
                 raise err from None
@@ -1771,6 +1773,8 @@ actual arch.
             elif node.tag == 'input' and node.get('type') in ('button', 'submit', 'reset'):
                 pass
             elif any(klass in classes for klass in ('btn-group', 'btn-toolbar', 'btn-addr')):
+                pass
+            elif node.tag == 'field' and node.get('widget') == 'url':
                 pass
             else:
                 msg = ("A simili button must be in tag a/button/select or tag `input` "

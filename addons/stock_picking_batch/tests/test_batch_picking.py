@@ -829,8 +829,11 @@ class TestBatchPicking02(TransactionCase):
         })
         batch.action_confirm()
         action = batch.action_done()
+        # Picking_1 should be detached from the batch after the wizard and picking_2 are validated.
+        self.assertEqual(batch.picking_ids, picking_1 | picking_2)
         Form(self.env[action['res_model']].with_context(action['context'])).save().process_cancel_backorder()
         self.assertEqual(batch.state, 'done')
+        self.assertEqual(batch.picking_ids, picking_2)
 
     def test_backorder_batching(self):
         """
@@ -999,6 +1002,138 @@ class TestBatchPicking02(TransactionCase):
             {'quantity': 2.0, 'picked': True},
             {'quantity': 2.0, 'picked': True},
         ])
+
+    def test_backorder_batching_3(self):
+        """
+        Check that pickings are still linked to the batch after validation
+        when backorders are skipped in autobacth
+        """
+        warehouse = self.env.ref('stock.warehouse0')
+        warehouse.int_type_id.write({
+            'auto_batch': True,
+            'batch_group_by_destination': True,
+        })
+        productA, productB = self.productA, self.productB
+        partner = self.env['res.partner'].create({'name': 'Mr. Belougat'})
+
+        # Create and validate a batch with 2 pickings where 1 of them is to partially backorder
+        pickings = self.env['stock.picking'].create([
+            {
+                'picking_type_id': warehouse.int_type_id.id,
+                'company_id': self.env.company.id,
+                'partner_id': partner.id,
+            } for _ in range(2)
+        ])
+        self.env['stock.move'].create([
+            {
+                'name': productA.name,
+                'product_id': productA.id,
+                'product_uom_qty': 1.0,
+                'product_uom': productA.uom_id.id,
+                'picking_id': pickings[0].id,
+                'location_id': pickings[0].location_id.id,
+                'location_dest_id': pickings[0].location_dest_id.id,
+            },
+            {
+                'name': productB.name,
+                'product_id': productB.id,
+                'product_uom_qty': 4.0,
+                'product_uom': productB.uom_id.id,
+                'picking_id': pickings[0].id,
+                'location_id': pickings[0].location_id.id,
+                'location_dest_id': pickings[0].location_dest_id.id,
+            },
+            {
+                'name': productA.name,
+                'product_id': productA.id,
+                'product_uom_qty': 1.0,
+                'product_uom': productA.uom_id.id,
+                'picking_id': pickings[1].id,
+                'location_id': pickings[1].location_id.id,
+                'location_dest_id': pickings[1].location_dest_id.id,
+            },
+        ])
+        pickings.action_confirm()
+        batch = self.env['stock.picking.batch'].create({
+            'picking_ids': [Command.link(pickings[0].id), Command.link(pickings[1].id)],
+            'picking_type_id': warehouse.int_type_id.id,
+        })
+        batch.action_confirm()
+        # Partially pick the quantities of only one of the 2 pickings
+        # The second picking should be removed from the batch and added to an other one
+        pickings.move_ids.filtered(lambda m: m.product_id == productA).quantity = 1.0
+        moveB = pickings.move_ids.filtered(lambda m: m.product_id == productB)
+        moveB.quantity = 4.0
+        moveB.picked = True
+        batch.with_context(skip_backorder=True).action_done()
+        self.assertEqual(batch.picking_ids, pickings[0])
+        self.assertEqual(batch.state, 'done')
+        self.assertTrue(pickings[1].batch_id)
+
+    def test_backorder_batching_4(self):
+        """
+        Check that pickings are still linked to the batch after validation
+        when backorders are skipped without autobacth
+        """
+        warehouse = self.env.ref('stock.warehouse0')
+        warehouse.int_type_id.auto_batch = False
+        productA, productB = self.productA, self.productB
+        partner = self.env['res.partner'].create({'name': 'Mr. Belougat'})
+
+        # Create and validate a batch with 2 pickings where 1 of them is to partially backorder
+        pickings = self.env['stock.picking'].create([
+            {
+                'picking_type_id': warehouse.int_type_id.id,
+                'company_id': self.env.company.id,
+                'partner_id': partner.id,
+            } for _ in range(2)
+        ])
+        self.env['stock.move'].create([
+            {
+                'name': productA.name,
+                'product_id': productA.id,
+                'product_uom_qty': 1.0,
+                'product_uom': productA.uom_id.id,
+                'picking_id': pickings[0].id,
+                'location_id': pickings[0].location_id.id,
+                'location_dest_id': pickings[0].location_dest_id.id,
+            },
+            {
+                'name': productB.name,
+                'product_id': productB.id,
+                'product_uom_qty': 4.0,
+                'product_uom': productB.uom_id.id,
+                'picking_id': pickings[0].id,
+                'location_id': pickings[0].location_id.id,
+                'location_dest_id': pickings[0].location_dest_id.id,
+            },
+            {
+                'name': productA.name,
+                'product_id': productA.id,
+                'product_uom_qty': 1.0,
+                'product_uom': productA.uom_id.id,
+                'picking_id': pickings[1].id,
+                'location_id': pickings[1].location_id.id,
+                'location_dest_id': pickings[1].location_dest_id.id,
+            },
+        ])
+        pickings.action_confirm()
+        batch = self.env['stock.picking.batch'].create({
+            'picking_ids': [Command.link(pickings[0].id), Command.link(pickings[1].id)],
+            'picking_type_id': warehouse.int_type_id.id,
+        })
+        batch.action_confirm()
+        # Partially pick the quantities of only one of the 2 pickings
+        # The second picking should be removed from the batch but not added to any other one
+        pickings.move_ids.filtered(lambda m: m.product_id == productA).quantity = 1.0
+        moveB = pickings.move_ids.filtered(lambda m: m.product_id == productB)
+        moveB.quantity = 4.0
+        moveB.picked = True
+        batch.with_context(skip_backorder=True).action_done()
+        self.assertEqual(batch.picking_ids, pickings[0])
+        self.assertEqual(batch.state, 'done')
+        self.assertFalse(pickings[1].batch_id)
+
 
 
 @tagged('post_install', '-at_install')

@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2024
 # Marius Stedjan <marius@stedjan.com>, 2024
+# Rune Restad, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2024\n"
+"Last-Translator: Rune Restad, 2024\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +35,15 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"- Skattegruppe: Skatten er et sett med delskatter.\n"
+"- Fast: Skattebeløpet forblir det samme uansett pris.\n"
+"- Prosent av pris: Skattebeløpet er en % av prisen:\n"
+"f.eks. 100 * (1 + 10 %) = 110 (ikke inkludert i prisen)\n"
+"f.eks. 110 / (1 + 10 %) = 100 (inkludert i prisen)\n"
+"- Prosent av pris inkludert skatt: Skattebeløpet er en deling av prisen:\n"
+"f.eks. 180 / (1 - 10 %) = 200 (ikke inkludert i prisen)\n"
+"f.eks. 200 * (1 - 10 %) = 180 (inkludert i prisen)"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
@@ -79,7 +89,7 @@ msgstr "Avgift"
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
 msgid "Tax Computation"
-msgstr ""
+msgstr "Mva beregning"
 
 #. module: account_tax_python
 #. odoo-python

@@ -2243,16 +2243,13 @@ QUnit.module("Fields", (hooks) => {
                 "first record",
                 "should show display_name of trululu of 1st record"
             );
-
-            await click(target, "button.o_pager_next");
-
             assert.strictEqual(
-                target.querySelectorAll("td.o_data_cell")[0].textContent,
+                target.querySelectorAll("td.o_data_cell")[2].textContent,
                 "record2",
                 "should show display_name of 2nd record"
             );
             assert.strictEqual(
-                target.querySelectorAll("td.o_data_cell")[1].textContent,
+                target.querySelectorAll("td.o_data_cell")[3].textContent,
                 "second record",
                 "should show display_name of trululu of 2nd record"
             );

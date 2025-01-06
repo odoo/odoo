@@ -5,6 +5,7 @@ import { CallParticipantVideo } from "@mail/discuss/call/common/call_participant
 import { useHover } from "@mail/utils/common/hooks";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { browser } from "@web/core/browser/browser";
+import { CONNECTION_TYPES } from "@mail/discuss/call/common/rtc_service";
 
 import {
     Component,
@@ -78,11 +79,18 @@ export class CallParticipantCard extends Component {
     }
 
     get showConnectionState() {
-        return Boolean(
-            this.isOfActiveCall &&
-                this.rtcSession?.peerConnection &&
-                !HIDDEN_CONNECTION_STATES.has(this.rtcSession.connectionState)
-        );
+        if (
+            !this.rtcSession ||
+            !this.isOfActiveCall ||
+            HIDDEN_CONNECTION_STATES.has(this.rtcSession.connectionState)
+        ) {
+            return false;
+        }
+        if (this.rtc.connectionType === CONNECTION_TYPES.SERVER) {
+            return this.rtcSession.eq(this.rtc?.selfSession);
+        } else {
+            return this.rtcSession.notEq(this.rtc?.selfSession);
+        }
     }
 
     get showServerState() {

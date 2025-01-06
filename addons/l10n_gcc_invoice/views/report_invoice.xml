@@ -57,7 +57,7 @@
                                 فاتورة ملغاة
                             </span>
                             <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">
-                                إشعار خصم
+                                إشعار دائن
                             </span>
                             <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">
                                 إشعار خصم المسودة
@@ -66,7 +66,7 @@
                                 إشعار خصم ملغاة
                             </span>
                             <span t-elif="o.move_type == 'in_refund'">
-                                إشعار خصم المورد
+                                إشعار مدين
                             </span>
                             <span t-elif="o.move_type == 'in_invoice'">
                                 فاتورة المورد
@@ -140,7 +140,7 @@
                             <strong style="white-space:nowrap">Reference:
                             </strong>
                         </div>
-                        <div class="col-2">
+                        <div class="col-8">
                             <span t-field="o.ref"/>
                         </div>
                         <div class="col-2 text-end">
@@ -280,9 +280,15 @@
                                         <span t-field="line.quantity"/>
                                         <span t-field="line.product_uom_id" groups="uom.group_uom"/>
                                     </td>
-                                    <td name="account_invoice_line_name">
-                                        <t t-set="line_name" t-value="line.name or line.with_context(lang=o.partner_id.lang).product_id.display_name"/>
-                                        <span t-out="line_name" t-options="{'widget': 'text'}" t-att-dir="o.env['res.lang']._lang_get_direction(o.partner_id.lang)"/>
+                                    <td name="account_invoice_line_name" class="text-end">
+                                        <t t-if="line.product_id">
+                                            <t t-set="english_name" t-value="line.with_context(lang='en_US').product_id.display_name"/>
+                                            <t t-set="arabic_name" t-value="line.with_context(lang='ar_001').product_id.display_name"/>
+
+                                            <span t-out="arabic_name + '\n'" t-if="arabic_name not in line.name" t-options="{'widget': 'text'}" dir="rtl"/>
+                                            <span t-out="english_name + '\n'" t-if="(english_name != arabic_name) and (english_name not in line.name)" t-options="{'widget': 'text'}"/>
+                                        </t>
+                                        <span t-out="line.name" t-options="{'widget': 'text'}" t-att-dir="o.env['res.lang']._lang_get_direction(o.partner_id.lang)"/>
                                     </td>
 
                                 </t>
@@ -337,23 +343,24 @@
                                     <!-- copy-pasted template "account.tax_groups_totals" with reversed columns order -->
                                     <t t-foreach="tax_totals['groups_by_subtotal'][subtotal_to_show]" t-as="amount_by_group">
                                         <tr>
-                                            <t t-if="tax_totals['display_tax_base']">
-                                                <td class="text-end o_price_total">
-                                                    <span class="text-nowrap" t-esc="amount_by_group['formatted_tax_group_amount']"/>
-                                                </td>
-                                                <td class="text-end">
+                                            <td class="text-end o_price_total">
+                                                <span class="text-nowrap" t-esc="amount_by_group['formatted_tax_group_amount']"/>
+                                            </td>
+                                            <td class="text-end">
+                                                <strong>
                                                     <span t-esc="amount_by_group['tax_group_name']"/>
-                                                    <span class="text-nowrap"> on
-                                                        <t t-esc="amount_by_group['formatted_tax_group_base_amount']"/>
+                                                    <t t-if="tax_totals['display_tax_base']">
+                                                        <span class="text-nowrap"> on
+                                                            <t t-esc="amount_by_group['formatted_tax_group_base_amount']"/>
+                                                        </span>
+                                                    </t>
+                                                    <!-- Arabic translation of tax group -->
+                                                    <t t-set="arabic_tax_group_name" t-value="o_sec.tax_totals['groups_by_subtotal'][o_sec.tax_totals['subtotals'][subtotal_index]['name']][amount_by_group_index]['tax_group_name']"/>
+                                                    <span t-if="arabic_tax_group_name != amount_by_group['tax_group_name']" class="text-nowrap">/
+                                                        <t t-esc="arabic_tax_group_name"/>
                                                     </span>
-                                                </td>
-                                            </t>
-                                            <t t-else="">
-                                                <td class="text-end o_price_total">
-                                                    <span class="text-nowrap" t-esc="amount_by_group['formatted_tax_group_amount']" />
-                                                </td>
-                                                <td class="text-end"><span class="text-nowrap" t-esc="amount_by_group['tax_group_name']"/></td>
-                                            </t>
+                                                </strong>
+                                            </td>
                                         </tr>
                                     </t>
 

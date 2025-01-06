@@ -306,9 +306,12 @@ export class Link extends Component {
         var doStripDomain = this._doStripDomain();
         if (this.state.url.indexOf(location.origin) === 0 && doStripDomain) {
             this.state.url = this.state.url.slice(location.origin.length);
+        } else if (url.indexOf(location.origin) === 0 && !doStripDomain) {
+            this.state.url = url;
         }
         var allWhitespace = /\s+/gi;
         var allStartAndEndSpace = /^\s+|\s+$/gi;
+        const isImage = this.props.link && this.props.link.querySelector('img');
         return {
             content: content,
             url: this._correctLink(this.state.url),
@@ -321,6 +324,7 @@ export class Link extends Component {
             oldAttributes: this.state.oldAttributes,
             isNewWindow: isNewWindow,
             doStripDomain: doStripDomain,
+            isImage,
         };
     }
     /**
@@ -471,7 +475,7 @@ export class Link extends Component {
      */
     _updateLinkContent($link, linkInfos, { force = false } = {}) {
         if (force || (this.props.needLabel && (linkInfos.content !== this.state.originalText || linkInfos.url !== this.state.url))) {
-            if (linkInfos.content === this.state.originalText) {
+            if (linkInfos.content === this.state.originalText || linkInfos.isImage) {
                 $link.html(this.state.originalHTML.replaceAll('\u200B', '').replaceAll('\uFEFF', ''));
             } else if (linkInfos.content && linkInfos.content.length) {
                 let contentWrapperEl = $link[0];

@@ -135,3 +135,29 @@ class LeadThread(models.Model):
     _inherit = ["base.automation.lead.test", "mail.thread"]
     _name = "base.automation.lead.thread.test"
     _description = "Threaded Lead Test"
+
+
+class ModelWithCharRecName(models.Model):
+    _name = "base.automation.model.with.recname.char"
+    _description = "Model with Char as _rec_name"
+    _rec_name = "description"
+    description = fields.Char()
+    user_id = fields.Many2one('res.users', string='Responsible')
+
+
+class ModelWithRecName(models.Model):
+    _name = "base.automation.model.with.recname.m2o"
+    _description = "Model with Many2one as _rec_name and name_create"
+    _rec_name = "user_id"
+    user_id = fields.Many2one("base.automation.model.with.recname.char", string='Responsible')
+
+    def name_create(self, name):
+        name = name.strip()
+        user = self.env["base.automation.model.with.recname.char"].search([('description', '=ilike', name)], limit=1)
+        if user:
+            user_id = user.id
+        else:
+            user_id, _user_name = self.env["base.automation.model.with.recname.char"].name_create(name)
+
+        record = self.create({'user_id': user_id})
+        return record.id, record.display_name

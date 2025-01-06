@@ -667,6 +667,26 @@ class Warehouse(models.Model):
         }
         return sub_locations
 
+    @api.model
+    def _get_warehouse_id_from_context(self):
+        """
+        Helper method used to extract a single id from the context.
+
+        The `warehouse_id` dummy field of the `product.template` model is meant to
+        to be used in the `product_template_search_form_view_stock` search view in
+        order to add a `warehouse` context key. That key can therefore be any of
+        the following types: Int, String, List(Int?, String?).
+        """
+        context_warehouse = self.env.context.get('warehouse', False)
+        if context_warehouse:
+            if isinstance(context_warehouse, int):
+                return context_warehouse
+            elif isinstance(context_warehouse, list):
+                relevant_context = list(filter(lambda key: isinstance(key, int), context_warehouse))
+                if relevant_context:
+                    return relevant_context[0]
+        return False
+
     def _valid_barcode(self, barcode, company_id):
         location = self.env['stock.location'].with_context(active_test=False).search([
             ('barcode', '=', barcode),
@@ -1032,27 +1052,27 @@ class Warehouse(models.Model):
         return {
             'in_type_id': {
                 'name': name + ' ' + _('Sequence in'),
-                'prefix': code + '/IN/', 'padding': 5,
+                'prefix': code + '/' + (self.in_type_id.sequence_code or 'IN') + '/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'out_type_id': {
                 'name': name + ' ' + _('Sequence out'),
-                'prefix': code + '/OUT/', 'padding': 5,
+                'prefix': code + '/' + (self.out_type_id.sequence_code or 'OUT') + '/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'pack_type_id': {
                 'name': name + ' ' + _('Sequence packing'),
-                'prefix': code + '/PACK/', 'padding': 5,
+                'prefix': code + '/' + (self.pack_type_id.sequence_code or 'PACK') + '/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'pick_type_id': {
                 'name': name + ' ' + _('Sequence picking'),
-                'prefix': code + '/PICK/', 'padding': 5,
+                'prefix': code + '/' + (self.pick_type_id.sequence_code or 'PICK') + '/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'int_type_id': {
                 'name': name + ' ' + _('Sequence internal'),
-                'prefix': code + '/INT/', 'padding': 5,
+                'prefix': code + '/' + (self.int_type_id.sequence_code or 'INT') + '/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
         }

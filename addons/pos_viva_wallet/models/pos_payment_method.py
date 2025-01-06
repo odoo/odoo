@@ -68,7 +68,7 @@ class PosPaymentMethod(models.Model):
             self.viva_wallet_bearer_token = access_token
             return {'Authorization': f"Bearer {access_token}"}
         else:
-            raise UserError(_('Not receive Bearer Token'))
+            raise UserError(_('Unable to retrieve Viva Wallet Bearer Token: Please verify that the Client ID and Client Secret are correct'))
 
     def _get_verification_key(self, endpoint, viva_wallet_merchant_id, viva_wallet_api_key):
         # Get a key to configure the webhook.
@@ -84,15 +84,14 @@ class PosPaymentMethod(models.Model):
             _logger.exception('Failed to call https://%s/api/messages/config/token endpoint', endpoint)
         return resp.json().get('Key')
 
-    def _call_viva_wallet(self, endpoint, action, data=None):
-        session = get_viva_wallet_session()
+    def _call_viva_wallet(self, endpoint, action, data=None, should_retry=True):
+        session = get_viva_wallet_session(should_retry)
         session.headers.update({'Authorization': f"Bearer {self.viva_wallet_bearer_token}"})
         endpoint = f"{self._viva_wallet_api_get_endpoint()}/ecr/v1/{endpoint}"
         try:
             resp = session.request(action, endpoint, json=data, timeout=TIMEOUT)
         except requests.exceptions.RequestException as e:
             return {'error': _("There are some issues between us and Viva Wallet, try again later.%s)", e)}
-
         if resp.text and resp.json().get('detail') == 'Could not validate credentials':
             session.headers.update(self._bearer_token(session))
             resp = session.request(action, endpoint, json=data, timeout=TIMEOUT)
@@ -139,19 +138,26 @@ class PosPaymentMethod(models.Model):
 
     def viva_wallet_send_payment_request(self, data):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):
-            raise AccessError(_("Only 'group_pos_user' are allowed to fetch token from Viva Wallet"))
+            raise AccessError(_("Only 'group_pos_user' are allowed to send a Viva Wallet payment request"))
 
         endpoint = "transactions:sale"
         return self._call_viva_wallet(endpoint, 'post', data)
 
     def viva_wallet_send_payment_cancel(self, data):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):
-            raise AccessError(_("Only 'group_pos_user' are allowed to fetch token from Viva Wallet"))
+            raise AccessError(_("Only 'group_pos_user' are allowed to cancel a Viva Wallet payment"))
 
         session_id = data.get('sessionId')
         cash_register_id = data.get('cashRegisterId')
         endpoint = f"sessions/{session_id}?cashRegisterId={cash_register_id}"
         return self._call_viva_wallet(endpoint, 'delete')
+
+    def viva_wallet_get_payment_status(self, session_id):
+        if not self.env.user.has_group('point_of_sale.group_pos_user'):
+            raise AccessError(_("Only 'group_pos_user' are allowed to get the payment status from Viva Wallet"))
+
+        endpoint = f"sessions/{session_id}"
+        return self._call_viva_wallet(endpoint, 'get', should_retry=False)
 
     def write(self, vals):
         record = super().write(vals)
@@ -202,11 +208,12 @@ class PosPaymentMethod(models.Model):
                 raise UserError(_('It is essential to provide API key for the use of viva wallet'))
 
 
-def get_viva_wallet_session():
+def get_viva_wallet_session(should_retry=True):
     session = requests.Session()
-    session.mount('https://', requests.adapters.HTTPAdapter(max_retries=requests.adapters.Retry(
-        total=6,
-        backoff_factor=2,
-        status_forcelist=[202, 500, 502, 503, 504],
-        )))
+    if should_retry:
+        session.mount('https://', requests.adapters.HTTPAdapter(max_retries=requests.adapters.Retry(
+            total=5,
+            backoff_factor=2,
+            status_forcelist=[202, 500, 502, 503, 504],
+            )))
     return session

@@ -734,3 +734,50 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             'credit': 10.0,
             'debit': 0,
         }])
+
+    def test_tax_line_amount_currency_modification_auto_balancing(self):
+        date = '2017-01-01'
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': date,
+            'partner_id': self.partner_a.id,
+            'invoice_date': date,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_payment_term_id': self.pay_terms_a.id,
+            'invoice_line_ids': [
+                (0, None, {
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_uom_id': self.product_a.uom_id.id,
+                    'quantity': 1.0,
+                    'price_unit': 1000,
+                    'tax_ids': self.product_a.taxes_id.ids,
+                }),
+                (0, None, {
+                    'name': self.product_b.name,
+                    'product_id': self.product_b.id,
+                    'product_uom_id': self.product_b.uom_id.id,
+                    'quantity': 1.0,
+                    'price_unit': 200,
+                    'tax_ids': self.product_b.taxes_id.ids,
+                }),
+            ]
+        })
+        receivable_line = move.line_ids.filtered(lambda line: line.display_type == 'payment_term')
+        self.assertRecordValues(receivable_line, [
+            {'amount_currency': 1410.00, 'balance': 705.00},
+        ])
+
+        # Modify the tax lines
+        tax_lines = move.line_ids.filtered(lambda line: line.display_type == 'tax').sorted('amount_currency')
+        self.assertRecordValues(tax_lines, [
+            {'amount_currency': -180.00, 'balance': -90.00},
+            {'amount_currency': -30.00, 'balance': -15.00},
+        ])
+        tax_lines[0].amount_currency = -180.03
+        # The following line should not cause the move to become unbalanced; i.e. there should be no error
+        tax_lines[1].amount_currency = -29.99
+
+        self.assertRecordValues(receivable_line, [
+            {'amount_currency': 1410.02, 'balance': 705.02},
+        ])

@@ -14,6 +14,8 @@ class WebsiteSale(main.WebsiteSale):
     @http.route()
     def pricelist(self, promo, **post):
         order = request.website.sale_get_order()
+        if not order:
+            return request.redirect('/shop')
         coupon_status = order._try_apply_code(promo)
         if coupon_status.get('not_found'):
             return super(WebsiteSale, self).pricelist(promo, **post)
@@ -23,7 +25,7 @@ class WebsiteSale(main.WebsiteSale):
             reward_successfully_applied = True
             if len(coupon_status) == 1:
                 coupon, rewards = next(iter(coupon_status.items()))
-                if len(rewards) == 1 and not rewards.multi_product:
+                if request.env.context.get('product_id') or (len(rewards) == 1 and not rewards.multi_product):
                     reward_successfully_applied = self._apply_reward(order, rewards, coupon)
 
             if reward_successfully_applied:
@@ -41,6 +43,9 @@ class WebsiteSale(main.WebsiteSale):
     @http.route()
     def cart(self, **post):
         order = request.website.sale_get_order()
+        if order and order.state != 'draft':
+            request.session['sale_order_id'] = None
+            order = request.website.sale_get_order()
         if order:
             order._update_programs_and_rewards()
             order._auto_apply_rewards()
@@ -81,8 +86,13 @@ class WebsiteSale(main.WebsiteSale):
             reward_id = None
 
         reward_sudo = request.env['loyalty.reward'].sudo().browse(reward_id).exists()
-        if not reward_sudo or reward_sudo.multi_product:
+        if not reward_sudo:
             return request.redirect(redirect)
+
+        if reward_sudo.multi_product and 'product_id' in post:
+            request.update_context(product_id=int(post['product_id']))
+        else:
+            request.redirect(redirect)
 
         program_sudo = reward_sudo.program_id
         claimable_rewards = order_sudo._get_claimable_and_showable_rewards()
@@ -105,14 +115,21 @@ class WebsiteSale(main.WebsiteSale):
         :returns: whether the reward was successfully applied
         :rtype: bool
         """
+        product_id = request.env.context.get('product_id')
+        product = product_id and request.env['product.product'].sudo().browse(product_id)
         try:
-            reward_status = order._apply_program_reward(reward, coupon)
+            reward_status = order._apply_program_reward(reward, coupon, product=product)
         except UserError as e:
             request.session['error_promo_code'] = str(e)
             return False
         if 'error' in reward_status:
             request.session['error_promo_code'] = reward_status['error']
             return False
+        order._update_programs_and_rewards()
+        if order.carrier_id.free_over and not reward.program_id.is_payment_program:
+            # update shiping cost if it's `free_over` and reward isn't eWallet or gift card
+            # will call `_update_programs_and_rewards` again, updating applied eWallet/gift cards
+            order._check_carrier_quotation(keep_carrier=True)
         return True
 
     @http.route()

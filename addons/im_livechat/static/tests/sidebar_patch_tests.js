@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { waitForChannels } from "@bus/../tests/helpers/websocket_event_deferred";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
@@ -486,7 +487,7 @@ QUnit.test("unknown livechat can be displayed and interacted with", async () => 
     await contains("button.o-active", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
-    await openDiscuss(channelId);
+    await Promise.all([waitForChannels([`discuss.channel_${channelId}`]), openDiscuss(channelId)]);
     await contains(
         ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel.o-active",
         {

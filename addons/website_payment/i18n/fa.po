@@ -34,26 +34,32 @@ msgid ""
 "                        <br/>\n"
 "                        Regards."
 msgstr ""
+"```html\n"
+"                        <br/>\n"
+"                        ما از حمایت شما از سازمان ما قدردانی می‌کنیم.\n"
+"                        <br/>\n"
+"                        با احترام.\n"
+"```"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "<b>Comment:</b>"
-msgstr ""
+msgstr "<b>نظر:</b>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "<b>Donation Date:</b>"
-msgstr ""
+msgstr "<b>تاریخ اهداء:</b>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "<b>Donor Email:</b>"
-msgstr ""
+msgstr "<b>ایمیل اهدا کننده:</b>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "<b>Donor Name:</b>"
-msgstr ""
+msgstr "<b>نام اهداکننده:</b>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -69,6 +75,9 @@ msgstr "<b>روش پرداخت</b>"
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "<option value=\"\">Country...</option>"
 msgstr ""
+"```html\n"
+"<option value=\"\">کشور...</option>\n"
+"```"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -76,6 +85,8 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                If you believe that it is an error, please contact the website administrator."
 msgstr ""
+"<strong>گزینه پرداخت مناسب یافت نشد.</strong><br/>\n"
+"اگر فکر می‌کنید که این یک خطا است، لطفاً با مدیر وب‌سایت تماس بگیرید."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -87,17 +98,17 @@ msgstr "<strong>Warning</strong> ارز موردنظر موجود نیست یا 
 #: code:addons/website_payment/models/payment_transaction.py:0
 #, python-format
 msgid "A donation has been made on your website"
-msgstr ""
+msgstr "یک اهدا در وب‌سایت شما انجام شده است"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "A year of cultural awakening."
-msgstr ""
+msgstr "یک سال بیداری فرهنگی."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Activate Payments"
-msgstr ""
+msgstr "فعال‌سازی پرداخت‌ها"
 
 #. module: website_payment
 #: model:ir.actions.server,name:website_payment.action_activate_stripe
@@ -110,14 +121,14 @@ msgstr "فعال‌سازی نوار"
 #: code:addons/website_payment/static/src/snippets/s_donation/options.js:0
 #, python-format
 msgid "Add a description here"
-msgstr ""
+msgstr "یک توضیح در اینجا اضافه کنید"
 
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_donation/options.js:0
 #, python-format
 msgid "Add new pre-filled option"
-msgstr ""
+msgstr "افزودن گزینه‌ی جدید از پیش پر شده"
 
 #. module: website_payment
 #. odoo-javascript
@@ -130,24 +141,24 @@ msgstr "مقدار"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Amount ("
-msgstr ""
+msgstr "مقدار ("
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "Amount("
-msgstr ""
+msgstr "مبلغ("
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "Caring for a baby for 1 month."
-msgstr ""
+msgstr "مراقبت از نوزاد برای ۱ ماه."
 
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #, python-format
 msgid "Choose Your Amount"
-msgstr ""
+msgstr "مبلغ خود را انتخاب کنید"
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_res_config_settings
@@ -159,7 +170,7 @@ msgstr "تنظیمات پیکربندی"
 #: code:addons/website_payment/models/res_config_settings.py:0
 #, python-format
 msgid "Configure %s"
-msgstr ""
+msgstr "پیکربندی %s"
 
 #. module: website_payment
 #. odoo-javascript
@@ -175,13 +186,15 @@ msgid ""
 "Country\n"
 "                    <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"کشور\n"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_payment
 #. odoo-python
 #: code:addons/website_payment/controllers/portal.py:0
 #, python-format
 msgid "Country is required."
-msgstr ""
+msgstr "کشور لازم است."
 
 #. module: website_payment
 #. odoo-javascript
@@ -191,7 +204,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 #, python-format
 msgid "Custom Amount"
-msgstr ""
+msgstr "مبلغ سفارشی"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -201,60 +214,60 @@ msgstr "گرامی"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Default Amount"
-msgstr ""
+msgstr "مبلغ پیش‌فرض"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Descriptions"
-msgstr ""
+msgstr "توضیحات"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Display Options"
-msgstr ""
+msgstr "گزینه‌های نمایش"
 
 #. module: website_payment
 #. odoo-python
 #: code:addons/website_payment/controllers/portal.py:0
 #, python-format
 msgid "Donate"
-msgstr ""
+msgstr "پرداخت نمایید"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "Donate Now"
-msgstr ""
+msgstr "اکنون اهدا کنید"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 #: model_terms:ir.ui.view,arch_db:website_payment.snippets
 msgid "Donation"
-msgstr ""
+msgstr "اهدا"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.snippets
 msgid "Donation Button"
-msgstr ""
+msgstr "دکمه اهدای کمک مالی"
 
 #. module: website_payment
 #. odoo-python
 #: code:addons/website_payment/controllers/portal.py:0
 #, python-format
 msgid "Donation amount must be at least %.2f."
-msgstr ""
+msgstr "مقدار کمک مالی باید حداقل %.2f باشد."
 
 #. module: website_payment
 #. odoo-python
 #: code:addons/website_payment/models/payment_transaction.py:0
 #, python-format
 msgid "Donation confirmation"
-msgstr ""
+msgstr "تأیید کمک مالی"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "Donation notification"
-msgstr ""
+msgstr "اطلاعیه کمک مالی"
 
 #. module: website_payment
 #. odoo-javascript
@@ -269,32 +282,34 @@ msgid ""
 "Email\n"
 "                    <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"ایمیل  \n"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Email is invalid"
-msgstr ""
+msgstr "ایمیل نامعتبر است"
 
 #. module: website_payment
 #. odoo-python
 #: code:addons/website_payment/controllers/portal.py:0
 #, python-format
 msgid "Email is required."
-msgstr ""
+msgstr "<p>ایمیل لازم است.</p>"
 
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Field '%s' is mandatory"
-msgstr ""
+msgstr "فیلد '%s' الزامی است"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__first_provider_label
 msgid "First Provider Label"
-msgstr ""
+msgstr "برچسب ارائه‌دهنده اول"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -304,33 +319,33 @@ msgstr "ورودی"
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_account_payment__is_donation
 msgid "Is Donation"
-msgstr ""
+msgstr "آیا کمک مالی است"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__is_stripe_supported_country
 #: model:ir.model.fields,field_description:website_payment.field_res_country__is_stripe_supported_country
 msgid "Is Stripe Supported Country"
-msgstr ""
+msgstr "آیا Stripe در این کشور پشتیبانی می‌شود؟"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_payment_transaction__is_donation
 msgid "Is donation"
-msgstr ""
+msgstr "است کمک مالی"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation
 msgid "Make a Donation"
-msgstr ""
+msgstr "ایجاد کمک مالی"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Maximum"
-msgstr ""
+msgstr "حداکثر"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Minimum"
-msgstr ""
+msgstr "حداقل"
 
 #. module: website_payment
 #. odoo-javascript
@@ -345,13 +360,15 @@ msgid ""
 "Name\n"
 "                    <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"نام\n"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_payment
 #. odoo-python
 #: code:addons/website_payment/controllers/portal.py:0
 #, python-format
 msgid "Name is required."
-msgstr ""
+msgstr "نام لازم است."
 
 #. module: website_payment
 #: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__none
@@ -362,17 +379,17 @@ msgstr "هیچکدام"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "One year in elementary school."
-msgstr ""
+msgstr "یک سال در مدرسه ابتدایی."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "One year in high school."
-msgstr ""
+msgstr "یک سال در دبیرستان."
 
 #. module: website_payment
 #: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__other_than_paypal
 msgid "Other than Paypal"
-msgstr ""
+msgstr "غیر از پی پال"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information
@@ -394,14 +411,14 @@ msgstr "تراکنش پرداخت"
 #: code:addons/website_payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Payment processing failed"
-msgstr ""
+msgstr "پردازش پرداخت ناموفق بود"
 
 #. module: website_payment
 #. odoo-python
 #: code:addons/website_payment/models/payment_transaction.py:0
 #, python-format
 msgid "Payment received from donation with following details:"
-msgstr ""
+msgstr "پرداخت دریافت شده از کمک مالی با جزئیات زیر:"
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_account_payment
@@ -411,51 +428,51 @@ msgstr "پرداخت‌ها"
 #. module: website_payment
 #: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__paypal_only
 msgid "Paypal Only"
-msgstr ""
+msgstr "فقط پی‌پال"
 
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_donation/000.js:0
 #, python-format
 msgid "Please select or enter an amount"
-msgstr ""
+msgstr "لطفاً یک مبلغ را انتخاب یا وارد کنید"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Pre-filled Options"
-msgstr ""
+msgstr "گزینه‌های از پیش پر شده"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__providers_state
 msgid "Providers State"
-msgstr ""
+msgstr "وضعیت ارائه‌دهندگان"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Recipient Email"
-msgstr ""
+msgstr "ایمیل گیرنده"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Shop - Payment"
-msgstr ""
+msgstr "فروشگاه - پرداخت"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Slider"
-msgstr ""
+msgstr "اسلایدر"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation
 msgid "Small or large, your contribution is essential."
-msgstr ""
+msgstr "مهم نیست که چقدر بزرگ یا کوچک است، مشارکت شما ضروری است."
 
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Some information is missing to process your payment."
-msgstr ""
+msgstr "برخی اطلاعات برای پردازش پرداخت شما ناقص هستند."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -468,6 +485,8 @@ msgid ""
 "Stripe Connect is not available in your country, please use another payment "
 "provider."
 msgstr ""
+"Stripe Connect در کشور شما در دسترس نیست، لطفاً از ارائه‌دهنده پرداخت دیگری "
+"استفاده کنید."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
@@ -475,18 +494,20 @@ msgid ""
 "Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple "
 "Pay, etc. as well as recurring charges."
 msgstr ""
+"از اکثر روش‌های پرداخت پشتیبانی می‌کند؛ ویزا، مسترکارت، مسترو، گوگل پی، اپل "
+"پی و غیره، و همچنین هزینه‌های تکراری."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "Thank you for your donation of"
-msgstr ""
+msgstr "سپاسگزاریم برای اهدا شما از"
 
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_donation/000.js:0
 #, python-format
 msgid "The minimum donation amount is %s%s%s"
-msgstr ""
+msgstr "حداقل مبلغ اهدایی %s%s%s است"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -496,12 +517,12 @@ msgstr "هیچ موردی برای پرداخت وجود ندارد."
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "View Alternatives"
-msgstr ""
+msgstr "مشاهده جایگزین‌ها"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "View other providers"
-msgstr ""
+msgstr "مشاهده ارائه‌دهندگان دیگر"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_payment_provider__website_id
@@ -511,19 +532,19 @@ msgstr "تارنما"
 #. module: website_payment
 #: model:mail.template,name:website_payment.mail_template_donation
 msgid "Website: Donation"
-msgstr ""
+msgstr "وب‌سایت: اهداء"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Write us a comment"
-msgstr ""
+msgstr "برای ما نظری بنویسید"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Your comment"
-msgstr ""
+msgstr "نظر شما"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "made on"
-msgstr ""
+msgstr "ساخته شده در"

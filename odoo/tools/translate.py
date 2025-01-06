@@ -126,7 +126,7 @@ _LOCALE2WIN32 = {
     'sv_SE': 'Swedish_Sweden',
     'ta_IN': 'English_Australia',
     'th_TH': 'Thai_Thailand',
-    'tr_TR': 'Turkish_Turkey',
+    'tr_TR': 'Turkish_Türkiye',
     'uk_UA': 'Ukrainian_Ukraine',
     'vi_VN': 'Vietnamese_Viet Nam',
     'tlh_TLH': 'Klingon',
@@ -199,7 +199,13 @@ def translate_xml_node(node, callback, parse, serialize):
     def translatable(node):
         """ Return whether the given node can be translated as a whole. """
         return (
-            node.tag in TRANSLATED_ELEMENTS
+            # Some specific nodes (e.g., text highlights) have an auto-updated
+            # DOM structure that makes them impossible to translate.
+            # The introduction of a translation `<span>` in the middle of their
+            # hierarchy breaks their functionalities. We need to force them to
+            # be translated as a whole using the `o_translate_inline` class.
+            "o_translate_inline" in node.attrib.get("class", "").split()
+            or node.tag in TRANSLATED_ELEMENTS
             and not any(key.startswith("t-") for key in node.attrib)
             and all(translatable(child) for child in node)
         )
@@ -342,7 +348,7 @@ _HTML_PARSER = etree.HTMLParser(encoding='utf8')
 def parse_html(text):
     try:
         parse = html.fragment_fromstring(text, parser=_HTML_PARSER)
-    except TypeError as e:
+    except (etree.ParserError, TypeError) as e:
         raise UserError(_("Error while parsing view:\n\n%s") % e) from e
     return parse
 
@@ -1001,28 +1007,28 @@ def extract_spreadsheet_terms(fileobj, keywords, comment_tags, options):
     :return: an iterator over ``(lineno, funcname, message, comments)``
              tuples
     """
-    terms = []
+    terms = set()
     data = json.load(fileobj)
     for sheet in data.get('sheets', []):
         for cell in sheet['cells'].values():
             content = cell.get('content', '')
             if content.startswith('='):
-                terms += extract_formula_terms(content)
+                terms.update(extract_formula_terms(content))
             else:
                 markdown_link = re.fullmatch(r'\[(.+)\]\(.+\)', content)
                 if markdown_link:
-                    terms.append(markdown_link[1])
+                    terms.add(markdown_link[1])
         for figure in sheet['figures']:
-            terms.append(figure['data']['title'])
+            terms.add(figure['data']['title'])
             if 'baselineDescr' in figure['data']:
-                terms.append(figure['data']['baselineDescr'])
+                terms.add(figure['data']['baselineDescr'])
     pivots = data.get('pivots', {}).values()
     lists = data.get('lists', {}).values()
     for data_source in itertools.chain(lists, pivots):
         if 'name' in data_source:
-            terms.append(data_source['name'])
+            terms.add(data_source['name'])
     for global_filter in data.get('globalFilters', []):
-        terms.append(global_filter['label'])
+        terms.add(global_filter['label'])
     return (
         (0, None, term, [])
         for term in terms
@@ -1316,6 +1322,8 @@ class TranslationModuleReader(TranslationReader):
         self._path_list.append((config['root_path'], False))
         _logger.debug("Scanning modules at paths: %s", self._path_list)
 
+        spreadsheet_files_regex = re.compile(r".*_dashboard(\.osheet)?\.json$")
+
         for (path, recursive) in self._path_list:
             _logger.debug("Scanning files of modules at %s", path)
             for root, dummy, files in os.walk(path, followlinks=True):
@@ -1334,7 +1342,7 @@ class TranslationModuleReader(TranslationReader):
                         self._babel_extract_terms(fname, path, root, 'odoo.tools.translate:babel_extract_qweb',
                                                   extra_comments=[JAVASCRIPT_TRANSLATION_COMMENT])
                 if fnmatch.fnmatch(root, '*/data/*'):
-                    for fname in fnmatch.filter(files, '*_dashboard.json'):
+                    for fname in filter(spreadsheet_files_regex.match, files):
                         self._babel_extract_terms(fname, path, root, 'odoo.tools.translate:extract_spreadsheet_terms',
                                                   extra_comments=[JAVASCRIPT_TRANSLATION_COMMENT])
                 if not recursive:

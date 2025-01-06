@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
@@ -1067,7 +1067,7 @@ msgstr ""
 "Según la configuración del producto, se puede calcular automáticamente la cantidad enviada:\n"
 "  - Manual: la cantidad se establece manualmente en la línea\n"
 "  - Analítica de gastos: la cantidad equivale a la suma de los gastos publicados\n"
-"  - Hojas de asistencia: la cantidad equivale a la suma de las horas registradas en las tareas vinculadas a esta línea de venta\n"
+"  - Partes de horas: la cantidad equivale a la suma de las horas registradas en las tareas vinculadas a esta línea de venta\n"
 "  - Movimientos del inventario: la cantidad viene de los albaranes confirmados\n"
 
 #. module: sale
@@ -1124,27 +1124,27 @@ msgstr "Tipos de actividad"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
 msgid "Add a new plan"
-msgstr "Agregar un nuevo plan"
+msgstr "Añadir un nuevo plan"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a note"
-msgstr "Agregar una nota"
+msgstr "Añadir una nota"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a product"
-msgstr "Agregar un producto"
+msgstr "Añadir un producto"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a section"
-msgstr "Agregar una sección"
+msgstr "Añadir una sección"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Add several variants to an order from a grid"
-msgstr "Agregue varias variantes a un pedido desde una cuadrícula"
+msgstr "Añada varias variantes a un pedido desde una cuadrícula"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__allowed_so_line_ids
@@ -1170,7 +1170,8 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
 "Le permite compartir el documento con sus clientes dentro de una venta.\n"
 "Déjelo vacío si no desea compartir este documento con su cliente.\n"
@@ -1178,7 +1179,8 @@ msgstr ""
 "Esta opción puede ser útil, por ejemplo, para compartir archivos de descripción del producto.\n"
 "Pedido confirmado: los clientes recibirán el documento y podrán visualizarlo.\n"
 "Esta opción puede ser útil, por ejemplo, para compartir el manual de usuario o algún contenido digital que se haya adquirido mediante comercio electrónico. \n"
-"Dentro del presupuesto: el documento se incluirá en el PDF del presupuesto entre el encabezado y la tabla de presupuesto."
+"Dentro del presupuesto: el documento se incluirá en el PDF del presupuesto\n"
+"y del pedido de venta entre el encabezado y la tabla de presupuesto."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1526,7 +1528,7 @@ msgstr "Seleccione cómo confirmar presupuestos"
 #, python-format
 msgid "Click here to add some products or services to your quotation."
 msgstr ""
-"Haga clic aquí para agregar algún producto o servicio a su presupuesto."
+"Haga clic aquí para añadir algún producto o servicio a su presupuesto."
 
 #. module: sale
 #. odoo-javascript
@@ -2432,7 +2434,7 @@ msgstr "Buen trabajo, continuemos."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Grant discounts on sales order lines"
-msgstr "Ofrezca descuentos en las líneas de las pedidos de venta"
+msgstr "Ofrezca descuentos en las líneas de los pedidos de venta"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__weight
@@ -2538,7 +2540,7 @@ msgstr ""
 msgid "If you change the pricelist, only newly added lines will be affected."
 msgstr ""
 "Si modifica la lista de precios, solo afectará a las nuevas líneas que "
-"agregó."
+"añadió."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2913,7 +2915,7 @@ msgid ""
 "Make your quote attractive by adding header pages, product descriptions and "
 "footer pages to your quote."
 msgstr ""
-"Haga su presupuesto más llamativo y agregue encabezados, descripciones de "
+"Haga su presupuesto más llamativo y añada encabezados, descripciones de "
 "productos y pies de página."
 
 #. module: sale
@@ -2947,8 +2949,8 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
 "Establezca manualmente las cantidades en el pedido: la factura se basa en la cantidad entregada manualmente, sin crear una cuenta analítica.\n"
-"Hojas de asistencia en el contrato: la factura se basa en las horas registradas en la hoja de asistencia relacionada.\n"
-"Crear una tarea y realizar un seguimiento de las horas: cree una tarea en la validación del pedido de venta y realice un seguimiento de las horas trabajadas."
+"Partes de horas en el contrato: la factura se basa en las horas registradas en los partes de horas relacionados.\n"
+"Crear una tarea y rastrear las horas: crea una tarea en la validación del pedido de venta y realiza un seguimiento de las horas trabajadas."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_margin
@@ -3964,7 +3966,7 @@ msgstr "Registrar pago"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
 msgid "Regular invoice"
-msgstr "Factura regular"
+msgstr "Factura normal"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4151,14 +4153,14 @@ msgid "Sales Analysis"
 msgstr "Análisis de ventas"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_customers
-msgid "Sales Analysis Per Customers"
-msgstr "Análisis de ventas por cliente"
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
 msgstr "Análisis de ventas por comerciales"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_customers
+msgid "Sales Analysis Per Customers"
+msgstr "Análisis de ventas por cliente"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
@@ -4244,7 +4246,6 @@ msgstr "Pedido(s) de venta"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4289,9 +4290,9 @@ msgid ""
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
-"Elemento en el pedido de venta al que se añadirá el tiempo dedicado para "
-"facturarlo a su cliente. Elimine el elemento para que la entrada de la hoja "
-"de asistencia no sea facturable."
+"Artículo del pedido de venta al que se añadirá el tiempo dedicado para "
+"facturarlo a su cliente. Elimine el dato para que el parte de horas no sea "
+"facturable."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -4987,7 +4988,6 @@ msgstr ""
 
 #. module: sale
 #. odoo-python
-#. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "The product (%s) has incompatible values: %s"
@@ -5034,11 +5034,6 @@ msgid "The value of the down payment amount must be positive."
 msgstr "El valor del importe del anticipo debe ser positivo."
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
-msgid "There are currently no orders for your account."
-msgstr "Actualmente no hay pedidos para su cuenta."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
 msgstr "Actualmente no hay presupuestos para su cuenta."
@@ -5052,6 +5047,19 @@ msgstr "Actualmente no hay pedidos de venta para su cuenta."
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "There are existing"
 msgstr "Existen"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
+"Parece que todavía no hay ningún producto de descuento configurado para esta"
+" compañía. Puede utilizar un descuento por línea o comuníquese con un "
+"administrador para que le proporcione el descuento."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5491,6 +5499,7 @@ msgstr "Advertencia"
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/product_template.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
@@ -5626,6 +5635,7 @@ msgstr ""
 " almacenable, un consumible o un servicio."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Sus pedidos"

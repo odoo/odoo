@@ -38,7 +38,9 @@
                     }"
                 >
                     <div class="position-relative flex-grow-1">
-                        <textarea class="o-mail-Composer-input form-control bg-view px-3 border-0 rounded-3 shadow-none overflow-auto"
+                        <t t-set="inputClasses" t-value="'form-control px-3 border-0 rounded-3'"/>
+                        <textarea class="o-mail-Composer-input bg-view shadow-none overflow-auto"
+                            t-att-class="inputClasses"
                             t-ref="textarea"
                             style="height:40px;"
                             t-on-keydown="onKeydown"
@@ -56,7 +58,8 @@
                              the textarea properly without flicker.
                         -->
                         <textarea
-                            class="o-mail-Composer-fake position-absolute"
+                            class="o-mail-Composer-fake overflow-hidden position-absolute"
+                            t-att-class="inputClasses"
                             t-model="props.composer.textInputContent"
                             t-ref="fakeTextarea"
                             disabled="1"
@@ -93,7 +96,7 @@
                     t-if="allowUpload and props.composer.attachments.length > 0"
                     attachments="props.composer.attachments"
                     unlinkAttachment.bind="(...args) => attachmentUploader.unlink(...args)"
-                    imagesHeight="50"/>
+                    imagesHeight="75"/>
                 <Picker t-props="picker"/>
             </div>
         </div>

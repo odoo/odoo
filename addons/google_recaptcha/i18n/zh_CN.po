@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -25,6 +25,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:google_recaptcha.res_config_settings_view_form
 msgid "<i class=\"oi oi-arrow-right\"/> Generate reCAPTCHA v3 keys"
 msgstr "<i class=\"oi oi-arrow-right\"/>生成 reCAPTCHA v3 密钥"
+
+#. module: google_recaptcha
+#: model:ir.model.fields,help:google_recaptcha.field_res_config_settings__recaptcha_min_score
+msgid ""
+"By default, should be one of 0.1, 0.3, 0.7, 0.9.\n"
+"1.0 is very likely a good interaction, 0.0 is very likely a bot"
+msgstr ""
+"预设情况下，应该是下列其中一项：0.1, 0.3, 0.7, 0.9。\n"
+"1.0 很可能是良好的互动，0.0 很可能是一个机器人"
 
 #. module: google_recaptcha
 #: model:ir.model,name:google_recaptcha.model_res_config_settings
@@ -66,15 +75,6 @@ msgstr "受 reCAPTCHA 保护、"
 #: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__recaptcha_private_key
 msgid "Secret Key"
 msgstr "密钥"
-
-#. module: google_recaptcha
-#: model:ir.model.fields,help:google_recaptcha.field_res_config_settings__recaptcha_min_score
-msgid ""
-"By default, should be one of 0.1, 0.3, 0.7, 0.9.\n"
-"1.0 is very likely a good interaction, 0.0 is very likely a bot"
-msgstr ""
-"预设情况下，应该是下列其中一项：0.1, 0.3, 0.7, 0.9。\n"
-"1.0 很可能是良好的互动，0.0 很可能是一个机器人"
 
 #. module: google_recaptcha
 #: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__recaptcha_public_key

@@ -30,6 +30,15 @@ export class DiscussCoreCommon {
     }
 
     setup() {
+        this.busService.addEventListener(
+            "connect",
+            () =>
+                this.store.imStatusTrackedPersonas.forEach((p) => {
+                    const model = p.type === "partner" ? "res.partner" : "mail.guest";
+                    this.busService.addChannel(`odoo-presence-${model}_${p.id}`);
+                }),
+            { once: true }
+        );
         this.messagingService.isReady.then((data) => {
             Record.MAKE_UPDATE(() => {
                 for (const channelData of data.channels) {

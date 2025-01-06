@@ -47,9 +47,11 @@ class SmsTracker(models.Model):
                 'trace_status': trace_status,
                 'failure_type': failure_type,
                 'failure_reason': failure_reason,
-                **{'sent_datetime': fields.Datetime.now() if trace_status == 'pending' else {}},
             }
             traces.write(traces_values)
+            traces.filtered(
+                lambda t: t.trace_status not in ['outgoing', 'process', 'error', 'cancel'] and not t.sent_datetime
+            ).sent_datetime = self.env.cr.now()
         return traces
 
     def _update_sms_mailings(self, trace_status, traces):

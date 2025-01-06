@@ -322,6 +322,52 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         }
     );
 
+    QUnit.test("Context is purged from PivotView related keys", async function (assert) {
+        const spreadsheetData = {
+            sheets: [
+                {
+                    id: "sheet1",
+                    cells: {
+                        A1: { content: `=ODOO.PIVOT(1, "probability")` },
+                    },
+                },
+            ],
+            pivots: {
+                1: {
+                    id: 1,
+                    colGroupBys: ["foo"],
+                    rowGroupBys: ["bar"],
+                    domain: [],
+                    measures: [{ field: "probability", operator: "avg" }],
+                    model: "partner",
+                    context: {
+                        pivot_measures: ["__count"],
+                        // inverse row and col group bys
+                        pivot_row_groupby: ["test"],
+                        pivot_column_groupby: ["check"],
+                        dummyKey: "true",
+                    },
+                },
+            },
+        };
+        const model = await createModelWithDataSource({
+            spreadsheetData,
+            mockRPC: function (route, { model, method, kwargs }) {
+                if (model === "partner" && method === "read_group") {
+                    assert.step(`pop`);
+                    assert.notOk(
+                        ["pivot_measures", "pivot_row_groupby", "pivot_column_groupby"].some(
+                            (val) => val in (kwargs.context || {})
+                        ),
+                        "The context should not contain pivot related keys"
+                    );
+                }
+            },
+        });
+        await waitForDataSourcesLoaded(model);
+        assert.verifySteps(["pop", "pop", "pop", "pop"]);
+    });
+
     QUnit.test("fetch metadata only once per model", async function (assert) {
         const spreadsheetData = {
             sheets: [

@@ -3,14 +3,14 @@
 # 	* account_edi_ubl_cii
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -437,8 +437,8 @@ msgstr "9951 - หมายเลข VAT ของประเทศซานม
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9952
-msgid "9952 - Turkey VAT number"
-msgstr "9952 - หมายเลข VAT ของประเทศตุรกี"
+msgid "9952 - Türkiye VAT number"
+msgstr "9952 - หมายเลขภาษีมูลค่าเพิ่มของประเทศตุรกี"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9953
@@ -560,6 +560,11 @@ msgid "Companies"
 msgstr "บริษัท"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__show_ubl_company_warning
+msgid "Company warning"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
@@ -653,7 +658,7 @@ msgstr "เปิดใช้งาน Ubl Cii Xml"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 #, python-format
 msgid "Errors occurred while creating the EDI document (format: %s):"
 msgstr "เกิดข้อผิดพลาดในขณะที่สร้างเอกสาร EDI (รูปแบบ: %s):"
@@ -748,6 +753,11 @@ msgid "Odoo"
 msgstr "Odoo"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__ubl_partner_warning
+msgid "Partner warning"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 #, python-format
@@ -769,8 +779,9 @@ msgstr "รหัส Peppol EAS 9955 นั้นถูกเลิกใช้�
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 #, python-format
 msgid ""
-"Peppol EAS codes 0212 and 0213 are deprecated. Please use 0216 instead."
-msgstr "รหัส Peppol EAS 0212 และ 0213 เลิกใช้แล้ว กรุณาใช้ 0216 แทน"
+"Peppol EAS codes 0037, 0212, 0213, 0215 are deprecated. Please use 0216 "
+"instead."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_endpoint
@@ -790,6 +801,15 @@ msgid "Peppol format"
 msgstr "รูปแบบ Peppol"
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_move_send_form
+msgid ""
+"Please fill in Peppol EAS and Peppol Endpoint in your company form to "
+"generate a complete file."
+msgstr ""
+"กรุณากรอก Peppol EAS และ Peppol Endpoint "
+"ในแบบฟอร์มบริษัทของคุณเพื่อสร้างไฟล์ที่สมบูรณ์"
+
+#. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg
 msgid "SG BIS Billing 3.0"
 msgstr "SG BIS Billing 3.0"
@@ -805,6 +825,17 @@ msgstr "SI-UBL 2.0 (NLCIUS)"
 #, python-format
 msgid "Tax '%s' is invalid: %s"
 msgstr "ภาษี '%s' ไม่ถูกต้อง: %s"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid ""
+"The Peppol endpoint is not valid. It should contain exactly 10 digits "
+"(Company Registry number).The expected format is: 1234567890"
+msgstr ""
+"จุดสิ้นสุด Peppol ไม่ถูกต้อง ควรมีตัวเลข 10 หลักพอดี (หมายเลขทะเบียนบริษัท) "
+"รูปแบบที่คาดหวังคือ: 1234567890"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -879,7 +910,7 @@ msgstr "ต้องระบุข้อมูล 'หมายเลขบั�
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 #, python-format
 msgid ""
 "The following partners are missing Peppol EAS or Peppol Endpoint field: %s. "
@@ -889,17 +920,6 @@ msgstr ""
 "คู่ค้าต่อไปนี้ไม่มีฟิลด์ Peppol EAS หรือ Peppol Endpoint: %s "
 "โปรดตรวจสอบสิ่งเหล่านั้นในแท็บระบบบัญชี "
 "ไม่เช่นนั้นไฟล์ที่สร้างขึ้นจะไม่สมบูรณ์"
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
-#, python-format
-msgid ""
-"The invoice contains line(s) with a negative unit price, which is not "
-"allowed. You might need to set a negative quantity instead."
-msgstr ""
-"ใบแจ้งหนี้มีรายการที่มีราคาต่อหน่วยติดลบ ซึ่งไม่ได้รับอนุญาต "
-"คุณอาจต้องตั้งค่าปริมาณติดลบแทน"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -913,7 +933,7 @@ msgstr "ใบแจ้งหนี้ได้ถูกแปลงเป็น
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 #, python-format
 msgid ""
 "This partner is missing Peppol EAS or Peppol Endpoint field. Please check "
@@ -921,14 +941,6 @@ msgid ""
 msgstr ""
 "คู่ค้ารายนี้ไม่มีฟิลด์ Peppol EAS หรือ Peppol Endpoint "
 "โปรดตรวจสอบในแท็บระบบบัญชี ไม่เช่นนั้นไฟล์ที่สร้างขึ้นจะไม่สมบูรณ์"
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
-#, python-format
-msgid "The supplier %s must have a Bronnoysund company registry."
-msgstr "ซัพพลายเออร์ %s ต้องมีทะเบียนบริษัท Bronnoysund"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_20
@@ -995,11 +1007,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "factur-x.xml"
 msgstr "factur-x.xml"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_line_facturx_export_22
-msgid "false"
-msgstr "เท็จ"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata

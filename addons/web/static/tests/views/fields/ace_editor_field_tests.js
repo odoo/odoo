@@ -259,4 +259,32 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_form_button_save");
         assert.verifySteps(['web_save: [[1],{"foo":"a"}]']);
     });
+
+    QUnit.test("Save and Discard buttons will become invisible after saving", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="display_name" />
+                    <field name="foo" widget="code" />
+                </form>`,
+        });
+
+        const textArea = target.querySelector(".ace_editor textarea");
+        await click(textArea);
+        textArea.focus();
+        textArea.value = "a";
+        await triggerEvent(textArea, null, "input", {});
+        assert.containsOnce(target, ".o_form_status_indicator_buttons");
+        assert.doesNotHaveClass(
+            target.querySelector(".o_form_status_indicator_buttons"),
+            "invisible"
+        );
+        await click(target, ".o_form_button_save");
+        assert.containsOnce(target, ".o_form_status_indicator_buttons");
+        assert.hasClass(target.querySelector(".o_form_status_indicator_buttons"), "invisible");
+    });
 });

@@ -509,7 +509,8 @@ class TestBatchPicking(TransactionCase):
     def test_validatation_of_partially_empty_picking(self):
         """
             Check that you can validate a wave transfer containing an empty picking,
-            that the picking stays unchanged and is removed from the transfer
+            that the picking stays unchanged (except for the 'picked' state of the move)
+            and is removed from the transfer
         """
         self.productA.tracking = 'none'
         self.productB.tracking = 'none'
@@ -545,6 +546,7 @@ class TestBatchPicking(TransactionCase):
         wave = self.env['stock.picking.batch'].create({
             'name': 'Wave transfer',
             'picking_ids': [Command.link(picking_1.id), Command.link(picking_2.id)],
+            'is_wave': True,
         })
         wave.move_ids.filtered(lambda m: m.product_id == self.productB).quantity = 0.0
         wave.move_ids.picked = True
@@ -552,7 +554,7 @@ class TestBatchPicking(TransactionCase):
         self.assertEqual(wave.state, 'done')
         self.assertEqual(wave.picking_ids, picking_1)
         self.assertEqual([picking_1.state, picking_1.move_ids.quantity, picking_1.move_ids.picked], ['done', 2.0, True])
-        self.assertEqual([picking_2.state, picking_2.move_ids.quantity, picking_2.move_ids.picked], ['assigned', 0.0, True])
+        self.assertEqual([picking_2.state, picking_2.move_ids.quantity, picking_2.move_ids.picked], ['assigned', 0.0, False])
 
     def test_add_partially_assigned_move_to_batch(self):
         """

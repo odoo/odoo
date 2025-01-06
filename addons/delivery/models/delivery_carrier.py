@@ -195,7 +195,9 @@ class DeliveryCarrier(models.Model):
         self.ensure_one()
         if self.delivery_type == 'fixed':
             return float(price)
-        return float(price) * (1.0 + self.margin) + self.fixed_margin
+        order = self.env.context.get('order', self.env['sale.order'])
+        fixed_margin_in_sale_currency = self._compute_currency(order, self.fixed_margin, 'company_to_pricelist') if order else self.fixed_margin
+        return float(price) * (1.0 + self.margin) + fixed_margin_in_sale_currency
 
     # -------------------------- #
     # API for external providers #
@@ -226,7 +228,7 @@ class DeliveryCarrier(models.Model):
                 product_currency=company.currency_id
             )
             # apply margin on computed price
-            res['price'] = self._apply_margins(res['price'])
+            res['price'] = self.with_context(order=order)._apply_margins(res['price'])
             # save the real price in case a free_over rule overide it to 0
             res['carrier_price'] = res['price']
             # free when order is large enough
@@ -328,12 +330,13 @@ class DeliveryCarrier(models.Model):
                 'warning_message': False}
 
     def _get_conversion_currencies(self, order, conversion):
-        if conversion == 'company_to_pricelist':
-            from_currency, to_currency = order.company_id.currency_id, order.currency_id
-        elif conversion == 'pricelist_to_company':
-            from_currency, to_currency = order.currency_id, order.company_id.currency_id
+        company_currency = (self.company_id or self.env['res.company']._get_main_company()).currency_id
+        pricelist_currency = order.currency_id
 
-        return from_currency, to_currency
+        if conversion == 'company_to_pricelist':
+            return company_currency, pricelist_currency
+        elif conversion == 'pricelist_to_company':
+            return pricelist_currency, company_currency
 
     def _compute_currency(self, order, price, conversion):
         from_currency, to_currency = self._get_conversion_currencies(order, conversion)

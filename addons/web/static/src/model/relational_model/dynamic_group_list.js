@@ -161,6 +161,13 @@ export class DynamicGroupList extends DynamicList {
         });
     }
 
+    _selectDomain(value) {
+        for (const group of this.groups) {
+            group.list._selectDomain(value);
+        }
+        super._selectDomain(value);
+    }
+
     async sortBy(fieldName) {
         if (!this.groups.length) {
             return;

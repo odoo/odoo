@@ -50,7 +50,7 @@ class DriverController(http.Controller):
     def check_certificate(self):
         """
         This route is called when we want to check if certificate is up-to-date
-        Used in cron.daily
+        Used in iot-box cron.daily, deprecated since image 24_10 but needed for compatibility with the image 24_01
         """
         helpers.get_certificate_status()
 

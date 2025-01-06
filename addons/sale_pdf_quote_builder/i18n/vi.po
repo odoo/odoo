@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -44,15 +44,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sales order between the header pages and the quote table. "
 msgstr ""
-"Cho phép bạn chia sẻ tài liệu với khách hàng của mình trong quá trình bán hàng.\n"
-"Để trống nếu bạn không muốn chia sẻ tài liệu này với khách hàng.\n"
-"Báo giá: tài liệu sẽ được gửi và khách hàng có thể truy cập bất cứ lúc nào.\n"
-"VD: tùy chọn này có thể hữu ích khi chia sẻ tệp mô tả Sản phẩm.\n"
-"Xác nhận đơn hàng: tài liệu sẽ được gửi và khách hàng có thể truy cập.\n"
-"VD: tùy chọn này có thể hữu ích khi chia sẻ Hướng dẫn sử dụng hoặc nội dung kỹ thuật số được mua trên sàn thương mại điện tử.\n"
-"Bên trong báo giá: Tài liệu sẽ có trong tệp pdf của báo giá, nằm giữa trang mở đầu và bảng báo giá."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_res_company
@@ -63,17 +57,6 @@ msgstr "Công ty"
 #: model:ir.model,name:sale_pdf_quote_builder.model_res_config_settings
 msgid "Config Settings"
 msgstr "Cài đặt cấu hình"
-
-#. module: sale_pdf_quote_builder
-#. odoo-python
-#: code:addons/sale_pdf_quote_builder/utils.py:0
-#, python-format
-msgid ""
-"It seems that we're not able to process this pdf inside a quotation. It is "
-"either encrypted, or encoded in a format we do not support."
-msgstr ""
-"Có vẻ như chúng tôi không thể xử lý bản pdf này bên trong báo giá. Nó đã "
-"được mã hóa hoặc được nhập theo định dạng mà chúng tôi không hỗ trợ."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer
@@ -87,12 +70,23 @@ msgstr "Trang kết thúc"
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_header
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_header
 msgid "Header pages"
-msgstr "Trang mở đầu"
+msgstr "Trang header"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on__inside
 msgid "Inside quote"
 msgstr "Bên trong báo giá"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/utils.py:0
+#, python-format
+msgid ""
+"It seems that we're not able to process this pdf inside a quotation. It is "
+"either encrypted, or encoded in a format we do not support."
+msgstr ""
+"Có vẻ như chúng tôi không thể xử lý bản pdf này bên trong báo giá. Nó đã "
+"được mã hóa hoặc được nhập theo định dạng mà chúng tôi không hỗ trợ."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -114,14 +108,6 @@ msgstr ""
 #, python-format
 msgid "Only PDF documents can be attached inside a quote."
 msgstr "Chỉ có thể đính kèm tài liệu PDF bên trong báo giá."
-
-#. module: sale_pdf_quote_builder
-#. odoo-python
-#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
-#, python-format
-msgid "When attached inside a quote, the document must be a file, not a URL."
-msgstr ""
-"Khi được đính kèm trong báo giá, tài liệu phải là tệp, không phải URL."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -181,7 +167,7 @@ msgstr "Mẫu báo giá"
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_ir_actions_report
 msgid "Report Action"
-msgstr "Hành động báo cáo"
+msgstr "Tác vụ báo cáo"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer_name
@@ -217,3 +203,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on
 msgid "Visible at"
 msgstr "Hiển thị ở"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+#, python-format
+msgid "When attached inside a quote, the document must be a file, not a URL."
+msgstr ""
+"Khi được đính kèm trong báo giá, tài liệu phải là tệp, không phải URL."

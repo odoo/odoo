@@ -14,21 +14,36 @@ except ImportError:
     phonenumbers = None
 
 
+def _cc_checker(country_code, code_type):
+    return lambda endpoint: get_cc_module(country_code, code_type).is_valid(endpoint)
+
+
+def _re_sanitizer(expression):
+    return lambda endpoint: (res.group(0) if (res := re.search(expression, endpoint)) else endpoint)
+
+
 PEPPOL_ENDPOINT_RULES = {
-    '0007': ['se', 'orgnr'],
-    '0088': ['ean'],
-    '0184': ['dk', 'cvr'],
-    '0192': ['no', 'orgnr'],
-    '0208': ['be', 'vat'],
+    '0007': _cc_checker('se', 'orgnr'),
+    '0088': ean.is_valid,
+    '0184': _cc_checker('dk', 'cvr'),
+    '0192': _cc_checker('no', 'orgnr'),
+    '0208': _cc_checker('be', 'vat'),
 }
 
-PEPPOL_ENDPOINT_WARNING = {
-    '0201': ['regex', '[0-9a-zA-Z]{6}$'],
-    '0210': ['it', 'codicefiscale'],
-    '0211': ['it', 'iva'],
-    '9906': ['it', 'iva'],
-    '9907': ['it', 'codicefiscale'],
-    '0151': ['au', 'abn'],
+PEPPOL_ENDPOINT_WARNINGS = {
+    '0151': _cc_checker('au', 'abn'),
+    '0201': lambda endpoint: bool(re.match('[0-9a-zA-Z]{6}$', endpoint)),
+    '0210': _cc_checker('it', 'codicefiscale'),
+    '0211': _cc_checker('it', 'iva'),
+    '9906': _cc_checker('it', 'iva'),
+    '9907': _cc_checker('it', 'codicefiscale'),
+}
+
+PEPPOL_ENDPOINT_SANITIZERS = {
+    '0007': _re_sanitizer(r'\d{10}'),
+    '0184': _re_sanitizer(r'\d{8}'),
+    '0192': _re_sanitizer(r'\d{9}'),
+    '0208': _re_sanitizer(r'\d{10}'),
 }
 
 
@@ -102,20 +117,9 @@ class ResCompany(models.Model):
 
     def _check_peppol_endpoint_number(self, warning=False):
         self.ensure_one()
+        peppol_dict = PEPPOL_ENDPOINT_WARNINGS if warning else PEPPOL_ENDPOINT_RULES
 
-        peppol_dict = PEPPOL_ENDPOINT_WARNING if warning else PEPPOL_ENDPOINT_RULES
-        endpoint_rule = peppol_dict.get(self.peppol_eas)
-        if not endpoint_rule:
-            return True
-
-        if endpoint_rule[0] == 'regex':
-            return bool(re.match(endpoint_rule[1], self.peppol_endpoint))
-
-        if endpoint_rule[0] == 'ean':
-            check_module = ean
-        else:
-            check_module = get_cc_module(endpoint_rule[0], endpoint_rule[1])
-        return check_module.is_valid(self.peppol_endpoint)
+        return True if (endpoint_rule := peppol_dict.get(self.peppol_eas)) is None else endpoint_rule(self.peppol_endpoint)
 
     # -------------------------------------------------------------------------
     # CONSTRAINTS
@@ -191,27 +195,39 @@ class ResCompany(models.Model):
 
     @api.model
     def _sanitize_peppol_endpoint(self, vals, eas=False, endpoint=False):
-        if 'peppol_eas' not in vals and 'peppol_endpoint' not in vals:
+        # TODO: remove in master
+        if not (peppol_eas := vals.get('peppol_eas', eas)) or not (peppol_endpoint := vals.get('peppol_endpoint', endpoint)):
             return vals
 
-        peppol_eas = vals['peppol_eas'] if 'peppol_eas' in vals else eas # let users remove the value
-        peppol_endpoint = vals['peppol_endpoint'] if 'peppol_endpoint' in vals else endpoint
-        if not peppol_eas or not peppol_endpoint:
-            return vals
+        if sanitizer := PEPPOL_ENDPOINT_SANITIZERS.get(peppol_eas):
+            vals['peppol_endpoint'] = sanitizer(peppol_endpoint)
 
-        if peppol_eas == '0208':
-            cbe_match = re.search('[0-9]{10}', peppol_endpoint)
-            if bool(cbe_match):
-                vals['peppol_endpoint'] = cbe_match.group(0)
         return vals
+
+    @api.model
+    def _sanitize_peppol_endpoint_in_values(self, values):
+        eas = values.get('peppol_eas')
+        endpoint = values.get('peppol_endpoint')
+        if not eas or not endpoint:
+            return
+        if sanitizer := PEPPOL_ENDPOINT_SANITIZERS.get(eas):
+            new_endpoint = sanitizer(endpoint)
+            if new_endpoint:
+                values['peppol_endpoint'] = new_endpoint
 
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            vals = self._sanitize_peppol_endpoint(vals)
+            self._sanitize_peppol_endpoint_in_values(vals)
         return super().create(vals_list)
 
     def write(self, vals):
-        for company in self:
-            vals = self._sanitize_peppol_endpoint(vals, company.peppol_eas, company.peppol_endpoint)
+        self._sanitize_peppol_endpoint_in_values(vals)
         return super().write(vals)
+
+    def _get_peppol_edi_mode(self):
+        self.ensure_one()
+        config_param = self.env['ir.config_parameter'].sudo().get_param('account_peppol.edi.mode')
+        # by design, we can only have zero or one proxy user per company with type Peppol
+        peppol_user = self.sudo().account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')
+        return peppol_user.edi_mode or config_param or 'prod'

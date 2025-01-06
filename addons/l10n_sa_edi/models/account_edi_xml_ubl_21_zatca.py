@@ -185,7 +185,10 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             the buyer VAT registration number or buyer group VAT registration number must not exist in the Invoice
         """
         if role != 'customer' or partner.country_id.code == 'SA':
-            return super()._get_partner_party_tax_scheme_vals_list(partner, role)
+            vals_list = super()._get_partner_party_tax_scheme_vals_list(partner, role)
+            for vals in vals_list:
+                vals['tax_scheme_vals'] = {'id': 'VAT'}
+            return vals_list
         return []
 
     def _apply_invoice_tax_filter(self, base_line, tax_values):
@@ -237,13 +240,8 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
         allowance_charge_vals = vals['vals']['allowance_charge_vals']
         allowance_total_amount = sum(a['amount'] for a in allowance_charge_vals if a['charge_indicator'] == 'false')
         if downpayment_vals:
-            # - BR-KSA-80: To calculate prepaid, we need to sum up the amounts of standard lines (neither a down-payments, nor a discount)
-            #   then we add the total amount of the down-payment.
-            # - BR-CO-16: To calculate payable amount, we substract the calculated prepaid amount from the total tax inclusive amount of the invoice
-            regular_line_vals = invoice._prepare_edi_tax_details(
-                filter_invl_to_apply=lambda line: (line.price_subtotal > 0 and not line._get_downpayment_lines())
-            )
-            prepaid_amount = abs(regular_line_vals['base_amount_currency'] + regular_line_vals['tax_amount_currency']) + downpayment_vals['total_amount']
+            # - BR-KSA-80: To calculate payable amount, we deduct prepaid amount from total tax inclusive amount
+            prepaid_amount = downpayment_vals['total_amount']
             payable_amount = tax_inclusive_amount - prepaid_amount
         return {
             'line_extension_amount': line_extension_amount - allowance_total_amount,
@@ -279,7 +277,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
                 'tax_category_vals': [{
                     'id': tax['id'],
                     'percent': tax['percent'],
-                    'tax_scheme_id': 'VAT',
+                    'tax_scheme_vals': {'id': 'VAT'},
                 } for tax in self._get_tax_category_list(line.move_id, taxes)],
             })
         return res
@@ -376,10 +374,10 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
 
         def grouping_key_generator(base_line, tax_values):
             tax = tax_values['tax_repartition_line'].tax_id
-            tax_category_vals = self._get_tax_category_list(line.move_id, tax)[0]
+            tax_category_vals = next(iter(self._get_tax_category_list(line.move_id, tax)), {})
             grouping_key = {
-                'tax_category_id': tax_category_vals['id'],
-                'tax_category_percent': tax_category_vals['percent'],
+                'tax_category_id': tax_category_vals.get('id'),
+                'tax_category_percent': tax_category_vals.get('percent'),
                 '_tax_category_vals_': tax_category_vals,
                 'tax_amount_type': tax.amount_type,
             }
@@ -405,6 +403,11 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             line_vals['price_vals']['price_amount'] = 0
             line_vals['tax_total_vals'][0]['tax_amount'] = 0
             line_vals['prepayment_vals'] = self._l10n_sa_get_line_prepayment_vals(line, taxes_vals)
+        else:
+            # - BR-KSA-80: only down-payment lines should have a tax subtotal breakdown, as that is
+            # used during computation of prepaid amount as ZATCA sums up tax amount/taxable amount of all lines
+            # irrespective of whether they are down-payment lines.
+            line_vals['tax_total_vals'][0].pop('tax_subtotal_vals', None)
         line_vals['tax_total_vals'][0]['total_amount_sa'] = total_amount_sa
         line_vals['line_quantity'] = abs(line_vals['line_quantity'])
         line_vals['line_extension_amount'] = extension_amount

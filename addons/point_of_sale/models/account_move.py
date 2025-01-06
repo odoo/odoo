@@ -71,3 +71,8 @@ class AccountMoveLine(models.Model):
         if sudo_order:
             price_unit = sudo_order._get_pos_anglo_saxon_price_unit(self.product_id, self.move_id.partner_id.id, self.quantity)
         return price_unit
+
+    def _check_edi_line_tax_required(self):
+        if self.product_id.type == 'combo':
+            return False
+        return super()._check_edi_line_tax_required()

@@ -23,7 +23,7 @@
             <attribute name="t-if" add="(pos_order.company_id.country_code != 'PE')" separator=" and " />
         </xpath>
         <xpath expr="//div[@id='get_info_div']" position="after">
-            <h4 t-else="">
+            <h4 t-elif="pos_order.company_id.country_code == 'PE'">
                 Please
                 <a
                     role="button"

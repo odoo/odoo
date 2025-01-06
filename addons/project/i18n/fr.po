@@ -3,18 +3,19 @@
 # 	* project
 # 
 # Translators:
-# Wil Odoo, 2024
 # Jolien De Paepe, 2024
 # Larissa Manderfeld, 2024
 # Camille Dantinne <cmd@odoo.com>, 2024
+# Wil Odoo, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Camille Dantinne <cmd@odoo.com>, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -385,7 +386,7 @@ msgstr ""
 "        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>\n"
-"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Vous recevez cet email parce que votre projet a été déplacé à l'étape <b t-out=\"object.stage_id.name or ''\">Fait</b></span>\n"
+"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Vous recevez cet e-mail parce que votre projet a été déplacé à l'étape <b t-out=\"object.stage_id.name or ''\">Fait</b></span>\n"
 "            "
 
 #. module: project
@@ -557,8 +558,8 @@ msgid ""
 msgstr ""
 "<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
 "                                                    <i class=\"fa fa-lightbulb-o pe-2\"/>\n"
-"                                                    <span invisible=\"rating_status == 'periodic'\">Une demande d'évaluation sera envoyée dès que la tâche atteint une étape sur laquelle un modèle d'email d'évaluation est défini.</span>\n"
-"                                                    <span invisible=\"rating_status == 'stage'\">Les demandes d'évaluation seront envoyées dès que la tâche reste dans une étape sur laquelle un modèle d'email d'évaluation est défini.</span>\n"
+"                                                    <span invisible=\"rating_status == 'periodic'\">Une demande d'évaluation sera envoyée dès que la tâche atteint une étape sur laquelle un modèle d'e-mail d'évaluation est défini.</span>\n"
+"                                                    <span invisible=\"rating_status == 'stage'\">Les demandes d'évaluation seront envoyées dès que la tâche reste dans une étape sur laquelle un modèle d'e-mail d'évaluation est défini.</span>\n"
 "                                                </span>"
 
 #. module: project
@@ -654,7 +655,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Accept Emails From"
-msgstr "Accepter les emails de"
+msgstr "Accepter les e-mails de"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_instruction_message
@@ -774,7 +775,7 @@ msgstr "Ajouter des détails sur cette tâche..."
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__note
 msgid "Add extra content to display in the email"
-msgstr "Ajouter du contenu supplémentaire à afficher dans l'email"
+msgstr "Ajouter du contenu supplémentaire à afficher dans l'e-mail"
 
 #. module: project
 #. odoo-javascript
@@ -865,6 +866,7 @@ msgid "Allocated Time"
 msgstr "Temps alloué"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task_allocated_hours_template
 msgid "Allocated Time:"
 msgstr "Temps alloué :"
@@ -1025,8 +1027,6 @@ msgid "Assigned to"
 msgstr "Assigné à"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
@@ -1034,7 +1034,6 @@ msgstr "Assigné à"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
-#, python-format
 msgid "Assignees"
 msgstr "Assignés"
 
@@ -1347,9 +1346,9 @@ msgid ""
 "Rating when changing stage: an email will be automatically sent when the task reaches the stage on which the rating email template is set.\n"
 "Periodic rating: an email will be automatically sent at regular intervals as long as the task remains in the stage in which the rating email template is set."
 msgstr ""
-"Recueillez un feedback de vos clients en leur envoyant une demande d'évaluation lorsqu'une tâche atteint une certaine étape. Pour ce faire, définissez un modèle d'email d'évaluation sur les étapes correspondantes.\n"
-"Évaluation lors du changement d'étape : un email sera envoyé automatiquement quand la tâche atteint l'étape pour laquelle le modèle d'email d'évaluation est défini.\n"
-"Évaluation périodique : un email sera envoyé automatiquement à intervalles réguliers tant que la tâche se situe à l'étape pour laquelle le modèle d'email d'évaluation est défini."
+"Recueillez un feedback de vos clients en leur envoyant une demande d'évaluation lorsqu'une tâche atteint une certaine étape. Pour ce faire, définissez un modèle d'e-mail d'évaluation sur les étapes correspondantes.\n"
+"Évaluation lors du changement d'étape : un e-mail sera envoyé automatiquement quand la tâche atteint l'étape pour laquelle le modèle d'e-mail d'évaluation est défini.\n"
+"Évaluation périodique : un e-mail sera envoyé automatiquement à intervalles réguliers tant que la tâche se situe à l'étape pour laquelle le modèle d'e-mail d'évaluation est défini."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
@@ -1526,12 +1525,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create tasks by sending an email to"
-msgstr "Créez des tâches en envoyant un email à"
+msgstr "Créez des tâches en envoyant un e-mail à"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "Create tasks by sending an email to the email address of your project."
-msgstr "Créez des tâches en envoyant un email à l'adresse de votre projet."
+msgstr "Créez des tâches en envoyant un e-mail à l'adresse de votre projet."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
@@ -1638,7 +1637,7 @@ msgstr "Client"
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "Customer Email"
-msgstr "Email client"
+msgstr "E-mail client"
 
 #. module: project
 #. odoo-javascript
@@ -1674,7 +1673,7 @@ msgid ""
 "Customers propose feedbacks by email; Odoo creates tasks automatically, and you can\n"
 "      communicate on the task directly."
 msgstr ""
-"Les clients proposent un feedback par email ; Odoo crée des tâches automatiquement et vous pouvez \n"
+"Les clients proposent un feedback par e-mail ; Odoo crée des tâches automatiquement et vous pouvez \n"
 "communiquer directement sur la tâche."
 
 #. module: project
@@ -1989,7 +1988,7 @@ msgstr "Afficher le bouton Tâche parente"
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
 "Accès non disponible, ne pas tenir compte de cette donnée dans le digest "
-"d'email envoyé à l'utilisateur"
+"d'e-mail envoyé à l'utilisateur"
 
 #. module: project
 #. odoo-javascript
@@ -2049,7 +2048,7 @@ msgstr "Édition"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__partner_email
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_email
@@ -2060,7 +2059,7 @@ msgstr "Alias de messagerie"
 #: model:ir.model.fields,field_description:project.field_project_project_stage__mail_template_id
 #: model:ir.model.fields,field_description:project.field_project_task_type__mail_template_id
 msgid "Email Template"
-msgstr "Modèle d'email"
+msgstr "Modèle d'e-mail"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
@@ -2068,19 +2067,24 @@ msgid ""
 "Email addresses that were in the CC of the incoming emails from this task "
 "and that are not currently linked to an existing customer."
 msgstr ""
-"Adresses email qui étaient en CC ou les emails entrants de cette tâche et "
+"Adresses e-mail qui étaient en CC ou les e-mails entrants de cette tâche et "
 "qui ne sont actuellement pas associées à un client existant."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
 #: model:ir.model.fields,field_description:project.field_project_update__email_cc
 msgid "Email cc"
-msgstr "Email cc"
+msgstr "E-mail cc"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "Domaine de l'e-mail e.g. 'example.com' dans 'odoo@example.com'"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "Emails sent to"
-msgstr "Emails envoyés à"
+msgstr "E-mails envoyés à"
 
 #. module: project
 #. odoo-javascript
@@ -2440,7 +2444,7 @@ msgid ""
 "Alternatively, it will be sent at a regular interval as long as the task remains in this stage, depending on the configuration of your project. \n"
 "To use this feature make sure that the 'Customer Ratings' option is enabled on your project."
 msgstr ""
-"Si défini, une demande d'évaluation sera automatiquement envoyée par email au client lorsque la tâche atteindra ce stade.\n"
+"Si défini, une demande d'évaluation sera automatiquement envoyée par e-mail au client lorsque la tâche atteindra ce stade.\n"
 "Alternativement, il sera envoyé à intervalles réguliers tant que la tâche reste à ce stade, selon la configuration de votre projet.\n"
 "Pour utiliser cette fonctionnalité, assurez-vous que l'option \"Évaluations des clients\" est activée sur votre projet."
 
@@ -2450,8 +2454,8 @@ msgid ""
 "If set, an email will be automatically sent to the customer when the project"
 " reaches this stage."
 msgstr ""
-"Si défini, un email sera automatiquement envoyé au client lorsque le projet "
-"atteindra cette étape."
+"Si défini, un e-mail sera automatiquement envoyé au client lorsque le projet"
+" atteindra cette étape."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__mail_template_id
@@ -2459,7 +2463,7 @@ msgid ""
 "If set, an email will be automatically sent to the customer when the task "
 "reaches this stage."
 msgstr ""
-"Si défini, un email sera automatiquement envoyé au client lorsque la tâche "
+"Si défini, un e-mail sera automatiquement envoyé au client lorsque la tâche "
 "atteindra cette étape."
 
 #. module: project
@@ -2530,7 +2534,7 @@ msgid ""
 "automatically synchronized with Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
 msgstr ""
-"Email interne associé avec le projet. Les emails entrants sont "
+"E-mail interne associé avec le projet. Les e-mails entrants sont "
 "automatiquement synchronisés avec les tâches (ou optionnellement les "
 "incidents si le module Suivi des Incidents est installé)."
 
@@ -2636,7 +2640,7 @@ msgid ""
 "                    Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
 "Suivez l'évolution de vos tâches de la création à la complétion.<br>\n"
-"                    Collaborez efficacement en discutant en temps réel ou par email."
+"                    Collaborez efficacement en discutant en temps réel ou par e-mail."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action
@@ -2645,7 +2649,7 @@ msgid ""
 "                Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
 "Suivez l'évolution de vos tâches de la création à la complétion.<br>\n"
-"                Collaborez efficacement en discutant en temps réel ou par email."
+"                Collaborez efficacement en discutant en temps réel ou par e-mail."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
@@ -3351,6 +3355,8 @@ msgstr "Une fois par mois"
 #, python-format
 msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
 msgstr ""
+"Seules les images jpeg, png, bmp et tiff peuvent être ajoutées en pièce "
+"jointe."
 
 #. module: project
 #. odoo-javascript
@@ -3406,7 +3412,7 @@ msgid ""
 "                    Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
 "Organisez vos tâches en les répartissant à travers le pipeline.<br>\n"
-"                    Collaborez efficacement en discutant en temps réel ou par email."
+"                    Collaborez efficacement en discutant en temps réel ou par e-mail."
 
 #. module: project
 #. odoo-python
@@ -3454,8 +3460,8 @@ msgid ""
 "(parent_model) and task (model))"
 msgstr ""
 "Modèle parent de l'alias. Le modèle possédant la référence de l'alias n'est "
-"pas nécessairement le modèle donné par alias_model_id (exemple : project "
-"(parent_model) et task (model))"
+"pas nécessairement le modèle donné par alias_model_id (exemple : projet "
+"(parent_model) et tâche (model))"
 
 #. module: project
 #. odoo-python
@@ -3981,7 +3987,7 @@ msgstr "Texte de l'évaluation moyenne"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
 msgid "Rating Email Template"
-msgstr "Modèle d'email pour les évaluations"
+msgstr "Modèle d'e-mail pour les évaluations"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status_period
@@ -4207,15 +4213,17 @@ msgstr "Visage triste"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
 #, python-format
-msgid "Save the task to be able to paste images in description"
+msgid "Save the task to be able to drag images in description"
 msgstr ""
+"Enregistrer la tâche pour pouvoir glisser des images dans la description"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
 #, python-format
-msgid "Save the task to be able to drag images in Description"
+msgid "Save the task to be able to paste images in description"
 msgstr ""
+"Enregistrer la tâche pour pouvoir insérer des images dans la description"
 
 #. module: project
 #. odoo-javascript
@@ -4336,7 +4344,7 @@ msgstr "Envoyer"
 #: model:ir.actions.act_window,name:project.action_send_mail_project_project
 #: model:ir.actions.act_window,name:project.action_send_mail_project_task
 msgid "Send Email"
-msgstr "Envoyer un email"
+msgstr "Envoyer un e-mail"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__sequence
@@ -4363,7 +4371,7 @@ msgstr "Définir le statut"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set a Rating Email Template on Stages"
-msgstr "Définir un modèle d'email d'évaluation sur les étapes"
+msgstr "Définir un modèle d'e-mail d'évaluation sur les étapes"
 
 #. module: project
 #: model:mail.template,description:project.project_done_email_template
@@ -4405,7 +4413,7 @@ msgid ""
 "stages"
 msgstr ""
 "Définir ce modèle sur une étape de projet pour automatiquement envoyer un "
-"email lorsque la tâche atteint cette étape"
+"e-mail lorsque la tâche atteint cette étape"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -4833,6 +4841,7 @@ msgstr "Tâche : Demande d'évaluation"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #: code:addons/project/models/project_project.py:0
+#: code:addons/project/models/project_project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.actions.act_window,name:project.action_view_task_from_milestone
@@ -4922,6 +4931,14 @@ msgstr "L'étape personnelle de tâche de l'utilisateur actuel."
 
 #. module: project
 #. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid ""
+"The document does not exist or you do not have the rights to access it."
+msgstr "Le document n'existe pas ou vous n'avez pas les droits d'accès."
+
+#. module: project
+#. odoo-python
 #: code:addons/project/models/project_task_recurrence.py:0
 #, python-format
 msgid "The end date should be in the future"
@@ -4951,8 +4968,8 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"Le modèle (type de document Odoo) auquel correspond cet alias. Chaque email "
-"entrant ne correspondant pas à un enregistrement existant entraînera la "
+"Le modèle (type de document Odoo) auquel correspond cet alias. Chaque e-mail"
+" entrant ne correspondant pas à un enregistrement existant entraînera la "
 "création d'un nouvel enregistrement de ce modèle (par ex. une tâche d'un "
 "projet)"
 
@@ -4962,7 +4979,7 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Le nom de l'alias, par exemple 'carrières' pour récupérer les emails de "
+"Le nom de l'alias, par exemple 'carrières' pour récupérer les e-mails de "
 "<carrières@example.odoo.com>"
 
 #. module: project
@@ -5167,7 +5184,7 @@ msgid ""
 "\"Call\" or \"Send email\")."
 msgstr ""
 "Cela représente les différentes catégories de choses que vous devez faire "
-"(par exemple \"Appeler\" ou \"Envoyer un email\")."
+"(par exemple \"Appeler\" ou \"Envoyer un e-mail\")."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5179,7 +5196,7 @@ msgstr "Gestion du temps"
 #: model:digest.tip,name:project.digest_tip_project_1
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "Tip: Create tasks from incoming emails"
-msgstr "Astuce : Créez des tâches à partir des emails entrants"
+msgstr "Astuce : Créez des tâches à partir des e-mails entrants"
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_0
@@ -5232,7 +5249,7 @@ msgid ""
 "                Chat in real time or by email to collaborate efficiently."
 msgstr ""
 "Pour faire avancer les choses, utilisez les activités et les statuts sur les tâches.<br>\n"
-"                Discutez en temps réel ou par email pour collaborer efficacement."
+"                Discutez en temps réel ou par e-mail pour collaborer efficacement."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
@@ -5489,7 +5506,7 @@ msgid ""
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
 msgstr ""
-"Utilisez le chatter pour <b>envoyer des emails</b> et communiquer "
+"Utilisez le chatter pour <b>envoyer des e-mails</b> et communiquer "
 "efficacement avec vos clients. Ajoutez de nouvelles personnes à la liste des"
 " abonnés pour les tenir au courant des principaux changements de cette "
 "tâche."
@@ -6016,6 +6033,13 @@ msgstr "pour marquer la tâche comme complétée."
 
 #. module: project
 #. odoo-javascript
+#: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
+#, python-format
+msgid "state.message"
+msgstr "statut.message"
+
+#. module: project
+#. odoo-javascript
 #: code:addons/project/static/src/components/project_task_name_with_subtask_count_char_field/project_task_name_with_subtask_count_char_field.xml:0
 #, python-format
 msgid "sub-tasks)"
@@ -6075,8 +6099,12 @@ msgstr "va générer des tâches dans votre"
 
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
-msgid "{{ object.project_id.company_id.name }}: Satisfaction Survey"
-msgstr "{{ object.project_id.company_id.name }}: Enquête de satisfaction"
+msgid ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: "
+"Satisfaction Survey"
+msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: Enquête de"
+" satisfaction"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban

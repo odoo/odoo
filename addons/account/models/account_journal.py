@@ -692,7 +692,7 @@ class AccountJournal(models.Model):
             ), False
         )
         if company != self.env.ref('base.main_company'):
-            company_identifier = company.name if self.env['mail.alias']._is_encodable(company.name) else company.id
+            company_identifier = self.env['mail.alias']._sanitize_alias_name(company.name) if self.env['mail.alias']._is_encodable(company.name) else company.id
             if f'-{company_identifier}' not in alias_name:
                 alias_name = f"{alias_name}-{company_identifier}"
         return self.env['mail.alias']._sanitize_alias_name(alias_name)
@@ -858,6 +858,11 @@ class AccountJournal(models.Model):
             if journal.currency_id and journal.currency_id != journal.company_id.currency_id:
                 name = f"{name} ({journal.currency_id.name})"
             journal.display_name = name
+
+    def action_archive(self):
+        if self.env['account.payment.method.line'].search_count([('journal_id', 'in', self.ids)], limit=1):
+            raise ValidationError(_("This journal is associated with a payment method. You cannot archive it"))
+        return super().action_archive()
 
     def action_configure_bank_journal(self):
         """ This function is called by the "configure" button of bank journals,

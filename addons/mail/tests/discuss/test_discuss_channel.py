@@ -204,8 +204,7 @@ class TestChannelInternals(MailCommon):
         chat = self.env['discuss.channel'].with_user(self.user_admin).channel_get((self.partner_employee | self.user_admin.partner_id).ids)
         msg_1 = self._add_messages(chat, 'Body1', author=self.user_employee.partner_id)
         member = chat.channel_member_ids.filtered(lambda m: m.partner_id == self.user_admin.partner_id)
-
-        self.env['bus.bus'].sudo().search([]).unlink()
+        self._reset_bus()
         with self.assertBus(
             [
                 (self.env.cr.dbname, "discuss.channel", chat.id),
@@ -250,7 +249,7 @@ class TestChannelInternals(MailCommon):
             chat._channel_seen(msg_1.id)
         # There should be no channel member to be set as seen in the second time
         # So no notification should be sent
-        self.env['bus.bus'].sudo().search([]).unlink()
+        self._reset_bus()
         with self.assertBus([], []):
             chat._channel_seen(msg_1.id)
 
@@ -261,6 +260,12 @@ class TestChannelInternals(MailCommon):
         self.assertFalse(message_format2['parent_id'], "should not allow parent from wrong thread")
         message_format3 = channels[1].message_post(body='Body3', parent_id=message.id + 100)
         self.assertFalse(message_format3['parent_id'], "should not allow non-existing parent")
+
+    def test_channel_message_post_with_voice_attachment(self):
+        """ Test 'voice' info being supported to create voice metadata. """
+        channel = self.env['discuss.channel'].create({'name': 'channel_1'})
+        channel.message_post(attachments=[('audio', b'OggS\x00\x02', {'voice': True})])
+        self.assertTrue(channel.message_ids.attachment_ids.voice_ids, "message's attachment should have voice metadata")
 
     @mute_logger('odoo.models.unlink')
     def test_channel_unsubscribe_auto(self):
@@ -378,7 +383,7 @@ class TestChannelInternals(MailCommon):
 
     def test_channel_write_should_send_notification(self):
         channel = self.env['discuss.channel'].create({"name": "test", "description": "test"})
-        self.env['bus.bus'].search([]).unlink()
+        self._reset_bus()
         with self.assertBus(
             [(self.cr.dbname, 'discuss.channel', channel.id)],
             [{
@@ -400,7 +405,7 @@ class TestChannelInternals(MailCommon):
         channel.image_128 = base64.b64encode(("<svg/>").encode())
         avatar_cache_key = channel._get_avatar_cache_key()
         channel.image_128 = False
-        self.env['bus.bus'].search([]).unlink()
+        self._reset_bus()
         with self.assertBus(
             [(self.cr.dbname, 'discuss.channel', channel.id)],
             [{
@@ -462,7 +467,7 @@ class TestChannelInternals(MailCommon):
         """Ensures the command '/help' works in a channel"""
         channel = self.env["discuss.channel"].browse(self.test_channel.ids)
         channel.name = "<strong>R&D</strong>"
-        self.env['bus.bus'].sudo().search([]).unlink()
+        self._reset_bus()
         with self.assertBus(
             [(self.env.cr.dbname, "res.partner", self.env.user.partner_id.id)],
             [
@@ -498,7 +503,7 @@ class TestChannelInternals(MailCommon):
             'channel_partner_ids': [(6, 0, test_user.partner_id.id)]
         })
         test_group.add_members(self.partner_employee_nomail.ids)
-        self.env['bus.bus'].sudo().search([]).unlink()
+        self._reset_bus()
         with self.assertBus(
             [(self.env.cr.dbname, "res.partner", self.env.user.partner_id.id)],
             [

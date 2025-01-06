@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -45,15 +45,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sales order between the header pages and the quote table. "
 msgstr ""
-"판매에서 고객과 문서를 공유할 수 있습니다.\n"
-"판매 고객과 해당 문서를 공유하지 않으려면 비워두세요.\n"
-"견적서: 언제든지 고객에게 문서를 전송하거나 고객이 액세스할 수 있습니다.\n"
-"예: 해당 옵션을 통해 품목에 대한 설명 파일을 편리하게 공유할 수 있습니다.\n"
-"주문 확정: 고객에게 문서를 전송하거나 고객이 액세스할 수 있습니다.\n"
-"예: 해당 옵션을 통해 사용자 매뉴얼이나 이커머스에서 구매한 디지털 콘텐츠를 편리하게 공유할 수 있습니다.\n"
-"내부 견적: 문서가 머릿말 페이지 및 견적표 사이의 견적서 PDF 안에 포함됩니다. "
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_res_company
@@ -64,15 +58,6 @@ msgstr "회사"
 #: model:ir.model,name:sale_pdf_quote_builder.model_res_config_settings
 msgid "Config Settings"
 msgstr "환경설정"
-
-#. module: sale_pdf_quote_builder
-#. odoo-python
-#: code:addons/sale_pdf_quote_builder/utils.py:0
-#, python-format
-msgid ""
-"It seems that we're not able to process this pdf inside a quotation. It is "
-"either encrypted, or encoded in a format we do not support."
-msgstr "견적서 내에서 이 PDF를 처리할 수 없습니다. 암호화되었거나 지원되지 않는 형식으로 인코딩되어 있을 수 있습니다."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer
@@ -94,6 +79,15 @@ msgid "Inside quote"
 msgstr "내부 견적"
 
 #. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/utils.py:0
+#, python-format
+msgid ""
+"It seems that we're not able to process this pdf inside a quotation. It is "
+"either encrypted, or encoded in a format we do not support."
+msgstr "견적서 내에서 이 PDF를 처리할 수 없습니다. 암호화되었거나 지원되지 않는 형식으로 인코딩되어 있을 수 있습니다."
+
+#. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Learn more from the documentation."
 msgstr "자세한 내용은 문서를 참조하세요."
@@ -111,13 +105,6 @@ msgstr "견적서를 꾸미려면 견적서의 머리말 페이지 및 품목 �
 #, python-format
 msgid "Only PDF documents can be attached inside a quote."
 msgstr "견적서 내부에는 PDF 문서만 첨부할 수 있습니다."
-
-#. module: sale_pdf_quote_builder
-#. odoo-python
-#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
-#, python-format
-msgid "When attached inside a quote, the document must be a file, not a URL."
-msgstr "견적서 안에 문서를 첨부하려면 URL이 아닌 파일을 사용해야 합니다."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -213,3 +200,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on
 msgid "Visible at"
 msgstr "다음에 표시"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+#, python-format
+msgid "When attached inside a quote, the document must be a file, not a URL."
+msgstr "견적서 안에 문서를 첨부하려면 URL이 아닌 파일을 사용해야 합니다."

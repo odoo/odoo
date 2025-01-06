@@ -20,9 +20,9 @@ class StockMoveLine(models.Model):
             analytic_move_to_recompute.add(move.id)
             if move_line.state != 'done':
                 continue
-            rounding = move.product_id.uom_id.rounding
-            diff = move.product_uom._compute_quantity(move_line.quantity, move.product_id.uom_id)
-            if float_is_zero(diff, precision_rounding=rounding):
+            product_uom = move_line.product_id.uom_id
+            diff = move_line.product_uom_id._compute_quantity(move_line.quantity, product_uom)
+            if float_is_zero(diff, precision_rounding=product_uom.rounding):
                 continue
             self._create_correction_svl(move, diff)
         if analytic_move_to_recompute:
@@ -40,14 +40,11 @@ class StockMoveLine(models.Model):
             for move_line in self:
                 if move_line.state != 'done':
                     continue
-                move = move_line.move_id
-                if float_compare(vals['quantity'], move_line.quantity, precision_rounding=move.product_uom.rounding) == 0:
+                product_uom = move_line.product_id.uom_id
+                diff = move_line.product_uom_id._compute_quantity(vals['quantity'] - move_line.quantity, product_uom, rounding_method='HALF-UP')
+                if float_is_zero(diff, precision_rounding=product_uom.rounding):
                     continue
-                rounding = move.product_id.uom_id.rounding
-                diff = move.product_uom._compute_quantity(vals['quantity'] - move_line.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
-                if float_is_zero(diff, precision_rounding=rounding):
-                    continue
-                self._create_correction_svl(move, diff)
+                self._create_correction_svl(move_line.move_id, diff)
         res = super(StockMoveLine, self).write(vals)
         if analytic_move_to_recompute:
             self.env['stock.move'].browse(analytic_move_to_recompute)._account_analytic_entry_move()

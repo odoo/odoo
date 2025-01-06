@@ -83,10 +83,10 @@ class TestExpenses(TestExpenseCommon):
             {'total_amount': 1160.00, 'untaxed_amount':  992.65, 'total_tax_amount': 167.35, 'state': 'draft', 'accounting_date': False},
         ])
         self.assertRecordValues(expense_sheets.expense_line_ids, [
-            {'total_amount_currency': 1600.00, 'untaxed_amount_currency': 1391.30, 'price_unit':  800.00, 'tax_amount': 208.70, 'state': 'reported'},
-            {'total_amount_currency':  160.00, 'untaxed_amount_currency':  123.08, 'price_unit':  160.00, 'tax_amount':  36.92, 'state': 'reported'},
-            {'total_amount_currency': 1000.00, 'untaxed_amount_currency':  869.57, 'price_unit': 1000.00, 'tax_amount': 130.43, 'state': 'reported'},
-            {'total_amount_currency':  160.00, 'untaxed_amount_currency':  123.08, 'price_unit':  160.00, 'tax_amount':  36.92, 'state': 'reported'},
+            {'total_amount_currency': 1600.00, 'untaxed_amount_currency': 1391.30, 'price_unit':  800.00, 'tax_amount_currency': 208.70, 'state': 'reported'},
+            {'total_amount_currency':  160.00, 'untaxed_amount_currency':  123.08, 'price_unit':  160.00, 'tax_amount_currency':  36.92, 'state': 'reported'},
+            {'total_amount_currency': 1000.00, 'untaxed_amount_currency':  869.57, 'price_unit': 1000.00, 'tax_amount_currency': 130.43, 'state': 'reported'},
+            {'total_amount_currency':  160.00, 'untaxed_amount_currency':  123.08, 'price_unit':  160.00, 'tax_amount_currency':  36.92, 'state': 'reported'},
         ])
 
         # Submitting properly change states
@@ -626,7 +626,7 @@ class TestExpenses(TestExpenseCommon):
         expense = expense_form.save()
         self.assertEqual(expense.name, product.display_name)
         self.assertEqual(expense.product_uom_id, product.uom_id)
-        self.assertEqual(expense.tax_ids, product.supplier_taxes_id)
+        self.assertEqual(expense.tax_ids, product.supplier_taxes_id.filtered(lambda t: t.company_id == expense.company_id))
         self.assertEqual(expense.account_id, product._get_product_accounts()['expense'])
 
     def test_attachments_in_move_from_own_expense(self):
@@ -1063,3 +1063,164 @@ class TestExpenses(TestExpenseCommon):
 
         expense_sheet.expense_line_ids.analytic_distribution = {self.analytic_account_1.id: 100.00}
         expense_sheet.with_context(validate_analytic=True).action_approve_expense_sheets()
+
+    def test_expense_no_stealing_from_employees(self):
+        """
+        Test to check that the company doesn't steal their employee when the commercial_partner_id of the employee partner
+        is the company
+        """
+        self.expense_employee.user_partner_id.parent_id = self.env.company.partner_id
+        self.assertEqual(self.env.company.partner_id, self.expense_employee.user_partner_id.commercial_partner_id)
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Company Cash Basis Expense Report',
+            'employee_id': self.expense_employee.id,
+            'payment_mode': 'own_account',
+            'state': 'approve',
+            'expense_line_ids': [Command.create({
+                'name': 'Company Cash Basis Expense',
+                'product_id': self.product_c.id,
+                'payment_mode': 'own_account',
+                'total_amount': 20.0,
+                'employee_id': self.expense_employee.id,
+            })]
+        })
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+        move = expense_sheet.account_move_ids
+
+        self.assertNotEqual(move.commercial_partner_id, self.env.company.partner_id)
+        self.assertEqual(move.partner_id, self.expense_employee.user_partner_id)
+        self.assertEqual(move.commercial_partner_id, self.expense_employee.user_partner_id)
+
+    def test_expense_sheet_with_line_ids(self):
+        """
+        Test to create an expense sheet with no account date and having multiple expenses
+        in which one of the expense doesn't have date to get the account date from the max date of expenses.
+        """
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for John Smith',
+            'employee_id': self.expense_employee.id,
+            'payment_method_line_id': self.outbound_payment_method_line.id,
+            'expense_line_ids': [
+                Command.create({
+                    'name': 'Car Travel Expenses',
+                    'employee_id': self.expense_employee.id,
+                    'product_id': self.product_c.id,
+                    'total_amount': 350.00,
+                    'date': False,
+                }),
+                Command.create({
+                    'name': 'Lunch expense',
+                    'employee_id': self.expense_employee.id,
+                    'product_id': self.product_c.id,
+                    'total_amount': 90.00,
+                    'date': '2024-04-30',
+                }),
+            ]
+        })
+        # Validate the values before submitting and approving
+        self.assertRecordValues(expense_sheet, [
+            {'total_amount': 440.00, 'accounting_date': False, 'state': 'draft', 'employee_id': self.expense_employee.id}
+        ])
+        self.assertRecordValues(expense_sheet.expense_line_ids, [
+            {'name': 'Car Travel Expenses', 'total_amount': 350.00, 'date': False},
+            {'name': 'Lunch expense', 'total_amount': 90.00, 'date': date(2024, 4, 30)},
+        ])
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+
+        # Validate the record values after submitting and approving
+        self.assertRecordValues(expense_sheet, [
+            {'total_amount': 440.00, 'accounting_date': date(2024, 4, 30), 'state': 'post', 'employee_id': self.expense_employee.id}
+        ])
+        self.assertRecordValues(expense_sheet.expense_line_ids, [
+            {'name': 'Car Travel Expenses', 'total_amount': 350.00, 'date': False},
+            {'name': 'Lunch expense', 'total_amount': 90.00, 'date': date(2024, 4, 30)},
+        ])
+
+        # Reset to draft to make the accounting_date to False and then recompute it
+        expense_sheet.action_reset_expense_sheets()
+
+        # Validate the accounting_date value to be false
+        self.assertFalse(expense_sheet.accounting_date)
+
+        # Update one of the expense sheet line date
+        expense_sheet.expense_line_ids[1].write({'date': '2024-05-30'})
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+
+        # Validate the acction_date value after subitting and approving
+        self.assertTrue(expense_sheet.accounting_date, date(2024, 5, 30))
+
+    def test_expense_bank_account_of_employee_on_entry_and_register_payment(self):
+        """
+        Test that the bank account defined on the employee form is correctly set on the entry and on the register payment
+        when having multiple bank accounts defined on the partner
+        """
+
+        self.partner_bank_account_1 = self.env['res.partner.bank'].create({
+            'acc_number': "987654321",
+            'partner_id': self.expense_employee.user_partner_id.id,
+            'acc_type': 'bank',
+        })
+        self.partner_bank_account_2 = self.env['res.partner.bank'].create({
+            'acc_number': "123456789",
+            'partner_id': self.expense_employee.user_partner_id.id,
+            'acc_type': 'bank',
+        })
+        # Set the second bank account for the employee
+        self.expense_employee.bank_account_id = self.partner_bank_account_2
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for John Smith',
+            'employee_id': self.expense_employee.id,
+            'payment_mode': 'own_account',
+            'state': 'approve',
+            'expense_line_ids': [Command.create({
+                'name': 'Car Travel Expenses',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_a.id,
+                'payment_mode': 'own_account',
+                'total_amount': 350.00,
+            })]
+        })
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+
+        move_bank_acc = expense_sheet.account_move_ids.partner_bank_id
+        self.assertEqual(move_bank_acc, self.partner_bank_account_2)
+        action_data = expense_sheet.action_register_payment()
+        with Form(self.env['account.payment.register'].with_context(action_data['context'])) as pay_form:
+            self.assertEqual(pay_form.partner_bank_id, self.partner_bank_account_2)
+
+    def test_expense_set_total_amount_to_0(self):
+        """Checks that amount fields are correctly updating when setting total_amount to 0"""
+        expense = self.env['hr.expense'].create({
+            'name': 'Expense with amount',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_c.id,
+            'total_amount_currency': 100.0,
+            'tax_ids': self.tax_purchase_a.ids,
+        })
+        expense.total_amount_currency = 0.0
+        self.assertTrue(expense.currency_id.is_zero(expense.tax_amount))
+        self.assertTrue(expense.company_currency_id.is_zero(expense.total_amount))
+
+    def test_expense_set_quantity_to_0(self):
+        """Checks that amount fields except for unit_amount are correctly updating when setting quantity to 0"""
+        expense = self.env['hr.expense'].create({
+            'name': 'Expense with amount',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_b.id,
+            'quantity': 10
+        })
+        expense.quantity = 0
+        self.assertTrue(expense.currency_id.is_zero(expense.total_amount_currency))
+        self.assertEqual(expense.company_currency_id.compare_amounts(expense.price_unit, self.product_b.standard_price), 0)

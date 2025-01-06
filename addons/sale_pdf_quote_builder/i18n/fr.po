@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -44,7 +44,8 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sales order between the header pages and the quote table. "
 msgstr ""
 "Vous permet de partager le document avec vos clients dans le cadre d'une vente. \n"
 "Laissez ce champ vide si vous ne voulez pas partager ce document avec vos clients.\n"
@@ -52,7 +53,8 @@ msgstr ""
 "Par exemple, cette option peut être utile pour partager des fichiers de description de produits. \n"
 "Commande confirmée : le document sera envoyé aux clients et est accessible par eux.\n"
 "Par exemple, cette option peut être utile pour partager des manuels d'utilisation ou des contenus numériques achetés dans le cadre d'un eCommerce.\n"
-"Dans le devis : Le document sera inclus dans le PDF du devis entre les pages d'en-tête et le tableau du devis."
+"Dans le devis : Le document sera inclus dans le PDF du devis \n"
+"et du bon de commande entre les pages d'en-tête et le tableau du devis."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_res_company
@@ -63,17 +65,6 @@ msgstr "Sociétés"
 #: model:ir.model,name:sale_pdf_quote_builder.model_res_config_settings
 msgid "Config Settings"
 msgstr "Paramètres de config"
-
-#. module: sale_pdf_quote_builder
-#. odoo-python
-#: code:addons/sale_pdf_quote_builder/utils.py:0
-#, python-format
-msgid ""
-"It seems that we're not able to process this pdf inside a quotation. It is "
-"either encrypted, or encoded in a format we do not support."
-msgstr ""
-"Il semble que ce pdf ne puisse pas être inclus dans un devis. Celui-ci est "
-"soit crypté, soit codé dans un format non pris en charge."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer
@@ -95,6 +86,17 @@ msgid "Inside quote"
 msgstr "Dans le devis"
 
 #. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/utils.py:0
+#, python-format
+msgid ""
+"It seems that we're not able to process this pdf inside a quotation. It is "
+"either encrypted, or encoded in a format we do not support."
+msgstr ""
+"Il semble que ce pdf ne puisse pas être inclus dans un devis. Celui-ci est "
+"soit crypté, soit codé dans un format non pris en charge."
+
+#. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Learn more from the documentation."
 msgstr "Consultez la documentation plus plus d'informations."
@@ -114,13 +116,6 @@ msgstr ""
 #, python-format
 msgid "Only PDF documents can be attached inside a quote."
 msgstr "Seuls les documents PDF peuvent être joints à un devis."
-
-#. module: sale_pdf_quote_builder
-#. odoo-python
-#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
-#, python-format
-msgid "When attached inside a quote, the document must be a file, not a URL."
-msgstr "Le document joint à un devis doit être un fichier et non une URL."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -216,3 +211,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on
 msgid "Visible at"
 msgstr "Visible sur"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+#, python-format
+msgid "When attached inside a quote, the document must be a file, not a URL."
+msgstr "Le document joint à un devis doit être un fichier et non une URL."

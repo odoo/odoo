@@ -26,6 +26,7 @@
         <record id="generic_tax_report_account_tax" model="account.report">
             <field name="name">Group by: Account &gt; Tax </field>
             <field name="root_report_id" ref="generic_tax_report"/>
+            <field name="availability_condition">always</field>
             <field name="column_ids">
                 <record id="generic_tax_report_account_tax_column_net" model="account.report.column">
                     <field name="name">Net</field>
@@ -43,6 +44,7 @@
         <record id="generic_tax_report_tax_account" model="account.report">
             <field name="name">Group by: Tax &gt; Account </field>
             <field name="root_report_id" ref="generic_tax_report"/>
+            <field name="availability_condition">always</field>
             <field name="column_ids">
                 <record id="generic_tax_report_tax_account_column_net" model="account.report.column">
                     <field name="name">Net</field>

@@ -12,6 +12,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, registry, _
 from odoo.tools import ormcache_context, email_normalize
 from odoo.osv import expression
+from odoo.sql_db import BaseCursor
 
 from odoo.addons.google_calendar.utils.google_event import GoogleEvent
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
@@ -27,6 +28,7 @@ _logger = logging.getLogger(__name__)
 def after_commit(func):
     @wraps(func)
     def wrapped(self, *args, **kwargs):
+        assert isinstance(self.env.cr, BaseCursor)
         dbname = self.env.cr.dbname
         context = self.env.context
         uid = self.env.uid
@@ -84,6 +86,7 @@ class GoogleSync(models.AbstractModel):
             for vals in vals_list:
                 vals.update({'need_sync': False})
         records = super().create(vals_list)
+        self._handle_allday_recurrences_edge_case(records, vals_list)
 
         google_service = GoogleCalendarService(self.env['google.service'])
         if self.env.user._get_google_sync_status() != "sync_paused":
@@ -91,6 +94,18 @@ class GoogleSync(models.AbstractModel):
                 if record.need_sync and record.active:
                     record.with_user(record._get_event_user())._google_insert(google_service, record._google_values(), timeout=3)
         return records
+
+    def _handle_allday_recurrences_edge_case(self, records, vals_list):
+        """
+        When creating 'All Day' recurrent event, the first event is wrongly synchronized as
+        a single event and then its recurrence creates a duplicated event. We must manually
+        set the 'need_sync' attribute as False in order to avoid this unwanted behavior.
+        """
+        if vals_list and self._name == 'calendar.event':
+            forbid_sync = all(not vals.get('need_sync', True) for vals in vals_list)
+            records_to_skip = records.filtered(lambda r: r.need_sync and r.allday and r.recurrency and not r.recurrence_id)
+            if forbid_sync and records_to_skip:
+                records_to_skip.with_context(send_updates=False).need_sync = False
 
     def unlink(self):
         """We can't delete an event that is also in Google Calendar. Otherwise we would
@@ -322,6 +337,16 @@ class GoogleSync(models.AbstractModel):
         # If there is a lot of event to synchronize to google the first time,
         # they will be synchronized eventually with the cron running few times a day
         return self.with_context(active_test=False).search(domain, limit=200)
+
+    def _check_any_records_to_sync(self):
+        """ Returns True if there are pending records to be synchronized from Odoo to Google, False otherwise. """
+        is_active_clause = (self._active_name, '=', True) if self._active_name else expression.TRUE_LEAF
+        domain = expression.AND([self._get_sync_domain(), [
+            '|',
+                '&', ('google_id', '=', False), is_active_clause,
+                ('need_sync', '=', True),
+        ]])
+        return self.search_count(domain, limit=1) > 0
 
     def _write_from_google(self, gevent, vals):
         self.write(vals)

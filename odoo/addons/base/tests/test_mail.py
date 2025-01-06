@@ -415,6 +415,9 @@ class TestHtmlTools(BaseCase):
 
         void_html_samples = [
             '<section><br /> <b><i/></b></section>',
+            '<section><br /> <b><i/ ></b></section>',
+            '<section><br /> <b>< i/ ></b></section>',
+            '<section><br /> <b>< i / ></b></section>',
             '<p><br></p>', '<p><br> </p>', '<p><br /></p >',
             '<p style="margin: 4px"></p>',
             '<div style="margin: 4px"></div>',
@@ -428,6 +431,8 @@ class TestHtmlTools(BaseCase):
             '<p><br>1</p>', '<p>1<br > </p>', '<p style="margin: 4px">Hello World</p>',
             '<div style="margin: 4px"><p>Hello World</p></div>',
             '<p><span style="font-weight: bolder;"><font style="color: rgb(255, 0, 0);" class=" ">W</font></span><br></p>',
+            '<span class="fa fa-heart"></span>',
+            '<i class="fas fa-home"></i>'
         ]
         for content in valid_html_samples:
             self.assertFalse(is_html_empty(content))
@@ -803,14 +808,24 @@ class TestEmailTools(BaseCase):
             ('admin@example.com', ['admin@example.com']),
             ('"Admin" <admin@example.com>, Demo <malformed email>', ['admin@example.com']),
             ('admin@éxample.com', ['admin@xn--xample-9ua.com']),
-            # formatted input containing email
-            ('"admin@éxample.com" <admin@éxample.com>', ['admin@xn--xample-9ua.com', 'admin@xn--xample-9ua.com']),
+            # email-like names
+            (
+                '"admin@éxample.com" <admin@éxample.com>',
+                ['admin@xn--xample-9ua.com', 'admin@xn--xample-9ua.com'],
+            ),
             ('"Robert Le Grand" <robert@notgmail.com>', ['robert@notgmail.com']),
             ('"robert@notgmail.com" <robert@notgmail.com>', ['robert@notgmail.com', 'robert@notgmail.com']),
+            # "@' in names
+            ('"Bike @ Home" <bike@example.com>', ['bike@example.com']),
+            ('"Bike@Home" <bike@example.com>', ['Bike@Home', 'bike@example.com']),
+            # combo @ in names + multi email
+            (
+                '"Not an Email" <robert@notgmail.com>, "robert@notgmail.com" <robert@notgmail.com>',
+                ['robert@notgmail.com', 'robert@notgmail.com', 'robert@notgmail.com'],
+            ),
             # accents
             ('DéBoulonneur@examplé.com', ['DéBoulonneur@xn--exampl-gva.com']),
         ]
-
         for source, expected in cases:
             with self.subTest(source=source):
                 self.assertEqual(extract_rfc2822_addresses(source), expected)

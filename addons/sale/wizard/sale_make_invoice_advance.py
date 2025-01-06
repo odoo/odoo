@@ -368,7 +368,11 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 analytic_map.setdefault(grouping_key, [])
                 analytic_map[grouping_key].append((price_subtotal, analytic_distribution))
 
+        lines_values = []
         for key, line_vals in downpayment_line_map.items():
+            # don't add line if price is 0 and prevent division by zero
+            if order.currency_id.is_zero(line_vals['price_unit']):
+                continue
             # weight analytic account distribution
             if analytic_map.get(key):
                 line_analytic_distribution = {}
@@ -379,8 +383,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 line_vals['analytic_distribution'] = line_analytic_distribution
             # round price unit
             line_vals['price_unit'] = order.currency_id.round(line_vals['price_unit'] * percentage)
+            lines_values.append(line_vals)
 
-        return list(downpayment_line_map.values())
+        return lines_values
 
     def _prepare_base_downpayment_line_values(self, order):
         self.ensure_one()

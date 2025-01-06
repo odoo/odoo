@@ -10,7 +10,6 @@ import subprocess
 import socket
 import threading
 import time
-
 import urllib3
 
 from odoo import http
@@ -44,6 +43,9 @@ class DisplayDriver(Driver):
         self.owner = False
         self.rendered_html = ''
         if self.device_identifier != 'distant_display':
+            # helpers.get_version returns a string formatted as: <L|W><version> (L: Linux, W: Windows)
+            self.browser = 'chromium-browser' if float(helpers.get_version()[1:]) >= 24.10 else 'firefox'
+            self.browser_process_name = 'chromium' if self.browser == 'chromium-browser' else self.browser
             self._x_screen = device.get('x_screen', '0')
             self.load_url()
 
@@ -74,12 +76,24 @@ class DisplayDriver(Driver):
     def update_url(self, url=None):
         os.environ['DISPLAY'] = ":0." + self._x_screen
         os.environ['XAUTHORITY'] = '/run/lightdm/pi/xauthority'
-        firefox_env = os.environ.copy()
-        firefox_env['HOME'] = '/tmp/' + self._x_screen
+        browser_env = os.environ.copy()
+        for key in ['HOME', 'XDG_RUNTIME_DIR', 'XDG_CACHE_HOME']:
+            browser_env[key] = '/tmp/' + self._x_screen
         self.url = url or 'http://localhost:8069/point_of_sale/display/' + self.device_identifier
-        new_window = subprocess.call(['xdotool', 'search', '--onlyvisible', '--screen', self._x_screen, '--class', 'Firefox'])
-        subprocess.Popen(['firefox', self.url], env=firefox_env)
-        if new_window:
+
+        # Kill browser instance (can't `instance.pkill()` as we can't keep the instance after Odoo service restarts)
+        # We need to terminate it because Odoo will create a new instance each time it is restarted.
+        subprocess.run(['pkill', self.browser.split('-')[0]], check=False)
+        browser_args = [
+            '--start-fullscreen',
+            '--log-level=3',        # avoid useless log messages
+            '--bwsi',               # use chromium without signing in
+            '--disable-extensions'  # disable extensions as they fill up /tmp
+        ]
+        subprocess.Popen([self.browser, self.url, *browser_args], env=browser_env)
+
+        # To remove when everyone is on version >= 24.10: chromium has '--start-fullscreen' option
+        if self.browser == 'firefox':
             self.call_xdotools('F11')
 
     def load_url(self):
@@ -103,7 +117,18 @@ class DisplayDriver(Driver):
         os.environ['DISPLAY'] = ":0." + self._x_screen
         os.environ['XAUTHORITY'] = "/run/lightdm/pi/xauthority"
         try:
-            subprocess.call(['xdotool', 'search', '--sync', '--onlyvisible', '--screen', self._x_screen, '--class', 'Firefox', 'key', keystroke])
+            subprocess.run([
+                'xdotool',
+                'search',
+                '--sync',
+                '--onlyvisible',
+                '--screen',
+                self._x_screen,
+                '--class',
+                self.browser_process_name,
+                'key',
+                keystroke,
+            ], check=False)
             return "xdotool succeeded in stroking " + keystroke
         except:
             return "xdotool threw an error, maybe it is not installed on the IoTBox"
@@ -153,8 +178,8 @@ class DisplayDriver(Driver):
         }
         event_manager.device_changed(self)
 
-class DisplayController(http.Controller):
 
+class DisplayController(http.Controller):
     @http.route('/hw_proxy/display_refresh', type='json', auth='none', cors='*')
     def display_refresh(self):
         display = DisplayDriver.get_default_display()
@@ -223,8 +248,9 @@ class DisplayController(http.Controller):
                             'icon': 'sitemap' if 'eth' in iface_id else 'wifi',
                         })
 
-        if not display_identifier:
-            display_identifier = DisplayDriver.get_default_display().device_identifier
+        default_display = DisplayDriver.get_default_display()
+        if not display_identifier and default_display != 0:
+            display_identifier = default_display.device_identifier
 
         return pos_display_template.render({
             'title': "Odoo -- Point of Sale",

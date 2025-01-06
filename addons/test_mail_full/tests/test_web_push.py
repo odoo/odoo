@@ -51,6 +51,8 @@ class TestWebPushNotification(SMSCommon):
             'name': 'Direct Message',
         })
 
+        cls.group_chat_channel = channel.with_user(cls.user_email).create_group(partners_to=(cls.user_email + cls.user_inbox).partner_id.ids)
+
         cls.group_channel = cls.env['discuss.channel'].channel_create(name='Channel', group_id=None)
         cls.group_channel.add_members((cls.user_email + cls.user_inbox).partner_id.ids)
 
@@ -170,6 +172,35 @@ class TestWebPushNotification(SMSCommon):
         self._assert_notification_count_for_cron(0)
         push_to_end_point.assert_called_once()
         self.assertEqual(push_to_end_point.call_args.kwargs['device']['endpoint'], 'https://test.odoo.com/webpush/user2')
+
+        # Reset the mock counter
+        push_to_end_point.reset_mock()
+
+        # Test Group Chat (partner as author)
+        self.group_chat_channel.add_members(guest_ids=[self.guest.id])
+        self.group_chat_channel.with_user(self.user_email).message_post(
+            body='Test', message_type='comment', subtype_xmlid='mail.mt_comment')
+
+        self._assert_notification_count_for_cron(0)
+        push_to_end_point.assert_called_once()
+        payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
+        self.assertIn(self.user_email.name, payload_value['title'])
+        self.assertIn(self.user_inbox.name, payload_value['title'])
+        self.assertIn(self.guest.name, payload_value['title'])
+        self.assertNotIn("False", payload_value['title'])
+
+        # Reset the mock counter
+        push_to_end_point.reset_mock()
+
+        # Test Group Chat (guest as author)
+        self.group_chat_channel.with_user(self.env.ref('base.public_user')).with_context(guest=self.guest).message_post(
+            body='Test', message_type='comment', subtype_xmlid='mail.mt_comment')
+
+        self._assert_notification_count_for_cron(0)
+        self.assertEqual(push_to_end_point.call_count, 2)  # the 2 partners
+        payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
+        self.assertIn(self.guest.name, payload_value['title'])
+        self.assertNotIn("False", payload_value['title'])
 
         # Reset the mock counter
         push_to_end_point.reset_mock()

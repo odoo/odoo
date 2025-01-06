@@ -104,10 +104,6 @@
                 <span t-out="o.invoice_date_due" t-options='{"widget": "date"}'/>
                 <br/>
 
-                <strong>Payment Terms:</strong>
-                <span t-out="o.invoice_payment_term_id.name or ''"/>
-
-
                 <t t-if="o.invoice_incoterm_id">
                     <br/>
                     <strong>Incoterm:</strong>
@@ -166,7 +162,7 @@
             <attribute name="t-options">{"widget": "float", "precision": 2}</attribute>
         </xpath>
 
-        <th name="th_priceunit" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" position="after">
+        <th name="th_discount" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" position="after">
             <th name="th_discount_currency" t-if="display_discount" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                 <span>Disc.</span>
             </th>
@@ -214,6 +210,10 @@
             </div>
         </xpath>
 
+        <!-- Disable the recap of tax totals in company currency at the bottom right of the invoice
+        to prevent duplicate info since it's already present in our custom tax totals-->
+        <xpath expr="//div[@id='right-elements']/t[@t-call='account.document_tax_totals_company_currency_template']" position="replace"/>
+
         <xpath expr="//span[@t-field='line.name']" position="replace">
             <t t-set="all_taxes" t-value="'all_taxes'"/>
             <t t-if="'second_currency' in line_amounts" t-set="line_second_currency_round" t-value="line_amounts['second_currency']['round_currency']"/>
@@ -236,7 +236,7 @@
     </template>
 
     <template id="tax_totals_widget" inherit_id="account.document_tax_totals" primary="True">
-        <t t-foreach="tax_totals['subtotals']" t-as="subtotal" position="replace">
+        <t t-foreach="tax_totals.get('subtotals')" t-as="subtotal" position="replace">
             <t t-set="subtotal_amounts" t-value="o._l10n_cl_get_amounts()"/>
             <t t-set="withholdings" t-value="o._l10n_cl_get_withholdings()"/>
             <t t-if="subtotal_amounts['subtotal_amount_taxable'] != 0.0">

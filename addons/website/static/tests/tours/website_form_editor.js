@@ -295,6 +295,25 @@
                         ":has(.checkbox:has(label:contains('Wiko Stairway')):has(input[type='checkbox'][required]))",
             run: function () {},
         },
+        // Check conditional visibility for the relational fields
+        ...selectButtonByData("data-set-visibility='conditional'"),
+        ...selectButtonByData("data-set-visibility-dependency='recipient_ids'"),
+        ...selectButtonByText("Is not equal to"),
+        ...selectButtonByText("Mitchell Admin"),
+        ...wTourUtils.clickOnSave(),
+        {
+            content: "Check 'products' field is visible.",
+            trigger: `iframe .s_website_form:has(${triggerFieldByLabel("Products")}:visible)`,
+            isCheck: true,
+        }, {
+            content: "choose the option 'Mitchell Admin' of partner.",
+            trigger: "iframe .checkbox:has(label:contains('Mitchell Admin')) input[type='checkbox']",
+        }, {
+            content: "Check 'products' field is not visible.",
+            trigger: "iframe .s_website_form" +`:has(${triggerFieldByLabel("Products")}:not(:visible))`,
+            isCheck: true,
+        },
+        ...wTourUtils.clickOnEditAndWaitEditMode(),
 
         ...addCustomField('selection', 'radio', 'Service', true),
         {
@@ -858,13 +877,15 @@
         },
         {
             content: "Click on the text inside the dropped form column",
+            extra_trigger: "iframe section.s_website_form .col-lg-4[contenteditable=true]",
             trigger: "iframe section.s_website_form h3.card-title",
             run: "dblclick",
         },
-        {   // Simulate a user interaction with the editable content.
+        {
+            // Simulate a user interaction with the editable content.
             content: "Update the text inside the form column",
             trigger: "iframe section.s_website_form h3.card-title",
-            run: "keydown 65 66 67",
+            run: "text ABC",
         },
         {
             content: "Check that the new text value was correctly set",
@@ -876,6 +897,23 @@
             run: "click",
         },
         ...wTourUtils.clickOnSave(),
+    ]);
+
+    wTourUtils.registerWebsitePreviewTour("website_form_nested_forms", {
+        test: true,
+        url: "/my/account",
+        edition: true,
+    },
+    () => [
+        {
+            ...wTourUtils.dragNDrop({ id: "s_website_form", name: "Form" }),
+            run: "drag_and_drop_native iframe #wrap .o_portal_details",
+        },
+        {
+            content: "Check the form was not dropped into another form",
+            trigger: "iframe form:not(:has([data-snippet='s_website_form']))",
+            isCheck: true,
+        },
     ]);
 
     wTourUtils.registerWebsitePreviewTour("website_form_special_characters", {

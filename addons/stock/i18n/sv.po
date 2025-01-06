@@ -14,23 +14,23 @@
 # Haojun Zou <apollo_zhj@msn.com>, 2023
 # Kristoffer Grundström <lovaren@gmail.com>, 2023
 # Robin Calvin, 2023
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Victor Ekström, 2024
 # Simon S, 2024
-# Lasse L, 2024
-# Tanguy Quéguineur, 2024
+# Tanguy Queguineur, 2024
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Larissa Manderfeld, 2024
+# Lasse L, 2024
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
@@ -1073,6 +1073,13 @@ msgid "All at once"
 msgstr "Allt på en gång"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"All our contractual relations will be governed exclusively by United States "
+"law."
+msgstr "Alla våra avtalsförhållanden regleras uteslutande av amerikansk lag."
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
 msgid "All returned moves"
 msgstr "Alla återlämnade flyttningar"
@@ -1469,6 +1476,14 @@ msgid "Before scheduled date"
 msgstr "Före planerat datum"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
+"responsibility."
+msgstr ""
+"Nedanstående text är ett förslag och innebär inget ansvar för Odoo S.A."
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
 msgid "Blocking Message"
 msgstr "Spärrmeddelande"
@@ -1611,6 +1626,25 @@ msgid "Category Routes"
 msgstr "Kategorirutter"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Certain countries apply withholding at source on the amount of invoices, in "
+"accordance with their internal legislation. Any withholding at source will "
+"be paid by the client to the tax authorities. Under no circumstances can My "
+"Company (Chicago) become involved in costs related to a country's "
+"legislation. The amount of the invoice will therefore be due to My Company "
+"(Chicago) in its entirety and does not include any costs relating to the "
+"legislation of the country in which the client is located."
+msgstr ""
+"Vissa länder tillämpar källskatt på fakturabeloppet i enlighet med sin "
+"interna lagstiftning. Eventuella källskatter ska betalas av kunden till "
+"skattemyndigheterna. My Company (Chicago) kan under inga omständigheter bli "
+"involverad i kostnader som är relaterade till ett lands lagstiftning. "
+"Fakturabeloppet kommer därför att tillfalla My Company (Chicago) i sin "
+"helhet och omfattar inte kostnader som har att göra med lagstiftningen i det"
+" land där kunden är etablerad."
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__move_dest_exists
 msgid "Chained Move Exists"
 msgstr "Det finns länkade flyttningar"
@@ -1620,6 +1654,17 @@ msgstr "Det finns länkade flyttningar"
 #: model:ir.model,name:stock.model_stock_change_product_qty
 msgid "Change Product Quantity"
 msgstr "Ändra produktantal"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
+"Det är inte tillåtet att ändra parti- eller serienummer för flyttrader med "
+"olika produkter."
 
 #. module: stock
 #. odoo-python
@@ -3751,6 +3796,18 @@ msgid "Icon to indicate an exception activity."
 msgstr "Ikon för att indikera en undantagsaktivitet."
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"If a payment is still outstanding more than sixty (60) days after the due "
+"payment date, My Company (Chicago) reserves the right to call on the "
+"services of a debt recovery company. All legal expenses will be payable by "
+"the client."
+msgstr ""
+"Om en betalning fortfarande är utestående mer än sextio (60) dagar efter "
+"förfallodagen förbehåller sig My Company (Chicago) rätten att anlita ett "
+"inkassobolag. Alla juridiska kostnader kommer att betalas av kunden."
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__same
 msgid "If all products are same"
 msgstr "Om alla produkter är likadana"
@@ -4034,6 +4091,18 @@ msgstr "In Stock"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
 msgstr "I Typ"
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"In order for it to be admissible, My Company (Chicago) must be notified of "
+"any claim by means of a letter sent by recorded delivery to its registered "
+"office within 8 days of the delivery of the goods or the provision of the "
+"services."
+msgstr ""
+"För att den ska kunna godtas måste My Company (Chicago) underrättas om alla "
+"krav genom ett brev som skickas med rekommenderad post till dess säte inom 8"
+" dagar från leveransen av varorna eller tillhandahållandet av tjänsterna."
 
 #. module: stock
 #. odoo-javascript
@@ -5252,6 +5321,23 @@ msgid "My Activity Deadline"
 msgstr "Mina aktiviteters sluttid"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"My Company (Chicago) undertakes to do its best to supply performant services"
+" in due time in accordance with the agreed timeframes. However, none of its "
+"obligations can be considered as being an obligation to achieve results. My "
+"Company (Chicago) cannot under any circumstances, be required by the client "
+"to appear as a third party in the context of any claim for damages filed "
+"against the client by an end consumer."
+msgstr ""
+"Mitt företag (Chicago) åtar sig att göra sitt bästa för att tillhandahålla "
+"tjänster i rätt tid i enlighet med de överenskomna tidsramarna. Ingen av "
+"dess skyldigheter kan dock anses vara en skyldighet att uppnå resultat. My "
+"Company (Chicago) kan inte under några omständigheter åläggas av kunden att "
+"uppträda som tredje part i samband med ett skadeståndsanspråk som en "
+"slutkonsument riktar mot kunden."
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "My Counts"
 msgstr "Mina räkningar"
@@ -5334,6 +5420,12 @@ msgstr "Nytt lagersaldo"
 #: model:ir.actions.act_window,name:stock.action_picking_form
 msgid "New Transfer"
 msgstr "Ny överföring"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_lot__activity_calendar_event_id
+#: model:ir.model.fields,field_description:stock.field_stock_picking__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Nästa Kalenderhändelse för aktivitet"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_date_deadline
@@ -5437,8 +5529,9 @@ msgstr "Inga operationer hittades. Låt oss skapa en överföring!"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
+#, python-format
 msgid "No product found to generate Serials/Lots for."
-msgstr ""
+msgstr "Ingen produkt hittades för att generera Serials/Lots för."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -5868,6 +5961,24 @@ msgid "Other Information"
 msgstr "Övrig information"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Our invoices are payable within 21 working days, unless another payment "
+"timeframe is indicated on either the invoice or the order. In the event of "
+"non-payment by the due date, My Company (Chicago) reserves the right to "
+"request a fixed interest payment amounting to 10% of the sum remaining due. "
+"My Company (Chicago) will be authorized to suspend any provision of services"
+" without prior warning in the event of late payment."
+msgstr ""
+"Våra fakturor ska betalas inom 21 arbetsdagar, om inte annan betalningstid "
+"anges på antingen fakturan eller beställningen. I händelse av utebliven "
+"betalning på förfallodagen förbehåller sig My Company (Chicago) rätten att "
+"begära en fast räntebetalning på 10% of av det belopp som återstår att "
+"betala. My Company (Chicago) kommer att ha rätt att avbryta "
+"tillhandahållandet av tjänster utan föregående varning i händelse av sen "
+"betalning."
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
 msgid "Out Type"
 msgstr "Uttyp"
@@ -6001,6 +6112,11 @@ msgstr "Emballage"
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Package A"
 msgstr "Paket A"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "Package B"
+msgstr "Paket B"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
@@ -7107,6 +7223,13 @@ msgid "RETURN OF"
 msgstr "ÅTERKOMST AV"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_lot__rating_ids
+#: model:ir.model.fields,field_description:stock.field_stock_picking__rating_ids
+#: model:ir.model.fields,field_description:stock.field_stock_scrap__rating_ids
+msgid "Ratings"
+msgstr "Betyg"
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__assigned
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -7780,6 +7903,11 @@ msgid "SSCC:"
 msgstr "SSCC:"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid "STANDARD TERMS AND CONDITIONS OF SALE"
+msgstr "STANDARDISERADE FÖRSÄLJNINGSVILLKOR"
+
+#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
@@ -8127,11 +8255,6 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_stock_general_settings
 msgid "Settings"
 msgstr "Inställningar"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid "Shelf 1"
-msgstr "Hylla 1"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -8786,6 +8909,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr "Lot/Serienummer (%s) är kopplat till en annan produkt."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
 msgid ""
 "The Serial Number (%s) is already used in these location(s): %s.\n"
 "\n"
@@ -8806,6 +8936,18 @@ msgstr "Backorder %s har skapats."
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
 msgid "The barcode for a location must be unique per company!"
 msgstr "Streckkoden för en plats måste vara unik för varje företag!"
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"The client explicitly waives its own standard terms and conditions, even if "
+"these were drawn up after these standard terms and conditions of sale. In "
+"order to be valid, any derogation must be expressly agreed to in advance in "
+"writing."
+msgstr ""
+"Kunden avstår uttryckligen från sina egna standardvillkor, även om dessa har"
+" utarbetats efter dessa standardförsäljningsvillkor. För att vara giltigt "
+"måste varje undantag uttryckligen överenskommas skriftligen i förväg."
 
 #. module: stock
 #. odoo-python
@@ -9926,6 +10068,7 @@ msgid "Used to order the 'All Operations' kanban view"
 msgstr "Används för att sortera Kanban-vyn \"Alla operationer\""
 
 #. module: stock
+#: model:ir.model,name:stock.model_res_users
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__user_id
 #: model:res.groups,name:stock.group_stock_user
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -10527,14 +10670,18 @@ msgstr "Du kan inte ändra typen av en produkt som redan har använts."
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr "Du kan inte skapa en snoozed orderpunkt som inte utlöses manuellt."
+
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
-#: code:addons/stock/models/stock_orderpoint.py:0
-#, python-format, python-format
-msgid ""
-"You can not create a snoozed orderpoint that is not manually triggered."
-msgstr ""
+#, python-format
+msgid "You can not delete moves linked to another operation"
+msgstr "Du kan inte ta bort rörelser som är kopplade till en annan operation"
 
 #. module: stock
 #. odoo-python
@@ -10598,6 +10745,8 @@ msgid ""
 "You can only snooze manual orderpoints. You should rather archive 'auto-"
 "trigger' orderpoints if you do not want them to be triggered."
 msgstr ""
+"Du kan bara snooza manuella orderpunkter. Du bör hellre arkivera \"auto-"
+"trigger\" orderpunkter om du inte vill att de ska triggas."
 
 #. module: stock
 #. odoo-python
@@ -10716,6 +10865,16 @@ msgid ""
 "package through this view. Try adding them to a batch picking and pack it "
 "there."
 msgstr ""
+"Du kan inte direkt packa kvantiteter från olika överföringar till samma "
+"paket via den här vyn. Försök att lägga till dem i en batchplockning och "
+"packa dem där."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "You cannot duplicate stock quants."
+msgstr "Du kan inte duplicera aktiequanter."
 
 #. module: stock
 #. odoo-python
@@ -10934,13 +11093,6 @@ msgstr "Du måste välja en rutt för att fylla på dina produkter"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-#, python-format
-msgid "You need to set a Serial Number before generating more."
-msgstr "Du måste ange ett serienummer innan du kan generera fler."
-
-#. module: stock
-#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -10956,6 +11108,12 @@ msgstr ""
 #, python-format
 msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "Du behöver tillhandahålla ett Parti/serienummer %s."
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid "You should update this document to reflect your T&amp;C."
+msgstr ""
+"Du bör uppdatera det här dokumentet så att det återspeglar din T&amp;C."
 
 #. module: stock
 #. odoo-python
@@ -10996,6 +11154,15 @@ msgstr ""
 "Här hittar du smarta förslag till påfyllning som bygger på lagerprognoser.\n"
 "            Välj kvantiteten att köpa eller tillverka och starta beställningar med ett klick.\n"
 "            För att spara tid i framtiden kan man ställa in reglerna till \"Auto\"."
+
+#. module: stock
+#: model_terms:res.company,lunch_notify_message:stock.res_company_1
+msgid ""
+"Your lunch has been delivered.\n"
+"Enjoy your meal!"
+msgstr ""
+"Din lunch har levererats.\n"
+"Njut av din måltid!"
 
 #. module: stock
 #. odoo-python

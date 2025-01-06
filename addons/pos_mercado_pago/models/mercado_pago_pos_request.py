@@ -19,9 +19,15 @@ class MercadoPagoPosRequest:
         :param endpoint: The endpoint to be reached by the request.
         :param payload: The payload of the request.
         :return The JSON-formatted content of the response.
+
+        Note: The platform id below is not secret, and is just used to
+        quantify the amount of Odoo users on Mercado's backend.
         """
         endpoint = MERCADO_PAGO_API_ENDPOINT + endpoint
-        header = {'Authorization': f"Bearer {self.mercado_pago_bearer_token}"}
+        header = {
+            'Authorization': f"Bearer {self.mercado_pago_bearer_token}",
+            'X-platform-id': "dev_cdf1cfac242111ef9fdebe8d845d0987"
+        }
         try:
             response = requests.request(method, endpoint, headers=header, json=payload, timeout=REQUEST_TIMEOUT)
             return response.json()

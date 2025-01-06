@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
@@ -350,22 +349,28 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
             return self.env['calendar.event'].search(self.env['res.users']._systray_get_calendar_event_domain())
 
         self.env.user.tz = 'Europe/Brussels' # UTC +1 15th November 2023
-        event = self.env['calendar.event'].create({
+        events = self.env['calendar.event'].create([{
             'name': "Meeting",
             'start': datetime(2023, 11, 15, 18, 0), # 19:00
             'stop': datetime(2023, 11, 15, 19, 0),  # 20:00
-        }).with_context(mail_notrack=True)
+        },
+        {
+            'name': "Tomorrow meeting",
+            'start': datetime(2023, 11, 15, 23, 0),  # 00:00 next day
+            'stop': datetime(2023, 11, 16, 0, 0),  # 01:00 next day
+        }
+        ]).with_context(mail_notrack=True)
         with freeze_time('2023-11-15 17:30:00'):    # 18:30 before event
-            self.assertEqual(search_event(), event)
+            self.assertEqual(search_event(), events[0])
         with freeze_time('2023-11-15 18:00:00'):    # 19:00 during event
-            self.assertEqual(search_event(), event)
+            self.assertEqual(search_event(), events[0])
         with freeze_time('2023-11-15 18:30:00'):    # 19:30 during event
-            self.assertEqual(search_event(), event)
+            self.assertEqual(search_event(), events[0])
         with freeze_time('2023-11-15 19:00:00'):    # 20:00 during event
-            self.assertEqual(search_event(), event)
+            self.assertEqual(search_event(), events[0])
         with freeze_time('2023-11-15 19:30:00'):    # 20:30 after event
             self.assertEqual(len(search_event()), 0)
-        event.unlink()
+        events.unlink()
 
         self.env.user.tz = 'America/Lima' # UTC -5 15th November 2023
         event = self.env['calendar.event'].create({
@@ -393,3 +398,66 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         with freeze_time('2023-11-15 19:00:00'):    # 14:00 the day before event
             self.assertEqual(len(search_event()), 0)
         event.unlink()
+
+        self.env.user.tz = 'Asia/Manila'  # UTC +8 15th November 2023
+        events = self.env['calendar.event'].create([{
+            'name': "Very early meeting",
+            'start': datetime(2023, 11, 14, 16, 30),  # 0:30
+            'stop': datetime(2023, 11, 14, 17, 0),  # 1:00
+        },
+        {
+            'name': "Meeting on 2 days",
+            'start': datetime(2023, 11, 15, 15, 30),  # 23:30
+            'stop': datetime(2023, 11, 15, 16, 30),  # 0:30 next day
+        },
+        {
+            'name': "Early meeting tomorrow",
+            'start': datetime(2023, 11, 15, 23, 0),  # 00:00 next day
+            'stop': datetime(2023, 11, 16, 0, 0),  # 01:00 next day
+        },
+        {
+            'name': "All day meeting",
+            'allday': True,
+            'start': "2023-11-15",
+        }
+        ]).with_context(mail_notrack=True)
+        with freeze_time('2023-11-15 16:00:00'):
+            self.assertEqual(len(search_event()), 3)
+        events.unlink()
+
+    def test_recurring_meeting_reminder_notification(self):
+        alarm = self.env['calendar.alarm'].create({
+            'name': 'Alarm',
+            'alarm_type': 'notification',
+            'interval': 'minutes',
+            'duration': 30,
+        })
+
+        self.event._apply_recurrence_values({
+            'interval': 2,
+            'rrule_type': 'weekly',
+            'tue': True,
+            'count': 2,
+        })
+
+        now = fields.Datetime.now()
+        with patch.object(fields.Datetime, 'now', lambda: now):
+            with self.assertBus([(self.env.cr.dbname, 'res.partner', self.partner.id)], [
+                {
+                    "type": "calendar.alarm",
+                    "payload": [{
+                        "alarm_id": alarm.id,
+                        "event_id": self.event.id,
+                        "title": "Doom's day",
+                        "message": self.event.display_time,
+                        "timer": 20 * 60,
+                        "notify_at": fields.Datetime.to_string(now + relativedelta(minutes=20)),
+                    }],
+                },
+            ]):
+                self.event.with_context(no_mail_to_attendees=True).write({
+                    'start': now + relativedelta(minutes=50),
+                    'stop': now + relativedelta(minutes=55),
+                    'partner_ids': [(4, self.partner.id)],
+                    'alarm_ids': [(4, alarm.id)]
+                })

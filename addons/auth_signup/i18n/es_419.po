@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Fernanda Alvarez, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -88,7 +88,7 @@ msgid ""
 "                                    Platform:</span>"
 msgstr ""
 "<span style=\"font-weight: bold;\">\n"
-"                                    Platforma:</span>"
+"                                    Plataforma:</span>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -185,13 +185,13 @@ msgstr ""
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
 "                        Apreciable <t t-out=\"object.name or ''\">Mitchell Admin</t>,<br> <br>\n"
-"                        Agregó a los siguientes usuarios a su base de datos, pero no se han registrado aún:\n"
+"                        Agregó a los siguientes usuarios a su base de datos, pero aún no se han registrado:\n"
 "                        <ul>\n"
 "                            <t t-foreach=\"invited_users\" t-as=\"invited_user\">\n"
 "                                <li t-out=\"invited_user or ''\">demo@ejemplo.com</li>\n"
 "                            </t>\n"
 "                        </ul>\n"
-"                        Haga un seguimiento para que puedan acceder a su base de datos y empezar a trabajar con usted.\n"
+"                        Comuníquese con ellos para que puedan acceder a su base de datos y comiencen a trabajar con usted.\n"
 "                        <br><br>\n"
 "                        ¡Que tenga un excelente día!<br>\n"
 "                        --<br>El equipo de <t t-out=\"object.company_id.name or ''\">SuEmpresa</t>\n"
@@ -564,7 +564,7 @@ msgstr "Otro usuario ya se registró con esta dirección de correo electrónico.
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Authentication Failed."
-msgstr "La autenticación falló."
+msgstr "Ocurrió un error con la autenticación."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
@@ -728,6 +728,7 @@ msgid "Marc Demo"
 msgstr "Marc Demo"
 
 #. module: auth_signup
+#. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Multiple accounts found for this login"

@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { selectCell, setCellContent } from "@spreadsheet/../tests/utils/commands";
-import * as spreadsheet from "@odoo/o-spreadsheet";
+import { registries, constants } from "@odoo/o-spreadsheet";
 import { getAccountingData } from "../accounting_test_data";
 import {
     createModelWithDataSource,
@@ -10,7 +10,8 @@ import {
 import { registry } from "@web/core/registry";
 import { doMenuAction } from "@spreadsheet/../tests/utils/ui";
 
-const { cellMenuRegistry } = spreadsheet.registries;
+const { cellMenuRegistry } = registries;
+const { DEFAULT_LOCALE } = constants;
 
 let serverData;
 
@@ -129,6 +130,47 @@ QUnit.module("spreadsheet_account > Accounting Drill down", { beforeEach }, () =
         setCellContent(model, "A2", '=ODOO.BALANCE("100", A1)');
         await waitForDataSourcesLoaded(model);
         selectCell(model, "A2");
+        await doMenuAction(cellMenuRegistry, ["move_lines_see_records"], env);
+        assert.verifySteps(["spreadsheet_move_line_action"]);
+    });
+
+    QUnit.test("Create drill down domain when date uses a non-standard locale", async (assert) => {
+        const actionService = {
+            start() {
+                return {
+                    doAction(args) {},
+                };
+            },
+        };
+        registry.category("services").add("action", actionService, { force: true });
+        const model = await createModelWithDataSource({
+            serverData,
+            mockRPC: async function (route, args) {
+                if (args.method === "spreadsheet_move_line_action") {
+                    assert.step("spreadsheet_move_line_action");
+                    assert.deepEqual(args.args, [
+                        {
+                            codes: ["100"],
+                            company_id: null,
+                            include_unposted: false,
+                            date_range: {
+                                range_type: "day",
+                                year: 2002,
+                                month: 2,
+                                day: 1,
+                            },
+                        },
+                    ]);
+                    return {};
+                }
+            },
+        });
+        const env = model.config.custom.env;
+        env.model = model;
+        const myLocale = { ...DEFAULT_LOCALE, dateFormat: "d/mmm/yyyy" };
+        model.dispatch("UPDATE_LOCALE", { locale: myLocale });
+        setCellContent(model, "A1", '=ODOO.BALANCE("100", DATE(2002, 2, 1))');
+        await waitForDataSourcesLoaded(model);
         await doMenuAction(cellMenuRegistry, ["move_lines_see_records"], env);
         assert.verifySteps(["spreadsheet_move_line_action"]);
     });

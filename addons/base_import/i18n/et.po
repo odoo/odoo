@@ -13,18 +13,18 @@
 # Piia Paurson <piia@avalah.ee>, 2023
 # Martin Trigaux, 2023
 # Aveli Kannel <aveli@avalah.ee>, 2023
-# JanaAvalah, 2023
 # Eneli Õigus <enelioigus@gmail.com>, 2023
-# Anna, 2024
 # Siim Raasuke, 2024
+# Anna, 2024
+# JanaAvalah, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Siim Raasuke, 2024\n"
+"Last-Translator: JanaAvalah, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -231,7 +231,7 @@ msgstr "Kuupäev/kellaaeg formaat:"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Decimals Separator:"
-msgstr ""
+msgstr "Kümnendkohtade eraldaja:"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -250,6 +250,8 @@ msgstr "Punkt"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Download"
@@ -439,6 +441,17 @@ msgstr ""
 "                     lihtsamaks, eriti kui failis on palju veerge."
 
 #. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid ""
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
+msgstr ""
+"Kui mudel kasutab openchatterit, teeb ajaloo jälgimine impordi ajal "
+"tellimusi ja saadab teatisi, kuid aeglustab ka importi."
+
+#. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
@@ -506,6 +519,7 @@ msgstr "Importimine"
 
 #. module: base_import
 #. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
@@ -671,7 +685,7 @@ msgstr "Eraldaja:"
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
 msgid "Set to: %s"
-msgstr ""
+msgstr "Määra: %s"
 
 #. module: base_import
 #. odoo-javascript
@@ -894,6 +908,17 @@ msgstr "Kasutage esimest rida päisena"
 #: model:ir.model,name:base_import.model_res_users
 msgid "User"
 msgstr "Kasutaja"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid ""
+"Warning: ignores the labels line, empty lines and lines composed only of "
+"empty cells"
+msgstr ""
+"Hoiatus: ignoreerib pealkirjarida (labels line), tühje ridu ja ainult "
+"tühjadest lahtritest koosnevaid ridu"
 
 #. module: base_import
 #. odoo-javascript

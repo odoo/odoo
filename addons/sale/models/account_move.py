@@ -3,18 +3,15 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import groupby
 
 
 class AccountMove(models.Model):
     _name = 'account.move'
     _inherit = ['account.move', 'utm.mixin']
 
-    @api.model
-    def _get_invoice_default_sale_team(self):
-        return self.env['crm.team']._get_default_team_id()
-
     team_id = fields.Many2one(
-        'crm.team', string='Sales Team', default=_get_invoice_default_sale_team,
+        'crm.team', string='Sales Team',
         compute='_compute_team_id', store=True, readonly=False,
         ondelete="set null", tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
@@ -32,14 +29,20 @@ class AccountMove(models.Model):
             downpayment_lines.unlink()
         return res
 
-    @api.depends('invoice_user_id')
+    @api.depends('invoice_user_id', 'partner_id')
     def _compute_team_id(self):
-        for move in self:
-            if not move.invoice_user_id.sale_team_id or not move.is_sale_document(include_receipts=True):
-                continue
-            move.team_id = self.env['crm.team']._get_default_team_id(
-                user_id=move.invoice_user_id.id,
-                domain=[('company_id', '=', move.company_id.id)])
+        sale_moves = self.filtered(lambda move: move.is_sale_document(include_receipts=True))
+        for ((user_id, company_id, partner_team_id), moves) in groupby(
+            sale_moves,
+            key=lambda m: (m.invoice_user_id.id, m.company_id.id, m.partner_id.team_id.id)
+        ):
+            default_team_id = self.env.context.get('default_team_id', False) or partner_team_id
+            self.concat(*moves).team_id = self.env['crm.team'].with_context(
+                allowed_company_ids=[company_id],
+                default_team_id=default_team_id
+            )._get_default_team_id(
+                user_id=user_id,
+            )
 
     @api.depends('line_ids.sale_line_ids')
     def _compute_origin_so_count(self):
@@ -69,11 +72,7 @@ class AccountMove(models.Model):
         other_so_lines = downpayment_lines.order_id.order_line - downpayment_lines
         real_invoices = set(other_so_lines.invoice_lines.move_id)
         for so_dpl in downpayment_lines:
-            so_dpl.price_unit = sum(
-                l.price_unit if l.move_id.move_type == 'out_invoice' else -l.price_unit
-                for l in so_dpl.invoice_lines
-                if l.move_id.state == 'posted' and l.move_id not in real_invoices  # don't recompute with the final invoice
-            )
+            so_dpl.price_unit = so_dpl._get_downpayment_line_price_unit(real_invoices)
             so_dpl.tax_id = so_dpl.invoice_lines.tax_ids
 
         return res

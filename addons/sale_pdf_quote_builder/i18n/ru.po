@@ -6,15 +6,16 @@
 # Martin Trigaux, 2023
 # Константин Коровин <korovin74@gmail.com>, 2023
 # Wil Odoo, 2024
-# nadia martynova, 2024
+# Nadia Martynova, 2024
+# Ilya Rozhkov, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: nadia martynova, 2024\n"
+"Last-Translator: Ilya Rozhkov, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,15 +47,16 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sales order between the header pages and the quote table. "
 msgstr ""
-"Позволяет поделиться документом с клиентами в рамках продажи.\n"
-"Оставьте это поле пустым, если вы не хотите предоставлять этот документ покупателям.\n"
-"Предложение: документ будет отправлен клиентам и доступен им в любое время.\n"
-"например, этот параметр может быть полезен для обмена файлами с описанием товара.\n"
-"Подтвержденный заказ: документ будет отправлен клиентам и доступен для просмотра.\n"
-"например, эта опция может быть полезна для обмена руководствами пользователя или цифровым контентом, купленным в электронной коммерции.\n"
-"Внутренняя цитата: Документ будет включен в pdf-файл коммерческого предложения между заголовочными страницами и таблицей коммерческого предложения."
+"Позволяет делиться документом с клиентами в рамках продажи. \n"
+"Оставьте это поле пустым, если не хотите предоставлять документ покупателям.\n"
+"Коммерческое предложение: документ будет отправлен клиентам и доступен им в любое время. \n"
+"Например, эта настройка полезна для передачи файлов с описанием товара.\n"
+"Подтверждённый заказ: документ будет отправлен клиентам и доступен для просмотра. \n"
+"Например, это удобно для передачи руководств пользователя или цифрового контента, приобретённого через интернет-магазин.\n"
+"В составе предложения: документ будет включён в PDF коммерческого предложения между заголовком и таблицей."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_res_company
@@ -65,18 +67,6 @@ msgstr "Компании"
 #: model:ir.model,name:sale_pdf_quote_builder.model_res_config_settings
 msgid "Config Settings"
 msgstr "Параметры конфигурации"
-
-#. module: sale_pdf_quote_builder
-#. odoo-python
-#: code:addons/sale_pdf_quote_builder/utils.py:0
-#, python-format
-msgid ""
-"It seems that we're not able to process this pdf inside a quotation. It is "
-"either encrypted, or encoded in a format we do not support."
-msgstr ""
-"Похоже, мы не можем обработать этот pdf-файл внутри коммерческого "
-"предложения. Он либо зашифрован, либо закодирован в формате, который мы не "
-"поддерживаем."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer
@@ -98,6 +88,18 @@ msgid "Inside quote"
 msgstr "Внутренняя цитата"
 
 #. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/utils.py:0
+#, python-format
+msgid ""
+"It seems that we're not able to process this pdf inside a quotation. It is "
+"either encrypted, or encoded in a format we do not support."
+msgstr ""
+"Похоже, мы не можем обработать этот pdf-файл внутри коммерческого "
+"предложения. Он либо зашифрован, либо закодирован в формате, который мы не "
+"поддерживаем."
+
+#. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Learn more from the documentation."
 msgstr "Узнайте больше из документации."
@@ -117,13 +119,6 @@ msgstr ""
 #, python-format
 msgid "Only PDF documents can be attached inside a quote."
 msgstr "В цитату можно вложить только документы в формате PDF."
-
-#. module: sale_pdf_quote_builder
-#. odoo-python
-#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
-#, python-format
-msgid "When attached inside a quote, the document must be a file, not a URL."
-msgstr ""
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -219,3 +214,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on
 msgid "Visible at"
 msgstr "Виден на"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+#, python-format
+msgid "When attached inside a quote, the document must be a file, not a URL."
+msgstr ""
+"Если документ прикреплён к предложению, он должен быть файлом, а не ссылкой."

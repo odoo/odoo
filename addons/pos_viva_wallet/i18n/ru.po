@@ -7,14 +7,15 @@
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
 # ILMIR <karamov@it-projects.info>, 2024
+# Ilya Rozhkov, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-30 14:16+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2024-02-07 08:49+0000\n"
-"Last-Translator: ILMIR <karamov@it-projects.info>, 2024\n"
+"Last-Translator: Ilya Rozhkov, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,13 +55,6 @@ msgid ""
 msgstr ""
 "Не удалось подключиться к серверу Odoo, пожалуйста, проверьте подключение к "
 "Интернету и повторите попытку."
-
-#. module: pos_viva_wallet
-#. odoo-python
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-#, python-format
-msgid "Do not have access to fetch token from Viva Wallet"
-msgstr "У вас нет доступа к получению токена из кошелька Viva Wallet"
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -197,6 +191,14 @@ msgstr "Конечная точка Viva Wallet Webhook"
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_webhook_verification_key
 msgid "Viva Wallet Webhook Verification Key"
 msgstr "Верификационный ключ Viva Wallet Webhook"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+#, python-format
+msgid "Your transaction with Viva Wallet failed. Please try again later."
+msgstr ""
+"Ваша транзакция с Viva Wallet не удалась. Пожалуйста, попробуйте позже."
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_terminal_id

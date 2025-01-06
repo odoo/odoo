@@ -19,8 +19,12 @@ export const userService = {
                 kwargs: { context },
             });
         });
-        groupCache.cache["base.group_user"] = session.is_internal_user;
-        groupCache.cache["base.group_system"] = session.is_system;
+        if (session.is_internal_user !== undefined) {
+            groupCache.cache["base.group_user"] = session.is_internal_user;
+        }
+        if (session.is_system !== undefined) {
+            groupCache.cache["base.group_system"] = session.is_system;
+        }
         const accessRightCache = new Cache((model, operation) => {
             const url = `/web/dataset/call_kw/${model}/check_access_rights`;
             return rpc(url, {

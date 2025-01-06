@@ -256,6 +256,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                         while (!floatIsZero(remaining_quantity, 6)) {
                             const splitted_line = new Orderline({ env: this.env }, line_values);
                             splitted_line.set_quantity(Math.min(remaining_quantity, 1.0), true);
+                            splitted_line.set_discount(line.discount);
                             this.pos.get_order().add_orderline(splitted_line);
                             remaining_quantity -= splitted_line.quantity;
                         }
@@ -275,20 +276,11 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                             this.pos.config.down_payment_product_id[0]
                         );
                     }
-                    const down_payment_tax =
-                        this.pos.taxes_by_id[down_payment_product.taxes_id] || false;
-                    let down_payment;
-                    if (down_payment_tax) {
-                        down_payment = down_payment_tax.price_include
-                            ? sale_order.amount_total
-                            : sale_order.amount_untaxed;
-                    } else {
-                        down_payment = sale_order.amount_total;
-                    }
 
+                    let down_payment;
                     let popupTitle = "";
                     let popupInputSuffix = "";
-                    const popupTotalDue = sale_order.amount_total;
+                    const popupTotalDue = sale_order.amount_unpaid;
                     let getInputBufferReminder = () => false;
                     const popupSubtitle = _t("Due balance: %s");
                     if (selectedOption == "dpAmount") {
@@ -315,7 +307,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                         title: popupTitle,
                         subtitle: sprintf(
                             popupSubtitle,
-                            this.env.utils.formatCurrency(sale_order.amount_total)
+                            this.env.utils.formatCurrency(popupTotalDue)
                         ),
                         inputSuffix: popupInputSuffix,
                         startingValue: 0,
@@ -328,7 +320,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     if (selectedOption == "dpAmount") {
                         down_payment = parseFloat(payload);
                     } else {
-                        down_payment = (down_payment * parseFloat(payload)) / 100;
+                        down_payment = (popupTotalDue * parseFloat(payload)) / 100;
                     }
 
                     if (down_payment > sale_order.amount_unpaid) {
@@ -392,7 +384,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
             const down_payment_line_price = total_down_payment * ratio;
 
             // We apply the taxes and keep the same price
-            const taxes_to_apply = group[0].tax_id.map((id) => {
+            const taxes_to_apply = group[0].tax_id.filter(id => this.pos.taxes_by_id[id].amount_type !== "fixed").map((id) => {
                 return { ...this.pos.taxes_by_id[id], price_include: true };
             });
             const tax_res = this.pos.compute_all(
@@ -416,7 +408,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                         price_type: "automatic",
                         sale_order_origin_id: clickedOrder,
                         down_payment_details: tab,
-                        tax_ids: group[0].tax_id,
+                        tax_ids: group[0].tax_id.filter(id => this.pos.taxes_by_id[id].amount_type !== "fixed"),
                     }
                 )
             );
@@ -443,15 +435,6 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
 
         const sale_lines = await this._getSOLines(sale_order.order_line);
         sale_order.order_line = sale_lines;
-
-        if (sale_order.picking_ids[0]) {
-            const [picking] = await this.orm.read(
-                "stock.picking",
-                [sale_order.picking_ids[0]],
-                ["scheduled_date"]
-            );
-            sale_order.shipping_date = picking.scheduled_date;
-        }
 
         return sale_order;
     }
