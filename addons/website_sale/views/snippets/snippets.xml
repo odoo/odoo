@@ -13,7 +13,7 @@
 <template id="product_ribbon_editor_options" name="Product ribbon options">
     <we-row>
         <we-select string="Ribbon" class="o_wsale_ribbon_select">
-            <we-button data-set-ribbon="" data-name="no_ribbon_opt">None</we-button>
+            <we-button data-set-ribbon="">None</we-button>
             <!-- Ribbons are filled in JS -->
         </we-select>
         <we-button
@@ -21,20 +21,44 @@
             title="Edit"
             class="fa fa-edit"
             data-no-preview="true"
-            data-name="edit_ribbon_opt"/>
-        <we-button data-create-ribbon="" data-name="create_ribbon_opt" title="Create" class="fa fa-plus text-success" data-no-preview="true"/>
+            data-name="edit_ribbon_opt"
+        />
+        <we-button
+            data-create-ribbon=""
+            data-name="create_ribbon_opt"
+            title="Create"
+            class="fa fa-plus text-success"
+            data-no-preview="true"
+        />
     </we-row>
     <div class="d-none" data-name="ribbon_customize_opt">
-        <we-input string="Name" class="o_we_sublevel_1 o_we_large"
-                  data-set-ribbon-name="Ribbon name" data-apply-to=".o_ribbon"/>
+        <we-input
+            string="Name"
+            class="o_we_sublevel_1 o_we_large"
+            data-set-ribbon-name="Ribbon name"
+            data-apply-to=".o_ribbons"
+        />
         <we-button-group string="Style" class="o_we_sublevel_1">
             <we-button data-set-ribbon-style="ribbon">Ribbon</we-button>
             <we-button data-set-ribbon-style="tag">Badge</we-button>
         </we-button-group>
-        <we-colorpicker string="Background" class="o_we_sublevel_1"
-                        title="" data-select-style="" data-css-property="background-color" data-color-prefix="text-bg-" data-apply-to=".o_ribbon"/>
-        <we-colorpicker string="Text" class="o_we_sublevel_1"
-                        title="" data-select-style="" data-css-property="color" data-apply-to=".o_ribbon"/>
+        <we-colorpicker
+            string="Background"
+            class="o_we_sublevel_1"
+            title=""
+            data-select-style=""
+            data-css-property="background-color"
+            data-color-prefix="text-bg-"
+            data-apply-to=".o_ribbons"
+        />
+        <we-colorpicker
+            string="Text"
+            class="o_we_sublevel_1"
+            title=""
+            data-select-style=""
+            data-css-property="color"
+            data-apply-to=".o_ribbons"
+        />
         <we-select string="Position" class="o_we_sublevel_1">
             <we-button data-set-ribbon-position="left">Left</we-button>
             <we-button data-set-ribbon-position="right">Right</we-button>
