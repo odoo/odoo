@@ -86,11 +86,7 @@ export class OutOfFocusService {
      * service when native notifications can't be sent.
      */
     sendNotification({ message, sound = true, title, type }) {
-        if (!this.canSendNativeNotification) {
-            this.sendOdooNotification(message, { sound, title, type });
-            return;
-        }
-        if (!this.multiTab.isOnMainTab()) {
+        if (!this.canSendNativeNotification || !this.multiTab.isOnMainTab()) {
             return;
         }
         try {
@@ -152,7 +148,7 @@ export class OutOfFocusService {
     }
 
     get canSendNativeNotification() {
-        return Boolean(browser.Notification && browser.Notification.permission === "granted");
+        return Boolean(window.Notification && window.Notification.permission === "granted");
     }
 }
 
