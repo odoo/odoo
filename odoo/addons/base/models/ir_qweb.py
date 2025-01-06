@@ -2214,6 +2214,7 @@ class IrQweb(models.AbstractModel):
         defer_load = self._compile_bool(el.attrib.pop('defer_load', False))
         lazy_load = self._compile_bool(el.attrib.pop('lazy_load', False))
         media = el.attrib.pop('media', False)
+        autoprefix = self._compile_bool(el.attrib.pop('t-autoprefix', False))
         code.append(indent_code(f"""
             t_call_assets_nodes = self._get_asset_nodes(
                 {xmlid!r},
@@ -2223,6 +2224,7 @@ class IrQweb(models.AbstractModel):
                 defer_load={defer_load},
                 lazy_load={lazy_load},
                 media={media!r},
+                autoprefix={autoprefix}
             )
         """.strip(), level))
 
@@ -2474,16 +2476,16 @@ class IrQweb(models.AbstractModel):
 
         return (attributes, content, inherit_branding)
 
-    def _get_asset_nodes(self, bundle, css=True, js=True, debug=False, defer_load=False, lazy_load=False, media=None):
+    def _get_asset_nodes(self, bundle, css=True, js=True, debug=False, defer_load=False, lazy_load=False, media=None, autoprefix=False):
         """Generates asset nodes.
         If debug=assets, the assets will be regenerated when a file which composes them has been modified.
         Else, the assets will be generated only once and then stored in cache.
         """
         media = css and media or None
-        links = self._get_asset_links(bundle, css=css, js=js, debug=debug)
+        links = self._get_asset_links(bundle, css=css, js=js, debug=debug, autoprefix=autoprefix)
         return self._links_to_nodes(links, defer_load=defer_load, lazy_load=lazy_load, media=media)
 
-    def _get_asset_links(self, bundle, css=True, js=True, debug=None):
+    def _get_asset_links(self, bundle, css=True, js=True, debug=None, autoprefix=False):
         """Generates asset nodes.
         If debug=assets, the assets will be regenerated when a file which composes them has been modified.
         Else, the assets will be generated only once and then stored in cache.
@@ -2493,9 +2495,9 @@ class IrQweb(models.AbstractModel):
         debug_assets = debug and 'assets' in debug
 
         if debug_assets:
-            return self._generate_asset_links(bundle, css=css, js=js, debug_assets=True, assets_params=assets_params, rtl=rtl)
+            return self._generate_asset_links(bundle, css=css, js=js, debug_assets=True, assets_params=assets_params, rtl=rtl, autoprefix=autoprefix)
         else:
-            return self._generate_asset_links_cache(bundle, css=css, js=js, assets_params=assets_params, rtl=rtl)
+            return self._generate_asset_links_cache(bundle, css=css, js=js, assets_params=assets_params, rtl=rtl, autoprefix=autoprefix)
 
     # qweb cache feature
 
@@ -2548,8 +2550,8 @@ class IrQweb(models.AbstractModel):
         'xml' not in tools.config['dev_mode'],
         tools.ormcache('bundle', 'css', 'js', 'tuple(sorted(assets_params.items()))', 'rtl', cache='assets'),
     )
-    def _generate_asset_links_cache(self, bundle, css=True, js=True, assets_params=None, rtl=False):
-        return self._generate_asset_links(bundle, css, js, False, assets_params, rtl)
+    def _generate_asset_links_cache(self, bundle, css=True, js=True, assets_params=None, rtl=False, autoprefix=False):
+        return self._generate_asset_links(bundle, css, js, False, assets_params, rtl, autoprefix=autoprefix)
 
     def _get_asset_content(self, bundle, assets_params=None):
         if assets_params is None:
@@ -2569,11 +2571,11 @@ class IrQweb(models.AbstractModel):
                 external_asset.append(path)
         return (files, external_asset)
 
-    def _get_asset_bundle(self, bundle_name, css=True, js=True, debug_assets=False, rtl=False, assets_params=None):
+    def _get_asset_bundle(self, bundle_name, css=True, js=True, debug_assets=False, rtl=False, assets_params=None, autoprefix=False):
         if assets_params is None:
             assets_params = self.env['ir.asset']._get_asset_params()
         files, external_assets = self._get_asset_content(bundle_name, assets_params)
-        return AssetsBundle(bundle_name, files, external_assets, env=self.env, css=css, js=js, debug_assets=debug_assets, rtl=rtl, assets_params=assets_params)
+        return AssetsBundle(bundle_name, files, external_assets, env=self.env, css=css, js=js, debug_assets=debug_assets, rtl=rtl, assets_params=assets_params, autoprefix=autoprefix)
 
     def _links_to_nodes(self, paths, defer_load=False, lazy_load=False, media=None):
         return [self._link_to_node(path, defer_load=defer_load, lazy_load=lazy_load, media=media) for path in paths]
@@ -2624,8 +2626,8 @@ class IrQweb(models.AbstractModel):
                 }
             return ('script', attributes)
 
-    def _generate_asset_links(self, bundle, css=True, js=True, debug_assets=False, assets_params=None, rtl=False):
-        asset_bundle = self._get_asset_bundle(bundle, css=css, js=js, debug_assets=debug_assets, rtl=rtl, assets_params=assets_params)
+    def _generate_asset_links(self, bundle, css=True, js=True, debug_assets=False, assets_params=None, rtl=False, autoprefix=False):
+        asset_bundle = self._get_asset_bundle(bundle, css=css, js=js, debug_assets=debug_assets, rtl=rtl, assets_params=assets_params, autoprefix=autoprefix)
         return asset_bundle.get_links()
 
     def _get_asset_link_urls(self, bundle, debug=False):
