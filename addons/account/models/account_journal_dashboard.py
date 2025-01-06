@@ -551,9 +551,8 @@ class AccountJournal(models.Model):
             "account_move.company_id",
         ]
         # DRAFTS
-        query, params = sale_purchase_journals._get_draft_sales_purchases_query().select(*bills_field_list)
-        self.env.cr.execute(query, params)
-        query_results_drafts = group_by_journal(self.env.cr.dictfetchall())
+        sql = sale_purchase_journals._get_draft_sales_purchases_query().select(*bills_field_list)
+        query_results_drafts = group_by_journal(self.env.execute_query_dict(sql))
 
         # WAITING AND LATE BILLS AND PAYMENTS
         query_results_to_pay = {}
