@@ -2139,7 +2139,7 @@ class AccountTax(models.Model):
         )
 
         subtotal_order = {}
-        encountered_base_amounts = {amount_untaxed_currency}
+        encountered_base_amounts = {currency.round(amount_untaxed_currency)}
         groups_by_subtotal = defaultdict(list)
         for tax_detail in tax_group_details_list:
             tax_group = tax_detail['tax_group']
