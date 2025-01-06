@@ -133,7 +133,7 @@ class AccountAccount(models.Model):
 
     def _field_to_sql(self, alias: str, fname: str, query: (Query | None) = None, flush: bool = True) -> SQL:
         if fname == 'internal_group':
-            return SQL("split_part(account_account.account_type, '_', 1)", to_flush=self._fields['account_type'])
+            return SQL("split_part(%s, '_', 1)", self._field_to_sql(alias, 'account_type', query, flush))
         return super()._field_to_sql(alias, fname, query, flush)
 
     @api.constrains('company_id', 'code')
