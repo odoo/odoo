@@ -157,6 +157,8 @@ export class DateTimeField extends Component {
         this.openPicker = dateTimePicker.open;
 
         onWillRender(() => this.triggerIsDirty());
+
+        this.futureWarningMsg = _t("This date is in the future");
     }
 
     //-------------------------------------------------------------------------
