@@ -123,12 +123,6 @@ class AccountAccount(models.Model):
     group_id = fields.Many2one('account.group', compute='_compute_account_group',
                                help="Account prefixes can determine account groups.")
     root_id = fields.Many2one('account.root', compute='_compute_account_root', search='_search_account_root')
-    allowed_journal_ids = fields.Many2many(
-        'account.journal',
-        string="Allowed Journals",
-        help="Define in which journals this account can be used. If empty, can be used in all journals.",
-        check_company=True,
-    )
     opening_debit = fields.Monetary(string="Opening Debit", compute='_compute_opening_debit_credit', inverse='_set_opening_debit', currency_field='company_currency_id')
     opening_credit = fields.Monetary(string="Opening Credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit', currency_field='company_currency_id')
     opening_balance = fields.Monetary(string="Opening Balance", compute='_compute_opening_debit_credit', inverse='_set_opening_balance', currency_field='company_currency_id')
@@ -197,21 +191,6 @@ class AccountAccount(models.Model):
                     raise UserError(_('An Off-Balance account can not be reconcilable'))
                 if record.tax_ids:
                     raise UserError(_('An Off-Balance account can not have taxes'))
-
-    @api.constrains('allowed_journal_ids')
-    def _constrains_allowed_journal_ids(self):
-        self.env['account.move.line'].flush_model(['account_id', 'journal_id'])
-        self.flush_recordset(['allowed_journal_ids'])
-        self._cr.execute("""
-            SELECT aml.id
-            FROM account_move_line aml
-            WHERE aml.account_id in %s
-            AND EXISTS (SELECT 1 FROM account_account_account_journal_rel WHERE account_account_id = aml.account_id)
-            AND NOT EXISTS (SELECT 1 FROM account_account_account_journal_rel WHERE account_account_id = aml.account_id AND account_journal_id = aml.journal_id)
-        """, [tuple(self.ids)])
-        ids = self._cr.fetchall()
-        if ids:
-            raise ValidationError(_('Some journal items already exist with this account but in other journals than the allowed ones.'))
 
     @api.constrains('currency_id')
     def _check_journal_consistency(self):

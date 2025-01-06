@@ -63,16 +63,3 @@ class AccountChartTemplate(models.AbstractModel):
             }
         }
 
-    @template('ae', 'account.account')
-    def _get_ae_account_account(self):
-        return {
-            "uae_account_100101": {
-                'allowed_journal_ids': [Command.link('ifrs16')],
-            },
-            "uae_account_100102": {
-                'allowed_journal_ids': [Command.link('ifrs16')],
-            },
-            "uae_account_400070": {
-                'allowed_journal_ids': [Command.link('ifrs16')],
-            },
-        }
