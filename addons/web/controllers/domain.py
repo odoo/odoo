@@ -1,10 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http, _
 from odoo.http import Controller, request
 from odoo.exceptions import ValidationError
+from odoo.tools import SQL
 from odoo.tools.misc import mute_logger
+
 
 class Domain(Controller):
 
@@ -21,14 +22,14 @@ class Domain(Controller):
             # go through the motions of preparing the final SQL for the domain,
             # so that anything invalid will raise an exception.
             query = Model.sudo()._search(domain)
-            sql, params = query.select()
 
             # Execute the search in EXPLAIN mode, to have the query parser
             # verify it. EXPLAIN will make sure the query is never actually executed
             # An alternative to EXPLAIN would be a LIMIT 0 clause, but the semantics
             # of a falsy `limit` parameter when calling _search() do not permit it.
+            sql = SQL("EXPLAIN %s", query.select())
             with mute_logger('odoo.sql_db'):
-                request.env.cr.execute(f"EXPLAIN {sql}", params)
+                request.env.cr.execute(sql)
             return True
         except Exception:  # pylint: disable=broad-except
             return False

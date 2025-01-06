@@ -115,17 +115,17 @@ class TestQuery(TransactionCase):
         records = self.env['res.partner.category']
         query = records._as_query()
         self.assertEqual(list(query), records.ids)
-        self.cr.execute(*query.select())
+        self.cr.execute(query.select())
         self.assertEqual([row[0] for row in self.cr.fetchall()], records.ids)
 
         records = self.env['res.partner.category'].search([])
         query = records._as_query()
         self.assertEqual(list(query), records.ids)
-        self.cr.execute(*query.select())
+        self.cr.execute(query.select())
         self.assertEqual([row[0] for row in self.cr.fetchall()], records.ids)
 
         records = records.browse(reversed(records.ids))
         query = records._as_query()
         self.assertEqual(list(query), records.ids)
-        self.cr.execute(*query.select())
+        self.cr.execute(query.select())
         self.assertEqual([row[0] for row in self.cr.fetchall()], records.ids)
