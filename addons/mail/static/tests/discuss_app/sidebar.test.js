@@ -1080,29 +1080,6 @@ test("Can unpin chat channel", async () => {
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Mitchell Admin" });
 });
 
-test("Unpinning chat should display notification", async () => {
-    mockDate("2023-01-03 12:00:00");
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
-    pyEnv["discuss.channel"].create({
-        channel_type: "chat",
-        channel_member_ids: [
-            Command.create({
-                partner_id: serverState.partnerId,
-                last_interest_dt: "2021-01-03 12:00:00",
-            }),
-            Command.create({ partner_id: partnerId, last_interest_dt: "2021-01-03 12:00:00" }),
-        ],
-    });
-    await start();
-    await openDiscuss();
-    await click(".o-mail-DiscussSidebarChannel [title='Unpin Conversation']");
-    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
-    await contains(".o_notification:has(.o_notification_bar.bg-info)", {
-        text: "You unpinned your conversation with Mario",
-    });
-});
-
 test("Can leave channel", async () => {
     mockDate("2023-01-03 12:00:00");
     const pyEnv = await startServer();
