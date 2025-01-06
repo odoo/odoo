@@ -56,3 +56,18 @@ test("hide/display base on applyTo", async () => {
     expect("[data-class-action='my-custom-class']").toHaveClass("active");
     expect(".options-container .o-checkbox").toHaveCount(1);
 });
+
+test("click on BuilderCheckbox with inverseAction", async () => {
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderCheckbox classAction="'my-custom-class'" inverseAction="true"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    expect(":iframe .test-options-target").not.toHaveClass("my-custom-class");
+    expect(".o-checkbox .form-check-input:checked").toHaveCount(1);
+
+    await contains(".o-checkbox").click();
+    expect(":iframe .test-options-target").toHaveClass("my-custom-class");
+    expect(".o-checkbox .form-check-input:checked").toHaveCount(0);
+});

@@ -213,7 +213,8 @@ export function useClickableBuilderComponent() {
         for (const actionId of comp.props.inheritedActions) {
             comp.env.dependencyManager.get(actionId).bus?.trigger("BEFORE_CALL_ACTIONS");
         }
-        const shouldClean = shouldToggle && isActive();
+        let shouldClean = shouldToggle && isActive();
+        shouldClean = comp.props.inverseAction ? !shouldClean : shouldClean;
         for (const applySpec of applySpecs) {
             if (shouldClean) {
                 applySpec.clean({
@@ -286,11 +287,12 @@ export function useClickableBuilderComponent() {
             const { actionId, actionParam, actionValue } = o;
             // TODO isActive === first editing el or all ?
             const editingElement = editingElements[0];
-            return getAction(actionId).isActive?.({
+            const isActive = getAction(actionId).isActive?.({
                 editingElement,
                 param: actionParam,
                 value: actionValue,
             });
+            return comp.props.inverseAction ? !isActive : isActive;
         });
         // If there is no `isActive` method for the widget return false
         if (areActionsActiveTabs.every((el) => el === undefined)) {
@@ -448,6 +450,7 @@ export const basicContainerBuilderComponentProps = {
 const validateIsNull = { validate: (value) => value === null };
 export const clickableBuilderComponentProps = {
     ...basicContainerBuilderComponentProps,
+    inverseAction: { type: Boolean, optional: true },
 
     actionValue: {
         type: [Boolean, String, Number, { type: Array, element: [Boolean, String, Number] }],

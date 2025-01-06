@@ -435,3 +435,18 @@ describe("Operation", () => {
         expect.verifySteps(["action2"]);
     });
 });
+
+test("click on BuilderButton with inverseAction", async () => {
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderButton classAction="'my-custom-class'" inverseAction="true"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    expect(":iframe .test-options-target").not.toHaveClass("my-custom-class");
+    expect("[data-class-action='my-custom-class']").toHaveClass("active");
+
+    await contains("[data-class-action='my-custom-class']").click();
+    expect(":iframe .test-options-target").toHaveClass("my-custom-class");
+    expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
+});
