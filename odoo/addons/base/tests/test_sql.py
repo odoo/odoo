@@ -73,6 +73,9 @@ class TestSQL(BaseCase):
         sql2 = SQL("SELECT id FROM table WHERE foo=%s", 421)
         self.assertNotEqual(sql1, sql2)
 
+    def test_sql_hash(self):
+        hash(SQL("SELECT id FROM table WHERE x=%s", 5))
+
     def test_sql_idempotence(self):
         sql1 = SQL("SELECT id FROM table WHERE foo=%s AND bar=%s", 42, 'baz')
         sql2 = SQL(sql1)
