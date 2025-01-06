@@ -486,7 +486,7 @@ test("leave command on channel", async () => {
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "general" });
     await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
-    await contains(".o_notification", { text: "You unsubscribed from general." });
+    await contains(".o_notification", { text: "You left general." });
 });
 
 test("Can handle leave notification from unknown member", async () => {
