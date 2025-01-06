@@ -34,6 +34,7 @@ class AccountMoveSendBatchWizard(models.TransientModel):
     def _compute_summary_data(self):
         extra_edis = self._get_all_extra_edis()
         sending_methods = dict(self.env['res.partner']._fields['invoice_sending_method'].selection)
+        sending_methods['manual'] = _('Manually')  # in batch sending, everything is done asynchronously, we never "Download"
 
         for wizard in self:
             edi_counter = Counter()
