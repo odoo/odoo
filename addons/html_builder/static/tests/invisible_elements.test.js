@@ -1,4 +1,4 @@
-import { InvisibleElementsPanel } from "@html_builder/builder/snippets_menu_tabs/invisible_elements_panel";
+import { InvisibleElementsPanel } from "@html_builder/builder/builder_sidebar/invisible_elements_panel";
 import { unformat } from "@html_editor/../tests/_helpers/format";
 import { expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, queryFirst, queryOne, waitFor } from "@odoo/hoot-dom";
@@ -10,7 +10,7 @@ import {
     defineWebsiteModels,
     getSnippetStructure,
     invisibleEl,
-    setupWebsiteBuilder
+    setupWebsiteBuilder,
 } from "./helpers";
 
 defineWebsiteModels();
@@ -62,7 +62,7 @@ test("Add an element on the invisible elements tab", async () => {
         selector: "*",
         dropNear: "section",
     });
-    await setupWebsiteBuilder(`${invisiblePopup} <section><p>Text</p></section>`, {
+    await setupWebsiteBuilder(`${invisibleEl} <section><p>Text</p></section>`, {
         snippets: {
             snippet_groups: [
                 '<div name="A" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',

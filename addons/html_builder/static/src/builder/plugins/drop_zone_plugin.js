@@ -2,18 +2,12 @@ import { Plugin } from "@html_editor/plugin";
 import { isBlock } from "@html_editor/utils/blocks";
 import { closest, touching } from "@web/core/utils/ui";
 
-function computeSelector({ editable, selector, exclude }) {
-    const filterFunction = (el) => {
-        // TODO add all filter like website
-        if (exclude && el.matches(exclude)) {
-            return false;
-        }
-        return true;
-    };
-    return {
-        is: (el) => el.matches(selector) && filterFunction(el),
-        all: () => [...editable.querySelectorAll(selector)].filter(filterFunction),
-    };
+function filterFunction(el, exclude) {
+    // TODO add all filter like website
+    if (exclude && el.matches(exclude)) {
+        return false;
+    }
+    return true;
 }
 
 export class DropZonePlugin extends Plugin {
@@ -27,18 +21,6 @@ export class DropZonePlugin extends Plugin {
 
     setup() {
         this.dropZoneElements = [];
-
-        this.dropZoneSelectors = this.getResource("dropzone_selector").map(
-            ({ selector, exclude, dropIn, dropNear }) => ({
-                selector: computeSelector({ editable: this.editable, selector, exclude }),
-                dropIn: computeSelector({ editable: this.editable, selector: dropIn, exclude }),
-                dropNear: computeSelector({
-                    editable: this.editable,
-                    selector: dropNear,
-                    exclude,
-                }),
-            })
-        );
     }
 
     /**
@@ -55,21 +37,29 @@ export class DropZonePlugin extends Plugin {
         return true;
     }
 
+    isDroppable(el, { selector, exclude }) {
+        return el.matches(selector) && filterFunction(el, exclude);
+    }
+
+    getAll(selector) {
+        return [...this.editable.querySelectorAll(selector)].filter((el) => filterFunction(el));
+    }
+
     getSelectors(snippet) {
         const selectorSiblings = [];
         const selectorChildren = [];
 
-        for (const dropZoneSelector of this.dropZoneSelectors) {
-            const { selector, dropNear, dropIn } = dropZoneSelector;
-            if (!selector.is(snippet.content)) {
+        for (const dropZoneSelector of this.getResource("dropzone_selector")) {
+            const { selector, exclude, dropIn, dropNear } = dropZoneSelector;
+            if (!this.isDroppable(snippet.content, { selector, exclude })) {
                 continue;
             }
 
             if (dropNear) {
-                selectorSiblings.push(...dropNear.all());
+                selectorSiblings.push(...this.getAll(dropNear));
             }
             if (dropIn) {
-                selectorChildren.push(...dropIn.all());
+                selectorChildren.push(...this.getAll(dropIn));
             }
         }
 
