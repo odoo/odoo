@@ -324,3 +324,35 @@ test("'Start a meeting' in mobile", async () => {
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMember", { text: "Partner 2" });
 });
+
+test("Use saved volume settings", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const partnerName = "Another Participant";
+    const partnerId = pyEnv["res.partner"].create({ name: partnerName });
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: partnerId,
+        }),
+        channel_id: channelId,
+    });
+    const expectedVolume = 0.31;
+    pyEnv["res.users.settings.volumes"].create({
+        user_setting_id: pyEnv["res.users.settings"].create({
+            user_id: serverState.userId,
+        }),
+        partner_id: partnerId,
+        volume: expectedVolume,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start a Call']");
+    await contains(".o-discuss-Call");
+    await triggerEvents(`.o-discuss-CallParticipantCard[title='${partnerName}']`, ["contextmenu"]);
+    await contains(".o-discuss-CallContextMenu");
+    const rangeInput = queryFirst(".o-discuss-CallContextMenu input[type='range']");
+    expect(rangeInput.value).toBe(expectedVolume.toString());
+    await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
+});
