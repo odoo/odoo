@@ -285,6 +285,8 @@ class AccountEdiFormat(models.Model):
 
             # === Invoice ===
 
+            if invoice.delivery_date and invoice.delivery_date != invoice.invoice_date:
+                invoice_node['FechaOperacion'] = invoice.delivery_date.strftime('%d-%m-%Y')
             invoice_node['DescripcionOperacion'] = invoice.invoice_origin[:500] if invoice.invoice_origin else 'manual'
             if invoice.is_sale_document():
                 nif = invoice.company_id.vat[2:] if invoice.company_id.vat.startswith('ES') else invoice.company_id.vat
