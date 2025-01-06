@@ -375,11 +375,21 @@ class HrExpenseSheet(models.Model):
         for sheet in self.filtered('account_move_ids'):
             sheet.accounting_date = sheet.account_move_ids[:1].date
 
-    @api.depends('employee_id', 'employee_id.department_id')
+    @api.depends('employee_id', 'employee_id.parent_ids', 'employee_id.department_id')
     def _compute_from_employee_id(self):
         for sheet in self:
             sheet.department_id = sheet.employee_id.department_id
-            sheet.user_id = sheet.employee_id.expense_manager_id or sheet.employee_id.parent_id.user_id
+            if sheet.state in ['draft', 'submit']:
+                approver = sheet.user_id or sheet.employee_id.expense_manager_id
+                managers = sheet.employee_id.parent_ids.mapped("user_id")
+                team_approvers = sheet.env.ref('hr_expense.group_hr_expense_team_approver', raise_if_not_found=False).users
+                all_approvers = sheet.env.ref('hr_expense.group_hr_expense_user', raise_if_not_found=False).users
+                approvers = (managers & team_approvers) or all_approvers
+                if not approver or approver not in approvers:
+                    if not approvers:
+                        raise UserError(_('Nobody in the company has the access rights to approve the expense.'))
+                    approver = approvers[0]
+                    sheet.user_id = approver
 
     @api.depends_context('uid')
     @api.depends('employee_id', 'user_id', 'state')
