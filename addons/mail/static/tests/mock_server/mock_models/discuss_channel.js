@@ -235,7 +235,6 @@ export class DiscussChannel extends models.ServerModel {
         const [data] = this._read_format(
             ids,
             [
-                "allow_public_upload",
                 "avatar_cache_key", // mock server simplification
                 "channel_type",
                 "create_uid",
@@ -439,7 +438,6 @@ export class DiscussChannel extends models.ServerModel {
                 "ADD",
                 makeKwArgs({ extra: true })
             );
-            res.allow_public_upload = channel.allow_public_upload;
             store.add(this.browse(channel.id), res);
         }
     }
