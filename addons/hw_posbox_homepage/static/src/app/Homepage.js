@@ -82,7 +82,7 @@ export class Homepage extends Component {
     static template = xml`
     <LoadingFullScreen t-if="this.state.waitRestart">
         <t t-set-slot="body">
-           Restarting IoT Box, please wait...
+           Restarting IoT System, please wait...
         </t>
     </LoadingFullScreen>
 
@@ -93,7 +93,7 @@ export class Homepage extends Component {
                 <IconButton onClick.bind="restartOdooService" icon="'fa-power-off'" />
             </div>
             <div class="d-flex mb-4 flex-column align-items-center justify-content-center">
-                <h4 class="text-center m-0">IoT Box - <t t-esc="this.data.hostname" /></h4>
+                <h4 class="text-center m-0">IoT System - <t t-esc="this.data.hostname" /></h4>
             </div>
             <div t-if="this.store.advanced" class="alert alert-warning" role="alert">
                 <p class="m-0 fw-bold">HTTPS certificate</p>

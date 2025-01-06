@@ -71,8 +71,8 @@ export class BasePrinter {
         return {
             successful: false,
             message: {
-                title: _t("Connection to IoT Box failed"),
-                body: _t("Please check if the IoT Box is still connected."),
+                title: _t("Connection to IoT System failed"),
+                body: _t("Please check if the IoT System is still connected."),
             },
         };
     }

@@ -159,7 +159,7 @@ def check_git_branch():
                 subprocess.check_output(git + ['symbolic-ref', '-q', '--short', 'HEAD']).decode('utf-8').rstrip()
             )
             _logger.info(
-                "Current IoT Box local git branch: %s / Associated Odoo database's git branch: %s",
+                "Current IoT System local git branch: %s / Associated Odoo database's git branch: %s",
                 local_branch,
                 db_branch,
             )

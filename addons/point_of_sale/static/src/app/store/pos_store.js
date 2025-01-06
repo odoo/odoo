@@ -1901,9 +1901,9 @@ export class PosStore extends Reactive {
                     if (statusText == "error" && window.location.protocol == "https:") {
                         // FIXME POSREF this looks like it's dead code.
                         reject({
-                            title: _t("HTTPS connection to IoT Box failed"),
+                            title: _t("HTTPS connection to IoT System failed"),
                             body: _t(
-                                "Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept the certificate of your IoT Box.",
+                                "Make sure you are using IoT System v18.12 or higher. Navigate to %s to accept the certificate of your IoT System.",
                                 url
                             ),
                             popup: "alert",

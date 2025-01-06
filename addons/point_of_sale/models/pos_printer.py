@@ -10,6 +10,6 @@ class PosPrinter(models.Model):
 
     name = fields.Char('Printer Name', required=True, default='Printer', help='An internal identification of the printer')
     printer_type = fields.Selection(string='Printer Type', default='iot',
-        selection=[('iot', ' Use a printer connected to the IoT Box')])
+        selection=[('iot', ' Use a printer connected to an IoT System')])
     proxy_ip = fields.Char('Proxy IP Address', help="The IP Address or hostname of the Printer's hardware proxy")
     product_categories_ids = fields.Many2many('pos.category', 'printer_category_rel', 'printer_id', 'category_id', string='Printed Product Categories')

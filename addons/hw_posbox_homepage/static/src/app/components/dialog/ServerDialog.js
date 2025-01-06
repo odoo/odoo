@@ -68,7 +68,7 @@ export class ServerDialog extends Component {
             <t t-set-slot="body">
                 <div class="alert alert-warning fs-6" role="alert">
                     Paste the token from the Connect wizard in your Odoo instance in the Server Token field.
-                    If you change the IoT Box Name, your IoT Box will need a reboot.
+                    If you change the IoT System Name, your IoT System will need a reboot.
                 </div>
                 <div class="mt-3">
                     <div class="input-group-sm mb-3" t-if="this.store.isLinux">

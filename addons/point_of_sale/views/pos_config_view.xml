@@ -50,14 +50,14 @@
                                 </div>
                             </div>
                         </setting>
-                        <setting id="other_devices" string="ePos Printer" help="Connect device to your PoS without an IoT Box">
+                        <setting id="other_devices" string="ePos Printer" help="Connect device to your PoS without an IoT System">
                             <field name="other_devices" />
                         </setting>
-                        <setting string="IoT Box" help="Connect devices using an IoT Box">
+                        <setting string="IoT System" help="Connect devices using an IoT System">
                                 <field name="is_posbox" />
                                 <div class="content-group pos_iot_config" invisible="not is_posbox">
                                     <div class="row">
-                                        <label string="IoT Box IP Address" for="proxy_ip" class="col-lg-4 o_light_label"/>
+                                        <label string="IoT System IP Address" for="proxy_ip" class="col-lg-4 o_light_label"/>
                                         <field name="proxy_ip"/>
                                     </div>
                                     <div class="row iot_barcode_scanner">

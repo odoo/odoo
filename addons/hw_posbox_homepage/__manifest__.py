@@ -2,13 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'IoT Box Homepage',
+    'name': 'IoT System Homepage',
     'category': 'Sales/Point of Sale',
     'sequence': 6,
     'website': 'https://www.odoo.com/app/point-of-sale-hardware',
-    'summary': 'A homepage for the IoT Box',
+    'summary': 'A homepage for the IoT System',
     'description': """
-IoT Box Homepage
+IoT System Homepage
 ================
 
 This module overrides Odoo web interface to display a simple

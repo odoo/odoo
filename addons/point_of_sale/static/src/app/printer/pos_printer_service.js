@@ -30,7 +30,7 @@ export class PosPrinterService extends PrinterService {
         } catch {
             this.popup.add(ErrorPopup, {
                 title: _t("Printing is not supported on some browsers"),
-                body: _t("It is possible to print your tickets by making use of an IoT Box."),
+                body: _t("It is possible to print your tickets by making use of an IoT System."),
             });
             return false;
         }

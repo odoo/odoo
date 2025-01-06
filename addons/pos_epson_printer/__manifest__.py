@@ -10,7 +10,7 @@
     'summary': 'Epson ePOS Printers in PoS',
     'description': """
 
-Use Epson ePOS Printers without the IoT Box in the Point of Sale
+Use Epson ePOS Printers without the IoT System in the Point of Sale
 """,
     'depends': ['point_of_sale'],
     'data': [

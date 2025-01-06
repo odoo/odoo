@@ -8,7 +8,7 @@
     'category': 'Sales/Point of Sale',
     'sequence': 6,
     'summary': 'Epson ePOS Printers in PoS Kiosk',
-    'description': "Use Epson ePOS Printers without the IoT Box in the PoS Kiosk",
+    'description': "Use Epson ePOS Printers without the IoT System in the PoS Kiosk",
     'depends': ['pos_epson_printer', 'pos_self_order'],
     'installable': True,
     'auto_install': True,

@@ -53,7 +53,7 @@ export class SixDialog extends Component {
     static template = xml`
         <LoadingFullScreen t-if="this.state.waitRestart">
             <t t-set-slot="body">
-                Your IoT Box is currently processing your request. Please wait.
+                Your IoT System is currently processing your request. Please wait.
             </t>
         </LoadingFullScreen>
 
