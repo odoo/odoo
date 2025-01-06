@@ -146,3 +146,12 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
 
     def test_user_known_after_reload(self):
         self.start_tour('/', 'website_livechat_user_known_after_reload')
+
+
+@tests.tagged('post_install', '-at_install')
+class TestLivechatBasicFlowHttpCaseMobile(HttpCaseWithUserDemo, TestLivechatCommon):
+    browser_size = '375x667'
+    touch_enabled = True
+
+    def test_mobile_user_interaction(self):
+        self.start_tour('/', 'im_livechat_request_chat_and_send_message', login=None)
