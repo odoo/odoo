@@ -4,13 +4,6 @@
     <t t-name="mail.AttachmentPanel">
         <ActionPanel title.translate="Attachments" minWidth="200" initialWidth="400" icon="'fa fa-paperclip'">
             <div class="d-flex flex-column py-2 flex-grow-1">
-                <div t-if="hasToggleAllowPublicUpload" class="form-check form-switch mx-4">
-                    <label class="form-check-label">
-                        <input t-on-change="toggleAllowPublicUpload" class="form-check-input" type="checkbox" role="switch" t-att-checked="props.thread.allow_public_upload"/>
-                        <t t-if="props.thread.allow_public_upload">File upload is enabled for external users</t>
-                        <t t-else="">File upload is disabled for external users</t>
-                    </label>
-                </div>
                 <div class="flex-grow-1" t-att-class="{
                     'd-flex justify-content-center align-items-center': props.thread.attachments.length === 0,
                 }">

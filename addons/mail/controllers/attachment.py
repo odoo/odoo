@@ -52,8 +52,6 @@ class AttachmentController(http.Controller):
         thread = ThreadController._get_thread_with_access(thread_model, thread_id, mode=request.env[thread_model]._mail_post_access, **kwargs)
         if not thread:
             raise NotFound()
-        if thread_model == "discuss.channel" and not thread.allow_public_upload and not request.env.user._is_internal():
-            raise AccessError(_("You are not allowed to upload attachments on this channel."))
         vals = {
             "name": ufile.filename,
             "raw": ufile.read(),
