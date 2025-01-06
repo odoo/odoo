@@ -1394,7 +1394,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
             self.assert_invoice_tax_totals_summary(invoice, expected_values)
         self._run_js_tests()
 
-    def test_intracomm_taxes(self):
+    def test_reverse_charge_taxes_1(self):
         tax = self.percent_tax(
             21.0,
             invoice_repartition_line_ids=[
@@ -1427,6 +1427,52 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                             'base_amount_currency': 100.0,
                             'tax_amount_currency': 0.0,
                             'display_base_amount_currency': 100.0,
+                        },
+                    ],
+                },
+            ],
+        }
+        self.assert_tax_totals_summary(document, expected_values)
+        invoice = self.convert_document_to_invoice(document)
+        self.assert_invoice_tax_totals_summary(invoice, expected_values)
+        self._run_js_tests()
+
+    def test_reverse_charge_taxes_2(self):
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+        tax = self.percent_tax(
+            21.0,
+            invoice_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
+            ],
+            refund_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
+            ],
+        )
+        document_params = self.init_document(lines=[
+            {'price_unit': 11178.65, 'discount': 10.0, 'tax_ids': tax},
+        ])
+        document = self.populate_document(document_params)
+        expected_values = {
+            'same_tax_base': True,
+            'currency_id': self.currency.id,
+            'base_amount_currency': 10060.79,
+            'tax_amount_currency': 0.0,
+            'total_amount_currency': 10060.79,
+            'subtotals': [
+                {
+                    'name': "Untaxed Amount",
+                    'base_amount_currency': 10060.79,
+                    'tax_amount_currency': 0.0,
+                    'tax_groups': [
+                        {
+                            'id': self.tax_groups[0].id,
+                            'base_amount_currency': 10060.79,
+                            'tax_amount_currency': 0.0,
+                            'display_base_amount_currency': 10060.79,
                         },
                     ],
                 },
