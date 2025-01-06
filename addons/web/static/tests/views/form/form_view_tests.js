@@ -12549,7 +12549,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("Auto save: save on closing tab/browser", async function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         const sendBeaconDef = makeDeferred();
         mockSendBeacon((route, blob) => {
@@ -12589,6 +12589,10 @@ QUnit.module("Views", (hooks) => {
         await nextTick();
         await sendBeaconDef;
         assert.verifySteps(["save"], "should not prevent unload");
+        // With all changes saved, the save/discard buttons should now be invisible.
+        // While it typically doesn't matter when leaving a page, an urgent save may get triggered
+        // by a user action that remains on the page, e.g. opening a VoIP client (see opw 4308954).
+        assert.containsOnce(target, ".o_form_status_indicator_buttons.invisible");
     });
 
     QUnit.test(
