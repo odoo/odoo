@@ -4165,3 +4165,15 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         with move_form.invoice_line_ids.new() as invoice_line_form:
             invoice_line_form.display_type = 'line_section'
         move_form.save()
+
+    def test_out_invoice_partner_context(self):
+        """No line should take the partner of the context instead of the one specified in the create vals."""
+        move = self.env['account.move'].with_context(default_partner_id=self.partner_b.id).create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [Command.create({
+                'price_unit': 1000.0,
+            })],
+        })
+        self.assertEqual(move.line_ids.partner_id, self.partner_a)
