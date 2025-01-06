@@ -419,7 +419,7 @@ class OdooPdfFileWriter(PdfFileWriter):
         # bytes, each of whose encoded byte values shall have a decimal value greater than 127 "
         self._header = b"%PDF-1.7\n"
         if submod == '._pypdf2_1':
-            self._header += b"\xDE\xAD\xBE\xEF"
+            self._header += b"%\xDE\xAD\xBE\xEF"
 
         # Add a document ID to the trailer. This is only needed when using encryption with regular PDF, but is required
         # when using PDF/A
