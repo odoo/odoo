@@ -29,7 +29,7 @@ class StockLotReport(models.Model):
             sml.quantity,
             sml.product_uom_id uom_id,
             CONCAT_WS(', ', partner.street, partner.street2, partner.city,  partner.zip, state.name, country.code) address,
-            (SELECT COUNT(sp_return.id) FROM stock_picking sp_return WHERE sp_return.return_id = picking.id) > 0 AS has_return,
+            MIN(sml_return.id) IS NOT NULL AS has_return,
             picking.date_done delivery_date
         """
 
@@ -48,6 +48,12 @@ class StockLotReport(models.Model):
             ON state.id = partner.state_id
             LEFT JOIN res_country AS country
             ON country.id = partner.country_id
+            LEFT JOIN stock_picking AS picking_return
+            ON picking_return.return_id = sml.picking_id
+            LEFT JOIN stock_move_line AS sml_return
+            ON sml_return.picking_id = picking_return.id 
+                AND sml_return.lot_id = lot.id 
+                AND sml_return.state = 'done'
         """
 
     def _group_by(self):
@@ -64,7 +70,8 @@ class StockLotReport(models.Model):
             partner.street2,
             sml.quantity,
             sml.product_uom_id,
-            picking.date_done
+            picking.date_done,
+            sml_return.id
         """
 
     def _query(self):
