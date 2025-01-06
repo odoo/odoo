@@ -517,7 +517,7 @@ class AccountBankStatementLine(models.Model):
             # Base domain.
             ('display_type', 'not in', ('line_section', 'line_note')),
             ('parent_state', '=', 'posted'),
-            ('company_id', 'child_of', self.company_id.root_id.id),
+            ('company_id', 'child_of', self.company_id.id),  # allow to match invoices from same or children companies to be consistant with what's shown in the interface
             # Reconciliation domain.
             ('reconciled', '=', False),
             # Domain to use the account_move_line__unreconciled_index
