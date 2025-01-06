@@ -133,8 +133,11 @@ class AccountAccount(models.Model):
                                     "If not, this account will belong to Trade Receivable/Payable in reports and filters.")
 
     def _field_to_sql(self, alias: str, fname: str, query: (Query | None) = None, flush: bool = True) -> SQL:
+        account_alias = SQL.identifier(self._table)
+        if query is not None and query.table != 'account_account':
+            account_alias = SQL.identifier(next(alias for alias, (_j_type, j_table, _j_cond) in query._joins.items() if j_table == account_alias))
         if fname == 'internal_group':
-            return SQL("split_part(account_account.account_type, '_', 1)", to_flush=self._fields['account_type'])
+            return SQL("split_part(%s.account_type, '_', 1)", account_alias, to_flush=self._fields['account_type'])
         return super()._field_to_sql(alias, fname, query, flush)
 
     @api.constrains('company_id', 'code')
