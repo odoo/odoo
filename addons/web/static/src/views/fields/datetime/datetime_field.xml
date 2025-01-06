@@ -21,16 +21,12 @@
                     t-ref="start-date"
                     type="text"
                     t-att-id="showSeparator ? props.endDateField and props.id : props.id"
-                    class="o_input cursor-pointer"
+                    t-att-class="'o_input cursor-pointer ' + (props.warnFuture and isDateInTheFuture(0) ? 'text-danger' : '')"
                     autocomplete="off"
                     t-att-placeholder="props.placeholder"
                     t-att-data-field="startDateField"
                     t-on-input="onInput"
-                />
-                <span
-                    t-if="props.warnFuture and isDateInTheFuture(0)"
-                    class="fa fa-exclamation-triangle text-danger"
-                    title="This date is on the future. Make sure it is what you expected."
+                    t-att-title="props.warnFuture and isDateInTheFuture(0) ? futureWarningMsg : ''"
                 />
             </t>
 
@@ -58,16 +54,12 @@
                         t-ref="end-date"
                         type="text"
                         t-att-id="props.startDateField and props.id"
-                        class="o_input cursor-pointer"
+                        t-att-class="'o_input cursor-pointer ' + (props.warnFuture and isDateInTheFuture(1) ? 'text-danger' : '')"
                         autocomplete="off"
                         t-att-placeholder="props.placeholder"
                         t-att-data-field="endDateField"
                         t-on-input="onInput"
-                    />
-                    <span
-                        t-if="props.warnFuture and isDateInTheFuture(1)"
-                        class="fa fa-exclamation-triangle text-danger"
-                        title="This date is on the future. Make sure it is what you expected."
+                        t-att-title="props.warnFuture and isDateInTheFuture(1) ? futureWarningMsg : ''"
                     />
                 </t>
             </t>
