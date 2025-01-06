@@ -1003,7 +1003,10 @@ export class Record extends DataPoint {
             const data = { jsonrpc: "2.0", method: "call", params };
             const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
             const succeeded = navigator.sendBeacon(route, blob);
-            if (!succeeded) {
+            if (succeeded) {
+                this._changes = markRaw({});
+                this.dirty = false;
+            } else {
                 this.model._closeUrgentSaveNotification = this.model.notification.add(
                     markup(
                         _t(
