@@ -173,7 +173,7 @@
 <t t-name="mail.Composer.dropdownActions">
     <t t-foreach="partitionedActions.other" t-as="action" t-key="action.id">
         <DropdownItem tag="'button'" class="'btn rounded-0 d-flex align-items-center px-2 py-2 m-0'" onSelected="(ev) => action.onClick?.(ev)" attrs="{ 'name': action.id, 'data-hotkey': action.hotkey, 'disabled': action.disabledCondition or areAllActionsDisabled }">
-            <i class="ms-1" t-att-class="action.icon"/>
+            <i class="fa-fw" t-att-class="action.icon"/>
             <span class="mx-2" t-out="action.name"/>
         </DropdownItem>
     </t>
