@@ -343,6 +343,7 @@ form: module.record_id""" % (xml_id,)
 
         if self.xml_filename and rec_id:
             model = model.with_context(
+                install_mode=True,
                 install_module=self.module,
                 install_filename=self.xml_filename,
                 install_xmlid=rec_id,
@@ -652,6 +653,7 @@ def convert_csv_import(env, module, fname, csvcontent, idref=None, mode='init',
     context = {
         'mode': mode,
         'module': module,
+        'install_mode': True,
         'install_module': module,
         'install_filename': fname,
         'noupdate': noupdate,
