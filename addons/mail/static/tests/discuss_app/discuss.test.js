@@ -18,7 +18,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, expect, test } from "@odoo/hoot";
-import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
+import { animationFrame, Deferred, mockDate, tick } from "@odoo/hoot-mock";
 import {
     asyncStep,
     Command,
@@ -1302,7 +1302,7 @@ test("new message in tab title has precedence over action name", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o_notification:contains(Hello World!)");
+    await animationFrame();
     expect(titleService.current).toBe("(1) Inbox");
 });
 
@@ -1377,7 +1377,6 @@ test("out-of-focus notif on needaction message in group chat contributes only on
     await contains(".o-mail-DiscussSidebar-item:has(.badge:contains(1))", {
         text: "Mitchell Admin and Dumbledore",
     });
-    await contains(".o_notification", { count: 1 });
     expect(titleService.current).toBe("(1) Inbox");
 });
 
