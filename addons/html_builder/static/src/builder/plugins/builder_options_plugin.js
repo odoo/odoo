@@ -5,7 +5,6 @@ export class BuilderOptionsPlugin extends Plugin {
     static id = "builder-options";
     static dependencies = ["selection", "overlay"];
     resources = {
-        selectionchange_handlers: this.onSelectionChange.bind(this),
         step_added_handlers: () => this.updateContainers(),
         update_containers: this.updateContainers.bind(this),
     };
@@ -20,25 +19,6 @@ export class BuilderOptionsPlugin extends Plugin {
         });
 
         this.lastContainers = [];
-    }
-
-    onSelectionChange(selection) {
-        const selectedNodes = this.dependencies.selection.getSelectedNodes();
-        let selectionNode;
-        if (selectedNodes.length === 0) {
-            selectionNode = selection.editableSelection.commonAncestorContainer;
-        } else if (selectedNodes.length === 1) {
-            selectionNode = selectedNodes[0];
-        } else {
-            // Some elements are not selectable in the editor but still can be
-            // a snippet. The selection will be put in the closest selectable element.
-            // Therefore if the selection is collapsed, let the pointerup event handle
-            return;
-        }
-        if (selectionNode.nodeType === Node.TEXT_NODE) {
-            selectionNode = selectionNode.parentElement;
-        }
-        this.updateContainers(selectionNode);
     }
 
     updateContainers(target) {
