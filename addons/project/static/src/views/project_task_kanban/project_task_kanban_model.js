@@ -8,6 +8,14 @@ export class ProjectTaskKanbanDynamicGroupList extends RelationalModel.DynamicGr
     }
 }
 
-export class ProjectTaskKanbanModel extends RelationalModel {}
+export class ProjectTaskKanbanModel extends RelationalModel {
+    async _webReadGroup(config, firstGroupByName, orderBy) {
+        config.context = {
+            ...config.context,
+            project_kanban: true,
+        };
+        return super._webReadGroup(...arguments);
+    }
+}
 
 ProjectTaskKanbanModel.DynamicGroupList = ProjectTaskKanbanDynamicGroupList;
