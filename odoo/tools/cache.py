@@ -8,6 +8,7 @@ from inspect import signature, Parameter
 import logging
 import time
 import typing
+import warnings
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable
@@ -65,6 +66,8 @@ class ormcache:
         self.args = args
         self.skiparg = skiparg
         self.cache_name = cache
+        if skiparg is not None:
+            warnings.warn("Deprecated since 19.0, ormcache(skiparg) will be removed", DeprecationWarning)
 
     def __call__(self, method: C) -> C:
         assert not hasattr(self, 'method'), "ormcache is already bound to a method"
@@ -188,6 +191,3 @@ def get_cache_key_counter(bound_method: Callable, *args, **kwargs):
     cache, key0, counter = ormcache_instance.lru(model)
     key = key0 + ormcache_instance.key(model, *args, **kwargs)
     return cache, key, counter
-
-# For backward compatibility
-cache = ormcache
