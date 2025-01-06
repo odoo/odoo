@@ -1702,6 +1702,66 @@ class PropertiesCase(TestPropertiesMixin):
         values = email.message.read(['attributes'])
         self.assertEqual(values[0]['attributes'][0]['value'], 'red')
 
+    def test_read_property(self):
+        """Test the `_read_property` that ease the usage of properties in templates."""
+        self.assertEqual(self.message_1._read_property('attributes'), self.message_1.read(['attributes'])[0]['attributes'])
+
+        # read a property that exist nowhere
+        self.assertEqual(self.message_3._read_property('attributes', '____'), False)
+
+        # read a property that exists, but on the wrong record
+        self.assertEqual(self.message_3._read_property('attributes', 'moderator_partner_id'), self.env['test_new_api.partner'])
+
+        # read many types
+        self.assertEqual(self.message_1._read_property('attributes', 'discussion_color_code'), 'Test')
+        self.assertEqual(self.message_1._read_property('attributes', 'moderator_partner_id'), self.partner)
+
+        self.assertEqual(self.message_2._read_property('attributes', 'discussion_color_code'), 'blue')
+        self.assertEqual(self.message_2._read_property('attributes', 'moderator_partner_id'), self.env['test_new_api.partner'])
+
+        self.assertEqual(self.message_1._read_property('attributes', 'state'), '')
+        self.assertEqual(self.message_2._read_property('attributes', 'state'), '')
+        self.assertEqual(self.message_3._read_property('attributes', 'state'), 'Draft')
+
+        self.message_1.attributes = [{
+            'name': 'tags',
+            'type': 'tags',
+            'tags': [['a', 'A', 0], ['b', 'B', 1], ['c', 'C', 2]],
+            'value': ['a', 'b', 'e'],
+            'definition_changed': True,
+        }]
+        self.env.flush_all()
+        self.assertEqual(self.message_1._read_property('attributes', 'tags'), 'A, B')
+        self.assertEqual(self.message_2._read_property('attributes', 'tags'), '')
+        self.assertEqual(self.message_3._read_property('attributes', 'tags'), '')
+
+        self.message_1.attributes = [{
+            'name': 'many2many',
+            'type': 'many2many',
+            'comodel': 'test_new_api.partner',
+            'value': (self.partner | self.partner_2).ids,
+            'definition_changed': True,
+        }]
+        self.env.flush_all()
+        self.assertEqual(self.message_1._read_property('attributes', 'many2many'), self.partner | self.partner_2)
+        self.assertEqual(self.message_2._read_property('attributes', 'many2many'), self.env['test_new_api.partner'])
+        self.assertEqual(self.message_3._read_property('attributes', 'many2many'), self.env['test_new_api.partner'])
+
+        self.message_1.attributes = [{
+            # no comodel
+            'name': 'many2many',
+            'type': 'many2many',
+            'value': (self.partner | self.partner_2).ids,
+            'definition_changed': True,
+        }]
+        self.env.flush_all()
+        self.assertEqual(self.message_1._read_property('attributes', 'many2many'), False)
+        self.assertEqual(self.message_2._read_property('attributes', 'many2many'), False)
+        self.assertEqual(self.message_3._read_property('attributes', 'many2many'), False)
+
+        # call `_read_property` on an empty recordset
+        self.assertEqual(self.env['test_new_api.message']._read_property('attributes'), False)
+        self.assertEqual(self.env['test_new_api.message']._read_property('attributes', 'many2many'), False)
 
 class PropertiesSearchCase(TestPropertiesMixin):
     @classmethod
