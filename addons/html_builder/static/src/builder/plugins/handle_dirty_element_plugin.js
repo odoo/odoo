@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { SAVABLE_SELECTOR } from "../../utils";
+import { SAVABLE_SELECTOR } from "@html_builder/builder/utils/utils";
 export class HandleDirtyElementPlugin extends Plugin {
     static id = "dirty";
     static shared = ["handleDirtyElement", "isEditableDirty"];

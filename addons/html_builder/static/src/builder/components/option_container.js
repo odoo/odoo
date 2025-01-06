@@ -2,7 +2,7 @@ import { Component, useSubEnv } from "@odoo/owl";
 import { defaultBuilderComponents } from "../builder_components/default_builder_components";
 import { useVisibilityObserver, useApplyVisibility } from "../builder_components/utils";
 import { DependencyManager } from "../plugins/dependency_manager";
-import { getSnippetName } from "@html_builder/utils";
+import { getSnippetName } from "@html_builder/builder/utils/utils";
 
 export class OptionsContainer extends Component {
     static template = "html_builder.OptionsContainer";

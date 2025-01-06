@@ -1,5 +1,5 @@
 import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
-import { getSnippetName } from "../../utils";
+import { getSnippetName } from "@html_builder/builder/utils/utils";
 export class InvisibleElementsPanel extends Component {
     static template = "html_builder.InvisibleElementsPanel";
     static props = {
