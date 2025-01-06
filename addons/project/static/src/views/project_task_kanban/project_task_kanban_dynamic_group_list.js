@@ -7,6 +7,7 @@ import { session } from '@web/session';
 export class ProjectTaskKanbanDynamicGroupList extends KanbanDynamicGroupList {
     get context() {
         const context = super.context;
+        context.project_kanban = true;
         if (context.createPersonalStageGroup) {
             context.default_user_id = context.uid;
             delete context.createPersonalStageGroup;
