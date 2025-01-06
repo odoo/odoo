@@ -251,9 +251,9 @@ test("date field with warn_future option ", async () => {
     await contains(getPickerCell("2020")).click();
     await contains(getPickerCell("Dec")).click();
     await contains(getPickerCell("22")).click();
-    expect(".fa-exclamation-triangle").toHaveCount(1);
+    expect(".o_field_date input").toHaveClass("text-danger");
     await fieldInput("date").clear();
-    expect(".fa-exclamation-triangle").toHaveCount(0);
+    expect(".o_field_date input").not.toHaveClass("text-danger");
 });
 
 test("date field with warn_future option: do not overwrite datepicker option", async () => {
