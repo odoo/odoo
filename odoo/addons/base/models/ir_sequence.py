@@ -285,30 +285,6 @@ class IrSequence(models.Model):
         seq_id = seq_ids[0]
         return seq_id._next(sequence_date=sequence_date)
 
-    @api.model
-    def get_id(self, sequence_code_or_id, code_or_id='id'):
-        """ Draw an interpolated string using the specified sequence.
-
-        The sequence to use is specified by the ``sequence_code_or_id``
-        argument, which can be a code or an id (as controlled by the
-        ``code_or_id`` argument. This method is deprecated.
-        """
-        _logger.warning("ir_sequence.get() and ir_sequence.get_id() are deprecated. "
-                        "Please use ir_sequence.next_by_code() or ir_sequence.next_by_id().")
-        if code_or_id == 'id':
-            return self.browse(sequence_code_or_id).next_by_id()
-        else:
-            return self.next_by_code(sequence_code_or_id)
-
-    @api.model
-    def get(self, code):
-        """ Draw an interpolated string using the specified sequence.
-
-        The sequence to use is specified by its code. This method is
-        deprecated.
-        """
-        return self.get_id(code, 'code')
-
 
 class IrSequenceDate_Range(models.Model):
     _name = 'ir.sequence.date_range'
