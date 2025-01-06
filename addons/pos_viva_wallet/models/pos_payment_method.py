@@ -144,15 +144,19 @@ class PosPaymentMethod(models.Model):
         return data
 
     def viva_wallet_send_payment_request(self, data):
-        if not self.env.user.has_group('point_of_sale.group_pos_user'):
-            raise AccessError(_("Only 'group_pos_user' are allowed to send a Viva Wallet payment request"))
+        self._check_pos_user_access_rights(_('send a payment request'))
 
         endpoint = "transactions:sale"
         return self._call_viva_wallet(endpoint, 'post', data)
 
+    def viva_wallet_send_refund_request(self, data):
+        self._check_pos_user_access_rights(_('send a refund request'))
+
+        endpoint = "transactions:refund"
+        return self._call_viva_wallet(endpoint, 'post', data)
+
     def viva_wallet_send_payment_cancel(self, data):
-        if not self.env.user.has_group('point_of_sale.group_pos_user'):
-            raise AccessError(_("Only 'group_pos_user' are allowed to cancel a Viva Wallet payment"))
+        self._check_pos_user_access_rights(_('cancel the payment'))
 
         session_id = data.get('sessionId')
         cash_register_id = data.get('cashRegisterId')
@@ -160,11 +164,14 @@ class PosPaymentMethod(models.Model):
         return self._call_viva_wallet(endpoint, 'delete')
 
     def viva_wallet_get_payment_status(self, session_id):
-        if not self.env.user.has_group('point_of_sale.group_pos_user'):
-            raise AccessError(_("Only 'group_pos_user' are allowed to get the payment status from Viva Wallet"))
+        self._check_pos_user_access_rights(_('get the payment status'))
 
         endpoint = f"sessions/{session_id}"
         return self._call_viva_wallet(endpoint, 'get', should_retry=False)
+
+    def _check_pos_user_access_rights(self, message):
+        if not self.env.user.has_group('point_of_sale.group_pos_user'):
+            raise AccessError(_("Viva Wallet: Only 'Point of Sale: User' are allowed to %(message)s"), message=message)
 
     def write(self, vals):
         record = super().write(vals)
