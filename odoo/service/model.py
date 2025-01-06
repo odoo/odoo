@@ -78,13 +78,17 @@ def dispatch(method, params):
     threading.current_thread().dbname = db
     threading.current_thread().uid = uid
     registry = Registry(db).check_signaling()
-    with registry.manage_changes():
+    try:
         if method == 'execute':
             res = execute(db, uid, *params[3:])
         elif method == 'execute_kw':
             res = execute_kw(db, uid, *params[3:])
         else:
-            raise NameError("Method not available %s" % method)
+            raise NameError(f"Method not available {method}")  # noqa: TRY301
+        registry.signal_changes()
+    except Exception:
+        registry.reset_changes()
+        raise
     return res
 
 

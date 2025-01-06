@@ -970,6 +970,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
     @contextmanager
     def manage_changes(self):
         """ Context manager to signal/discard registry and cache invalidations. """
+        warnings.warn("Since 19.0, use signal_changes() and reset_changes() directly", DeprecationWarning)
         try:
             yield self
             self.signal_changes()
