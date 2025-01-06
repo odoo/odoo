@@ -52,3 +52,10 @@ class TestProduct(AccountTestInvoicingCommon):
             'taxes_id': self.company_data['company'].account_sale_tax_id.ids,
             'supplier_taxes_id': self.company_data['company'].account_purchase_tax_id.ids,
         }])
+
+    def test_account_manager_user_can_create_product(self):
+        """Test that a user with group_account_manager can create a product."""
+        product = self.env['product.product'].with_user(self.account_manager_user).create({
+            'name': 'Test Accountant', 'type': 'consu', 'list_price': 50.0,
+        })
+        self.assertTrue(product)
