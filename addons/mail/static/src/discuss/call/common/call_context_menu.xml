@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="discuss.CallContextMenu">
-        <div class="d-flex flex-column p-3">
+        <div class="o-discuss-CallContextMenu d-flex flex-column p-3">
             <div class="text-center pb-2 fw-bolder" t-out="props.rtcSession.name"/>
             <input t-if="!isSelf" type="range" min="0.0" max="1" step="0.01" t-att-value="volume" t-on-change="onChangeVolume" class="form-range"/>
             <t t-if="env.debug and !isSelf and rtc.state.connectionType === rtcConnectionTypes.P2P">
