@@ -103,7 +103,7 @@ class AccountTestInvoicingCommon(ProductCommon):
                     'account_src_id': cls.product_a.property_account_expense_id.id,
                     'account_dest_id': cls.product_b.property_account_expense_id.id,
                 }),
-            ],
+            ] if cls.env.registry.loaded else [],
         })
 
         # ==== Payment terms ====
@@ -179,10 +179,11 @@ class AccountTestInvoicingCommon(ProductCommon):
             'reconcile': True,
             'account_type': 'asset_current'
         })
-        cls.inbound_payment_method_line = bank_journal.inbound_payment_method_line_ids[0]
-        cls.inbound_payment_method_line.payment_account_id = in_outstanding_account
-        cls.outbound_payment_method_line = bank_journal.outbound_payment_method_line_ids[0]
-        cls.outbound_payment_method_line.payment_account_id = out_outstanding_account
+        if bank_journal:
+            cls.inbound_payment_method_line = bank_journal.inbound_payment_method_line_ids[0]
+            cls.inbound_payment_method_line.payment_account_id = in_outstanding_account
+            cls.outbound_payment_method_line = bank_journal.outbound_payment_method_line_ids[0]
+            cls.outbound_payment_method_line.payment_account_id = out_outstanding_account
 
     @classmethod
     def change_company_country(cls, company, country):
@@ -210,6 +211,12 @@ class AccountTestInvoicingCommon(ProductCommon):
         if cls.env.registry.loaded:
             # Only create a new company for post-install tests
             return cls._create_company(name='company_1_data', **kwargs)
+        else:
+            cls.env['account.tax.group'].create({
+                'name': 'Test tax group',
+                'company_id': cls.env.company.id,
+            })
+            cls.env.company.country_id = cls.quick_ref('base.be')
         return super().setup_independent_company(**kwargs)
 
     @classmethod
