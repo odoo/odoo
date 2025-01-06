@@ -189,7 +189,7 @@ class StockQuant(models.Model):
 
     @api.depends('inventory_quantity')
     def _compute_inventory_diff_quantity(self):
-        for quant in self:
+        for quant in self.filtered(lambda q: q.inventory_quantity_set):
             quant.inventory_diff_quantity = quant.inventory_quantity - quant.quantity
 
     @api.depends('inventory_quantity')
