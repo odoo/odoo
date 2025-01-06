@@ -142,7 +142,7 @@
                         <button name="action_post" string="Confirm" type="object" class="oe_highlight"
                                 invisible="state != 'draft'" data-hotkey="q"/>
                         <button name="action_validate" string="Validate" type="object" class="oe_highlight"
-                                invisible="state != 'in_process'" data-hotkey="q"/>
+                                invisible="state != 'in_process' or move_id" data-hotkey="q"/>
                         <button name="action_reject" string="Reject" type="object" class="oe_highlight"
                                 invisible="state != 'in_process' or not is_sent" data-hotkey="q"/>
                         <button name="action_draft" string="Reset To Draft" type="object" class="btn btn-secondary"
