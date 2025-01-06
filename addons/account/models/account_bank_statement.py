@@ -122,7 +122,7 @@ class AccountBankStatement(models.Model):
 
     @api.depends('create_date')
     def _compute_name(self):
-        for stmt in self:
+        for stmt in self.filtered(lambda s: not s.name):
             stmt.name = _("%(journal_code)s Statement %(date)s", journal_code=stmt.journal_id.code, date=stmt.date)
 
     @api.depends('line_ids.internal_index', 'line_ids.state')
