@@ -23,6 +23,7 @@ Odoo Arabic localization for most Saudi Arabia.
         'data/account_tax_template_data.xml',
         'data/account_fiscal_position_template_data.xml',
         'data/account_chart_template_configure_data.xml',
+        'data/report_paperformat_data.xml',
         'views/view_move_form.xml',
         'views/report_invoice.xml',
     ],
