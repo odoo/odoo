@@ -130,7 +130,7 @@ class Date(BaseDate[date]):
         """
         today = timestamp or datetime.now()
         context_today = None
-        tz_name = record._context.get('tz') or record.env.user.tz
+        tz_name = record.env.context.get('tz') or record.env.user.tz
         if tz_name:
             try:
                 today_utc = pytz.timezone('UTC').localize(today, is_dst=False)  # UTC = no DST
@@ -229,7 +229,7 @@ class Datetime(BaseDate[datetime]):
         :rtype: datetime
         """
         assert isinstance(timestamp, datetime), 'Datetime instance expected'
-        tz_name = record._context.get('tz') or record.env.user.tz
+        tz_name = record.env.context.get('tz') or record.env.user.tz
         utc_timestamp = pytz.utc.localize(timestamp, is_dst=False)  # UTC = no DST
         if tz_name:
             try:
