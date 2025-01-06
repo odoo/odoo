@@ -44,7 +44,7 @@
             <field name="name">discuss.channel.kanban</field>
             <field name="model">discuss.channel</field>
             <field name="arch" type="xml">
-                <kanban js_class="im_livechat.discuss_channel_kanban" class="o_kanban_mobile" sample="1" quick_create="false">
+                <kanban js_class="im_livechat.discuss_channel_kanban" class="o_kanban_mobile" sample="1" quick_create="false" default_order="create_date desc">
                     <templates>
                         <t t-name="card">
                             <div class="d-flex">
