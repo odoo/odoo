@@ -517,7 +517,7 @@ class SaleOrderLine(models.Model):
         price = self.pricelist_item_id._compute_price(
             product=self.product_id.with_context(**self._get_product_price_context()),
             quantity=self.product_uom_qty or 1.0,
-            uom=self.product_uom,
+            uom=self.product_uom or self.product_id.uom_id,
             date=self.order_id.date_order,
             currency=self.currency_id,
         )
