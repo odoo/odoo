@@ -6,6 +6,7 @@ Wants=network-online.target
 [Service]
 User=pi
 Group=pi
+Environment="LIBCAMERA_LOG_LEVELS=3"
 ExecStartPre=sudo /bin/mkdir -p /run/odoo
 ExecStartPre=sudo /bin/chown pi:pi /run/odoo
 ExecStartPre=sudo timedatectl set-ntp true
