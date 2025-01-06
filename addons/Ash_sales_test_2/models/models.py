@@ -156,6 +156,7 @@ class SaleOrder(models.Model):
                 data_to_send = {
                     'order_number': order.name,
                     'products': products_data,
+                    'tenant_code':order.tenant_code_id.name,
                 }
                 logger.info(f"Generated data to release: {data_to_send}")
                 logger.debug(f"Data to be sent for order {order.name}: {data_to_send}")

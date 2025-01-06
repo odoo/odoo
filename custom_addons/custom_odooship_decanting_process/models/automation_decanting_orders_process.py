@@ -173,6 +173,7 @@ class AutomationDecantingOrdersProcess(models.Model):
             crate = self.env['crate.barcode.configuration'].search([
                 ('name', '=', self.crate_barcode),
                 ('crate_status', '=', 'available'),
+                ('site_code_id', '=', self.site_code_id.id)
             ], limit=1)
 
             # If crate not found or not available, raise a ValidationError

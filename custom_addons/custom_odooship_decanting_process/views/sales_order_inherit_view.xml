@@ -6,6 +6,9 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form" />
             <field name="arch" type="xml">
+                <xpath expr="//form/sheet/group/group" position="inside">
+                    <field name="tenant_code_id" string="Tenant ID"/>
+                </xpath>
                 <!-- Add the field to the order_line tree view -->
                 <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="after">
                     <field name="auto_assign_route" />
