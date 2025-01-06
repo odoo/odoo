@@ -208,8 +208,6 @@ def handle_demo(func, self, *args, **kwargs):
     First handle the decision: "Are we in demo mode?", and conditionally decide which function to
     execute.
     """
-    demo_mode = self.env.company._get_peppol_edi_mode() == 'demo'
-
-    if not demo_mode or modules.module.current_test:
-        return func(self, *args, **kwargs)
-    return _demo_behaviour[func.__name__](func, self, *args, **kwargs)
+    if self.env.company._get_peppol_edi_mode() == 'demo':
+        return _demo_behaviour[func.__name__](func, self, *args, **kwargs)
+    return func(self, *args, **kwargs)
