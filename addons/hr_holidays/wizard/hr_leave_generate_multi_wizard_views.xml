@@ -6,7 +6,7 @@
             <form string="Generate time off for multiple employees">
                 <group>
                     <group>
-                        <field name="holiday_status_id"/>
+                        <field name="holiday_status_id" domain="[('requires_allocation', '=', 'no')]"/>
                         <field name="allocation_mode" string="Mode"/>
                         <field name="employee_ids" invisible="allocation_mode != 'employee'" required="allocation_mode == 'employee'" widget="many2many_avatar_user"/>
                         <field name="company_id" invisible="allocation_mode != 'company'"/>
