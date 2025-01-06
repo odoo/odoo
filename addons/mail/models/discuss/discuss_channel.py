@@ -84,7 +84,7 @@ class DiscussChannel(models.Model):
     uuid = fields.Char('UUID', size=50, default=_generate_random_token, copy=False)
     group_public_id = fields.Many2one('res.groups', string='Authorized Group', compute='_compute_group_public_id', recursive=True, readonly=False, store=True)
     invitation_url = fields.Char('Invitation URL', compute='_compute_invitation_url')
-    allow_public_upload = fields.Boolean(default=False)
+    allow_public_upload = fields.Boolean(help="This field is deprecated and has no effect, it will be removed in future versions.")
     _channel_type_not_null = models.Constraint(
         'CHECK(channel_type IS NOT NULL)',
         'The channel type cannot be empty',
@@ -908,7 +908,6 @@ class DiscussChannel(models.Model):
         self.ensure_one()
         data = self._read_format(
             [
-                "allow_public_upload",
                 "avatar_cache_key",
                 "channel_type",
                 "create_uid",
@@ -959,7 +958,6 @@ class DiscussChannel(models.Model):
             )
 
         return [
-            "allow_public_upload",
             Store.Attr("authorizedGroupFullName", lambda c: c.group_public_id.full_name),
             "avatar_cache_key",
             "channel_type",
