@@ -51,15 +51,10 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .05;
 }
 
 .o-mail-DiscussSidebarCategory-toggler {
-    &.o-compact {
-        font-size: .65rem;
-    }
-    &:not(.o-compact) {
-        line-height: 2.35; // so that same height as actions, so folding doesn't resize
-    }
+    line-height: 2.35; // so that same height as actions, so folding doesn't resize
 }
 
-.o-mail-DiscussSidebarChannel-badge.o-nonCompact {
+.o-mail-DiscussSidebarChannel-badge {
     margin-right: map-get($spacers, 2) + map-get($spacers, 2) / 2;
 }
 
@@ -78,7 +73,7 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .05;
     left: 3px;
 }
 
-.o-mail-DiscussSidebarChannel-subChannel.o-nonCompact {
+.o-mail-DiscussSidebarChannel-subChannel {
     margin-left: map-get($spacers, 4) + map-get($spacers, 2);
 }
 
@@ -86,7 +81,7 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .05;
     font-size: 0.35rem;
     left: 0px;
 
-    .o-mail-DiscussSidebarSubchannel &:not(.o-compact) {
+    .o-mail-DiscussSidebarSubchannel {
         left: map-get($spacers, 2) + map-get($spacers, 1) / 2;
     }
 }

@@ -22,24 +22,6 @@ export class DiscussApp extends Record {
             }
         },
     });
-    isSidebarCompact = Record.attr(false, {
-        compute() {
-            return (
-                browser.localStorage.getItem("mail.user_setting.discuss_sidebar_compact") === "true"
-            );
-        },
-        /** @this {import("models").DiscussApp} */
-        onUpdate() {
-            if (this.isSidebarCompact) {
-                browser.localStorage.setItem(
-                    "mail.user_setting.discuss_sidebar_compact",
-                    this.isSidebarCompact.toString()
-                );
-            } else {
-                browser.localStorage.removeItem("mail.user_setting.discuss_sidebar_compact");
-            }
-        },
-    });
     thread = Record.one("Thread");
     hasRestoredThread = false;
 }
