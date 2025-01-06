@@ -1,17 +1,9 @@
-# -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools, _
-import odoo.addons
 
 import logging
-import sys
 _logger = logging.getLogger(__name__)
-
-
-def get_precision(application):
-    _logger.warning("Deprecated call to decimal_precision.get_precision(<application>), use digits=<application> instead")
-    return application
 
 
 class DecimalPrecision(models.Model):
@@ -36,17 +28,17 @@ class DecimalPrecision(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        res = super(DecimalPrecision, self).create(vals_list)
+        res = super().create(vals_list)
         self.env.registry.clear_cache()
         return res
 
     def write(self, data):
-        res = super(DecimalPrecision, self).write(data)
+        res = super().write(data)
         self.env.registry.clear_cache()
         return res
 
     def unlink(self):
-        res = super(DecimalPrecision, self).unlink()
+        res = super().unlink()
         self.env.registry.clear_cache()
         return res
 
@@ -66,9 +58,3 @@ class DecimalPrecision(models.Model):
                     )
                 }
             }
-
-# compatibility for decimal_precision.get_precision(): expose the module in addons namespace
-dp = sys.modules['odoo.addons.base.models.decimal_precision']
-odoo.addons.decimal_precision = dp
-sys.modules['odoo.addons.decimal_precision'] = dp
-sys.modules['openerp.addons.decimal_precision'] = dp
