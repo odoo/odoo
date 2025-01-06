@@ -527,6 +527,104 @@ class TestSaleToInvoice(TestSaleCommon):
 
         self.assertEqual(invoice.line_ids[0].display_type, 'line_section')
 
+    def test_invoice_combo_product(self):
+        """ Test creating an invoice for a SO with a combo product. """
+        product_a = self._create_product(name="Horse-meat burger")
+        product_b = self._create_product(name="French fries")
+        combo_a = self.env['product.combo'].create({
+            'name': "Burger",
+            'combo_item_ids': [
+                Command.create({'product_id': product_a.id}),
+            ],
+        })
+        combo_b = self.env['product.combo'].create({
+            'name': "Side",
+            'combo_item_ids': [
+                Command.create({'product_id': product_b.id}),
+            ],
+        })
+        product_combo = self._create_product(
+            name="Meal Menu",
+            list_price=10.0,
+            type='combo',
+            combo_ids=[
+                Command.link(combo_a.id),
+                Command.link(combo_b.id),
+            ],
+        )
+
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': 'Meal Menu',
+                    'product_id': product_combo.id,
+                    'product_uom_qty': 3,
+                    'price_unit': 0,
+                    'tax_ids': [],
+                }),
+                Command.create({
+                    'name': 'Horse-meat burger',
+                    'product_id': product_a.id,
+                    'product_uom_qty': 3,
+                    'price_unit': 5.0,
+                    'tax_ids': [],
+                }),
+                Command.create({
+                    'name': 'French fries',
+                    'product_id': product_b.id,
+                    'product_uom_qty': 3,
+                    'price_unit': 5.0,
+                    'tax_ids': [],
+                }),
+            ]
+        })
+
+        # Confirm the SO
+        sale_order.action_confirm()
+
+        # Context
+        self.context = {
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+
+        # Let's do an invoice with invoiceable lines
+        payment = self.env['sale.advance.payment.inv'].with_context(self.context).create({
+            'advance_payment_method': 'delivered'
+        })
+        payment.create_invoices()
+
+        invoice = sale_order.invoice_ids[0]
+
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {
+                'name': 'Meal Menu x 3',
+                'display_type': 'line_section',
+                'product_id': False,
+                'quantity': 0,
+                'price_unit': 0,
+            },
+            {
+                'name': 'Horse-meat burger',
+                'display_type': 'product',
+                'product_id': product_a.id,
+                'quantity': 3,
+                'price_unit': 5.0
+            },
+            {
+                'name': 'French fries',
+                'display_type': 'product',
+                'product_id': product_b.id,
+                'quantity': 3,
+                'price_unit': 5.0
+            },
+        ])
+
     def test_qty_invoiced(self):
         """Verify uom rounding is correctly considered during qty_invoiced compute"""
         sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
