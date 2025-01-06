@@ -124,6 +124,9 @@ export class BuilderSidebar extends Component {
                     },
                     unsplittable_node_predicates: (node) =>
                         node.querySelector("[data-oe-translation-source-sha]"),
+                    can_display_toolbar: (namespace) =>
+                        // disable the toolbar for images and icons
+                        namespace === undefined ? true : false,
                 },
                 getRecordInfo: (editableEl) => {
                     if (!editableEl) {

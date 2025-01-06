@@ -281,9 +281,7 @@ test("toolbar works: can select font size", async () => {
 
     await contains(".o-we-toolbar [name='font-size'] .dropdown-toggle").click();
     const sizes = new Set(
-        fontSizeItems.map((item) => {
-            return getFontSizeFromVar(item.variableName).toString();
-        })
+        fontSizeItems.map((item) => getFontSizeFromVar(item.variableName).toString())
     );
     expect(queryAllTexts(".o_font_selector_menu .dropdown-item")).toEqual([...sizes]);
     const h1Size = getFontSizeFromVar("h1-font-size").toString();
@@ -455,9 +453,7 @@ test("toolbar correctly show namespace button group and stop showing when namesp
             toolbar_namespaces: [
                 {
                     id: "aNamespace",
-                    isApplied: (nodeList) => {
-                        return !!nodeList.find((node) => node.tagName === "DIV");
-                    },
+                    isApplied: (nodeList) => !!nodeList.find((node) => node.tagName === "DIV"),
                 },
             ],
             user_commands: { id: "test_cmd", run: () => null },
@@ -664,6 +660,17 @@ test("close the toolbar if the selection contains any nodes (traverseNode = [], 
 
     setContent(el, `<p>ab${strong("[\u200B]", "first")}cd</p>`);
     await tick(); // selectionChange
+    await animationFrame();
+    expect(".o-we-toolbar").toHaveCount(0);
+});
+
+test("toolbar shouldn't be visible if can_display_toolbar === false", async () => {
+    const { el } = await setupEditor("<p>[test]<img></p>", {
+        config: { resources: { can_display_toolbar: (namespace) => namespace !== "image" } },
+    });
+
+    expect(".o-we-toolbar").toHaveCount(1);
+    setContent(el, "<p>test[<img>]</p>");
     await animationFrame();
     expect(".o-we-toolbar").toHaveCount(0);
 });
