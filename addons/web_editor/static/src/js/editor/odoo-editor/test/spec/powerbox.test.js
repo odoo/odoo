@@ -309,6 +309,46 @@ describe('Powerbox', () => {
             powerbox.destroy();
             editable.remove();
         });
+        it("should filter commands keywords", async () => {
+            const editable = document.createElement("div");
+            editable.classList.add("odoo-editor-editable");
+            document.body.append(editable);
+            editable.append(document.createTextNode("original text"));
+            setSelection(editable.firstChild, 13);
+            const powerbox = new Powerbox({
+                categories: [],
+                commands: [
+                    { category: "a", name: "a2", keywords: ["2", "two"] },
+                    { category: "a", name: "a3", keywords: ["3", "three"] },
+                    { category: "a", name: "a1", keywords: ["1", "one"] },
+                    { category: "b", name: "b2x", keywords: ["2x", "two"] },
+                    { category: "b", name: "b3x", keywords: ["3x", "three"] },
+                    { category: "b", name: "b1y", keywords: ["1y", "b1"] },
+                ],
+                editable,
+            });
+            powerbox.open();
+            window.chai.expect(powerbox._context.initialValue).to.eql("original text");
+            window.chai
+                .expect(getCurrentCommandNames(powerbox))
+                .to.eql(["a1", "a2", "a3", "b1y", "b2x", "b3x"]);
+            // filter: 'one'
+            editable.append(document.createTextNode("one"));
+            await triggerEvent(editable, "keyup");
+            window.chai.expect(getCurrentCommandNames(powerbox)).to.eql(["a1"]);
+            // filter: ''
+            editable.lastChild.remove();
+            await triggerEvent(editable, "keyup");
+            window.chai
+                .expect(getCurrentCommandNames(powerbox))
+                .to.eql(["a1", "a2", "a3", "b1y", "b2x", "b3x"]);
+            // filter: 'two'
+            editable.append(document.createTextNode("two"));
+            await triggerEvent(editable, "keyup");
+            window.chai.expect(getCurrentCommandNames(powerbox)).to.eql(["a2", "b2x"]);
+            powerbox.destroy();
+            editable.remove();
+        });
         it('should close the Powerbox on remove last filter text with Backspace', async () => {
             const editable = document.createElement('div');
             editable.classList.add('odoo-editor-editable');

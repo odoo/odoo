@@ -238,13 +238,14 @@ export class MassMailingWysiwyg extends Wysiwyg {
                 priority: 90,
                 description: _t("Insert a rating snippet"),
                 fontawesome: "fa-star-half-o",
+                keywords: ["rate", "stars"],
                 isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback(".oe_snippet_body[data-snippet='s_rating']");
                 },
             },
         ];
-        return [commands, [{ name: "Mass mailing", priority: 20 }]];
+        return [commands, [{ name: _t("Mass mailing"), priority: 20 }]];
     }
 }
 
