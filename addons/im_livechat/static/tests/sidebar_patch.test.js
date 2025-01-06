@@ -351,8 +351,9 @@ test("Clicking on unpin button unpins the channel", async () => {
     });
     await start();
     await openDiscuss();
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Visitor 11" });
     await click(".o-mail-DiscussSidebarChannel [title='Unpin Conversation']");
-    await contains(".o_notification", { text: "You unpinned your conversation with Visitor 11" });
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Visitor 11" });
 });
 
 test("Message unread counter", async () => {
