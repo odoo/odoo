@@ -1146,18 +1146,18 @@ class Field(typing.Generic[T]):
         """
         if not column:
             # the column does not exist, create it
-            sql.create_column(model._cr, model._table, self.name, self.column_type[1], self.string)
+            sql.create_column(model.env.cr, model._table, self.name, self.column_type[1], self.string)
             return
         if column['udt_name'] == self.column_type[0]:
             return
         if column['is_nullable'] == 'NO':
-            sql.drop_not_null(model._cr, model._table, self.name)
+            sql.drop_not_null(model.env.cr, model._table, self.name)
         self._convert_db_column(model, column)
         column.clear()  # remove information, because it may no longer be valid
 
     def _convert_db_column(self, model: BaseModel, column: dict[str, typing.Any]):
         """ Convert the given database column to the type of the field. """
-        sql.convert_column(model._cr, model._table, self.name, self.column_type[1])
+        sql.convert_column(model.env.cr, model._table, self.name, self.column_type[1])
 
     def update_db_notnull(self, model: BaseModel, column: dict[str, typing.Any]):
         """ Add or remove the NOT NULL constraint on ``self``.
@@ -1191,7 +1191,7 @@ class Field(typing.Generic[T]):
                 )
 
         elif not self.required and has_notnull:
-            sql.drop_not_null(model._cr, model._table, self.name)
+            sql.drop_not_null(model.env.cr, model._table, self.name)
 
     def update_db_related(self, model: BaseModel) -> None:
         """ Compute a stored related field directly in SQL. """

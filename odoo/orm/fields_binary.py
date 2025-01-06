@@ -98,8 +98,8 @@ class Binary(Field):
             # is given when assigning a binary field (test `TestFileSeparator`)
             return value.encode()
         if isinstance(value, int) and \
-                (record._context.get('bin_size') or
-                 record._context.get('bin_size_' + self.name)):
+                (record.env.context.get('bin_size') or
+                 record.env.context.get('bin_size_' + self.name)):
             # If the client requests only the size of the field, we return that
             # instead of the content. Presumably a separate request will be done
             # to read the actual content, if necessary.

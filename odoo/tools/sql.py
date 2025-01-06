@@ -672,7 +672,7 @@ def increment_fields_skiplock(records, *fields):
     for field in fields:
         assert records._fields[field].type == 'integer'
 
-    cr = records._cr
+    cr = records.env.cr
     tablename = records._table
     cr.execute(SQL(
         """
