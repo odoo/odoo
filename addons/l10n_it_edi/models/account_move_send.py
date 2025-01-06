@@ -73,11 +73,12 @@ class AccountMoveSend(models.AbstractModel):
         moves = self.env['account.move']
         for move, move_data in invoices_data.items():
             if 'it_edi_send' in move_data['extra_edis']:
-                moves |= move
                 if attachment := move.l10n_it_edi_attachment_id:
                     attachments_vals[move] = {'name': attachment.name, 'raw': attachment.raw}
-                else:
-                    attachments_vals[move] = invoices_data[move]['l10n_it_edi_values']
+                    moves |= move
+                elif edi_values := move_data.get('l10n_it_edi_values'):
+                    attachments_vals[move] = edi_values
+                    moves |= move
         moves._l10n_it_edi_send(attachments_vals)
 
     def _link_invoice_documents(self, invoices_data):
