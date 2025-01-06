@@ -264,14 +264,6 @@ class ResCompany(models.Model):
         domain = super(ResCompany, newself)._search_display_name(operator, value)
         return expression.AND([domain, constraint])
 
-    @api.model
-    def _company_default_get(self, object=False, field=False):
-        """ Returns the user's company
-            - Deprecated
-        """
-        _logger.warning("The method '_company_default_get' on res.company is deprecated and shouldn't be used anymore")
-        return self.env.company
-
     @api.depends('company_details')
     def _compute_empty_company_details(self):
         # In recent change when an html field is empty a <p> balise remains with a <br> in it,
