@@ -2,7 +2,7 @@ import { Component } from "@odoo/owl";
 import publicWidget from '@web/legacy/js/public/public_widget';
 
 publicWidget.registry.PaymentButton = publicWidget.Widget.extend({
-    selector: 'button[name="o_payment_submit_button"]',
+    selector: '[name="o_payment_submit_button"]',
 
     async start() {
         await this._super(...arguments);
@@ -23,7 +23,7 @@ publicWidget.registry.PaymentButton = publicWidget.Widget.extend({
      */
     _enable() {
         if (this._canSubmit()) {
-            this.paymentButton.disabled = false;
+            this._setEnabled();
         }
     },
 
@@ -43,6 +43,16 @@ publicWidget.registry.PaymentButton = publicWidget.Widget.extend({
             return true; // Ignore the check.
         }
         return document.querySelectorAll('input[name="o_payment_radio"]:checked').length === 1;
+    },
+
+    /**
+     * Enable the payment button.
+     *
+     * @private
+     * @return {void}
+     */
+    _setEnabled() {
+        this.paymentButton.disabled = false;
     },
 
     /**
