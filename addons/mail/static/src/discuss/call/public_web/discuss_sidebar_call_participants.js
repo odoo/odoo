@@ -15,7 +15,7 @@ import { _t } from "@web/core/l10n/translation";
  */
 export class DiscussSidebarCallParticipants extends Component {
     static template = "mail.DiscussSidebarCallParticipants";
-    static props = { thread: { type: Thread }, compact: { type: Boolean, optional: true } };
+    static props = { thread: { type: Thread } };
     static components = { AvatarStack, DiscussSidebarCallParticipants, Dropdown };
 
     setup() {
@@ -29,27 +29,17 @@ export class DiscussSidebarCallParticipants extends Component {
         this.state = useState({ expanded: false });
         this.floating = useDropdownState();
         useEffect(
-            (selfSession, compact) => {
-                if (selfSession?.in(this.sessions) && !compact) {
+            (selfSession) => {
+                if (selfSession?.in(this.sessions)) {
                     this.state.expanded = true;
                 }
-                if (compact) {
-                    this.state.expanded = false;
-                }
             },
-            () => [this.rtc.selfSession, this.compact]
+            () => [this.rtc.selfSession]
         );
     }
 
     get callActionsRegistry() {
         return callActionsRegistry;
-    }
-
-    get compact() {
-        if (typeof this.props.compact === "boolean") {
-            return this.props.compact;
-        }
-        return this.store.discuss.isSidebarCompact;
     }
 
     get lastActiveSession() {
