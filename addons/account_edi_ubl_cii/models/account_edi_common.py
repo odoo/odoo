@@ -471,7 +471,7 @@ class AccountEdiCommon(models.AbstractModel):
     def _import_currency(self, tree, xpath):
         logs = []
         currency_name = tree.findtext(xpath)
-        currency = self.env['res.currency']
+        currency = self.env.company.currency_id
         if currency_name is not None:
             currency = currency.with_context(active_test=False).search([
                 ('name', '=', currency_name),
