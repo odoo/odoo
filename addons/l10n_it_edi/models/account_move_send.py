@@ -50,7 +50,7 @@ class AccountMoveSend(models.AbstractModel):
             if errors := invoice._l10n_it_edi_export_data_check():
                 invoice_data['error'] = {
                     'error_title': _("Errors occurred while creating the e-invoice file:"),
-                    'errors': errors,
+                    'errors': [error['message'] for error in errors.values()],
                 }
 
     def _hook_invoice_document_after_pdf_report_render(self, invoice, invoice_data):
