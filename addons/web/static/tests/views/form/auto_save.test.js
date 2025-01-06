@@ -341,6 +341,12 @@ test("save on closing tab/browser", async () => {
     await sendBeaconDeferred;
     expect.verifySteps(["sendBeacon"]);
     expect(event.defaultPrevented).toBe(false);
+
+    // With all changes saved, the save/discard buttons should now be invisible.
+    // While it typically doesn't matter when leaving a page, an urgent save may get triggered
+    // by a user action that remains on the page, e.g. opening a VoIP client (see opw 4308954).
+    await animationFrame();
+    expect(`.o_form_status_indicator_buttons:not(.invisible)`).toHaveCount(0);
 });
 
 test("save on closing tab/browser (sendBeacon fails)", async () => {
