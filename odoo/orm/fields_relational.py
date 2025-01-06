@@ -1282,7 +1282,7 @@ class Many2many(_RelationalMulti):
                 inverses.add(field, self)
 
     def update_db(self, model, columns):
-        cr = model._cr
+        cr = model.env.cr
         # Do not reflect relations for custom fields, as they do not belong to a
         # module. They are automatically removed when dropping the corresponding
         # 'ir.model.field'.
