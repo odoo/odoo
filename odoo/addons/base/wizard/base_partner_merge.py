@@ -623,7 +623,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         model_mapping = self._compute_models()
 
         # group partner query
-        self.env.cr.execute(query) # pylint: disable=sql-injection
+        self.env.cr.execute(query)
 
         counter = 0
         for min_id, aggr_ids in self.env.cr.fetchall():

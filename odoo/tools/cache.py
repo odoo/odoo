@@ -157,7 +157,7 @@ class ormcache_context(ormcache):
             str(params.replace(annotation=Parameter.empty, default=Parameter.empty))
             for params in sign.parameters.values()
         )
-        cont_expr = "(context or {})" if 'context' in sign.parameters else "self._context"
+        cont_expr = "(context or {})" if 'context' in sign.parameters else "self.env.context"
         keys_expr = "tuple(%s.get(k) for k in %r)" % (cont_expr, self.keys)
         if self.args:
             code = "lambda %s: (%s, %s)" % (args, ", ".join(self.args), keys_expr)
