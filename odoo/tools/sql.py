@@ -163,6 +163,7 @@ class SQL:
             sql = SQL(...)
             code, params = sql
         """
+        warnings.warn("Deprecated since 19.0, use code and params properties directly", DeprecationWarning)
         yield self.code
         yield self.params
 
