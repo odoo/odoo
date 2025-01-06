@@ -67,16 +67,6 @@ export class DiscussCoreCommon {
             const thread = this.store.Thread.get({ model: "discuss.channel", id: payload.id });
             if (thread) {
                 thread.is_pinned = false;
-                this.notificationService.add(
-                    thread.parent_channel_id
-                        ? _t(`You unpinned %(conversation_name)s`, {
-                              conversation_name: thread.displayName,
-                          })
-                        : _t(`You unpinned your conversation with %(user_name)s`, {
-                              user_name: thread.displayName,
-                          }),
-                    { type: "info" }
-                );
             }
         });
         this.busService.subscribe("discuss.channel.member/fetched", (payload) => {
