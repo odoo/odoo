@@ -9,7 +9,7 @@ import unittest
 from unittest.mock import patch
 
 from odoo.fields import Command, Domain
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import Form, TransactionCase, users
 from odoo.tools import mute_logger, get_lang
 
@@ -1701,6 +1701,23 @@ class PropertiesCase(TestPropertiesMixin):
         self.assertEqual(values[0]['attributes'][0]['value'], 'red')
         values = email.message.read(['attributes'])
         self.assertEqual(values[0]['attributes'][0]['value'], 'red')
+
+    def test_properties_server_action_path_traversal(self):
+        action = self.env['ir.actions.server'].create({
+            'name': 'TestAction',
+            'model_id': self.env['ir.model'].search([
+                ('model', '=', 'test_new_api.emailmessage'),
+            ]).id,
+            'model_name': 'test_new_api.emailmessage',
+            'state': 'object_write',
+        })
+        with self.assertRaises(ValidationError):
+            action.update_path = 'attributes.discussion_color_code'
+            # call _stringify_path directly because it's only called for
+            # server action linked to a base_automation
+            self.assertEqual(action._stringify_path(),
+                'Properties > discussion_color_code'
+            )
 
 
 class PropertiesSearchCase(TestPropertiesMixin):
