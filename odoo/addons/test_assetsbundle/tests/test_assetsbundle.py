@@ -1421,7 +1421,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'bundle': 'test_assetsbundle.irasset2',
             'path': 'test_assetsbundle/static/src/scss/test_prefix.scss',
         })
-        bundle = self.env['ir.qweb']._get_asset_bundle('test_assetsbundle.irasset2', js=False)
+        bundle = self.env['ir.qweb']._get_asset_bundle('test_assetsbundle.irasset2', js=False, autoprefix=True)
         content = bundle.css().raw.decode()
         self.assertRegex(content, '.appearance-none{-webkit-appearance: none; -moz-appearance: none; appearance: none;}')
         self.assertRegex(content, '.appearance-auto{-webkit-appearance: auto; -moz-appearance: auto; appearance: auto;}')

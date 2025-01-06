@@ -7,7 +7,7 @@
                 <base t-att-href="base_url"/>
             </t>
             <t t-set="head_end">
-                <t t-call-assets="stock.assets_stock_print_report" t-js="False"/>
+                <t t-call-assets="stock.assets_stock_print_report" t-js="False" t-autoprefix="true"/>
             </t>
             <t t-call='stock.report_stock_body_print'/>
         </t>

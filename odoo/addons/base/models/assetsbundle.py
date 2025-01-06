@@ -52,7 +52,7 @@ class AssetsBundle(object):
 
     TRACKED_BUNDLES = ['web.assets_web']
 
-    def __init__(self, name, files, external_assets=(), env=None, css=True, js=True, debug_assets=False, rtl=False, assets_params=None):
+    def __init__(self, name, files, external_assets=(), env=None, css=True, js=True, debug_assets=False, rtl=False, assets_params=None, autoprefix=False):
         """
         :param name: bundle name
         :param files: files to be added to the bundle
@@ -68,6 +68,7 @@ class AssetsBundle(object):
         self.files = files
         self.rtl = rtl
         self.assets_params = assets_params or {}
+        self.autoprefix = autoprefix
         self.has_css = css
         self.has_js = js
         self._checksum_cache = {}
@@ -90,6 +91,7 @@ class AssetsBundle(object):
             if css:
                 css_params = {
                     'rtl': self.rtl,
+                    'autoprefix': self.autoprefix,
                 }
                 if extension == 'sass':
                     self.stylesheets.append(SassStylesheetAsset(self, **params, **css_params))
@@ -147,7 +149,8 @@ class AssetsBundle(object):
 
     def get_asset_url(self, unique=ANY_UNIQUE, extension='%', ignore_params=False):
         direction = '.rtl' if self.is_css(extension) and self.rtl else ''
-        bundle_name = f"{self.name}{direction}.{extension}"
+        autoprefixed = '.autoprefixed' if self.is_css(extension) and self.autoprefix else ''
+        bundle_name = f"{self.name}{direction}{autoprefixed}.{extension}"
         return self.env['ir.asset']._get_asset_bundle_url(bundle_name, unique, self.assets_params, ignore_params)
 
     def _unlink_attachments(self, attachments):
@@ -584,6 +587,9 @@ css_error_message {
                     source = '\n'.join([asset.get_source() for asset in assets])
                     compiled += self.compile_css(assets[0].compile, source)
 
+            if self.autoprefix:
+                compiled = self.autoprefix_css(compiled)
+
             # We want to run rtlcss on normal css, so merge it in compiled
             if self.rtl:
                 stylesheet_assets = [asset for asset in self.stylesheets if not isinstance(asset, (SassStylesheetAsset, ScssStylesheetAsset, LessStylesheetAsset))]
@@ -631,7 +637,10 @@ css_error_message {
         except CompileError as e:
             return handle_compile_error(e, source=source)
 
-        compiled = compiled.strip()
+        return compiled.strip()
+
+    def autoprefix_css(self, source):
+        compiled = source.strip()
 
         # Post process the produced css to add required vendor prefixes here
         compiled = re.sub(r'[ \t]\b(appearance: (\w+);)', r'-webkit-appearance: \2; -moz-appearance: \2; \1', compiled)
@@ -911,8 +920,9 @@ class StylesheetAsset(WebAsset):
     rx_sourceMap = re.compile(r'(/\*# sourceMappingURL=.*)', re.U)
     rx_charset = re.compile(r'(@charset "[^"]+";)', re.U)
 
-    def __init__(self, *args, rtl=False, **kw):
+    def __init__(self, *args, rtl=False, autoprefix=False, **kw):
         self.rtl = rtl
+        self.autoprefix = autoprefix
         super().__init__(*args, **kw)
 
     @property
@@ -922,7 +932,8 @@ class StylesheetAsset(WebAsset):
     @func.lazy_property
     def unique_descriptor(self):
         direction = (self.rtl and 'rtl') or 'ltr'
-        return f'{self.url or self.inline},{self.last_modified},{direction}'
+        autoprefixed = (self.autoprefix and 'autoprefixed') or ''
+        return f'{self.url or self.inline},{self.last_modified},{direction},{autoprefixed}'
 
     def _fetch_content(self):
         try:

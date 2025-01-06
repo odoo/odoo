@@ -14,7 +14,7 @@
                 <meta charset="utf-8"/>
                 <meta name="viewport" content="initial-scale=1"/>
                 <title><t t-esc="title or 'Odoo Report'"/></title>
-                <t t-call-assets="web.report_assets_common"/>
+                <t t-call-assets="web.report_assets_common" t-autoprefix="true"/>
                 <!-- Temporary code: only used to maintain CSS for legacy HTML reports (full width...) -->
                 <!-- Should be removed once the reports are fully converted. -->
                 <script type="text/javascript">
@@ -231,8 +231,8 @@
         <html style="height: 0;">
             <head>
                 <base t-att-href="base_url"/>
-                <t t-call-assets="web.report_assets_pdf" t-js="false"/>
-                <t t-call-assets="web.report_assets_common" t-js="false"/>
+                <t t-call-assets="web.report_assets_pdf" t-js="false" t-autoprefix="true"/>
+                <t t-call-assets="web.report_assets_common" t-js="false" t-autoprefix="true"/>
                 <t t-call-assets="web.report_assets_pdf" t-css="false"/>
                 <meta charset="utf-8"/>
                 <script t-if="subst">
