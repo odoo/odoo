@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+import contextlib
 from datetime import timedelta
 
 from markupsafe import Markup
@@ -1347,6 +1348,15 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
 
+        if self.product_id.type == 'combo':
+            qty_to_invoice = self.qty_to_invoice
+            with contextlib.suppress(ValueError):
+                qty_to_invoice = int(self.qty_to_invoice)
+            return {
+                'display_type': 'line_section',
+                'sequence': self.sequence,
+                'name': f'{self.product_id.name} x {qty_to_invoice}',
+            }
         res = {
             'display_type': self.display_type or 'product',
             'sequence': self.sequence,
