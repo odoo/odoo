@@ -230,4 +230,4 @@ class Selection(Field[str | typing.Literal[False]]):
         for item in self._description_selection(record.env):
             if item[0] == value:
                 return item[1]
-        return ''
+        return value or ''
