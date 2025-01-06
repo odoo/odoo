@@ -1,6 +1,7 @@
 import ast
 import os
 import logging
+from email._policybase import _PolicyBase
 from odoo import MIN_PY_VERSION
 from shutil import copyfileobj
 from types import CodeType
@@ -153,3 +154,14 @@ def pool_init(self, *args, **kwargs):
 
 orig_pool_init = PoolManager.__init__
 PoolManager.__init__ = pool_init
+
+
+def policy_clone(self, **kwargs):
+    for arg in kwargs:
+        if arg.startswith("_") or "__" in arg:
+            raise AttributeError(f"{self.__class__.__name__!r} object has no attribute {arg!r}")
+    return orig_policy_clone(self, **kwargs)
+
+
+orig_policy_clone = _PolicyBase.clone
+_PolicyBase.clone = policy_clone
