@@ -102,11 +102,8 @@ composerActionsRegistry
     .add("upload-files", {
         condition: (component) => {
             const thread = component.thread ?? component.message?.thread;
-            if (!thread?.allow_public_upload && component.store.self.type === "guest") {
-                return false;
-            }
             return !(
-                component.thread?.channel_type === "whatsapp" &&
+                thread?.channel_type === "whatsapp" &&
                 component.props.composer.attachments.length > 0
             );
         },
