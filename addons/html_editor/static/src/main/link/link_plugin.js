@@ -188,12 +188,13 @@ export class LinkPlugin extends Plugin {
     setup() {
         this.overlay = this.dependencies.overlay.createOverlay(LinkPopover, {}, { sequence: 50 });
         this.addDomListener(this.editable, "click", (ev) => {
-            if (ev.target.tagName === "A" && ev.target.isContentEditable) {
+            const target = closestElement(ev.target, "a");
+            if (target?.isContentEditable) {
                 if (ev.ctrlKey || ev.metaKey) {
-                    window.open(ev.target.href, "_blank");
+                    window.open(target.href, "_blank");
                 }
                 ev.preventDefault();
-                this.toggleLinkTools({ link: ev.target });
+                this.toggleLinkTools({ link: target });
             }
         });
         // link creation is added to the command service because of a shortcut conflict,
