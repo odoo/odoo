@@ -500,10 +500,16 @@ class Project(models.Model):
         }
 
     def _get_profitability_items(self, with_action=True):
-        return self._get_profitability_items_from_aal(
+        profitability_items = self._get_profitability_items_from_aal(
             super()._get_profitability_items(with_action),
             with_action
         )
+        for project in self.sale_order_id.project_ids - self:
+            profitability_items = project._get_profitability_items_from_aal(
+                profitability_items,
+                with_action=False,
+            )
+        return profitability_items
 
 
 class ProjectTask(models.Model):

@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.tests import tagged
 
 from .common import TestCommonSaleTimesheet
+from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT
 
 
 @tagged('-at_install', 'post_install')
@@ -224,3 +226,66 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         profitability_items = self.project_task_rate._get_profitability_items(False)
         self.assertFalse([data for data in profitability_items['revenues']['data'] if data['id'] == 'billable_milestones'])
         self.assertFalse([data for data in profitability_items['costs']['data'] if data['id'] == 'billable_milestones'])
+
+    def test_multiple_aal_profitabilty(self):
+        """If projects with different analytic lines are linked to the same sales order,
+        their profitability items (without action) should be identical.
+        """
+        self.env = self.env['base'].with_context(**DISABLED_MAIL_CONTEXT).env
+
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_delivery_timesheet1.id,
+                'product_uom_qty': 5.0,
+            })],
+        })
+        order.action_confirm()
+
+        project1, project2 = self.env['project.project'].create([{
+            'name': name,
+            'partner_id': self.partner_a.id,
+            'sale_line_id': order.order_line.id,
+            'allow_billable': True,
+            'allow_timesheets': True,
+            'task_ids': [Command.create({
+                'name': f"Task ({name})",
+            })],
+        } for name in ("Project 1", "Project 2")])
+
+        project1.task_ids.timesheet_ids = [Command.create({
+            'name': "/",
+            'employee_id': self.employee_manager.id,
+            'unit_amount': 1.5,
+        })]
+        project2.task_ids.timesheet_ids = [Command.create({
+            'name': "/",
+            'employee_id': self.employee_user.id,
+            'unit_amount': 3.5,
+        })]
+
+        revenue = order.order_line.untaxed_amount_to_invoice
+        cost = self.employee_manager.hourly_cost * -1.5 + self.employee_user.hourly_cost * -3.5
+        expected = {
+            'revenues': {
+                'data': [{
+                    'id': 'billable_time',
+                    'sequence': 2,
+                    'invoiced': 0.0,
+                    'to_invoice': revenue,
+                }],
+                'total': {'invoiced': 0.0, 'to_invoice': revenue},
+            },
+            'costs': {
+                'data': [{
+                    'id': 'billable_time',
+                    'sequence': 2,
+                    'billed': cost,
+                    'to_bill': 0.0,
+                }],
+                'total': {'billed': cost, 'to_bill': 0.0},
+            },
+        }
+
+        self.assertDictEqual(project1._get_profitability_items(False), expected)
+        self.assertDictEqual(project2._get_profitability_items(False), expected)
