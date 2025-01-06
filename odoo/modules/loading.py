@@ -47,7 +47,6 @@ def load_data(env: Environment, idref, mode: str, kind: str, package: Node) -> b
     :returns: Whether a file was loaded
     :rtype: bool
     """
-    env = env(context=dict(env.context, install_mode=True))
 
     def _get_files_of_kind(kind: str) -> list[str]:
         if kind == 'demo':
