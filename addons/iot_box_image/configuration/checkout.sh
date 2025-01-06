@@ -22,15 +22,3 @@ if [ -d /home/pi/odoo/addons/point_of_sale ]; then
       echo "server_wide_modules=hw_drivers,hw_posbox_homepage,web" >> $odoo_conf
   fi
 fi
-
-{
-    sudo find /usr/local/lib/ -type f -name "*.iotpatch" 2> /dev/null | while read iotpatch; do
-        DIR=$(dirname "${iotpatch}")
-        BASE=$(basename "${iotpatch%.iotpatch}")
-        sudo find "${DIR}" -type f -name "${BASE}" ! -name "*.iotpatch" | while read file; do
-            sudo patch -f "${file}" < "${iotpatch}"
-        done
-    done
-} || {
-    true
-}
