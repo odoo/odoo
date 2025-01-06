@@ -5,13 +5,13 @@ import { debounce, Deferred } from "@bus/workers/websocket_worker_utils";
 /**
  * Type of events that can be sent from the worker to its clients.
  *
- * @typedef { 'connect' | 'reconnect' | 'disconnect' | 'reconnecting' | 'notification' | 'initialized' | 'outdated' | 'log_debug'} WorkerEvent
+ * @typedef { 'connect' | 'reconnect' | 'disconnect' | 'reconnecting' | 'notification' | 'initialized' | 'outdated' | 'worker_channels_state' | 'log_debug'} WorkerEvent
  */
 
 /**
  * Type of action that can be sent from the client to the worker.
  *
- * @typedef {'add_channel' | 'delete_channel' | 'force_update_channels' | 'initialize_connection' | 'send' | 'leave' | 'stop' | 'start'} WorkerAction
+ * @typedef {'add_channel' | 'delete_channel' | 'force_update_channels' | 'get_channels' | 'initialize_connection' | 'send' | 'leave' | 'stop' | 'start'} WorkerAction
  */
 
 export const WEBSOCKET_CLOSE_CODES = Object.freeze({
@@ -152,6 +152,8 @@ export class WebsocketWorker {
                 return this._unregisterClient(client);
             case "add_channel":
                 return this._addChannel(client, data);
+            case "get_channels":
+                return this._getChannels();
             case "delete_channel":
                 return this._deleteChannel(client, data);
             case "force_update_channels":
@@ -495,5 +497,15 @@ export class WebsocketWorker {
             });
             this.firstSubscribeDeferred.resolve();
         }
+    }
+
+    /**
+     * Return a list of subscribed channels
+     *
+     * @returns {string[]} List of channels.
+     */
+    _getChannels() {
+        const channels = [...this.channelsByClient.values()].flat();
+        this.broadcast("worker_channels_state", channels);
     }
 }

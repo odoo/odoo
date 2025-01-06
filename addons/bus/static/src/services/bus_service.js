@@ -27,6 +27,7 @@ export const busService = {
         const notificationBus = new EventBus();
         const subscribeFnToWrapper = new Map();
         let worker;
+        let workerChannels = [];
         let isActive = false;
         let isInitialized = false;
         let isUsingSharedWorker = browser.SharedWorker && !isIosApp();
@@ -76,6 +77,9 @@ export const busService = {
                     connectionInitializedDeferred.resolve();
                     break;
                 }
+                case "worker_channels_state":
+                    workerChannels = data;
+                    break;
                 case "log_debug": {
                     console.debug(...data);
                     break;
@@ -208,6 +212,7 @@ export const busService = {
             forceUpdateChannels: () => send("force_update_channels"),
             trigger: bus.trigger.bind(bus),
             removeEventListener: bus.removeEventListener.bind(bus),
+            getWorkerChannels: () => send("get_channels"),
             send: (eventName, data) => send("send", { event_name: eventName, data }),
             start: async () => {
                 if (!worker) {
@@ -252,6 +257,9 @@ export const busService = {
                 subscribeFnToWrapper.delete(callback);
             },
             startedAt,
+            get workerChannels() {
+                return workerChannels;
+            },
         };
     },
 };

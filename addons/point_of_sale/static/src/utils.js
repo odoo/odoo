@@ -86,9 +86,14 @@ export function getMax(entries, { criterion = (x) => x, inverted = false } = {})
 export function getMin(entries, options) {
     return getMax(entries, { ...options, inverted: true });
 }
-export function getOnNotified(bus, channel) {
+export function getOnNotified(bus, channel, cache = {}) {
     bus.addChannel(channel);
-    return (notif, callback) => bus.subscribe(`${channel}-${notif}`, callback);
+    cache[channel] = cache[channel] || {};
+    return (notif, callback) => {
+        const key = `${channel}-${notif}`;
+        cache[channel][notif] = callback;
+        bus.subscribe(key, callback);
+    };
 }
 
 /**

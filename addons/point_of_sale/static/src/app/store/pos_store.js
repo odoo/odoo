@@ -155,7 +155,7 @@ export class PosStore extends Reactive {
 
     async initServerData() {
         await this.processServerData();
-        this.onNotified = getOnNotified(this.bus, this.config.access_token);
+        this.onNotified = getOnNotified(this.bus, this.config.access_token, this.data.channels);
         this.onNotified("CLOSING_SESSION", this.closingSessionNotification.bind(this));
         this.onNotified("SYNCHRONISATION", this.recordSynchronisation.bind(this));
 

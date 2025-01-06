@@ -26,6 +26,7 @@ export class PosData extends Reactive {
         this.orm = orm;
         this.bus = bus_service;
         this.relations = [];
+        this.channels = {};
         this.custom = {};
         this.syncInProgress = false;
         this.mutex = markRaw(new Mutex());
@@ -48,6 +49,27 @@ export class PosData extends Reactive {
             }),
             [this.records]
         );
+
+        this.watchChannels();
+    }
+
+    watchChannels() {
+        setInterval(() => {
+            this.bus.getWorkerChannels();
+
+            // We use a setTimeout because the worker will dispatch an event with the channels
+            // This event is normally dispatched after calling the method above
+            setTimeout(() => {
+                for (const [channel, notifs] of Object.entries(this.channels)) {
+                    if (!this.bus.workerChannels.includes(channel)) {
+                        this.bus.addChannel(channel);
+                        for (const [notif, callback] of Object.entries(notifs)) {
+                            this.bus.subscribe(`${channel}-${notif}`, callback);
+                        }
+                    }
+                }
+            }, 500);
+        }, 5000);
     }
 
     dispatchData(data) {
