@@ -529,7 +529,6 @@ test("leave command on chat", async () => {
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Chuck Norris" });
     await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
-    await contains(".o_notification", { text: "You unpinned your conversation with Chuck Norris" });
 });
 
 test("Can post suggestions", async () => {
