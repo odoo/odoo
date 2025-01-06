@@ -1784,7 +1784,7 @@ export class PosStore extends WithLazyGetterTrap {
 
             order.setPreset(preset);
             if (preset.identification === "name" && !order.floating_order_name && !order.table_id) {
-                order.floating_order_name = order.getPartner().name;
+                order.floating_order_name = order.getPartner()?.name;
                 if (!order.floating_order_name) {
                     this.editFloatingOrderName(order);
                 }
