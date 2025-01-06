@@ -3335,6 +3335,16 @@ class AccountMove(models.Model):
             fields_spec = {key: val for key, val in fields_spec.items() if key != 'line_ids'}
         return super().onchange(values, field_names, fields_spec)
 
+    @api.model
+    def _get_view(self, view_id=None, view_type='form', **options):
+        arch, view = super()._get_view(view_id, view_type, **options)
+        if view_type == 'form':
+            if name_node := arch.xpath("""//field[@name="name"][@invisible="name == '/' and not posted_before and not quick_edit_mode"]"""):
+                name_node[0].set('invisible', "not (name or name_placeholder or quick_edit_mode)")
+            if draft_node := arch.xpath("""//span[@invisible="name == '/' and not posted_before and not quick_edit_mode"]"""):
+                draft_node[0].set('invisible', "name or name_placeholder or quick_edit_mode")
+        return arch, view
+
     # -------------------------------------------------------------------------
     # RECONCILIATION METHODS
     # -------------------------------------------------------------------------
