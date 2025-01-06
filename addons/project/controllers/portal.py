@@ -35,7 +35,7 @@ class ProjectCustomerPortal(CustomerPortal):
         domain = [('project_id', '=', project.id)]
         # pager
         url = "/my/projects/%s" % project.id
-        values = self._prepare_tasks_values(page, date_begin, date_end, sortby, search, search_in, groupby, url, domain, su=bool(access_token), project=project)
+        values = self._prepare_tasks_values(page, date_begin, date_end, sortby, search, search_in, groupby, url, domain, su=bool(access_token) and request.env.user.has_group('base.group_public'), project=project)
         # adding the access_token to the pager's url args,
         # so we are not prompted for loging when switching pages
         # if access_token is None, the arg is not present in the URL
