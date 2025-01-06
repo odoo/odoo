@@ -31,10 +31,12 @@ export class DiscussCoreCommon {
             const { Thread } = this.store.insert(payload);
             const [thread] = Thread;
             if (thread.notifyOnLeave) {
-                this.notificationService.add(_t("You unsubscribed from %s.", thread.displayName), {
-                    type: "info",
-                });
+                this.notificationService.add(
+                    _t("You left %(channel)s.", { channel: thread.displayName }),
+                    { type: "info" }
+                );
             }
+            thread.closeChatWindow();
         });
         this.busService.subscribe("discuss.channel/delete", (payload, metadata) => {
             const thread = this.store.Thread.insert({
@@ -67,6 +69,7 @@ export class DiscussCoreCommon {
             const thread = this.store.Thread.get({ model: "discuss.channel", id: payload.id });
             if (thread) {
                 thread.is_pinned = false;
+                thread.closeChatWindow();
             }
         });
         this.busService.subscribe("discuss.channel.member/fetched", (payload) => {
