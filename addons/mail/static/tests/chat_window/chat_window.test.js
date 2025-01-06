@@ -1091,3 +1091,41 @@ test("open channel in chat window from push notification", async () => {
     );
     await contains(".o-mail-ChatWindow", { text: "General" });
 });
+
+test("Chat window should be closed when leaving the channel", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "general" });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-ChatWindow", { text: "general" });
+    await insertText(".o-mail-Composer-input", "/leave");
+    await contains(".o-mail-Composer-suggestion strong", { count: 1 });
+    triggerHotkey("Enter");
+    await contains(".o-mail-Composer-input", { value: "/leave " });
+    triggerHotkey("Enter");
+    await contains(".o-mail-ChatWindow", { text: "general", count: 0 });
+});
+
+test("Chat window should be closed when leaving a chat", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-ChatWindow", { text: "Demo" });
+    await insertText(".o-mail-Composer-input", "/leave");
+    await contains(".o-mail-Composer-suggestion strong", { count: 1 });
+    triggerHotkey("Enter");
+    await contains(".o-mail-Composer-input", { value: "/leave " });
+    triggerHotkey("Enter");
+    await contains(".o-mail-ChatWindow", { text: "Demo", count: 0 });
+});

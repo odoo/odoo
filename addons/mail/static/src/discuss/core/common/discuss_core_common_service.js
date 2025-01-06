@@ -35,6 +35,7 @@ export class DiscussCoreCommon {
                     type: "info",
                 });
             }
+            thread.closeChatWindow();
         });
         this.busService.subscribe("discuss.channel/delete", (payload, metadata) => {
             const thread = this.store.Thread.insert({
@@ -77,6 +78,7 @@ export class DiscussCoreCommon {
                           }),
                     { type: "info" }
                 );
+                thread.closeChatWindow();
             }
         });
         this.busService.subscribe("discuss.channel.member/fetched", (payload) => {
