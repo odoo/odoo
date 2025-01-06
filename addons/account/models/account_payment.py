@@ -889,7 +889,7 @@ class AccountPayment(models.Model):
     def write(self, vals):
         if vals.get('state') in ('in_process', 'paid') and not vals.get('move_id'):
             self.filtered(lambda p: not p.move_id)._generate_journal_entry()
-            self.move_id.action_post()
+            self.move_id.filtered(lambda m: m.state == 'draft').action_post()
 
         res = super().write(vals)
         if self.move_id:
