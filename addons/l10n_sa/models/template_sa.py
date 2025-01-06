@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, Command
+from odoo import models
 from odoo.addons.account.models.chart_template import template
 
 
@@ -59,14 +59,4 @@ class AccountChartTemplate(models.AbstractModel):
                 'show_on_dashboard': True,
                 'sequence': 10,
             }
-        }
-
-    @template('sa', 'account.account')
-    def _get_sa_account_account(self):
-        return {
-            "sa_account_100101": {'allowed_journal_ids': [Command.link('ifrs16')]},
-            "sa_account_100102": {'allowed_journal_ids': [Command.link('ifrs16')]},
-            "sa_account_400070": {'allowed_journal_ids': [Command.link('ifrs16')]},
-            "sa_account_201019": {'allowed_journal_ids': [Command.link('zakat')]},
-            "sa_account_400072": {'allowed_journal_ids': [Command.link('zakat')]},
         }
