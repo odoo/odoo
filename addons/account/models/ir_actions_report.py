@@ -11,6 +11,16 @@ from odoo.tools.pdf import PdfReadError, PdfStreamError
 class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'
 
+    def _prepare_pdf_report_attachment_vals_list(self, report, streams):
+        """ Save the reference to the new attachment in invoice's `invoice_pdf_report_*` fields """
+        attachment_vals_list = super()._prepare_pdf_report_attachment_vals_list(report, streams)
+
+        if self._is_invoice_report(report):
+            for attachment_vals in attachment_vals_list:
+                attachment_vals['res_field'] = 'invoice_pdf_report_file'
+
+        return attachment_vals_list
+
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
         # Custom behavior for 'account.report_original_vendor_bill'.
         if self._get_report(report_ref).report_name != 'account.report_original_vendor_bill':
