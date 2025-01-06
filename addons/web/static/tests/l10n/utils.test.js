@@ -43,6 +43,8 @@ describe("jsToPyLocale", () => {
     test("already converted locale with script", () =>
         expect(jsToPyLocale("sr@latin")).toBe("sr@latin"));
     test("undefined locale", () => expect(jsToPyLocale(undefined)).toBe(""));
+    test("Tagalog", () => expect(jsToPyLocale("tl-PH")).toBe("tl_PH"));
+    test("Filipino", () => expect(jsToPyLocale("fil-PH")).toBe("tl_PH"));
 });
 
 describe("pyToJsLocale", () => {
