@@ -111,6 +111,7 @@ export class PosStore extends WithLazyGetterTrap {
                 offsetBySearch: {},
             },
         };
+
         // Handle offline mode
         // All of Set of ids
         this.pendingOrder = {
@@ -243,7 +244,122 @@ export class PosStore extends WithLazyGetterTrap {
     async initServerData() {
         await this.processServerData();
         this.onNotified = getOnNotified(this.bus, this.config.access_token);
+        this.onNotified("CLOSING_SESSION", this.closingSessionNotification.bind(this));
+        this.onNotified("SYNCHRONISATION", this.recordSynchronisation.bind(this));
         return await this.afterProcessServerData();
+    }
+
+    async closingSessionNotification(data) {
+        if (data.login_number === this.session.login_number) {
+            return;
+        }
+
+        try {
+            const paidOrderNotSynced = this.models["pos.order"].filter(
+                (order) => order.state === "paid" && order.id !== "number"
+            );
+            this.addPendingOrder(paidOrderNotSynced.map((o) => o.id));
+            await this.syncAllOrders({ throw: true });
+
+            this.dialog.add(AlertDialog, {
+                title: _t("Closing Session"),
+                body: _t("The session is being closed by another user. The page will be reloaded."),
+            });
+        } catch {
+            this.dialog.add(AlertDialog, {
+                title: _t("Error"),
+                body: _t(
+                    "An error occurred while closing the session. Unsynced orders will be available in the next session. The page will be reloaded."
+                ),
+            });
+        } finally {
+            const orders = this.models["pos.order"].filter((o) => typeof o.id !== "number");
+            for (const order of orders) {
+                if (!order.finalized) {
+                    order.state = "cancel";
+                }
+            }
+        }
+
+        setTimeout(() => {
+            window.location.reload();
+        }, 3000);
+    }
+
+    async recordSynchronisation(data) {
+        if (odoo.debug === "assets") {
+            console.info("Incoming synchronisation", data);
+            console.info("Login number", odoo.login_number, data.login_number);
+            console.info("Session Ids", odoo.pos_session_id, data.session_id);
+        }
+
+        if (data.login_number === odoo.login_number || data.session_id !== odoo.pos_session_id) {
+            return;
+        }
+
+        const records = await this.data.call("pos.config", "get_records", [
+            odoo.pos_config_id,
+            data["records"],
+        ]);
+
+        const missing = await this.data.missingRecursive(records);
+        const toRemove = {};
+        const toCreate = {};
+        const toUpdate = {};
+
+        for (const [model, records] of Object.entries(missing)) {
+            toCreate[model] = [];
+            toUpdate[model] = [];
+
+            for (const record of records) {
+                const existingRec = this.models[model].get(record.id);
+                if (existingRec) {
+                    if (model === "pos.order" && existingRec.state === "draft") {
+                        // Verify if some subrecords are deleted
+                        const children = ["lines", "payment_ids"];
+                        for (const child of children) {
+                            const existingChild = existingRec[child];
+                            const recordChild = record[child];
+
+                            if (existingChild.length !== recordChild.length) {
+                                // We only delete server records, the local one will be synced later
+                                const toDelete = existingChild.filter(
+                                    (c) => !recordChild.includes(c.id) && typeof c.id === "number"
+                                );
+
+                                if (toDelete.length) {
+                                    const childModel = toDelete[0].model.modelName;
+                                    toRemove[childModel] = toRemove[childModel] || [];
+                                    toRemove[childModel].push(...toDelete);
+                                }
+                            }
+                        }
+                    } else if (model === "pos.order") {
+                        continue;
+                    }
+
+                    toUpdate[model].push(record);
+                } else {
+                    toCreate[model].push(record);
+                }
+            }
+        }
+
+        this.models.loadData(this.models, toCreate, [], false);
+        this.models.loadData(this.models, toUpdate, [], false, true);
+
+        for (const [model, records] of Object.entries(toRemove)) {
+            this.models[model].deleteMany(records, { silent: true });
+        }
+
+        if (
+            this.getOrder()?.finalized &&
+            !["TipScreen", "ReceiptScreen", "PaymentScreen"].includes(
+                this.mainScreen.component.name
+            )
+        ) {
+            this.addNewOrder();
+        }
     }
 
     get session() {
@@ -417,7 +533,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         if (ids.size > 0) {
-            await this.data.call("pos.order", "action_pos_order_cancel", [Array.from(ids)]);
+            await this.data.callRelated("pos.order", "action_pos_order_cancel", [Array.from(ids)]);
         }
 
         return true;
@@ -1115,7 +1231,7 @@ export class PosStore extends WithLazyGetterTrap {
     postSyncAllOrders(orders) {}
     async syncAllOrders(options = {}) {
         const { orderToCreate, orderToUpdate } = this.getPendingOrder();
-        let orders = [...orderToCreate, ...orderToUpdate];
+        let orders = options.orders || [...orderToCreate, ...orderToUpdate];
 
         // Filter out orders that are already being synced
         orders = orders.filter((order) => !this.syncingOrders.has(order.id));
@@ -1132,7 +1248,7 @@ export class PosStore extends WithLazyGetterTrap {
             // Allow us to force the sync of the orders In the case of
             // pos_restaurant is usefull to get unsynced orders
             // for a specific table
-            if (orders.length === 0 && !context.force) {
+            if (orders.length === 0) {
                 return;
             }
 
@@ -1151,12 +1267,13 @@ export class PosStore extends WithLazyGetterTrap {
                 context,
             });
             const missingRecords = await this.data.missingRecursive(data);
-            const newData = this.models.loadData(this.models, missingRecords);
+            this.data.dispatchData(missingRecords);
+            const newData = this.models.loadData(this.models, missingRecords, [], false, true);
 
             for (const line of newData["pos.order.line"]) {
                 const refundedOrderLine = line.refunded_orderline_id;
 
-                if (refundedOrderLine) {
+                if (refundedOrderLine && ["paid", "done"].includes(line.order_id.state)) {
                     const order = refundedOrderLine.order_id;
                     delete order.uiState.lineToRefund[refundedOrderLine.uuid];
                     refundedOrderLine.refunded_qty += Math.abs(line.qty);
@@ -1194,9 +1311,6 @@ export class PosStore extends WithLazyGetterTrap {
         return this.pushOrderMutex.exec(() => this.syncAllOrders(order));
     }
 
-    setLoadingOrderState(bool) {
-        this.loadingOrderState = bool;
-    }
     async pay() {
         const currentOrder = this.getOrder();
 
@@ -1463,7 +1577,7 @@ export class PosStore extends WithLazyGetterTrap {
     async sendOrderInPreparationUpdateLastChange(o, cancelled = false) {
         this.addPendingOrder([o.id]);
         const uuid = o.uuid;
-        const orders = await this.syncAllOrders();
+        const orders = await this.syncAllOrders({ orders: [o] });
         const order = orders.find((order) => order.uuid === uuid);
 
         if (order) {
@@ -2060,22 +2174,6 @@ export class PosStore extends WithLazyGetterTrap {
             {},
             QRPopup
         );
-    }
-
-    async onTicketButtonClick() {
-        if (!this.isTicketScreenShown) {
-            if (this.config.shouldLoadOrders) {
-                try {
-                    this.setLoadingOrderState(true);
-                    await this.getServerOrders();
-                } finally {
-                    this.setLoadingOrderState(false);
-                    this.showScreen("TicketScreen");
-                }
-            } else {
-                this.showScreen("TicketScreen");
-            }
-        }
     }
 
     get isTicketScreenShown() {

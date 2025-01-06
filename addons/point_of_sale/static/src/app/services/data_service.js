@@ -62,6 +62,26 @@ export class PosData extends Reactive {
         return `data_server_date_${odoo.pos_config_id}`;
     }
 
+    dispatchData(data) {
+        let hasChanges = false;
+        const recordIds = Object.entries(data).reduce((acc, [model, records]) => {
+            acc[model] = records.map((record) => record.id);
+            hasChanges = hasChanges || acc[model].length > 0;
+            return acc;
+        }, {});
+
+        if (!hasChanges) {
+            return;
+        }
+
+        return this.call("pos.config", "dispatch_record_ids", [
+            odoo.pos_config_id,
+            odoo.pos_session_id,
+            recordIds,
+            odoo.login_number,
+        ]);
+    }
+
     async resetIndexedDB() {
         // Remove data_server_date since it's used to determine the last time the data was loaded
         await this.indexedDB.reset();
@@ -147,11 +167,28 @@ export class PosData extends Reactive {
 
         const preLoadData = await this.preLoadData(data);
         const missing = await this.missingRecursive(preLoadData);
-        const results = this.models.loadData(this.models, missing, [], true);
+        const results = this.models.loadData(this.models, missing, [], true, true);
         for (const data of Object.values(results)) {
             for (const record of data) {
                 if (record.raw.JSONuiState) {
                     record.setupState(JSON.parse(record.raw.JSONuiState));
+                }
+            }
+        }
+
+        if (results && results["pos.order"]) {
+            const ids = results["pos.order"]
+                .map((o) => o.id)
+                .filter((id) => typeof id === "number");
+
+            if (ids.length) {
+                const result = await this.read("pos.order", ids);
+                const serverIds = result.map((r) => r.id);
+
+                for (const id of ids) {
+                    if (!serverIds.includes(id)) {
+                        this.localDeleteCascade(this.models["pos.order"].get(id), true);
+                    }
                 }
             }
         }
@@ -273,7 +310,6 @@ export class PosData extends Reactive {
         const relations = {};
         const dataParams = await this.loadFieldsAndRelations();
         await this.initIndexedDB(dataParams);
-        await this.verifyCurrentSession();
 
         for (const [model, values] of Object.entries(dataParams)) {
             relations[model] = values.relations;
@@ -331,21 +367,6 @@ export class PosData extends Reactive {
                 this.synchronizeServerDataInIndexedDB({ [model]: [record] });
             });
         }
-    }
-
-    async verifyCurrentSession() {
-        // If another device close the session we need to invalided the indexedDB on
-        // on the current device during the next reload
-        const localSessionId = localStorage.getItem(`pos.session.${odoo.pos_config_id}`);
-        if (
-            parseInt(localSessionId) &&
-            parseInt(localSessionId) !== parseInt(odoo.pos_session_id)
-        ) {
-            await this.resetIndexedDB();
-            localStorage.removeItem(`pos.session.${odoo.pos_config_id}`);
-            window.location.reload();
-        }
-        localStorage.setItem(`pos.session.${odoo.pos_config_id}`, odoo.pos_session_id);
     }
 
     async execute({
@@ -672,6 +693,7 @@ export class PosData extends Reactive {
 
     async callRelated(model, method, args = [], kwargs = {}, queue = true) {
         const data = await this.execute({ type: "call", model, method, args, kwargs, queue });
+        this.dispatchData(data);
         this.synchronizeServerDataInIndexedDB(data);
         const results = this.models.loadData(this.models, data, [], true);
         return results;
@@ -682,7 +704,9 @@ export class PosData extends Reactive {
     }
 
     async ormWrite(model, ids, values, queue = true) {
-        return await this.execute({ type: "write", model, ids, values, queue });
+        const result = await this.execute({ type: "write", model, ids, values, queue });
+        this.dispatchData({ [model]: ids.map((id) => ({ id })) });
+        return result;
     }
 
     async ormDelete(model, ids, queue = true) {

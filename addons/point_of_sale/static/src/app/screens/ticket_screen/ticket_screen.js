@@ -11,7 +11,7 @@ import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { CenteredIcon } from "@point_of_sale/app/components/centered_icon/centered_icon";
 import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/search_bar";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, onMounted, useState } from "@odoo/owl";
+import { Component, onMounted, onWillStart, useState } from "@odoo/owl";
 import {
     BACKSPACE,
     Numpad,
@@ -80,6 +80,9 @@ export class TicketScreen extends Component {
         Object.assign(this.state, this.props.stateOverride || {});
 
         onMounted(this.onMounted);
+        onWillStart(async () => {
+            await this.pos.getServerOrders();
+        });
     }
     onMounted() {
         setTimeout(() => {
@@ -297,10 +300,7 @@ export class TicketScreen extends Component {
         }
         // Set the partner to the destinationOrder.
         this.setPartnerToRefundOrder(partner, destinationOrder);
-
-        if (this.pos.getOrder().uuid !== destinationOrder.uuid) {
-            this.pos.setOrder(destinationOrder);
-        }
+        this.pos.setOrder(destinationOrder);
         await this.addAdditionalRefundInfo(order, destinationOrder);
 
         this.postRefund(destinationOrder);
@@ -330,7 +330,7 @@ export class TicketScreen extends Component {
         );
     }
     activeOrderFilter(o) {
-        const screen = ["PaymentScreen", "ProductScreen", "ReceiptScreen", "TipScreen"];
+        const screen = ["ReceiptScreen", "TipScreen"];
         const oScreen = o.getScreenData();
         return (!o.finalized || screen.includes(oScreen.name)) && o.uiState.displayed;
     }

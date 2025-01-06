@@ -300,7 +300,7 @@ export class ClosePosPopup extends Component {
             confirm: () => {
                 if (!response.redirect) {
                     this.props.close();
-                    this.pos.onTicketButtonClick();
+                    this.pos.showScreen("TicketScreen");
                 }
             },
             cancel: async () => {
