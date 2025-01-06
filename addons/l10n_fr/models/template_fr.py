@@ -38,6 +38,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'l10n_fr_rounding_difference_profit_account_id': 'pcg_4778',
                 'account_sale_tax_id': 'tva_normale',
                 'account_purchase_tax_id': 'tva_acq_normale',
+                'tax_exigibility': True,
             },
         }
 
