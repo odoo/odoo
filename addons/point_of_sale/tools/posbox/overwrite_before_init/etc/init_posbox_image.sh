@@ -62,6 +62,7 @@ PKGS_TO_INSTALL="
     python3-jinja2 \
     python3-ldap \
     python3-libsass \
+    python3-libcamera \
     python3-lxml \
     python3-mako \
     python3-mock \
