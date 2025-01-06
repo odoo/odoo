@@ -6,4 +6,12 @@
     <record id="stock.product_cable_management_box_product_template" model="product.template">
         <field name="public_categ_ids" eval="[(6,0,[ref('website_sale.public_category_boxes')])]"/>
     </record>
+     <record id="website_sale_stock.out_of_stock_ribbon" model="product.ribbon">
+            <field name="name">Out of stock</field>
+            <field name="position">left</field>
+            <field name="text_color">#FFFFFF</field>
+            <field name="bg_color">#ffc107</field>
+            <field name="style">tag</field>
+            <field name="assign">out_of_stock</field>
+        </record>
 </odoo>
