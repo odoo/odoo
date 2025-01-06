@@ -1785,6 +1785,22 @@ export class PosStore extends WithLazyGetterTrap {
             }
 
             order.setPreset(preset);
+<<<<<<< master
+||||||| a5250cbb252574f10a0f725dc7723e083e72c883
+            if (preset.identification === "name" && !order.floating_order_name && !order.table_id) {
+                order.floating_order_name = order.getPartner().name;
+                if (!order.floating_order_name) {
+                    this.editFloatingOrderName(order);
+                }
+            }
+=======
+            if (preset.identification === "name" && !order.floating_order_name && !order.table_id) {
+                order.floating_order_name = order.getPartner()?.name;
+                if (!order.floating_order_name) {
+                    this.editFloatingOrderName(order);
+                }
+            }
+>>>>>>> 25fec78b0fede940f3c318ca88e938f52bee4b82
 
             if (preset.use_timing && !order.preset_time) {
                 await this.syncPresetSlotAvaibility(preset);
