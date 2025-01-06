@@ -272,7 +272,6 @@ ProductScreen.do.clickCustomer('AAA Partner');
 ProductScreen.do.clickDisplayedProduct('Product Test');
 ProductScreen.check.totalAmountIs('1.00');
 PosLoyalty.check.isRewardButtonHighlighted(true);
-PosLoyalty.do.clickRewardButton();
 PosLoyalty.do.claimReward('Free Product B');
 PosLoyalty.check.hasRewardLine('Free Product B', '-1.00');
 ProductScreen.check.totalAmountIs('1.00');
