@@ -1180,7 +1180,6 @@ class BaseModel(metaclass=MetaModel):
         sp = cr.savepoint(flush=False)
 
         fields = [fix_import_export_id_paths(f) for f in fields]
-        fg = self.fields_get()
 
         ids = []
         messages = []
