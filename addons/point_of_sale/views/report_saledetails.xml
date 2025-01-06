@@ -13,7 +13,7 @@
                     <meta charset="utf-8"/>
                     <meta name="viewport" content="initial-scale=1"/>
                     <title><t t-esc="title or 'Odoo Report'"/></title>
-                    <t t-call-assets="web.report_assets_common"/>
+                    <t t-call-assets="web.report_assets_common" t-autoprefix="true"/>
                     <script type="text/javascript">
                         document.addEventListener('DOMContentLoaded', () => {
                             if (window.self !== window.top) {
