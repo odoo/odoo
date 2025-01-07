@@ -175,8 +175,8 @@ class AccountMoveSend(models.AbstractModel):
             lambda u: u.proxy_type == 'peppol')
 
         try:
-            response = edi_user._make_request(
-                f"{edi_user._get_server_url()}/api/peppol/1/send_document",
+            response = edi_user._call_peppol_proxy(
+                "/api/peppol/1/send_document",
                 params=params,
             )
         except AccountEdiProxyError as e:
