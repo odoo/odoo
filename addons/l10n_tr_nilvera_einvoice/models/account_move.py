@@ -83,6 +83,7 @@ class AccountMove(models.Model):
             )
 
             if response.status_code == 200:
+                self.is_move_sent = True
                 self.l10n_tr_nilvera_send_status = 'sent'
             elif response.status_code in {401, 403}:
                 raise UserError(_("Oops, seems like you're unauthorised to do this. Try another API key with more rights or contact Nilvera."))
@@ -95,7 +96,7 @@ class AccountMove(models.Model):
                     return self._l10n_tr_nilvera_submit_document(xml_file, endpoint, post_series=False)
                 raise UserError(error_message)
             elif response.status_code == 500:
-                return UserError(_("Server error from Nilvera, please try again later."))
+                raise UserError(_("Server error from Nilvera, please try again later."))
 
             self.message_post(body=_("The invoice has been successfully sent to Nilvera."))
 
