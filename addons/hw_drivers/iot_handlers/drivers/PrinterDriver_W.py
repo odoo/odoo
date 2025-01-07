@@ -8,7 +8,6 @@ import io
 import win32print
 import ghostscript
 
-from odoo.addons.hw_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.hw_drivers.driver import Driver
 from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.main import iot_devices
@@ -170,5 +169,3 @@ class PrinterDriver(Driver):
         else:
             self.print_raw(document)
         send_to_controller(self.connection_type, {'print_id': data['print_id'], 'device_identifier': self.device_identifier})
-
-proxy_drivers['printer'] = PrinterDriver

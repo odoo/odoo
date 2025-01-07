@@ -13,7 +13,6 @@ import subprocess
 
 from odoo import http
 from odoo.addons.hw_drivers.connection_manager import connection_manager
-from odoo.addons.hw_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.hw_drivers.driver import Driver
 from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.iot_handlers.interfaces.PrinterInterface_L import PPDs, conn, cups_lock
@@ -430,11 +429,16 @@ class PrinterController(http.Controller):
 
     @http.route('/hw_proxy/default_printer_action', type='jsonrpc', auth='none', cors='*')
     def default_printer_action(self, data):
+        """Please use Longpolling/Websocket communication instead.
+        This route will be removed soon.
+
+        :param data: The data to send to the printer
+        """
+        _logger.warning(
+            "DEPRECATED: Driver routes will soon be removed. Please use Longpolling/Websocket communication instead."
+        )
         printer = next((d for d in iot_devices if iot_devices[d].device_type == 'printer' and iot_devices[d].device_connection == 'direct'), None)
         if printer:
             iot_devices[printer].action(data)
             return True
         return False
-
-
-proxy_drivers['printer'] = PrinterDriver

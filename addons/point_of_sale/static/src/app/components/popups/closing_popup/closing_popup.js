@@ -11,9 +11,9 @@ import { parseFloat } from "@web/views/fields/parsers";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
-import { deduceUrl } from "@point_of_sale/utils";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { PaymentMethodBreakdown } from "@point_of_sale/app/components/payment_method_breakdown/payment_method_breakdown";
+import { DeviceController } from "@iot/device_controller";
 
 const { DateTime } = luxon;
 
@@ -34,6 +34,7 @@ export class ClosePosPopup extends Component {
         this.pos = usePos();
         this.report = useService("report");
         this.hardwareProxy = useService("hardware_proxy");
+        this.iotLongpolling = useService("iot_longpolling");
         this.dialog = useService("dialog");
         this.ui = useService("ui");
         this.state = useState(this.getInitialState());
@@ -184,17 +185,11 @@ export class ClosePosPopup extends Component {
     async closeSession() {
         this.pos._resetConnectedCashier();
         if (this.pos.config.customer_display_type === "proxy") {
-            const proxyIP = this.pos.getDisplayDeviceIP();
-            fetch(`${deduceUrl(proxyIP)}/hw_proxy/customer_facing_display`, {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ params: { action: "close" } }),
-            }).catch(() => {
-                console.log("Failed to send data to customer display");
+            const iotDisplay = new DeviceController(this.iotLongpolling, {
+                iot_ip: this.pos.getDisplayDeviceIP(),
+                identifier: "HDMI-1",
             });
+            iotDisplay.action({ action: "close_customer_display" });
         }
         // If there are orders in the db left unsynced, we try to sync.
         const syncSuccess = await this.pos.pushOrdersWithClosingPopup();

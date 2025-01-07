@@ -1,4 +1,5 @@
 import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
+import { IoTDevice } from "@iot_base/device_controller";
 import { EventBus, reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { rpc } from "@web/core/network/rpc";
@@ -13,17 +14,18 @@ import { effect } from "@web/core/utils/reactive";
  * by using the bus for two-way communication?
  */
 export class HardwareProxy extends EventBus {
-    static serviceDependencies = [];
-    constructor() {
+    static serviceDependencies = ["iot_longpolling"];
+    constructor(iot_longpolling) {
         super();
         this.setup(...arguments);
     }
-    setup() {
+    setup(iot_longpolling) {
         this.debugWeight = 0;
         this.useDebugWeight = false;
         this.host = "";
         this.keptalive = false;
         this.connectionInfo = reactive({ status: "init", drivers: {} });
+        this.iotLongpolling = iot_longpolling;
         effect(
             (info) => {
                 if (info.status === "connected" && this.printer) {
@@ -68,7 +70,9 @@ export class HardwareProxy extends EventBus {
     }
 
     connectToPrinter() {
-        this.printer = new HWPrinter({ url: this.host });
+        const iot_ip = new URL(this.host).hostname;
+        this.printerDevice = new IoTDevice(this.iotLongpolling, { iot_ip, identifier: "default_printer" });
+        this.printer = new HWPrinter({ printer: this.printerDevice });
     }
 
     /**
@@ -121,16 +125,21 @@ export class HardwareProxy extends EventBus {
     }
 
     /**
+     * @param {IoTDevice} iotDevice - IoTDevice object to communicate with the device
      * @param {string} name
      * @param {Object} [params]
      * @returns {Promise}
      */
-    message(name, params) {
+    message(iotDevice, name, params) {
         this.dispatchEvent(new CustomEvent(`send_message:${name}`));
         if (this.connectionInfo.status === "disconnected") {
             return Promise.reject();
         }
-        return rpc(`${this.host}/hw_proxy/${name}`, params, { silent: true });
+        const result = iotDevice.addListener((data) => {
+            return data;
+        });
+        iotDevice.action({ action: name, ...params });
+        return result;
     }
 
     /**
@@ -167,7 +176,13 @@ export class HardwareProxy extends EventBus {
         if (this.useDebugWeight) {
             return this.debugWeight;
         }
-        return this.message("scale_read")
+        const scaleDevice = new IoTDevice(this.iotLongpolling, {
+            iot_ip: new URL(this.host).hostname,
+            identifier: "default_scale",
+        });
+
+
+        return this.message(scaleDevice, "scale_read")
             .then(({ weight }) => weight)
             .catch(() => 0);
     }
@@ -184,10 +199,6 @@ export class HardwareProxy extends EventBus {
         this.debugWeight = 0;
     }
 
-    // asks the proxy to log some information, as with the debug.log you can provide several arguments.
-    log() {
-        return this.message("log", { arguments: [...arguments] });
-    }
     async openCashbox(action = false) {
         if (
             this.pos.config.iface_cashdrawer &&

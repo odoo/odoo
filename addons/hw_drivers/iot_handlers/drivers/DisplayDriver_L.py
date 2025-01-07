@@ -7,14 +7,12 @@ import os
 import requests
 import subprocess
 import time
-import werkzeug
 
-from odoo import http
 from odoo.addons.hw_drivers.browser import Browser, BrowserState
 from odoo.addons.hw_drivers.driver import Driver
-from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.tools import helpers, wifi
 from odoo.addons.hw_drivers.tools.helpers import Orientation
+from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.tools.misc import file_path
 
 _logger = logging.getLogger(__name__)
@@ -43,6 +41,12 @@ class DisplayDriver(Driver):
         self._actions.update({
             'update_url': self._action_update_url,
             'display_refresh': self._action_display_refresh,
+            'get_customer_display_data': self._action_get_customer_display_data,
+            'set_customer_display_data': self._action_set_customer_display_data,
+            'close_customer_display': self._action_close_customer_display,
+            'open_customer_display': self._action_open_customer_display,
+            'open_kiosk': self._action_open_kiosk,
+            'rotate_screen': self._action_set_orientation,
         })
 
         self.set_orientation(self.orientation)
@@ -50,11 +54,6 @@ class DisplayDriver(Driver):
     @classmethod
     def supported(cls, device):
         return True  # All devices with connection_type == 'display' are supported
-
-    @classmethod
-    def get_default_display(cls):
-        displays = list(filter(lambda d: iot_devices[d].device_type == 'display', iot_devices))
-        return len(displays) and iot_devices[displays[0]]
 
     def run(self):
         while self.device_identifier != 'distant_display' and not self._stopped.is_set() and "pos_customer_display" not in self.url:
@@ -86,14 +85,6 @@ class DisplayDriver(Driver):
             except json.decoder.JSONDecodeError:
                 return response.content.decode('utf8')
 
-    def _action_update_url(self, data):
-        if self.device_identifier != 'distant_display':
-            self.update_url(data.get('url'))
-
-    def _action_display_refresh(self, data):
-        if self.device_identifier != 'distant_display':
-            self.browser.refresh()
-
     def set_orientation(self, orientation=Orientation.NORMAL):
         if self.device_identifier == 'distant_display':
             # Avoid calling xrandr if no display is connected
@@ -105,37 +96,54 @@ class DisplayDriver(Driver):
         subprocess.run([file_path('hw_drivers/tools/sync_touchscreen.sh'), str(int(self._x_screen) + 1)], check=False)
         helpers.save_browser_state(orientation=orientation)
 
+    def _action_update_url(self, data):
+        if self.device_identifier != 'distant_display':
+            self.update_url(data.get('url'))
+        event_manager.device_changed(self)
 
-class DisplayController(http.Controller):
-    @http.route('/hw_proxy/customer_facing_display', type='jsonrpc', auth='none', cors='*')
-    def customer_facing_display(self, action, pos_id=None, access_token=None, data=None):
-        display = self.ensure_display()
-        if action in ['open', 'open_kiosk']:
-            origin = helpers.get_odoo_server_url()
-            if action == 'open_kiosk':
-                url = f"{origin}/pos-self/{pos_id}?access_token={access_token}"
-                display.set_orientation(Orientation.RIGHT)
-            else:
-                url = f"{origin}/pos_customer_display/{pos_id}/{access_token}"
-            display.update_url(url)
-            return {'status': 'opened'}
-        if action == 'close':
-            helpers.unlink_file('browser-url.conf')
-            helpers.unlink_file('screen-orientation.conf')
-            display.browser.disable_kiosk_mode()
-            display.update_url()
-            return {'status': 'closed'}
-        if action == 'set':
-            display.customer_display_data = data
-            return {'status': 'updated'}
-        if action == 'get':
-            return {'status': 'retrieved', 'data': display.customer_display_data}
-        if action == 'rotate_screen':
-            display.set_orientation(Orientation(data))
-            return {'status': 'rotated'}
+    def _action_display_refresh(self, _data):
+        if self.device_identifier != 'distant_display':
+            self.browser.refresh()
+        event_manager.device_changed(self)
 
-    def ensure_display(self):
-        display: DisplayDriver = DisplayDriver.get_default_display()
-        if not display:
-            raise werkzeug.exceptions.ServiceUnavailable(description="No display connected")
-        return display
+    def _action_get_customer_display_data(self, _data):
+        """Return the data to be displayed on the customer facing display."""
+        self.value = self.customer_display_data
+        event_manager.device_changed(self)
+
+    def _action_set_customer_display_data(self, data):
+        """Set the data to be displayed on the customer facing display."""
+        self.customer_display_data = data.get('data', {})
+        event_manager.device_changed(self)
+
+    def _action_open_customer_display(self, data):
+        """Open the customer facing display."""
+        if self.device_identifier == 'distant_display':
+            return
+        self.update_url(
+            f"{helpers.get_odoo_server_url()}/pos_customer_display/{data['pos_id']}/{data['access_token']}"
+        )
+        event_manager.device_changed(self)
+
+    def _action_close_customer_display(self, _data):
+        """Close the customer facing display."""
+        helpers.unlink_file('browser-url.conf')
+        helpers.unlink_file('screen-orientation.conf')
+        self.browser.disable_kiosk_mode()
+        self.update_url()
+        event_manager.device_changed(self)
+
+    def _action_open_kiosk(self, data):
+        """Switch to kiosk mode opening the PoS Self Order session."""
+        if self.device_identifier == 'distant_display':
+            return
+        self.set_orientation(Orientation.RIGHT)
+        self.update_url(
+            f"{helpers.get_odoo_server_url()}/pos-self/{data['pos_id']}?access_token={data['access_token']}"
+        )
+        event_manager.device_changed(self)
+
+    def _action_set_orientation(self, data):
+        """Set the orientation of the screen."""
+        self.set_orientation(Orientation(data.get('orientation', Orientation.NORMAL)))
+        event_manager.device_changed(self)

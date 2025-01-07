@@ -8,16 +8,12 @@ import serial
 import threading
 import time
 
-from odoo import http
-from odoo.addons.hw_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.iot_handlers.drivers.SerialBaseDriver import SerialDriver, SerialProtocol, serial_connection
 
 
 _logger = logging.getLogger(__name__)
 
-# Only needed to ensure compatibility with older versions of Odoo
-ACTIVE_SCALE = None
 new_weight_event = threading.Event()
 
 ScaleProtocol = namedtuple('ScaleProtocol', SerialProtocol._fields + ('zeroCommand', 'tareCommand', 'clearCommand', 'autoResetWeight'))
@@ -80,15 +76,6 @@ ADAMEquipmentProtocol = ScaleProtocol(
 )
 
 
-# Ensures compatibility with older versions of Odoo
-class ScaleReadOldRoute(http.Controller):
-    @http.route('/hw_proxy/scale_read', type='jsonrpc', auth='none', cors='*')
-    def scale_read(self):
-        if ACTIVE_SCALE:
-            return {'weight': ACTIVE_SCALE._scale_read_old_route()}
-        return None
-
-
 class ScaleDriver(SerialDriver):
     """Abstract base class for scale drivers."""
     last_sent_value = None
@@ -98,12 +85,6 @@ class ScaleDriver(SerialDriver):
         self.device_type = 'scale'
         self._set_actions()
         self._is_reading = True
-
-        # Ensures compatibility with older versions of Odoo
-        # Only the last scale connected is kept
-        global ACTIVE_SCALE
-        ACTIVE_SCALE = self
-        proxy_drivers['scale'] = ACTIVE_SCALE
 
     # Ensures compatibility with older versions of Odoo
     # and allows using the `ProxyDevice` in the point of sale to retrieve the status

@@ -20,6 +20,7 @@ import { OrderTabs } from "@point_of_sale/app/components/order_tabs/order_tabs";
 import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { _t } from "@web/core/l10n/translation";
+import { DeviceController } from "@iot/device_controller";
 
 const { DateTime } = luxon;
 
@@ -45,6 +46,7 @@ export class Navbar extends Component {
         this.dialog = useService("dialog");
         this.notification = useService("notification");
         this.hardwareProxy = useService("hardware_proxy");
+        this.iotLongpolling = useService("iot_longpolling");
         this.dialog = useService("dialog");
         this.isDisplayStandalone = isDisplayStandalone();
         this.isBarcodeScannerSupported = isBarcodeScannerSupported;
@@ -115,31 +117,31 @@ export class Navbar extends Component {
             this.notification.add("Connected");
         }
         if (this.pos.config.customer_display_type === "remote") {
-            this.notification.add("Navigate to your POS Customer Display on the other computer");
+            this.notification.add(
+                _t("Navigate to your POS Customer Display on the other computer")
+            );
         }
         if (this.pos.config.customer_display_type === "proxy") {
-            this.notification.add("Connecting to the IoT Box");
+            this.notification.add(_t("Connecting to the IoT Box"), { type: "info" });
             const proxyIP = this.pos.getDisplayDeviceIP();
-            fetch(`${deduceUrl(proxyIP)}/hw_proxy/customer_facing_display`, {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    params: {
-                        action: "open",
-                        access_token: this.pos.config.access_token,
-                        pos_id: this.pos.config.id,
-                    },
-                }),
-            })
-                .then(() => {
-                    this.notification.add("Connection successful", { type: "success" });
-                })
-                .catch(() => {
-                    this.notification.add("Connection failed", { type: "danger" });
+            const iotDisplay = new DeviceController(this.iotLongpolling, {
+                iot_ip: proxyIP,
+                identifier: "HDMI-1",
+            });
+            iotDisplay.addListener(() => {
+                this.notification.add(_t("Connection successful"), { type: "success" });
+                iotDisplay.removeListener();
+            });
+            try {
+                iotDisplay.action({
+                    action: "open_customer_display",
+                    pos_id: this.pos.config.id,
+                    access_token: this.pos.config.access_token,
                 });
+            } catch {
+                this.notification.add(_t("Connection failed"), { type: "danger" });
+                iotDisplay.removeListener();
+            }
         }
     }
 

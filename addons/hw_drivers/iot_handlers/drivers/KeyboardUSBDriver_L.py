@@ -7,7 +7,6 @@ import json
 import logging
 from lxml import etree
 import os
-from pathlib import Path
 from queue import Queue, Empty
 import re
 import requests
@@ -16,8 +15,6 @@ from threading import Lock
 import time
 from usb import util
 
-from odoo import http
-from odoo.addons.hw_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.hw_drivers.driver import Driver
 from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.main import iot_devices
@@ -358,15 +355,3 @@ class KeyboardUSBDriver(Driver):
                     return barcode
             except Empty:
                 return ''
-
-proxy_drivers['scanner'] = KeyboardUSBDriver
-
-
-class KeyboardUSBController(http.Controller):
-    @http.route('/hw_proxy/scanner', type='jsonrpc', auth='none', cors='*')
-    def get_barcode(self):
-        scanners = [iot_devices[d] for d in iot_devices if iot_devices[d].device_type == "scanner"]
-        if scanners:
-            return scanners[0].read_next_barcode()
-        time.sleep(5)
-        return None

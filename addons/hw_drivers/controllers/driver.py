@@ -29,7 +29,12 @@ class DriverController(http.Controller):
         We specify in data from which session_id that action is called
         And call the action of specific device
         """
-        iot_device = iot_devices.get(device_identifier)
+        if "default_" in device_identifier:
+            device_type = device_identifier.split("default_")[1]
+            iot_device = next((d for d in iot_devices if iot_devices[d].device_type == device_type), None)
+        else:
+            iot_device = iot_devices.get(device_identifier)
+
         if iot_device:
             iot_device.data['owner'] = session_id
             data = json.loads(data)

@@ -1,5 +1,5 @@
 import { formatCurrency } from "@point_of_sale/app/models/utils/currency";
-import { deduceUrl } from "@point_of_sale/utils";
+import { DeviceController } from "@iot/device_controller";
 
 /**
  * This module provides functions to format order and order line data for customer display.
@@ -23,29 +23,18 @@ export class CustomerDisplayPosAdapter {
 
         if (pos.config.customer_display_type === "remote") {
             pos.data.call("pos.config", "update_customer_display", [
-                [this.pos.config.id],
+                [pos.config.id],
                 this.data,
-                this.pos.config.access_token,
+                pos.config.access_token,
             ]);
         }
 
         if (pos.config.customer_display_type === "proxy") {
-            const proxyIP = pos.getDisplayDeviceIP();
-            fetch(`${deduceUrl(proxyIP)}/hw_proxy/customer_facing_display`, {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    params: {
-                        action: "set",
-                        data: this.data,
-                    },
-                }),
-            }).catch(() => {
-                console.log("Failed to send data to customer display");
+            const iotDisplay = new DeviceController(pos.iotLongpolling, {
+                iot_ip: pos.getDisplayDeviceIP(),
+                identifier: "HDMI-1",
             });
+            iotDisplay.action({ action: "set_customer_display_data", data: this.data });
         }
     }
 
