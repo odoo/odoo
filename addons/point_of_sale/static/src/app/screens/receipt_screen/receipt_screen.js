@@ -96,7 +96,90 @@ export class ReceiptScreen extends Component {
     isResumeVisible() {
         return this.pos.get_open_orders().length > 0;
     }
+<<<<<<< saas-17.4
     async _sendReceiptToCustomer({ action }) {
+||||||| dcb184639291a336a81623b3afab1b6dfb2b5c8d
+    async _sendReceiptToCustomer() {
+        const partner = this.currentOrder.get_partner();
+        const orderPartner = {
+            email: this.orderUiState.inputEmail,
+            name: partner ? partner.name : this.orderUiState.inputEmail,
+        };
+        await this.sendToCustomer(orderPartner, "action_receipt_to_customer");
+    }
+    async sendToCustomer(orderPartner, methodName) {
+        const ticketImage = await this.renderer.toJpeg(
+            OrderReceipt,
+            {
+                data: this.pos.get_order().export_for_printing(),
+                formatCurrency: this.env.utils.formatCurrency,
+            },
+            { addClass: "pos-receipt-print", addEmailMargins: true }
+        );
+=======
+<<<<<<< saas-17.2
+||||||| 75c69312343298790b3c087f23f40206d2f0b1bc
+    async printReceipt() {
+        this.buttonPrintReceipt.el.className = "fa fa-fw fa-spin fa-circle-o-notch";
+        const isPrinted = await this.printer.print(
+            OrderReceipt,
+            {
+                data: this.pos.get_order().export_for_printing(),
+                formatCurrency: this.env.utils.formatCurrency,
+            },
+            { webPrintFallback: true }
+        );
+
+        if (isPrinted) {
+            this.currentOrder._printed = true;
+        }
+
+        if (this.buttonPrintReceipt.el) {
+            this.buttonPrintReceipt.el.className = "fa fa-print";
+        }
+    }
+=======
+    async printReceipt() {
+        this.buttonPrintReceipt.el.className = "fa fa-fw fa-spin fa-circle-o-notch";
+        const isPrinted = await this.printer.print(
+            OrderReceipt,
+            {
+                data: {
+                    ...this.pos.get_order().export_for_printing(),
+                    isBill: this.isBill,
+                },
+                formatCurrency: this.env.utils.formatCurrency,
+            },
+            { webPrintFallback: true }
+        );
+
+        if (isPrinted) {
+            this.currentOrder._printed = true;
+        }
+
+        if (this.buttonPrintReceipt.el) {
+            this.buttonPrintReceipt.el.className = "fa fa-print";
+        }
+    }
+>>>>>>> 10730f7b2eb6fb5da684259a36c1a5cbbfa64920
+    async _sendReceiptToCustomer() {
+        const partner = this.currentOrder.get_partner();
+        const orderPartner = {
+            email: this.orderUiState.inputEmail,
+            name: partner ? partner.name : this.orderUiState.inputEmail,
+        };
+        await this.sendToCustomer(orderPartner, "action_receipt_to_customer");
+    }
+    async sendToCustomer(orderPartner, methodName) {
+        const ticketImage = await this.renderer.toJpeg(
+            OrderReceipt,
+            {
+                data: this.pos.get_order().export_for_printing(),
+                formatCurrency: this.env.utils.formatCurrency,
+            },
+            { addClass: "pos-receipt-print", addEmailMargins: true }
+        );
+>>>>>>> 53107ba34bf36954ef8bee7f4cc25b887c207445
         const order = this.currentOrder;
         if (typeof order.id !== "number") {
             this.dialog.add(ConfirmationDialog, {
@@ -119,6 +202,9 @@ export class ReceiptScreen extends Component {
     }
     isValidEmail(email) {
         return email && /^.+@.+$/.test(email);
+    }
+    get isBill() {
+        return false;
     }
 }
 
