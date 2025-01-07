@@ -27,11 +27,13 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         })
         return company_data
 
-    def _create_purchase(self, product, date, quantity=1.0, set_tax=False, price_unit=66.0):
+    def _create_purchase(self, product, date, quantity=1.0, set_tax=False, price_unit=66.0, currency=False):
+        if not currency:
+            currency = self.currency_data['currency']
         with freeze_time(date):
             rslt = self.env['purchase.order'].create({
                 'partner_id': self.partner_a.id,
-                'currency_id': self.currency_data['currency'].id,
+                'currency_id': currency.id,
                 'order_line': [
                     (0, 0, {
                         'name': product.name,
@@ -542,3 +544,71 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             '|', ('debit', '=', 5), ('credit', '=', 5),
         ])
         self.assertEqual(cost_change_journal_items.mapped('quantity'), [0, 0])
+
+    @freeze_time('2025-01-07')
+    def test_exchange_rate_backdated_bill(self):
+        """ Having a purchase order in some foreign currency:
+        Changing the invoice date on the bill for that order after having received the product
+        should not affect the journal entries created after the user clicks the `Post` button on
+        the bill- specifically:
+        (A) In the case where that date is in the future (relative to the actual User time) and
+        (B) The date has an associated currency rate which differs from the one used at reception
+        """
+        product = self.test_product_order
+        self.env['res.currency.rate'].create([{
+            'name': name,
+            'rate': rate,
+            'currency_id': self.env.ref('base.EUR').id,
+            'company_id': self.env.company.id,
+        } for (name, rate) in [('2025-01-06', 0.8), ('2025-01-07', 0.7), ('2025-01-08', 0.8)]])
+        for date in ('2025-01-07', '2025-01-06', '2025-01-08'):
+            purchase_order = self._create_purchase(product, '2025-01-07', quantity=1, set_tax=True, price_unit=10, currency=self.env.ref('base.EUR'))
+            receipt = purchase_order.picking_ids
+            receipt.move_ids.quantity_done = 1
+            receipt.button_validate()
+            purchase_order.action_create_invoice()
+            bill = purchase_order.invoice_ids
+            with Form(bill) as bill_form:
+                bill_form.invoice_date = date
+            bill.action_post()
+
+        # Prior to the commit introducing this test, we would have entries in the following journals:
+        #   | Inventory Valuation | Vendor Bills | Exchange Difference |
+        # Post commit, we should see no entries in the Exchange Difference journal
+        stock_journal_id, bills_journal_id, exchg_journal_id = (
+            product.categ_id.property_stock_journal.id,
+            self.company_data['default_journal_purchase'].id,
+            self.env.company.currency_exchange_journal_id.id,
+        )
+        relevant_amls = self.env['account.move.line'].search([
+            ('journal_id', 'in', (stock_journal_id, bills_journal_id, exchg_journal_id)),
+        ], order='id asc')
+        self.assertEqual(len(relevant_amls), 19)
+        self.assertEqual(self.env['account.journal'].browse(exchg_journal_id).entries_count, 0)
+        self.assertRecordValues(
+            relevant_amls,
+            [
+                # Control (no reconciliation needed)
+                {'journal_id': stock_journal_id,    'balance': -14.29},
+                {'journal_id': stock_journal_id,    'balance':  14.29},
+                {'journal_id': bills_journal_id,    'balance':  14.29},
+                {'journal_id': bills_journal_id,    'balance':   2.14},
+                {'journal_id': bills_journal_id,    'balance': -16.43},
+                # back-dated bill
+                {'journal_id': stock_journal_id,    'balance': -14.29},
+                {'journal_id': stock_journal_id,    'balance':  14.29},
+                {'journal_id': bills_journal_id,    'balance':  12.50},
+                {'journal_id': bills_journal_id,    'balance':   1.88},
+                {'journal_id': bills_journal_id,    'balance': -14.38},
+                {'journal_id': stock_journal_id,    'balance':   1.79},
+                {'journal_id': stock_journal_id,    'balance':  -1.79},
+                # forward-dated bill
+                {'journal_id': stock_journal_id,    'balance': -14.29},
+                {'journal_id': stock_journal_id,    'balance':  14.29},
+                {'journal_id': bills_journal_id,    'balance':  12.50},
+                {'journal_id': bills_journal_id,    'balance':   1.88},
+                {'journal_id': bills_journal_id,    'balance': -14.38},
+                {'journal_id': stock_journal_id,    'balance':   1.79},
+                {'journal_id': stock_journal_id,    'balance':  -1.79},
+            ],
+        )
