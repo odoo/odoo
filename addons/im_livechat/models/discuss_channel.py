@@ -40,18 +40,26 @@ class DiscussChannel(models.Model):
             end = record.message_ids[0].date if record.message_ids else fields.Datetime.now()
             record.duration = (end - start).total_seconds() / 3600
 
-    def _to_store_defaults(self):
+    def _sync_field_names(self):
+        return super()._sync_field_names() + ["livechat_operator_id"]
+
+    def _field_store_repr(self, field_name):
+        if field_name == "livechat_operator_id":
+            return Store.One(
+                "livechat_operator_id", ["user_livechat_username", "write_date"], rename="operator"
+            )
+        return super()._field_store_repr(field_name)
+
+    def _to_store_defaults(self, for_current_user=True):
         fields = [
             "anonymous_name",
             "chatbot_current_step",
             Store.One("country_id", ["code", "name"], rename="anonymous_country"),
-            Store.One(
-                "livechat_operator_id", ["user_livechat_username", "write_date"], rename="operator"
-            ),
+            self._field_store_repr("livechat_operator_id"),
         ]
         if self.env.user._is_internal():
             fields.append(Store.One("livechat_channel_id", ["name"], rename="livechatChannel"))
-        return super()._to_store_defaults() + fields
+        return super()._to_store_defaults(for_current_user=for_current_user) + fields
 
     def _to_store(self, store: Store, fields):
         """Extends the channel header by adding the livechat operator and the 'anonymous' profile"""

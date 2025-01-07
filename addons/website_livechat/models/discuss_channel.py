@@ -22,8 +22,8 @@ class DiscussChannel(models.Model):
         if self.livechat_active and not self.message_ids:
             self.sudo().unlink()
 
-    def _to_store_defaults(self):
-        return super()._to_store_defaults() + ["add_visitor"]
+    def _to_store_defaults(self, for_current_user=True):
+        return super()._to_store_defaults(for_current_user=for_current_user) + ["add_visitor"]
 
     def _to_store(self, store: Store, fields):
         """

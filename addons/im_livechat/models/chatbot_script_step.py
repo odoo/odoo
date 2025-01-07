@@ -367,25 +367,31 @@ class ChatbotScriptStep(models.Model):
                 posted_message = discuss_channel._chatbot_post_message(self.chatbot_script_id, plaintext2html(self.message))
 
             # next, add the human_operator to the channel and post a "Operator joined the channel" notification
-            discuss_channel.with_user(human_operator).sudo().add_members(human_operator.partner_id.ids, open_chat_window=True)
+            discuss_channel.with_user(human_operator).sudo().add_members(
+                human_operator.partner_id.ids
+            )
             # sudo - discuss.channel: let the chat bot proceed to the forward step (change channel operator, add human operator
             # as member, remove bot from channel, rename channel and finally broadcast the channel to the new operator).
             channel_sudo = discuss_channel.sudo()
-            channel_sudo.livechat_operator_id = human_operator.partner_id
             if bot_member := channel_sudo.channel_member_ids.filtered(
                 lambda m: m.partner_id == self.chatbot_script_id.operator_partner_id
             ):
                 channel_sudo._action_unfollow(partner=bot_member.partner_id)
             # finally, rename the channel to include the operator's name
-            channel_sudo.name = " ".join(
-                [
-                    self.env.user.display_name
-                    if not self.env.user._is_public()
-                    else discuss_channel.anonymous_name,
-                    human_operator.livechat_username
-                    if human_operator.livechat_username
-                    else human_operator.name,
-                ]
+            channel_sudo.write(
+                {
+                    "livechat_operator_id": human_operator.partner_id,
+                    "name": " ".join(
+                        [
+                            self.env.user.display_name
+                            if not self.env.user._is_public()
+                            else discuss_channel.anonymous_name,
+                            human_operator.livechat_username
+                            if human_operator.livechat_username
+                            else human_operator.name,
+                        ]
+                    )
+                }
             )
             channel_sudo._broadcast(human_operator.partner_id.ids)
             discuss_channel.channel_pin(pinned=True)
