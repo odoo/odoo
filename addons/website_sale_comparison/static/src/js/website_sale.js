@@ -7,8 +7,8 @@ WebsiteSale.include({
      *
      * @override
      */
-    _toggleDisable: function ($parent, isCombinationPossible) {
+    _toggleDisable: function (parent, isCombinationPossible) {
         this._super(...arguments);
-        $parent.find('a.a-submit').toggleClass('disabled', !isCombinationPossible);
+        parent.querySelector("a.a-submit").classList.toggle("disabled", !isCombinationPossible);
     },
 });
