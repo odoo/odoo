@@ -57,7 +57,7 @@ export class MediaPlugin extends Plugin {
                 ? []
                 : [{ categoryId: "media", commandId: "insertMedia" }]),
         ],
-        power_buttons: { commandId: "insertMedia" },
+        power_buttons: withSequence(1, { commandId: "insertMedia" }),
 
         /** Handlers */
         clean_handlers: this.clean.bind(this),

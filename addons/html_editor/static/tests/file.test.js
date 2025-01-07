@@ -116,3 +116,31 @@ describe("document tab in media dialog", () => {
     });
 });
 
+describe("powerbutton", () => {
+    test("file powerbutton uploads a file directly via the system's selector", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        const mockedUpload = patchUpload(editor);
+        // Click on the upload powerbutton.
+        await click(".power_button.fa-upload");
+        await animationFrame();
+        // Check that there's no media dialog.
+        expect(".o_select_media_dialog").toHaveCount(0);
+        await mockedUpload;
+        // Check that file card (embedded component) was inserted in the editable.
+        expect(".odoo-editor-editable .o_file_box").toHaveCount(1);
+    });
+
+    test("file powerbutton uploads a file directly via the system's selector (embedded component)", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>", { config: configWithEmbeddedFile });
+        const mockedUpload = patchUpload(editor);
+        // Click on the upload powerbutton.
+        await click(".power_button.fa-upload");
+        await animationFrame();
+        // Check that there's no media dialog.
+        expect(".o_select_media_dialog").toHaveCount(0);
+        await mockedUpload;
+        // Check that file card (embedded component) was inserted in the editable.
+        expect('.odoo-editor-editable [data-embedded="file"]').toHaveCount(1);
+    });
+});
+
