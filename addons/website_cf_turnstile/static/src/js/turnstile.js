@@ -2,44 +2,43 @@
 
 import "@website/snippets/s_website_form/000";  // force deps
 import publicWidget from '@web/legacy/js/public/public_widget';
+import { renderToElement } from "@web/core/utils/render";
 import { session } from "@web/session";
 
 export const turnStile = {
     addTurnstile: function (action) {
         if (!this.isEditable && !this.$(".s_turnstile").length) {
             const mode = new URLSearchParams(window.location.search).get('cf') == 'show' ? 'always' : 'interaction-only';
-            return $(`<div class="s_turnstile cf-turnstile float-end"
-                        style="display: none;"
-                        data-action="${action}"
-                        data-appearance="${mode}"
-                        data-response-field-name="turnstile_captcha"
-                        data-sitekey="${session.turnstile_site_key}"
-                        data-error-callback="throwTurnstileError"
-                        data-callback="turnstileSuccess"
-                        data-before-interactive-callback="turnstileBecomeVisible"
-                ></div>
-                <script class="s_turnstile">
-                    // Rethrow the error, or we only will catch a "Script error" without any info
-                    // because of the script api.js originating from a different domain.
-                    function throwTurnstileError(code) {
-                        const error = new Error("Turnstile Error");
-                        error.code = code;
-                        throw error;
-                    }
-                    function turnstileSuccess() {
-                        const form = this.wrapper.parentElement.parentElement;
-                        const spinner = form.querySelector("i.turnstile-spinner");
-                        const button = spinner.parentElement;
-                        button.disabled = false;
-                        button.classList.remove('disabled');
-                        spinner.remove();
-                    }
-                    function turnstileBecomeVisible() {
-                        this.wrapper.parentElement.style.display = '';
-                    }
-                </script>
-                <script class="s_turnstile" src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
-            `);
+            const turnstileContainer = renderToElement("website_cf_turnstile.turnstile_container", {
+                action: action,
+                appearance: mode,
+                additionalClasses: "float-end",
+                beforeInteractiveGlobalCallback: "turnstileBecomeVisible",
+                errorGlobalCallback: "throwTurnstileErrorCode",
+                executeGlobalCallback: "turnstileSuccess",
+                sitekey: session.turnstile_site_key,
+                style: "display: none;",
+            });
+            const turnstileScript = renderToElement("website_cf_turnstile.turnstile_remote_script");
+            // Rethrow the error, or we only will catch a "Script error" without any info 
+            // because of the script api.js originating from a different domain.
+            globalThis.throwTurnstileError = (code) => {
+                const error = new Error("Turnstile Error");
+                error.code = code;
+                throw error;
+            }
+            globalThis.turnstileSuccess = () => {
+                    const form = turnstileContainer.parentElement;
+                    const spinner = form.querySelector("i.turnstile-spinner");
+                    const button = spinner.parentElement;
+                    button.disabled = false;
+                    button.classList.remove('disabled');
+                    spinner.remove();
+            };
+            globalThis.turnstileBecomeVisible = () => {
+                turnstileContainer.style.display = '';
+            }
+            return $(turnstileContainer).add($(turnstileScript))
         }
     },
 
