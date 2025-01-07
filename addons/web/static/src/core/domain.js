@@ -197,18 +197,6 @@ export class Domain {
     }
 }
 
-/**
- * @param {Array[] | boolean} modifier
- * @param {Object} evalContext
- * @returns {boolean}
- */
-export function evalDomain(modifier, evalContext) {
-    if (modifier && typeof modifier !== "boolean") {
-        modifier = new Domain(modifier).contains(evalContext);
-    }
-    return Boolean(modifier);
-}
-
 /** @type {Condition} */
 const TRUE_LEAF = [1, "=", 1];
 /** @type {Condition} */
