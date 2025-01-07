@@ -1,11 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from freezegun import freeze_time
+import json
 
 from odoo import Command, fields
 from odoo.addons.im_livechat.tests import chatbot_common
 from odoo.tests.common import JsonRpcException, new_test_user, tagged
 from odoo.tools.misc import mute_logger
+from odoo.addons.bus.models.bus import json_dump
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -158,6 +160,16 @@ class ChatbotCase(chatbot_common.ChatbotCase):
         member_bot = discuss_channel.channel_member_ids.filtered(
             lambda m: m.partner_id == self.chatbot_script.operator_partner_id
         )
+        member_bot_data = {
+            "create_date": fields.Datetime.to_string(member_bot.create_date),
+            "fetched_message_id": False,
+            "id": member_bot.id,
+            "is_bot": True,
+            "last_seen_dt": False,
+            "persona": {"id": member_bot.partner_id.id, "type": "partner"},
+            "seen_message_id": False,
+            "thread": {"id": discuss_channel.id, "model": "discuss.channel"},
+        }
 
         def get_forward_op_bus_params():
             messages = self.env["mail.message"].search([], order="id desc", limit=3)
@@ -198,6 +210,42 @@ class ChatbotCase(chatbot_common.ChatbotCase):
             member_emp = discuss_channel.channel_member_ids.filtered(
                 lambda m: m.partner_id == self.partner_employee
             )
+            # data in-between join and leave
+            channel_data_join = json.loads(
+                json_dump(
+                    Store(
+                        discuss_channel, discuss_channel._to_store_defaults(for_current_user=False)
+                    ).get_result()
+                )
+            )
+            channel_data_join["discuss.channel"][0]["chatbot"]["currentStep"]["message"] = messages[2].id
+            channel_data_join["discuss.channel"][0]["chatbot"]["steps"][0]["message"] = messages[2].id
+            channel_data_join["discuss.channel"][0]["is_pinned"] = True
+            channel_data_join["discuss.channel"][0]["member_count"] = 3
+            channel_data_join["discuss.channel"][0]["name"] = "Testing Bot"
+            channel_data_join["discuss.channel"][0]["operator"] = {
+                "id": self.chatbot_script.operator_partner_id.id,
+                "type": "partner",
+            }
+            channel_data_join["discuss.channel.member"].insert(0, member_bot_data)
+            channel_data_join["discuss.channel.member"][2]["fetched_message_id"] = False
+            channel_data_join["discuss.channel.member"][2]["last_seen_dt"] = False
+            channel_data_join["discuss.channel.member"][2]["seen_message_id"] = False
+            del channel_data_join["res.partner"][1]
+            channel_data_join["res.partner"].insert(
+                0,
+                {
+                    "active": False,
+                    "country": False,
+                    "id": self.chatbot_script.operator_partner_id.id,
+                    "is_public": False,
+                    "name": "Testing Bot",
+                    "user_livechat_username": False,
+                    "write_date": fields.Datetime.to_string(self.chatbot_script.operator_partner_id.write_date),
+                },
+            )
+            channel_data = Store(discuss_channel).get_result()
+            channel_data["discuss.channel"][0]["message_needaction_counter_bus_id"] = 0
             channel_data_emp = Store(discuss_channel.with_user(self.user_employee)).get_result()
             channel_data_emp["discuss.channel"][0]["message_needaction_counter_bus_id"] = 0
             channel_data_emp["discuss.channel.member"][1]["message_unread_counter_bus_id"] = 0
@@ -236,28 +284,7 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                     },
                     {
                         "type": "discuss.channel/joined",
-                        "payload": {
-                            "channel": {
-                                "id": discuss_channel.id,
-                                "allow_public_upload": False,
-                                "avatar_cache_key": "no-avatar",
-                                "channel_type": "livechat",
-                                "create_uid": self.user_public.id,
-                                "default_display_mode": False,
-                                "description": False,
-                                "last_interest_dt": fields.Datetime.to_string(
-                                    discuss_channel.last_interest_dt
-                                ),
-                                "member_count": 3,
-                                "name": "Testing Bot",
-                                "uuid": discuss_channel.uuid,
-                                "authorizedGroupFullName": False,
-                                "group_based_subscription": False,
-                                "model": "discuss.channel",
-                                "is_pinned": True,
-                            },
-                            "open_chat_window": True,
-                        },
+                        "payload": {"channel_id": discuss_channel.id, "data": channel_data_join},
                     },
                     {
                         "type": "mail.record/insert",
@@ -279,7 +306,7 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                             "res.country": [
                                 {"code": "BE", "id": self.env.ref("base.be").id, "name": "Belgium"}
                             ],
-                            "res.partner": [
+                            "res.partner": self._filter_partners_fields(
                                 {
                                     "active": True,
                                     "country": self.env.ref("base.be").id,
@@ -291,7 +318,7 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                                         self.partner_employee.write_date
                                     ),
                                 }
-                            ],
+                            ),
                         },
                     },
                     {
@@ -333,7 +360,7 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                             "res.country": [
                                 {"code": "BE", "id": self.env.ref("base.be").id, "name": "Belgium"}
                             ],
-                            "res.partner": [
+                            "res.partner": self._filter_partners_fields(
                                 {
                                     "active": True,
                                     "country": self.env.ref("base.be").id,
@@ -345,7 +372,7 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                                         self.partner_employee.write_date
                                     ),
                                 }
-                            ],
+                            ),
                         },
                     },
                     {
@@ -386,8 +413,22 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                         "type": "mail.record/insert",
                         "payload": {
                             "discuss.channel": [
-                                {"id": discuss_channel.id, "name": "OdooBot Ernest Employee"}
-                            ]
+                                {
+                                    "id": discuss_channel.id,
+                                    "name": "OdooBot Ernest Employee",
+                                    "operator": {"id": self.partner_employee.id, "type": "partner"},
+                                },
+                            ],
+                            "res.partner": self._filter_partners_fields(
+                                {
+                                    "id": self.partner_employee.id,
+                                    "name": "Ernest Employee",
+                                    "user_livechat_username": False,
+                                    "write_date": fields.Datetime.to_string(
+                                        self.partner_employee.write_date
+                                    ),
+                                }
+                            ),
                         },
                     },
                     {"type": "mail.record/insert", "payload": channel_data_emp},
