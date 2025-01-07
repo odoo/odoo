@@ -157,7 +157,7 @@
             <field name="model">account.move.line</field>
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
-                <list name="move_line_tree" string="Journal Items" create="false" edit="true" expand="context.get('expand', False)" multi_edit="1" sample="1">
+                <list name="move_line_tree" string="Journal Items" decoration-info="parent_state == 'draft'" create="false" edit="true" expand="context.get('expand', False)" multi_edit="1" sample="1">
                     <field name="move_id" column_invisible="True"/>
                     <field name="invoice_date" string="Invoice Date" optional="hide"/>
                     <field name="date" readonly="1"/>
@@ -198,6 +198,7 @@
                     <field name="is_same_currency" column_invisible="True"/>
                     <field name="is_account_reconcile" column_invisible="True"/>
                     <field name="sequence" column_invisible="True"/>
+                    <field name="parent_state" column_invisible="True"/>
                     <groupby name="partner_id">
                         <button name="edit" type="edit" icon="fa-edit" title="Edit"/>
                     </groupby>
@@ -386,7 +387,7 @@
             <field name="model">account.move.line</field>
             <field eval="200" name="priority"/>
             <field name="arch" type="xml">
-                <list string="Payment Items" create="false" edit="true" expand="context.get('expand', False)" multi_edit="1" sample="1" default_order="payment_date asc, id asc">
+                <list string="Payment Items" decoration-info="parent_state == 'draft'" create="false" edit="true" expand="context.get('expand', False)" multi_edit="1" sample="1" default_order="payment_date asc, id asc">
                     <header>
                         <button name="action_payment_items_register_payment" type="object" string="Pay" groups="account.group_account_user"/>
                     </header>
@@ -412,6 +413,7 @@
                     <field name="is_same_currency" column_invisible="True"/>
                     <field name="is_account_reconcile" column_invisible="True"/>
                     <field name="currency_id" groups="!base.group_multi_currency" column_invisible="True"/>
+                    <field name="parent_state" column_invisible="True"/>
                     <groupby name="partner_id">
                         <button name="edit" type="edit" icon="fa-edit" title="Edit"/>
                     </groupby>
