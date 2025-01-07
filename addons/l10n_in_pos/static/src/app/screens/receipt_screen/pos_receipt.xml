@@ -18,14 +18,6 @@
     </t>
 
     <t t-name="l10n_in_pos.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
-        <xpath expr="//Orderline" position="inside">
-            <t t-if="line.l10n_in_hsn_code and header.company.country_id?.code === 'IN'">
-                <div class="pos-receipt-left-padding">
-                    <span>HSN Code: </span>
-                    <t t-out="line.l10n_in_hsn_code"/>
-                </div>
-            </t>
-        </xpath>
         <xpath expr="//div[@class='before-footer']" position="after">
             <br/>
             <t t-set="l10n_in_hsn_summary" t-value="order._prepareL10nInHsnSummary()"/>
