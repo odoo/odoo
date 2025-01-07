@@ -31,7 +31,7 @@ class PosSession(models.Model):
         'pos.config', string='Point of Sale',
         required=True,
         index=True)
-    name = fields.Char(string='Session ID', required=True, readonly=True, default='/')
+    name = fields.Char(string='Session ID', readonly=True, default='/')
     user_id = fields.Many2one(
         'res.users', string='Opened By',
         required=True,
@@ -92,11 +92,6 @@ class PosSession(models.Model):
     is_in_company_currency = fields.Boolean('Is Using Company Currency', compute='_compute_is_in_company_currency')
     update_stock_at_closing = fields.Boolean('Stock should be updated at closing')
     bank_payment_ids = fields.One2many('account.payment', 'pos_session_id', 'Bank Payments', help='Account payments representing aggregated and bank split payments.')
-
-    _uniq_name = models.Constraint(
-        'unique(name)',
-        'The name of this POS Session must be unique!',
-    )
 
     @api.model
     def _load_pos_data_relations(self, model, fields):
@@ -375,16 +370,9 @@ class PosSession(models.Model):
             # the .xml files as the CoA is not yet installed.
             pos_config = self.env['pos.config'].browse(config_id)
 
-            pos_name = self.env['ir.sequence'].with_context(
-                company_id=pos_config.company_id.id
-            ).next_by_code('pos.session')
-            if vals.get('name'):
-                pos_name += ' ' + vals['name']
-
             update_stock_at_closing = pos_config.company_id.point_of_sale_update_stock_quantities == "closing"
 
             vals.update({
-                'name': pos_name,
                 'config_id': config_id,
                 'update_stock_at_closing': update_stock_at_closing,
             })
@@ -1699,6 +1687,10 @@ class PosSession(models.Model):
     def set_opening_control(self, cashbox_value: int, notes: str):
         self.state = 'opened'
 
+        self.name = self.env['ir.sequence'].with_context(
+            company_id=self.config_id.company_id.id
+        ).next_by_code('pos.session') + (self.name if self.name != '/' else '')
+            
         cash_payment_method_ids = self.config_id.payment_method_ids.filtered(lambda pm: pm.is_cash_count)
         if cash_payment_method_ids:
             self.opening_notes = notes
