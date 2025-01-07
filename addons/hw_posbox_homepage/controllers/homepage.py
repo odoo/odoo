@@ -290,18 +290,23 @@ class IotBoxOwlHomePage(http.Controller):
 
     @http.route('/hw_posbox_homepage/update_wifi', auth="none", type="jsonrpc", methods=['POST'], cors='*')
     def update_wifi(self, essid, password):
-        if wifi.connect(essid, password):
+        if wifi.reconnect(essid, password, force_update=True):
             helpers.update_conf({'wifi_ssid': essid, 'wifi_password': password})
-        server = helpers.get_odoo_server_url()
+            server = helpers.get_odoo_server_url()
 
-        res_payload = {
-            'status': 'success',
-            'message': 'Connecting to ' + essid,
-            'server': {
-                'url': server or 'http://' + helpers.get_ip() + ':8069',
-                'message': 'Redirect to Odoo Server' if server else 'Redirect to IoT Box'
+            res_payload = {
+                'status': 'success',
+                'message': 'Connecting to ' + essid,
+                'server': {
+                    'url': server or 'http://' + helpers.get_ip() + ':8069',
+                    'message': 'Redirect to Odoo Server' if server else 'Redirect to IoT Box'
+                }
             }
-        }
+        else:
+            res_payload = {
+                'status': 'error',
+                'message': 'Failed to connect to ' + essid,
+            }
 
         return res_payload
 

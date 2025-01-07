@@ -14,8 +14,8 @@ export class WifiDialog extends Component {
         this.store = useStore();
         this.state = useState({
             scanning: true,
-            loading: false,
             waitRestart: false,
+            statusMessage: "",
             availableWiFi: [],
         });
         this.form = useState({
@@ -29,6 +29,17 @@ export class WifiDialog extends Component {
         this.state.scanning = true;
         this.form.essid = "";
         this.form.password = "";
+    }
+
+    isCurrentlyConnectedToWifi() {
+        return (
+            !this.store.base.is_access_point_up &&
+            this.store.base.network_interfaces.some((netInterface) => netInterface.is_wifi)
+        );
+    }
+
+    isCurrentlyConnectedToEthernet() {
+        return this.store.base.network_interfaces.some((netInterface) => !netInterface.is_wifi);
     }
 
     async getWiFiNetworks() {
@@ -51,13 +62,19 @@ export class WifiDialog extends Component {
         }
 
         this.state.waitRestart = true;
-        const data = await this.store.rpc({
+        const responsePromise = this.store.rpc({
             url: "/hw_posbox_homepage/update_wifi",
             method: "POST",
             params: this.form,
         });
-
-        if (data.status !== "success") {
+        if (this.isCurrentlyConnectedToEthernet()) {
+            const data = await responsePromise;
+            if (data.status !== "success") {
+                this.state.waitRestart = false;
+            }
+        } else {
+            // The IoT box is no longer reachable, so we can't await the response.
+            this.state.statusMessage = `The IoT Box will now attempt to connect to ${this.form.essid}. You may close this page.`;
             this.state.waitRestart = false;
         }
     }
@@ -65,11 +82,17 @@ export class WifiDialog extends Component {
     async clearConfiguration() {
         try {
             this.state.waitRestart = true;
-            const data = await this.store.rpc({
+            const responsePromise = this.store.rpc({
                 url: "/hw_posbox_homepage/wifi_clear",
             });
-
-            if (data.status !== "success") {
+            if (this.isCurrentlyConnectedToEthernet()) {
+                const data = await responsePromise;
+                if (data.status !== "success") {
+                    this.state.waitRestart = false;
+                }
+            } else {
+                // The IoT box is no longer reachable, so we can't await the response.
+                this.state.statusMessage = `The IoT Box Wi-Fi configuration has been cleared. You will need to connect to the IoT Box hotspot or connect an ethernet cable.`;
                 this.state.waitRestart = false;
             }
         } catch {
@@ -83,6 +106,10 @@ export class WifiDialog extends Component {
                 Updating Wi-Fi configuration, please wait...
             </t>
         </LoadingFullScreen>
+
+        <div t-if="state.statusMessage" class="position-fixed top-0 start-0 bg-white vh-100 w-100 justify-content-center align-items-center d-flex always-on-top">
+            <div class="alert alert-success" t-out="state.statusMessage"/>
+        </div>
 
         <BootstrapDialog identifier="'wifi-configuration'" btnName="'Configure'" onOpen.bind="getWiFiNetworks" onClose.bind="onClose">
             <t t-set-slot="header">
@@ -116,7 +143,7 @@ export class WifiDialog extends Component {
                     </div>
 
                     <div class="d-flex justify-content-end gap-2">
-                        <button t-if="!this.store.base.is_access_point_up" type="submit" class="btn btn-secondary btn-sm" t-on-click="clearConfiguration">
+                        <button t-if="this.isCurrentlyConnectedToWifi()" type="submit" class="btn btn-secondary btn-sm" t-on-click="clearConfiguration">
                             Disconnect From Current
                         </button>
                         <button type="submit" class="btn btn-primary btn-sm" t-on-click="connectToWiFi">Connect</button>
