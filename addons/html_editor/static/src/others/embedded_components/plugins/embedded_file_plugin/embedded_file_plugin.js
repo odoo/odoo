@@ -33,6 +33,11 @@ export class EmbeddedFilePlugin extends FilePlugin {
         );
     }
 
+    /** @override */
+    get componentForMediaDialog() {
+        return EmbeddedFileDocumentsSelector;
+    }
+
     setupNewFile({ name, env }) {
         if (name === "file") {
             Object.assign(env, {

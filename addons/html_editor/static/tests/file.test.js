@@ -10,6 +10,15 @@ import { getContent } from "./_helpers/selection";
 import { isZwnbsp } from "@html_editor/utils/dom_info";
 import { EmbeddedFilePlugin } from "@html_editor/others/embedded_components/plugins/embedded_file_plugin/embedded_file_plugin";
 
+const configWithEmbeddedFile = {
+    Plugins: [
+        ...MAIN_PLUGINS.filter((P) => P.id !== "file"),
+        EmbeddedFilePlugin,
+        ...EMBEDDED_COMPONENT_PLUGINS,
+    ],
+    resources: { embedded_components: MAIN_EMBEDDINGS },
+};
+
 const patchUpload = (editor) => {
     const mockedUploadPromise = new Promise((resolve) => {
         patchWithCleanup(editor.services.uploadLocalFiles, {
@@ -51,6 +60,59 @@ describe("file command", () => {
         expect(fileCard.firstElementChild).toHaveClass(["alert", "alert-info"]);
         // No download button in file card.
         expect(".o_file_box .fa-download").toHaveCount(0);
+    });
+});
+
+describe("document tab in media dialog", () => {
+    beforeEach(() =>
+        onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => [
+            {
+                id: 1,
+                name: "file.txt",
+                mimetype: "text/plain",
+                public: true,
+                image_src: "",
+            },
+        ])
+    );
+
+    describe("without File nor EmbeddedFile plugin", () => {
+        test("Document tab is not available by default", async () => {
+            const { editor } = await setupEditor("<p>[]<br></p>", {
+                config: { Plugins: MAIN_PLUGINS.filter((p) => p.id !== "file") },
+            });
+            execCommand(editor, "insertMedia");
+            await animationFrame();
+            expect(".nav-link:contains('Documents')").toHaveCount(0);
+        });
+    });
+
+    describe("with EmbeddedFile plugin", () => {
+        test("file upload via media dialog inserts a file card in the editable", async () => {
+            const { editor } = await setupEditor("<p>[]<br></p>", {
+                config: configWithEmbeddedFile,
+            });
+            execCommand(editor, "insertMedia");
+            await animationFrame();
+            await click(".nav-link:contains('Documents')");
+            await animationFrame();
+            await click(".o_we_attachment_highlight");
+            // wait for the embedded component to be mounted
+            await waitFor('[data-embedded="file"] .o_file_name:contains("file.txt")');
+            expect('[data-embedded="file"]').toHaveCount(1);
+        });
+    });
+
+    describe("with File plugin (no embedded component)", () => {
+        test("file upload via media dialog inserts a link in the editable", async () => {
+            const { editor } = await setupEditor("<p>[]<br></p>");
+            execCommand(editor, "insertMedia");
+            await animationFrame();
+            await click(".nav-link:contains('Documents')");
+            await animationFrame();
+            await click(".o_we_attachment_highlight");
+            expect(".odoo-editor-editable .o_file_box a:contains('file.txt')").toHaveCount(1);
+        });
     });
 });
 

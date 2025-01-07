@@ -24,6 +24,14 @@ export class FilePlugin extends Plugin {
             keywords: [_t("file"), _t("document")],
         },
         unsplittable_node_predicates: (node) => node.classList?.contains("o_file_box"),
+        ...(!this.config.disableFile && {
+            media_dialog_extra_tabs: {
+                id: "DOCUMENTS",
+                title: _t("Documents"),
+                Component: this.componentForMediaDialog,
+                sequence: 15,
+            },
+        }),
     };
 
     get recordInfo() {
@@ -32,6 +40,10 @@ export class FilePlugin extends Plugin {
 
     isUploadCommandAvailable() {
         return !this.config.disableFile;
+    }
+
+    get componentForMediaDialog() {
+        return DocumentSelector;
     }
 
     async uploadAndInsertFiles() {
