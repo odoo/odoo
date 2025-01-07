@@ -122,7 +122,7 @@ class AccountEdiProxyClientUser(models.Model):
         """Save new documents in an accounting journal, when one is specified on the company.
 
         :param attachment: the new document
-        :param partner_endpoint: a string containing the sender's Peppol endpoint
+        :param partner_endpoint: DEPRECATED - to be removed in master
         :param peppol_state: the state of the received Peppol document
         :param uuid: the UUID of the Peppol document
         :return: `True` if the document was saved, `False` if it was not
@@ -144,9 +144,8 @@ class AccountEdiProxyClientUser(models.Model):
         move._extend_with_attachments(attachment, new=True)
         move._message_log(
             body=_(
-                "Peppol document (UUID: %(uuid)s) has been received successfully.\n(Sender endpoint: %(endpoint)s)",
+                "Peppol document (UUID: %(uuid)s) has been received successfully",
                 uuid=uuid,
-                endpoint=partner_endpoint,
             ),
             attachment_ids=attachment.ids,
         )
@@ -192,7 +191,6 @@ class AccountEdiProxyClientUser(models.Model):
                     enc_key = content["enc_key"]
                     document_content = content["document"]
                     filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
-                    partner_endpoint = content["accounting_supplier_party"]
                     decoded_document = edi_user._decrypt_data(document_content, enc_key)
                     attachment = self.env["ir.attachment"].create(
                         {
@@ -202,7 +200,7 @@ class AccountEdiProxyClientUser(models.Model):
                             "mimetype": "application/xml",
                         }
                     )
-                    if edi_user._peppol_import_invoice(attachment, partner_endpoint, content["state"], uuid):
+                    if edi_user._peppol_import_invoice(attachment, None, content["state"], uuid):
                         # Only acknowledge when we saved the document somewhere
                         proxy_acks.append(uuid)
 
