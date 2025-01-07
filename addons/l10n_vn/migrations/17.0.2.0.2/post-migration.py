@@ -8,6 +8,7 @@ FIXED_ACCOUNTS_TYPE = {
     'expense_depreciation': ['6274', '6414', '6424'],
 }
 
+
 def _fix_accounts_type(env):
     for correct_account_type, accounts_code in FIXED_ACCOUNTS_TYPE.items():
         domains_per_company = []
