@@ -138,11 +138,12 @@ export class DiscussChannel extends models.ServerModel {
                 })
             );
             BusBus._sendone(partner, "discuss.channel/joined", {
-                channel: {
+                channel_id: channel.id,
+                data: new mailDataHelpers.Store(this.browse(channel.id), {
                     ...this._channel_basic_info([channel.id]),
                     is_pinned: true,
                     model: "discuss.channel",
-                },
+                }).get_result(),
                 invited_by_user_id: this.env.uid,
             });
         }

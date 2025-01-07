@@ -360,20 +360,46 @@ class DiscussChannel(models.Model):
                         channels=format_list(self.env, failing_channels.mapped("name")),
                     )
                 )
+        def get_vals(channel):
+            return {field_name: channel[field_name] for field_name in self._sync_field_names()}
 
-        old_vals = {channel: channel._channel_basic_info() for channel in self}
+        old_vals = {channel: get_vals(channel) for channel in self}
         result = super().write(vals)
         for channel in self:
-            info = channel._channel_basic_info()
-            diff = {}
-            for key, value in info.items():
-                if value != old_vals[channel][key]:
-                    diff[key] = value
+            new_vals = get_vals(channel)
+            diff = []
+            for field_name, value in new_vals.items():
+                if value != old_vals[channel][field_name]:
+                    diff.append(channel._field_store_repr(field_name))
             if diff:
                 channel._bus_send_store(channel, diff)
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
         return result
+
+    def _sync_field_names(self):
+        return [
+            "avatar_cache_key",
+            "channel_type",
+            "create_uid",
+            "default_display_mode",
+            "description",
+            "group_ids",
+            "group_public_id",
+            "last_interest_dt",
+            "member_count",
+            "name",
+            "uuid",
+        ]
+
+    def _field_store_repr(self, field_name):
+        """Return the default Store representation of the given field name, which can be passed as
+        param to the various Store methods."""
+        if field_name == "group_public_id":
+            return Store.Attr("authorizedGroupFullName", lambda c: c.group_public_id.full_name)
+        if field_name == "group_ids":
+            return Store.Attr("group_based_subscription", lambda c: bool(c.group_ids))
+        return field_name
 
     # ------------------------------------------------------------
     # MEMBERS MANAGEMENT
@@ -391,7 +417,9 @@ class DiscussChannel(models.Model):
             self.env['discuss.channel.member'].sudo().create(to_create)
         for channel in self:
             channel.group_ids._bus_send_store(
-                channel, {**channel._channel_basic_info(), "is_pinned": True}
+                Store(channel, channel._to_store_defaults(for_current_user=False)).add(
+                    channel, {"is_pinned": True}
+                )
             )
 
     def _subscribe_users_automatically_get_members(self):
@@ -437,7 +465,9 @@ class DiscussChannel(models.Model):
             ],
         )
 
-    def add_members(self, partner_ids=None, guest_ids=None, invite_to_rtc_call=False, open_chat_window=False, post_joined_message=True):
+    def add_members(
+        self, partner_ids=None, guest_ids=None, invite_to_rtc_call=False, post_joined_message=True
+    ):
         """ Adds the given partner_ids and guest_ids as member of self channels. """
         current_partner, current_guest = self.env["res.partner"]._get_current_persona()
         partners = self.env['res.partner'].browse(partner_ids or []).exists()
@@ -464,12 +494,13 @@ class DiscussChannel(models.Model):
             all_new_members += new_members
             for member in new_members:
                 payload = {
-                    "channel": {
-                        **member.channel_id._channel_basic_info(),
-                        "model": "discuss.channel",
-                        "is_pinned": True,
-                    },
-                    "open_chat_window": open_chat_window,
+                    "channel_id": member.channel_id.id,
+                    "data": Store(
+                        member.channel_id,
+                        member.channel_id._to_store_defaults(for_current_user=False),
+                    )
+                    .add(member.channel_id, {"is_pinned": True})
+                    .get_result(),
                 }
                 if not member.is_self and not self.env.user._is_public():
                     payload["invited_by_user_id"] = self.env.user.id
@@ -904,27 +935,7 @@ class DiscussChannel(models.Model):
         channels += self.env["discuss.channel"].search(pinned_member_domain)
         return channels
 
-    def _channel_basic_info(self):
-        self.ensure_one()
-        data = self._read_format(
-            [
-                "avatar_cache_key",
-                "channel_type",
-                "create_uid",
-                "default_display_mode",
-                "description",
-                "last_interest_dt",
-                "member_count",
-                "name",
-                "uuid",
-            ],
-            load=False,
-        )[0]
-        data["authorizedGroupFullName"] = self.group_public_id.full_name
-        data["group_based_subscription"] = bool(self.group_ids)
-        return data
-
-    def _to_store_defaults(self):
+    def _to_store_defaults(self, for_current_user=True):
         # As the method uses partial recordsets with filtered (that lose the prefetch ids) it is
         # best to prefetch these computed fields once to avoid doing partial queries multiple times,
         # especially because these 2 fields are used in ACL too.
@@ -957,8 +968,7 @@ class DiscussChannel(models.Model):
                 predicate=lambda channel: channel.self_member_id,
             )
 
-        return [
-            Store.Attr("authorizedGroupFullName", lambda c: c.group_public_id.full_name),
+        res = [
             "avatar_cache_key",
             "channel_type",
             "create_uid",
@@ -968,13 +978,11 @@ class DiscussChannel(models.Model):
                 sort="id",
                 predicate=lambda channel: channel in channels_with_all_members,
             ),
-            forward_member_field("custom_channel_name"),
-            forward_member_field("custom_notifications"),
             "default_display_mode",
             "description",
-            {"fetchChannelInfoState": "fetched"},
             Store.One("from_message_id"),
-            Store.Attr("group_based_subscription", lambda c: bool(c.group_ids)),
+            self._field_store_repr("group_ids"),
+            self._field_store_repr("group_public_id"),
             Store.Many(
                 "invited_member_ids",
                 [
@@ -984,39 +992,46 @@ class DiscussChannel(models.Model):
                 mode="ADD",
                 rename="invitedMembers",
             ),
-            "is_editable",
-            forward_member_field("is_pinned"),
             "last_interest_dt",
             "member_count",
-            forward_member_field("mute_until_dt"),
-            "message_needaction_counter",
-            {"message_needaction_counter_bus_id": bus_last_id},
             "name",
             Store.One("parent_channel_id"),
             Store.Many("rtc_session_ids", mode="ADD", extra=True, rename="rtcSessions"),
-                # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
-            Store.One(
-                "rtcInvitingSession",
-                value=lambda c: c.self_member_id.rtc_inviting_session_id.sudo(),
-                predicate=lambda c: c.self_member_id.rtc_inviting_session_id,
-            ),
-            Store.One(
-                "self_member_id",
-                extra_fields=[
-                    "last_interest_dt",
-                    "message_unread_counter",
-                    {"message_unread_counter_bus_id": bus_last_id},
-                    "new_message_separator",
-                ],
-                only_data=True,
-            ),
-            Store.Attr(
-                "state",
-                lambda c: c.self_member_id.fold_state or "closed",
-                predicate=lambda c: c.self_member_id,
-            ),
             "uuid",
         ]
+        if for_current_user:
+            res = res + [
+                forward_member_field("custom_channel_name"),
+                forward_member_field("custom_notifications"),
+                {"fetchChannelInfoState": "fetched"},
+                "is_editable",
+                forward_member_field("is_pinned"),
+                forward_member_field("mute_until_dt"),
+                "message_needaction_counter",
+                {"message_needaction_counter_bus_id": bus_last_id},
+                # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
+                Store.One(
+                    "rtcInvitingSession",
+                    value=lambda c: c.self_member_id.rtc_inviting_session_id.sudo(),
+                    predicate=lambda c: c.self_member_id.rtc_inviting_session_id,
+                ),
+                Store.One(
+                    "self_member_id",
+                    extra_fields=[
+                        "last_interest_dt",
+                        "message_unread_counter",
+                        {"message_unread_counter_bus_id": bus_last_id},
+                        "new_message_separator",
+                    ],
+                    only_data=True,
+                ),
+                Store.Attr(
+                    "state",
+                    lambda c: c.self_member_id.fold_state or "closed",
+                    predicate=lambda c: c.self_member_id,
+                ),
+            ]
+        return res
 
     def _to_store(self, store: Store, fields):
         store.add_records_fields(self, fields)
