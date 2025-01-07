@@ -323,7 +323,7 @@
         @include media-breakpoint-up(md) {
             position: sticky;
             top: 0;
-            z-index: 1;
+            z-index: $zindex-modal + 1;
 
             &:not(.modal .o_form_statusbar) {
                 background-color: $body-bg;
