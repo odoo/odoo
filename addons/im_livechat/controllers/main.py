@@ -156,8 +156,8 @@ class LivechatController(http.Controller):
             channel_info = {
                 "id": -1,  # only one temporary thread at a time, id does not matter.
                 "isLoaded": True,
+                "livechat_operator_id": Store.One(operator, ["user_livechat_username", "write_date"]),
                 "name": channel_vals["name"],
-                "operator": Store.One(operator, ["user_livechat_username", "write_date"]),
                 "scrollUnread": False,
                 "state": "open",
                 "channel_type": "livechat",
