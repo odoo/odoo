@@ -5,7 +5,7 @@ import logging
 from collections import defaultdict, namedtuple, OrderedDict
 from dateutil.relativedelta import relativedelta
 
-from odoo import SUPERUSER_ID, _, api, fields, models, registry
+from odoo import _, api, fields, models, registry
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.sql_db import BaseCursor
@@ -311,7 +311,7 @@ class StockRule(models.Model):
 
         for company_id, moves_values in moves_values_by_company.items():
             # create the move as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
-            moves = self.env['stock.move'].with_user(SUPERUSER_ID).sudo().with_company(company_id).create(moves_values)
+            moves = self.env['stock.move'].sudo().with_company(company_id).create(moves_values)
             # Since action_confirm launch following procurement_group we should activate it.
             moves._action_confirm()
         return True
@@ -340,8 +340,7 @@ class StockRule(models.Model):
         )
         date_deadline = values.get('date_deadline') and (fields.Datetime.to_datetime(values['date_deadline']) - relativedelta(days=self.delay or 0)) or False
         partner = self.partner_address_id or (values.get('group_id', False) and values['group_id'].partner_id)
-        if partner:
-            product_id = product_id.with_context(lang=partner.lang or self.env.user.lang)
+        product_id = product_id.with_context(lang=(partner and partner.lang) or self.env.user.lang)
         picking_description = product_id._get_description(self.picking_type_id)
         if values.get('product_description_variants'):
             picking_description += values['product_description_variants']

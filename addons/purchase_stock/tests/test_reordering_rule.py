@@ -700,6 +700,82 @@ class TestReorderingRule(TransactionCase):
         self.assertTrue(po_line)
         self.assertEqual("[A] product TEST", po_line.name)
 
+    def test_multi_lingual_orderpoints(self):
+        """
+        Define a product with description in English and French.
+        Use the same reordering rule twice with a partner (customer)
+        set up with French as language. Verify that the generated PO
+        contains a single POL with the cumulative quantity.
+        """
+        warehouse = self.env.ref("stock.warehouse0")
+        warehouse_2 = self.env['stock.warehouse'].create({
+            'name': 'Warehouse 2',
+            'code': 'WH2',
+            'resupply_wh_ids': warehouse.ids,
+        })
+        route_buy_id = self.ref('purchase_stock.route_warehouse0_buy')
+        product = self.env["product.product"].create({
+            "name": "product TEST",
+            "standard_price": 100.0,
+            "is_storable": True,
+            "uom_id": self.ref("uom.product_uom_unit"),
+            "default_code": "A",
+            "route_ids": [Command.set([route_buy_id])],
+        })
+        # Enable french and add a french description
+        self.env['res.lang']._activate_lang('fr_FR')
+        product.with_context(lang='fr_FR').name = 'produit en français'
+        default_vendor = self.env["res.partner"].create({
+            "name": "Super Supplier",
+            "lang": "fr_FR",
+        })
+        self.env["product.supplierinfo"].create({
+            "partner_id": default_vendor.id,
+            "product_tmpl_id": product.product_tmpl_id.id,
+            "delay": 7,
+        })
+        warehouse_2.resupply_route_ids.rule_ids.procure_method = 'make_to_order'
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'RR for %s' % product.name,
+            'warehouse_id': warehouse_2.id,
+            'location_id': warehouse_2.lot_stock_id.id,
+            'trigger': 'auto',
+            'product_id': product.id,
+            'route_id': warehouse_2.resupply_route_ids.id,
+            'qty_to_order_manual': 5.0,
+        })
+        french_user = self.env['res.users'].create(
+            {
+                'login': 'french user',
+                'name': 'Arnold',
+                'email': 'frenchuser@example.com',
+                'lang': 'fr_FR',
+                'groups_id': [Command.set(self.env.user.groups_id.ids)]
+            }
+        )
+        self.env.company.partner_id.lang = "fr_FR"
+        orderpoint.with_user(french_user).action_replenish() # impersonnate a french user.
+
+        po_line = self.env['purchase.order.line'].search([('partner_id', '=', default_vendor.id), ('product_id', '=', product.id)], limit=1)
+        self.assertRecordValues(po_line, [{"name": "[A] produit en français", "product_qty": 5.0}])
+        self.assertRecordValues(po_line.move_dest_ids, [{"product_uom_qty": 5.0}])
+        orderpoint.qty_to_order_manual = 4.0
+        orderpoint.with_user(french_user).action_replenish()
+        self.assertRecordValues(po_line, [{"name": "[A] produit en français", "product_qty": 9.0}])
+        self.assertEqual(len(po_line.order_id.order_line), 1)
+        self.assertRecordValues(po_line.move_dest_ids, [{"product_uom_qty": 9.0}])
+        orderpoint.product_min_qty = 10.0
+        orderpoint.product_max_qty = 20.0
+        # run the scheduler to test the use case where the user is always the SUPERUSER
+        self.env['procurement.group'].run_scheduler()
+        self.assertRecordValues(po_line, [{"name": "[A] produit en français", "product_qty": 20.0}])
+        self.assertEqual(len(po_line.order_id.order_line), 1)
+        # the moves_dest_ids are not expected to be merged since the scheduler is excuted by robodoo in en_US rather fr_FR
+        self.assertRecordValues(po_line.move_dest_ids.sorted('product_uom_qty'), [
+            {"description_picking": "produit en français", "product_uom_qty": 9.0},
+            {"description_picking": "product TEST", "product_uom_qty": 11.0},
+        ])
+
     def test_multi_locations_and_reordering_rule(self):
         """ Suppose two orderpoints for the same product, each one to a different location
         If the user triggers each orderpoint separately, it should still produce two
