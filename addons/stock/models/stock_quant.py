@@ -187,7 +187,7 @@ class StockQuant(models.Model):
         for quant in self:
             quant.last_count_date = date_by_quant.get((quant.location_id.id, quant.package_id.id, quant.product_id.id, quant.lot_id.id, quant.owner_id.id))
 
-    @api.depends('inventory_quantity')
+    @api.depends('inventory_quantity', 'quantity')
     def _compute_inventory_diff_quantity(self):
         for quant in self:
             quant.inventory_diff_quantity = quant.inventory_quantity - quant.quantity
