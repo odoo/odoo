@@ -1,7 +1,6 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
-import { session } from "@web/session";
-import { mountView, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { mountView, serverState } from "@web/../tests/web_test_helpers";
 
 import { HRTimesheet, defineTimesheetModels, patchSession } from "./hr_timesheet_models";
 
@@ -28,9 +27,7 @@ test("hr.timesheet (form): FloatTimeField is used when current company uom uses 
 });
 
 test("hr.timesheet (form): FloatTimeField is not dependent of timesheet_uom_factor of the current company when current company uom uses float_time widget", async () => {
-    patchWithCleanup(session.user_companies.allowed_companies[1], {
-        timesheet_uom_factor: 2,
-    });
+    serverState.companies[0].timesheet_uom_factor = 2;
     await mountView({
         type: "form",
         resModel: "account.analytic.line",
@@ -42,7 +39,7 @@ test("hr.timesheet (form): FloatTimeField is not dependent of timesheet_uom_fact
 });
 
 test("hr.timesheet (form): FloatToggleField is used when current company uom uses float_toggle widget", async () => {
-    patchWithCleanup(session.user_companies.allowed_companies[1], { timesheet_uom_id: 2 });
+    serverState.companies[0].timesheet_uom_id = 2;
     await mountView({
         type: "form",
         resModel: "account.analytic.line",
@@ -54,10 +51,8 @@ test("hr.timesheet (form): FloatToggleField is used when current company uom use
 });
 
 test("hr.timesheet (form): FloatToggleField is dependent on timesheet_uom_factor of the current company when current company uom uses float_toggle widget", async () => {
-    patchWithCleanup(session.user_companies.allowed_companies[1], {
-        timesheet_uom_id: 2,
-        timesheet_uom_factor: 2,
-    });
+    serverState.companies[0].timesheet_uom_id = 2;
+    serverState.companies[0].timesheet_uom_factor = 2;
     await mountView({
         type: "form",
         resModel: "account.analytic.line",
@@ -69,7 +64,7 @@ test("hr.timesheet (form): FloatToggleField is dependent on timesheet_uom_factor
 });
 
 test("hr.timesheet (form): FloatFactorField is used when the current_company uom is not part of the session uom", async () => {
-    patchWithCleanup(session.user_companies.allowed_companies[1], { timesheet_uom_id: "dummy" });
+    serverState.companies[0].timesheet_uom_id = "dummy";
     await mountView({
         type: "form",
         resModel: "account.analytic.line",
@@ -87,10 +82,8 @@ test("hr.timesheet (form): FloatFactorField is used when the current_company uom
 });
 
 test("hr.timesheet (form): FloatFactorField is dependent on timesheet_uom_factor of the current company when current company uom uses float_toggle widget", async () => {
-    patchWithCleanup(session.user_companies.allowed_companies[1], {
-        timesheet_uom_id: "dummy",
-        timesheet_uom_factor: 2,
-    });
+    serverState.companies[0].timesheet_uom_id = "dummy";
+    serverState.companies[0].timesheet_uom_factor = 2;
     await mountView({
         type: "form",
         resModel: "account.analytic.line",

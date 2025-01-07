@@ -1,4 +1,5 @@
 import { GraphModel } from "@web/views/graph/graph_model";
+import { user } from "@web/core/user";
 
 const FIELDS = [
     'unit_amount', 'effective_hours', 'allocated_hours', 'remaining_hours', 'total_hours_spent', 'subtask_effective_hours',
@@ -11,7 +12,6 @@ export class hrTimesheetGraphModel extends GraphModel {
      */
     setup(params, services) {
         super.setup(...arguments);
-        this.companyService = services.company;
     }
 
     //--------------------------------------------------------------------------
@@ -23,8 +23,7 @@ export class hrTimesheetGraphModel extends GraphModel {
      * @override
      */
     _getProcessedDataPoints() {
-        const currentCompany = this.companyService.currentCompany;
-        const factor = currentCompany.timesheet_uom_factor || 1;
+        const factor = user.activeCompany.timesheet_uom_factor || 1;
         if (factor !== 1 && FIELDS.includes(this.metaData.measure)) {
             // recalculate the Duration values according to the timesheet_uom_factor
             for (const dataPt of this.dataPoints) {
@@ -34,4 +33,3 @@ export class hrTimesheetGraphModel extends GraphModel {
         return super._getProcessedDataPoints(...arguments);
     }
 }
-hrTimesheetGraphModel.services = [...GraphModel.services, "company"];

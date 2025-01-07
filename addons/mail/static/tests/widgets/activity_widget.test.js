@@ -10,13 +10,13 @@ import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, tick } from "@odoo/hoot-dom";
 import {
     asyncStep,
-    getService,
     onRpc,
     patchWithCleanup,
     serverState,
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
 import { serializeDate } from "@web/core/l10n/dates";
+import { user } from "@web/core/user";
 
 defineMailModels();
 describe.current.tags("desktop");
@@ -24,7 +24,6 @@ describe.current.tags("desktop");
 test("list activity widget with no activity", async () => {
     const mailDataDoneDef = new Deferred();
     onRpc("/mail/data", async (request) => {
-        const companyService = getService("company");
         const { params } = await request.json();
         expect(params).toEqual({
             init_messaging: {},
@@ -34,9 +33,7 @@ test("list activity widget with no activity", async () => {
                 lang: "en",
                 tz: "taht",
                 uid: serverState.userId,
-                allowed_company_ids: Object.values(companyService.allowedCompanies).map(
-                    (c) => c.id
-                ),
+                allowed_company_ids: user.allowedCompanies.map((c) => c.id),
             },
         });
         asyncStep("/mail/data");
@@ -44,7 +41,6 @@ test("list activity widget with no activity", async () => {
     });
     onRpc("res.users", "web_search_read", async (params) => {
         await mailDataDoneDef; // Ensure order of steps.
-        const companyService = getService("company");
         expect(params.kwargs).toEqual({
             specification: {
                 activity_ids: { fields: {} },
@@ -63,9 +59,7 @@ test("list activity widget with no activity", async () => {
                 tz: "taht",
                 uid: serverState.userId,
                 bin_size: true,
-                allowed_company_ids: Object.values(companyService.allowedCompanies).map(
-                    (c) => c.id
-                ),
+                allowed_company_ids: user.allowedCompanies.map((c) => c.id),
             },
             count_limit: 10001,
             domain: [],

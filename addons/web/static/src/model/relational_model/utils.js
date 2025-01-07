@@ -16,6 +16,7 @@ import { batched } from "@web/core/utils/timing";
 import { orderByToString } from "@web/search/utils/order_by";
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 
 /**
  * @param {boolean || string} value boolean or string encoding a python expression
@@ -324,13 +325,12 @@ export function getFieldDomain(record, fieldName, domain) {
 }
 
 export function getBasicEvalContext(config) {
-    const { uid, allowed_company_ids } = config.context;
+    const { allowed_company_ids } = config.context;
     return {
         context: config.context,
-        companies: config.companies,
-        uid,
         allowed_company_ids,
-        current_company_id: config.companies.active_id,
+        current_company_id: user.activeCompany?.id,
+        ...user.evalContext,
     };
 }
 

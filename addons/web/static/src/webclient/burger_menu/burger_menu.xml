@@ -23,7 +23,7 @@
           </div>
           <nav class="o_burger_menu_content flex-grow-1 flex-shrink-1 overflow-auto o_burger_menu_app">
 
-            <MobileSwitchCompanyMenu t-if="Object.values(company.allowedCompanies).length > 1" />
+            <MobileSwitchCompanyMenu t-if="user.allowedCompanies.length > 1" />
             <BurgerUserMenu/>
           </nav>
         </div>

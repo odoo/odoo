@@ -195,7 +195,6 @@
             'web/static/src/webclient/actions/**/*',
             ('remove', 'web/static/src/webclient/actions/reports/layout_assets/**/*'),
             ('remove', 'web/static/src/webclient/actions/**/*css'),
-            'web/static/src/webclient/company_service.js',
             'point_of_sale/static/src/customer_display/customer_display_adapter.js',
         ],
         'point_of_sale.base_tests': [
