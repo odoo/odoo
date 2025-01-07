@@ -1167,6 +1167,7 @@ test(`invisible fields are properly hidden`, async () => {
 
 test(`invisible, required and readonly using company evalContext`, async () => {
     Partner._records[0].int_field = 3;
+    cookie.set("cids", "3-1");
     serverState.companies = [
         {
             id: 1,
@@ -1193,7 +1194,6 @@ test(`invisible, required and readonly using company evalContext`, async () => {
             country_code: "AR",
         },
     ];
-    cookie.set("cids", "3-1");
 
     await mountView({
         resModel: "partner",

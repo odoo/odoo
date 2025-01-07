@@ -23,6 +23,7 @@ import {
 import { registry } from "@web/core/registry";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
+import { cookie } from "@web/core/browser/cookie";
 
 describe.current.tags("desktop");
 
@@ -1741,6 +1742,7 @@ test("many2many basic keys in field evalcontext -- in list", async () => {
         form: `<form><field name="partner_id" /></form>`,
     };
 
+    cookie.set("cids", "3");
     serverState.companies = [
         { id: 3, name: "Hermit", sequence: 1 },
         { id: 2, name: "Herman's", sequence: 2 },
@@ -1779,6 +1781,7 @@ test("many2many basic keys in field evalcontext -- in form", async () => {
     PartnerType._views = {
         form: `<form><field name="partner_id" /></form>`,
     };
+    cookie.set("cids", "3");
     serverState.companies = [
         { id: 3, name: "Hermit", sequence: 1 },
         { id: 2, name: "Herman's", sequence: 2 },
@@ -1821,6 +1824,7 @@ test("many2many basic keys in field evalcontext -- in a x2many in form", async (
 
     const rec = Partner._records.find(({ id }) => id === 2);
     rec.p = [1];
+    cookie.set("cids", "3");
     serverState.companies = [
         { id: 3, name: "Hermit", sequence: 1 },
         { id: 2, name: "Herman's", sequence: 2 },

@@ -189,7 +189,7 @@ class TestUi(BaseTestUi):
 
         current_companies = "%s-%s" % (company1.id, company2.id)
         with mute_logger("odoo.http"):
-            self.start_tour(f"/odoo/action-{act_window.id}?debug=assets&cids={current_companies}", "test_company_switch_access_error", login="admin")
+            self.start_tour(f"/odoo/action-{act_window.id}?debug=assets", "test_company_switch_access_error", login="admin", cookies={"cids": current_companies})
 
 
 @odoo.tests.tagged('post_install', '-at_install')

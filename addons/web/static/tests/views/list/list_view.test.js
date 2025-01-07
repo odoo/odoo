@@ -1436,6 +1436,7 @@ test(`invisible column based on the context are correctly displayed`, async () =
 });
 
 test(`invisible column based on the company evalContext are correctly displayed`, async () => {
+    cookie.set("cids", "3-1");
     serverState.companies = [
         {
             id: 1,
@@ -1462,7 +1463,6 @@ test(`invisible column based on the company evalContext are correctly displayed`
             country_code: "AR",
         },
     ];
-    cookie.set("cids", "3-1");
     await mountView({
         resModel: "foo",
         type: "list",

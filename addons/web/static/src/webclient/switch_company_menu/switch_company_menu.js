@@ -11,18 +11,26 @@ import { useChildRef, useService } from "@web/core/utils/hooks";
 import { SwitchCompanyItem } from "@web/webclient/switch_company_menu/switch_company_item";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { user } from "@web/core/user";
+import { router } from "@web/core/browser/router";
+
+function getCompany(cid) {
+    return user.allowedCompaniesWithAncestors.find((c) => c.id === cid);
+}
 
 export class CompanySelector {
-    constructor(companyService, dropdownState) {
-        this.companyService = companyService;
+    constructor(actionService, dropdownState) {
+        this.actionService = actionService;
         this.dropdownState = dropdownState;
-        this.selectedCompaniesIds = companyService.activeCompanyIds.slice();
+        this.selectedCompaniesIds = user.activeCompanies.map((c) => c.id);
     }
 
     get hasSelectionChanged() {
         return (
-            symmetricalDifference(this.selectedCompaniesIds, this.companyService.activeCompanyIds)
-                .length > 0
+            symmetricalDifference(
+                this.selectedCompaniesIds,
+                user.activeCompanies.map((c) => c.id)
+            ).length > 0
         );
     }
 
@@ -48,19 +56,40 @@ export class CompanySelector {
         }
     }
 
-    apply() {
-        this.companyService.setCompanies(this.selectedCompaniesIds, false);
+    async apply() {
+        user.activateCompanies(this.selectedCompaniesIds, {
+            includeChildCompanies: false,
+            reload: false,
+        });
+
+        const controller = this.actionService.currentController;
+        const state = {};
+        const options = { reload: true };
+        if (controller?.props.resId && controller?.props.resModel) {
+            const hasReadRights = await user.checkAccessRight(
+                controller.props.resModel,
+                "read",
+                controller.props.resId
+            );
+
+            if (!hasReadRights) {
+                options.replace = true;
+                state.actionStack = router.current.actionStack.slice(0, -1);
+            }
+        }
+
+        router.pushState(state, options);
     }
 
     reset() {
-        this.selectedCompaniesIds = this.companyService.activeCompanyIds.slice();
+        this.selectedCompaniesIds = user.activeCompanies.map((c) => c.id);
     }
 
     selectAll() {
         if (this.selectedCompaniesIds.length > 0) {
             this.selectedCompaniesIds.splice(0, this.selectedCompaniesIds.length);
         } else {
-            const newIds = Object.values(this.companyService.allowedCompanies).map((c) => c.id);
+            const newIds = user.allowedCompanies.map((c) => c.id);
             this.selectedCompaniesIds.splice(0, this.selectedCompaniesIds.length, ...newIds);
         }
     }
@@ -88,7 +117,7 @@ export class CompanySelector {
     }
 
     _getBranches(companyId) {
-        return this.companyService.getCompany(companyId).child_ids || [];
+        return getCompany(companyId).child_ids || [];
     }
 
     _isSingleCompanyMode() {
@@ -98,7 +127,7 @@ export class CompanySelector {
 
         const getActiveCompany = (companyId) => {
             const isActive = this.selectedCompaniesIds.includes(companyId);
-            return isActive ? this.companyService.getCompany(companyId) : null;
+            return isActive ? getCompany(companyId) : null;
         };
 
         let rootCompany = undefined;
@@ -143,10 +172,11 @@ export class SwitchCompanyMenu extends Component {
 
     setup() {
         this.dropdown = useDropdownState();
-        this.companyService = useService("company");
+        this.user = user;
+        const actionService = useService("action");
 
         this.companySelector = useState(
-            new this.constructor.CompanySelector(this.companyService, this.dropdown)
+            new this.constructor.CompanySelector(actionService, this.dropdown)
         );
         useChildSubEnv({ companySelector: this.companySelector });
 
@@ -192,7 +222,7 @@ export class SwitchCompanyMenu extends Component {
     }
 
     get hasLotsOfCompanies() {
-        return Object.values(this.companyService.allowedCompaniesWithAncestors).length > 9;
+        return user.allowedCompaniesWithAncestors.length > 9;
     }
 
     get companiesEntries() {
@@ -205,12 +235,12 @@ export class SwitchCompanyMenu extends Component {
 
             if (company.child_ids) {
                 for (const companyId of company.child_ids) {
-                    addCompany(this.companyService.getCompany(companyId), level + 1);
+                    addCompany(getCompany(companyId), level + 1);
                 }
             }
         };
 
-        Object.values(this.companyService.allowedCompaniesWithAncestors)
+        user.allowedCompaniesWithAncestors
             .filter((c) => !c.parent_id)
             .sort((c1, c2) => c1.sequence - c2.sequence)
             .forEach((c) => addCompany(c));
@@ -219,10 +249,7 @@ export class SwitchCompanyMenu extends Component {
     }
 
     get selectAllClass() {
-        if (
-            this.companySelector.selectedCompaniesIds.length >=
-            Object.values(this.companyService.allowedCompanies).length
-        ) {
+        if (this.companySelector.selectedCompaniesIds.length >= user.allowedCompanies.length) {
             return "btn-link text-primary";
         } else {
             return "btn-link text-secondary";
@@ -230,10 +257,7 @@ export class SwitchCompanyMenu extends Component {
     }
 
     get selectAllIcon() {
-        if (
-            this.companySelector.selectedCompaniesIds.length >=
-            Object.values(this.companyService.allowedCompanies).length
-        ) {
+        if (this.companySelector.selectedCompaniesIds.length >= user.allowedCompanies.length) {
             return "fa-check-square text-primary";
         } else if (this.companySelector.selectedCompaniesIds.length > 0) {
             return "fa-minus-square-o";
@@ -284,7 +308,7 @@ export class SwitchCompanyMenu extends Component {
     }
 
     get isSingleCompany() {
-        return Object.values(this.companyService.allowedCompaniesWithAncestors ?? {}).length === 1;
+        return user.allowedCompaniesWithAncestors.length === 1;
     }
 }
 

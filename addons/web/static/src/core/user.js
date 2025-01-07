@@ -4,9 +4,38 @@ import { rpc } from "@web/core/network/rpc";
 import { Cache } from "@web/core/utils/cache";
 import { session } from "@web/session";
 import { ensureArray } from "./utils/arrays";
+import { cookie } from "@web/core/browser/cookie";
+import { allowedFns } from "@web/core/py_js/py_interpreter";
 
 // This file exports an object containing user-related information and functions
 // allowing to obtain/alter user-related information from the server.
+
+function getCookieCompanyIds() {
+    if (cookie.get("cids")) {
+        const cids = cookie.get("cids");
+        if (typeof cids === "string") {
+            return cids.split("-").map(Number);
+        }
+        if (typeof cids === "number") {
+            return [cids];
+        }
+    }
+    return [];
+}
+
+function computeActiveCompanies(cids, allowedCompanies, defaultCompanyId) {
+    const activeCompanies = [];
+    cids.forEach((cid) => {
+        activeCompanies.push(allowedCompanies.find((c) => c.id === cid));
+    });
+    if (
+        activeCompanies.length === 0 ||
+        activeCompanies.length !== activeCompanies.filter(Boolean).length
+    ) {
+        return [defaultCompanyId];
+    }
+    return activeCompanies;
+}
 
 /**
  * This function exists for testing purposes. We don't want tests to share the
@@ -31,8 +60,79 @@ export function _makeUser(session) {
         user_context: context,
         user_settings,
         partner_write_date: writeDate,
+        user_companies: userCompanies,
     } = session;
     const settings = user_settings || {};
+
+    // Companies information
+    let allowedCompanies = [];
+    const allowedCompaniesWithAncestors = [];
+    let activeCompanies = [];
+    let defaultCompany;
+
+    if (userCompanies) {
+        allowedCompanies = Object.values(userCompanies.allowed_companies);
+        allowedCompaniesWithAncestors.push(...Object.values(userCompanies.allowed_companies));
+        if (userCompanies.disallowed_ancestor_companies) {
+            allowedCompaniesWithAncestors.push(
+                ...Object.values(userCompanies.disallowed_ancestor_companies)
+            );
+        }
+        defaultCompany = allowedCompanies.find((c) => c.id === userCompanies.current_company); // TODO: change the name in the session current_company to default_company
+        activeCompanies = computeActiveCompanies(
+            getCookieCompanyIds(),
+            allowedCompanies,
+            defaultCompany
+        );
+
+        // update browser data
+        cookie.set("cids", activeCompanies.map((c) => c.id).join("-"));
+        Object.assign(context, { allowed_company_ids: activeCompanies.map((c) => c.id) });
+    }
+
+    const companyEvalContext = {
+        /**
+         * @type {boolean}
+         * A boolean indicating whether the user has access to multiple companies.
+         */
+        multi_company: allowedCompanies.length > 1,
+
+        /**
+         * @type {Array.<number>}
+         * The list of company IDs the user is allowed to connect to.
+         */
+        allowed_ids: allowedCompanies.map((c) => c.id),
+
+        /**
+         * @type {Array.<number>}
+         * The list of company IDs the user is connected to (selected in the company
+         * switcher dropdown).
+         */
+        active_ids: activeCompanies.map((c) => c.id),
+
+        /**
+         * @type {number}
+         * The ID of the main company selected (the one highlighted in the company switcher
+         * dropdown and displayed in the navbar of the webclient).
+         */
+        active_id: activeCompanies?.[0]?.id,
+
+        /**
+         * @param {(Array.<number>|number)} ids - id or ids of companies
+         * @param {string} field - property of the company. Note that the properties of the
+         *                          companies are those sent by the server in the session info.
+         * @param {*} value - specified value
+         * @returns {boolean}
+         * returns a boolean indicating whether there's a company with id in `ids` for which
+         * `field` matches the given `value`.
+         */
+        has: (ids, field, value) => {
+            ids = typeof ids === "number" ? [ids] : ids || [];
+            return allowedCompanies.some((c) => ids.includes(c.id) && c[field] === value);
+        },
+    };
+
+    allowedFns.add(companyEvalContext.has);
 
     // Delete user-related information from the session, s.t. there's a single source of truth
     delete session.home_action_id;
@@ -47,6 +147,7 @@ export function _makeUser(session) {
     delete session.user_context;
     delete session.user_settings;
     delete session.partner_write_date;
+    delete session.user_companies;
 
     // Generate caches for has_group and has_access calls
     const getGroupCacheValue = (group, context) => {
@@ -82,7 +183,7 @@ export function _makeUser(session) {
     const accessRightCache = new Cache(getAccessRightCacheValue, getAccessRightCacheKey);
     const lang = pyToJsLocale(context?.lang);
 
-    const user = {
+    return {
         name,
         login,
         isAdmin,
@@ -94,6 +195,9 @@ export function _makeUser(session) {
         writeDate,
         get context() {
             return Object.assign({}, context, { uid: this.userId });
+        },
+        get evalContext() {
+            return { uid: this.userId, companies: companyEvalContext };
         },
         get lang() {
             return lang;
@@ -129,9 +233,45 @@ export function _makeUser(session) {
             });
             Object.assign(settings, changedSettings);
         },
-    };
+        defaultCompany, // default company of the user, used if no cookie set
+        allowedCompanies, // list of authorized companies for the user
+        allowedCompaniesWithAncestors,
+        activeCompanies, // list of companies the user is currently logged into
+        // main company the user is currently logged into (default company for created records)
+        get activeCompany() {
+            return activeCompanies?.[0];
+        },
+        async activateCompanies(
+            companyIds,
+            options = { includeChildCompanies: true, reload: true }
+        ) {
+            const newCompanyIds = companyIds.length ? companyIds : [activeCompanies[0].id];
 
-    return user;
+            function addCompanies(companyIds) {
+                for (const companyId of companyIds) {
+                    if (!newCompanyIds.includes(companyId)) {
+                        newCompanyIds.push(companyId);
+                        addCompanies(allowedCompanies[companyId].child_ids);
+                    }
+                }
+            }
+
+            if (options.includeChildCompanies) {
+                addCompanies(
+                    companyIds.flatMap(
+                        (companyId) => allowedCompanies.find((c) => c.id === companyId).child_ids
+                    )
+                );
+            }
+
+            cookie.set("cids", newCompanyIds.join("-"));
+            Object.assign(context, { allowed_company_ids: newCompanyIds });
+
+            if (options.reload) {
+                browser.location.reload();
+            }
+        },
+    };
 }
 
 export const user = _makeUser(session);

@@ -15,7 +15,6 @@ import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import {
     fakeTitleService,
-    fakeCompanyService,
     makeFakePwaService,
     makeFakeLocalizationService,
     makeFakeHTTPService,
@@ -75,7 +74,6 @@ export function setupWebClientRegistries() {
         title: () => fakeTitleService,
         ui: () => uiService,
         view: () => viewService,
-        company: () => fakeCompanyService,
         datetime_picker: () => datetimePickerService,
     };
     for (const serviceName in services) {

@@ -3,6 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { DataPoint } from "./datapoint";
 import { Record } from "./record";
 import { resequence } from "./utils";
+import { user } from "@web/core/user";
 
 const DEFAULT_HANDLE_FIELD = "sequence";
 
@@ -19,7 +20,7 @@ export class DynamicList extends DataPoint {
             this.handleField = DEFAULT_HANDLE_FIELD;
         }
         this.isDomainSelected = false;
-        this.evalContext = { ...this.context, companies: this.config.companies };
+        this.evalContext = { ...this.context, ...user.evalContext };
     }
 
     // -------------------------------------------------------------------------
