@@ -71,6 +71,7 @@
             'website_event/static/src/js/register_toaster_widget.js',
             'website_event/static/src/js/website_event.js',
             'website_event/static/src/js/website_event_ticket_details.js',
+            'website_event/static/src/interactions/*.js',
         ],
         'website.assets_wysiwyg': [
             'website_event/static/src/snippets/s_events/options.js',

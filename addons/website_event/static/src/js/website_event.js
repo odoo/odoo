@@ -126,14 +126,4 @@ publicWidget.registry.EventRegistrationFormInstance = publicWidget.Widget.extend
     },
 });
 
-publicWidget.registry.EventPage = publicWidget.Widget.extend({
-    selector: '#o_wevent_event_submenu .dropdown-menu a.dropdown-toggle',
-    events: {
-        'click ': '_onClickSubDropDown',
-    },
-    _onClickSubDropDown:function(ev){
-        ev.stopPropagation()
-    }
-})
-
 export default EventRegistrationForm;
