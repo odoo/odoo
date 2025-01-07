@@ -103,7 +103,7 @@ class StockPicking(models.Model):
 
     def _link_owner_on_return_picking(self, lines):
         """This method tries to retrieve the owner of the returned product"""
-        if lines[0].order_id.refunded_order_id.picking_ids:
+        if lines and lines[0].order_id.refunded_order_id.picking_ids:
             returned_lines_picking = lines[0].order_id.refunded_order_id.picking_ids
             returnable_qty_by_product = {}
             for move_line in returned_lines_picking.move_line_ids:
