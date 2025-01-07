@@ -159,6 +159,7 @@ export class MediaPlugin extends Plugin {
             onAttachmentChange: this.config.onAttachmentChange || (() => {}),
             noVideos: !!this.config.disableVideo,
             noImages: !!this.config.disableImage,
+            extraTabs: this.getResource("media_dialog_extra_tabs"),
             ...this.config.mediaModalParams,
             ...params,
         });
