@@ -302,11 +302,7 @@ export class SearchBar extends Component {
         const context = { ...this.env.searchModel.domainEvalContext, ...field.context };
         let domain = [];
         if (searchItem.domain) {
-            try {
-                domain = new Domain(searchItem.domain).toList(context);
-            } catch {
-                // Pass
-            }
+            domain = new Domain(searchItem.domain).toList(context);
         }
         const relation =
             searchItem.type === "field_property"
