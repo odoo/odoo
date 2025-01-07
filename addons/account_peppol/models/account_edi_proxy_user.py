@@ -133,7 +133,6 @@ class AccountEdiProxyClientUser(models.Model):
                     enc_key = content["enc_key"]
                     document_content = content["document"]
                     filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
-                    partner_endpoint = content["accounting_supplier_party"]
                     decoded_document = edi_user._decrypt_data(document_content, enc_key)
                     attachment_vals = {
                         'name': f'{filename}.xml',
@@ -151,11 +150,7 @@ class AccountEdiProxyClientUser(models.Model):
                                 default_peppol_message_uuid=uuid,
                             )\
                             ._create_document_from_attachment(attachment.id)
-                        if partner_endpoint:
-                            move._message_log(body=_(
-                                'Peppol document has been received successfully. Sender endpoint: %s', partner_endpoint))
-                        else:
-                            move._message_log(body=_('Peppol document has been received successfully'))
+                        move._message_log(body=_('Peppol document has been received successfully'))
                     # pylint: disable=broad-except
                     except Exception:  # noqa: BLE001
                         # if the invoice creation fails for any reason,
