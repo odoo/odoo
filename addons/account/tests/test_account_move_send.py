@@ -13,7 +13,7 @@ from odoo.tests import users, warmup, tagged
 from odoo.tools import formataddr, mute_logger
 
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
+@tagged('post_install_l10n', 'post_install', '-at_install', 'mail_flow')
 class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
 
     @classmethod

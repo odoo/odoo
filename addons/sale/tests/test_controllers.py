@@ -71,7 +71,7 @@ class TestAccessRightsControllers(HttpCase, SaleCommon):
         self.assertEqual(req.status_code, 303)
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'mail_flow')
 class TestSaleSignature(HttpCaseWithUserPortal):
 
     def test_01_portal_sale_signature_tour(self):
@@ -89,6 +89,7 @@ class TestSaleSignature(HttpCaseWithUserPortal):
             'order_id': sales_order.id,
             'product_id': self.env['product.product'].create({'name': 'A product'}).id,
         })
+        self.assertFalse(sales_order.message_partner_ids)
 
         # must be sent to the user so he can see it
         email_act = sales_order.action_quotation_send()
@@ -97,5 +98,6 @@ class TestSaleSignature(HttpCaseWithUserPortal):
             self.env['mail.template'].browse(email_ctx.get('default_template_id')),
             subtype_xmlid='mail.mt_comment',
         )
+        self.assertEqual(sales_order.message_partner_ids, portal_user_partner)
 
         self.start_tour("/", 'sale_signature', login="portal")
