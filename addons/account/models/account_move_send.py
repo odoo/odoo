@@ -435,23 +435,22 @@ class AccountMoveSend(models.AbstractModel):
     def _send_mail(self, move, mail_template, **kwargs):
         """ Send the journal entry passed as parameter by mail. """
         partner_ids = kwargs.get('partner_ids', [])
-        author_id = kwargs.pop('author_id')
+        author_id = kwargs.get('author_id')
 
-        new_message = move\
-            .with_context(
+        new_message = move.with_context(
                 no_new_invoice=True,
                 mail_notify_author=author_id in partner_ids,
-            ).message_post(
-                message_type='comment',
-                **kwargs,
-                **{  # noqa: PIE804
-                    'email_layout_xmlid': self._get_mail_layout(),
-                    'email_add_signature': not mail_template,
-                    'mail_auto_delete': mail_template.auto_delete,
-                    'mail_server_id': mail_template.mail_server_id.id,
-                    'reply_to_force_new': False,
-                }
-            )
+        ).message_post(
+            message_type='comment',
+            **kwargs,
+            **{  # noqa: PIE804
+                'email_layout_xmlid': self._get_mail_layout(),
+                'email_add_signature': not mail_template,
+                'mail_auto_delete': mail_template.auto_delete,
+                'mail_server_id': mail_template.mail_server_id.id,
+                'reply_to_force_new': False,
+            }
+        )
 
         # Prevent duplicated attachments linked to the invoice.
         new_message.attachment_ids.invalidate_recordset(['res_id', 'res_model'], flush=False)
@@ -550,12 +549,19 @@ class AccountMoveSend(models.AbstractModel):
                 attachment = move_data['proforma_pdf_attachment']
                 mail_params['attachments'].append((attachment.name, attachment.raw))
 
+            # synchronize author / email_from, as account.move.send wizard computes
+            # a bit too much stuff
+            author_id = mail_params.pop('author_id', False)
             email_from = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'email_from')
+            if email_from or not author_id:
+                author_id, email_from = move._message_compute_author(email_from=email_from)
+
             model_description = move.with_context(lang=mail_lang).type_name
 
             self._send_mail(
                 move,
                 mail_template,
+                author_id=author_id,
                 subtype_id=subtype.id,
                 model_description=model_description,
                 email_from=email_from,

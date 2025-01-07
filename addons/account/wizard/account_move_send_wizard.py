@@ -331,8 +331,8 @@ class AccountMoveSendWizard(models.TransientModel):
             'invoice_edi_format': self.invoice_edi_format,
             'extra_edis': self.extra_edis or [],
             'pdf_report': self.pdf_report_id,
-            'author_user_id': self.env.user.partner_id.id,
-            'author_partner_id': self.env.user.id,
+            'author_user_id': self.env.user.id,
+            'author_partner_id': self.env.user.partner_id.id,
         }
         if self.sending_methods and 'email' in self.sending_methods:
             send_settings.update({
