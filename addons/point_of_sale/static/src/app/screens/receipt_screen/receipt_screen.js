@@ -119,6 +119,51 @@ export class ReceiptScreen extends Component {
     isResumeVisible() {
         return this.pos.get_order_list().length > 1;
     }
+<<<<<<< saas-17.2
+||||||| 75c69312343298790b3c087f23f40206d2f0b1bc
+    async printReceipt() {
+        this.buttonPrintReceipt.el.className = "fa fa-fw fa-spin fa-circle-o-notch";
+        const isPrinted = await this.printer.print(
+            OrderReceipt,
+            {
+                data: this.pos.get_order().export_for_printing(),
+                formatCurrency: this.env.utils.formatCurrency,
+            },
+            { webPrintFallback: true }
+        );
+
+        if (isPrinted) {
+            this.currentOrder._printed = true;
+        }
+
+        if (this.buttonPrintReceipt.el) {
+            this.buttonPrintReceipt.el.className = "fa fa-print";
+        }
+    }
+=======
+    async printReceipt() {
+        this.buttonPrintReceipt.el.className = "fa fa-fw fa-spin fa-circle-o-notch";
+        const isPrinted = await this.printer.print(
+            OrderReceipt,
+            {
+                data: {
+                    ...this.pos.get_order().export_for_printing(),
+                    isBill: this.isBill,
+                },
+                formatCurrency: this.env.utils.formatCurrency,
+            },
+            { webPrintFallback: true }
+        );
+
+        if (isPrinted) {
+            this.currentOrder._printed = true;
+        }
+
+        if (this.buttonPrintReceipt.el) {
+            this.buttonPrintReceipt.el.className = "fa fa-print";
+        }
+    }
+>>>>>>> 10730f7b2eb6fb5da684259a36c1a5cbbfa64920
     async _sendReceiptToCustomer() {
         const partner = this.currentOrder.get_partner();
         const orderPartner = {
@@ -154,6 +199,9 @@ export class ReceiptScreen extends Component {
             orderPartner,
             ticketImage,
         ]);
+    }
+    get isBill() {
+        return false;
     }
 }
 
