@@ -4,18 +4,12 @@ from werkzeug.exceptions import NotFound, Forbidden
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.portal.controllers.mail import PortalChatter
+from odoo.addons.mail.controllers.thread import ThreadController
+from odoo.addons.portal.controllers.portal_thread import PortalChatter
 from odoo.tools import plaintext2html, html2plaintext
 
 
 class SlidesPortalChatter(PortalChatter):
-
-    def _portal_post_has_content(self, thread_model, thread_id, message, attachment_ids=None, **kw):
-        """ Relax constraint on slide model: having a rating value is sufficient
-        to consider we have a content. """
-        if thread_model == 'slide.channel' and kw.get('rating_value'):
-            return True
-        return super()._portal_post_has_content(thread_model, thread_id, message, attachment_ids=attachment_ids, **kw)
 
     @http.route([
         '/slides/mail/update_comment',
@@ -28,15 +22,14 @@ class SlidesPortalChatter(PortalChatter):
         thread_id = int(thread_id)
         attachment_ids = post_data.get('attachment_ids', [])
 
-        self._portal_post_check_attachments(attachment_ids, post.get('attachment_tokens', []))
+        request.env['ir.attachment'].browse(attachment_ids)._check_attachments_access(post.get('attachment_tokens', []))
 
-        pid = int(post['pid']) if post.get('pid') else False
-        channel = request.env["slide.channel"]._get_thread_with_access(
-            thread_id,
-            request.env["slide.channel"]._mail_post_access,
-            token=post.get("token"),
-            hash=post.get("hash"),
-            pid=pid,
+        channel = ThreadController._get_thread_with_access(
+            "slide.channel", thread_id,
+            # TDE todo: should rely on '_get_mail_message_access'
+            mode=request.env["slide.channel"]._mail_post_access,
+            pid=int(post.pop('pid', None)) or False,
+            **post,
         )
         if not channel:
             raise Forbidden()
