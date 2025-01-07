@@ -28,4 +28,8 @@ export class CustomizeTab extends Component {
     cloneElement(el) {
         this.env.editor.shared.clone.cloneElement(el);
     }
+
+    selectElement(el) {
+        this.env.editor.shared["builder-options"].updateContainers(el);
+    }
 }

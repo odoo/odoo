@@ -56,3 +56,15 @@ test("Use the sidebar 'clone' buttons", async () => {
     expect(":iframe .col-lg-7").toHaveCount(4);
     expect(":iframe .col-lg-5").toHaveCount(2);
 });
+
+test("Clicking on the options container title selects the corresponding element", async () => {
+    await setupWebsiteBuilder(dummySnippet, { loadIframeBundles: true });
+
+    await contains(":iframe .col-lg-7").click();
+    expect(".o_customize_tab .options-container").toHaveCount(2);
+    expect(".oe_overlay.oe_active").toHaveRect(":iframe .col-lg-7");
+
+    await contains(".o_customize_tab .options-container span:contains('Dummy Section')").click();
+    expect(".o_customize_tab .options-container").toHaveCount(1);
+    expect(".oe_overlay.oe_active").toHaveRect(":iframe section");
+});

@@ -13,6 +13,7 @@ export class OptionsContainer extends Component {
         isRemovable: false,
         removeElement: { type: Function },
         cloneElement: { type: Function },
+        selectElement: { type: Function },
     };
 
     setup() {
@@ -27,6 +28,10 @@ export class OptionsContainer extends Component {
 
     get title() {
         return getSnippetName(this.env.getEditingElement());
+    }
+
+    selectElement() {
+        this.props.selectElement(this.props.editingElement);
     }
 
     // Actions of the buttons in the title bar.
