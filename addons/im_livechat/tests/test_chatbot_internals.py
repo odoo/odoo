@@ -221,12 +221,12 @@ class ChatbotCase(chatbot_common.ChatbotCase):
             channel_data_join["discuss.channel"][0]["chatbot"]["currentStep"]["message"] = messages[2].id
             channel_data_join["discuss.channel"][0]["chatbot"]["steps"][0]["message"] = messages[2].id
             channel_data_join["discuss.channel"][0]["is_pinned"] = True
-            channel_data_join["discuss.channel"][0]["member_count"] = 3
-            channel_data_join["discuss.channel"][0]["name"] = "Testing Bot"
-            channel_data_join["discuss.channel"][0]["operator"] = {
+            channel_data_join["discuss.channel"][0]["livechat_operator_id"] = {
                 "id": self.chatbot_script.operator_partner_id.id,
                 "type": "partner",
             }
+            channel_data_join["discuss.channel"][0]["member_count"] = 3
+            channel_data_join["discuss.channel"][0]["name"] = "Testing Bot"
             channel_data_join["discuss.channel.member"].insert(0, member_bot_data)
             channel_data_join["discuss.channel.member"][2]["fetched_message_id"] = False
             channel_data_join["discuss.channel.member"][2]["last_seen_dt"] = False
@@ -415,8 +415,8 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                             "discuss.channel": [
                                 {
                                     "id": discuss_channel.id,
+                                    "livechat_operator_id": {"id": self.partner_employee.id, "type": "partner"},
                                     "name": "OdooBot Ernest Employee",
-                                    "operator": {"id": self.partner_employee.id, "type": "partner"},
                                 },
                             ],
                             "res.partner": self._filter_partners_fields(
