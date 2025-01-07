@@ -1579,6 +1579,24 @@ test("select autocompleted many2one with allowed_company_ids domain", async () =
     ]);
 });
 
+test("throw error when domain can not be parsed", async () => {
+    expect.errors(1);
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <field name="bar" domain="[('company', 'in', wrong)]"/>
+            </search>
+        `,
+    });
+
+    await editSearch("rec");
+    await contains(`.o_expand`).click();
+    expect.verifyErrors(["Error: Name 'wrong' is not defined"]);
+});
+
 test("dropdown menu last element is 'Add Custom Filter'", async () => {
     await mountWithSearch(SearchBar, {
         resModel: "partner",
