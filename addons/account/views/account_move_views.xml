@@ -405,7 +405,7 @@
                     <field name="move_type" column_invisible="True"/>
                     <field name="is_same_currency" column_invisible="True"/>
                     <field name="is_account_reconcile" column_invisible="True"/>
-                    <field name="currency_id" groups="base.group_multi_currency" invisible="1"/>
+                    <field name="currency_id" groups="!base.group_multi_currency" column_invisible="True"/>
                     <groupby name="partner_id">
                         <button name="edit" type="edit" icon="fa-edit" title="Edit"/>
                     </groupby>
