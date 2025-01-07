@@ -142,3 +142,57 @@ registry.category("web_tour.tours").add("purchase_tour", {
         ...new PurchaseAdditionalTourSteps()._get_purchase_stock_steps(),
     ],
 });
+
+registry.category("web_tour.tours").add('purchase_order_vendor_conformation_tour',{
+    steps: () => [stepUtils.showAppsMenuItem(),
+    {
+        trigger: '.o_list_button_add',
+        run: 'click',
+    },
+    {
+        trigger: '.o_field_x2many_list_row_add > a',
+        run: 'click',
+    },
+    {
+        trigger: "div[name='product_id'] input, div[name='product_template_id'] input",
+        run: 'edit Super Product',
+    },
+    {
+        trigger: ".ui-menu-item > a:contains('Super Product')",
+        run: 'click',
+    },
+    {trigger: ".o_data_row > td:contains('50')",},
+    {
+        trigger: 'div[name="partner_id"] input',
+        run: 'edit Vendor2',
+    },
+    {
+        trigger: ".ui-menu-item > a:contains('Vendor2')",
+        run: 'click',
+    },
+    {trigger: ".table > tbody > tr > td:contains('Super Product')",},
+    {trigger: ".table > tbody > tr > td:contains('50')",},
+    {trigger: ".table > tbody > tr > td:contains('60')",},
+    {
+        trigger: ".modal-footer > .btn-primary",
+        run:'click',
+    },
+    {trigger: ".o_data_row > td:contains('60')",},
+    {
+        trigger: 'div[name="partner_id"] input',
+        run: 'edit Vendor1',
+    },
+    {
+        trigger: ".ui-menu-item > a:contains('Vendor1')",
+        run: 'click',
+    },
+    {trigger: ".table > tbody > tr > td:contains('Super Product')",},
+    {trigger: ".table > tbody > tr > td:contains('60')",},
+    {trigger: ".table > tbody > tr > td:contains('50')",},
+    {
+        trigger: ".modal-footer > .btn-secondary",
+        run: 'click',
+    },
+    {trigger: ".o_data_row > td:contains('60')",},
+    ...stepUtils.saveForm(),
+]})

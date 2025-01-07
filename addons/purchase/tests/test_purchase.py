@@ -7,7 +7,6 @@ from odoo.exceptions import UserError
 
 
 from datetime import timedelta
-from freezegun import freeze_time
 import pytz
 
 
@@ -810,45 +809,6 @@ class TestPurchase(AccountTestInvoicingCommon):
             {'product_id': product_no_tax.id, 'taxes_id': []},
         ])
 
-    @freeze_time('2024-07-08')
-    def test_description_price__date_depending_on_vendor(self):
-        """
-        Test that the description and the price are updated accordingly when the vendor is changed.
-        """
-        self.product_a.seller_ids = [
-            Command.create({
-                'partner_id': self.partner_a.id,
-                'min_qty': 1,
-                'price': 5,
-                'product_code': 'Vendor A',
-                'delay': 5,
-            }),
-            Command.create({
-                'partner_id': self.partner_b.id,
-                'min_qty': 1,
-                'price': 10,
-                'product_code': 'Vendor B',
-                'delay': 6,
-            }),
-        ]
-        self.assertFalse(False)
-        # Create PO and set vendor A
-        po_form = Form(self.env['purchase.order'])
-        po_form.partner_id = self.partner_a
-        with po_form.order_line.new() as po_line:
-            po_line.product_id = self.product_a
-            po_line.product_qty = 10
-        po = po_form.save()
-        self.assertEqual(po.order_line.price_unit, 5)
-        self.assertEqual(po.order_line.name, '[Vendor A] product_a')
-        self.assertEqual(po.order_line.product_qty, 10)
-        self.assertEqual(po.order_line.date_planned, fields.Datetime.now() + timedelta(days=5))
-        po.partner_id = self.partner_b
-        self.assertEqual(po.order_line.price_unit, 10)
-        self.assertEqual(po.order_line.name, '[Vendor B] product_a')
-        self.assertEqual(po.order_line.product_qty, 10)
-        self.assertEqual(po.order_line.date_planned, fields.Datetime.now() + timedelta(days=6))
-
     def test_merge_purchase_order(self):
         PurchaseOrder = self.env['purchase.order']
         user_1 = self.env['res.users'].search([])[0]
@@ -902,3 +862,47 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po_1.user_id, user_1)
         self.assertEqual(po_1.payment_term_id, payment_term_id_1)
         self.assertEqual(po_1.incoterm_id, incoterm_id_1)
+
+    def test_orderline_price_manual_set(self):
+        self.env.user.groups_id += self.env.ref('uom.group_uom')
+        uom_units = self.env.ref('uom.product_uom_unit')
+        vendor = self.env['res.partner'].create({
+            'name': 'Vendor'
+        })
+        product_01 = self.env['product.product'].create({
+            'name': 'Product-1',
+            'standard_price': 150,
+            'uom_id': uom_units.id,
+            'uom_po_id': uom_units.id,
+        })
+        product_02 = self.env['product.product'].create({
+            'name': 'Product-1',
+            'standard_price': 110,
+            'uom_id': uom_units.id,
+            'uom_po_id': uom_units.id,
+            'seller_ids': [(0, 0, {
+                'partner_id': vendor.id,
+                'min_qty': 1.0,
+                'price': 120.0,
+            })]
+        })
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = vendor
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product_01
+            po_line.price_unit = 200
+            po_line.product_qty = 1
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product_02
+            po_line.price_unit = 100
+            po_line.product_qty = 1
+        po = po_form.save()
+
+        self.assertEqual(po.order_line[0].price_unit, 200)
+        self.assertEqual(po.order_line[1].price_unit, 100)
+
+        po.order_line[0].product_qty = 2
+        po.order_line[1].product_qty = 6
+
+        self.assertEqual(po.order_line[0].price_unit, 200)
+        self.assertEqual(po.order_line[1].price_unit, 100)
