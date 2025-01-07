@@ -488,7 +488,7 @@ class AccountMoveSend(models.TransientModel):
         attachments = self.env['ir.attachment'].create(attachment_to_create)
         res_id_to_attachment = {attachment.res_id: attachment for attachment in attachments}
 
-        for invoice, invoice_date in invoices_data.items():
+        for invoice, invoice_data in invoices_data.items():
             invoice.message_main_attachment_id = res_id_to_attachment[invoice.id]
             invoice.invalidate_recordset(fnames=['invoice_pdf_report_id', 'invoice_pdf_report_file'])
             invoice.is_move_sent = True
