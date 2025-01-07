@@ -115,9 +115,15 @@ DEFAULT_PAYMENT_METHOD_CODES = {
 
 # The codes of payment methods that are not recognized by the orders API.
 FALLBACK_PAYMENT_METHOD_CODES = {
-    'wallets_india',
-    'paylater_india',
     'emi_india',
+    'fpx',
+    'paylater_india',
+    'wallets_india',
+}
+
+# The codes of payment methods that require redirection back to the website
+REDIRECT_PAYMENT_METHOD_CODES = {
+    'fpx',
 }
 
 # Mapping of payment method codes to Razorpay codes.

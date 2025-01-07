@@ -6,12 +6,14 @@ import time
 from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
+from werkzeug.urls import url_encode, url_join
 
 from odoo import _, api, models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_razorpay import const
+from odoo.addons.payment_razorpay.controllers.main import RazorpayController
 
 
 _logger = logging.getLogger(__name__)
@@ -45,6 +47,11 @@ class PaymentTransaction(models.Model):
             'razorpay_customer_id': customer_id,
             'is_tokenize_request': self.tokenize,
             'razorpay_order_id': order_id,
+            'callback_url': url_join(
+                self.provider_id.get_base_url(),
+                f'{RazorpayController._return_url}?{url_encode({"reference": self.reference})}'
+            ),
+            'redirect': self.payment_method_id.code in const.REDIRECT_PAYMENT_METHOD_CODES,
         }
 
     def _razorpay_create_customer(self):

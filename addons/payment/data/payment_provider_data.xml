@@ -330,12 +330,13 @@
         <field name="payment_method_ids"
                eval="[Command.set([
                          ref('payment.payment_method_card'),
+                         ref('payment.payment_method_emi_india'),
+                         ref('payment.payment_method_fpx'),
                          ref('payment.payment_method_netbanking'),
+                         ref('payment.payment_method_paylater_india'),
+                         ref('payment.payment_method_paynow'),
                          ref('payment.payment_method_upi'),
                          ref('payment.payment_method_wallets_india'),
-                         ref('payment.payment_method_paylater_india'),
-                         ref('payment.payment_method_emi_india'),
-                         ref('payment.payment_method_paynow'),
                      ])]"
         />
     </record>
