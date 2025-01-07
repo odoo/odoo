@@ -1,8 +1,8 @@
-import { Message } from "@mail/core/common/message";
+import { NotificationMessage } from "@mail/core/common/notification_message";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(Message.prototype, {
+patch(NotificationMessage.prototype, {
     /**
      * @override
      * @param {MouseEvent} ev
