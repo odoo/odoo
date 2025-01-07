@@ -5,11 +5,11 @@ import pytz
 
 from odoo.tests import tagged
 
-from odoo.addons.website_sale.tests.test_website_sale_gmc import TestWebsiteSaleGMCCommon
+from odoo.addons.website_sale.tests.test_website_sale_gmc import WebsiteSaleGMCCommon
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleStockGMCItems(TestWebsiteSaleGMCCommon):
+class TestWebsiteSaleStockGMC(WebsiteSaleGMCCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -17,15 +17,15 @@ class TestWebsiteSaleStockGMCItems(TestWebsiteSaleGMCCommon):
         cls.website.warehouse_id = cls.env.ref('stock.warehouse0')
         cls.stock_loc = cls.website.warehouse_id.lot_stock_id
         cls.supplier_loc = cls.env.ref('stock.stock_location_suppliers')
-        cls.black_mouse.write({
+        cls.blue_sofa.write({
             'is_storable': True,
             'allow_out_of_stock_order': False,
         })
-        cls.white_mouse.write({
+        cls.red_sofa.write({
             'is_storable': True,
             'allow_out_of_stock_order': True,
         })
-        cls.keyboard.write({
+        cls.blanket.write({
             'is_storable': True,
             'allow_out_of_stock_order': False,
         })
@@ -49,42 +49,35 @@ class TestWebsiteSaleStockGMCItems(TestWebsiteSaleGMCCommon):
         })
         picking.action_confirm()
 
-    def test_gmc_product_availability_override(self):
+    def test_gmc_items_availability_check_stock(self):
         self.env['stock.quant'].create({
-            'product_id': self.black_mouse.id,
+            'product_id': self.blue_sofa.id,
             'quantity': 10.0,
             'location_id': self.stock_loc.id,
         })
-        self.update_items()
-        self.assertEqual(
-            'in_stock',
-            self.black_mouse_item['availability'],
-            'Black mouse has some stock => in_stock',
-        )
-        self.assertEqual(
-            'in_stock',
-            self.white_mouse_item['availability'],
-            'White mouse does not have stock, but allow out of stock order => in_stock',
-        )
-        self.assertEqual(
-            'out_of_stock',
-            self.items[self.keyboard]['availability'],
-            'Keyboard does not have stock and does not allow out of stock order => out_of_stock',
-        )
 
-        planned_date = datetime.datetime.now() + datetime.timedelta(10)
-        self.replenish(self.white_mouse, self.stock_loc, 10.0, planned_date)
         self.update_items()
-        self.assertEqual('backorder', self.white_mouse_item['availability'])
+
+        self.assertEqual('in_stock', self.blue_sofa_item['availability'])
+        # no stock but allow_out_of_stock
+        self.assertEqual('in_stock', self.red_sofa_item['availability'])
+        self.assertEqual('out_of_stock', self.items[self.blanket]['availability'])
+
+    def test_gmc_items_availability_backorder(self):
+        planned_date = datetime.datetime.now() + datetime.timedelta(10)
+        self.replenish(self.red_sofa, self.stock_loc, 10.0, planned_date)
+
+        self.update_items()
+
+        self.assertEqual('backorder', self.red_sofa_item['availability'])
         self.assertEqual(
             pytz.UTC.localize(planned_date).isoformat(timespec='minutes'),
-            self.white_mouse_item['availability_date'],
+            self.red_sofa_item['availability_date'],
         )
 
-    def test_keep_website_stock_seperate(self):
-        """Test that stock availabilies are website specific."""
+    def test_gmc_items_keep_website_stock_seperate(self):
         website_1_planned_date = datetime.datetime.now() + datetime.timedelta(10)
-        self.replenish(self.white_mouse, self.stock_loc, 10.0, website_1_planned_date)
+        self.replenish(self.red_sofa, self.stock_loc, 10.0, website_1_planned_date)
         # setup second website with seperate stock
         website_2_warehouse = self.env['stock.warehouse'].create({'name': 'Stock 2', 'code': 'WH2'})
         website_2 = self.env['website'].create({
@@ -94,21 +87,19 @@ class TestWebsiteSaleStockGMCItems(TestWebsiteSaleGMCCommon):
         })
         website_2_planned_date = datetime.datetime.now() + datetime.timedelta(20)
         self.replenish(
-            self.white_mouse, website_2_warehouse.lot_stock_id, 10.0, website_2_planned_date
+            self.red_sofa, website_2_warehouse.lot_stock_id, 10.0, website_2_planned_date
         )
-
         self.update_items()
-        self.assertEqual('backorder', self.white_mouse_item['availability'])
+        self.assertEqual('backorder', self.red_sofa_item['availability'])
         self.assertEqual(
             pytz.UTC.localize(website_1_planned_date).isoformat(timespec='minutes'),
-            self.white_mouse_item['availability_date'],
-            'Should use moves related to self.website to figure out the availability_date',
+            self.red_sofa_item['availability_date'],
         )
 
         self.update_items(website=website_2)
-        self.assertEqual('backorder', self.white_mouse_item['availability'])
+
+        self.assertEqual('backorder', self.red_sofa_item['availability'])
         self.assertEqual(
             pytz.UTC.localize(website_2_planned_date).isoformat(timespec='minutes'),
-            self.white_mouse_item['availability_date'],
-            'Should use moves related to website_2 to figure out the availability_date',
+            self.red_sofa_item['availability_date'],
         )

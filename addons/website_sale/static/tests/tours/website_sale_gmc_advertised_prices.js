@@ -1,73 +1,38 @@
 import { registry } from '@web/core/registry';
 
-registry.category('web_tour.tours').add('website_sale_gmc_check_advertised_prices_white_mouse_usd', {
-    steps: () => [
+function check_price(price, currency) {
+    return [
         {
             content: 'Check price',
-            trigger: 'span.oe_price:contains("79.00")'
+            trigger: `span.oe_price:contains("${price}")`
         },
         {
             content: 'Check currency',
-            trigger: 'span[itemprop="priceCurrency"]:contains("USD"):not(:visible)'
+            trigger: `span[itemprop="priceCurrency"]:contains("${currency}"):not(:visible)`
         },
-]});
+    ]
+}
 
-registry.category('web_tour.tours').add('website_sale_gmc_check_advertised_prices_black_mouse_usd', {
-    steps: () => [
-        {
-            content: 'Check price',
-            trigger: 'span.oe_price:contains("99.00")',
-        },
-        {
-            content: 'Check currency',
-            trigger: 'span[itemprop="priceCurrency"]:contains("USD"):not(:visible)'
-        },
-]});
+registry.category('web_tour.tours').add('website_sale_gmc_check_advertised_prices_red_sofa_default', {
+    steps: () => check_price('1,000.0', 'USD')
+});
 
-registry.category('web_tour.tours').add('website_sale_gmc_check_advertised_prices_white_mouse_christmas', {
-    steps: () => [
-        {
-            content: 'Check price',
-            trigger: 'span.oe_price:contains("78.21")', // 79.0 * 1.1 (EUR rate) - 10% discount
-        },
-        {
-            content: 'Check currency',
-            trigger: 'span[itemprop="priceCurrency"]:contains("EUR"):not(:visible)'
-        },
-]});
+registry.category('web_tour.tours').add('website_sale_gmc_check_advertised_prices_blue_sofa_default', {
+    steps: () => check_price('1,200.0', 'USD')
+});
 
-registry.category('web_tour.tours').add('website_sale_gmc_check_advertised_prices_black_mouse_christmas', {
-    steps: () => [
-        {
-            content: 'Check price',
-            trigger: 'span.oe_price:contains("98.01")', // 99.0 * 1.1 (EUR rate) - 10% discount
-        },
-        {
-            content: 'Check currency',
-            trigger: 'span[itemprop="priceCurrency"]:contains("EUR"):not(:visible)'
-        },
-]});
+registry.category('web_tour.tours').add('website_sale_gmc_check_advertised_prices_red_sofa_christmas', {
+    steps: () => check_price('990.0', 'EUR') // 1000.0 * 1.1 (EUR rate) - 10% discount
+});
 
-registry.category('web_tour.tours').add('website_sale_gmc_check_advertised_prices_white_mouse_tax_included', {
-    steps: () => [
-        {
-            content: 'Check price',
-            trigger: 'span.oe_price:contains("90.85")', // 15% tax
-        },
-        {
-            content: 'Check currency',
-            trigger: 'span[itemprop="priceCurrency"]:contains("USD"):not(:visible)'
-        },
-]});
+registry.category('web_tour.tours').add('website_sale_gmc_check_advertised_prices_blue_sofa_christmas', {
+    steps: () => check_price('1,188.0', 'EUR') // 1200.0 * 1.1 (EUR rate) - 10% discount
+});
 
-registry.category('web_tour.tours').add('website_sale_gmc_check_advertised_prices_black_mouse_tax_included', {
-    steps: () => [
-        {
-            content: 'Check price',
-            trigger: 'span.oe_price:contains("113.85")', // 15% tax
-        },
-        {
-            content: 'Check currency',
-            trigger: 'span[itemprop="priceCurrency"]:contains("USD"):not(:visible)'
-        },
-]});
+registry.category('web_tour.tours').add('website_sale_gmc_check_advertised_prices_red_sofa_tax_included', {
+    steps: () => check_price('1,150.0', 'USD') // 1000.0 + 15% tax
+});
+
+registry.category('web_tour.tours').add('website_sale_gmc_check_advertised_prices_blue_sofa_tax_included', {
+    steps: () => check_price('1,380.0', 'USD') // 1200.0 + 15% tax
+});
