@@ -124,6 +124,7 @@
                 <t t-set="use_filters" t-value="True"/>
                 <t t-set="use_size" t-value="True"/>
                 <t t-set="use_text_align" t-value="True"/>
+                <t t-set="additional_classes" t-value="h-100"/>
                 <div t-attf-class="o_wslides_course_header position-relative pb-md-0 pt-2 pt-md-5 #{'pb-3' if channel.channel_type == 'training' else 'o_wslides_course_doc_header pb-5'}">
                     <t t-call="website_slides.course_nav"/>
                     <div class="container mt-5 mt-md-3 mt-xl-4">
