@@ -33,6 +33,9 @@ class ConnectionManager(Thread):
             self.pairing_uuid = False
 
     def _connect_box(self):
+        if not helpers.get_ip() or (platform.system() == 'Linux' and wifi.is_access_point()):
+            return
+
         data = {
             'jsonrpc': 2.0,
             'params': {
