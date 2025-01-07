@@ -33,6 +33,7 @@ export class FilePlugin extends Plugin {
                 sequence: 15,
             },
         }),
+        selectors_for_feff_providers: () => ".o_file_box",
     };
 
     get recordInfo() {
