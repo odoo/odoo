@@ -3,10 +3,12 @@ import {
     lockBusServiceStart,
     lockWebsocketConnect,
 } from "@bus/../tests/bus_test_helpers";
-import { busMonitoringservice } from "@bus/services/bus_monitoring_service";
-import { WEBSOCKET_CLOSE_CODES } from "@bus/workers/websocket_worker";
+import {
+    busMonitoringservice,
+    CONNECTION_LOST_WARNING_DELAY,
+} from "@bus/services/bus_monitoring_service";
+import { WEBSOCKET_CLOSE_CODES, WORKER_STATE } from "@bus/workers/websocket_worker";
 import { describe, expect, test } from "@odoo/hoot";
-import { runAllTimers } from "@odoo/hoot-dom";
 import {
     asyncStep,
     makeMockEnv,
@@ -15,6 +17,7 @@ import {
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
+import { runAllTimers, Deferred, advanceTime } from "@odoo/hoot-dom";
 
 defineBusModels();
 describe.current.tags("desktop");
@@ -48,6 +51,12 @@ test("connection considered as lost after failed reconnect attempt", async () =>
     const env = await makeMockEnv();
     env.services.bus_service.addEventListener("connect", () => asyncStep("connect"));
     env.services.bus_service.addEventListener("reconnect", () => asyncStep("reconnect"));
+    const def = new Deferred();
+    env.services.bus_service.addEventListener("worker_state_updated", ({ detail }) => {
+        if (detail === WORKER_STATE.DISCONNECTED) {
+            def.resolve();
+        }
+    });
     unlockBus();
     await env.services.bus_service.start();
     await waitForSteps(["isConnectionLost - false", "connect"]);
@@ -55,6 +64,8 @@ test("connection considered as lost after failed reconnect attempt", async () =>
     MockServer.current.env["bus.bus"]._simulateDisconnection(
         WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE
     );
+    await def;
+    await advanceTime(CONNECTION_LOST_WARNING_DELAY);
     await waitForSteps([`isConnectionLost - true`]);
     unlockWebsocket();
     await waitForSteps([`isConnectionLost - false`]);
