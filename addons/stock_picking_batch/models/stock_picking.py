@@ -167,6 +167,7 @@ class StockPicking(models.Model):
         assignable_pickings = self.env['stock.picking'].browse(to_assign_ids)
         for picking in assignable_pickings:
             picking._find_auto_batch()
+        assignable_pickings.move_line_ids.with_context(skip_auto_waveable=True)._auto_wave()
 
         return res
 
