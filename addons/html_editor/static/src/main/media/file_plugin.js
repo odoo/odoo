@@ -23,6 +23,7 @@ export class FilePlugin extends Plugin {
             commandId: "uploadFile",
             keywords: [_t("file"), _t("document")],
         },
+        power_buttons: withSequence(5, { commandId: "uploadFile" }),
         unsplittable_node_predicates: (node) => node.classList?.contains("o_file_box"),
         ...(!this.config.disableFile && {
             media_dialog_extra_tabs: {
