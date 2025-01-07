@@ -608,7 +608,7 @@ class StockWarehouseOrderpoint(models.Model):
         return True
 
     def _get_orderpoint_procurement_date(self):
-        return timezone(self.company_id.partner_id.tz or 'UTC').localize(datetime.combine(self.lead_days_date, time(12))).astimezone(UTC).replace(tzinfo=None)
+        return timezone(self.company_id.partner_id.tz or 'UTC').localize(datetime.combine(self.sudo().lead_days_date, time(12))).astimezone(UTC).replace(tzinfo=None)
 
     def _get_orderpoint_products(self):
         return self.env['product.product'].search([('type', '=', 'product'), ('stock_move_ids', '!=', False)])

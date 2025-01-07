@@ -1091,3 +1091,57 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         # however, due to rounding differences, the expected value is 100
         svl_val = self.env['stock.valuation.layer'].search([('stock_move_id', '=', move.id)]).value
         self.assertEqual(svl_val, 100)
+
+    def test_access_rights_manufacture_purchase(self):
+        warehouse = self.warehouse
+        buy_route = warehouse.buy_pull_id.route_id
+        manufacture_route = warehouse.manufacture_pull_id.route_id
+
+        vendor1 = self.env['res.partner'].create({'name': 'aaa'})
+        supplier_info1 = self.env['product.supplierinfo'].create({
+            'partner_id': vendor1.id,
+            'price': 50,
+        })
+        component = self.env['product.product'].create({
+            'name': 'component',
+            'type': 'product',
+            'route_ids': [(4, buy_route.id)],
+            'seller_ids': [(6, 0, [supplier_info1.id])],
+        })
+
+        # create reordering rule
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.product_id = component
+        orderpoint_form.product_min_qty = 0.000
+        orderpoint_form.product_max_qty = 0.000
+        orderpoint_form.save()
+
+        product = self.env['product.product'].create({
+            'name': 'product a',
+            'type': 'product',
+            'route_ids': [(4, manufacture_route.id)],
+        })
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {
+                'product_id': component.id,
+                'product_qty': 12,
+            })]
+        })
+        self.env['ir.rule'].create({
+            'name': 'test contact rule',
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'domain_force': "[('name', '!=', 'aaa')]"
+        })
+
+        man_order_form = Form(self.env['mrp.production'].with_user(self.env.user))
+        man_order_form.product_id = product
+        man_order_form.product_qty = 1.0
+        man_order_form.bom_id = bom
+        man_order = man_order_form.save()
+        man_order.with_user(self.env.user).action_confirm()
+
+        self.assertEqual(man_order.state, 'confirmed')
+        man_order.unlink()
