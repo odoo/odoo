@@ -63,7 +63,8 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_21
         vals = super()._get_partner_address_vals(partner)
         vals.update({
-            'city_subdivision_name ': partner.state_id.name,
+            'city_subdivision_name ': partner.city,
+            'city_name': partner.state_id.name,
             'country_subentity': False,
             'country_subentity_code': False,
         })
