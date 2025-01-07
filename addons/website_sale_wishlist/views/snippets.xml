@@ -14,7 +14,10 @@
                    data-no-preview="true"
                    data-reload="/"/>
     </xpath>
-    <xpath expr="//we-button[hasclass('o_we_buy_now_btn')]" position="after">
+    <div data-name="o_wsale_actions_opt" position="attributes">
+        <attribute name="class" remove="d-none"/>
+    </div>
+    <we-row data-name="o_we_actions_opt" position="inside">
         <we-button title="Wishlist"
                    data-customize-website-views="website_sale_wishlist.product_add_to_wishlist"
                    data-no-preview="true"
@@ -22,7 +25,7 @@
             <i class="fa fa-fw fa-heart"/>
             Wishlist
         </we-button>
-    </xpath>
+    </we-row>
     <div name="o_wsale_checkout_pages" position="inside">
         <we-checkbox
             string="Add to Wishlist"
