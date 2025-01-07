@@ -21,6 +21,7 @@ import { ChatGPTPlugin } from "./main/chatgpt/chatgpt_plugin";
 import { ColumnPlugin } from "./main/column_plugin";
 import { EmojiPlugin } from "./main/emoji_plugin";
 import { ColorPlugin } from "./main/font/color_plugin";
+import { FeffPlugin } from "./main/feff_plugin";
 import { FontPlugin } from "./main/font/font_plugin";
 import { HintPlugin } from "./main/hint_plugin";
 import { InlineCodePlugin } from "./main/inline_code";
@@ -89,6 +90,7 @@ import { QWebPlugin } from "./others/qweb_plugin";
  * @property { import ("./main/emoji_plugin").EmojiShared } emoji
  * @property { import ("./main/local_overlay_plugin").LocalOverlayShared } localOverlay
  * @property { import ("./main/tabulation_plugin").TabulationShared } tabulation
+ * @property { import ("./main/feff_plugin").FeffShared } feff
  *
  * Others
  * @property { import("./others/collaboration/collaboration_odoo_plugin").CollaborationOdooShared } collaborationOdoo
@@ -142,6 +144,7 @@ export const MAIN_PLUGINS = [
     ImageCropPlugin,
     LinkPlugin,
     LinkPastePlugin,
+    FeffPlugin,
     LinkSelectionPlugin,
     OdooLinkSelectionPlugin,
     PowerButtonsPlugin,
