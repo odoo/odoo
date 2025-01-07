@@ -112,12 +112,12 @@ class PrinterDriver(Driver):
         printer = self.device_name
 
         args = [
-            "-dPrinted", "-dBATCH", "-dNOPAUSE", "-dNOPROMPT"
+            "-dPrinted", "-dBATCH", "-dNOPAUSE", "-dNOPROMPT", "-dNORANGEPAGESIZE",
             "-q",
             "-sDEVICE#mswinpr2",
             f'-sOutputFile#%printer%{printer}',
             f'{file_name}'
-            ]
+        ]
 
         ghostscript.Ghostscript(*args)
 
