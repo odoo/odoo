@@ -288,7 +288,7 @@
     <template id="report_bom_structure">
         <t t-set="data_report_landscape" t-value="True"/>
         <t t-call="web.basic_layout">
-            <t t-call-assets="mrp.assets_common" t-js="False"/>
+            <t t-call-assets="web.assets_common" t-js="False"/>
             <t t-foreach="docs" t-as="data">
                 <div class="page">
                     <t t-call="mrp.report_mrp_bom"/>
