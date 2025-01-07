@@ -17,7 +17,46 @@ _logger = logging.getLogger(__name__)
 
 
 class RazorpayController(http.Controller):
+    _return_url = '/payment/razorpay/return'
     _webhook_url = '/payment/razorpay/webhook'
+
+    @http.route(
+        _return_url,
+        type='http',
+        auth='public',
+        methods=['POST'],
+        csrf=False,
+        save_session=False,
+    )
+    def razorpay_return_from_checkout(self, reference, **data):
+        """ Process the notification data sent by Razorpay after redirection from checkout.
+
+        The route is configured with save_session=False to prevent Odoo from creating a new session
+        when the user is redirected here via a POST request. Indeed, as the session cookie is
+        created without a `SameSite` attribute, some browsers that don't implement the recommended
+        default `SameSite=Lax` behavior will not include the cookie in the redirection request from
+        the payment provider to Odoo. However, the redirection to the /payment/status page will
+        satisfy any specification of the `SameSite` attribute, the session of the user will be
+        retrieved and with it the transaction which will be immediately post-processed.
+
+        :param str reference: The transaction reference embedded in the return URL.
+        :param dict data: The notification data.
+        """
+        _logger.info("Handling redirection from Razorpay with data:\n%s", pprint.pformat(data))
+        if all(f'razorpay_{key}' in data for key in ('order_id', 'payment_id', 'signature')):
+            # Check the integrity of the notification.
+            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+                'razorpay', {'description': reference}
+            )  # Use the same key as for webhook notifications' data.
+            self._verify_notification_signature(data, data.get('razorpay_signature'), tx_sudo)
+
+            # Handle the notification data.
+            tx_sudo._handle_notification_data('razorpay', data)
+        else:  # The customer cancelled the payment or the payment failed.
+            pass  # Don't try to process this case because the payment id was not provided.
+
+        # Redirect the user to the status page.
+        return request.redirect('/payment/status')
 
     @http.route(_webhook_url, type='http', methods=['POST'], auth='public', csrf=False)
     def razorpay_webhook(self):
@@ -42,7 +81,7 @@ class RazorpayController(http.Controller):
                     'razorpay', entity_data
                 )
                 self._verify_notification_signature(
-                    request.httprequest.data, received_signature, tx_sudo
+                    request.httprequest.data, received_signature, tx_sudo, is_redirect=False
                 )
 
                 # Handle the notification data.
@@ -52,13 +91,17 @@ class RazorpayController(http.Controller):
         return request.make_json_response('')
 
     @staticmethod
-    def _verify_notification_signature(notification_data, received_signature, tx_sudo):
+    def _verify_notification_signature(
+        notification_data, received_signature, tx_sudo, is_redirect=True
+    ):
         """ Check that the received signature matches the expected one.
 
         :param dict|bytes notification_data: The notification data.
         :param str received_signature: The signature to compare with the expected signature.
         :param recordset tx_sudo: The sudoed transaction referenced by the notification data, as a
                                   `payment.transaction` record
+        :param bool is_redirect: Whether the notification data should be treated as redirect data
+                                 or as coming from a webhook notification.
         :return: None
         :raise :class:`werkzeug.exceptions.Forbidden`: If the signatures don't match.
         """
@@ -68,7 +111,9 @@ class RazorpayController(http.Controller):
             raise Forbidden()
 
         # Compare the received signature with the expected signature.
-        expected_signature = tx_sudo.provider_id._razorpay_calculate_signature(notification_data)
+        expected_signature = tx_sudo.provider_id._razorpay_calculate_signature(
+            notification_data, is_redirect=is_redirect
+        )
         if (
             expected_signature is None
             or not hmac.compare_digest(received_signature, expected_signature)
