@@ -513,8 +513,11 @@
             <field name="parent_res_model">project.project</field>
             <field name="sequence">20</field>
             <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
-            <field name="action_id" ref="hr_timesheet.act_hr_timesheet_line_by_project"/>
+            <field name="action_id" eval="False"/>
+            <field name="name">Timesheets</field>
+            <field name="python_method">action_project_timesheets</field>
             <field name="domain">[('allow_timesheets', '=', True)]</field>
+            <field name="context">{'from_embedded_action': true}</field>
             <field name="groups_ids" eval="[(4, ref('hr_timesheet.group_hr_timesheet_user'))]" />
         </record>
 
@@ -522,8 +525,11 @@
             <field name="parent_res_model">project.project</field>
             <field name="sequence">30</field>
             <field name="parent_action_id" ref="project.project_update_all_action"/>
-            <field name="action_id" ref="hr_timesheet.act_hr_timesheet_line_by_project"/>
+            <field name="action_id" eval="False"/>
+            <field name="name">Timesheets</field>
+            <field name="python_method">action_project_timesheets</field>
             <field name="domain">[('allow_timesheets', '=', True)]</field>
+            <field name="context">{'from_embedded_action': true}</field>
             <field name="groups_ids" eval="[(4, ref('hr_timesheet.group_hr_timesheet_user'))]" />
         </record>
 
