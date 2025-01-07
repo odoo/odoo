@@ -127,7 +127,10 @@ export class ReceiptScreen extends Component {
         const isPrinted = await this.printer.print(
             OrderReceipt,
             {
-                data: this.pos.get_order().export_for_printing(),
+                data: {
+                    ...this.pos.get_order().export_for_printing(),
+                    isBill: this.isBill,
+                },
                 formatCurrency: this.env.utils.formatCurrency,
             },
             { webPrintFallback: true }
@@ -178,6 +181,9 @@ export class ReceiptScreen extends Component {
             orderPartner,
             ticketImage,
         ]);
+    }
+    get isBill() {
+        return false;
     }
 }
 
