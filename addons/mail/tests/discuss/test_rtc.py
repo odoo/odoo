@@ -72,7 +72,7 @@ class TestChannelRTC(MailCommon):
                                 "id": channel_member.rtc_session_ids.id + 1,
                             },
                         ],
-                        "res.partner": [
+                        "res.partner": self._filter_partners_fields(
                             {
                                 "id": channel_member.partner_id.id,
                                 "im_status": channel_member.partner_id.im_status,
@@ -81,7 +81,7 @@ class TestChannelRTC(MailCommon):
                                     channel_member.partner_id.write_date
                                 ),
                             },
-                        ],
+                        ),
                     },
                 },
             ],
@@ -117,7 +117,7 @@ class TestChannelRTC(MailCommon):
                         "id": channel_member.rtc_session_ids.id,
                     },
                 ],
-                "res.partner": [
+                "res.partner": self._filter_partners_fields(
                     {
                         "id": channel_member.partner_id.id,
                         "im_status": channel_member.partner_id.im_status,
@@ -126,7 +126,7 @@ class TestChannelRTC(MailCommon):
                             channel_member.partner_id.write_date
                         ),
                     },
-                ],
+                ),
                 "Rtc": {
                     "iceServers": False,
                     "selfSession": channel_member.rtc_session_ids.id,
@@ -190,7 +190,7 @@ class TestChannelRTC(MailCommon):
                                 "id": last_rtc_session_id + 1,
                             },
                         ],
-                        "res.partner": [
+                        "res.partner": self._filter_partners_fields(
                             {
                                 "id": channel_member.partner_id.id,
                                 "im_status": channel_member.partner_id.im_status,
@@ -199,7 +199,7 @@ class TestChannelRTC(MailCommon):
                                     channel_member.partner_id.write_date
                                 ),
                             },
-                        ],
+                        ),
                     },
                 },
                 {
@@ -224,7 +224,7 @@ class TestChannelRTC(MailCommon):
                                 },
                             },
                         ],
-                        "res.partner": [
+                        "res.partner": self._filter_partners_fields(
                             {
                                 "id": channel_member_test_user.partner_id.id,
                                 "im_status": channel_member_test_user.partner_id.im_status,
@@ -233,7 +233,7 @@ class TestChannelRTC(MailCommon):
                                     channel_member_test_user.partner_id.write_date
                                 ),
                             },
-                        ],
+                        ),
                     },
                 },
             ],
@@ -302,7 +302,7 @@ class TestChannelRTC(MailCommon):
                                 "id": last_rtc_session_id + 1,
                             },
                         ],
-                        "res.partner": [
+                        "res.partner": self._filter_partners_fields(
                             {
                                 "id": channel_member.partner_id.id,
                                 "im_status": channel_member.partner_id.im_status,
@@ -311,7 +311,7 @@ class TestChannelRTC(MailCommon):
                                     channel_member.partner_id.write_date
                                 ),
                             },
-                        ],
+                        ),
                     },
                 },
                 {
@@ -339,7 +339,7 @@ class TestChannelRTC(MailCommon):
                                 "id": last_rtc_session_id + 1,
                             },
                         ],
-                        "res.partner": [
+                        "res.partner": self._filter_partners_fields(
                             {
                                 "id": channel_member.partner_id.id,
                                 "im_status": channel_member.partner_id.im_status,
@@ -348,7 +348,7 @@ class TestChannelRTC(MailCommon):
                                     channel_member.partner_id.write_date
                                 ),
                             },
-                        ],
+                        ),
                     },
                 },
                 {
@@ -399,7 +399,7 @@ class TestChannelRTC(MailCommon):
                                 ),
                             },
                         ],
-                        "res.partner": [
+                        "res.partner": self._filter_partners_fields(
                             {
                                 "id": channel_member_test_user.partner_id.id,
                                 "im_status": channel_member_test_user.partner_id.im_status,
@@ -408,7 +408,7 @@ class TestChannelRTC(MailCommon):
                                     channel_member_test_user.partner_id.write_date
                                 ),
                             },
-                        ],
+                        ),
                     },
                 },
             ],
@@ -467,7 +467,7 @@ class TestChannelRTC(MailCommon):
                                 },
                             },
                         ],
-                        "res.partner": [
+                        "res.partner": self._filter_partners_fields(
                             {
                                 "id": channel_member_test_user.partner_id.id,
                                 "im_status": channel_member_test_user.partner_id.im_status,
@@ -476,7 +476,7 @@ class TestChannelRTC(MailCommon):
                                     channel_member_test_user.partner_id.write_date
                                 ),
                             },
-                        ],
+                        ),
                     },
                 },
                 {
@@ -507,7 +507,7 @@ class TestChannelRTC(MailCommon):
                                 "id": channel_member.rtc_session_ids.id + 1,
                             },
                         ],
-                        "res.partner": [
+                        "res.partner": self._filter_partners_fields(
                             {
                                 "id": channel_member_test_user.partner_id.id,
                                 "im_status": channel_member_test_user.partner_id.im_status,
@@ -516,7 +516,7 @@ class TestChannelRTC(MailCommon):
                                     channel_member_test_user.partner_id.write_date
                                 ),
                             },
-                        ],
+                        ),
                     },
                 },
             ],
@@ -667,7 +667,7 @@ class TestChannelRTC(MailCommon):
                                 },
                             },
                         ],
-                        "res.partner": [
+                        "res.partner": self._filter_partners_fields(
                             {
                                 "id": channel_member_test_user.partner_id.id,
                                 "im_status": channel_member_test_user.partner_id.im_status,
@@ -676,7 +676,7 @@ class TestChannelRTC(MailCommon):
                                     channel_member_test_user.partner_id.write_date
                                 ),
                             },
-                        ],
+                        ),
                     },
                 },
             ],
@@ -828,7 +828,7 @@ class TestChannelRTC(MailCommon):
                                 ),
                             },
                         ],
-                        "res.partner": [
+                        "res.partner": self._filter_partners_fields(
                             {
                                 "id": channel_member_test_user.partner_id.id,
                                 "im_status": channel_member_test_user.partner_id.im_status,
@@ -837,7 +837,7 @@ class TestChannelRTC(MailCommon):
                                     channel_member_test_user.partner_id.write_date
                                 ),
                             },
-                        ],
+                        ),
                     },
                 },
                 {
@@ -932,7 +932,7 @@ class TestChannelRTC(MailCommon):
                                 "is_screen_sharing_on": channel_member.rtc_session_ids.is_screen_sharing_on,
                             },
                         ],
-                        "res.partner": [
+                        "res.partner": self._filter_partners_fields(
                             {
                                 "id": channel_member.partner_id.id,
                                 "im_status": channel_member.partner_id.im_status,
@@ -941,7 +941,7 @@ class TestChannelRTC(MailCommon):
                                     channel_member.partner_id.write_date
                                 ),
                             },
-                        ],
+                        ),
                     },
                 },
                 {
@@ -973,7 +973,7 @@ class TestChannelRTC(MailCommon):
                                 "is_screen_sharing_on": channel_member.rtc_session_ids.is_screen_sharing_on,
                             },
                         ],
-                        "res.partner": [
+                        "res.partner": self._filter_partners_fields(
                             {
                                 "id": channel_member.partner_id.id,
                                 "im_status": channel_member.partner_id.im_status,
@@ -982,7 +982,7 @@ class TestChannelRTC(MailCommon):
                                     channel_member.partner_id.write_date
                                 ),
                             },
-                        ],
+                        ),
                     },
                 },
                 {
@@ -1033,7 +1033,7 @@ class TestChannelRTC(MailCommon):
                                 ),
                             },
                         ],
-                        "res.partner": [
+                        "res.partner": self._filter_partners_fields(
                             {
                                 "id": channel_member_test_user.partner_id.id,
                                 "im_status": channel_member_test_user.partner_id.im_status,
@@ -1042,7 +1042,7 @@ class TestChannelRTC(MailCommon):
                                     channel_member_test_user.partner_id.write_date
                                 ),
                             },
-                        ],
+                        ),
                     },
                 },
             ],
