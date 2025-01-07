@@ -7,6 +7,7 @@
         <record id="pos_closed_session_1" model="pos.session" forcecreate="False" context="{'onboarding_creation': True}">
             <field name="config_id" ref="pos_config_main" />
             <field name="user_id" ref="base.user_admin" />
+            <field name="name">POS/DEMO/01</field>
             <field name="start_at" eval="(DateTime.today() + relativedelta(days=-1)).strftime('%Y-%m-%d %H:%M:%S')" />
             <field name="stop_at"
                 eval="(DateTime.today() + relativedelta(days=-1, hours=1)).strftime('%Y-%m-%d %H:%M:%S')" />
@@ -93,6 +94,7 @@
         <record id="pos_closed_session_2" model="pos.session" forcecreate="False" context="{'onboarding_creation': True}">
             <field name="config_id" ref="pos_config_main" />
             <field name="user_id" ref="base.user_admin" />
+            <field name="name">POS/DEMO/02</field>
             <field name="start_at" eval="(DateTime.today() + relativedelta(hours=-3)).strftime('%Y-%m-%d %H:%M:%S')" />
             <field name="stop_at" eval="(DateTime.today() + relativedelta(hours=-2)).strftime('%Y-%m-%d %H:%M:%S')" />
         </record>
