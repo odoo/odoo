@@ -22,6 +22,7 @@
         <record id="pos_closed_session_3" model="pos.session" forcecreate="False">
             <field name="config_id" ref="pos_config_main_restaurant" />
             <field name="user_id" ref="base.user_admin" />
+            <field name="name">POS/DEMO/03</field>
             <field name="start_at" eval="(DateTime.today() + relativedelta(days=-1)).strftime('%Y-%m-%d %H:%M:%S')" />
             <field name="stop_at"
                 eval="(DateTime.today() + relativedelta(days=-1, hours=1)).strftime('%Y-%m-%d %H:%M:%S')" />
@@ -94,6 +95,7 @@
         <record id="pos_closed_session_4" model="pos.session" forcecreate="False">
             <field name="config_id" ref="pos_config_main_restaurant" />
             <field name="user_id" ref="base.user_admin" />
+            <field name="name">POS/DEMO/04</field>
             <field name="start_at" eval="(DateTime.today() + relativedelta(days=-1)).strftime('%Y-%m-%d %H:%M:%S')" />
             <field name="stop_at"
                 eval="(DateTime.today() + relativedelta(days=-1, hours=1)).strftime('%Y-%m-%d %H:%M:%S')" />
