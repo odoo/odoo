@@ -68,17 +68,23 @@ class StockMoveLine(models.Model):
 
     @api.depends('quantity', 'uom_id', 'product_id', 'move_id.sale_line_id', 'move_id.sale_line_id.price_reduce_taxinc', 'move_id.sale_line_id.product_uom_id')
     def _compute_sale_price(self):
+        sale_orders = self.picking_id.sale_id
+        line_global_discounts = sale_orders._get_line_global_discount()
         for move_line in self:
-            sale_line_id = move_line.move_id.sale_line_id
-            if sale_line_id and sale_line_id.product_id == move_line.product_id:
+            sale_line = move_line.move_id.sale_line_id
+            if sale_line and sale_line.product_id == move_line.product_id and sale_line.price_reduce_taxinc:
                 # Compute the total price (tax included) for the actually delivered quantity
                 # using the same tax logic as the sale order line and purchase order line.
-                base_line = sale_line_id._prepare_base_line_for_taxes_computation()
-                qty = move_line.uom_id._compute_quantity(move_line.quantity, sale_line_id.product_uom_id)
+                base_line = sale_line._prepare_base_line_for_taxes_computation()
+                qty = move_line.uom_id._compute_quantity(move_line.quantity, sale_line.product_uom_id)
                 base_line.update({'quantity': qty})
-                self.env['account.tax']._add_tax_details_in_base_line(base_line, sale_line_id.company_id)
+                self.env['account.tax']._add_tax_details_in_base_line(base_line, sale_line.company_id)
                 tax_results = base_line['tax_details']
-                move_line.sale_price = sale_line_id.currency_id.round(tax_results['raw_total_included_currency'])
+                raw_total = tax_results['raw_total_included_currency']
+                global_discount = line_global_discounts.get(sale_line.id, 0.0)
+                if global_discount:
+                    raw_total -= global_discount * qty
+                move_line.sale_price = sale_line.currency_id.round(raw_total)
             else:
                 # For kits, use the regular unit price
                 unit_price = move_line.product_id.list_price
