@@ -5,10 +5,9 @@ import { isRemovable } from "./remove/remove_plugin";
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builder-options";
     static dependencies = ["selection", "overlay"];
-    static shared = ["getContainers"];
+    static shared = ["getContainers", "updateContainers"];
     resources = {
         step_added_handlers: () => this.updateContainers(),
-        update_containers: this.updateContainers.bind(this),
     };
 
     setup() {

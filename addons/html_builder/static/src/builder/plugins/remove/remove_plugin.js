@@ -90,7 +90,7 @@ export class RemovePlugin extends Plugin {
     }
 
     removeElement(el) {
-        this.dispatchTo("update_containers", el);
+        this.updateContainers(el);
         this.removeCurrentTarget();
         this.dependencies.history.addStep();
     }
@@ -138,7 +138,7 @@ export class RemovePlugin extends Plugin {
 
         if (previousSiblingEl || nextSiblingEl) {
             // Activate the previous or next visible siblings if any.
-            this.dispatchTo("update_containers", previousSiblingEl || nextSiblingEl);
+            this.updateContainers(previousSiblingEl || nextSiblingEl);
         } else {
             // Remove potential ancestors (like when removing the last column of
             // a snippet).
@@ -152,7 +152,7 @@ export class RemovePlugin extends Plugin {
                 }
                 parentEl = nextParentEl;
             }
-            this.dispatchTo("update_containers", parentEl);
+            this.updateContainers(parentEl);
             optionsTargetEls = this.getOptionsContainersElements();
             if (this.isEmptyAndRemovable(parentEl, optionsTargetEls)) {
                 this.removeCurrentTarget();
@@ -175,5 +175,9 @@ export class RemovePlugin extends Plugin {
 
     getOptionsContainersElements() {
         return this.dependencies["builder-options"].getContainers().map((option) => option.element);
+    }
+
+    updateContainers(el) {
+        this.dependencies["builder-options"].updateContainers(el);
     }
 }

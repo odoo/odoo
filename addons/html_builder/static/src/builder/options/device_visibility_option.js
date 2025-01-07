@@ -6,6 +6,7 @@ export const device_visibility_option_selector = "section .row > div";
 
 class DeviceVisibilityOptionPlugin extends Plugin {
     static id = "DeviceVisibilityOption";
+    static dependencies = ["builder-options"];
     websiteService = this.services.website;
     selector = "section .row > div";
     resources = {
@@ -45,7 +46,7 @@ class DeviceVisibilityOptionPlugin extends Plugin {
                         editingEl: editingElement,
                         show: show,
                     });
-                    this.dispatchTo("update_containers", editingElement);
+                    this.dependencies["builder-options"].updateContainers(editingElement);
                 },
                 clean: ({ editingElement }) => {
                     this.clean(editingElement);
@@ -67,7 +68,7 @@ class DeviceVisibilityOptionPlugin extends Plugin {
         const style = getComputedStyle(editingElement);
         const display = style["display"];
         editingElement.classList.remove(`d-md-${display}`, `d-lg-${display}`);
-        this.dispatchTo("update_containers", editingElement);
+        this.dependencies["builder-options"].updateContainers(editingElement);
     }
     isActive(editingElement, visibilityParam) {
         const classList = [...editingElement.classList];

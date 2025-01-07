@@ -12,7 +12,7 @@ function isReplaceable(el) {
 
 export class ReplacePlugin extends Plugin {
     static id = "replace";
-    static dependencies = ["history"];
+    static dependencies = ["history", "builder-options"];
     resources = {
         get_overlay_buttons: this.getActiveOverlayButtons.bind(this),
     };
@@ -43,7 +43,7 @@ export class ReplacePlugin extends Plugin {
             // TODO find a way to wait for the images to load before updating or
             // to trigger a refresh once the images are loaded afterwards.
             // If not possible, call updateContainers with nothing.
-            this.dispatchTo("update_containers", newSnippet);
+            this.dependencies["builder-options"].updateContainers(newSnippet);
             // TODO post snippet drop (onBuild,...)
             this.dependencies.history.addStep();
         }
