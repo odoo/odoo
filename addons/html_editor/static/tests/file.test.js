@@ -144,3 +144,47 @@ describe("powerbutton", () => {
     });
 });
 
+describe("zero width no-break space", () => {
+    test("file card should be padded with zero-width no-break spaces", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        patchUpload(editor);
+        execCommand(editor, "uploadFile");
+        // wait for the the file to be uploaded and the card rendered
+        await waitFor('.o_file_box a:contains("file.txt")');
+        // Check that file card is padded with ZWNBSP on both sides.
+        const fileCard = queryOne(".o_file_box");
+        expect(isZwnbsp(fileCard.previousSibling)).toBe(true);
+        expect(isZwnbsp(fileCard.nextSibling)).toBe(true);
+    });
+
+    test("should not add two contiguous ZWNBSP between two file cards", async () => {
+        const { editor, el } = await setupEditor("<p>[]<br></p>", {
+            config: { ...configWithEmbeddedFile, resources: {} }, // disable embedded component rendering
+        });
+        let mockUpload = patchUpload(editor);
+        execCommand(editor, "uploadFile");
+        await mockUpload;
+        // patch again to get new Promise
+        mockUpload = patchUpload(editor);
+        execCommand(editor, "uploadFile");
+        await mockUpload;
+        let content = getContent(el);
+        // replace embedded component root with a <FILE/> placeholder for readability
+        content = content.replace(/<span data-embedded="file".*?<\/span>/g, "<FILE/>");
+        expect(content).toBe("<p>\ufeff<FILE/>\ufeff<FILE/>\ufeff[]</p>");
+    });
+
+    test("should not add two contiguous ZWNBSP between two file cards (2)", async () => {
+        const { el } = await setupEditor(
+            '<p>abc<span data-embedded="file" class="o_file_box"></span>x[]<span data-embedded="file" class="o_file_box"></span></p>',
+            { config: { ...configWithEmbeddedFile, resources: {} } } // disable embedded component rendering
+        );
+        expect(getContent(el)).toBe(
+            '<p>abc\ufeff<span data-embedded="file" class="o_file_box"></span>\ufeffx[]\ufeff<span data-embedded="file" class="o_file_box"></span>\ufeff</p>'
+        );
+        press("Backspace");
+        expect(getContent(el)).toBe(
+            '<p>abc\ufeff<span data-embedded="file" class="o_file_box"></span>\ufeff[]<span data-embedded="file" class="o_file_box"></span>\ufeff</p>'
+        );
+    });
+});
