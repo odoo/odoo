@@ -166,6 +166,8 @@
             <kanban class="o_kanban_mobile">
                 <templates>
                     <t t-name="card">
+                        <!-- needed for SMLX2ManyField -->
+                        <field name="quant_id" invisible="1"/>
                         <div class="row">
                             <field name="reference" class="col-6"/>
                             <field name="date" class="col-6 text-end"/>
