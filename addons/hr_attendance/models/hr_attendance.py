@@ -76,6 +76,7 @@ class HrAttendance(models.Model):
     @api.depends('worked_hours')
     def _compute_overtime_hours(self):
         att_progress_values = dict()
+        negative_overtime_attendances = defaultdict(lambda: False)
         if self.employee_id:
             self.env['hr.attendance'].flush_model(['worked_hours'])
             self.env['hr.attendance.overtime'].flush_model(['duration'])
@@ -116,21 +117,29 @@ class HrAttendance(models.Model):
                     else:
                         grouped_dict[row['ot_id']]['attendances'].append((row['att_id'], row['att_wh']))
 
-            for ot in grouped_dict:
-                ot_bucket = grouped_dict[ot]['overtime_duration']
-                for att in grouped_dict[ot]['attendances']:
-                    if ot_bucket > 0:
-                        sub_time = att[1] - ot_bucket
-                        if sub_time < 0:
-                            att_progress_values[att[0]] = 0
-                            ot_bucket -= att[1]
+            for overtime in grouped_dict:
+                overtime_reservoir = grouped_dict[overtime]['overtime_duration']
+                if overtime_reservoir > 0:
+                    for attendance in grouped_dict[overtime]['attendances']:
+                        if overtime_reservoir > 0:
+                            sub_time = attendance[1] - overtime_reservoir
+                            if sub_time < 0:
+                                att_progress_values[attendance[0]] = 0
+                                overtime_reservoir -= attendance[1]
+                            else:
+                                att_progress_values[attendance[0]] = float(((attendance[1] - overtime_reservoir) / attendance[1]) * 100)
+                                overtime_reservoir = 0
                         else:
-                            att_progress_values[att[0]] = float(((att[1] - ot_bucket) / att[1])*100)
-                            ot_bucket = 0
-                    else:
-                        att_progress_values[att[0]] = 100
+                            att_progress_values[attendance[0]] = 100
+                elif overtime_reservoir < 0 and grouped_dict[overtime]['attendances']:
+                    att_id = grouped_dict[overtime]['attendances'][0][0]
+                    att_progress_values[att_id] = overtime_reservoir
+                    negative_overtime_attendances[att_id] = True
         for attendance in self:
-            attendance.overtime_hours = attendance.worked_hours * ((100 - att_progress_values.get(attendance.id, 100))/100)
+            if negative_overtime_attendances[attendance.id]:
+                attendance.overtime_hours = att_progress_values.get(attendance.id, 0)
+            else:
+                attendance.overtime_hours = attendance.worked_hours * ((100 - att_progress_values.get(attendance.id, 100)) / 100)
 
     @api.depends('employee_id', 'check_in', 'check_out')
     def _compute_display_name(self):
