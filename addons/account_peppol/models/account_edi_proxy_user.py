@@ -164,8 +164,8 @@ class AccountEdiProxyClientUser(models.Model):
             params['domain']['receiver_identifier'] = edi_user.edi_identification
             try:
                 # request all messages that haven't been acknowledged
-                messages = edi_user._make_request(
-                    url=f"{edi_user._get_server_url()}/api/peppol/1/get_all_documents",
+                messages = edi_user._call_peppol_proxy(
+                    "/api/peppol/1/get_all_documents",
                     params=params,
                 )
             except AccountEdiProxyError as e:
@@ -183,9 +183,9 @@ class AccountEdiProxyClientUser(models.Model):
             for uuids in split_every(BATCH_SIZE, message_uuids):
                 proxy_acks = []
                 # retrieve attachments for filtered messages
-                all_messages = edi_user._make_request(
-                    f"{edi_user._get_server_url()}/api/peppol/1/get_document",
-                    {'message_uuids': uuids},
+                all_messages = edi_user._call_peppol_proxy(
+                    "/api/peppol/1/get_document",
+                    params={'message_uuids': uuids},
                 )
 
                 for uuid, content in all_messages.items():
@@ -209,9 +209,9 @@ class AccountEdiProxyClientUser(models.Model):
                 if not tools.config['test_enable']:
                     self.env.cr.commit()
                 if proxy_acks:
-                    edi_user._make_request(
-                        f"{edi_user._get_server_url()}/api/peppol/1/ack",
-                        {'message_uuids': proxy_acks},
+                    edi_user._call_peppol_proxy(
+                        "/api/peppol/1/ack",
+                        params={'message_uuids': proxy_acks},
                     )
 
     def _peppol_get_message_status(self):
@@ -225,9 +225,9 @@ class AccountEdiProxyClientUser(models.Model):
 
             message_uuids = {move.peppol_message_uuid: move for move in edi_user_moves}
             for uuids in split_every(BATCH_SIZE, message_uuids.keys()):
-                messages_to_process = edi_user._make_request(
-                    f"{edi_user._get_server_url()}/api/peppol/1/get_document",
-                    {'message_uuids': uuids},
+                messages_to_process = edi_user._call_peppol_proxy(
+                    "/api/peppol/1/get_document",
+                    params={'message_uuids': uuids},
                 )
 
                 for uuid, content in messages_to_process.items():
@@ -253,16 +253,15 @@ class AccountEdiProxyClientUser(models.Model):
                     move.peppol_move_state = content['state']
                     move._message_log(body=_('Peppol status update: %s', content['state']))
 
-                edi_user._make_request(
-                    f"{edi_user._get_server_url()}/api/peppol/1/ack",
-                    {'message_uuids': uuids},
+                edi_user._call_peppol_proxy(
+                    "/api/peppol/1/ack",
+                    params={'message_uuids': uuids},
                 )
 
     def _peppol_get_participant_status(self):
         for edi_user in self:
             try:
-                proxy_user = edi_user._make_request(
-                    f"{edi_user._get_server_url()}/api/peppol/2/participant_status")
+                proxy_user = edi_user._call_peppol_proxy("/api/peppol/2/participant_status")
             except AccountEdiProxyError as e:
                 _logger.error('Error while updating Peppol participant status: %s', e)
                 continue
@@ -380,9 +379,8 @@ class AccountEdiProxyClientUser(models.Model):
         for receiver in receivers:
             try:
                 receiver._call_peppol_proxy(
-                    "/api/peppol/2/add_services", {
-                        'document_identifiers': supported_identifiers,
-                    },
+                    '/api/peppol/2/add_services',
+                    params={'document_identifiers': supported_identifiers},
                 )
             # Broad exception case, so as not to block execution of the rest of the _post_init hook.
             except (AccountEdiProxyError, UserError) as exception:
@@ -409,9 +407,8 @@ class AccountEdiProxyClientUser(models.Model):
         for receiver in receivers:
             try:
                 receiver._call_peppol_proxy(
-                    "/api/peppol/2/remove_services", {
-                        'document_identifiers': unsupported_identifiers,
-                    },
+                    '/api/peppol/2/remove_services',
+                    params={'document_identifiers': unsupported_identifiers},
                 )
             except (AccountEdiProxyError, UserError) as exception:
                 _logger.error(
