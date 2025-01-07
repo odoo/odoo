@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from unittest.mock import patch
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 
@@ -56,8 +58,6 @@ class TestProductMargin(AccountTestInvoicingCommon):
         invoices.invoice_date = invoices[0].date
         invoices.action_post()
 
-        result = ipad._compute_product_margin_fields_values()
-
         # Sale turnover ( Quantity * Price Subtotal / Quantity)
         sale_turnover = ((20.0 * 750.00) + (10.0 * 550.00))
 
@@ -74,7 +74,18 @@ class TestProductMargin(AccountTestInvoicingCommon):
         expected_margin = sale_expected - purchase_normal_cost
 
         # Check total margin
-        self.assertEqual(result[ipad.id]['total_margin'], total_margin, "Wrong Total Margin.")
+        self.assertEqual(ipad.total_margin, total_margin, "Wrong Total Margin.")
 
         # Check expected margin
-        self.assertEqual(result[ipad.id]['expected_margin'], expected_margin, "Wrong Expected Margin.")
+        self.assertEqual(ipad.expected_margin, expected_margin, "Wrong Expected Margin.")
+
+        # Check that read_group doesn't generate an UPDATE and returns the right answer
+        ipad.invalidate_recordset()
+        with patch.object(self.registry['product.product'], 'write') as write_method:
+            total_margin_sum, expected_margin_sum = self.env['product.product']._read_group(
+                [('id', '=', ipad.id)],
+                aggregates=['total_margin:sum', 'expected_margin:sum'],
+            )[0]
+            self.assertEqual(total_margin_sum, total_margin)
+            self.assertEqual(expected_margin_sum, expected_margin)
+            write_method.assert_not_called()
