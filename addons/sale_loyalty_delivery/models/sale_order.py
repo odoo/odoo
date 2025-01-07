@@ -67,3 +67,32 @@ class SaleOrder(models.Model):
                     filtered_res[coupon] = filtered_rewards
             res = filtered_res
         return res
+
+    def _get_line_global_discount(self):
+        """ Overrides the original method to apply rewards and loyalty discounts. """
+        if not self:
+            return {}
+
+        sale_line_discount_dict = super()._get_line_global_discount()
+        for so in self:
+            invoicable_lines = so.order_line.filtered(lambda line: line._can_be_invoiced_alone())
+            reward_lines = (so.order_line - invoicable_lines).filtered(lambda line: line.is_reward_line)
+            if not invoicable_lines or sum(invoicable_lines.mapped("price_reduce_taxinc")) == 0:
+                continue
+            for line in reward_lines:
+                lines = invoicable_lines
+                reward = line.reward_id
+                reward_line_amount = line.price_total
+                if reward.reward_type == "discount":
+                    if reward.discount_applicability == "cheapest" and (cheapest_line := so._cheapest_line()):
+                        sale_line_discount_dict[cheapest_line.id] -= reward_line_amount / cheapest_line.product_uom_qty
+                        continue
+                    elif reward.discount_applicability == "specific":
+                        lines = invoicable_lines.filtered(lambda line: line.product_id in reward.discount_product_ids)
+                elif reward.reward_type == "product" and reward.reward_product_id in lines.mapped('product_id'):
+                    reward_line_amount = -(reward.reward_product_id.lst_price * line.product_uom_qty)
+                for line in lines:
+                    total_lines_price = sum(lines.mapped("price_reduce_taxinc"))
+                    line_price_share = (line.price_reduce_taxinc / total_lines_price) * reward_line_amount
+                    sale_line_discount_dict[line.id] -= line_price_share / line.product_uom_qty
+        return sale_line_discount_dict
