@@ -79,6 +79,9 @@ class MailThread(models.AbstractModel):
        document rights, which can be controller using this attribute. Defaults
        to 'write' as writing is considered as editing. A common customization
        is to set it to 'read', allowing people with read access to discuss.
+     - _mail_thread_customer: if set to True, consider this model has a strong
+       tie with the customer (found using '_mail_get_customer'). It currently
+       automatically subscribes customer if found in any post recipients.
 
     MailThread features can be somewhat controlled through context keys :
 
@@ -111,6 +114,7 @@ class MailThread(models.AbstractModel):
     _name = 'mail.thread'
     _description = 'Email Thread'
     _mail_flat_thread = True  # flatten the discussion history
+    _mail_thread_customer = False  # subscribe customer when being in post recipients
     _mail_post_access = 'write'  # access required on the document to post on it
     _primary_email = 'email'  # Must be set for the models that can be created by alias
     _Attachment = namedtuple('Attachment', ('fname', 'content', 'info'))
@@ -2316,6 +2320,11 @@ class MailThread(models.AbstractModel):
         # automatically subscribe recipients if asked to
         if self._context.get('mail_post_autofollow') and partner_ids:
             self.message_subscribe(partner_ids=list(partner_ids))
+        # automatically subscribe customer recipient if model expects it
+        elif partner_ids and self.env.context.get('mail_post_autofollow') is not False and self._mail_thread_customer:
+            customer = self._mail_get_customer()
+            if customer.id in partner_ids:
+                self.message_subscribe(partner_ids=customer.ids)
 
         msg_values = dict(msg_kwargs)
         if 'email_add_signature' not in msg_values:
