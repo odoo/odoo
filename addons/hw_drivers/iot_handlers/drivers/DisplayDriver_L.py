@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+import logging
 import os
 import requests
 import subprocess
@@ -15,6 +16,8 @@ from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.tools import helpers, wifi
 from odoo.addons.hw_drivers.tools.helpers import Orientation
 from odoo.tools.misc import file_path
+
+_logger = logging.getLogger(__name__)
 
 
 class DisplayDriver(Driver):
