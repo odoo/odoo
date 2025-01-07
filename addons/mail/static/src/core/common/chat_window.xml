@@ -102,7 +102,7 @@
                     <t t-component="threadActions.activeAction.component" t-props="{ ...threadActions.activeAction.componentProps, thread }"/>
                 </div>
                 <t t-elif="thread">
-                    <Thread isInChatWindow="true" thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/>
+                    <Thread isInChatWindow="true" thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent + props.chatWindow.jumpThreadPresent" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/>
                     <div t-if="thread.hasOtherMembersTyping" class="d-flex bg-view position-relative">
                         <div class="o-mail-ChatWindow-typing d-flex px-2 position-absolute bottom-0 start-0 w-100 bg-view align-items-center">
                             <Typing channel="thread" size="'medium'"/>

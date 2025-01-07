@@ -18,6 +18,7 @@ export class ChatWindow extends Record {
 
     thread = Record.one("Thread");
     autofocus = 0;
+    jumpThreadPresent = 0;
     hidden = false;
     /** Whether the chat window was created from the messaging menu */
     fromMessagingMenu = false;
@@ -58,6 +59,7 @@ export class ChatWindow extends Record {
 
     focus() {
         this.autofocus++;
+        this.jumpThreadPresent++;
     }
 
     fold() {
