@@ -214,7 +214,8 @@ class ProjectProject(models.Model):
 
     def action_project_timesheets(self):
         action = self.env['ir.actions.act_window']._for_xml_id('hr_timesheet.act_hr_timesheet_line_by_project')
-        action['display_name'] = _("%(name)s's Timesheets", name=self.name)
+        if not self.env.context.get('from_embedded_action'):
+            action['display_name'] = _("%(name)s's Timesheets", name=self.name)
         return action
 
     # ----------------------------

@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 import json
 
 from odoo import api, fields, models
@@ -280,6 +281,16 @@ class ProjectProject(models.Model):
                 action['res_id'] = res_id
             return action
         return super().action_profitability_items(section_name, domain, res_id)
+
+    def action_project_timesheets(self):
+        action = super().action_project_timesheets()
+        if not self.allow_billable:
+            context = action['context'].replace('active_id', str(self.id))
+            action['context'] = {
+                **ast.literal_eval(context),
+                'hide_so_line': True,
+            }
+        return action
 
     # ----------------------------
     #  Project Updates

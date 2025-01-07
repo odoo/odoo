@@ -824,6 +824,7 @@ class ProjectProject(models.Model):
 
         action = super().action_view_tasks()
         action['context']['hide_partner'] = self._get_hide_partner()
+        action['context']['hide_sale_line'] = not self.allow_billable
         return action
 
     def action_open_project_vendor_bills(self):
