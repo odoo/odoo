@@ -192,10 +192,10 @@ export class LivechatService {
             }),
             ONE_DAY_TTL
         );
-        if (this.thread.operator) {
+        if (this.thread.livechat_operator_id) {
             expirableStorage.setItem(
                 OPERATOR_STORAGE_KEY,
-                this.thread.operator.id,
+                this.thread.livechat_operator_id.id,
                 ONE_DAY_TTL * 7
             );
         }
@@ -224,7 +224,7 @@ export class LivechatService {
         const saveData = JSON.parse(JSON.stringify(data));
         const { Thread = [] } = this.store.insert(data);
         this.thread = Thread[0];
-        if (!this.thread?.operator) {
+        if (!this.thread?.livechat_operator_id) {
             this.notificationService.add(_t("No available collaborator, please try again later."));
             this.leave({ notifyServer: false });
             return;

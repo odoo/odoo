@@ -101,11 +101,7 @@ export class Thread extends Record {
         },
     });
     get showCorrespondentCountry() {
-        return (
-            this.channel_type === "livechat" &&
-            this.operator?.eq(this.store.self) &&
-            Boolean(this.correspondentCountry)
-        );
+        return false;
     }
     counter = 0;
     counter_bus_id = 0;

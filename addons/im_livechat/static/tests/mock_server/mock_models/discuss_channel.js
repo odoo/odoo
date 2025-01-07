@@ -34,12 +34,12 @@ export class DiscussChannel extends mailModels.DiscussChannel {
                 // add the operator id
                 if (channel.livechat_operator_id) {
                     // livechat_username ignored for simplicity
-                    channelInfo.operator = mailDataHelpers.Store.one(
+                    channelInfo.livechat_operator_id = mailDataHelpers.Store.one(
                         ResPartner.browse(channel.livechat_operator_id),
                         makeKwArgs({ fields: ["user_livechat_username", "write_date"] })
                     );
                 } else {
-                    channelInfo.operator = false;
+                    channelInfo.livechat_operator_id = false;
                 }
                 channelInfo.livechatChannel = mailDataHelpers.Store.one(
                     this.env["im_livechat.channel"].browse(channel.livechat_channel_id),
