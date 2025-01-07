@@ -5134,6 +5134,8 @@ class AccountMove(models.Model):
         return report_action
 
     def action_invoice_download_pdf(self):
+        if any(move.state != 'posted' for move in self):
+            raise UserError(_("You can't Download invoices that are not posted."))
         return {
             'type': 'ir.actions.act_url',
             'url': f'/account/download_invoice_documents/{",".join(map(str, self.ids))}/pdf',
