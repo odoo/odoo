@@ -22,7 +22,7 @@
                 data-create-method="createTag"/>
         </div>
         <!-- Blog Posts page  -->
-        <div data-selector="main:has(#o_wblog_index_content)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Blogs Page">
+        <div data-selector="main:has(#o_wblog_blog_top)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Blogs Page">
             <we-checkbox string="Top Banner"
                          data-name="blog_cover_opt"
                          data-customize-website-views="website_blog.opt_blog_cover_post"
@@ -33,7 +33,9 @@
                          data-customize-website-views="website_blog.opt_blog_cover_post_fullwidth_design"
                          data-dependencies="blog_cover_opt"
                          data-no-preview="true"
-                         data-reload="/"/>
+                        data-reload="/"/>
+        </div>
+        <div data-selector="main:has(#o_wblog_index_content)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Blogs Page">
             <we-select string="Layout" data-no-preview="true" data-reload="/">
                 <we-button data-customize-website-views="">Grid</we-button>
                 <we-button data-customize-website-views="website_blog.opt_blog_list_view">List</we-button>
