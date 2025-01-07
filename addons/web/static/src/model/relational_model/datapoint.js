@@ -1,5 +1,4 @@
 import { markRaw } from "@odoo/owl";
-import { evalDomain } from "@web/core/domain";
 import { Reactive } from "@web/core/utils/reactive";
 import { getId } from "./utils";
 
@@ -75,19 +74,5 @@ export class DataPoint extends Reactive {
 
     get context() {
         return this.config.context;
-    }
-
-    // -------------------------------------------------------------------------
-    // Public
-    // -------------------------------------------------------------------------
-
-    /**
-     * @param {string} fieldName
-     * @returns {boolean}
-     */
-    isFieldReadonly(fieldName) {
-        const activeField = this.activeFields[fieldName];
-        const { readonly } = activeField || this.fields[fieldName];
-        return readonly && evalDomain(readonly, this.evalContext);
     }
 }
