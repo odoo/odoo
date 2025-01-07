@@ -214,20 +214,29 @@ class PaymentProvider(models.Model):
             )
         return response.json()
 
-    def _razorpay_calculate_signature(self, data):
+    def _razorpay_calculate_signature(self, data, is_redirect=True):
         """ Compute the signature for the request's data according to the Razorpay documentation.
 
         See https://razorpay.com/docs/webhooks/validate-test#validate-webhooks.
 
         :param bytes data: The data to sign.
+        :param bool is_redirect: Whether the data should be treated as redirect data or as coming
+                                 from a webhook notification.
         :return: The calculated signature.
         :rtype: str
         """
-        secret = self.razorpay_webhook_secret
-        if not secret:
-            _logger.warning("Missing webhook secret; aborting signature calculation.")
-            return None
-        return hmac.new(secret.encode(), msg=data, digestmod=hashlib.sha256).hexdigest()
+        if is_redirect:
+            secret = self.razorpay_key_secret
+            signing_string = f'{data["razorpay_order_id"]}|{data["razorpay_payment_id"]}'
+            return hmac.new(
+                secret.encode(), msg=signing_string.encode(), digestmod=hashlib.sha256
+            ).hexdigest()
+        else:  # Notification data.
+            secret = self.razorpay_webhook_secret
+            if not secret:
+                _logger.warning("Missing webhook secret; aborting signature calculation.")
+                return None
+            return hmac.new(secret.encode(), msg=data, digestmod=hashlib.sha256).hexdigest()
 
     def _get_default_payment_method_codes(self):
         """ Override of `payment` to return the default payment method codes. """
