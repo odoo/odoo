@@ -19,7 +19,9 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
 
         for _i in range(5):
             discuss_channels = self._open_livechat_discuss_channel()
-            channel_operator_ids = [channel_info['operator']['id'] for channel_info in discuss_channels]
+            channel_operator_ids = [
+                channel_info["livechat_operator_id"]["id"] for channel_info in discuss_channels
+            ]
             self.assertTrue(all(partner_id in channel_operator_ids for partner_id in self.operators.mapped('partner_id').ids))
 
     def test_channel_get_livechat_visitor_info(self):
@@ -186,7 +188,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             ('partner_id', '=', operator.partner_id.id),
         ]
         operator_member = self.env['discuss.channel.member'].search(operator_member_domain)
-        self.assertEqual(channel_info['operator'], {
+        self.assertEqual(channel_info['livechat_operator_id'], {
             "id": operator.partner_id.id,
             "type": "partner",
         })

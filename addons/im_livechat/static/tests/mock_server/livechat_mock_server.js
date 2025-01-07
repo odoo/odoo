@@ -70,11 +70,11 @@ async function get_session(request) {
             chatbot_current_step_id: channelVals.chatbot_current_step_id,
             id: -1,
             isLoaded: true,
-            name: channelVals["name"],
-            operator: mailDataHelpers.Store.one(
+            livechat_operator_id: mailDataHelpers.Store.one(
                 ResPartner.browse(channelVals.livechat_operator_id),
                 makeKwArgs({ fields: ["user_livechat_username", "write_date"] })
             ),
+            name: channelVals["name"],
             scrollUnread: false,
             state: "open",
         });

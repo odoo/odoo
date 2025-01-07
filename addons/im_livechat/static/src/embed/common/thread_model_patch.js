@@ -11,7 +11,7 @@ patch(Thread.prototype, {
         this.chatbotTypingMessage = Record.one("mail.message", {
             compute() {
                 if (this.chatbot) {
-                    return { id: -0.1 - this.id, thread: this, author: this.operator };
+                    return { id: -0.1 - this.id, thread: this, author: this.livechat_operator_id };
                 }
             },
         });
@@ -23,7 +23,7 @@ patch(Thread.prototype, {
                         id: -0.2 - this.id,
                         body: livechatService.options.default_message,
                         thread: this,
-                        author: this.operator,
+                        author: this.livechat_operator_id,
                     };
                 }
             },
@@ -45,13 +45,15 @@ patch(Thread.prototype, {
 
     get avatarUrl() {
         if (this.channel_type === "livechat") {
-            return this.operator.avatarUrl;
+            return this.livechat_operator_id.avatarUrl;
         }
         return super.avatarUrl;
     },
     get displayName() {
-        if (this.channel_type === "livechat" && this.operator) {
-            return this.operator.user_livechat_username || this.operator.name;
+        if (this.channel_type === "livechat" && this.livechat_operator_id) {
+            return (
+                this.livechat_operator_id.user_livechat_username || this.livechat_operator_id.name
+            );
         }
         return super.displayName;
     },

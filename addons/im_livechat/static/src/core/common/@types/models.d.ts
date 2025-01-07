@@ -1,5 +1,5 @@
 declare module "models" {
     export interface Thread {
-        operator: Persona,
+        livechat_operator_id: Persona,
     }
 }

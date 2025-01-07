@@ -23,7 +23,7 @@ export class HistoryService {
             const data = expirableStorage.getItem(HistoryService.HISTORY_STORAGE_KEY);
             const history = data ? JSON.parse(data) : [];
             rpc("/im_livechat/history", {
-                pid: this.livechatService.thread.operator.id,
+                pid: this.livechatService.thread.livechat_operator_id.id,
                 channel_id: this.livechatService.thread.id,
                 page_history: history,
             });
