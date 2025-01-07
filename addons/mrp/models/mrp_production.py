@@ -1765,6 +1765,15 @@ class MrpProduction(models.Model):
         has_backorder_to_ignore = defaultdict(lambda: False)
         for production in self:
             mo_amounts = amounts.get(production)
+            if production.product_id.tracking == 'serial' and \
+                production.product_qty * sum(production.move_raw_ids.mapped('product_uom_qty')) > 50000000:
+                raise UserError(
+                    "You are about to create a very large number of Manufacturing Orders "
+                    f"for product {production.product_id.display_name} because it is "
+                    "tracked by serial number with high quantity. This may lead to "
+                    "performance issues. Please consider splitting your order into multiple "
+                    "batches or use a different tracking approach."
+                )
             if not mo_amounts:
                 amounts[production] = _default_amounts(production)
                 continue
