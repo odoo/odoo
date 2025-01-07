@@ -5,11 +5,12 @@ class NewId:
     """ Pseudo-ids for new records, encapsulating an optional origin id (actual
         record id) and an optional reference (any value).
     """
-    __slots__ = ['origin', 'ref']
+    __slots__ = 'origin', 'ref' , '__hash'
 
     def __init__(self, origin=None, ref=None):
         self.origin = origin
         self.ref = ref
+        self.__hash = None
 
     def __bool__(self):
         return False
@@ -21,7 +22,9 @@ class NewId:
         )
 
     def __hash__(self):
-        return hash(self.origin or self.ref or id(self))
+        if self.__hash is None:
+            self.__hash = hash(self.origin or self.ref or id(self))
+        return self.__hash
 
     def __repr__(self):
         return (
