@@ -4396,13 +4396,13 @@ class MailThread(models.AbstractModel):
         return True
 
     @api.readonly
-    def message_get_followers(self, after=None, limit=100, filter_recipients=False):
+    def message_get_followers(self, limit=20, offset=0, filter_recipients=False):
         self.ensure_one()
         store = Store()
-        self._message_followers_to_store(store, after, limit, filter_recipients)
+        self._message_followers_to_store(store, limit, offset, filter_recipients)
         return store.get_result()
 
-    def _message_followers_to_store(self, store: Store, after=None, limit=100, filter_recipients=False, reset=False):
+    def _message_followers_to_store(self, store: Store, limit=20, offset=0, filter_recipients=False, reset=False):
         self.ensure_one()
         domain = [
             ("res_id", "=", self.id),
@@ -4416,13 +4416,11 @@ class MailThread(models.AbstractModel):
                 ("partner_id.active", "=", True),
             ]
             domain = expression.AND([domain, subtype_domain])
-        if after:
-            domain = expression.AND([domain, [("id", ">", after)]])
         store.add(
             self,
             {
                 "recipients" if filter_recipients else "followers": Store.Many(
-                    self.env["mail.followers"].search(domain, limit=limit, order="id ASC"),
+                    self.env["mail.followers"].search(domain, offset=offset, limit=limit, order="name ASC"),
                     mode="ADD" if not reset else "REPLACE",
                 ),
             },
