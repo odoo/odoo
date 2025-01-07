@@ -102,6 +102,8 @@ class IotBoxOwlHomePage(http.Controller):
     def clear_wifi_configuration(self):
         helpers.update_conf({'wifi_ssid': '', 'wifi_password': ''})
         wifi.disconnect(forget_network=True)
+        if not helpers.get_ip():
+            wifi.toggle_access_point(True)
         return json.dumps({
             'status': 'success',
             'message': 'Successfully disconnected from wifi',
