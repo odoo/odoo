@@ -944,8 +944,10 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.repair1.action_repair_start()
         self.repair1.action_repair_end()
         self.repair1.action_create_sale_order()
+        self.assertEqual(len(self.product_1.stock_move_ids.ids), 2, "There should be 2 stock moves for the product created by the repair order")
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosRepairSettleOrder', login="pos_user")
+        self.assertEqual(len(self.product_1.stock_move_ids.ids), 2, "Paying for the order in PoS should not create new stock moves")
 
     def test_settle_order_ship_later_delivered_qty(self):
         """This test create an order, settle it in the PoS and ship it later.
