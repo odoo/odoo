@@ -32,6 +32,15 @@ class MailTestRecipients(models.Model):
     def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id', 'contact_ids']
 
+
+class MailTestThreadCustomer(models.Model):
+    _name = 'mail.test.thread.customer'
+    _description = "Test Customer Thread Model"
+    _inherit = ['mail.test.recipients']
+    _mail_thread_customer = True
+    _primary_email = 'customer_email'
+
+
 # ------------------------------------------------------------
 # PROPERTIES
 # ------------------------------------------------------------
