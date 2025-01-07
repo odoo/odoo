@@ -362,7 +362,7 @@ class PurchaseOrderLine(models.Model):
             name = product_lang.display_name
             if product_lang.description_purchase:
                 name += '\n' + product_lang.description_purchase
-            lines = lines.filtered(lambda l: l.name == name + '\n' + description_picking)
+            lines = lines.filtered(lambda l: (l.name == name + '\n' + description_picking) or (product_lang.name == values.get('product_description_variants') and l.name == name))
             if lines:
                 return lines[0]
 
