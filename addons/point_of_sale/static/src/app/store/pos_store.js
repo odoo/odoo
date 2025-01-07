@@ -227,7 +227,7 @@ export class PosStore extends Reactive {
     }
 
     async closingSessionNotification(data) {
-        if (data.login_number === this.session.login_number) {
+        if (data.login_number == odoo.login_number) {
             return;
         }
 
@@ -270,7 +270,7 @@ export class PosStore extends Reactive {
             console.info("Session Ids", odoo.pos_session_id, data.session_id);
         }
 
-        if (data.login_number === odoo.login_number || data.session_id !== odoo.pos_session_id) {
+        if (data.login_number == odoo.login_number || data.session_id !== odoo.pos_session_id) {
             return;
         }
 
@@ -2011,9 +2011,9 @@ export class PosStore extends Reactive {
             }, {});
 
         // Remove lot/serial names that are already used in draft orders
-        existingLots = existingLots.filter((lot) => {
-            return lot.product_qty > (usedLotsQty[lot.name]?.total || 0);
-        });
+        existingLots = existingLots.filter(
+            (lot) => lot.product_qty > (usedLotsQty[lot.name]?.total || 0)
+        );
 
         // Check if the input lot/serial name is already used in another order
         const isLotNameUsed = (itemValue) => {
