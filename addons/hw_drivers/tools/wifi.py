@@ -119,18 +119,20 @@ def disconnect(forget_network=False):
     if forget_network and not _validate_configuration(ssid, forget_network):
         _logger.warning('Failed to remove network configuration from /root_bypass_ramdisks for %s', ssid)
 
+    if not get_ip():
+        toggle_access_point(START)
     return not is_current(ssid)
 
 
-def connect(ssid, password):
-    """Disables access point mode, disconnects from the current network and
-    connects to the given network using the provided password.
+def _connect(ssid, password):
+    """Disables access point mode and connects to the given
+    network using the provided password.
 
     :param str ssid: SSID of the network to connect to
     :param str password: Password of the network to connect to
     :return: True if connected successfully
     """
-    if ssid not in get_available_ssids() or not toggle_access_point(STOP) or not disconnect():
+    if ssid not in get_available_ssids() or not toggle_access_point(STOP):
         return False
 
     _logger.info('Connecting to network %s', ssid)
@@ -142,29 +144,37 @@ def connect(ssid, password):
     return is_current(ssid)
 
 
-def reconnect(ssid=None, password=None):
+def reconnect(ssid=None, password=None, force_update=False):
     """Reconnect to the given network. If a connection to the network already exists,
     we can reconnect to it without providing the password (e.g. after a reboot).
     If no SSID is provided, we will try to reconnect to the last connected network.
 
     :param str ssid: SSID of the network to reconnect to (optional)
     :param str password: Password of the network to reconnect to (optional)
+    :param bool force_update: Force connection, even if internet is already available through ethernet
     :return: True if reconnected successfully
     """
-    timer = time.time() + 10  # Required on boot: wait 10 sec (see: https://github.com/odoo/odoo/pull/187862)
-    while time.time() < timer:
-        if get_ip():
-            return True
-        time.sleep(.5)
+    should_start_access_point_on_failure = is_access_point() or not get_ip()
+
+    if not force_update:
+        timer = time.time() + 10  # Required on boot: wait 10 sec (see: https://github.com/odoo/odoo/pull/187862)
+        while time.time() < timer:
+            if get_ip():
+                return True
+            time.sleep(.5)
 
     if not ssid:
         return toggle_access_point(START)
 
     # Try to re-enable an existing connection, or set up a new persistent one
     if not _nmcli(['con', 'up', ssid], sudo=True):
-        connect(ssid, password)
+        _connect(ssid, password)
 
-    return is_current(ssid) or toggle_access_point(START)
+    connected_successfully = is_current(ssid)
+    if not connected_successfully and should_start_access_point_on_failure:
+        toggle_access_point(START)
+
+    return connected_successfully
 
 
 def _validate_configuration(ssid, forget_network=False):
