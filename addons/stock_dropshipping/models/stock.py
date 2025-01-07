@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields
+from odoo import api, models, fields, _
 from odoo.osv import expression
 
 
@@ -48,6 +48,26 @@ class StockPicking(models.Model):
     def _is_to_external_location(self):
         self.ensure_one()
         return super()._is_to_external_location() or self.is_dropship
+
+    def _send_confirmation_email(self):
+        subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
+        for stock_pick in self.filtered(lambda p: p.company_id.stock_move_email_validation and p.picking_type_id.code == 'dropship'):
+            delivery_template = stock_pick.company_id.stock_mail_confirmation_template_id
+            if stock_pick.purchase_id.dest_address_id:
+                dropshipping_template = self.env.ref('stock_dropshipping.mail_template_data_delivery_confirmation_dropship', raise_if_not_found=False)
+                delivery_template = dropshipping_template or delivery_template
+            stock_pick.with_context(force_send=True).message_post_with_source(
+                delivery_template,
+                email_layout_xmlid='mail.mail_notification_light',
+                subtype_id=subtype_id,
+            )
+        super()._send_confirmation_email()
+
+    def _get_report_base_filename(self):
+        picking_report_name = super()._get_report_base_filename()
+        if self.picking_type_code == 'dropship' and self.purchase_id.dest_address_id:
+            picking_report_name = _("Delivery Slip - %s", f"{self.purchase_id.dest_address_id.name} - {self.name}")
+        return picking_report_name
 
 
 class StockPickingType(models.Model):

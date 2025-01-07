@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="mail_template_data_delivery_confirmation_dropship" model="mail.template">
+        <field name="name">Shipping: Send by Email</field>
+        <field name="model_id" ref="model_stock_picking"/>
+        <field name="subject">{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})</field>
+        <field name="partner_to">{{ object.purchase_id.dest_address_id.email and object.purchase_id.dest_address_id.id or object.purchase_id.dest_address_id.parent_id.id }}</field>
+        <field name="description">Sent to the customers when orders are delivered, if the setting is enabled</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Hello <t t-out="object.purchase_id.dest_address_id.name or ''">Brandon Freeman</t>,<br/><br/>
+                    We are glad to inform you that your order has been shipped.
+                    <t t-if="hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref">
+                        Your tracking reference is
+                        <strong>
+                        <t t-if="object.carrier_tracking_url">
+                            <t t-set="multiple_carrier_tracking" t-value="object.get_multiple_carrier_tracking()"/>
+                            <t t-if="multiple_carrier_tracking">
+                                <t t-foreach="multiple_carrier_tracking" t-as="line">
+                                    <br/><a t-att-href="line[1]" target="_blank" t-out="line[0] or ''"></a>
+                                </t>
+                            </t>
+                            <t t-else="">
+                                <a t-attf-href="{{ object.carrier_tracking_url }}" target="_blank" t-out="object.carrier_tracking_ref or ''"></a>.
+                            </t>
+                        </t>
+                        <t t-else="">
+                            <t t-out="object.carrier_tracking_ref or ''"></t>.
+                        </t>
+                        </strong>
+                    </t>
+                    <br/><br/>
+                    Please find your delivery order attached for more details.<br/><br/>
+                    Thank you,
+                    <t t-if="user.signature">
+                        <br />
+                        <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+                    </t>
+                </p>
+            </div>
+        </field>
+        <field name="report_template_ids" eval="[(4, ref('stock.action_report_delivery'))]"/>
+        <field name="lang">{{ object.purchase_id.dest_address_id.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+</odoo>

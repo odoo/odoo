@@ -23,9 +23,11 @@ internal transfer document is needed.
     'depends': ['sale_purchase_stock'],
     'data': [
         'data/stock_data.xml',
+        'data/mail_template_data.xml',
         'views/sale_order_views.xml',
         'views/stock_picking_views.xml',
-        'views/purchase_order_views.xml'
+        'views/purchase_order_views.xml',
+        'views/res_config_settings_views.xml',
     ],
     'demo': [
         'data/stock_dropshipping_demo.xml',
