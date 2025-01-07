@@ -1457,18 +1457,7 @@ export class SearchModel extends EventBus {
                 }
             }
         }
-        let context;
-        try {
-            context = makeContext(contexts);
-            return context;
-        } catch (error) {
-            throw new Error(
-                _t("Failed to evaluate the context: %(context)s.\n%(error)s", {
-                    context,
-                    error: error.message,
-                })
-            );
-        }
+        return makeContext(contexts);
     }
 
     /**
@@ -1538,18 +1527,8 @@ export class SearchModel extends EventBus {
             domains.push(this._getSearchPanelDomain());
         }
 
-        let domain;
-        try {
-            domain = Domain.and(domains);
-            return params.raw ? domain : domain.toList(this.domainEvalContext);
-        } catch (error) {
-            throw new Error(
-                _t("Failed to evaluate the domain: %(domain)s.\n%(error)s", {
-                    domain: domain.toString(),
-                    error: error.message,
-                })
-            );
-        }
+        const domain = Domain.and(domains);
+        return params.raw ? domain : domain.toList(this.domainEvalContext);
     }
 
     _getFacets() {
@@ -1966,19 +1945,14 @@ export class SearchModel extends EventBus {
                 // should set {'field1': [value1, value2]} in the context
                 let context = {};
                 if (searchItem.context) {
-                    try {
-                        const self = activeItem.autocompletValues.map(
-                            (autocompleValue) => autocompleValue.value
-                        );
-                        context = evaluateExpr(searchItem.context, { self });
-                        if (typeof context !== "object") {
-                            throw Error();
-                        }
-                    } catch (error) {
+                    const self = activeItem.autocompletValues.map(
+                        (autocompleValue) => autocompleValue.value
+                    );
+                    context = evaluateExpr(searchItem.context, { self });
+                    if (typeof context !== "object") {
                         throw new Error(
-                            _t("Failed to evaluate the context: %(context)s.\n%(error)s", {
+                            _t("Failed to evaluate the context: %(context)s.", {
                                 context: searchItem.context,
-                                error: error.message,
                             })
                         );
                     }
