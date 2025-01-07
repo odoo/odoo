@@ -165,7 +165,6 @@ export class FormController extends Component {
         this.orm = useService("orm");
         this.viewService = useService("view");
         this.ui = useService("ui");
-        this.companyService = useService("company");
         useBus(this.ui.bus, "resize", this.render);
 
         this.archInfo = this.props.archInfo;
@@ -222,9 +221,9 @@ export class FormController extends Component {
             const suggestedCompany = error.cause?.data?.context?.suggested_company;
             if (error.cause?.data?.name === "odoo.exceptions.AccessError" && suggestedCompany) {
                 this.env.pushStateBeforeReload();
-                const activeCompanyIds = this.companyService.activeCompanyIds;
+                const activeCompanyIds = user.activeCompanies.map((c) => c.id);
                 activeCompanyIds.push(suggestedCompany.id);
-                this.companyService.setCompanies(activeCompanyIds, true);
+                user.activateCompanies(activeCompanyIds);
             } else {
                 throw error;
             }
@@ -283,13 +282,11 @@ export class FormController extends Component {
             beforeVisibilityChange: () => this.beforeVisibilityChange(),
             beforeLeave: () => this.beforeLeave(),
             beforeUnload: (ev) => this.beforeUnload(ev),
-            getLocalState: () => {
-                return {
-                    activeNotebookPages: !this.model.root.isNew ? activeNotebookPages : {},
-                    modelState: this.model.exportState(),
-                    resId: this.model.root.resId,
-                };
-            },
+            getLocalState: () => ({
+                activeNotebookPages: !this.model.root.isNew ? activeNotebookPages : {},
+                modelState: this.model.exportState(),
+                resId: this.model.root.resId,
+            }),
         });
         useDebugCategory("form", { component: this });
 

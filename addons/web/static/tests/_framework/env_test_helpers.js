@@ -104,8 +104,7 @@ export async function makeMockEnv(partialEnv, { makeNew = false } = {}) {
             translatedTerms[translationLoaded] = false;
         }
 
-        // Ideally: should be done in a patch of the company service, but this
-        // is less intrusive for now.
+        // Ideally: should be done in a patch of the user, but this is less intrusive for now.
         allowedFns.forEach((fn) => {
             if (fn.name === "has") {
                 allowedFns.delete(fn);

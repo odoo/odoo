@@ -22,7 +22,6 @@ declare module "services" {
     import { publicComponentService } from "@web/public/public_component_service";
     import { viewService } from "@web/views/view_service";
     import { actionService } from "@web/webclient/actions/action_service";
-    import { companyService } from "@web/webclient/company_service";
     import { profilingService } from "@web/webclient/debug/profiling/profiling_service";
     import { menuService } from "@web/webclient/menus/menu_service";
     import { demoDataService } from "@web/webclient/settings_form_view/widgets/demo_data_service";
@@ -36,7 +35,6 @@ declare module "services" {
     export interface Services {
         action: typeof actionService;
         command: typeof commandService;
-        company: typeof companyService;
         datetime_picker: typeof datetimePickerService;
         demo_data: typeof demoDataService;
         dialog: typeof dialogService;

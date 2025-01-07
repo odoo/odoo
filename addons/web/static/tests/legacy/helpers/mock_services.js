@@ -254,26 +254,6 @@ export function patchUserWithCleanup(patch) {
     patchWithCleanup(user, patch);
 }
 
-export const fakeCompanyService = {
-    start() {
-        return {
-            allowedCompanies: {},
-            allowedCompaniesWithAncestors: {},
-            activeCompanyIds: [],
-            currentCompany: {},
-            setCompanies: () => {},
-            getCompany: () => {},
-            evalContext: {
-                multi_company: false,
-                allowed_ids: [],
-                active_ids: [],
-                active_id: undefined,
-                has: () => {},
-            },
-        };
-    },
-};
-
 export function makeFakeBarcodeService() {
     return {
         start() {
@@ -324,7 +304,6 @@ function makeFakeActionService() {
 
 export const mocks = {
     color_scheme: () => fakeColorSchemeService,
-    company: () => fakeCompanyService,
     command: () => fakeCommandService,
     effect: () => effectService, // BOI The real service ? Is this what we want ?
     localization: makeFakeLocalizationService,

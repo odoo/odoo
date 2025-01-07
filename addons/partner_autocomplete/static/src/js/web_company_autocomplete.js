@@ -1,13 +1,13 @@
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
+import { user } from "@web/core/user";
 
 export const companyAutocompleteService = {
-    dependencies: ["orm", "company"],
+    dependencies: ["orm"],
 
-    start(env, { orm, company }) {
+    start(env, { orm }) {
         if (session.iap_company_enrich) {
-            const currentCompanyId = company.currentCompany.id;
-            orm.silent.call("res.company", "iap_enrich_auto", [currentCompanyId], {});
+            orm.silent.call("res.company", "iap_enrich_auto", [user.activeCompany.id], {});
         }
     },
 };

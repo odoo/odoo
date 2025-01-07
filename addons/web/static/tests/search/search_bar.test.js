@@ -38,7 +38,7 @@ import {
     toggleSearchBarMenu,
     validateSearch,
 } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
+import { cookie } from "@web/core/browser/cookie";
 import { pick } from "@web/core/utils/objects";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
@@ -1564,7 +1564,8 @@ test("facets display with any / not any operator (check brackets)", async functi
     expect.verifySteps([`/web/domain/validate`]);
 });
 
-test("select autocompleted many2one with allowed_company_ids domain", async () => {
+test("select autocompleted many2one with allowed_company_ids domain (cids: 1-5)", async () => {
+    cookie.set("cids", "1-5");
     // allowed_company_ids is initially set by the company_service
     serverState.companies = [
         ...serverState.companies,
@@ -1574,7 +1575,6 @@ test("select autocompleted many2one with allowed_company_ids domain", async () =
             name: "Hierophant",
         },
     ];
-    browser.location.search = "cids=1,5";
 
     await mountWithSearch(SearchBar, {
         resModel: "partner",
@@ -1595,8 +1595,30 @@ test("select autocompleted many2one with allowed_company_ids domain", async () =
         "Third record",
         "Add Custom Filter",
     ]);
+});
 
-    serverState.userContext = { allowed_company_ids: [1] };
+test("select autocompleted many2one with allowed_company_ids domain (cids: 1)", async () => {
+    cookie.set("cids", "1");
+    // allowed_company_ids is initially set by the company_service
+    serverState.companies = [
+        ...serverState.companies,
+        // company_service only includes existing companies from cids
+        {
+            id: 5,
+            name: "Hierophant",
+        },
+    ];
+
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <field name="bar" domain="[('company', 'in', allowed_company_ids)]"/>
+            </search>
+        `,
+    });
 
     await click(".o_searchview input");
     await clear();

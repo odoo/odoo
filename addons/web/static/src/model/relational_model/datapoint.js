@@ -77,10 +77,6 @@ export class DataPoint extends Reactive {
         return this.config.context;
     }
 
-    get companies() {
-        return this.config.companies;
-    }
-
     // -------------------------------------------------------------------------
     // Public
     // -------------------------------------------------------------------------

@@ -3,13 +3,13 @@ import { registry } from "@web/core/registry";
 import { formatFloatTime, formatFloatFactor } from "@web/views/fields/formatters";
 import { formatFloat } from "@web/core/utils/numbers";
 import { FloatFactorField } from "@web/views/fields/float_factor/float_factor_field";
+import { user } from "@web/core/user";
 
 export const timesheetUOMService = {
-    dependencies: ["company"],
-    start(env, { company }) {
+    start() {
         const service = {
             get timesheetUOMId() {
-                return company.currentCompany.timesheet_uom_id;
+                return user.activeCompany.timesheet_uom_id;
             },
             get timesheetWidget() {
                 let timesheet_widget = "float_factor";
@@ -29,14 +29,14 @@ export const timesheetUOMService = {
                     : props;
             },
             _getFactorCompanyDependentProps(props) {
-                const factor = company.currentCompany.timesheet_uom_factor || props.factor;
+                const factor = user.activeCompany.timesheet_uom_factor || props.factor;
                 return { ...props, factor };
             },
             get formatter() {
                 if (this.timesheetWidget === "float_time") {
                     return formatFloatTime;
                 }
-                const factor = company.currentCompany.timesheet_uom_factor || 1;
+                const factor = user.activeCompany.timesheet_uom_factor || 1;
                 if (this.timesheetWidget === "float_toggle") {
                     return (value, options = {}) => formatFloat(value * factor, options);
                 }

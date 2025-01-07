@@ -45,7 +45,6 @@ import { FetchRecordError } from "./errors";
  * @property {Object} activeFields
  * @property {object} context
  * @property {boolean} isMonoRecord
- * @property {object} companies
  * @property {boolean} isRoot
  * @property {Array} [domain]
  * @property {Array} [groupBy]
@@ -92,7 +91,7 @@ const DEFAULT_HOOKS = {
 };
 
 export class RelationalModel extends Model {
-    static services = ["action", "company", "dialog", "notification", "orm"];
+    static services = ["action", "dialog", "notification", "orm"];
     static Record = Record;
     static Group = Group;
     static DynamicRecordList = DynamicRecordList;
@@ -107,7 +106,7 @@ export class RelationalModel extends Model {
     /**
      * @param {Params} params
      */
-    setup(params, { action, company, dialog, notification }) {
+    setup(params, { action, dialog, notification }) {
         this.action = action;
         this.dialog = dialog;
         this.notification = notification;
@@ -120,7 +119,6 @@ export class RelationalModel extends Model {
         /** @type {Config} */
         this.config = {
             isMonoRecord: false,
-            companies: company.evalContext,
             context: {},
             ...params.config,
             isRoot: true,
@@ -371,7 +369,6 @@ export class RelationalModel extends Model {
             resModel: config.resModel,
             fields: config.fields,
             activeFields: config.activeFields,
-            companies: config.companies,
         };
         let groupRecordConfig;
         const groupRecordResIds = [];
@@ -380,7 +377,6 @@ export class RelationalModel extends Model {
                 ...this.groupByInfo[firstGroupByName],
                 resModel: config.fields[firstGroupByName].relation,
                 context: {},
-                companies: config.companies,
             };
         }
         const proms = [];
