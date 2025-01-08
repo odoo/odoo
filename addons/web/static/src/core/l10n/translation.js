@@ -5,7 +5,19 @@ export const translationLoaded = Symbol("translationLoaded");
 export const translatedTerms = {
     [translationLoaded]: false,
 };
+export const translatedTermsNext = {};
 export const translationIsReady = new Deferred();
+
+// do not use this
+export function _contextualized_t(context) {
+    return function () {
+        odoo.translateContext = context;
+        const translatedValue = _t(...arguments);
+        odoo.translateContext = null;
+        return translatedValue;
+    };
+}
+
 /**
  * Translate a term, or return the term if no translation can be found.
  *
@@ -14,7 +26,9 @@ export const translationIsReady = new Deferred();
  */
 export function _t(term, ...values) {
     if (translatedTerms[translationLoaded]) {
-        const translation = translatedTerms[term] ?? term;
+        const context = odoo.translateContext;
+        const termMap = context ? translatedTermsNext[context] : translatedTerms;
+        const translation = termMap?.[term] ?? term;
         if (values.length === 0) {
             return translation;
         }
@@ -32,7 +46,9 @@ class LazyTranslatedString extends String {
     valueOf() {
         const term = super.valueOf();
         if (translatedTerms[translationLoaded]) {
-            const translation = translatedTerms[term] ?? term;
+            const context = odoo.translateContext;
+            const termMap = context ? translatedTermsNext[context] : translatedTerms;
+            const translation = termMap[term] ?? term;
             if (this.values.length === 0) {
                 return translation;
             }

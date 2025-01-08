@@ -1,3 +1,5 @@
+import { _contextualized_t } from "@web/core/l10n/translation";
+const _t = _contextualized_t("web");
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -19,6 +21,7 @@ export class UserMenu extends Component {
     setup() {
         this.userName = user.name;
         this.dbName = session.db;
+        this.myString = _t("Disabled");
         const { partnerId, writeDate } = user;
         this.source = imageUrl("res.partner", partnerId, "avatar_128", { unique: writeDate });
     }

@@ -5,7 +5,12 @@ import { browser } from "../browser/browser";
 import { registry } from "../registry";
 import { strftimeToLuxonFormat } from "./dates";
 import { localization } from "./localization";
-import { translatedTerms, translationLoaded, translationIsReady } from "./translation";
+import {
+    translatedTerms,
+    translationLoaded,
+    translationIsReady,
+    translatedTermsNext,
+} from "./translation";
 
 const { Settings } = luxon;
 
@@ -44,9 +49,21 @@ export const localizationService = {
             multi_lang: multiLang,
         } = await response.json();
 
+        const termsNext = {};
+        for (const addon of Object.keys(modules)) {
+            termsNext[addon] = {};
+            for (const message of modules[addon].messages) {
+                termsNext[addon][message.id] = message.string;
+            }
+        }
+        termsNext.web.Disabled = "Web Disabled";
+        termsNext.web_enterprise.Disabled = "Web enterprise Disabled";
+        Object.assign(translatedTermsNext, termsNext);
+
         // FIXME We flatten the result of the python route.
         // Eventually, we want a new python route to return directly the good result.
         const terms = {};
+        modules["website"].messages.push({ calendar: "kikou" });
         for (const addon of Object.keys(modules)) {
             for (const message of modules[addon].messages) {
                 terms[message.id] = message.string;
