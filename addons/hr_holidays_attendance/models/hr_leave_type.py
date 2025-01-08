@@ -47,14 +47,53 @@ class HrLeaveType(models.Model):
         res = super().get_allocation_data(employees, date)
         deductible_time_off_types = self.env['hr.leave.type'].search([
             ('requires_allocation', '=', 'extra_hours')])
-        leave_type_names = deductible_time_off_types.mapped('name')
-        for employee in res:
-            for leave_data in res[employee]:
-                if leave_data[0] in leave_type_names:
-                    leave_data[1]['virtual_remaining_leaves'] = employee.sudo().total_overtime
-                    leave_data[1]['overtime_deductible'] = True
-                else:
-                    leave_data[1]['overtime_deductible'] = False
+        for employee in employees:
+            for leave_type in deductible_time_off_types:
+                confirmed_leaves = self.env['hr.leave'].search([
+                    ('employee_id', '=', employee.id),
+                    ('holiday_status_id', '=', leave_type.id),
+                    ('state', '=', 'confirm'),
+                ])
+                validated_leaves = self.env['hr.leave'].search([
+                    ('employee_id', '=', employee.id),
+                    ('holiday_status_id', '=', leave_type.id),
+                    ('state', '=', 'validate'),
+                ])
+                res[employee].append((leave_type.name, {
+                    'remaining_leaves': 0,
+                    'virtual_remaining_leaves': employee.sudo().total_overtime,
+                    'max_leaves': 0,
+                    'accrual_bonus': 0,
+                    'leaves_taken': 0,
+                    'virtual_leaves_taken': 0,
+                    'leaves_requested': 0,
+                    'leaves_approved': 0,
+                    'closest_allocation_remaining': 0,
+                    'closest_allocation_expire': False,
+                    'holds_changes': False,
+                    'total_virtual_excess': 0,
+                    'virtual_excess_data': {},
+                    'exceeding_duration': 0,
+                    'request_unit': leave_type.request_unit,
+                    'icon': leave_type.sudo().icon_id.url,
+                    'allows_negative': leave_type.allows_negative,
+                    'max_allowed_negative': leave_type.max_allowed_negative,
+                    'employee_company': employee.company_id.id,
+                    'closest_allocation_remaining': False,
+                    'closest_allocation_expire': False,
+                    'closest_allocation_duration': False,
+                    'holds_changes': False,
+                }, 'extra_hours', leave_type.id))
+                for leave in confirmed_leaves:
+                    if leave_type.request_unit == 'hour':
+                        res[employee][-1][1]['leaves_requested'] += leave.number_of_hours
+                    else:
+                        res[employee][-1][1]['leaves_requested'] += leave.number_of_days
+                for leave in validated_leaves:
+                    if leave_type.request_unit == 'hour':
+                        res[employee][-1][1]['leaves_approved'] += leave.number_of_hours
+                    else:
+                        res[employee][-1][1]['leaves_approved'] += leave.number_of_days
         return res
 
     def _get_days_request(self, date=None):
