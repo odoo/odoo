@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-23 10:41+0000\n"
-"PO-Revision-Date: 2024-12-23 10:41+0000\n"
+"POT-Creation-Date: 2025-01-08 13:22+0000\n"
+"PO-Revision-Date: 2025-01-08 13:22+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -382,6 +382,7 @@ msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__error
+#: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__skipped
 msgid "Error"
 msgstr ""
 
@@ -570,9 +571,7 @@ msgid "PEPPOL message ID"
 msgstr ""
 
 #. module: account_peppol
-#: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_move_state
 #: model:ir.model.fields,field_description:account_peppol.field_account_journal__account_peppol_proxy_state
-#: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_move_state
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__account_peppol_proxy_state
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_proxy_state
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_proxy_state
@@ -610,7 +609,15 @@ msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
-msgid "Pending Reception"
+#: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__ready
+#: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__to_send
+msgid "Pending"
+msgstr ""
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_move_state
+#: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_move_state
+msgid "Peppol"
 msgstr ""
 
 #. module: account_peppol
@@ -760,16 +767,6 @@ msgid "Proxy Type"
 msgstr ""
 
 #. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__to_send
-msgid "Queued"
-msgstr ""
-
-#. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__ready
-msgid "Ready to send"
-msgstr ""
-
-#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__smp_registration
 msgid "Register as a receiver"
 msgstr ""
@@ -846,11 +843,6 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service_wizard__service_json
 msgid "Service Json"
-msgstr ""
-
-#. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__skipped
-msgid "Skipped"
 msgstr ""
 
 #. module: account_peppol
@@ -1050,11 +1042,13 @@ msgid "You can now send and receive electronic invoices via Peppol"
 msgstr ""
 
 #. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "You can now send electronic invoices via Peppol."
 msgstr ""
 
 #. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/tools/demo_utils.py:0
 msgid "You can now send invoices in demo mode."
 msgstr ""

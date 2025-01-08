@@ -11,15 +11,15 @@ class AccountMove(models.Model):
     peppol_message_uuid = fields.Char(string='PEPPOL message ID')
     peppol_move_state = fields.Selection(
         selection=[
-            ('ready', 'Ready to send'),
-            ('to_send', 'Queued'),
-            ('skipped', 'Skipped'),
-            ('processing', 'Pending Reception'),
+            ('ready', 'Pending'),
+            ('to_send', 'Pending'),
+            ('skipped', 'Error'),
+            ('processing', 'Pending'),
             ('done', 'Done'),
             ('error', 'Error'),
         ],
         compute='_compute_peppol_move_state', store=True,
-        string='PEPPOL status',
+        string='Peppol',
         copy=False,
     )
 
