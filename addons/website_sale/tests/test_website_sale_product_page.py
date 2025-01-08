@@ -31,6 +31,9 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
 
     def test_product_reviews_reactions_public(self):
         """ Check that public users can not react to reviews """
+        password = "Pl1bhD@2!kXZ"
+        manager = self.env.ref("base.user_admin")
+        manager.write({"password": password})
 
         self.env["ir.ui.view"].with_context(active_test=False).search([
             ("key", "=", "website_sale.product_comment")
@@ -43,11 +46,23 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
             "website_published": True,
             "invoice_policy": "delivery",
         })
-        self.product_product_7.product_tmpl_id.message_post(
+        message = self.product_product_7.product_tmpl_id.message_post(
             body="Bad box!",
             message_type="comment",
             rating_value="1",
             subtype_xmlid="mail.mt_comment"
         )
+        self.authenticate(manager.login, password)
+        self._add_reaction(message, "😊")
 
         self.start_tour("/", "website_sale_product_reviews_reactions_public", login=None)
+
+    def _add_reaction(self, message, reaction):
+        self.make_jsonrpc_request(
+            "/mail/message/reaction",
+            {
+                "action": "add",
+                "content": reaction,
+                "message_id": message.id,
+            },
+        )
