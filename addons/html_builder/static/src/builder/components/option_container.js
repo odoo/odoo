@@ -11,9 +11,6 @@ export class OptionsContainer extends Component {
         options: { type: Array },
         editingElement: true, // HTMLElement from iframe
         isRemovable: false,
-        removeElement: { type: Function },
-        cloneElement: { type: Function },
-        selectElement: { type: Function },
     };
 
     setup() {
@@ -31,15 +28,33 @@ export class OptionsContainer extends Component {
     }
 
     selectElement() {
-        this.props.selectElement(this.props.editingElement);
+        this.env.editor.shared["builder-options"].updateContainers(this.props.editingElement);
+    }
+
+    toggleOverlayPreview(el, show) {
+        if (show) {
+            this.env.editor.shared.overlayButtons.hideOverlayButtons();
+            this.env.editor.shared.builderOverlay.showOverlayPreview(el);
+        } else {
+            this.env.editor.shared.overlayButtons.showOverlayButtons();
+            this.env.editor.shared.builderOverlay.hideOverlayPreview(el);
+        }
+    }
+
+    onMouseEnter() {
+        this.toggleOverlayPreview(this.props.editingElement, true);
+    }
+
+    onMouseLeave() {
+        this.toggleOverlayPreview(this.props.editingElement, false);
     }
 
     // Actions of the buttons in the title bar.
     removeElement() {
-        this.props.removeElement(this.props.editingElement);
+        this.env.editor.shared.remove.removeElement(this.props.editingElement);
     }
 
     cloneElement() {
-        this.props.cloneElement(this.props.editingElement);
+        this.env.editor.shared.clone.cloneElement(this.props.editingElement);
     }
 }

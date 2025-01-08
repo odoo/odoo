@@ -51,6 +51,7 @@ function isResizable(el) {
 export class OverlayButtonsPlugin extends Plugin {
     static id = "overlayButtons";
     static dependencies = ["selection", "overlay", "history"];
+    static shared = ["hideOverlayButtons", "showOverlayButtons"];
     resources = {
         step_added_handlers: this.refreshButtons.bind(this),
         change_current_options_containers_listeners: this.addOverlayButtons.bind(this),
@@ -96,12 +97,12 @@ export class OverlayButtonsPlugin extends Plugin {
         // On keydown, hide the buttons and then show them again when the mouse
         // moves.
         const onMouseMoveOrDown = throttleForAnimation((ev) => {
-            this.toggleVisibility(true);
+            this.showOverlayButtons();
             ev.currentTarget.removeEventListener("mousemove", onMouseMoveOrDown);
             ev.currentTarget.removeEventListener("mousedown", onMouseMoveOrDown);
         });
         this.addDomListener(this.editable, "keydown", (ev) => {
-            this.toggleVisibility(false);
+            this.hideOverlayButtons();
             ev.currentTarget.addEventListener("mousemove", onMouseMoveOrDown);
             ev.currentTarget.addEventListener("mousedown", onMouseMoveOrDown);
         });
@@ -114,10 +115,10 @@ export class OverlayButtonsPlugin extends Plugin {
             scrollingTarget,
             "scroll",
             throttleForAnimation(() => {
-                this.toggleVisibility(false);
+                this.hideOverlayButtons();
                 clearTimeout(this.scrollingTimeout);
                 this.scrollingTimeout = setTimeout(() => {
-                    this.toggleVisibility(true);
+                    this.showOverlayButtons();
                 }, 250);
             }),
             { capture: true }
@@ -140,8 +141,12 @@ export class OverlayButtonsPlugin extends Plugin {
         this.state.buttons = buttons;
     }
 
-    toggleVisibility(show) {
-        this.state.isVisible = show;
+    hideOverlayButtons() {
+        this.state.isVisible = false;
+    }
+
+    showOverlayButtons() {
+        this.state.isVisible = true;
     }
 
     addOverlayButtons(optionsContainer) {
@@ -153,6 +158,7 @@ export class OverlayButtonsPlugin extends Plugin {
         );
         if (optionWithOverlayButtons) {
             this.target = optionWithOverlayButtons.element;
+            this.state.isVisible = true;
             this.refreshButtons();
             this.overlay.open({
                 target: optionWithOverlayButtons.element,

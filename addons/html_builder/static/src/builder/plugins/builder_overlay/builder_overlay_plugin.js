@@ -6,6 +6,7 @@ import { BuilderOverlay } from "./builder_overlay";
 export class BuilderOverlayPlugin extends Plugin {
     static id = "builderOverlay";
     static dependencies = ["selection", "localOverlay", "history"];
+    static shared = ["showOverlayPreview", "hideOverlayPreview"];
     resources = {
         step_added_handlers: this._update.bind(this),
         change_current_options_containers_listeners: this.openBuilderOverlay.bind(this),
@@ -132,5 +133,22 @@ export class BuilderOverlayPlugin extends Plugin {
         this.overlays.forEach((overlay) => {
             overlay.toggleOverlayVisibility(show);
         });
+    }
+
+    showOverlayPreview(el) {
+        // Hide all the active overlays.
+        this.toggleOverlaysVisibility(false);
+        // Show the preview of the one corresponding to the given element.
+        const overlayToShow = this.overlays.find((overlay) => overlay.overlayTarget === el);
+        overlayToShow.toggleOverlayPreview(true);
+        overlayToShow.toggleOverlayVisibility(true);
+    }
+
+    hideOverlayPreview(el) {
+        // Remove the preview.
+        const overlayToHide = this.overlays.find((overlay) => overlay.overlayTarget === el);
+        overlayToHide.toggleOverlayPreview(false);
+        // Show back the active overlays.
+        this.toggleOverlaysVisibility(true);
     }
 }

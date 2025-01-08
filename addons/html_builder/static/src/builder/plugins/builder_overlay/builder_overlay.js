@@ -60,7 +60,7 @@ export class BuilderOverlay {
 
     isActive() {
         // TODO active still necessary ? (check when we have preview mode)
-        return this.overlayElement.classList.contains("oe_active");
+        return this.overlayElement.matches(".oe_active, .o_we_overlay_preview");
     }
 
     refreshPosition() {
@@ -105,7 +105,13 @@ export class BuilderOverlay {
     }
 
     toggleOverlay(show) {
-        this.overlayElement.classList.add("oe_active", show);
+        this.overlayElement.classList.toggle("oe_active", show);
+        this.refreshPosition();
+        this.refreshHandles();
+    }
+
+    toggleOverlayPreview(show) {
+        this.overlayElement.classList.toggle("o_we_overlay_preview", show);
         this.refreshPosition();
         this.refreshHandles();
     }

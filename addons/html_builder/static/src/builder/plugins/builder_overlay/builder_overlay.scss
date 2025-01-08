@@ -15,9 +15,15 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
             opacity: 0 !important;
             transition: none;
         }
-        &.oe_active {
+
+        &.oe_active,
+        &.o_we_overlay_preview {
             display: block;
             z-index: 1;
+        }
+
+        &.o_we_overlay_preview {
+            transition: none;
         }
 
         // HANDLES
