@@ -4708,8 +4708,10 @@ export class OdooEditor extends EventTarget {
         ev.preventDefault();
         const sel = this.document.getSelection();
         const files = getImageFiles(ev.clipboardData);
-        const odooEditorHtml = ev.clipboardData.getData('text/odoo-editor');
-        const clipboardHtml = ev.clipboardData.getData('text/html');
+        const textContent = ev.clipboardData.getData("text/plain");
+        const isContentSingleLink = /^https?:\/\//i.test(textContent);
+        const odooEditorHtml = isContentSingleLink ? '' : ev.clipboardData.getData('text/odoo-editor');
+        const clipboardHtml = isContentSingleLink ? '' : ev.clipboardData.getData('text/html');
         const targetSupportsHtmlContent = isHtmlContentSupported(sel.anchorNode);
         // Replace entire link if its label is fully selected.
         const link = closestElement(sel.anchorNode, 'a');
@@ -4719,8 +4721,7 @@ export class OdooEditor extends EventTarget {
             setSelection(...start, ...start, false);
         }
         if (!targetSupportsHtmlContent) {
-            const text = ev.clipboardData.getData("text/plain");
-            this._applyCommand("insert", text);
+            this._applyCommand("insert", textContent);
         } else if (odooEditorHtml) {
             const fragment = parseHTML(odooEditorHtml);
             const selector = this.options.renderingClasses.map(c => `.${c}`).join(',');
