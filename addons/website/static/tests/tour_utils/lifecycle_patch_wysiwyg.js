@@ -8,11 +8,11 @@ odoo.loader.bus.addEventListener("module-started", (e) => {
 
     const { WysiwygAdapterComponent } = e.detail.module;
 
-    // Duplicated from "@website/../tests/tour_utils/widget_lifecycle_dep_widget"
+    // Duplicated from "@website/../tests/tour_utils/lifecycle_dep_interaction"
     // Cannot be imported for some reason, probably because of this being lazy
     // loaded?
     function addLifecycleStep(step) {
-        const localStorageKey = 'widgetAndWysiwygLifecycle';
+        const localStorageKey = 'interactionAndWysiwygLifecycle';
         const oldValue = window.localStorage.getItem(localStorageKey);
         const newValue = JSON.stringify(JSON.parse(oldValue).concat(step));
         window.localStorage.setItem(localStorageKey, newValue);
@@ -26,7 +26,7 @@ odoo.loader.bus.addEventListener("module-started", (e) => {
             super.setup(...arguments);
 
             // The Wysiwyg class is very messy at the moment: it touches the DOM in
-            // onWillStart hook, mixes OWL & legacy widget, etc. Here we want to
+            // onWillStart hook, mixes OWL & interaction, etc. Here we want to
             // test "when the Wysiwyg is started"... for now we will settle on
             // testing "the first time it touches the DOM", relying on it to be when
             // he reads what "editable elements" are for the first time, thanks to

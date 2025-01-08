@@ -225,7 +225,7 @@ function isHTTPSorNakedDomainRedirection(url1, url2) {
            url1.replace(/^www\./, '') === url2.replace(/^www\./, '');
 }
 
-function sendRequest(route, params) {
+export function sendRequest(route, params) {
     function _addInput(form, name, value) {
         let param = document.createElement('input');
         param.setAttribute('type', 'hidden');
