@@ -300,9 +300,6 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             # Non-SEPA international credit transfer, the Payment account identifier (BT-84) shall be present.
             # note: Payment account identifier is <cac:PayeeFinancialAccount>
             # note: no need to check account_number, because it's a required field for a partner_bank
-            'cen_en16931_payment_account_identifier': self._check_required_fields(
-                invoice, 'partner_bank_id'
-            ) if vals['vals']['payment_means_vals_list'][0]['payment_means_code'] in (30, 58) else None,
             # [BR-IC-12]-In an Invoice with a VAT breakdown (BG-23) where the VAT category code (BT-118) is
             # "Intra-community supply" the Deliver to country code (BT-80) shall not be blank.
             'cen_en16931_delivery_country_code': self._check_required_fields(
