@@ -249,7 +249,7 @@ class EventEvent(models.Model):
         compute='_compute_ticket_instructions', store=True, readonly=False,
         help="This information will be printed on your tickets.")
     # questions
-    question_ids = fields.One2many(
+    question_ids = fields.Many2many(
         'event.question', 'event_id', 'Questions', copy=True,
         compute='_compute_question_ids', readonly=False, store=True)
     general_question_ids = fields.One2many('event.question', 'event_id', 'General Questions',
