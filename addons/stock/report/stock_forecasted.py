@@ -187,6 +187,12 @@ class StockForecasted_Product_Product(models.AbstractModel):
     def _get_report_moves_fields(self):
         return ['id', 'date']
 
+    def _get_products_to_always_include(self, products, product_templates):
+        return self.env['product.product']
+
+    def _get_quant_domain(self, location_ids, products):
+        return [('location_id', 'in', location_ids), ('quantity', '>', 0), ('product_id', 'in', products.ids)]
+
     def _get_report_lines(self, product_template_ids, product_ids, wh_location_ids, wh_stock_location, read=True):
 
         def _get_out_move_reserved_data(out, linked_moves, used_reserved_moves, currents, wh_stock_location, wh_stock_sub_location_ids):
@@ -325,8 +331,10 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 'move_dests': in_._rollup_move_dests()
             })
 
-        qties = self.env['stock.quant']._read_group([('location_id', 'in', wh_location_ids), ('quantity', '>', 0), ('product_id', 'in', outs.product_id.ids)],
-                                                    ['product_id', 'location_id'], ['quantity:sum'])
+        qties = self.env['stock.quant']._read_group(
+            self._get_quant_domain(wh_location_ids, outs.product_id | self._get_products_to_always_include(product_ids, product_template_ids)),
+            ['product_id', 'location_id'], ['quantity:sum']
+        )
         wh_stock_sub_location_ids = set(
             (wh_stock_location.search([('id', 'child_of', wh_stock_location.id)]) - wh_stock_location)._ids
         )
@@ -355,7 +363,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
             if product_loc[1] not in wh_stock_sub_location_ids:
                 product_sum[product_loc[0]] += quantity
         lines = []
-        for product in (ins | outs).product_id:
+        for product in (ins | outs).product_id | self._get_products_to_always_include(product_ids, product_template_ids):
             product_rounding = product.uom_id.rounding
             unreconciled_outs = []
             # remaining stock
@@ -411,14 +419,19 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 lines.append(self._prepare_report_line(transit_stock, product=product, in_transit=True, read=read))
 
             # Unused remaining stock.
-            if not float_is_zero(free_stock, precision_rounding=product_rounding):
-                lines.append(self._prepare_report_line(free_stock, product=product, read=read))
+            lines += self._free_stock_lines(product, free_stock, moves_data, wh_location_ids, read)
+
             # In moves not used.
             for in_ in ins_per_product[product.id]:
                 if float_is_zero(in_['qty'], precision_rounding=product_rounding):
                     continue
                 lines.append(self._prepare_report_line(in_['qty'], move_in=in_['move'], read=read))
         return lines
+
+    def _free_stock_lines(self, product, free_stock, moves_data, wh_location_ids, read):
+        if not float_is_zero(free_stock, precision_rounding=product.uom_id.rounding):
+            return [self._prepare_report_line(free_stock, product=product, read=read)]
+        return []
 
     @api.model
     def action_reserve_linked_picks(self, move_id):

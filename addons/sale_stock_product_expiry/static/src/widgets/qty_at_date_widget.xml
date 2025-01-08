@@ -1,0 +1,7 @@
+<t t-name="sale_stock_product_expiry.QtyAtDatePopover" t-inherit="sale_stock.QtyAtDatePopover" t-inherit-mode="extension">
+        <xpath expr="//strong[@t-out='availableLabel']" position="after">
+            <t t-if="props.record.data.use_expiration_date">
+                <br /><small>Today</small>
+            </t>
+        </xpath>
+    </t>
