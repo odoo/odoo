@@ -14,6 +14,7 @@ class StockMoveLine(models.Model):
         string='Expiration Date', compute='_compute_expiration_date', store=True,
         help='This is the date on which the goods with this Serial Number may'
         ' become dangerous and must not be consumed.')
+    removal_date = fields.Datetime(string='Removal Date', compute='_compute_expiration_date', store=True)
     is_expired = fields.Boolean(related='lot_id.product_expiry_alert')
     use_expiration_date = fields.Boolean(
         string='Use Expiration Date', related='product_id.use_expiration_date')
@@ -26,20 +27,25 @@ class StockMoveLine(models.Model):
         """
         if not column_exists(self._cr, "stock_move_line", "expiration_date"):
             create_column(self._cr, "stock_move_line", "expiration_date", "timestamp")
+        if not column_exists(self._cr, "stock_move_line", "removal_date"):
+            create_column(self._cr, "stock_move_line", "removal_date", "timestamp")
         return super()._auto_init()
 
-    @api.depends('product_id', 'lot_id.expiration_date', 'picking_id.scheduled_date')
+    @api.depends('product_id', 'lot_id.expiration_date', 'picking_id.scheduled_date', 'lot_id.removal_date')
     def _compute_expiration_date(self):
         for move_line in self:
             if move_line.lot_id.expiration_date:
                 move_line.expiration_date = move_line.lot_id.expiration_date
+                move_line.removal_date = move_line.lot_id.removal_date
             elif move_line.picking_type_use_create_lots:
                 if move_line.product_id.use_expiration_date:
                     if not move_line.expiration_date:
                         from_date = move_line.picking_id.scheduled_date or fields.Datetime.today()
                         move_line.expiration_date = from_date + datetime.timedelta(days=move_line.product_id.expiration_time)
+                        move_line.removal_date = move_line.expiration_date - datetime.timedelta(days=move_line.product_id.removal_time)
                 else:
                     move_line.expiration_date = False
+                    move_line.removal_date = False
 
     @api.onchange('product_id', 'product_uom_id', 'picking_id')
     def _onchange_product_id(self):
@@ -48,8 +54,10 @@ class StockMoveLine(models.Model):
             if self.product_id.use_expiration_date:
                 from_date = self.picking_id.scheduled_date or fields.Datetime.today()
                 self.expiration_date = from_date + datetime.timedelta(days=self.product_id.expiration_time)
+                self.removal_date = self.expiration_date - datetime.timedelta(days=self.product_id.removal_time)
             else:
                 self.expiration_date = False
+                self.removal_date = False
         return res
 
     def _prepare_new_lot_vals(self):
