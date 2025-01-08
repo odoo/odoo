@@ -57,7 +57,10 @@ export class SplitBillScreen extends Component {
             } else {
                 this.qtyTracker[line.uuid] += 1;
             }
-
+            // We need this split for decimal quantities (e.g. 0.5 kg)
+            if (this.qtyTracker[line.uuid] > line.getQuantity()) {
+                this.qtyTracker[line.uuid] = line.getQuantity();
+            }
             this.priceTracker[line.uuid] =
                 (line.getPriceWithTax() / line.qty) * this.qtyTracker[line.uuid];
             this.setLineQtyStr(line);
