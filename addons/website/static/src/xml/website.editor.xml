@@ -78,9 +78,6 @@
                         </div>
                         <label class="col-form-label col-md-4" for="google_font_serve">
                             Serve font from Google servers
-                            <sup class="text-info" title="To comply with some local regulations">
-                                <a target="_blank" href="https://www.odoo.com/forum/help-1/how-to-use-google-fonts-and-respecting-german-requirements-214049">?</a>
-                            </sup>
                         </label>
                         <label class="o_switch col-form-label col-md-8" t-att-class="{'o_switch_disabled': !state.googleFontFamily}" for="google_font_serve">
                             <input type="checkbox" checked="checked" t-att-disabled="!state.googleFontFamily" id="google_font_serve" t-model="state.googleServe"/>
