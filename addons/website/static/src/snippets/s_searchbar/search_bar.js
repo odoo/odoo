@@ -142,17 +142,15 @@ export class SearchBar extends Interaction {
         ];
     }
 
-    onInput() {
+    async onInput() {
         if (!this.limit) {
             return;
         }
         if (this.searchType === "all" && !this.inputEl.value.trim().length) {
             this.render();
         } else {
-            this.keepLast.add(this.waitFor(this.fetch())).then((res) => {
-                this.render(res);
-                this.updateContent();
-            });
+            const res = await this.keepLast.add(this.waitFor(this.fetch()));
+            this.render(res);
         }
     }
 
