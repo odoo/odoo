@@ -123,7 +123,8 @@ export class Composer extends Component {
                     isEventHandled(ev, "emoji.selectEmoji") ||
                     isEventHandled(ev, "Composer.onClickAddEmoji") ||
                     isEventHandled(ev, "composer.clickOnAddAttachment") ||
-                    isEventHandled(ev, "composer.selectSuggestion")
+                    isEventHandled(ev, "composer.selectSuggestion") ||
+                    isEventHandled(ev, "composer.clickInsertCannedResponse")
                 );
             },
         });
@@ -400,8 +401,6 @@ export class Composer extends Component {
             case "mail.canned.response":
                 return {
                     ...props,
-                    autoSelectFirst: false,
-                    hint: _t("Tab to select"),
                     optionTemplate: "mail.Composer.suggestionCannedResponse",
                     options: suggestions.map((suggestion) => ({
                         cannedResponse: suggestion,
@@ -697,6 +696,20 @@ export class Composer extends Component {
             });
         }
         this.suggestion?.clearRawMentions();
+    }
+
+    onClickInsertCannedResponse(ev) {
+        markEventHandled(ev, "composer.clickInsertCannedResponse");
+        const composer = toRaw(this.props.composer);
+        const text = composer.text;
+        const firstPart = text.slice(0, composer.selection.start);
+        const secondPart = text.slice(composer.selection.end, text.length);
+        const toInsertPart = firstPart.length === 0 || firstPart.at(-1) === " " ? "::" : " ::";
+        composer.text = firstPart + toInsertPart + secondPart;
+        this.selection.moveCursor((firstPart + toInsertPart).length);
+        if (!this.ui.isSmall || !this.env.inChatter) {
+            composer.autofocus++;
+        }
     }
 
     addEmoji(str) {
