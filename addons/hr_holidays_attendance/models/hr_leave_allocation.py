@@ -34,3 +34,8 @@ class HrLeaveAllocation(models.Model):
         ])
         work_entry_prorata = sum(attendances.mapped('worked_hours'))
         return work_entry_prorata
+    
+    def create(self, vals):
+        if vals.get('holiday_status_id') and self.env['hr.leave.type'].browse(vals['holiday_status_id']).requires_allocation == 'extra_hours':
+            raise ValidationError(_('You cannot create an allocation request for a leave type based on extra hours.'))
+        return super().create(vals)
