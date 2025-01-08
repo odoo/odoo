@@ -33,7 +33,7 @@ registry.category("web_tour.tours").add("crm_rainbowman", {
         {
             trigger: ".o_kanban_record:contains('Test Lead 1')",
             content: "move to won stage",
-            run: "drag_and_drop (.o_opportunity_kanban .o_kanban_group:eq(3))",
+            run: "drag_and_drop (.o_opportunity_kanban .o_kanban_group:has(.o_column_title:contains('Won')))",
         },
         {
             trigger: ".o_reward_rainbow",
