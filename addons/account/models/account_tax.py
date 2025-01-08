@@ -2324,6 +2324,7 @@ class AccountTax(models.Model):
                     'account_id': tax_rep_data['account'].id,
                     'analytic': tax.analytic,
                     'use_in_tax_closing': rep_line.use_in_tax_closing,
+                    'is_reverse_charge': tax_data['is_reverse_charge'],
                     'price_include': tax.price_include,
                     'tax_exigibility': tax.tax_exigibility,
                     'tax_repartition_line_id': rep_line.id,
