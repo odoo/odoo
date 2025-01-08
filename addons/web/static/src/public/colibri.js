@@ -91,9 +91,11 @@ export class Colibri {
         }
         const handler = fn.isHandler
             ? fn
-            : (...args) => {
-                  if (SKIP_IMPLICIT_UPDATE !== fn.call(this.interaction, ...args)) {
-                      this.updateContent();
+            : async (...args) => {
+                  if (SKIP_IMPLICIT_UPDATE !== (await fn.call(this.interaction, ...args))) {
+                      if (!this.isDestroyed) {
+                          this.updateContent();
+                      }
                   }
               };
         handler.isHandler = true;

@@ -157,6 +157,33 @@ describe("adding listeners", () => {
         await startInteraction(Test, `<iframe src="about:blank"/>`);
         expect.verifySteps(["click"]);
     });
+    test("updateContent after async listener", async () => {
+        const def = new Deferred();
+        let clicked = 0;
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                span: {
+                    "t-on-click": async () => {
+                        await def;
+                        clicked++;
+                    },
+                    "t-att-x": () => clicked.toString(),
+                },
+            };
+        }
+        const { el } = await startInteraction(Test, TemplateTest);
+        console.log(el);
+        expect(clicked).toBe(0);
+        expect("span").toHaveAttribute("x", "0");
+        await click("span");
+        expect(clicked).toBe(0);
+        expect("span").toHaveAttribute("x", "0");
+        def.resolve();
+        await animationFrame();
+        expect(clicked).toBe(1);
+        expect("span").toHaveAttribute("x", "1");
+    });
 });
 
 describe("using selectors", () => {
