@@ -67,6 +67,18 @@ registry.category("web_tour.tours").add("course_reviews", {
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message [title='Add a Reaction']",
+            run: "click",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-QuickReactionMenu-emoji span:contains('👍'):not(:visible)",
+            run: "click",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-MessageReactions-add:not(:visible)",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-MessageReaction",
+            run: "click",
         },
     ],
 });
