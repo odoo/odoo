@@ -98,9 +98,8 @@
             'stock/static/src/scss/report_stock_forecasted.scss',
             'stock/static/src/scss/report_stock_reception.scss',
             'stock/static/src/scss/report_stock_rule.scss',
-        ],
-        'web.assets_common': [
             'stock/static/src/scss/stock_traceability_report.scss',
+
         ],
         'web.assets_backend': [
             'stock/static/src/js/inventory_report_list_controller.js',

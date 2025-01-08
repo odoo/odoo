@@ -74,15 +74,15 @@
             </div>
         </div>
     </template>
-
+    
+    <template id="layout" name="Report Layout" inherit_id="web.report_layout">
+        <xpath expr="//head/meta[1]" position="before">
+            <base t-att-href="base_url"/>
+        </xpath>
+    </template>
+    
     <template id="report_stock_inventory_print">
         <t t-call="web.html_container">
-            <t t-set="head_start">
-                <base t-att-href="base_url"/>
-            </t>
-            <t t-set="head_end">
-                <t t-call-assets="stock.assets_stock_print_report" t-js="False"/>
-            </t>
             <t t-call='stock.report_stock_body_print'/>
         </t>
     </template>
