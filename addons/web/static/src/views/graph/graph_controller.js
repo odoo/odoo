@@ -46,6 +46,10 @@ export class GraphController extends Component {
         return context;
     }
 
+    loadAll() {
+        return this.model.forceLoadAll();
+    }
+
     /**
      * Execute the action to open the view on the current model.
      *
