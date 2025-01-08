@@ -36,7 +36,7 @@
                             t-on-click.prevent="() => this._onClickInventory()"
                            t-out="_formatFloat(this.props.docs.quantity_on_hand)"/>
                     </div>
-                    <div>On Hand</div>
+                    <div t-out="onHandLabel"></div>
                 </div>
                 <div class="h3 col-md-auto text-center">+</div>
                 <div t-attf-class="col-md-auto text-center #{props.docs.incoming_qty}">

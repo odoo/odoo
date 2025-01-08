@@ -187,6 +187,9 @@ class StockForecasted_Product_Product(models.AbstractModel):
     def _get_report_moves_fields(self):
         return ['id', 'date']
 
+    def _get_quant_domain(self, location_ids, product_ids):
+        return [('location_id', 'in', location_ids), ('quantity', '>', 0), ('product_id', 'in', product_ids)]
+
     def _get_report_lines(self, product_template_ids, product_ids, wh_location_ids, wh_stock_location, read=True):
 
         def _get_out_move_reserved_data(out, linked_moves, used_reserved_moves, currents, wh_stock_location, wh_stock_sub_location_ids):
@@ -325,8 +328,10 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 'move_dests': in_._rollup_move_dests()
             })
 
-        qties = self.env['stock.quant']._read_group([('location_id', 'in', wh_location_ids), ('quantity', '>', 0), ('product_id', 'in', outs.product_id.ids)],
-                                                    ['product_id', 'location_id'], ['quantity:sum'])
+        qties = self.env['stock.quant']._read_group(
+            self._get_quant_domain(wh_location_ids, outs.product_id.ids),
+            ['product_id', 'location_id'], ['quantity:sum']
+        )
         wh_stock_sub_location_ids = set(
             (wh_stock_location.search([('id', 'child_of', wh_stock_location.id)]) - wh_stock_location)._ids
         )

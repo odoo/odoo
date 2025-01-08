@@ -25,6 +25,8 @@
                 <field name="expiration_date" force_save="1" column_invisible="not parent.use_expiration_date" readonly="picking_type_use_existing_lots"
                  decoration-danger="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"
                  decoration-bf="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"/>
+                <field name="removal_date" force_save="1" column_invisible="not parent.use_expiration_date" readonly="picking_type_use_existing_lots"
+                 decoration-danger="removal_date &lt; current_date" decoration-bf="removal_date &lt; current_date"/>
             </xpath>
         </field>
     </record>
@@ -40,6 +42,8 @@
                 <field name="expiration_date" decoration-danger="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"
                  decoration-bf="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"
                  force_save="1" readonly="picking_type_use_existing_lots" invisible="tracking == 'none'"/>
+                <field name="removal_date" force_save="1" readonly="picking_type_use_existing_lots" invisible="tracking == 'none'"
+                 decoration-danger="removal_date &lt; current_date" decoration-bf="removal_date &lt; current_date"/>
             </xpath>
             <xpath expr="//field[@name='lot_id']" position="after">
                 <field name="is_expired" column_invisible="True"/>
