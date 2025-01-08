@@ -148,7 +148,7 @@ class LivechatController(http.Controller):
                 "name": channel_vals["name"],
                 "operator": Store.one(
                     request.env["res.partner"].sudo().browse(channel_vals["livechat_operator_id"]),
-                    fields=["user_livechat_username", "write_date"],
+                    fields=["avatar_128", "user_livechat_username"],
                 ),
                 "scrollUnread": False,
                 "state": "open",

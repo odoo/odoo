@@ -6,6 +6,7 @@ from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo import Command, fields
+from odoo.tools.misc import limited_field_access_token
 from odoo.addons.mail.models.discuss.discuss_channel import channel_avatar, group_avatar
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
@@ -129,6 +130,9 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 ),
                                 "res.partner": self._filter_partners_fields(
                                     {
+                                        "avatar_128_access_token": limited_field_access_token(
+                                            self.env.user.partner_id, "avatar_128"
+                                        ),
                                         "id": self.env.user.partner_id.id,
                                         "isInternalUser": True,
                                         "is_company": False,
@@ -159,6 +163,9 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "res.partner": self._filter_partners_fields(
                                 {
                                     "active": True,
+                                    "avatar_128_access_token": limited_field_access_token(
+                                        self.test_partner, "avatar_128"
+                                    ),
                                     "email": "test_customer@example.com",
                                     "id": self.test_partner.id,
                                     "im_status": "im_partner",
@@ -203,6 +210,9 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "res.partner": self._filter_partners_fields(
                                 {
                                     "active": True,
+                                    "avatar_128_access_token": limited_field_access_token(
+                                        self.test_partner, "avatar_128"
+                                    ),
                                     "email": "test_customer@example.com",
                                     "id": self.test_partner.id,
                                     "im_status": "im_partner",

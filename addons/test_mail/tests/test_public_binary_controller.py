@@ -28,8 +28,8 @@ class TestPublicBinaryController(TestBinaryControllerCommon):
         self._execute_subtests(
             self.guest_2,
             (
-                (self.user_public, True),
-                (self.guest, True),
+                (self.user_public, False),
+                (self.guest, False),
                 (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_demo, True),
@@ -59,8 +59,8 @@ class TestPublicBinaryController(TestBinaryControllerCommon):
         self._execute_subtests(
             self.user_test,
             (
-                (self.user_public, True),
-                (self.guest, True),
+                (self.user_public, False),
+                (self.guest, False),
                 (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_demo, True),

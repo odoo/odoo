@@ -16,9 +16,20 @@ export class MailGuest extends models.ServerModel {
         const kwargs = getKwArgs(arguments, "ids", "store", "fields");
         fields = kwargs.fields;
         if (!fields) {
-            fields = ["im_status", "name", "write_date"];
+            fields = ["avatar_128", "im_status", "name"];
         }
-        store.add("mail.guest", this._read_format(ids, fields, false));
+        for (const guest of this.browse(ids)) {
+            const [data] = this._read_format(
+                guest.id,
+                fields.filter((field) => !["avatar_128"].includes(field)),
+                false
+            );
+            if (fields.includes("avatar_128")) {
+                data.avatar_128_access_token = guest.id;
+                data.write_date = guest.write_date;
+            }
+            store.add(this.browse(guest.id), data);
+        }
     }
 
     _set_auth_cookie(guestId) {
