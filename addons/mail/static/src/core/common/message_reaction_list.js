@@ -78,6 +78,9 @@ export class MessageReactionList extends Component {
     }
 
     onClickReaction(reaction) {
+        if (!this.props.message.canAddReaction()) {
+            return;
+        }
         if (this.hasSelfReacted(reaction)) {
             reaction.remove();
         } else {

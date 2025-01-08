@@ -15,6 +15,7 @@
             'bg-view border-secondary': !hasSelfReacted(props.reaction),
             'ms-1': env.inChatWindow and env.alignedRight,
             'me-1': !(env.inChatWindow and env.alignedRight),
+            'cursor-default': !props.message.canAddReaction(),
         }">
             <span t-esc="props.reaction.content"/>
             <span class="small" t-esc="props.reaction.count"/>
