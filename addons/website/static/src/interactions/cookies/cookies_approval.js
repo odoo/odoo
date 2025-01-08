@@ -5,6 +5,11 @@ import { MEDIAS_BREAKPOINTS, SIZES } from "@web/core/ui/ui_service";
 
 export class CookiesApproval extends Interaction {
     static selector = "[data-need-cookies-approval]";
+    dynamicContent = {
+        _document: {
+            "t-on-optionalCookiesAccepted.once": this.onOptionalCookiesAccepted,
+        },
+    };
 
     setup() {
         this.iframeEl = this.el.tagName === "IFRAME" ? this.el : this.el.querySelector("iframe");
@@ -14,12 +19,6 @@ export class CookiesApproval extends Interaction {
         if (this.iframeEl && !this.getCookiesWarningEl()) {
             this.addOptionalCookiesWarning();
         }
-        this.addListener(
-            document,
-            "optionalCookiesAccepted",
-            this.onOptionalCookiesAccepted,
-            { once: true }
-        );
     }
 
     getCookiesWarningEl() {

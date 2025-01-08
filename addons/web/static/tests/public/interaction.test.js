@@ -683,6 +683,20 @@ describe("using qualifiers", () => {
         expect.verifySteps(["strong", "span"]);
     });
 
+    test("add a listener with the .once qualifier", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                span: { "t-on-click.once": () => expect.step("span") },
+            };
+        }
+        await startInteraction(Test, TemplateTest);
+        expect.verifySteps([]);
+        await click("span");
+        await click("span");
+        expect.verifySteps(["span"]);
+    });
+
     test("add a listener with the .noupdate qualifier", async () => {
         let clicked = false;
         class Test extends Interaction {

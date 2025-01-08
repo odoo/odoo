@@ -14,16 +14,10 @@ export class CookiesWarning extends Interaction {
                 "d-none": !!this.el.parentElement,
             }),
         },
+        _document: {
+            "t-on-optionalCookiesAccepted.once": () => this.el.remove(),
+        },
     };
-
-    start() {
-        this.addListener(
-            document,
-            "optionalCookiesAccepted",
-            () => this.el.remove(),
-            { once: true }
-        );
-    }
 }
 
 registry
