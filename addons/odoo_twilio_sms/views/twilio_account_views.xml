@@ -65,13 +65,13 @@
         </field>
     </record>
     <!-- Twilio menu -->
-    <menuitem id="twilio_menu_root" name="Twilio" sequence="2"
+    <menuitem id="twilio_menu_root" name="Twilio" sequence="2" groups="base.group_erp_manager"
               web_icon="odoo_twilio_sms,static/description/icon.png"/>
     <!-- Configuration menu -->
     <menuitem id="twilio_configuration_menu" name="Configuration"
-              parent="twilio_menu_root" sequence="2"/>
+              parent="twilio_menu_root" sequence="50"/>
     <!--    Twilio Account menu -->
     <menuitem id="twilio_account_menu" name="Twilio Account"
               parent="twilio_configuration_menu" action="twilio_account_action"
-              sequence="4"/>
+              sequence="1"/>
 </odoo>
