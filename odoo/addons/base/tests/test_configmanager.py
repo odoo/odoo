@@ -1,4 +1,5 @@
 import unittest
+from os import name as os_name
 from unittest.mock import call, patch
 
 import odoo
@@ -7,7 +8,6 @@ from odoo.tools import file_path, file_open, file_open_temporary_directory
 from odoo.tools.config import configmanager
 
 
-IS_POSIX = 'workers' in odoo.tools.config.options
 EMPTY_CONFIG_PATH = file_path('base/tests/config/empty.conf')
 PROJECT_PATH = odoo.tools.config.root_path.removesuffix('/odoo')
 DEFAULT_DATADIR = odoo.tools.config._default_options['data_dir']
@@ -157,17 +157,15 @@ class TestConfigManager(TransactionCase):
             'geoip_country_db': '/usr/share/GeoIP/GeoLite2-Country.mmdb',
 
             # multiprocessing
-            **({
-                'workers': 0,
-                'limit_memory_soft': 2048 * 1024 * 1024,
-                'limit_memory_soft_gevent': None,
-                'limit_memory_hard': 2560 * 1024 * 1024,
-                'limit_memory_hard_gevent': None,
-                'limit_time_cpu': 60,
-                'limit_time_real': 120,
-                'limit_time_real_cron': -1,
-                'limit_request': 2**16,
-            } if IS_POSIX else {}),
+            'workers': 0,
+            'limit_memory_soft': 2048 * 1024 * 1024,
+            'limit_memory_soft_gevent': None,
+            'limit_memory_hard': 2560 * 1024 * 1024,
+            'limit_memory_hard_gevent': None,
+            'limit_time_cpu': 60,
+            'limit_time_real': 120,
+            'limit_time_real_cron': -1,
+            'limit_request': 2**16,
         })
 
     def test_02_config_file(self):
@@ -274,17 +272,15 @@ class TestConfigManager(TransactionCase):
             'geoip_country_db': '/tmp/country.db',
 
             # multiprocessing
-            **({
-                'workers': 92,
-                'limit_memory_soft': 1048576,
-                'limit_memory_soft_gevent': 1048577,
-                'limit_memory_hard': 1048578,
-                'limit_memory_hard_gevent': 1048579,
-                'limit_time_cpu': 60,
-                'limit_time_real': 61,
-                'limit_time_real_cron': 62,
-                'limit_request': 100,
-            } if IS_POSIX else {}),
+            'workers': 92,
+            'limit_memory_soft': 1048576,
+            'limit_memory_soft_gevent': 1048577,
+            'limit_memory_hard': 1048578,
+            'limit_memory_hard_gevent': 1048579,
+            'limit_time_cpu': 60,
+            'limit_time_real': 61,
+            'limit_time_real_cron': 62,
+            'limit_request': 100,
         })
         self.assertEqual(capture.output, [
             "WARNING:odoo.tools.config:option addons_path, no such directory '/tmp/odoo', skipped",
@@ -292,7 +288,7 @@ class TestConfigManager(TransactionCase):
             "WARNING:odoo.tools.config:test file '/tmp/file-file' cannot be found",
         ])
 
-    @unittest.skipIf(not IS_POSIX, 'this test is POSIX only')
+    @unittest.skipIf(os_name != 'posix', 'this test is POSIX only')
     def test_03_save_default_options(self):
         with file_open_temporary_directory(self.env) as temp_dir:
             config_path = f'{temp_dir}/save.conf'
@@ -389,17 +385,15 @@ class TestConfigManager(TransactionCase):
             'proxy_access_token': '',
 
             # multiprocessing
-            **({
-                'workers': 0,
-                'limit_memory_soft': 2048 * 1024 * 1024,
-                'limit_memory_soft_gevent': None,
-                'limit_memory_hard': 2560 * 1024 * 1024,
-                'limit_memory_hard_gevent': None,
-                'limit_time_cpu': 60,
-                'limit_time_real': 120,
-                'limit_time_real_cron': -1,
-                'limit_request': 1 << 16,
-            } if IS_POSIX else {}),
+            'workers': 0,
+            'limit_memory_soft': 2048 * 1024 * 1024,
+            'limit_memory_soft_gevent': None,
+            'limit_memory_hard': 2560 * 1024 * 1024,
+            'limit_memory_hard_gevent': None,
+            'limit_time_cpu': 60,
+            'limit_time_real': 120,
+            'limit_time_real_cron': -1,
+            'limit_request': 1 << 16,
 
             # new options since 14.0
             'db_maxconn_gevent': None,
@@ -554,17 +548,16 @@ class TestConfigManager(TransactionCase):
             'unaccent': True,
             'geoip_city_db': '/tmp/city.db',
             'geoip_country_db': '/tmp/country.db',
-            **({
-                'workers': 92,
-                'limit_memory_soft': 1048576,
-                'limit_memory_soft_gevent': 1048577,
-                'limit_memory_hard': 1048578,
-                'limit_memory_hard_gevent': 1048579,
-                'limit_time_cpu': 60,
-                'limit_time_real': 61,
-                'limit_time_real_cron': 62,
-                'limit_request': 100,
-            } if IS_POSIX else {})
+
+            'workers': 92,
+            'limit_memory_soft': 1048576,
+            'limit_memory_soft_gevent': 1048577,
+            'limit_memory_hard': 1048578,
+            'limit_memory_hard_gevent': 1048579,
+            'limit_time_cpu': 60,
+            'limit_time_real': 61,
+            'limit_time_real_cron': 62,
+            'limit_request': 100,
         })
 
     @patch('optparse.OptionParser.error')
