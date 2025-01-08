@@ -72,11 +72,22 @@
                     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 row-cols-xxl-4 g-2">
                         <t t-foreach="this.state.employeesData.records" t-as="employee" t-key="employee.id">
                             <div t-on-click="() => this.props.onSelectEmployee(employee.id)" class="col">
-                                <div class="card d-flex flex-column align-items-center h-100 p-3">
+                                <div class="card d-flex flex-column align-items-center h-100 p-2 pt-1">
+                                    <div class="small ms-auto">
+                                        <t t-if="employee.status == 'checked_in'">
+                                            <span class="text-success">
+                                                <t t-if="employee.mode == 'kiosk'">On site</t>
+                                                <t t-else="">Online</t>
+                                            </span>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="text-danger">Absent</span>
+                                        </t>
+                                    </div>
                                     <img class="rounded-circle" alt="Employee Avatar" loading="lazy" t-attf-src="{{employee.avatar}}"/>
                                     <div class="d-flex flex-column align-items-center mt-2">
                                         <h6 class="mb-0" t-esc="employee.display_name"/>
-                                        <p class="small text-muted text-center mb-0" t-if="employee.job_id" t-esc="employee.job_id"/>
+                                        <p class="small text-muted text-center mb-1" t-if="employee.job_id" t-esc="employee.job_id"/>
                                     </div>
                                 </div>
                             </div>
