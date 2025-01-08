@@ -457,6 +457,7 @@
             <field name="arch" type="xml">
                 <form>
                     <group>
+                        <field name="team_id" attrs="{'invisible': &quot;[('user_id', '=', uid)]&quot;}"/>
                         <field name="partner_id" widget="res_partner_many2one"
                             string='Organization / Contact'
                             context="{
@@ -489,7 +490,6 @@
                         <field name="company_id" invisible="1"/>
                         <field name="user_id" invisible="1"/>
                         <field name="user_company_ids" invisible="1"/>
-                        <field name="team_id" invisible="1"/>
                         <field name="type" invisible="1"/>
                         <field name="partner_name" invisible="1"/>
                         <field name="contact_name" invisible="1"/>
