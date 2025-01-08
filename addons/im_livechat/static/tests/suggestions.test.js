@@ -12,7 +12,7 @@ import { defineLivechatModels } from "./livechat_test_helpers";
 describe.current.tags("desktop");
 defineLivechatModels();
 
-test("Suggestions are shown after delimiter was used in text (:)", async () => {
+test("Suggestions are shown after delimiter was used in text (::)", async () => {
     const pyEnv = await startServer();
     pyEnv["mail.canned.response"].create({
         source: "hello",
@@ -29,11 +29,11 @@ test("Suggestions are shown after delimiter was used in text (:)", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", ":");
+    await insertText(".o-mail-Composer-input", "::");
     await contains(".o-mail-Composer-suggestion strong", { text: "hello" });
     await insertText(".o-mail-Composer-input", ")");
     await contains(".o-mail-Composer-suggestion strong", { count: 0 });
-    await insertText(".o-mail-Composer-input", " :");
+    await insertText(".o-mail-Composer-input", " ::");
     await contains(".o-mail-Composer-suggestion strong", { text: "hello" });
 });
 
