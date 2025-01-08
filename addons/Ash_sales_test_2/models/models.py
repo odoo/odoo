@@ -157,8 +157,7 @@ class SaleOrder(models.Model):
                     'order_number': order.name,
                     'products': products_data,
                     'tenant_code':order.tenant_code_id.name,
-                    'customer_name':order.partner_id.name,
-                    'shipping_address' : f"{order.partner_id.street or ''}, , {order.partner_id.city or ''}, {order.partner_id.state_id.name or ''},{order.partner_id.country_id.name or ''}, {order.partner_id.zip or ''}" if order.partner_id else "Unknown"
+                    'shipping_address' : f"{order.partner_id.name},{order.partner_id.street or ''}, , {order.partner_id.city or ''}, {order.partner_id.state_id.name or ''},{order.partner_id.country_id.name or ''}, {order.partner_id.zip or ''}, {order.partner_id.phone}" if order.partner_id else "Unknown"
                 }
                 logger.info(f"Generated data to release: {data_to_send}")
                 logger.debug(f"Data to be sent for order {order.name}: {data_to_send}")
