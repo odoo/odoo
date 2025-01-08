@@ -38,8 +38,6 @@ export class HeaderStandard extends BaseHeader {
     }
 
     onScroll() {
-        super.onScroll();
-
         const scroll = this.scrollingElement.scrollTop;
 
         const isScrolled = (scroll > this.transitionPoint);
@@ -70,7 +68,7 @@ export class HeaderStandard extends BaseHeader {
         this.el.classList.remove("o_transformed_not_affixed");
         this.hideEl?.classList.toggle("hidden", reachHeaderBottom);
 
-        this.cssAffixed = reachHeaderBottom;
+        this.toggleCSSAffixed(reachHeaderBottom);
         this.isScrolled = reachTransitionPoint;
     }
 }

@@ -157,7 +157,7 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
     },
     ...clickOnSave(),
     ...clickOnEditAndWaitEditMode(),
-    clickOnElement("Image of the 'Columns' snippet with the overlay effect", ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='overlay']"),
+    clickOnElement("Image of the 'Columns' snippet with the overlay effect", ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='overlay']:not(:visible)"),
     changeOption("WebsiteAnimate", 'we-toggler:contains("Overlay")'),
     changeOption("WebsiteAnimate", 'we-button[data-select-data-attribute="outline"]'),
     {
@@ -180,7 +180,7 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
         },
     },
     ...clickOnEditAndWaitEditMode(),
-    clickOnElement("Image of the 'Columns' snippet with the outline effect", ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']"),
+    clickOnElement("Image of the 'Columns' snippet with the outline effect", ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']:not(:visible)"),
     changeOption("ImageTools", 'we-select:contains("Filter") we-toggler:contains("None")'),
     changeOption("ImageTools", 'we-button:contains("Blur")'),
     {

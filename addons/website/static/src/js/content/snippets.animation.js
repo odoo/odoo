@@ -2,18 +2,10 @@
  * Provides a way to start JS code for snippets' initialization and animations.
  */
 
-import { _t } from "@web/core/l10n/translation";
-import { loadJS } from "@web/core/assets";
 import { uniqueId } from "@web/core/utils/functions";
-import { escape } from "@web/core/utils/strings";
-import { debounce, throttleForAnimation } from "@web/core/utils/timing";
+import { throttleForAnimation } from "@web/core/utils/timing";
 import Class from "@web/legacy/js/core/class";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import { renderToElement } from "@web/core/utils/render";
-import { hasTouch } from "@web/core/browser/feature_detection";
-import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
-import { touching } from "@web/core/utils/ui";
-import { ObservingCookieWidgetMixin } from "@website/snippets/observing_cookie_mixin";
 
 // Initialize fallbacks for the use of requestAnimationFrame,
 // cancelAnimationFrame and performance.now()

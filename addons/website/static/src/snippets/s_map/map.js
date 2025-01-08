@@ -10,8 +10,7 @@ export class Map extends Interaction {
         if (!this.el.querySelector(".s_map_embedded")) {
             // The iframe is not found inside the snippet. This is probably due
             // to the sanitization of a field during the save, like in a product
-            // description field.
-            // In such cases, reconstruct the iframe.
+            // description field. In such cases, reconstruct the iframe.
             const dataset = this.el.dataset;
             if (dataset.mapAddress) {
                 const iframeEl = generateGMapIframe();

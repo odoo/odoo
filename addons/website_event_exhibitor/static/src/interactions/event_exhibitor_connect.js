@@ -1,78 +1,38 @@
-import { debounce } from "@web/core/utils/timing";
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { redirect } from "@web/core/utils/urls";
 import { ExhibitorConnectClosedDialog } from "../components/exhibitor_connect_closed_dialog/exhibitor_connect_closed_dialog";
 
-publicWidget.registry.eventExhibitorConnect = publicWidget.Widget.extend({
-    selector: '.o_wesponsor_connect_button',
-    /**
-     * @override
-     * @public
-     */
-    init: function () {
-        this._super(...arguments);
-        this._onConnectClick = debounce(this._onConnectClick, 500, true).bind(this);
-    },
+export class ExhibitorConnect extends Interaction {
+    static selector = ".o_wesponsor_connect_button";
+    dynamicContent = {
+        _root: {
+            "t-on-click.stop.prevent": this.debounced(this.onClick, 500),
+        },
+    };
 
-    /**
-     * @override
-     * @public
-     */
-    start: function () {
-        var self = this;
-        return this._super(...arguments).then(function () {
-            self.eventIsOngoing = self.el.dataset.eventIsOngoing || false;
-            self.sponsorIsOngoing = self.el.dataset.sponsorIsOngoing || false;
-            self.isParticipating = self.el.dataset.isParticipating || false;
-            self.userEventManager = self.el.dataset.userEventManager || false;
-            self.el.addEventListener("click", self._onConnectClick);
-        });
-    },
+    setup() {
+        const eventIsOngoing = this.el.dataset.eventIsOngoing || false;
+        const sponsorIsOngoing = this.el.dataset.sponsorIsOngoing || false;
+        const userEventManager = this.el.dataset.userEventManager || false;
+        this.shouldOpenDialog = !userEventManager && !(eventIsOngoing && sponsorIsOngoing);
+    }
 
-    /**
-     * @override
-     * @public
-     */
-    destory () {
-        this._super(...arguments);
-        this.el.removeEventListener("click", this._onConnectClick);
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //-------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     * On click, if sponsor is not within opening hours, display a modal instead
-     * of redirecting on the sponsor view;
-     */
-    _onConnectClick: function (ev) {
-        ev.stopPropagation();
-        ev.preventDefault();
-
-        if (this.userEventManager) {
-            redirect(this.el.dataset.sponsorUrl);
-        } else if (!this.eventIsOngoing || ! this.sponsorIsOngoing) {
-            return this._openClosedDialog();
+    onClick() {
+        if (this.shouldOpenDialog) {
+            return this.openClosedDialog();
         } else {
             redirect(this.el.dataset.sponsorUrl);
         }
-    },
+    }
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    _openClosedDialog: function () {
+    openClosedDialog() {
         const sponsorId = parseInt(this.el.dataset.sponsorId);
-        this.call("dialog", "add", ExhibitorConnectClosedDialog, { sponsorId });
-    },
+        this.services.dialog.add(ExhibitorConnectClosedDialog, { sponsorId });
+    }
+}
 
-});
-
-
-export default {
-    eventExhibitorConnect: publicWidget.registry.eventExhibitorConnect,
-};
+registry
+    .category("public.interactions")
+    .add("website_event_exhibitor.exhibitor_connect", ExhibitorConnect);

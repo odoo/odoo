@@ -1,34 +1,30 @@
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 
-publicWidget.registry.boothSponsorDetails = publicWidget.Widget.extend({
-    selector: '#o_wbooth_contact_details_form',
-    events: {
-        'click input[id="contact_details"]': '_onClickContactDetails',
-    },
+export class BoothSponsorDetails extends Interaction {
+    static selector = "#o_wbooth_contact_details_form";
+    dynamicContent = {
+        "input[id='contact_details']": { "t-on-click.withTarget": this.onClickContactDetails },
+    }
 
-    //--------------------------------------------------------------------------
-    // Handler
-    //--------------------------------------------------------------------------
+    onClickContactDetails(ev, currentTargetEl) {
+        this.useContactDetails = currentTargetEl.checked;
 
-    _onClickContactDetails(ev) {
-        this.useContactDetails = ev.currentTarget.checked;
-        this.el
-            .querySelector("#o_wbooth_contact_details")
-            .classList.toggle("d-none", !this.useContactDetails);
-        this.el
-            .querySelectorAll(
-                "label[for='sponsor_name'] > .mandatory_mark, label[for='sponsor_email'] > .mandatory_mark"
-            )
-            .forEach((el) => {
-                el.classList.toggle("d-none", this.useContactDetails);
-            });
-        this.el
-            .querySelectorAll("input[name='contact_name'], input[name='contact_email']")
-            .forEach((inputEl) => (inputEl.required = this.useContactDetails));
-    },
+        const contactDetailsEl = this.el.querySelector("#o_wbooth_contact_details");
+        contactDetailsEl.classList.toggle("d-none", !this.useContactDetails);
 
-});
+        const sponsorInfoEls = this.el.querySelectorAll("label[for='sponsor_name'] > .mandatory_mark, label[for='sponsor_email'] > .mandatory_mark");
+        for (const sponsorInfoEl of sponsorInfoEls) {
+            sponsorInfoEl.classList.toggle("d-none", this.useContactDetails);
+        }
 
-export default {
-    boothSponsorDetails: publicWidget.registry.boothSponsorDetails,
-};
+        const contactInfoEls = this.el.querySelectorAll("input[name='contact_name'], input[name='contact_email']");
+        for (const contactInfoEl of contactInfoEls) {
+            contactInfoEl.required = this.useContactDetails;
+        }
+    }
+}
+
+registry
+    .category("public.interactions")
+    .add("website_event_booth_exhibitor.booth_sponsor_details", BoothSponsorDetails);

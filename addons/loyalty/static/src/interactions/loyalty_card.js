@@ -1,18 +1,21 @@
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { rpc } from '@web/core/network/rpc';
-import publicWidget from '@web/legacy/js/public/public_widget';
+import { PortalLoyaltyCardDialog } from '../js/portal/loyalty_card_dialog/loyalty_card_dialog';
 
-import { PortalLoyaltyCardDialog } from './loyalty_card_dialog/loyalty_card_dialog';
+export class LoyaltyCard extends Interaction {
+    static selector = ".o_loyalty_container";
+    dynamicContent = {
+        ".o_loyalty_card": { "t-on-click.withTarget": this.onClickLoyaltyCard },
+    };
 
-publicWidget.registry.PortalLoyaltyWidget = publicWidget.Widget.extend({
-    selector: '.o_loyalty_container',
-    events: {
-        'click .o_loyalty_card': '_onClickLoyaltyCard',
-    },
+    async onClickLoyaltyCard(ev, currentTargetEl) {
+        const data = await this.waitFor(rpc(`/my/loyalty_card/${currentTargetEl.dataset.card_id}/values`));
+        this.services.dialog.add(PortalLoyaltyCardDialog, data);
+    }
+}
 
-    async _onClickLoyaltyCard(ev) {
-        const card_id = ev.currentTarget.dataset.card_id;
-        let data = await rpc(`/my/loyalty_card/${card_id}/values`);
-        this.call("dialog", "add", PortalLoyaltyCardDialog, data);
-    },
-
-});
+registry
+    .category("public.interactions")
+    .add("loyalty.loyalty_card", LoyaltyCard);

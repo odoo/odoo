@@ -1,12 +1,13 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { hover, pointerDown } from "@odoo/hoot-dom";
-
 import {
     startInteractions,
     setupInteractionWhiteList,
 } from "@web/../tests/public/helpers";
 
+import { describe, expect, test } from "@odoo/hoot";
+import { hover, pointerDown } from "@odoo/hoot-dom";
+
 setupInteractionWhiteList("website.mega_menu_dropdown");
+
 describe.current.tags("interaction_dev");
 
 const getTemplate = function (options = {}) {
@@ -28,11 +29,11 @@ const getTemplate = function (options = {}) {
         </nav>
     </header>
     `
-}
+};
 
 test("mega_menu_dropdown is started when there is an element header#top", async () => {
     const { core } = await startInteractions(getTemplate());
-    expect(core.interactions.length).toBe(1);
+    expect(core.interactions).toHaveLength(1);
 });
 
 test.tags("desktop")("[mousedown] moves content from desktop to mobile", async () => {

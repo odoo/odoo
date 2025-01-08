@@ -1,5 +1,5 @@
-import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 
 export class ImageShapeHoverEffect extends Interaction {
     static selector = "img[data-hover-effect]";

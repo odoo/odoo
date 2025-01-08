@@ -4,12 +4,12 @@ import { registry } from "@web/core/registry";
 import { loadBundle } from "@web/core/assets";
 import weUtils from "@web_editor/js/common/utils";
 
-class Chart extends Interaction {
-
+export class Chart extends Interaction {
     static selector = ".s_chart";
 
     setup() {
         this.chart = null;
+        this.noAnimation = false;
         this.style = window.getComputedStyle(document.documentElement);
     }
 
@@ -20,13 +20,8 @@ class Chart extends Interaction {
     start() {
         const data = JSON.parse(this.el.dataset.data);
         data.datasets.forEach(el => {
-            if (Array.isArray(el.backgroundColor)) {
-                el.backgroundColor = el.backgroundColor.map(el => this.convertToCSSColor(el));
-                el.borderColor = el.borderColor.map(el => this.convertToCSSColor(el));
-            } else {
-                el.backgroundColor = this.convertToCSSColor(el.backgroundColor);
-                el.borderColor = this.convertToCSSColor(el.borderColor);
-            }
+            el.backgroundColor = this.convertToCSS(el.backgroundColor);
+            el.borderColor = this.convertToCSS(el.borderColor);
             el.borderWidth = this.el.dataset.borderWidth;
         });
 
@@ -89,51 +84,34 @@ class Chart extends Interaction {
                 label: (tooltipItem) => {
                     const label = tooltipItem.label;
                     const secondLabel = tooltipItem.dataset.label;
-                    let final = label;
-                    if (label) {
-                        if (secondLabel) {
-                            final = label + " - " + secondLabel;
-                        }
-                    } else if (secondLabel) {
-                        final = secondLabel;
-                    }
+                    const final = label && secondLabel ? label + " - " + secondLabel : label || secondLabel;
                     return final + ":" + tooltipItem.formattedValue;
                 },
             };
         }
 
-        // Disable animation in edit mode
-        if (this.editableMode) {
-            chartData.options.animation = {
-                duration: 0,
-            };
+        if (this.noAnimation) {
+            chartData.options.animation = { duration: 0 };
         }
 
-        const canvas = this.el.querySelector("canvas");
-        window.Chart.Tooltip.positioners.custom = (elements, eventPosition) => eventPosition;
-        this.chart = new window.Chart(canvas, chartData);
+        const canvasEls = this.el.querySelector("canvas");
+        window.Chart.Tooltip.positioners.custom = (_, eventPosition) => eventPosition;
+        this.chart = new window.Chart(canvasEls, chartData);
         this.registerCleanup(() => {
             this.chart.destroy();
             this.el.querySelectorAll(".chartjs-size-monitor").forEach(el => el.remove());
         });
     }
 
-    /**
-     * @param {string} color
-     * @returns {string}
-     */
+    convertToCSS(paramColor) {
+        return Array.isArray(paramColor) ? paramColor.map(color => this.convertToCSSColor(color)) : this.convertToCSSColor(paramColor);
+    }
+
     convertToCSSColor(color) {
-        if (!color) {
-            return "transparent";
-        }
-        return weUtils.getCSSVariableValue(color, this.style) || color;
+        return color ? weUtils.getCSSVariableValue(color, this.style) || color : "transparent";
     }
 }
 
-registry.category("public.interactions").add("website.chart", Chart);
-
 registry
-    .category("public.interactions.edit")
-    .add("website.chart", {
-        Interaction: Chart,
-    });
+    .category("public.interactions")
+    .add("website.chart", Chart);

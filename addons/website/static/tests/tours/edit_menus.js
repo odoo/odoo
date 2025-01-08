@@ -279,17 +279,12 @@ registerWebsitePreviewTour('edit_menus', {
         },
     },
     {
-        content: "The Home menu should be closed",
-        trigger: ':iframe .top_menu .nav-item:contains("Home"):has(ul:not(.show))',
+        content: "The Home menu should not be closed",
+        trigger: ':iframe .top_menu .nav-item:contains("Home"):has(ul.show)',
     },
     {
-        content: "Open the Home menu after scroll",
-        trigger: ':iframe .top_menu .nav-item a.dropdown-toggle:contains("Home")',
-        run: "click",
-    },
-    {
-        content: "Check that the Home menu is opened",
-        trigger: ':iframe .top_menu .nav-item:contains("Home") ul.show li' +
+        content: "Check that the Home menu contains the contact us button",
+        trigger: ':iframe .top_menu .nav-item:contains("Home"):has(ul.show)' +
             ' a.dropdown-item:contains("Contact us")[href="/contactus"]',
     },
     {
@@ -321,18 +316,8 @@ registerWebsitePreviewTour('edit_menus', {
         }
     },
     {
-        content: "Check that the mega menu is closed",
-        trigger: ':iframe .top_menu .nav-item:contains("Megaaaaa!"):has(div[data-name="Mega Menu"]:not(.show))',
-    },
-    {
-        content: "Open the mega menu after scroll",
-        trigger: ':iframe .top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")',
-        run: "click",
-    },
-    {
-        content: "Check that the mega menu is opened",
-        trigger: ':iframe .top_menu .nav-item:has(a.o_mega_menu_toggle:contains("Megaaaaa!")) ' +
-                 '.s_mega_menu_odoo_menu',
+        content: "Check that the mega menu is not closed",
+        trigger: ':iframe .top_menu .nav-item:contains("Megaaaaa!"):has(div[data-name="Mega Menu"].show)',
     },
     ...clickOnEditAndWaitEditMode(),
     {

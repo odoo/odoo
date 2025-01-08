@@ -1,7 +1,7 @@
-import { registry } from "@web/core/registry";
-import { MEDIAS_BREAKPOINTS, SIZES } from "@web/core/ui/ui_service";
-import { renderToElement } from "@web/core/utils/render";
 import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
+import { MEDIAS_BREAKPOINTS, SIZES } from "@web/core/ui/ui_service";
 
 export class CookiesApproval extends Interaction {
     static selector = "[data-need-cookies-approval]";
@@ -11,10 +11,8 @@ export class CookiesApproval extends Interaction {
     }
 
     start() {
-        if (this.iframeEl) {
-            if (!this.cookiesWarningEl) {
-                this.addOptionalCookiesWarning();
-            }
+        if (this.iframeEl && !this.getCookiesWarningEl()) {
+            this.addOptionalCookiesWarning();
         }
         this.addListener(
             document,
@@ -24,7 +22,7 @@ export class CookiesApproval extends Interaction {
         );
     }
 
-    get cookiesWarningEl() {
+    getCookiesWarningEl() {
         if (this.iframeEl.nextElementSibling?.classList.contains("o_no_optional_cookie")) {
             return this.iframeEl.nextElementSibling;
         }
@@ -32,15 +30,14 @@ export class CookiesApproval extends Interaction {
     }
 
     addOptionalCookiesWarning() {
-        const optionalCookiesWarningEl = renderToElement("website.cookiesWarning", {
+        this.renderAt("website.cookiesWarning", {
             extraStyle: this.iframeEl.parentElement.classList.contains("media_iframe_video")
                 ? `aspect-ratio: 16/9; max-width: ${MEDIAS_BREAKPOINTS[SIZES.SM].maxWidth}px;`
                 : "",
             extraClasses: getComputedStyle(this.iframeEl.parentElement).position === "absolute"
-                ? "" : "my-3",
-        });
-        this.insert(optionalCookiesWarningEl, this.iframeEl, "afterend");
-        this.services["public.interactions"].startInteractions(optionalCookiesWarningEl);
+                ? ""
+                : "my-3",
+        }, this.iframeEl, "afterend");
     }
 
     onOptionalCookiesAccepted() {
@@ -52,4 +49,6 @@ export class CookiesApproval extends Interaction {
     }
 }
 
-registry.category("public.interactions").add("website.cookies_approval", CookiesApproval);
+registry
+    .category("public.interactions")
+    .add("website.cookies_approval", CookiesApproval);

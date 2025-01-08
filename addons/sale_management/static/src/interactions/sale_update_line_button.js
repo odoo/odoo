@@ -1,105 +1,67 @@
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { rpc } from "@web/core/network/rpc";
-import publicWidget from "@web/legacy/js/public/public_widget";
 
-publicWidget.registry.SaleUpdateLineButton = publicWidget.Widget.extend({
-    selector: '.o_portal_sale_sidebar',
-    events: {
-        'click a.js_update_line_json': '_onClickOptionQuantityButton',
-        'click a.js_add_optional_products': '_onClickAddOptionalProduct',
-        'change .js_quantity': '_onChangeOptionQuantity',
-    },
+export class SaleUpdateLineButton extends Interaction {
+    static selector = ".o_portal_sale_sidebar";
+    dynamicContent = {
+        "a.js_update_line_json": {
+            "t-on-click.prevent.withTarget": this.onClickOptionQuantityButton,
+        },
+        "a.js_add_optional_products": {
+            "t-on-click.prevent.withTarget": this.onClickAddOptionalProduct,
+        },
+        ".js_quantity": {
+            "t-on-change.prevent.withTarget": this.onChangeOptionQuantity,
+        },
+    };
 
-    /**
-     * @override
-     */
-    async start() {
-        await this._super(...arguments);
-        this.orderDetail = this.$el.find('table#sales_order_table').data();
-    },
+    setup() {
+        this.orderDetail = this.el.querySelector('table#sales_order_table').dataset;
+    }
 
-    /**
-     * Calls the route to get updated values of the line and order
-     * when the quantity of a product has changed
-     *
-     * @private
-     * @param {integer} order_id
-     * @param {Object} params
-     * @return {Deferred}
-     */
-     _callUpdateLineRoute(order_id, params) {
-        return rpc("/my/orders/" + order_id + "/update_line_dict", params);
-    },
+    callUpdateLineRoute(orderId, params) {
+        return rpc("/my/orders/" + orderId + "/update_line_dict", params);
+    }
 
-    /**
-     * Refresh the UI of the order details
-     *
-     * @private
-     * @param {Object} data: contains order html details
-     */
-    _refreshOrderUI(data){
+    callAddOptionRoute(orderId, optionId, params) {
+        return rpc("/my/orders/" + orderId + "/add_option/" + optionId, params);
+    }
+
+    refreshOrderUI(data) {
         window.location.reload();
-    },
+    }
 
-    /**
-     * Process the change in line quantity
-     *
-     * @private
-     * @param {Event} ev
-     */
-    async _onChangeOptionQuantity(ev) {
-        ev.preventDefault();
-        let self = this,
-            $target = $(ev.currentTarget),
-            quantity = parseInt($target.val());
-
-        const result = await this._callUpdateLineRoute(self.orderDetail.orderId, {
-            'line_id': $target.data('lineId'),
+    async onChangeOptionQuantity(ev, currentTargetEl) {
+        const quantity = parseInt(currentTargetEl.value);
+        const data = await this.waitFor(this.callUpdateLineRoute(this.orderDetail.orderId, {
+            'access_token': this.orderDetail.token,
             'input_quantity': quantity >= 0 ? quantity : false,
-            'access_token': self.orderDetail.token
-        });
-        this._refreshOrderUI(result);
-    },
+            'line_id': currentTargetEl.dataset.lineId,
+        }));
+        this.refreshOrderUI(data);
+    }
 
-    /**
-     * Reacts to the click on the -/+ buttons
-     *
-     * @private
-     * @param {Event} ev
-     */
-    async _onClickOptionQuantityButton(ev) {
-        ev.preventDefault();
-        let self = this,
-            $target = $(ev.currentTarget);
+    async onClickOptionQuantityButton(ev, currentTargetEl) {
+        const data = await this.waitFor(this.callUpdateLineRoute(this.orderDetail.orderId, {
+            'access_token': this.orderDetail.token,
+            'line_id': currentTargetEl.dataset.lineId,
+            'remove': currentTargetEl.dataset.remove,
+            'unlink': currentTargetEl.dataset.unlink,
+        }));
+        this.refreshOrderUI(data);
+    }
 
-        const result = await this._callUpdateLineRoute(self.orderDetail.orderId, {
-            'line_id': $target.data('lineId'),
-            'remove': $target.data('remove'),
-            'unlink': $target.data('unlink'),
-            'access_token': self.orderDetail.token
-        });
-        this._refreshOrderUI(result);
-    },
+    async onClickAddOptionalProduct(ev, currentTargetEl) {
+        currentTargetEl.style.setProperty('pointer-events', 'none');
+        const data = await this.waitFor(this.callAddOptionRoute(this.orderDetail.orderId, currentTargetEl.dataset.optionId, {
+            'access_token': this.orderDetail.token,
+        }));
+        this.refreshOrderUI(data);
+    }
+}
 
-    /**
-     * Triggered when optional product added to order from portal.
-     *
-     * @private
-     * @param {Event} ev
-     */
-     _onClickAddOptionalProduct(ev) {
-        ev.preventDefault();
-        let self = this,
-            $target = $(ev.currentTarget);
-
-        // to avoid double click on link with href.
-        $target.css('pointer-events', 'none');
-
-        rpc(
-            "/my/orders/" + self.orderDetail.orderId + "/add_option/" + $target.data('optionId'),
-            {access_token: self.orderDetail.token}
-        ).then((data) => {
-            this._refreshOrderUI(data);
-        });
-    },
-
-});
+registry
+    .category("public.interactions")
+    .add("sale_management.sale_update_line_button", SaleUpdateLineButton);

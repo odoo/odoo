@@ -1,7 +1,7 @@
 import { Interaction } from "@web/public/interaction";
-import { compensateScrollbar } from "@web/core/utils/scrolling";
-import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
 
+import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
+import { compensateScrollbar } from "@web/core/utils/scrolling";
 
 export class BaseHeader extends Interaction {
     dynamicContent = {
@@ -35,7 +35,7 @@ export class BaseHeader extends Interaction {
             "t-on-show.bs.collapse": this.disableScroll,
             "t-on-hide.bs.collapse": this.enableScroll,
         },
-    }
+    };
 
     //--------------------------------------------------------------
     // Life Cycle
@@ -53,8 +53,6 @@ export class BaseHeader extends Interaction {
 
         this.isVisible = true;
         this.isScrolled = false;
-        this.hasScrolled = false;
-        this.closeDropdowns = false;
         this.forcedScroll = 0;
 
         this.isOverlay = !!this.el.closest(".o_header_overlay, .o_header_overlay_theme");
@@ -65,10 +63,10 @@ export class BaseHeader extends Interaction {
 
         this.scrollingElement = document.scrollingElement;
         const navbarEl = this.el.querySelector(".navbar");
-        const navBreakpoint = Object.keys(SIZES).find((size) =>
+        const navBreakpoint = navbarEl ? Object.keys(SIZES).find((size) =>
             navbarEl.classList.contains(`navbar-expand-${size.toLowerCase()}`)
-        );
-        this.breakpointSize = SIZES[navBreakpoint || "LG"];    }
+        ) : "LG";
+        this.breakpointSize = SIZES[navBreakpoint];    }
 
     start() {
         this.services.website_menus.triggerCallbacks();
@@ -93,21 +91,6 @@ export class BaseHeader extends Interaction {
 
     enableScroll() {
         this.bodyNoScroll = false;
-    }
-
-    onScroll() {
-        if (!this.hasScrolled) {
-            this.hasScrolled = true;
-        } else {
-            this.closeDropdowns = true;
-        }
-
-        if (this.closeDropdowns) {
-            const dropdownToggleEls = this.el.querySelectorAll(".dropdown-toggle.show");
-            for (const dropdownToggleEl of dropdownToggleEls) {
-                Dropdown.getOrCreateInstance(dropdownToggleEl).hide();
-            }
-        }
     }
 
     onResize() {

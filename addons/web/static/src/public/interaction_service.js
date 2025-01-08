@@ -105,12 +105,25 @@ class InteractionService {
                     `The dynamic content object should be defined on the instance, not on the class (${I.name})`
                 );
             }
-            if (el.matches(I.selector)) {
-                this._startInteraction(el, I, proms);
-            } else {
-                for (const _el of el.querySelectorAll(I.selector)) {
-                    this._startInteraction(_el, I, proms);
+            let targets;
+            try {
+                const isMatch = el.matches(I.selector);
+                targets = isMatch
+                    ? [el, ...el.querySelectorAll(I.selector)]
+                    : el.querySelectorAll(I.selector);
+                if (I.selectorHas) {
+                    targets = [...targets].filter((el) => !!el.querySelector(I.selectorHas));
                 }
+            } catch {
+                const selectorHasError = I.selectorHas ? ` or selectorHas: '${I.selectorHas}'` : "";
+                const error = new Error(
+                    `Could not start interaction ${I.name} (invalid selector: '${I.selector}'${selectorHasError})`
+                );
+                proms.push(Promise.reject(error));
+                continue;
+            }
+            for (const _el of targets) {
+                this._startInteraction(_el, I, proms);
             }
         }
         if (el === this.el) {

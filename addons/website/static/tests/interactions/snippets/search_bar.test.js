@@ -1,13 +1,16 @@
-import { describe, expect, test } from "@odoo/hoot";
 import {
-    click,
-    press,
-} from "@odoo/hoot-dom";
+    startInteractions,
+    setupInteractionWhiteList,
+} from "@web/../tests/public/helpers";
+
+import { describe, expect, test } from "@odoo/hoot";
+import { click, press } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
+
 import { onRpc } from "@web/../tests/web_test_helpers";
-import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 setupInteractionWhiteList("website.search_bar");
+
 describe.current.tags("interaction_dev");
 
 const searchTemplate = `
@@ -21,8 +24,7 @@ const searchTemplate = `
                     data-display-extra-link="true"
                     data-display-detail="false"
                     data-order-by="name asc"
-                    autocomplete="off"
-            />
+                    autocomplete="off"/>
             <button type="submit" aria-label="Search" title="Search" class="btn oe_search_button border border-start-0 px-4 bg-o-color-4">
                 <i class="oi oi-search"></i>
             </button>
@@ -75,7 +77,7 @@ function supportAutocomplete() {
 test("searchbar triggers a search when text is entered", async () => {
     supportAutocomplete();
     const { core, el } = await startInteractions(searchTemplate);
-    expect(core.interactions.length).toBe(1);
+    expect(core.interactions).toHaveLength(1);
     const formEl = el.querySelector("form");
     const inputEl = formEl.querySelector("input[type=search]");
     await click(inputEl);
@@ -86,7 +88,7 @@ test("searchbar triggers a search when text is entered", async () => {
     await press("z");
     await advanceTime(400);
     const resultEls = formEl.querySelectorAll(".o_search_result_item");
-    expect(resultEls.length).toBe(3);
+    expect(resultEls).toHaveLength(3);
 });
 
 test("searchbar selects first result on cursor down", async () => {
@@ -100,7 +102,7 @@ test("searchbar selects first result on cursor down", async () => {
     await press("z");
     await advanceTime(400);
     const resultEls = formEl.querySelectorAll("a:has(.o_search_result_item)");
-    expect(resultEls.length).toBe(3);
+    expect(resultEls).toHaveLength(3);
     expect(document.activeElement).toBe(inputEl);
     await press("down");
     expect(document.activeElement).toBe(resultEls[0]);
@@ -117,7 +119,7 @@ test("searchbar selects last result on cursor up", async () => {
     await press("z");
     await advanceTime(400);
     const resultEls = formEl.querySelectorAll("a:has(.o_search_result_item)");
-    expect(resultEls.length).toBe(3);
+    expect(resultEls).toHaveLength(3);
     expect(document.activeElement).toBe(inputEl);
     await press("up");
     expect(document.activeElement).toBe(resultEls[2]);
@@ -134,8 +136,8 @@ test("searchbar removes results on escape", async () => {
     await press("z");
     await advanceTime(400);
     let resultEls = formEl.querySelectorAll("a:has(.o_search_result_item)");
-    expect(resultEls.length).toBe(3);
+    expect(resultEls).toHaveLength(3);
     await press("escape");
     resultEls = formEl.querySelectorAll("a:has(.o_search_result_item)");
-    expect(resultEls.length).toBe(0);
+    expect(resultEls).toHaveLength(0);
 });

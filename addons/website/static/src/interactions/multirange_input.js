@@ -1,8 +1,9 @@
-import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import multirange from "@website/../lib/multirange/multirange_custom";
 
-export class WebsiteMultirangeInput extends Interaction {
+export class MultirangeInput extends Interaction {
     static selector = "input[type=range][multiple]:not(.multirange)";
 
     start() {
@@ -12,4 +13,4 @@ export class WebsiteMultirangeInput extends Interaction {
 
 registry
     .category("public.interactions")
-    .add("website.multirange_input", WebsiteMultirangeInput);
+    .add("website.multirange_input", MultirangeInput);

@@ -1,23 +1,28 @@
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 
-publicWidget.registry.SignUpForm = publicWidget.Widget.extend({
-    selector: '.oe_signup_form',
-    events: {
-        'submit': '_onSubmit',
-    },
+export class SignUpForm extends Interaction {
+    static selector = ".oe_signup_form";
+    dynamicContent = {
+        _root: { "t-on-submit": this.onSubmit },
+        ".oe_login_buttons > button[type='submit']": { "t-att-disabled": () => this.submitElStatus },
+    };
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+    setup() {
+        this.submitElStatus = null;
+    }
 
-    /**
-     * @private
-     */
-    _onSubmit: function () {
-        const btn = this.$('.oe_login_buttons > button[type="submit"]');
-        if (!btn.prop("disabled")) {
-            btn.attr("disabled", "disabled");
-            btn.prepend('<i class="fa fa-circle-o-notch fa-spin"/> ');
+    onSubmit() {
+        const submitEl = document.querySelector(".oe_login_buttons > button[type='submit']");
+        if (!this.submitElStatus) {
+            this.submitElStatus = "disabled";
+            const refreshEl = document.createElement("i");
+            refreshEl.classList.add("fa", "fa-circle-o-notch", "fa-spin");
+            this.insert(refreshEl, submitEl, "beforebegin");
         }
-    },
-});
+    }
+}
+
+registry
+    .category("public.interactions")
+    .add("auth_signup.sign_up_form", SignUpForm);

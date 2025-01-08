@@ -1,36 +1,43 @@
-import { groupBy } from '@web/core/utils/arrays';
-import publicWidget from '@web/legacy/js/public/public_widget';
-import DynamicSnippet from '@website/snippets/s_dynamic_snippet/000';
+import { DynamicSnippet } from "@website/snippets/s_dynamic_snippet/dynamic_snippet";
+import { registry } from "@web/core/registry";
 
-const DynamicSnippetEvents = DynamicSnippet.extend({
+import { groupBy } from "@web/core/utils/arrays";
+
+export class Events extends DynamicSnippet {
     // While the selector has 'upcoming_snippet' in its name, it now has a filter
     // option to include ongoing events. The name is kept for backward compatibility.
-    selector: '.s_event_upcoming_snippet',
-    disabledInEditableMode: false,
+    static selector = ".s_event_upcoming_snippet";
 
     /**
      * @override
-     * @private
      */
-    _getSearchDomain: function () {
-        let searchDomain = this._super.apply(this, arguments);
-        const filterByTagIds = this.$el.get(0).dataset.filterByTagIds;
+    getSearchDomain() {
+        let searchDomain = super.getSearchDomain(...arguments);
+        const filterByTagIds = this.el.dataset.filterByTagIds;
         if (filterByTagIds) {
-            let tagGroupedByCategory = groupBy(JSON.parse(filterByTagIds), 'category_id');
+            let tagGroupedByCategory = groupBy(JSON.parse(filterByTagIds), "category_id");
             for (const category in tagGroupedByCategory) {
                 searchDomain = searchDomain.concat(
-                    [['tag_ids', 'in', tagGroupedByCategory[category].map(e => e.id)]]);
+                    [["tag_ids", "in", tagGroupedByCategory[category].map(e => e.id)]]);
             }
         }
         return searchDomain;
-    },
+    }
+
     /**
      * @override
-     * @private
      */
-    _getMainPageUrl() {
+    getMainPageUrl() {
         return "/event";
-    },
-});
+    }
+}
 
-publicWidget.registry.events = DynamicSnippetEvents;
+registry
+    .category("public.interactions")
+    .add("website_event.events", Events);
+
+registry
+    .category("public.interactions.edit")
+    .add("website_event.events", {
+        Interaction: Events,
+    });

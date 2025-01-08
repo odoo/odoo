@@ -1,133 +1,90 @@
-import { Component, useState, markup, onWillStart } from "@odoo/owl";
-import { FlagMarkAsOffensiveDialog } from "../components/flag_mark_as_offensive/flag_mark_as_offensive";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { cookie } from "@web/core/browser/cookie";;
-import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFromTextarea";
-import publicWidget from "@web/legacy/js/public/public_widget";
-import { session } from "@web/session";
-import { rpc } from "@web/core/network/rpc";
-import { get } from "@web/core/network/http_service";
-import { _t } from "@web/core/l10n/translation";
-import { renderToElement } from "@web/core/utils/render";
-import { scrollTo, closestScrollable } from "@web_editor/js/common/scrolling";
-import { attachComponent } from "@web_editor/js/core/owl_utils";
-import { SelectMenu } from "@web/core/select_menu/select_menu";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 
-class WebsiteForumTagsWrapper extends Component {
-    static template = "website_forum.WebsiteForumTagsWrapper";
-    static components = { SelectMenu, DropdownItem };
-    static defaultProps = {
-        isReadOnly: false,
-    };
-    static props = {
-        defaulValue: { optional: true, type: Array },
-        isReadOnly: { optional: true, Type: Boolean },
+import { markup } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
+import { cookie } from "@web/core/browser/cookie";;
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
+import { session } from "@web/session";
+import { scrollTo, closestScrollable } from "@web_editor/js/common/scrolling";
+import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFromTextarea";
+import { FlagMarkAsOffensiveDialog } from "../components/flag_mark_as_offensive/flag_mark_as_offensive";
+import { WebsiteForumTagsWrapper } from "../components/website_forum_tags_wrapper";
+
+export class WebsiteForum extends Interaction {
+    static selector = ".website_forum";
+    dynamicContent = {
+        ".karma_required": {
+            "t-on-click.withTarget": this.onClickKarmaRequired,
+        },
+        ".o_js_forum_tag_follow": {
+            "t-on-click.withTarget": this.onClickTagFollow,
+        },
+        ".o_wforum_flag:not(.karma_required)": {
+            "t-on-click.prevent.withTarget": this.onClickFlag,
+        },
+        ".o_wforum_flag_validator": {
+            "t-on-click.prevent.withTarget": this.onClickFlagValidator,
+        },
+        ".o_wforum_flag_mark_as_offensive": {
+            "t-on-click.prevent.withTarget": this.onClickFlagMarkAsOffensive,
+        },
+        ".vote_up:not(.karma_required), .vote_down:not(.karma_required)": {
+            "t-on-click.prevent.withTarget": this.onClickVotePost,
+        },
+        ".o_wforum_validation_queue a[href*='/validate']": {
+            "t-on-click.prevent.withTarget": this.onClickValidationQueue,
+        },
+        ".o_wforum_validate_toggler:not(.karma_required)": {
+            "t-on-click.prevent.withTarget": this.onClickToggleValidate,
+        },
+        ".o_wforum_favourite_toggle": {
+            "t-on-click.prevent.withTarget": this.onClickToggleFavourite,
+        },
+        ".comment_delete:not(.karma_required)": {
+            "t-on-click.prevent.withTarget": this.onClickDeleteComment,
+        },
+        ".js_close_intro": {
+            "t-on-click.prevent": this.onClickCloseIntro,
+        },
+        ".answer_collapse": {
+            "t-on-click.withTarget": this.onClickExpandAnswer,
+        },
+        ".js_wforum_submit_form:has(.o_wforum_submit_post:not(.karma_required))": {
+            "t-on-submit.withTarget": this.onSubmitForm,
+        },
+        "#post_reply": {
+            "t-on-shown.bs.collapse.withTarget": this.onCollapseShown,
+        },
+        // Not sure this is still needed.
+        // float-start class messes up the post layout OPW 769721
+        "span[data-oe-model='forum.post'][data-oe-field='content'] img.float-start": {
+            "t-att-class": () => ({ "float-start": false }),
+        },
     };
 
     setup() {
-        this.state = useState({
-            value: this.props.defaulValue || [],
-        });
-        onWillStart(async () => {
-            await this.loadChoices();
-        });
-    }
-
-    get showCreateOption() {
-        // The "Create" option should not be visible if:
-        // 1. Tag length is less than 2.
-        // 2. The tag already exists (tags are created on form submission, so
-        // consider the current value).
-        // 3. There is insufficient karma.
-        const searchValue = this.select.data.searchValue;
-        const karma = document.querySelector("#karma").value;
-        const editKarma = document.querySelector("#karma_edit_retag").value;
-        const hasEnoughKarma = parseInt(karma) >= parseInt(editKarma);
-
-        return hasEnoughKarma && searchValue.length >= 2
-            && !this.state.choices.some(c => c.label === searchValue)
-            && !this.state.value.some(v => v === `_${searchValue.trim()}`);
-    }
-
-    onCreateOption(string) {
-        const choice = {
-            label: string.trim(),
-            value: `_${string.trim()}`,
-        };
-        this.state.choices.push(choice);
-        this.onSelect([...this.state.value, choice.value]);
-    }
-
-    onSelect(values) {
-        this.state.value = values;
-    }
-
-    async loadChoices(searchString = "") {
-        const forumID = document.querySelector("#wrapwrap").dataset.forum_id;
-        const choices = await new Promise((resolve, reject) => {
-            get(`/forum/get_tags?query=${searchString}&limit=${50}&forum_id=${forumID}`).then(
-                (result) => {
-                    result.forEach((choiceEl) => {
-                        choiceEl.value = choiceEl.id;
-                        choiceEl.label = choiceEl.name;
-                    });
-                    resolve(result);
-                }
-            );
-        });
-        this.state.choices = choices;
-    }
-}
-
-publicWidget.registry.websiteForum = publicWidget.Widget.extend({
-    selector: '.website_forum',
-    events: {
-        'click .karma_required': '_onKarmaRequiredClick',
-        'mouseenter .o_js_forum_tag_follow': '_onTagFollowBoxMouseEnter',
-        'mouseleave .o_js_forum_tag_follow': '_onTagFollowBoxMouseLeave',
-        "click .o_js_forum_tag_follow": "_onTagFollowClick",
-        'mouseenter .o_forum_user_info': '_onUserInfoMouseEnter',
-        'mouseleave .o_forum_user_info': '_onUserInfoMouseLeave',
-        'mouseleave .o_forum_user_bio_expand': '_onUserBioExpandMouseLeave',
-        'click .o_wforum_flag:not(.karma_required)': '_onFlagAlertClick',
-        'click .o_wforum_flag_validator': '_onFlagValidatorClick',
-        'click .o_wforum_flag_mark_as_offensive': '_onFlagMarkAsOffensiveClick',
-        'click .vote_up:not(.karma_required), .vote_down:not(.karma_required)': '_onVotePostClick',
-        'click .o_wforum_validation_queue a[href*="/validate"]': '_onValidationQueueClick',
-        'click .o_wforum_validate_toggler:not(.karma_required)': '_onAcceptAnswerClick',
-        'click .o_wforum_favourite_toggle': '_onFavoriteQuestionClick',
-        'click .comment_delete:not(.karma_required)': '_onDeleteCommentClick',
-        'click .js_close_intro': '_onCloseIntroClick',
-        'click .answer_collapse': '_onExpandAnswerClick',
-        'submit .js_wforum_submit_form:has(:not(.karma_required).o_wforum_submit_post)': '_onSubmitForm',
-    },
-
-    init() {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
-        this.notification = this.bindService("notification");
-    },
-
-    /**
-     * @override
-     */
-    async start() {
-        var self = this;
-        const _super = this._super.bind(this);
-
         this.lastsearch = [];
 
-        // float-start class messes up the post layout OPW 769721
-        $('span[data-oe-model="forum.post"][data-oe-field="content"]').find('img.float-start').removeClass('float-start');
-
         // welcome message action button
-        var forumLogin = `${window.location.origin}/odoo?redirect=${encodeURIComponent(window.location.href)}`
-        $('.forum_register_url').attr('href', forumLogin);
+        const forumRegisterUrlEl = this.el.querySelector(".forum_register_url");
+        if (forumRegisterUrlEl) {
+            const forumLogin = `${browser.location.origin}/odoo?redirect=${encodeURIComponent(browser.location.href)}`;
+            forumRegisterUrlEl.href = forumLogin;
+        }
 
         // Initialize forum's tooltips
-        this.$('[data-bs-toggle="tooltip"]').tooltip({delay: 0});
-        this.$('[data-bs-toggle="popover"]').popover({offset: '8'});
+        this.el.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((el) => {
+            const bsTooltip = window.Tooltip.getOrCreateInstance(el);
+            this.registerCleanup(() => bsTooltip.dispose());
+        });
+
+        this.el.querySelectorAll('[data-bs-toggle="popover"]').forEach((el) => {
+            const bsPopover = window.Popover.getOrCreateInstance(el);
+            this.registerCleanup(() => bsPopover.dispose());
+        });
 
         const selectMenuWrapperEl = document.querySelector("div.js_select_menu_wrapper");
         if (selectMenuWrapperEl) {
@@ -135,19 +92,18 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             // Take default tags from the input value
             const defaulValue = JSON.parse(selectMenuWrapperEl.dataset.initValue || "[]").map((x) => x.id);
 
-            await attachComponent(this, selectMenuWrapperEl, WebsiteForumTagsWrapper, {
+            this.mountComponent(selectMenuWrapperEl, WebsiteForumTagsWrapper, {
                 defaulValue: defaulValue,
                 disabled: isReadOnly,
             });
         }
 
-        $('textarea.o_wysiwyg_loader').toArray().forEach((textarea) => {
-            var $textarea = $(textarea);
-            var editorKarma = $textarea.data('karma') || 0; // default value for backward compatibility
-            var $form = $textarea.closest('form');
-            var hasFullEdit = parseInt($("#karma").val()) >= editorKarma;
-            var options = {
-                toolbarTemplate: 'website_forum.web_editor_toolbar',
+        this.el.querySelectorAll("textarea.o_wysiwyg_loader").forEach((textareaEl) => {
+            const editorKarma = parseInt(textareaEl.dataset.karma || 0); // default value for backward compatibility
+            const formEl = textareaEl.closest("form");
+            const hasFullEdit = parseInt(this.el.querySelector("#karma").value) >= editorKarma;
+            const options = {
+                toolbarTemplate: "website_forum.web_editor_toolbar",
                 toolbarOptions: {
                     showColors: false,
                     showFontSize: false,
@@ -159,155 +115,146 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     showImageEdit: hasFullEdit,
                 },
                 recordInfo: {
-                    context: self._getContext(),
-                    res_model: 'forum.post',
+                    context: this.services.website_page.context,
+                    res_model: "forum.post",
                     // Id is retrieved from URL, which is either:
                     // - /forum/name-1/post/something-5
                     // - /forum/name-1/post/something-5/edit
                     // TODO: Make this more robust.
-                    res_id: +window.location.pathname.split('-').slice(-1)[0].split('/')[0],
+                    res_id: +browser.location.pathname.split("-").slice(-1)[0].split("/")[0],
                 },
-                value: $textarea.get(0).getAttribute("content"),
+                value: textareaEl.getAttribute("content"),
                 resizable: true,
                 userGeneratedContent: true,
                 height: 350,
             };
             options.allowCommandLink = hasFullEdit;
             options.allowCommandImage = hasFullEdit;
-            loadWysiwygFromTextarea(self, $textarea[0], options).then(wysiwyg => {
+            loadWysiwygFromTextarea(this, textareaEl, options).then(() => {
                 // float-start class messes up the post layout OPW 769721
-                $form.find('.note-editable').find('img.float-start').removeClass('float-start');
+                formEl.querySelectorAll(".note-editable img.float-start").forEach((el) => {
+                    el.classList.remove("float-start");
+                });
             });
         });
 
-        this.$('.o_wforum_bio_popover').toArray().forEach((authorBox) => {
-            $(authorBox).popover({
-                trigger: 'hover',
-                offset: '10',
+        this.el.querySelectorAll(".o_wforum_bio_popover").forEach((authorBox) => {
+            const bsPopover = window.Popover.getOrCreateInstance(authorBox, {
+                trigger: "hover",
+                offset: "10",
                 animation: false,
                 html: true,
-                customClass: 'o_wforum_bio_popover_container shadow-sm',
+                customClass: "o_wforum_bio_popover_container shadow-sm",
             });
+            this.registerCleanup(() => bsPopover.dispose());
         });
 
-        this.$('#post_reply').on('shown.bs.collapse', function (e) {
-            const replyEl = document.querySelector('#post_reply');
-            const scrollingElement = closestScrollable(replyEl.parentNode);
-            scrollTo(replyEl, {
-                forcedOffset: $(scrollingElement).innerHeight() - $(replyEl).innerHeight(),
-            });
-        });
-        document.querySelectorAll('.o_wforum_question, .o_wforum_answer, .o_wforum_post_comment, .o_wforum_last_activity')
+        this.el.querySelectorAll(".o_wforum_question, .o_wforum_answer, .o_wforum_post_comment, .o_wforum_last_activity")
             .forEach((post) => {
-                post.querySelector('.o_wforum_relative_datetime').textContent = luxon.DateTime
-                    .fromSQL(post.dataset.lastActivity, {zone: 'utc'})
-                    .toRelative();
+                post.querySelector(".o_wforum_relative_datetime").textContent =
+                    luxon.DateTime.fromSQL(post.dataset.lastActivity, { zone: "utc" }).toRelative();
             });
-        return _super(...arguments);
-    },
+    }
 
     /**
-     * Check if the user is public, if it's true send a warning alert saying the action cannot be performed.
+     * Check if the user is public, if it's true send a warning alert saying the
+     * action cannot be performed.
+     *
+     * @returns {boolean}
      **/
-    _warnIfPublicUser: function() {
+    warnIfPublicUser() {
         if (session.is_website_user) {
-            this._displayAccessDeniedNotification(
+            this.displayAccessDeniedNotification(
                 markup(_t('Oh no! Please <a href="%s">sign in</a> to perform this action', "/web/login"))
             );
             return true;
         }
         return false;
-    },
-
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+    }
 
     /**
-     *
-     * @override
-     * @param {Event} ev
+     * @param {string} message
      */
-    _onSubmitForm: function (ev) {
+    displayAccessDeniedNotification(message) {
+        this.services.notification.add(message, {
+            title: _t("Access Denied"),
+            sticky: false,
+            type: "warning",
+        });
+    }
+
+    /**
+     * @param {Event} ev
+     * @param {HTMLElement} currentTargetEl
+     */
+    onSubmitForm(ev, currentTargetEl) {
         let validForm = true;
+        const titleEl = currentTargetEl.querySelector("input[name=post_name]");
+        const textareaEl = currentTargetEl.querySelector("textarea[name=content]");
 
-        let $form = $(ev.currentTarget);
-        let $title = $form.find('input[name=post_name]');
-        let $textarea = $form.find('textarea[name=content]');
-        // It's not really in the textarea that the user write at first
-        const fillableTextAreaEl = $form[0].querySelector(".o_wysiwyg_textarea_wrapper");
-        const isTextAreaFilled = fillableTextAreaEl &&
-            (fillableTextAreaEl.innerText.trim() || fillableTextAreaEl.querySelector("img"));
-
-        if ($title.length && $title[0].required) {
-            if ($title.val()) {
-                $title.removeClass('is-invalid');
-            } else {
-                $title.addClass('is-invalid');
-                validForm = false;
-            }
+        if (titleEl?.required) {
+            titleEl.classList.toggle("is-invalid", !!titleEl.value);
+            validForm = !!titleEl.value;
         }
 
-        // Because the textarea is hidden, we add the red or green border to its container
-        if ($textarea[0] && $textarea[0].required) {
-            let $textareaContainer = $form.find('.o_wysiwyg_textarea_wrapper');
-            if (!isTextAreaFilled) {
-                $textareaContainer.addClass('border border-danger rounded-top');
-                validForm = false;
-            } else {
-                $textareaContainer.removeClass('border border-danger rounded-top');
-            }
+        // Because the textarea is hidden, we add the red or green border to its
+        // container.
+        if (textareaEl?.required) {
+            const textareaContainerEl = currentTargetEl.querySelector(".o_wysiwyg_textarea_wrapper");
+            const hasContent = !!textareaContainerEl.innerText.trim() || !!textareaContainerEl.querySelector("img");
+            ["border", "border-danger", "rounded-top"].forEach((cls) => {
+                textareaContainerEl.classList.toggle(cls, hasContent);
+            });
+            validForm = hasContent;
         }
 
         if (validForm) {
             // Stores social share data to display modal on next page.
-            if ($form.has('.oe_social_share_call').length) {
-                sessionStorage.setItem('social_share', JSON.stringify({
-                    targetType: $(ev.currentTarget).find('.o_wforum_submit_post').data('social-target-type'),
+            if (currentTargetEl.querySelector(".oe_social_share_call")) {
+                sessionStorage.setItem("social_share", JSON.stringify({
+                    targetType: currentTargetEl.querySelector(".o_wforum_submit_post").dataset.socialTargetType,
                 }));
             }
         } else {
             ev.preventDefault();
-            setTimeout(function() {
-                var $buttons = $(ev.currentTarget).find('button[type="submit"], a.a-submit');
-                $buttons.toArray().forEach((btn) => {
-                    let $btn = $(btn);
-                    $btn.find('i').remove();
-                    $btn.prop('disabled', false);
+            this.waitForTimeout(() => {
+                currentTargetEl.querySelectorAll('button[type="submit"], a.a-submit').forEach((btnEl) => {
+                    btnEl.querySelector("i").remove();
+                    btnEl.disabled = false;
                 });
             }, 0);
         }
-    },
+    }
+
     /**
-     * @private
      * @param {Event} ev
+     * @param {HTMLElement} currentTargetEl
      */
-    _onExpandAnswerClick: function (ev) {
-        const expandableWindow = ev.currentTarget;
-        if (ev.target.matches('.o_wforum_expand_toggle')) {
-            expandableWindow.classList.toggle('o_expand')
-            expandableWindow.classList.toggle('min-vh-100');
-            expandableWindow.classList.toggle('w-lg-50');
-        } else if (ev.target.matches('.o_wforum_discard_btn')){
-            expandableWindow.classList.remove('o_expand', 'min-vh-100');
-            expandableWindow.classList.add('w-lg-50');
+    onClickExpandAnswer(ev, currentTargetEl) {
+        if (ev.target.matches(".o_wforum_expand_toggle")) {
+            currentTargetEl.classList.toggle("o_expand")
+            currentTargetEl.classList.toggle("min-vh-100");
+            currentTargetEl.classList.toggle("w-lg-50");
+        } else if (ev.target.matches(".o_wforum_discard_btn")) {
+            currentTargetEl.classList.remove("o_expand", "min-vh-100");
+            currentTargetEl.classList.add("w-lg-50");
         }
-    },
+    }
+
     /**
-     * @private
      * @param {Event} ev
+     * @param {HTMLElement} currentTargetEl
      */
-    _onKarmaRequiredClick: function (ev) {
-        const karma = parseInt(ev.currentTarget.dataset.karma);
+    onClickKarmaRequired(ev, currentTargetEl) {
+        const karma = parseInt(currentTargetEl.dataset.karma);
         if (!karma) {
             return;
         }
         ev.preventDefault();
-        if (this._warnIfPublicUser()) {
+        if (this.warnIfPublicUser()) {
             return;
         }
-        const forumId = parseInt(document.getElementById('wrapwrap').dataset.forum_id);
+        const forumId = parseInt(this.el.ownerDocument.getElementById("wrapwrap").dataset.forum_id);
         const additionalInfoWithForumID = forumId
             ? markup(`<br/>
                 <a class="alert-link" href="/forum/${forumId}/faq">
@@ -316,401 +263,296 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             : "";
         const translatedText = _t("karma is required to perform this action. ");
         const message = markup(`${karma} ${translatedText}${additionalInfoWithForumID}`);
-        this.notification.add(message, {
+        this.services.notification.add(message, {
             type: "warning",
             sticky: false,
             title: _t("Karma Error"),
         });
-    },
+    }
+
     /**
-     * @private
      * @param {Event} ev
+     * @param {HTMLElement} currentTargetEl
      */
-    _onTagFollowBoxMouseEnter: function (ev) {
-        $(ev.currentTarget).find('.o_forum_tag_follow_box').stop().fadeIn().css('display', 'block');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onTagFollowBoxMouseLeave: function (ev) {
-        $(ev.currentTarget).find('.o_forum_tag_follow_box').stop().fadeOut().css('display', 'none');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onTagFollowClick: function (ev) {
-        const closestBtn = ev.target.closest("button");
-        if (closestBtn) {
-            ev.currentTarget.querySelector(".o_js_forum_tag_link").classList.toggle("text-muted");
+    onClickTagFollow(ev, currentTargetEl) {
+        if (ev.target.closest("button")) {
+            currentTargetEl.querySelector(".o_js_forum_tag_link").classList.toggle("text-muted");
         }
-    },
+    }
+
     /**
-     * @private
      * @param {Event} ev
+     * @param {HTMLElement} currentTargetEl
      */
-    _onUserInfoMouseEnter: function (ev) {
-        $(ev.currentTarget).parent().find('.o_forum_user_bio_expand').delay(500).toggle('fast');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onUserInfoMouseLeave: function (ev) {
-        $(ev.currentTarget).parent().find('.o_forum_user_bio_expand').clearQueue();
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onUserBioExpandMouseLeave: function (ev) {
-        $(ev.currentTarget).fadeOut('fast');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onFlagAlertClick: function (ev) {
-        ev.preventDefault();
-        if (this._warnIfPublicUser()) {
+    async onClickFlag(ev, currentTargetEl) {
+        if (this.warnIfPublicUser()) {
             return;
         }
-        const elem = ev.currentTarget;
-        rpc(
-            elem.dataset.href || (elem.getAttribute('href') !== '#' && elem.getAttribute('href')) || elem.closest('form').getAttribute('action'),
-        ).then(data => {
-            if (data.error) {
-                const message = data.error === 'post_already_flagged'
-                    ? _t("This post is already flagged")
-                    : data.error === 'post_non_flaggable'
-                        ? _t("This post can not be flagged")
-                        : data.error;
-                this._displayAccessDeniedNotification(message);
-            } else if (data.success) {
-                const child = elem.firstElementChild;
-                if (data.success === 'post_flagged_moderator') {
-                    const countFlaggedPosts = this.el.querySelector('#count_posts_queue_flagged');
-                    elem.innerText = _t(' Flagged');
-                    elem.prepend(child);
-                    if (countFlaggedPosts) {
-                        countFlaggedPosts.classList.remove('bg-light');
-                        countFlaggedPosts.classList.remove('d-none');
-                        countFlaggedPosts.classList.add('text-bg-danger');
-                        countFlaggedPosts.innerText = parseInt(countFlaggedPosts.innerText, 10) + 1;
-                    }
-                    $(elem).nextAll('.flag_validator').removeClass('d-none');
-                } else if (data.success === 'post_flagged_non_moderator') {
-                    elem.innerText = _t(' Flagged');
-                    elem.prepend(child);
-                    const $forumAnswer = $(elem).closest('.o_wforum_answer');
-                    if ($forumAnswer) {
-                        $forumAnswer.fadeIn(1000);
-                        $forumAnswer.slideUp(1000);
-                    }
+        const data = await this.waitFor(rpc(
+            currentTargetEl.dataset.href
+            || (currentTargetEl.getAttribute("href") !== "#" && currentTargetEl.getAttribute("href"))
+            || currentTargetEl.closest("form").getAttribute("action")
+        ));
+        if (data.error) {
+            const message = data.error === "post_already_flagged"
+                ? _t("This post is already flagged")
+                : data.error === "post_non_flaggable"
+                    ? _t("This post can not be flagged")
+                    : data.error;
+            this.displayAccessDeniedNotification(message);
+        } else if (data.success) {
+            const child = currentTargetEl.firstElementChild;
+            if (data.success === "post_flagged_moderator") {
+                const countFlaggedPosts = this.el.querySelector("#count_posts_queue_flagged");
+                currentTargetEl.innerText = _t(" Flagged");
+                currentTargetEl.prepend(child);
+                if (countFlaggedPosts) {
+                    countFlaggedPosts.classList.remove("bg-light", "d-none");
+                    countFlaggedPosts.classList.add("text-bg-danger");
+                    countFlaggedPosts.innerText = parseInt(countFlaggedPosts.innerText, 10) + 1;
+                }
+            } else if (data.success === "post_flagged_non_moderator") {
+                currentTargetEl.innerText = _t(" Flagged");
+                currentTargetEl.prepend(child);
+                const forumAnswerEl = currentTargetEl.closest(".o_wforum_answer");
+                if (forumAnswerEl) {
+                    forumAnswerEl.style.height = getComputedStyle(forumAnswerEl).height;
+                    forumAnswerEl.classList.add("overflow-hidden");
+                    forumAnswerEl.style.transition = "height 1s, opacity 1s";
+                    forumAnswerEl.classList.add("opacity-0", "h-0");
                 }
             }
-        });
-    },
+        }
+    }
+
     /**
-     * @private
      * @param {Event} ev
+     * @param {HTMLElement} currentTargetEl
      */
-    _onVotePostClick: function (ev) {
-        ev.preventDefault();
-        if (this._warnIfPublicUser()) {
+    async onClickVotePost(ev, currentTargetEl) {
+        if (this.warnIfPublicUser()) {
             return;
         }
-        var $btn = $(ev.currentTarget);
-        rpc($btn.data('href')).then(data => {
-            if (data.error) {
-                const message = data.error === 'own_post' ? _t('Sorry, you cannot vote for your own posts') : data.error;
-                this._displayAccessDeniedNotification(message);
-            } else {
-                var $container = $btn.closest('.vote');
-                var $items = $container.children();
-                var $voteUp = $items.filter('.vote_up');
-                var $voteDown = $items.filter('.vote_down');
-                var $voteCount = $items.filter('.vote_count');
-                var userVote = parseInt(data['user_vote']);
+        const data = await this.waitFor(rpc(currentTargetEl.dataset.href));
+        if (data.error) {
+            const message = data.error === "own_post"
+                ? _t("Sorry, you cannot vote for your own posts")
+                : data.error;
+            this.displayAccessDeniedNotification(message);
+        } else {
+            const containerEl = currentTargetEl.closest(".vote");
+            const voteUpEl = containerEl.querySelector(".vote_up");
+            const voteDownEl = containerEl.querySelector(".vote_down");
+            const voteCountEl = containerEl.querySelector(".vote_count");
+            const userVote = parseInt(data["user_vote"]);
 
-                $voteUp.prop('disabled', userVote === 1);
-                $voteDown.prop('disabled', userVote === -1);
+            voteUpEl.disabled = userVote === 1;
+            voteDownEl.disabled = userVote === -1;
 
-                $items.removeClass('text-success text-danger text-muted opacity-75 o_forum_vote_animate');
-                void $container[0].offsetWidth; // Force a refresh
+            [voteUpEl, voteDownEl, voteCountEl].forEach((el) => {
+                el.classList.remove("text-success", "text-danger", "text-muted", "opacity-75", "o_forum_vote_animate");
+            });
+            void containerEl.offsetWidth; // Force a refresh
 
-                if (userVote === 1) {
-                    $voteUp.addClass('text-success');
-                    $voteCount.addClass('text-success');
-                    $voteDown.removeClass('karma_required');
-                }
-                if (userVote === -1) {
-                    $voteDown.addClass('text-danger');
-                    $voteCount.addClass('text-danger');
-                    $voteUp.removeClass('karma_required');
-                }
-                if (userVote === 0) {
-                    $voteCount.addClass('text-muted opacity-75');
-                    if (!$voteDown.data('can-downvote')) {
-                        $voteDown.addClass('karma_required');
-                    }
-                    if (!$voteUp.data('can-upvote')) {
-                        $voteUp.addClass('karma_required');
-                    }
-                }
-                $voteCount.html(data['vote_count']).addClass('o_forum_vote_animate');
+            if (userVote === 1) {
+                voteUpEl.classList.add("text-success");
+                voteCountEl.classList.add("text-success");
+                voteDownEl.classList.remove("karma_required");
             }
-        });
-    },
+            if (userVote === -1) {
+                voteDownEl.classList.add("text-danger");
+                voteCountEl.classList.add("text-danger");
+                voteUpEl.classList.remove("karma_required");
+            }
+            if (userVote === 0) {
+                voteCountEl.classList.add("text-muted", "opacity-75");
+                if (!voteDownEl.dataset.canDownvote) {
+                    voteDownEl.classList.add("karma_required");
+                }
+                if (!voteUpEl.dataset.canUpvote) {
+                    voteUpEl.classList.add("karma_required");
+                }
+            }
+            voteCountEl.innerHTML = data["vote_count"];
+            voteCountEl.classList.add("o_forum_vote_animate");
+            this.refreshListeners();
+        }
+    }
+
     /**
      * Call the route to moderate/validate the post, then hide the validated post
      * and decrement the count in the appropriate queue badge of the sidebar on success.
-     *
-     * @private
+     * 
      * @param {Event} ev
+     * @param {HTMLElement} currentTargetEl
      */
-    _onValidationQueueClick: async function (ev) {
-        ev.preventDefault();
-        const approvalLink = ev.currentTarget;
-        const postBeingValidated = this._findParent(approvalLink, '.post_to_validate');
+    async onClickValidationQueue(ev, currentTargetEl) {
+        const postBeingValidated = currentTargetEl.closest(".post_to_validate");
         if (!postBeingValidated) {
             return;
         }
-        postBeingValidated.classList.add('d-none');
+        postBeingValidated.classList.add("d-none");
         let ok;
         try {
-            ok = (await fetch(approvalLink.href)).ok;
+            ok = (await this.waitFor(fetch(currentTargetEl.href))).ok;
         } catch {
             // Calling the endpoint like this returns an HTML page. As we can't
             // extract the error message from that, we disregard it and simply
             // restore the post's visibility. This __should__ be improved.
         }
         if (!ok) {
-            postBeingValidated.classList.remove('d-none');
+            postBeingValidated.classList.remove("d-none");
             return;
         }
-        const nbLeftInQueue = Array.from(document.querySelectorAll('.post_to_validate'))
-            .filter(e => window.getComputedStyle(e).display !== 'none')
+        const nbLeftInQueue = Array.from(document.querySelectorAll(".post_to_validate"))
+            .filter(e => window.getComputedStyle(e).display !== "none")
             .length;
-        const queueType = document.querySelector('#queue_type').dataset.queueType;
+        const queueType = document.querySelector("#queue_type").dataset.queueType;
         const queueCountBadge = document.querySelector(`#count_posts_queue_${queueType}`);
         queueCountBadge.innerText = nbLeftInQueue;
         if (!nbLeftInQueue) {
-            document.querySelector('.o_caught_up_alert').classList.remove('d-none');
-            document.querySelector('.o_wforum_btn_filter_tool')?.classList.add('d-none');
-            queueCountBadge.classList.add('d-none');
+            document.querySelector(".o_caught_up_alert").classList.remove("d-none");
+            document.querySelector(".o_wforum_btn_filter_tool")?.classList.add("d-none");
+            queueCountBadge.classList.add("d-none");
         }
-    },
-    _findParent: function (el, selector) {
-        while (el.parentElement && !el.matches(selector)) {
-            el = el.parentElement;
-        }
-        return el.matches(selector) ? el : null;
-    },
+    }
+
     /**
-     * @private
      * @param {Event} ev
+     * @param {HTMLElement} currentTargetEl
      */
-    _onAcceptAnswerClick: async function (ev) {
-        ev.preventDefault();
-        if (this._warnIfPublicUser()) {
+    async onClickToggleValidate(ev, currentTargetEl) {
+        if (this.warnIfPublicUser()) {
             return;
         }
-        const link = ev.currentTarget;
-        const target = link.dataset.target;
-        const data = await rpc(link.dataset.href);
+        const target = currentTargetEl.dataset.target;
+        const data = await this.waitFor(rpc(currentTargetEl.dataset.href));
         if (data.error) {
-            const message = data.error === 'own_post' ? _t('Sorry, you cannot select your own posts as best answer') : data.error;
-            this._displayAccessDeniedNotification(message);
+            const message = data.error === "own_post"
+                ? _t("Sorry, you cannot select your own posts as best answer")
+                : data.error;
+            this.displayAccessDeniedNotification(message);
             return;
         }
-        for (const answer of document.querySelectorAll('.o_wforum_answer')) {
+        for (const answer of document.querySelectorAll(".o_wforum_answer")) {
             const isCorrect = answer.matches(target) ? data : false;
-            const toggler = answer.querySelector('.o_wforum_validate_toggler');
-            toggler.setAttribute('data-bs-original-title', isCorrect ? toggler.dataset.helperDecline : toggler.dataset.helperAccept);
+            const toggler = answer.querySelector(".o_wforum_validate_toggler");
+            toggler.setAttribute(
+                "data-bs-original-title",
+                isCorrect ? toggler.dataset.helperDecline : toggler.dataset.helperAccept
+            );
             const styleForCorrect = isCorrect ? answer.classList.add : answer.classList.remove;
             const styleForIncorrect = isCorrect ? answer.classList.remove : answer.classList.add;
-            styleForCorrect.call(answer.classList, 'o_wforum_answer_correct', 'my-2', 'mx-n3', 'mx-lg-n2', 'mx-xl-n3', 'py-3', 'px-3', 'px-lg-2', 'px-xl-3');
-            styleForIncorrect.call(toggler.classList, 'opacity-50');
-            const answerBorder = answer.querySelector('div .border-start');
-            styleForCorrect.call(answerBorder.classList, 'border-success');
-            const togglerIcon = toggler.querySelector('.fa');
-            styleForCorrect.call(togglerIcon.classList, 'fa-check-circle', 'text-success');
-            styleForIncorrect.call(togglerIcon.classList, 'fa-check-circle-o');
-            const correctBadge = answer.querySelector('.o_wforum_answer_correct_badge');
-            styleForCorrect.call(correctBadge.classList, 'd-inline');
-            styleForIncorrect.call(correctBadge.classList, 'd-none');
+            styleForCorrect.call(
+                answer.classList,
+                "o_wforum_answer_correct", "my-2", "mx-n3", "mx-lg-n2", "mx-xl-n3", "py-3", "px-3", "px-lg-2", "px-xl-3"
+            );
+            styleForIncorrect.call(toggler.classList, "opacity-50");
+            const answerBorder = answer.querySelector("div .border-start");
+            styleForCorrect.call(answerBorder.classList, "border-success");
+            const togglerIcon = toggler.querySelector(".fa");
+            styleForCorrect.call(togglerIcon.classList, "fa-check-circle", "text-success");
+            styleForIncorrect.call(togglerIcon.classList, "fa-check-circle-o");
+            const correctBadge = answer.querySelector(".o_wforum_answer_correct_badge");
+            styleForCorrect.call(correctBadge.classList, "d-inline");
+            styleForIncorrect.call(correctBadge.classList, "d-none");
         }
-    },
+    }
+
     /**
-     * @private
      * @param {Event} ev
+     * @param {HTMLElement} currentTargetEl
      */
-    _onFavoriteQuestionClick: async function (ev) {
-        ev.preventDefault();
-        const link = ev.currentTarget;
-        const data = await rpc(link.dataset.href);
-        link.classList.toggle('opacity-50', !data);
-        link.classList.toggle('opacity-100-hover', !data);
-        const link_icon = link.querySelector('.fa');
-        link_icon.classList.toggle('fa-star-o', !data);
-        link_icon.classList.toggle('o_wforum_gold', data)
-        link_icon.classList.toggle('fa-star', data)
-    },
+    async onClickToggleFavourite(ev, currentTargetEl) {
+        const data = await this.waitFor(rpc(currentTargetEl.dataset.href));
+        currentTargetEl.classList.toggle("opacity-50", !data);
+        currentTargetEl.classList.toggle("opacity-100-hover", !data);
+        const currentTargetEl_icon = currentTargetEl.querySelector(".fa");
+        currentTargetEl_icon.classList.toggle("fa-star-o", !data);
+        currentTargetEl_icon.classList.toggle("o_wforum_gold", data)
+        currentTargetEl_icon.classList.toggle("fa-star", data)
+    }
+
     /**
-     * @private
      * @param {Event} ev
+     * @param {HTMLElement} currentTargetEl
      */
-    _onDeleteCommentClick: function (ev) {
-        ev.preventDefault();
-        if (this._warnIfPublicUser()) {
+    onClickDeleteComment(ev, currentTargetEl) {
+        if (this.warnIfPublicUser()) {
             return;
         }
-        this.call("dialog", "add", ConfirmationDialog, {
+        this.services.dialog.add(ConfirmationDialog, {
             body: _t("Are you sure you want to delete this comment?"),
             confirmLabel: _t("Delete"),
             confirm: () => {
-                const deleteBtn = ev.currentTarget;
-                rpc(deleteBtn.closest("form").attributes.action.value).then(() => {
-                    deleteBtn.closest(".o_wforum_post_comment").remove();
+                rpc(currentTargetEl.closest("form").attributes.action.value).then(() => {
+                    currentTargetEl.closest(".o_wforum_post_comment").remove();
                 }).catch((error) => {
-                    this.notification.add(error.data.message, {
+                    this.services.notification.add(error.data.message, {
                         title: _t("Karma Error"),
                         sticky: false,
-                        type: 'warning',
+                        type: "warning",
                     });
                 });
             },
-            cancel: () => {},
+            cancel: () => { },
         });
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onCloseIntroClick: function (ev) {
-        ev.preventDefault();
-        cookie.set('forum_welcome_message', false, 24 * 60 * 60 * 365, 'optional');
-        $('.forum_intro').slideUp();
+    }
+
+    onClickCloseIntro() {
+        cookie.set("forum_welcome_message", false, 24 * 60 * 60 * 365, "optional");
+        const forumIntroEl = this.el.querySelector(".forum_intro");
+        forumIntroEl.style.height = getComputedStyle(forumIntroEl).height;
+        forumIntroEl.classList.add("overflow-hidden");
+        forumIntroEl.style.transition = "height 1s";
+        forumIntroEl.classList.add("h-0");
         return true;
-    },
+    }
+
     /**
-     * @private
      * @param {Event} ev
+     * @param {HTMLElement} currentTargetEl
      */
-    async _onFlagValidatorClick(ev) {
-        ev.preventDefault();
-        const currentTarget = ev.currentTarget;
-        await this.orm.call("forum.post", currentTarget.dataset.action, [
-            parseInt(currentTarget.dataset.postId),
-        ]);
-        this._findParent(currentTarget, '.o_wforum_flag_alert')?.classList.toggle('d-none');
-        const flaggedButton = currentTarget.parentElement.firstElementChild,
+    async onClickFlagValidator(ev, currentTargetEl) {
+        await this.waitFor(this.services.orm.call("forum.post", currentTargetEl.dataset.action, [
+            parseInt(currentTargetEl.dataset.postId),
+        ]));
+        currentTargetEl.closest(".o_wforum_flag_alert")?.classList.toggle("d-none");
+        const flaggedButton = currentTargetEl.parentElement.firstElementChild,
             child = flaggedButton.firstElementChild,
-            countFlaggedPosts = this.el.querySelector('#count_posts_queue_flagged'),
+            countFlaggedPosts = this.el.querySelector("#count_posts_queue_flagged"),
             count = parseInt(countFlaggedPosts.innerText, 10) - 1;
 
-        flaggedButton.innerText = _t(' Flag');
+        flaggedButton.innerText = _t(" Flag");
         flaggedButton.prepend(child);
         if (count === 0) {
-            countFlaggedPosts.classList.add('bg-light');
+            countFlaggedPosts.classList.add("bg-light");
         }
         countFlaggedPosts.innerText = count;
-    },
+    }
+
     /**
-     * @private
      * @param {Event} ev
+     * @param {HTMLElement} currentTargetEl
      */
-    async _onFlagMarkAsOffensiveClick(ev) {
-        ev.preventDefault();
-        const template = await rpc($(ev.currentTarget).data('action'));
-        this.call("dialog", "add", FlagMarkAsOffensiveDialog, {
+    async onClickFlagMarkAsOffensive(ev, currentTargetEl) {
+        const template = await this.waitFor(rpc(currentTargetEl.dataset.action));
+        this.services.dialog.add(FlagMarkAsOffensiveDialog, {
             title: _t("Offensive Post"),
             body: markup(template),
         });
-    },
-    _displayAccessDeniedNotification(message) {
-        this.notification.add(message, {
-            title: _t('Access Denied'),
-            sticky: false,
-            type: 'warning',
-        });
     }
-});
-
-publicWidget.registry.websiteForumSpam = publicWidget.Widget.extend({
-    selector: '.o_wforum_moderation_queue',
-    events: {
-        'click .o_wforum_select_all_spam': '_onSelectallSpamClick',
-        'click .o_wforum_mark_spam': 'async _onMarkSpamClick',
-        'input #spamSearch': '_onSpamSearchInput',
-    },
-
-    init() {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
-    },
 
     /**
-     * @override
-     */
-    start: function () {
-        this.spamIDs = this.$('.modal').data('spam-ids');
-        return this._super.apply(this, arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
      * @param {Event} ev
+     * @param {HTMLElement} currentTargetEl
      */
-    _onSelectallSpamClick: function (ev) {
-        var $spamInput = this.$('.modal .tab-pane.active input');
-        $spamInput.prop('checked', true);
-    },
+    onCollapseShown(ev, currentTargetEl) {
+        const scrollingElement = closestScrollable(currentTargetEl.parentNode);
+        scrollTo(currentTargetEl, { forcedOffset: scrollingElement.clientHeight - currentTargetEl.clientHeight });
+    }
+}
 
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onSpamSearchInput: function (ev) {
-        var self = this;
-        var toSearch = $(ev.currentTarget).val();
-        return this.orm.searchRead(
-            "forum.post",
-            [['id', 'in', self.spamIDs],
-                '|',
-                ['name', 'ilike', toSearch],
-                ['content', 'ilike', toSearch]],
-            ['name', 'content']
-        ).then(function (o) {
-            Object.values(o).forEach((r) => {
-                r.content = $('<p>' + $(r.content).html() + '</p>').text().substring(0, 250);
-            });
-            self.$('div.post_spam').empty().append(renderToElement('website_forum.spam_search_name', {
-                posts: o,
-            }));
-        });
-    },
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onMarkSpamClick: function (ev) {
-        var key = this.$('.modal .tab-pane.active').data('key');
-        var $inputs = this.$('.modal .tab-pane.active input.form-check-input:checked');
-        var values = Array.from($inputs).map((o) => parseInt(o.value));
-        return this.orm.call("forum.post", "mark_as_offensive_batch", [
-            this.spamIDs,
-            key,
-            values,
-        ]).then(function () {
-            window.location.reload();
-        });
-    },
-});
+registry
+    .category("public.interactions")
+    .add("website_forum.website_forum", WebsiteForum);

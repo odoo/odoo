@@ -1,6 +1,8 @@
-import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { onceAllImagesLoaded } from "@website/utils/images";
+
 /**
  * The websites, by default, use image lazy loading via the loading="lazy"
  * attribute on <img> elements. However, this does not work great on all
@@ -34,14 +36,10 @@ export class ImageLazyLoading extends Interaction {
     }
 
     start() {
-        this.restoreImage();
+        this.el.style.minHeight = this.initialHeight;
     }
 
     destroy() {
-        this.restoreImage();
-    }
-
-    restoreImage() {
         this.el.style.minHeight = this.initialHeight;
     }
 }

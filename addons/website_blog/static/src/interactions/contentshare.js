@@ -1,95 +1,71 @@
-import { sprintf, escape } from "@web/core/utils/strings";
+import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { sprintf } from "@web/core/utils/strings";
 import { scrollTo } from "@web_editor/js/common/scrolling";
+import { Interaction } from "@web/public/interaction";
 
-export function share(el, options) {
-    const option = {
-        shareLink: "http://twitter.com/intent/tweet?text=",
-        minLength: 5,
-        maxLength: 140,
-        target: "blank",
-        className: "share",
-        placement: "top",
-        ...options
+export class BlogContentShare extends Interaction {
+    static selector = ".js_comment, .js_tweet";
+
+    dynamicContent = {
+        "_root": { "t-on-mouseup": this.showPopover },
+        "_window": { "t-on-mousedown": this.hidePopover },
     };
-    let selectedText = "";
 
-    function init(shareable) {
-        shareable.addEventListener("mouseup", () => {
-            if (!shareable.closest("body.editor_enable")) {
-                popOver();
-            }
+    setup() {
+        this.isCommentActive = this.el.matches(".js_comment");
+        this.isTweetActive = this.el.matches(".js_tweet");
+
+        this.options = {
+            minLength: 5,
+            maxLength: 140,
+        };
+        this.bsPopover = null;
+        this.shareCommentEl = null;
+        this.shareTweetEl = null;
+        this.removeCommentListener = null;
+        this.removeTweetListener = null;
+        this.popoverContentEl = null;
+    }
+
+    showPopover() {
+        if (this.getSelectionRange("string").length < this.options.minLength) {
+            return;
+        }
+        const popoverEl = document.createElement("span");
+        popoverEl.classList.add("share");
+        this.popoverContentEl ||= this.makeContent();
+        this.updatePopoverSelection();
+
+        const range = this.getSelectionRange();
+        range.insertNode(popoverEl);
+
+        this.bsPopover = Popover.getOrCreateInstance(popoverEl, {
+            trigger: "manual",
+            placement: "top",
+            html: true,
+            content: () => this.popoverContentEl,
         });
-        shareable.addEventListener("mousedown", destroy);
+
+        this.bsPopover.show();
+        this.registerCleanup(() => {
+            this.bsPopover.hide();
+            this.bsPopover.dispose();
+            popoverEl.remove();
+        });
     }
 
-    function getContent() {
-        const popoverContentEl = document.createElement("div");
-        popoverContentEl.className = "h4 m-0";
-
-        if (
-            document.querySelector(
-                ".o_wblog_title.js_comment, .o_wblog_post_content_field.js_comment"
-            )
-        ) {
-            selectedText = getSelection("string");
-            const btnEl = document.createElement("a");
-            btnEl.className = "o_share_comment btn btn-link px-2";
-            btnEl.href = "#";
-            const iEl = document.createElement("i");
-            iEl.className = "fa fa-lg fa-comment";
-            btnEl.appendChild(iEl);
-            popoverContentEl.appendChild(btnEl);
-        }
-
-        if (
-            document.querySelector(".o_wblog_title.js_tweet, .o_wblog_post_content_field.js_tweet")
-        ) {
-            const tweet = '"%s" - %s';
-            const baseLength = tweet.replace(/%s/g, "").length;
-            const selectedTextShort = getSelection("string").substring(
-                0,
-                option.maxLength - baseLength - 23
-            );
-
-            const text = window.btoa(
-                encodeURIComponent(sprintf(tweet, selectedTextShort, window.location.href))
-            );
-
-            const anchorEL = document.createElement("a");
-            anchorEL.href = "#";
-            anchorEL.classList.add("btn");
-            anchorEL.addEventListener("click", () => {
-                const decodedText = atob(text);
-                window.open(
-                    escape(option.shareLink) + decodedText,
-                    `_${escape(option.target)}`,
-                    "location=yes,height=570,width=520,scrollbars=yes,status=yes"
-                );
-            });
-            const iconEl = document.createElement("i");
-            iconEl.className = "ml4 mr4 fa fa-twitter fa-lg";
-            anchorEL.appendChild(iconEl);
-            popoverContentEl.appendChild(anchorEL);
-        }
-
-        return popoverContentEl;
-    }
-
-    function commentEdition() {
-        const textareaEl = document.querySelector(".o_portal_chatter_composer_body textarea");
-        if (textareaEl) {
-            textareaEl.value = `"${selectedText}" `;
-            textareaEl.focus();
-        }
-        const commentsEl = document.getElementById("o_wblog_post_comments");
-        if (commentsEl) {
-            scrollTo(commentsEl).then(() => {
-                window.location.hash = "blog_post_comment_quote";
-            });
+    hidePopover() {
+        if (this.bsPopover) {
+            this.bsPopover.hide();
         }
     }
 
-    function getSelection(type) {
+    /**
+     * @param {"string" | null} type - whether to return a string or a Range
+     * @returns {"string" | Range}
+     */
+    getSelectionRange(type) {
         const selection = window.getSelection();
         if (!selection || selection.rangeCount === 0) {
             return "";
@@ -101,41 +77,84 @@ export function share(el, options) {
         }
     }
 
-    function popOver() {
-        destroy();
-        if (getSelection("string").length < option.minLength) {
-            return;
+    makeContent() {
+        const popoverContentEl = document.createElement("div");
+        popoverContentEl.className = "h4 m-0";
+
+        if (this.isCommentActive) {
+            this.shareCommentEl = this.makeButton(
+                "o_share_comment btn btn-link px-2",
+                "fa fa-lg fa-comment",
+                "Comment with the quoted selection"
+            );
+            this.insert(this.shareCommentEl, popoverContentEl, "beforeend");
         }
-        const data = getContent();
-        const range = getSelection();
-
-        const newNode = document.createElement("span");
-        range.insertNode(newNode);
-        newNode.className = option.className;
-
-        const popover = Popover.getOrCreateInstance(newNode, {
-            trigger: "manual",
-            placement: option.placement,
-            html: true,
-            content: () => data,
-        });
-
-        popover.show();
-
-        const shareCommentEl = document.querySelector(".o_share_comment");
-        shareCommentEl?.addEventListener("click", commentEdition);
+        if (this.isTweetActive) {
+            this.shareTweetEl = this.makeButton(
+                "btn", "ml4 mr4 fa fa-twitter fa-lg", "Tweet the selection"
+            );
+            this.insert(this.shareTweetEl, popoverContentEl, "beforeend");
+        }
+        return popoverContentEl;
     }
 
-    function destroy() {
-        const spanEl = document.querySelector(`span.${option.className}`);
-        if (spanEl) {
-            const popover = Popover.getInstance(spanEl);
-            if (popover) {
-                popover.hide();
-            }
-            spanEl.remove();
+    updatePopoverSelection() {
+        if (this.isCommentActive) {
+            const selectedText = this.getSelectionRange("string");
+            this.removeCommentListener?.();
+            this.removeCommentListener = this.addListener(this.shareCommentEl, "click", () => {
+                const textareaEl = document.querySelector("#chatterRoot")?.shadowRoot
+                    .querySelector(".o-mail-Composer-coreMain textarea");
+                if (textareaEl) {
+                    textareaEl.value = `"${selectedText}"\n`;
+                    textareaEl.focus();
+                }
+                const commentsEl = document.getElementById("o_wblog_post_comments");
+                if (commentsEl) {
+                    scrollTo(commentsEl);
+                }
+            });
+        }
+        if (this.isTweetActive) {
+            const tweet = '"%s" - %s';
+            const baseLength = tweet.replace(/%s/g, "").length;
+            const selectedTextShort = this.getSelectionRange("string").substring(
+                0,
+                this.options.maxLength - baseLength - 23
+            );
+            const text = window.btoa(
+                encodeURIComponent(sprintf(tweet, selectedTextShort, window.location.href))
+            );
+
+            this.removeTweetListener?.();
+            this.removeTweetListener = this.addListener(this.shareTweetEl, "click", () => {
+                const decodedText = atob(text);
+                window.open(
+                    "http://twitter.com/intent/tweet?text=" + decodedText,
+                    "_blank",
+                    "location=yes,height=570,width=520,scrollbars=yes,status=yes"
+                );
+            });
         }
     }
 
-    init(el);
+    /**
+     * @param {string} btnClasses
+     * @param {string} iconClasses
+     * @param {string} iconTitle
+     */
+    makeButton(btnClasses, iconClasses, iconTitle) {
+        const btnEl = document.createElement("button");
+        btnEl.className = btnClasses;
+        const iconEl = document.createElement("span");
+        iconEl.className = iconClasses;
+        iconEl.title = iconEl.ariaLabel = _t(iconTitle);
+        iconEl.role = "img";
+        btnEl.appendChild(iconEl);
+        return btnEl;
+    }
 }
+
+registry
+    .category("public.interactions")
+    .add("website_blog.blog_content_share", BlogContentShare);

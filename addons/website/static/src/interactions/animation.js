@@ -1,5 +1,6 @@
-import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { getScrollingElement, isScrollableY } from "@web/core/utils/scrolling";
 import { isVisible } from "@web/core/utils/ui";
 
@@ -7,14 +8,12 @@ export class Animation extends Interaction {
     static selector = ".o_animate";
     dynamicSelectors = {
         ...this.dynamicSelectors,
-        _wrapwrap: () => this.wrapwrapEl,
         _scrollingTarget: () => this.scrollingTarget,
+        _windowUnlessDropdown: () => this.windowUnlessDropdown,
     };
     dynamicContent = {
-        _window: {
-            "t-on-resize": this.scrollWebsiteAnimate,
-        },
-        _wrapwrap: {
+        _window: { "t-on-resize": this.scrollWebsiteAnimate },
+        _windowUnlessDropdown: {
             "t-on-shown.bs.modal": this.scrollWebsiteAnimate,
             "t-on-slid.bs.carousel": this.scrollWebsiteAnimate,
             "t-on-shown.bs.tab": this.scrollWebsiteAnimate,
@@ -24,7 +23,7 @@ export class Animation extends Interaction {
             // Setting capture to true allows to take advantage of event
             // bubbling for events that otherwise don’t support it. (e.g. useful
             // when scrolling a modal)
-            "t-on-scroll.capture": this.throttledForAnimation(this.scrollWebsiteAnimate),
+            "t-on-scroll.capture": this.throttled(this.scrollWebsiteAnimate),
         },
         _root: {
             "t-att-class": (el) => ({
@@ -52,7 +51,8 @@ export class Animation extends Interaction {
 
     setup() {
         this.wrapwrapEl = document.querySelector("#wrapwrap");
-        this.scrollingElement = getScrollingElement(this.el.ownerDocument);
+        this.windowUnlessDropdown = this.el.closest(".dropdown") ? [] : window;
+        this.scrollingElement = this.findScrollingElement();
         this.scrollingTarget = isScrollableY(this.scrollingElement) ? this.scrollingElement : this.scrollingElement.ownerDocument.defaultView;
         this.isAnimating = false;
         this.isAnimated = false;
@@ -64,12 +64,21 @@ export class Animation extends Interaction {
     }
 
     start() {
+        if (this.el.closest(".dropdown")) {
+            return;
+        }
         // By default, elements are hidden by the css of o_animate.
         // Render elements and trigger the animation then pause it in state 0.
-        if (!this.el.closest(".dropdown") && !this.isAnimateOnScroll) {
+        if (!this.isAnimateOnScroll) {
             this.resetAnimation();
             this.updateContent();
         }
+        this.scrollWebsiteAnimate();
+        this.updateContent();
+    }
+
+    findScrollingElement() {
+        return getScrollingElement(this.el.ownerDocument);
     }
 
     /**
@@ -191,7 +200,9 @@ export class Animation extends Interaction {
     }
 }
 
-registry.category("public.interactions").add("website.animation", Animation);
+registry
+    .category("public.interactions")
+    .add("website.animation", Animation);
 
 registry
     .category("public.interactions.edit")

@@ -1,13 +1,14 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, click, press } from "@odoo/hoot-dom";
-import { advanceTime } from "@odoo/hoot-mock";
-
 import {
     startInteractions,
     setupInteractionWhiteList,
 } from "@web/../tests/public/helpers";
 
+import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame, click, press } from "@odoo/hoot-dom";
+import { advanceTime } from "@odoo/hoot-mock";
+
 setupInteractionWhiteList("website.gallery");
+
 describe.current.tags("interaction_dev");
 
 // TODO Obtain rendering from `website.s_images_wall` template ?
@@ -40,12 +41,12 @@ test("gallery does nothing if there is no non-slideshow s_image_gallery", async 
             <section class="s_image_gallery o_slideshow"/>
         </div>
     `);
-    expect(core.interactions.length).toBe(0);
+    expect(core.interactions).toHaveLength(0);
 });
 
 async function checkLightbox({ next, previous, close }) {
     const { core, el } = await startInteractions(defaultGallery);
-    expect(core.interactions.length).toBe(1);
+    expect(core.interactions).toHaveLength(1);
     const imgEls = el.querySelectorAll("img");
     await click(imgEls[3]);
     await animationFrame();
@@ -82,28 +83,16 @@ async function checkLightbox({ next, previous, close }) {
 
 test("gallery interaction opens lightbox on click, then use keyboard", async () => {
     await checkLightbox({
-        next: async () => {
-            await press("ArrowRight", { code: "ArrowRight" });
-        },
-        previous: async () => {
-            await press("ArrowLeft", { code: "ArrowLeft" });
-        },
-        close: async () => {
-            await press("Escape", { code: "Escape" });
-        },
+        close: async () => await press("Escape", { code: "Escape" }),
+        next: async () => await press("ArrowRight", { code: "ArrowRight" }),
+        previous: async () => await press("ArrowLeft", { code: "ArrowLeft" }),
     });
 });
 
 test("gallery interaction opens lightbox on click, then use mouse", async () => {
     await checkLightbox({
-        next: async (lightboxEl) => {
-            await click(lightboxEl.querySelector(".carousel-control-next"));
-        },
-        previous: async (lightboxEl) => {
-            await click(lightboxEl.querySelector(".carousel-control-prev"));
-        },
-        close: async (lightboxEl) => {
-            await click(lightboxEl.querySelector(".btn-close"));
-        },
+        close: async (lightboxEl) => await click(lightboxEl.querySelector(".btn-close")),
+        next: async (lightboxEl) => await click(lightboxEl.querySelector(".carousel-control-next")),
+        previous: async (lightboxEl) => await click(lightboxEl.querySelector(".carousel-control-prev")),
     });
 });

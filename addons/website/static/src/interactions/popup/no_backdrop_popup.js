@@ -1,18 +1,19 @@
-import { registry } from "@web/core/registry";
-import { isScrollableY } from "@web/core/utils/scrolling";
 import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
+import { isScrollableY } from "@web/core/utils/scrolling";
 
 export class NoBackdropPopup extends Interaction {
     static selector = ".s_popup_no_backdrop";
     dynamicContent = {
         "_root": {
-            "t-on-shown.bs.modal": this.addModalNoBackdropEvents,
+            "t-on-show.bs.modal": this.addModalNoBackdropEvents,
             "t-on-hide.bs.modal": this.removeModalNoBackdropEvents,
         }
     };
 
     setup() {
-        this.throttledUpdateScrollbar = this.throttledForAnimation(this.updateScrollbar);
+        this.throttledUpdateScrollbar = this.throttled(this.updateScrollbar);
         this.removeResizeListener = null;
         this.resizeObserver = null;
     }
@@ -29,7 +30,7 @@ export class NoBackdropPopup extends Interaction {
         // '.modal-content' (see comments in CSS).
         const modalContentEl = this.el.querySelector(".modal-content");
         const isOverflowing = isScrollableY(modalContentEl);
-        const bsModal = window.Modal.getInstance(this.el);
+        const bsModal = window.Modal.getOrCreateInstance(this.el);
         if (isOverflowing) {
             // If the "no-backdrop" modal has a scrollbar, the page's scrollbar
             // must be hidden. This is because if the two scrollbars overlap, it
@@ -65,4 +66,6 @@ export class NoBackdropPopup extends Interaction {
     }
 }
 
-registry.category("public.interactions").add("website.no_backdrop_popup", NoBackdropPopup);
+registry
+    .category("public.interactions")
+    .add("website.no_backdrop_popup", NoBackdropPopup);

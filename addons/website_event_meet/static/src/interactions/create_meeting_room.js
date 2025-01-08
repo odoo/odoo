@@ -1,50 +1,32 @@
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { rpc } from "@web/core/network/rpc";
-import { renderToElement } from "@web/core/utils/render";
 
-publicWidget.registry.websiteEventCreateMeetingRoom = publicWidget.Widget.extend({
-    selector: '.o_wevent_create_room_button',
-    events: {
-        'click': '_onClickCreate',
-    },
+export class CreateMeetingRoom extends Interaction {
+    static selector = ".o_wevent_create_room_button";
+    dynamicContent = {
+        _root: { "t-on-click": this.onClickCreate }
+    };
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    _onClickCreate: async function () {
+    async onClickCreate() {
         if (!this.createModalEl) {
-            const langs = await rpc("/event/active_langs");
-
-            this.createModalEl = renderToElement("event_meet_create_room_modal", {
-                csrf_token: odoo.csrf_token,
-                eventId: this.el.dataset.eventId,
-                defaultLangCode: this.el.dataset.defaultLangCode,
-                langs: langs,
-            });
-            this.el.parentNode.append(this.createModalEl);
+            const langs = await this.waitFor(rpc("/event/active_langs"));
+            if (langs) {
+                this.createModalEl = this.renderAt("event_meet_create_room_modal", {
+                    csrf_token: odoo.csrf_token,
+                    eventId: this.el.dataset.eventId,
+                    defaultLangCode: this.el.dataset.defaultLangCode,
+                    langs: langs,
+                }, this.el, "afterend")[0];
+            }
         }
-
-        Modal.getOrCreateInstance(this.createModalEl).show();
-    },
-
-    //--------------------------------------------------------------------------
-    // Override
-    //--------------------------------------------------------------------------
-
-    /**
-     * Remove the create modal from the DOM, to avoid issue when editing the template
-     * with the website editor.
-     *
-     * @override
-     */
-    destroy: function () {
-        const modalEl = document.querySelector(".o_wevent_create_meeting_room_modal");
-        if (modalEl) {
-            modalEl.remove();
+        if (this.createModalEl) {
+            Modal.getOrCreateInstance(this.createModalEl).show();
         }
-        this._super.apply(this, arguments);
-    },
-});
+    }
+}
 
-export default publicWidget.registry.websiteEventMeetingRoom;
+registry
+    .category("public.interactions")
+    .add("website_event_meet.create_meeting_room", CreateMeetingRoom);

@@ -3,15 +3,11 @@ import { registry } from "@web/core/registry";
 
 import { touching, isVisible } from "@web/core/utils/ui";
 
-class BottomFixedElement extends Interaction {
+export class BottomFixedElement extends Interaction {
     static selector = "#wrapwrap";
     dynamicContent = {
-        _document: {
-            "t-on-scroll": this.hideBottomFixedElements,
-        },
-        _window: {
-            "t-on-resize": this.hideBottomFixedElements,
-        },
+        _document: { "t-on-scroll": this.hideBottomFixedElements },
+        _window: { "t-on-resize": this.hideBottomFixedElements },
     }
 
     destroy() {
@@ -22,7 +18,7 @@ class BottomFixedElement extends Interaction {
         // Note: check in the whole DOM instead of #wrapwrap as unfortunately
         // some things are still put outside of the #wrapwrap (like the livechat
         // button which is the main reason of this code).
-        const bottomFixedEls = this.el.querySelectorAll(".o_bottom_fixed_element");
+        const bottomFixedEls = document.querySelectorAll(".o_bottom_fixed_element");
         if (!bottomFixedEls.length) {
             return;
         }
@@ -36,7 +32,7 @@ class BottomFixedElement extends Interaction {
         // reappear.
         if (this.el.querySelector(".s_popup_no_backdrop.show")) {
             for (const bottomFixedEl of bottomFixedEls) {
-                bottomFixedEl.classList.add("o_bottom_fixed_element_hidden")
+                bottomFixedEl.classList.add("o_bottom_fixed_element_hidden");
             }
             return;
         }
@@ -47,7 +43,7 @@ class BottomFixedElement extends Interaction {
             const buttonEls = [...this.el.querySelectorAll('a, .btn')].filter(isVisible);
             for (const bottomFixedEl of bottomFixedEls) {
                 const bcr = bottomFixedEl.getBoundingClientRect();
-                const hiddenButtonEl = touching(buttonEls, {
+                const touchingButtonEl = touching(buttonEls, {
                     top: bcr.top,
                     right: bcr.right,
                     bottom: bcr.bottom,
@@ -56,13 +52,12 @@ class BottomFixedElement extends Interaction {
                     height: bcr.height,
                     x: bcr.x,
                     y: bcr.y,
-                })
-                if (!!hiddenButtonEl.length) {
+                });
+                if (!!touchingButtonEl.length) {
                     if (bottomFixedEl.classList.contains("o_bottom_fixed_element_move_up")) {
-                        bottomFixedEl.style.marginBottom = window.innerHeight - hiddenButtonEl.getBoundingClientRect().top + 5 + 'px';
+                        bottomFixedEl.style.marginBottom = window.innerHeight - touchingButtonEl.getBoundingClientRect().top + 5 + 'px';
                     } else {
                         bottomFixedEl.classList.add('o_bottom_fixed_element_hidden');
-
                     }
                 }
             }
@@ -83,3 +78,9 @@ class BottomFixedElement extends Interaction {
 registry
     .category("public.interactions")
     .add("website.bottom_fixed_element", BottomFixedElement);
+
+registry
+    .category("public.interactions.edit")
+    .add("website.bottom_fixed_element", {
+        Interaction: BottomFixedElement,
+    });

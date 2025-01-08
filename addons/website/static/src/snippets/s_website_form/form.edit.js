@@ -1,12 +1,13 @@
-import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+import { Form } from "./form";
+
 import { patch } from "@web/core/utils/patch";
 import {
     formatDate,
     formatDateTime,
 } from "@web/core/l10n/dates";
 const { DateTime } = luxon;
-import { Form } from "./form";
 
 export class FormDateFormatterEdit extends Interaction {
     static selector = ".s_website_form form .s_website_form_field .s_website_form_input.datetimepicker-input, form.s_website_form .s_website_form_field .s_website_form_input.datetimepicker-input"; // !compatibility
@@ -19,7 +20,7 @@ export class FormDateFormatterEdit extends Interaction {
                 this.el.closest(".s_website_form_field").dataset.type === "date"
                     ? formatDate
                     : formatDateTime;
-                this.el.value = format(DateTime.fromSeconds(parseInt(value)));
+            this.el.value = format(DateTime.fromSeconds(parseInt(value)));
         }
     }
 }
@@ -36,7 +37,6 @@ patch(Form.prototype, {
         super.setup();
         this.editTranslations = this.services.website_edit.isEditingTranslations();
     },
-
     prefillValues() {
         if (this.editTranslations) {
             return;

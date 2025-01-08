@@ -14,13 +14,13 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
     'data': [
         'security/ir.model.access.csv',
         'data/ir_model_data.xml',
-        'views/snippets/s_popup.xml',
         'views/snippets_templates.xml',
     ],
     'auto_install': ['website', 'mass_mailing'],
     'assets': {
         'web.assets_frontend': [
             'website_mass_mailing/static/src/scss/website_mass_mailing.scss',
+            'website_mass_mailing/static/src/interactions/**/*',
             'website_mass_mailing/static/src/scss/website_mass_mailing_popup.scss',
             'website_mass_mailing/static/src/js/website_mass_mailing.js',
             'website_mass_mailing/static/src/xml/*.xml',
@@ -32,7 +32,13 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
             'website_mass_mailing/static/src/snippets/s_popup/options.js',
         ],
         'web.assets_tests': [
-            'website_mass_mailing/static/tests/**/*',
+            'website_mass_mailing/static/tests/tours/**/*',
+        ],
+        'web.assets_unit_tests': [
+            'website_mass_mailing/static/tests/interactions/**/*',
+        ],
+        'web.assets_unit_tests_setup': [
+            'website_mass_mailing/static/src/interactions/**/*',
         ],
     },
     'license': 'LGPL-3',

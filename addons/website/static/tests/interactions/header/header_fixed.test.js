@@ -1,9 +1,9 @@
-import { describe, expect, test } from "@odoo/hoot";
-
 import {
     startInteractions,
     setupInteractionWhiteList,
 } from "@web/../tests/public/helpers";
+
+import { describe, expect, test } from "@odoo/hoot";
 
 import {
     setupTest,
@@ -14,11 +14,12 @@ import {
 } from "./helpers";
 
 setupInteractionWhiteList("website.header_fixed");
+
 describe.current.tags("interaction_dev");
 
 test("header_fixed is started when there is an element header.o_header_fixed", async () => {
     const { core } = await startInteractions(getTemplateWithoutHideOnScroll("o_header_fixed"));
-    expect(core.interactions.length).toBe(1);
+    expect(core.interactions).toHaveLength(1);
 });
 
 const behaviorWithout = [{

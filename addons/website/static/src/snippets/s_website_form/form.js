@@ -1,13 +1,14 @@
-import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
-import { session } from "@web/session";
-import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
+import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
+import { localization } from "@web/core/l10n/localization";
+import { _t } from "@web/core/l10n/translation";
+import { post } from "@web/core/network/http_service";
 import { user } from "@web/core/user";
 import { delay } from "@web/core/utils/concurrency";
-import { _t } from "@web/core/l10n/translation";
-import { renderToElement } from "@web/core/utils/render";
-import { post } from "@web/core/network/http_service";
-import { localization } from "@web/core/l10n/localization";
+import { session } from "@web/session";
+import { addLoadingEffect } from "@web/core/utils/ui";
 import {
     formatDate,
     formatDateTime,
@@ -16,31 +17,29 @@ import {
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
-import { addLoadingEffect } from "@web/core/utils/ui";
 import { scrollTo } from "@web_editor/js/common/scrolling";
-const DEBOUNCE = 400;
-const { DateTime } = luxon;
 import wUtils from "@website/js/utils";
 
+const { DateTime } = luxon;
 
 export class Form extends Interaction {
     static selector = ".s_website_form form, form.s_website_form"; // !compatibility
     dynamicContent = {
-        ".s_website_form_send, .o_website_form_send": { // !compatibility
-            "t-on-click": this.send,
+        ".s_website_form_send, .o_website_form_send": { "t-on-click.prevent": this.send }, // !compatibility
+        _root: {
+            "t-on-submit.prevent": this.send,
+            "t-att-class": () => ({
+                "d-none": this.isHidden,
+            })
         },
-        "_root": {
-            "t-on-submit": this.send,
+        ".s_website_form_end_message": {
+            "t-att-class": () => ({
+                "d-none": !this.isHidden,
+            })
         },
-        "input[type=file]": {
-            "t-on-change": this.changeFile,
-        },
-        "input.o_add_files_button": {
-            "t-on-click": this.clickAddFilesButton,
-        },
-        ".s_website_form_field[data-type=binary]": {
-            "t-on-click": this.clickFileDelete, // delegate on ".o_file_delete"
-        },
+        "input[type=file]": { "t-on-change": this.changeFile },
+        "input.o_add_files_button": { "t-on-click": this.clickAddFilesButton },
+        ".s_website_form_field[data-type=binary]": { "t-on-click": this.clickFileDelete }, // delegate on ".o_file_delete"
         ".s_website_form_field": {
             "t-on-input": this.onFieldInput,
             "t-att-class": (el) => ({ "d-none": !this.isFieldVisible(el) }),
@@ -48,19 +47,27 @@ export class Form extends Interaction {
         ".s_website_form_field .s_website_form_input": {
             "t-att-disabled": (el) => !this.isInputVisible(el) || undefined,
         },
+        ".s_website_form_datetime, .o_website_form_datetime, .s_website_form_date, .o_website_form_date": {
+            "t-att-class": () => ({
+                "s_website_form_datepicker_initialized": this.datapickerInitialized,
+            }),
+        },
     };
 
     setup() {
+        this.isHidden = false;
+        this.datapickersInitialized = false;
         this.recaptcha = new ReCaptcha();
         this.initialValues = new Map();
-        this.visibilityFunctionByFieldName = new Map();
-        this.visibilityFunctionByFieldEl = new Map();
         this.disabledStates = new Map();
+        this.visibilityFunctionByFieldEl = new Map();
+        this.visibilityFunctionByFieldName = new Map();
         this.inputEls = this.el.querySelectorAll(".s_website_form_field.s_website_form_field_hidden_if .s_website_form_input");
         this.dateFieldEls = this.el.querySelectorAll(".s_website_form_datetime, .o_website_form_datetime, .s_website_form_date, .o_website_form_date");
         this.disableDateTimePickers = [];
         this.preFillValues = {};
     }
+
     async willStart() {
         if (!this.el.classList.contains("s_website_form_no_recaptcha")) {
             this.recaptchaLoaded = true;
@@ -93,6 +100,7 @@ export class Form extends Interaction {
             this.visibilityFunctionByFieldName.set(name, () => funcs.some(func => func()));
         }
     }
+
     start() {
         this.prepareDateFields();
         this.prefillValues();
@@ -154,15 +162,6 @@ export class Form extends Interaction {
         // Remove the status message
         this.el.querySelector("#s_website_form_result, #o_website_form_result")?.replaceChildren(); // !compatibility
 
-        // Remove the success message and display the form
-        this.el.classList.remove("d-none");
-        this.el.parentElement.querySelector(".s_website_form_end_message")?.classList.add("d-none");
-
-        // Reinitialize dates
-        for (const fieldEl of this.dateFieldEls) {
-            fieldEl.classList.remove("s_website_form_datepicker_initialized");
-        }
-
         // Restore disabled attribute
         for (const inputEl of this.inputEls) {
             inputEl.disabled = !!this.disabledStates.get(inputEl);
@@ -198,9 +197,7 @@ export class Form extends Interaction {
                 },
             }).enable());
         }
-        for (const fieldEl of this.dateFieldEls) {
-            fieldEl.classList.add("s_website_form_datepicker_initialized");
-        }
+        this.datapickerInitialized = true
     }
 
     prefillValues() {
@@ -235,15 +232,15 @@ export class Form extends Interaction {
                 // field is however treated as an exception at the moment
                 // so that values set by users are always used.
                 if (name === "email_to" && fieldEl.value
-                        // The following value is the default value that
-                        // is set if the form is edited in any way. (see the
-                        // @website/js/form_editor_registry module in editor
-                        // assets bundle).
-                        // TODO that value should probably never be forced
-                        // unless explicitely manipulated by the user or on
-                        // custom form addition but that seems risky to
-                        // change as a stable fix.
-                        && fieldEl.value !== "info@yourcompany.example.com") {
+                    // The following value is the default value that
+                    // is set if the form is edited in any way. (see the
+                    // @website/js/form_editor_registry module in editor
+                    // assets bundle).
+                    // TODO that value should probably never be forced
+                    // unless explicitely manipulated by the user or on
+                    // custom form addition but that seems risky to
+                    // change as a stable fix.
+                    && fieldEl.value !== "info@yourcompany.example.com") {
                     continue;
                 }
 
@@ -261,9 +258,8 @@ export class Form extends Interaction {
         }
     }
 
-    async send(e) {
-        e.preventDefault(); // Prevent the default submit behavior
-         // Prevent users from crazy clicking
+    async send() {
+        // Prevent users from crazy clicking
         const buttonEl = this.el.querySelector(".s_website_form_send, .o_website_form_send");
         buttonEl.classList.add("disabled"); // !compatibility
         buttonEl.setAttribute("disabled", "disabled");
@@ -273,12 +269,12 @@ export class Form extends Interaction {
             if (this.fileInputError) {
                 const errorMessage = this.fileInputError.type === "number"
                     ? _t(
-                        "Please fill in the form correctly. You uploaded too many files. (Maximum %s files)", 
+                        "Please fill in the form correctly. You uploaded too many files. (Maximum %s files)",
                         this.fileInputError.limit
                     )
                     : _t(
-                        "Please fill in the form correctly. The file “%(file name)s” is too large. (Maximum %(max)s MB)", 
-                        { "file name": this.fileInputError.fileName, max:this.fileInputError.limit }
+                        "Please fill in the form correctly. The file “%(file name)s” is too large. (Maximum %(max)s MB)",
+                        { "file name": this.fileInputError.fileName, max: this.fileInputError.limit }
                     );
                 this.updateStatus("error", errorMessage);
                 delete this.fileInputError;
@@ -364,104 +360,103 @@ export class Form extends Interaction {
 
         // Post form and handle result
         post(this.el.getAttribute("action") + (this.el.dataset.force_action || this.el.dataset.model_name), formData)
-        .then(async (resultData) => {
-            // Restore send button behavior
-            buttonEl.removeAttribute("disabled");
-            buttonEl.classList.remove("disabled"); // !compatibility
-            if (!resultData.id) {
-                // Failure, the server didn't return the created record ID
-                this.updateStatus("error", resultData.error ? resultData.error : false);
-                if (resultData.error_fields) {
-                    // If the server return a list of bad fields, show these fields for users
-                    this.checkErrorFields(resultData.error_fields);
-                }
-            } else {
-                // Success, redirect or update status
-                let successMode = this.el.dataset.successMode;
-                let successPage = this.el.dataset.successPage;
-                if (!successMode) {
-                    successPage = this.el.dataset.success_page; // !compatibility
-                    successMode = successPage ? "redirect" : "nothing";
-                }
-                switch (successMode) {
-                    case "redirect": {
-                        let hashIndex = successPage.indexOf("#");
-                        if (hashIndex > 0) {
-                            // URL containing an anchor detected: extract
-                            // the anchor from the URL if the URL is the
-                            // same as the current page URL so we can scroll
-                            // directly to the element (if found) later
-                            // instead of redirecting.
-                            // Note that both currentUrlPath and successPage
-                            // can exist with or without a trailing slash
-                            // before the hash (e.g. "domain.com#footer" or
-                            // "domain.com/#footer"). Therefore, if they are
-                            // not present, we add them to be able to
-                            // compare the two variables correctly.
-                            let currentUrlPath = window.location.pathname;
-                            if (!currentUrlPath.endsWith("/")) {
-                                currentUrlPath = currentUrlPath + "/";
-                            }
-                            if (!successPage.includes("/#")) {
-                                successPage = successPage.replace("#", "/#");
-                                hashIndex++;
-                            }
-                            if ([successPage, "/" + session.lang_url_code + successPage].some(link => link.startsWith(currentUrlPath + "#"))) {
-                                successPage = successPage.substring(hashIndex);
-                            }
-                        }
-                        if (successPage.charAt(0) === "#") {
-                            const successAnchorEl = document.getElementById(successPage.substring(1));
-                            if (successAnchorEl) {
-                                // Check if the target of the link is a modal.
-                                if (successAnchorEl.classList.contains("modal")) {
-                                    // Trigger a "hashChange" event to
-                                    // notify the popup widget to show the
-                                    // popup.
-                                    window.location.href = successPage;
-                                } else {
-                                    await this.waitFor(scrollTo(successAnchorEl, {
-                                        duration: 500,
-                                        extraOffset: 0,
-                                    }));
+            .then(async (resultData) => {
+                // Restore send button behavior
+                buttonEl.removeAttribute("disabled");
+                buttonEl.classList.remove("disabled"); // !compatibility
+                if (!resultData.id) {
+                    // Failure, the server didn't return the created record ID
+                    this.updateStatus("error", resultData.error ? resultData.error : false);
+                    if (resultData.error_fields) {
+                        // If the server return a list of bad fields, show these fields for users
+                        this.checkErrorFields(resultData.error_fields);
+                    }
+                } else {
+                    // Success, redirect or update status
+                    let successMode = this.el.dataset.successMode;
+                    let successPage = this.el.dataset.successPage;
+                    if (!successMode) {
+                        successPage = this.el.dataset.success_page; // !compatibility
+                        successMode = successPage ? "redirect" : "nothing";
+                    }
+                    switch (successMode) {
+                        case "redirect": {
+                            let hashIndex = successPage.indexOf("#");
+                            if (hashIndex > 0) {
+                                // URL containing an anchor detected: extract
+                                // the anchor from the URL if the URL is the
+                                // same as the current page URL so we can scroll
+                                // directly to the element (if found) later
+                                // instead of redirecting.
+                                // Note that both currentUrlPath and successPage
+                                // can exist with or without a trailing slash
+                                // before the hash (e.g. "domain.com#footer" or
+                                // "domain.com/#footer"). Therefore, if they are
+                                // not present, we add them to be able to
+                                // compare the two variables correctly.
+                                let currentUrlPath = window.location.pathname;
+                                if (!currentUrlPath.endsWith("/")) {
+                                    currentUrlPath = currentUrlPath + "/";
+                                }
+                                if (!successPage.includes("/#")) {
+                                    successPage = successPage.replace("#", "/#");
+                                    hashIndex++;
+                                }
+                                if ([successPage, "/" + session.lang_url_code + successPage].some(link => link.startsWith(currentUrlPath + "#"))) {
+                                    successPage = successPage.substring(hashIndex);
                                 }
                             }
+                            if (successPage.charAt(0) === "#") {
+                                const successAnchorEl = document.getElementById(successPage.substring(1));
+                                if (successAnchorEl) {
+                                    // Check if the target of the link is a modal.
+                                    if (successAnchorEl.classList.contains("modal")) {
+                                        // Trigger a "hashChange" event to
+                                        // notify the popup widget to show the
+                                        // popup.
+                                        window.location.href = successPage;
+                                    } else {
+                                        await this.waitFor(scrollTo(successAnchorEl, {
+                                            duration: 500,
+                                            extraOffset: 0,
+                                        }));
+                                    }
+                                }
+                                break;
+                            }
+                            window.location.href = successPage;
+                            return;
+                        }
+                        case "message": {
+                            // Prevent double-clicking on the send button and
+                            // add a upload loading effect (delay before success
+                            // message)
+                            await delay(400);
+
+                            this.isHidden = true;
                             break;
                         }
-                        window.location.href = successPage;
-                        return;
-                    }
-                    case "message": {
-                        // Prevent double-clicking on the send button and
-                        // add a upload loading effect (delay before success
-                        // message)
-                        await delay(DEBOUNCE);
+                        default: {
+                            // Prevent double-clicking on the send button and
+                            // add a upload loading effect (delay before success
+                            // message)
+                            await this.waitFor(delay(400));
 
-                        this.el.classList.add("d-none");
-                        this.el.parentElement.querySelector(".s_website_form_end_message").classList.remove("d-none");
-                        break;
+                            this.updateStatus("success");
+                            break;
+                        }
                     }
-                    default: {
-                        // Prevent double-clicking on the send button and
-                        // add a upload loading effect (delay before success
-                        // message)
-                        await this.waitFor(delay(DEBOUNCE));
 
-                        this.updateStatus("success");
-                        break;
-                    }
+                    this.resetForm();
+                    this.restoreBtnLoading();
                 }
-
-                this.resetForm();
-                this.restoreBtnLoading();
-            }
-        })
-        .catch(error => {
-            this.updateStatus(
-                "error",
-                error.status && error.status === 413 ? _t("Uploaded file is too large.") : "",
-            );
-        });
+            })
+            .catch(error => {
+                this.updateStatus(
+                    "error",
+                    error.status && error.status === 413 ? _t("Uploaded file is too large.") : "",
+                );
+            });
     }
 
     /**
@@ -509,13 +504,13 @@ export class Form extends Interaction {
                     const checkboxes = inputEls.filter(el => el.required && el.type === "checkbox");
                     return !checkboxes.some((checkbox) => checkbox.checkValidity());
 
-                // Special cases for dates and datetimes
-                // FIXME this seems like dead code, the inputs do not use
-                // those classes, their parent does (but it seemed to work
-                // at some point given that https://github.com/odoo/odoo/commit/75e03c0f7692a112e1b0fa33267f4939363f3871
-                // was made)... need more investigation (if restored,
-                // consider checking the date inputs are not disabled before
-                // saying they are invalid (see checkValidity used here))
+                    // Special cases for dates and datetimes
+                    // FIXME this seems like dead code, the inputs do not use
+                    // those classes, their parent does (but it seemed to work
+                    // at some point given that https://github.com/odoo/odoo/commit/75e03c0f7692a112e1b0fa33267f4939363f3871
+                    // was made)... need more investigation (if restored,
+                    // consider checking the date inputs are not disabled before
+                    // saying they are invalid (see checkValidity used here))
                 } else if (inputEl.matches(".s_website_form_date, .o_website_form_date")) { // !compatibility
                     const date = parseDate(inputEl.value);
                     if (!date || !date.isValid) {
@@ -582,9 +577,10 @@ export class Form extends Interaction {
             message = _t("An error has occured, the form has not been sent.");
         }
 
-        resultEl.replaceWith(renderToElement(`website.s_website_form_status_${status}`, {
+        this.renderAt(`website.s_website_form_status_${status}`, {
             message: message,
-        }));
+        }, resultEl, "afterend");
+        resultEl.remove();
     }
 
     /**
@@ -603,7 +599,7 @@ export class Form extends Interaction {
         const maxFilesNumber = inputEl.dataset.maxFilesNumber;
         if (maxFilesNumber && inputEl.files.length > maxFilesNumber) {
             // Store information to display the error message later.
-            this.fileInputError = {type: "number", limit: maxFilesNumber};
+            this.fileInputError = { type: "number", limit: maxFilesNumber };
             return false;
         }
         // Checking the files size.
@@ -612,17 +608,13 @@ export class Form extends Interaction {
         if (maxFileSize) {
             for (const file of Object.values(inputEl.files)) {
                 if (file.size / bytesInMegabyte > maxFileSize) {
-                    this.fileInputError = {type: "size", limit: maxFileSize, fileName: file.name};
+                    this.fileInputError = { type: "size", limit: maxFileSize, fileName: file.name };
                     return false;
                 }
             }
         }
         return true;
     }
-
-    //----------------------------------------------------------------------
-    // Private
-    //----------------------------------------------------------------------
 
     /**
      * Gets the user's field needed to be fetched to pre-fill the form.
@@ -632,6 +624,7 @@ export class Form extends Interaction {
     getUserPreFillFields() {
         return ["name", "phone", "email", "commercial_company_name"];
     }
+
     /**
      * Compares the value with the comparable (and the between) with
      * comparator as a means to compare
@@ -711,6 +704,7 @@ export class Form extends Interaction {
                 return value >= comparable;
         }
     }
+
     /**
      * @param {HTMLElement} fieldEl the field we want to have a function
      *      that calculates its visibility
@@ -737,13 +731,16 @@ export class Form extends Interaction {
             return this.compareTo(comparator, currentValueOfDependency, visibilityCondition, between);
         };
     }
+
     isFieldVisible(fieldEl) {
         const isVisible = this.visibilityFunctionByFieldEl.get(fieldEl);
         return isVisible ? !!isVisible() : true;
     }
+
     isInputVisible(inputEl) {
         return this.isFieldVisible(inputEl.closest(".s_website_form_field"));
     }
+
     /**
      * Creates a block containing the file name and a cross to delete it.
      *
@@ -752,10 +749,9 @@ export class Form extends Interaction {
      *      displayed
      */
     createFileBlock(fileDetails, filesZoneEl) {
-        const fileBlockEl = renderToElement("website.file_block", {fileName: fileDetails.name});
-        fileBlockEl.fileDetails = fileDetails;
-        filesZoneEl.append(fileBlockEl);
+        this.renderAt("website.file_block", { fileName: fileDetails.name }, filesZoneEl, "beforeend", (els) => els[0].fileDetails = fileDetails);
     }
+
     /**
      * Creates the file upload button (= a button to replace the file input,
      * in order to modify its text content more easily).
@@ -772,10 +768,6 @@ export class Form extends Interaction {
         inputEl.classList.add("d-none");
     }
 
-    //----------------------------------------------------------------------
-    // Handlers
-    //----------------------------------------------------------------------
-
     /**
      * Calculates the visibility of the fields at each input event on the
      * form (this method should be debounced in the start).
@@ -783,6 +775,7 @@ export class Form extends Interaction {
     onFieldInput() {
         // Implicitly updates DOM.
     }
+
     /**
      * Called when files are uploaded: updates the button text content,
      * displays the file blocks (containing the files name and a cross to
@@ -822,13 +815,14 @@ export class Form extends Interaction {
             if (![...fileInputEl.fileList.files].some(file => newFile.name === file.name &&
                 newFile.size === file.size && newFile.type === file.type)) {
                 fileInputEl.fileList.items.add(newFile);
-                const fileDetails = {name: newFile.name, size: newFile.size, type: newFile.type};
+                const fileDetails = { name: newFile.name, size: newFile.size, type: newFile.type };
                 this.createFileBlock(fileDetails, filesZoneEl);
             }
         }
         // Update the input files.
         fileInputEl.files = fileInputEl.fileList.files;
     }
+
     /**
      * Called when a file is deleted by clicking on the cross on the block
      * describing it.
@@ -854,7 +848,7 @@ export class Form extends Interaction {
             }
         }
         // Update the input lists and remove the file block.
-        Object.assign(fileInputEl, {fileList: newFileList, files: newFileList.files});
+        Object.assign(fileInputEl, { fileList: newFileList, files: newFileList.files });
         fileBlockEl.remove();
 
         // Restore the file input if there are no files uploaded and update
@@ -864,6 +858,7 @@ export class Form extends Interaction {
             addFilesButtonEl.remove();
         }
     }
+
     /**
      * Detects when the fake input file button is clicked to simulate a
      * click on the real input.
@@ -876,4 +871,6 @@ export class Form extends Interaction {
     }
 }
 
-registry.category("public.interactions").add("website.form", Form);
+registry
+    .category("public.interactions")
+    .add("website.form", Form);

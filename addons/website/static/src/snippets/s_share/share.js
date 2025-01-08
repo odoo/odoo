@@ -1,11 +1,11 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
-class Share extends Interaction {
+export class Share extends Interaction {
     static selector = ".s_share, .oe_share";
     dynamicContent = {
         "a": { "t-on-click": this.onClick },
-    }
+    };
 
     /**
      * Everything is done on click here (even changing the href) as the URL we

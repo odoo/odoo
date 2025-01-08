@@ -1,21 +1,20 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, click } from "@odoo/hoot-dom";
-import { advanceTime } from "@odoo/hoot-mock";
 import {
     isElementInViewport,
     startInteractions,
     setupInteractionWhiteList,
 } from "@web/../tests/public/helpers";
 
+import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame, click } from "@odoo/hoot-dom";
+import { advanceTime } from "@odoo/hoot-mock";
+
 setupInteractionWhiteList("website.scroll_button");
+
 describe.current.tags("interaction_dev");
 
 test("scroll button does nothing if there is o_scroll_button", async () => {
-    const { core } = await startInteractions(`
-      <div id="wrapwrap">
-      </div>
-    `);
-    expect(core.interactions.length).toBe(0);
+    const { core } = await startInteractions(`<div id="wrapwrap"></div>`);
+    expect(core.interactions).toHaveLength(0);
 });
 
 test("scroll button scrolls to next section", async () => {
@@ -30,9 +29,9 @@ test("scroll button scrolls to next section", async () => {
             <section style="min-height: 500px;">
                 Third
             </section>
-        </div>
+        </div >
     `);
-    expect(core.interactions.length).toBe(2);
+    expect(core.interactions).toHaveLength(2);
     const aEls = el.querySelectorAll("a");
     const sectionEls = el.querySelectorAll("section");
     expect(isElementInViewport(sectionEls[0])).toBe(true);

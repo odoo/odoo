@@ -1,119 +1,111 @@
-import PortalSidebar from "@portal/js/portal_sidebar";
+import { Sidebar } from "@portal/interactions/sidebar";
+import { registry } from "@web/core/registry";
+
 import { uniqueId } from "@web/core/utils/functions";
-import publicWidget from "@web/legacy/js/public/public_widget";
 
-publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
-    selector: '.o_portal_sale_sidebar',
+export class SaleSidebar extends Sidebar {
+    static selector = ".o_portal_sale_sidebar";
 
-    /**
-     * @constructor
-     */
-    init: function (parent, options) {
-        this._super.apply(this, arguments);
-        this.authorizedTextTag = ['em', 'b', 'i', 'u'];
-        this.spyWatched = $('body[data-target=".navspy"]');
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        var def = this._super.apply(this, arguments);
-        var $spyWatcheElement = this.$el.find('[data-id="portal_sidebar"]');
-        this._setElementId($spyWatcheElement);
+    setup() {
+        super.setup();
+        this.authorizedTextTag = ["em", "b", "i", "u"];
+        this.spyWatched = document.querySelector("body[data-target='.navspy']");
+    }
+
+    start() {
+        super.start();
+        const spyWatcheElement = this.el.querySelector("[data-id='portal_sidebar']");
+        this.setElementId(spyWatcheElement);
         // Nav Menu ScrollSpy
-        this._generateMenu();
+        this.generateMenu();
         // After signature, automatically open the popup for payment
         const searchParams = new URLSearchParams(window.location.search.substring(1));
-        const payNowButton = this.$('#o_sale_portal_paynow')
-        if (searchParams.get("allow_payment") === "yes" && payNowButton) {
-            payNowButton[0].click();
+        if (searchParams.get("allow_payment") === "yes") {
+            this.el.querySelector("#o_sale_portal_paynow")?.click();
         }
-        return def;
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //---------------------------------------------------------------------------
+    }
 
     /**
      * create an unique id and added as a attribute of spyWatched element
      *
-     * @private
      * @param {string} prefix
-     * @param {Object} $el
-     *
+     * @param {HTMLElement} el
      */
-    _setElementId: function (prefix, $el) {
-        var id = uniqueId(prefix);
-        this.spyWatched.find($el).attr('id', id);
+    setElementId(prefix, el) {
+        const id = uniqueId(prefix);
+        el?.setAttribute("id", id);
         return id;
-    },
-    /**
-     * generate the new spy menu
-     *
-     * @private
-     *
-     */
-    _generateMenu: function () {
-        var self = this,
-            lastLI = false,
-            lastUL = null,
-            $bsSidenav = this.$el.find('.bs-sidenav');
+    }
 
-        $("#quote_content [id^=quote_header_], #quote_content [id^=quote_]", this.spyWatched).attr("id", "");
-        this.spyWatched.find("#quote_content h2, #quote_content h3").toArray().forEach((el) => {
-            var id, text;
-            switch (el.tagName.toLowerCase()) {
+    generateMenu() {
+        let lastLI = false;
+        let lastUL = null;
+        const bsSidenavEl = this.el.querySelector(".bs-sidenav");
+
+        const quoteEls = document.querySelectorAll("#quote_content [id^=quote_header_], #quote_content [id^=quote_]");
+        for (const quoteEl of quoteEls) {
+            quoteEl.removeAttribute("id");
+        };
+        this.spyWatched.removeAttribute("id");
+
+        const quoteHeaderEls = this.spyWatched.querySelectorAll("#quote_content h2, #quote_content h3");
+        for (const quoteHeaderEl of quoteHeaderEls) {
+            let id = null;
+            let text = null;
+            switch (quoteHeaderEl.tagName.toLowerCase()) {
                 case "h2":
-                    id = self._setElementId('quote_header_', el);
-                    text = self._extractText($(el));
+                    id = this.setElementId("quote_header_", quoteHeaderEl);
+                    text = this.extractText(quoteHeaderEl);
                     if (!text) {
                         break;
                     }
-                    lastLI = $("<li class='nav-item'>").append($('<a class="nav-link p-0" href="#' + id + '"/>').text(text)).appendTo($bsSidenav);
+                    const linkEl = document.createElement("a");
+                    linkEl.classList.add("nav-link", "p-0");
+                    linkEl.href = `#${id}`;
+                    linkEl.innerText = text;
+
+                    const liEl = document.createElement("li");
+                    liEl.classList.add("nav-item");
+
+                    liEl.appendChild(linkEl);
+                    this.insert(liEl, bsSidenavEl);
+
+                    lastLI = liEl;
                     lastUL = false;
                     break;
                 case "h3":
-                    id = self._setElementId('quote_', el);
-                    text = self._extractText($(el));
+                    id = this.setElementId("quote_", quoteHeaderEl);
+                    text = this.extractText(quoteHeaderEl);
                     if (!text) {
                         break;
                     }
                     if (lastLI) {
                         if (!lastUL) {
-                            lastUL = $("<ul class='nav flex-column'>").appendTo(lastLI);
+                            const ulEl = document.createElement("ul");
+                            ulEl.classList.add("nav", "flex-column");
+
+                            this.insert(ulEl, liEl);
+
+                            lastUL = ulEl;
                         }
-                        $("<li class='nav-item'>").append($('<a class="nav-link p-0" href="#' + id + '"/>').text(text)).appendTo(lastUL);
+                        const linkEl = document.createElement("a");
+                        linkEl.classList.add("nav-link", "p-0");
+                        linkEl.href = `#${id}`;
+                        linkEl.innerText = text;
+
+                        const liEl = document.createElement("li");
+                        liEl.classList.add("nav-item");
+
+                        liEl.appendChild(linkEl);
+                        this.insert(liEl, lastUL);
                     }
                     break;
             }
-            el.setAttribute('data-anchor', true);
-        });
-        this.trigger_up('widgets_start_request', {$target: $bsSidenav});
-    },
-    /**
-     * extract text of menu title for sidebar
-     *
-     * @private
-     * @param {Object} $node
-     *
-     */
-    _extractText: function ($node) {
-        var self = this;
-        var rawText = [];
-        $node.contents().toArray().forEach((el) => {
-            var current = $(el);
-            if ($.trim(current.text())) {
-                var tagName = current.prop("tagName");
-                if (
-                    typeof tagName === "undefined" ||
-                    (typeof tagName !== "undefined" &&
-                        self.authorizedTextTag.includes(tagName.toLowerCase()))
-                ) {
-                    rawText.push($.trim(current.text()));
-                }
-            }
-        });
-        return rawText.join(' ');
-    },
-});
+            quoteHeaderEl.setAttribute("data-anchor", true);
+        }
+    }
+}
+
+registry
+    .category("public.interactions")
+    .add("sale.sale_sidebar", SaleSidebar);

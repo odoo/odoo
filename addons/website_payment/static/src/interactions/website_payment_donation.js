@@ -1,36 +1,27 @@
-import publicWidget from '@web/legacy/js/public/public_widget';
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 
-publicWidget.registry.WebsitePaymentDonation = publicWidget.Widget.extend({
-    selector: '.o_donation_payment_form',
-    events: {
-        'focus .o_amount_input': '_onFocusAmountInput',
-        'change #donation_comment_checkbox': '_onChangeDonationComment'
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+export class DonationForm extends Interaction {
+    static selector = ".o_donation_payment_form";
+    dynamicContent = {
+        ".o_amount_input": { "t-on-focus": () => this.el.querySelector("#other_amount")?.setAttribute("checked", true) },
+        "#donation_comment_checkbox": { "t-on-change.withTarget": this.onChangeDonationComment },
+    };
 
     /**
-     * @private
      * @param {Event} ev
+     * @param {HTMLElement} currentTargetEl
      */
-    _onFocusAmountInput(ev) {
-        const otherAmountEl = this.el.querySelector("#other_amount");
-        if (otherAmountEl) {
-            otherAmountEl.checked = true;
-        }
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onChangeDonationComment(ev) {
+    onChangeDonationComment(ev, currentTargetEl) {
+        const checked = currentTargetEl.checked;
         const donationCommentEl = this.el.querySelector('#donation_comment');
-        const checked = ev.currentTarget.checked;
         donationCommentEl.classList.toggle('d-none', !checked);
         if (!checked) {
             donationCommentEl.value = "";
         }
-    },
-});
+    }
+}
+
+registry
+    .category("public.interactions")
+    .add("website_payment.donation_form", DonationForm);

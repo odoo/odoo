@@ -1,22 +1,24 @@
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { renderToElement } from "@web/core/utils/render";
-import publicWidget from '@web/legacy/js/public/public_widget';
 
-publicWidget.registry.websiteSlidesCoursePrerequisite = publicWidget.Widget.extend({
-    selector: '.o_wslides_js_prerequisite_course',
+export class CoursePrerequisite extends Interaction {
+    static selector = ".o_wslides_js_prerequisite_course";
 
-    async start() {
-        await this._super(...arguments);
-        const channels = this.$el.data('channels');
-        this.$el.popover({
+    start() {
+        this.services.popover.add(this.el, {
             trigger: 'focus',
             placement: 'bottom',
             container: 'body',
             html: true,
-            content: renderToElement('slide.course.prerequisite', {channels: channels}),
+            content: renderToElement('slide.course.prerequisite', {
+                channels: this.el.dataset.channels
+            }),
         });
-    },
-});
+    }
+}
 
-export default {
-    websiteSlidesCoursePrerequisite: publicWidget.registry.websiteSlidesCoursePrerequisite
-};
+registry
+    .category("public.interactions")
+    .add("website_slides.course_prerequisite", CoursePrerequisite);

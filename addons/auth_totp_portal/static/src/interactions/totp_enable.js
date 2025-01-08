@@ -1,71 +1,75 @@
-import { _t } from "@web/core/l10n/translation";
-import { markup } from "@odoo/owl";
-import { InputConfirmationDialog } from "@portal/js/components/input_confirmation_dialog/input_confirmation_dialog";
-import { handleCheckIdentity } from "@portal/js/portal_security";
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { browser } from "@web/core/browser/browser";
 import { user } from "@web/core/user";
+import { _t } from "@web/core/l10n/translation";
+
+import { markup } from "@odoo/owl";
+
+import { InputConfirmationDialog } from "@portal/js/components/input_confirmation_dialog/input_confirmation_dialog";
+import { handleCheckIdentity } from "@portal/js/portal_security";
 
 /**
  * Replaces specific <field> elements by normal HTML, strip out the rest entirely
  */
 function fromField(f, record) {
     switch (f.getAttribute('name')) {
-    case 'qrcode':
-        const qrcode = document.createElement('img');
-        qrcode.setAttribute('class', 'img img-fluid');
-        qrcode.setAttribute('src', 'data:image/png;base64,' + record['qrcode']);
-        return qrcode;
-    case 'url':
-        const url = document.createElement('a');
-        url.setAttribute('href', record['url']);
-        url.textContent = f.getAttribute('text') || record['url'];
-        return url;
-    case 'code':
-        const code = document.createElement('input');
-        code.setAttribute('name', 'code');
-        code.setAttribute('class', 'form-control col-10 col-md-6');
-        code.setAttribute('placeholder', '6-digit code');
-        code.required = true;
-        code.maxLength = 6;
-        code.minLength = 6;
-        return code;
-    case 'secret':
-        // As CopyClipboard wizard is backend only, mimic his behaviour to use it in frontend.
-        // Field
-        const secretSpan = document.createElement('span');
-        secretSpan.setAttribute('name', 'secret');
-        secretSpan.setAttribute('class', 'o_field_copy_url');
-        secretSpan.textContent = record['secret'];
+        case 'qrcode':
+            const qrcode = document.createElement('img');
+            qrcode.setAttribute('class', 'img img-fluid');
+            qrcode.setAttribute('src', 'data:image/png;base64,' + record['qrcode']);
+            return qrcode;
+        case 'url':
+            const url = document.createElement('a');
+            url.setAttribute('href', record['url']);
+            url.textContent = f.getAttribute('text') || record['url'];
+            return url;
+        case 'code':
+            const code = document.createElement('input');
+            code.setAttribute('name', 'code');
+            code.setAttribute('class', 'form-control col-10 col-md-6');
+            code.setAttribute('placeholder', '6-digit code');
+            code.required = true;
+            code.maxLength = 6;
+            code.minLength = 6;
+            return code;
+        case 'secret':
+            // As CopyClipboard wizard is backend only, mimic his behaviour to use it in frontend.
+            // Field
+            const secretSpan = document.createElement('span');
+            secretSpan.setAttribute('name', 'secret');
+            secretSpan.setAttribute('class', 'o_field_copy_url');
+            secretSpan.textContent = record['secret'];
 
-        // Copy Button
-        const copySpanIcon = document.createElement('span');
-        copySpanIcon.setAttribute('class', 'fa fa-clipboard');
-        const copySpanText = document.createElement('span');
-        copySpanText.textContent = _t(' Copy');
+            // Copy Button
+            const copySpanIcon = document.createElement('span');
+            copySpanIcon.setAttribute('class', 'fa fa-clipboard');
+            const copySpanText = document.createElement('span');
+            copySpanText.textContent = _t(' Copy');
 
-        const copyButton = document.createElement('button');
-        copyButton.setAttribute('class', 'btn btn-sm btn-primary o_clipboard_button o_btn_char_copy py-0 px-2');
-        copyButton.onclick = async function(event) {
-            event.preventDefault();
-            $(copyButton).tooltip({title: _t("Copied!"), trigger: "manual", placement: "bottom"});
-            await browser.navigator.clipboard.writeText($(secretSpan)[0].innerText);
-            $(copyButton).tooltip('show');
-            setTimeout(() => $(copyButton).tooltip("hide"), 800);
-        };
+            const copyButton = document.createElement('button');
+            copyButton.setAttribute('class', 'btn btn-sm btn-primary o_clipboard_button o_btn_char_copy py-0 px-2');
+            copyButton.onclick = async function (event) {
+                event.preventDefault();
+                $(copyButton).tooltip({ title: _t("Copied!"), trigger: "manual", placement: "bottom" });
+                await browser.navigator.clipboard.writeText($(secretSpan)[0].innerText);
+                $(copyButton).tooltip('show');
+                setTimeout(() => $(copyButton).tooltip("hide"), 800);
+            };
 
-        copyButton.appendChild(copySpanIcon);
-        copyButton.appendChild(copySpanText);
+            copyButton.appendChild(copySpanIcon);
+            copyButton.appendChild(copySpanText);
 
-        // CopyClipboard Div
-        const secretDiv = document.createElement('div');
-        secretDiv.setAttribute('class', 'o_field_copy d-flex justify-content-center align-items-center');
-        secretDiv.appendChild(secretSpan);
-        secretDiv.appendChild(copyButton);
+            // CopyClipboard Div
+            const secretDiv = document.createElement('div');
+            secretDiv.setAttribute('class', 'o_field_copy d-flex justify-content-center align-items-center');
+            secretDiv.appendChild(secretSpan);
+            secretDiv.appendChild(copyButton);
 
-        return secretDiv;
-    default: // just display the field's data
-        return document.createTextNode(record[f.getAttribute('name')] || '');
+            return secretDiv;
+        default: // just display the field's data
+            return document.createTextNode(record[f.getAttribute('name')] || '');
     }
 }
 
@@ -90,21 +94,21 @@ function fixupViewBody(oldNode, record) {
             if (oldNode.tagName === 'field') {
                 node = fromField(oldNode, record);
                 switch (oldNode.getAttribute('name')) {
-                case 'qrcode':
-                    qrcode = node;
-                    break;
-                case 'code':
-                    code = node;
-                    break
+                    case 'qrcode':
+                        qrcode = node;
+                        break;
+                    case 'code':
+                        code = node;
+                        break
                 }
                 break; // no need to recurse here
             }
             node = document.createElement(oldNode.tagName);
-            for(let i=0; i<oldNode.attributes.length; ++i) {
+            for (let i = 0; i < oldNode.attributes.length; ++i) {
                 const attr = oldNode.attributes[i];
                 node.setAttribute(attr.name, attr.value);
             }
-            for(let j=0; j<oldNode.childNodes.length; ++j) {
+            for (let j = 0; j < oldNode.childNodes.length; ++j) {
                 const [ch, qr, co] = fixupViewBody(oldNode.childNodes[j], record);
                 if (ch) { node.appendChild(ch); }
                 if (qr) { qrcode = qr; }
@@ -115,42 +119,34 @@ function fixupViewBody(oldNode, record) {
             node = document.createTextNode(oldNode.data);
             break;
         default:
-            // don't care about PI & al
+        // don't care about PI & al
     }
 
     return [node, qrcode, code]
 }
 
-publicWidget.registry.TOTPButton = publicWidget.Widget.extend({
-    selector: '#auth_totp_portal_enable',
-    events: {
-        click: '_onClick',
-    },
+export class TOTPEnable extends Interaction {
+    static selector = "#auth_totp_portal_enable";
+    dynamicContent = {
+        _root: { "t-on-click.prevent": this.onClick },
+    };
 
-    init() {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
-        this.dialog = this.bindService("dialog");
-    },
+    async onClick() {
+        const data = await this.waitFor(handleCheckIdentity(
+            this.waitFor(this.services.orm.call("res.users", "action_totp_enable_wizard", [user.userId])),
+            this.services.orm,
+            this.services.dialog,
+        ));
 
-    async _onClick(e) {
-        e.preventDefault();
-
-        const w = await handleCheckIdentity(
-            this.orm.call("res.users", "action_totp_enable_wizard", [user.userId]),
-            this.orm,
-            this.dialog
-        );
-
-        if (!w) {
+        if (!data) {
             // TOTP probably already enabled, just reload page
-            window.location = window.location;
+            location.reload()
             return;
         }
 
-        const {res_model: model, res_id: wizard_id} = w;
-
-        const record = await this.orm.read(model, [wizard_id], []).then(ar => ar[0]);
+        const model = data.res_model;
+        const wizard_id = data.res_id;
+        const record = (await this.services.orm.read(model, [wizard_id], []))[0];
 
         const doc = new DOMParser().parseFromString(
             document.getElementById('totp_wizard_view').textContent,
@@ -160,11 +156,9 @@ publicWidget.registry.TOTPButton = publicWidget.Widget.extend({
         const xmlBody = doc.querySelector('sheet *');
         const [body, ,] = fixupViewBody(xmlBody, record);
 
-        this.call("dialog", "add", InputConfirmationDialog, {
+        this.services.dialog.add(InputConfirmationDialog, {
             body: markup(body.outerHTML),
-            onInput: ({ inputEl }) => {
-                inputEl.setCustomValidity("");
-            },
+            onInput: ({ inputEl }) => { inputEl.setCustomValidity("") },
             confirmLabel: _t("Activate"),
             confirm: async ({ inputEl }) => {
                 if (!inputEl.reportValidity()) {
@@ -173,17 +167,17 @@ publicWidget.registry.TOTPButton = publicWidget.Widget.extend({
                 }
 
                 try {
-                    await this.orm.write(model, [record.id], { code: inputEl.value });
+                    await this.services.orm.write(model, [record.id], { code: inputEl.value });
                     await handleCheckIdentity(
-                        this.orm.call(model, "enable", [record.id]),
-                        this.orm,
-                        this.dialog
+                        this.waitFor(this.services.orm.call(model, "enable", [record.id])),
+                        this.services.orm,
+                        this.services.dialog
                     );
                 } catch (e) {
                     const errorMessage = (
                         !e.message ? e.toString()
-                      : !e.message.data ? e.message.message
-                      : e.message.data.message || _t("Operation failed for unknown reason.")
+                            : !e.message.data ? e.message.message
+                                : e.message.data.message || _t("Operation failed for unknown reason.")
                     );
                     inputEl.classList.add("is-invalid");
                     // show custom validity error message
@@ -192,75 +186,13 @@ publicWidget.registry.TOTPButton = publicWidget.Widget.extend({
                     return false;
                 }
                 // reloads page, avoid window.location.reload() because it re-posts forms
-                window.location = window.location;
+                location.reload();
             },
-            cancel: () => {},
+            cancel: () => { },
         });
-    },
-});
-publicWidget.registry.DisableTOTPButton = publicWidget.Widget.extend({
-    selector: '#auth_totp_portal_disable',
-    events: {
-        click: '_onClick'
-    },
-
-    init() {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
-        this.dialog = this.bindService("dialog");
-    },
-
-    async _onClick(e) {
-        e.preventDefault();
-        await handleCheckIdentity(
-            this.orm.call("res.users", "action_totp_disable", [user.userId]),
-            this.orm,
-            this.dialog
-        )
-        window.location = window.location;
     }
-});
-publicWidget.registry.RevokeTrustedDeviceButton = publicWidget.Widget.extend({
-    selector: '#totp_wizard_view + * .fa.fa-trash.text-danger',
-    events: {
-        click: '_onClick'
-    },
+}
 
-    init() {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
-        this.dialog = this.bindService("dialog");
-    },
-
-    async _onClick(e){
-        e.preventDefault();
-        await handleCheckIdentity(
-            this.orm.call("auth_totp.device", "remove", [parseInt(this.el.id)]),
-            this.orm,
-            this.dialog
-        );
-        window.location = window.location;
-    }
-});
-publicWidget.registry.RevokeAllTrustedDevicesButton = publicWidget.Widget.extend({
-    selector: '#auth_totp_portal_revoke_all_devices',
-    events: {
-        click: '_onClick'
-    },
-
-    init() {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
-        this.dialog = this.bindService("dialog");
-    },
-
-    async _onClick(e){
-        e.preventDefault();
-        await handleCheckIdentity(
-            this.orm.call("res.users", "revoke_all_devices", [user.userId]),
-            this.orm,
-            this.dialog
-        );
-        window.location = window.location;
-    }
-});
+registry
+    .category("public.interactions")
+    .add("auth_totp_portal.totp_enable", TOTPEnable);

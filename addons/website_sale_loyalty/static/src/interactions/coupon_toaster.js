@@ -1,17 +1,13 @@
-import publicWidget from '@web/legacy/js/public/public_widget';
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 
-const CouponToasterWidget = publicWidget.Widget.extend({
-    selector: '.coupon-message',
-
-    init() {
-        this._super(...arguments);
-        this.notification = this.bindService("notification");
-    },
+export class CouponToaster extends Interaction {
+    static selector = ".coupon-message";
 
     start() {
         let options = {};
-        const contentEl = this.el.querySelector('.coupon-message-content');
         const titleEl = this.el.querySelector('.coupon-message-title');
+        const contentEl = this.el.querySelector('.coupon-message-content');
         let message = null;
 
         if (contentEl) {
@@ -24,17 +20,15 @@ const CouponToasterWidget = publicWidget.Widget.extend({
         }
 
         if (this.el.classList.contains('coupon-info-message')) {
-            this.notification.add(message, Object.assign({type: 'success'}, options));
+            this.services.notification.add(message, Object.assign({ type: 'success' }, options));
         } else if (this.el.classList.contains('coupon-error-message')) {
-            this.notification.add(message, Object.assign({type: 'danger'}, options));
+            this.services.notification.add(message, Object.assign({ type: 'danger' }, options));
         } else if (this.el.classList.contains('coupon-warning-message')) {
-            this.notification.add(message, Object.assign({type: 'warning'}, options));
+            this.services.notification.add(message, Object.assign({ type: 'warning' }, options));
         }
+    }
+}
 
-        return this._super(...arguments);
-    },
-});
-
-publicWidget.registry.CouponToasterWidget = CouponToasterWidget;
-
-export default CouponToasterWidget;
+registry
+    .category("public.interactions")
+    .add("website_sale_loyalty.coupon_toaster", CouponToaster);

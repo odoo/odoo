@@ -1,27 +1,24 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
+import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { _t } from "@web/core/l10n/translation";
 import { isCSSColor } from "@web/core/utils/colors";
-import { renderToElement } from "@web/core/utils/render";
-import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 
-class Countdown extends Interaction {
+export class Countdown extends Interaction {
     static selector = ".s_countdown";
     dynamicContent = {
-        ".s_countdown_canvas_wrapper": { 
+        ".s_countdown_canvas_wrapper": {
             "t-att-class": () => ({
                 "d-flex": true,
                 "justify-content-center": true,
-            })
+            }),
         },
-    }
+    };
 
     setup() {
         // Remove SVG previews (used to simulated canvas)
-        this.el.querySelectorAll("svg").forEach(el => {
-            el.parentNode.remove();
-        })
+        this.el.querySelectorAll("svg").forEach(el => el.parentNode.remove());
 
         this.wrapperEl = this.el.querySelector(".s_countdown_canvas_wrapper");
         this.hereBeforeTimerEnds = false;
@@ -47,9 +44,9 @@ class Countdown extends Interaction {
         this.progressBarStyle = this.el.dataset.progressBarStyle;
         this.progressBarWeight = this.el.dataset.progressBarWeight;
 
-        this.textColor = this.ensureCSSColor(this.el.dataset.textColor);
         this.layoutBackgroundColor = this.ensureCSSColor(this.el.dataset.layoutBackgroundColor);
         this.progressBarColor = this.ensureCSSColor(this.el.dataset.progressBarColor);
+        this.textColor = this.ensureCSSColor(this.el.dataset.textColor);
 
         this.onlyOneUnit = this.display === "d";
         this.width = this.size;
@@ -64,9 +61,7 @@ class Countdown extends Interaction {
     }
 
     destroy() {
-        this.el.querySelector(".s_countdown_end_message")?.classList.add("d-none");
-        this.el.querySelector(".s_countdown_canvas_wrapper")?.classList.remove("d-none");
-
+        this.el.querySelector(".s_countdown_canvas_wrapper").classList.remove("d-none");
         clearInterval(this.setInterval);
     }
 
@@ -90,19 +85,19 @@ class Countdown extends Interaction {
         if (this.endAction === "redirect") {
             const redirectUrl = this.el.dataset.redirectUrl || "/";
             if (this.hereBeforeTimerEnds) {
-                setTimeout(() => window.location = redirectUrl, 500);
+                this.waitForTimeout(() => window.location = redirectUrl, 500);
             } else {
                 if (!this.el.querySelector(".s_countdown_end_redirect_message").length) {
                     const container = this.el.querySelector("> .container, > .container-fluid, > .o_container_small");
-
-                    this.insert(renderToElement("website.s_countdown.end_redirect_message", {
+                    this.renderAt("website.s_countdown.end_redirect_message", {
                         redirectUrl: redirectUrl,
-                    }), container);
+                    }, container);
                 }
             }
         } else if (this.endAction === "message" || this.endAction === "message_no_countdown") {
-            this.el.querySelector(".s_countdown_end_message").removeClass("d-none");
+            this.el.querySelector(".s_countdown_end_message").classList.remove("d-none");
         }
+        this.registerCleanup(() => this.el.querySelector(".s_countdown_end_message").classList.add("d-none"));
     }
 
     getDelta() {
@@ -205,7 +200,7 @@ class Countdown extends Interaction {
 
         const hideCountdown = this.isFinished && !this.editableMode && this.el.classList.contains("hide-countdown");
         if (this.layout === "text") {
-            const canvasEls = this.el.querySelectorAll(".s_countdown_canvas_flex")
+            const canvasEls = this.el.querySelectorAll(".s_countdown_canvas_flex");
             for (const canvasEl of canvasEls) {
                 canvasEl.classList.add("d-none");
             }
@@ -408,4 +403,6 @@ registry
 
 registry
     .category("public.interactions.edit")
-    .add("website.countdown", { Interaction: Countdown });
+    .add("website.countdown", {
+        Interaction: Countdown,
+    });

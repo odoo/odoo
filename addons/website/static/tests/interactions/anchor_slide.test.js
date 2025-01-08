@@ -1,77 +1,79 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, click } from "@odoo/hoot-dom";
-import { advanceTime } from "@odoo/hoot-mock";
 import {
-    isElementInViewport,
+    isElementVerticallyInViewportOf,
     startInteractions,
     setupInteractionWhiteList,
 } from "@web/../tests/public/helpers";
 
+import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame, click } from "@odoo/hoot-dom";
+import { advanceTime } from "@odoo/hoot-mock";
+
 setupInteractionWhiteList("website.anchor_slide");
+
 describe.current.tags("interaction_dev");
 
-test("anchor slide does nothing if there is no href", async () => {
+test("anchor_slide does nothing if there is no href", async () => {
     const { core } = await startInteractions(`
-      <div id="wrapwrap">
-        <a id="somewhere" />
-      </div>
+        <div id="wrapwrap">
+            <a id="somewhere"/>
+        </div>
     `);
-    expect(core.interactions.length).toBe(0);
+    expect(core.interactions).toHaveLength(0);
 });
 
-test("anchor slide scrolls to targetted location", async () => {
+test("anchor_slide scrolls to targetted location", async () => {
     const { core, el } = await startInteractions(`
-        <div id="wrapwrap" style="overflow: scroll; max-height: 500px;">
+        <div id="wrapwrap" style="overflow: scroll; width: 500px; max-height: 500px;">
             <a href="#target">Click here</a>
             <div style="min-height: 2000px;">Tall stuff</div>
             <div id="target">Target</div>
         </div>
     `);
-    expect(core.interactions.length).toBe(1);
-    const aEl = el.querySelector("a[href]");
-    const targetEl = el.querySelector("div#target");
-    expect(isElementInViewport(targetEl)).toBe(false);
-    click(aEl);
-    expect(isElementInViewport(targetEl)).toBe(false);
+    const scrollEl = el.querySelector("#wrapwrap");
+    const targetEl = scrollEl.querySelector("div#target");
+    expect(core.interactions).toHaveLength(1);
+    expect(isElementVerticallyInViewportOf(targetEl, scrollEl)).toBe(false);
+    click("a[href]"); // Intentionally not awaited
+    expect(isElementVerticallyInViewportOf(targetEl, scrollEl)).toBe(false);
     await animationFrame();
     await advanceTime(500); // Duration defined in AnchorSlide.
-    expect(isElementInViewport(targetEl)).toBe(true);
+    expect(isElementVerticallyInViewportOf(targetEl, scrollEl)).toBe(true);
 });
 
-test("without anchor slide instantly reach the targetted location", async () => {
+test("without anchor_slide, instantly reach the targetted location", async () => {
     const { core, el } = await startInteractions(`
-        <div id="wrapwrap" style="overflow: scroll; max-height: 100%;">
+        <div id="wrapwrap" style="overflow: scroll; width: 500px; max-height: 100%;">
             <a href="#target">Click here</a>
             <div style="min-height: 2000px;">Tall stuff</div>
             <div id="target">Target</div>
         </div>
     `);
-    expect(core.interactions.length).toBe(1);
+    const scrollEl = el.querySelector("#wrapwrap");
+    const targetEl = scrollEl.querySelector("div#target");
+    expect(core.interactions).toHaveLength(1);
     core.stopInteractions();
-    expect(core.interactions.length).toBe(0);
-    const aEl = el.querySelector("a[href]");
-    const targetEl = el.querySelector("div#target");
-    expect(isElementInViewport(targetEl)).toBe(false);
-    click(aEl);
+    expect(core.interactions).toHaveLength(0);
+    expect(isElementVerticallyInViewportOf(targetEl, scrollEl)).toBe(false);
+    click("a[href]"); // Intentionally not awaited
     await animationFrame();
-    expect(isElementInViewport(targetEl)).toBe(true);
+    expect(isElementVerticallyInViewportOf(targetEl, scrollEl)).toBe(true);
 });
 
-test("anchor slide scrolls to targetted location - with non-ASCII7 characters", async () => {
+test("anchor_slide scrolls to targetted location - with non-ASCII7 characters", async () => {
     const { core, el } = await startInteractions(`
-        <div id="wrapwrap" style="overflow: scroll; max-height: 500px;">
+        <div id="wrapwrap" style="overflow: scroll; width: 500px; max-height: 500px;">
             <a href="#ok%C3%A9%25">Click here</a>
             <div style="min-height: 2000px;">Tall stuff</div>
             <div class="target" id="ok%C3%A9%25"}">Target</div>
         </div>
     `);
+    const scrollEl = el.querySelector("#wrapwrap");
+    const targetEl = scrollEl.querySelector("div.target");
     expect(core.interactions.length).toBe(1);
-    const aEl = el.querySelector("a[href]");
-    const targetEl = el.querySelector("div.target");
-    expect(isElementInViewport(targetEl)).toBe(false);
-    click(aEl);
-    expect(isElementInViewport(targetEl)).toBe(false);
+    expect(isElementVerticallyInViewportOf(targetEl, scrollEl)).toBe(false);
+    click("a[href]"); // Intentionally not awaited
+    expect(isElementVerticallyInViewportOf(targetEl, scrollEl)).toBe(false);
     await animationFrame();
     await advanceTime(500); // Duration defined in AnchorSlide.
-    expect(isElementInViewport(targetEl)).toBe(true);
+    expect(isElementVerticallyInViewportOf(targetEl, scrollEl)).toBe(true);
 });

@@ -21,7 +21,11 @@
     'assets': {
         'web.assets_frontend': [
             'website_profile/static/src/scss/website_profile.scss',
-            'website_profile/static/src/js/website_profile.js',
+            'website_profile/static/src/interactions/**/*',
+            ('remove', 'website_profile/static/src/interactions/**/*.edit.js'),
+        ],
+        'website.assets_edit_frontend': [
+            'website_profile/static/src/interactions/**/*',
         ],
         'web.assets_tests': [
             'website_profile/static/tests/tours/tour_website_profile_description.js',

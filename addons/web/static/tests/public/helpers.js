@@ -7,6 +7,9 @@ const elementRegistry = registry.category("public.interactions");
 const content = elementRegistry.content;
 
 export function setupInteractionWhiteList(interactions) {
+    if (arguments.length > 1) {
+        throw new Error("Multiple white-listed interactions should be listed in an array.");
+    }
     if (typeof interactions === "string") {
         interactions = [interactions];
     }

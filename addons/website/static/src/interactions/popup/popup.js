@@ -1,8 +1,10 @@
-import { cookie } from "@web/core/browser/cookie";
+import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
+
+import { browser } from "@web/core/browser/browser";
+import { cookie } from "@web/core/browser/cookie";
 import { utils as uiUtils, SIZES } from "@web/core/ui/ui_service";
 import { getTabableElements } from "@web/core/utils/ui";
-import { Interaction } from "@web/public/interaction";
 
 export class Popup extends Interaction {
     static selector = ".s_popup:not(#website_cookies_bar)";
@@ -16,6 +18,7 @@ export class Popup extends Interaction {
         "_root": {
             "t-on-hide.bs.modal": this.onHideModal,
             "t-on-show.bs.modal": this.onShowModal,
+            "t-on-shown.bs.modal": this.trapFocus,
         },
         "_window": {
             "t-on-hashchange": this.onHashChange,
@@ -27,13 +30,11 @@ export class Popup extends Interaction {
         this.modalEl = this.el.querySelector(".modal");
         /** @type {import("bootstrap").Modal} */
         this.bsModal = window.Modal.getOrCreateInstance(this.modalEl);
-        this.registerCleanup(() => {
-            this.bsModal.dispose();
-        });
-        this.releaseFocus = null;
+        this.registerCleanup(() => { this.bsModal.dispose() });
 
         this.modalShownOnClickEl = this.el.querySelector(".modal[data-display='onClick']");
         if (this.modalShownOnClickEl) {
+            this.showModalBtnEl = document.querySelector(`[href="#${this.modalShownOnClickEl.id}"]`);
             // Check if a hash exists and if the modal needs to be opened when
             // the page loads (e.g. The user has clicked a button on the
             // "Contact us" page to open a popup on the homepage).
@@ -41,7 +42,7 @@ export class Popup extends Interaction {
             return;
         }
 
-        this._popupAlreadyShown = !!cookie.get(this.el.id);
+        this.popupAlreadyShown = !!cookie.get(this.el.id);
     }
 
     start() {
@@ -59,7 +60,7 @@ export class Popup extends Interaction {
                 : el.classList.contains("o_snippet_desktop_invisible");
             return (visibilitySelectors && el.matches(visibilitySelectors)) || deviceInvisible;
         });
-        if (!this._popupAlreadyShown && !emptyPopup) {
+        if (!this.popupAlreadyShown && !emptyPopup) {
             this.bindPopup();
         }
     }
@@ -91,11 +92,10 @@ export class Popup extends Interaction {
     }
 
     showPopup() {
-        if (this._popupAlreadyShown || !this.canShowPopup()) {
+        if (this.popupAlreadyShown || !this.canShowPopup()) {
             return;
         }
         this.bsModal.show();
-        this.releaseFocus = this.trapFocus();
         this.registerCleanup(() => {
             // Do not call .hide() directly, because it is queued whereas
             // .dispose() is not, making it crash. As we don't have to wait for
@@ -103,23 +103,20 @@ export class Popup extends Interaction {
             // Additionally, .hide() triggers `hide.bs.modal`, which triggers
             // onHideModal() and sets a cookie: we don't want that on destroy.
             this.bsModal._hideModal();
-            if (this.releaseFocus) {
-                this.releaseFocus();
-            }
         });
     }
 
     /**
      * @param {String} [hash]
      */
-    showPopupOnClick(hash = window.location.hash) {
+    showPopupOnClick(hash = browser.location.hash) {
         // If a hash exists in the URL and it corresponds to the ID of the modal,
         // then we open the modal.
         if (hash && hash.substring(1) === this.modalShownOnClickEl.id) {
             // We remove the hash from the URL because otherwise the popup
             // cannot open again after being closed.
-            const urlWithoutHash = window.location.href.replace(hash, "");
-            window.history.replaceState(null, null, urlWithoutHash);
+            const urlWithoutHash = browser.location.href.replace(hash, "");
+            browser.history.replaceState(null, null, urlWithoutHash);
             this.showPopup();
         }
     }
@@ -145,7 +142,12 @@ export class Popup extends Interaction {
      */
     trapFocus() {
         let tabableEls = getTabableElements(this.el);
-        const previouslyFocusedEl = document.activeElement || document.body;
+        let previouslyFocusedEl;
+        if (this.showModalBtnEl) {
+            previouslyFocusedEl = this.showModalBtnEl;
+        } else {
+            previouslyFocusedEl = document.activeElement || document.body;
+        }
         if (tabableEls.length) {
             tabableEls[0].focus();
         } else {
@@ -153,7 +155,8 @@ export class Popup extends Interaction {
         }
         // The focus should stay free for no backdrop popups.
         if (this.el.querySelector(".s_popup_no_backdrop")) {
-            return () => previouslyFocusedEl.focus();
+            this.addListener(this.el, "hide.bs.modal", () => previouslyFocusedEl.focus(), { once: true });
+            return;
         }
         const onKeydown = (ev) => {
             if (ev.key !== "Tab") {
@@ -175,10 +178,10 @@ export class Popup extends Interaction {
             }
         };
         const removeOnKeydown = this.addListener(this.el, "keydown", onKeydown);
-        return () => {
+        this.addListener(this.el, "hide.bs.modal", () => {
             removeOnKeydown();
             previouslyFocusedEl.focus();
-        };
+        }, { once: true });
     }
 
     onCloseClick() {
@@ -197,16 +200,11 @@ export class Popup extends Interaction {
     onHideModal() {
         const nbDays = this.modalEl.dataset.consentsDuration;
         cookie.set(this.el.id, this.cookieValue, nbDays * 24 * 60 * 60, "required");
-        this._popupAlreadyShown = !this.modalShownOnClickEl;
+        this.popupAlreadyShown = !this.modalShownOnClickEl;
 
-        this.el.querySelectorAll(".media_iframe_video iframe").forEach((iframeEl) => {
+        const iframeEls = this.el.querySelectorAll(".media_iframe_video iframe");
+        for (const iframeEl of iframeEls) {
             iframeEl.src = "";
-        });
-        if (this.releaseFocus) {
-            this.releaseFocus();
-            // Reset to avoid calling it twice. It may happen with cookie bars
-            // or in the destroy.
-            this.releaseFocus = null;
         }
     }
 

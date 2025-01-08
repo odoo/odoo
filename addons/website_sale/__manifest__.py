@@ -59,7 +59,6 @@
         'views/snippets/s_add_to_cart.xml',
         'views/snippets/s_dynamic_snippet_products.xml',
         'views/snippets/s_dynamic_snippet_products_preview_data.xml',
-        'views/snippets/s_popup.xml',
         'views/snippets/s_mega_menu/big_icons_subtitles.xml',
         'views/snippets/s_mega_menu/cards.xml',
         'views/snippets/s_mega_menu/image_menu.xml',
@@ -79,6 +78,7 @@
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
+            'website_sale/static/src/interactions/**/*',
             'website_sale/static/src/js/tours/tour_utils.js',
             'website_sale/static/src/scss/website_sale.scss',
             'website_sale/static/src/scss/website_sale_frontend.scss',
@@ -104,7 +104,7 @@
             'website_sale/static/src/js/website_sale_recently_viewed.js',
             'website_sale/static/src/js/website_sale_tracking.js',
             'website/static/lib/multirange/multirange_custom.js',
-            'website/static/lib/multirange/multirange_instance.js',
+            'website/static/src/interactions/multirange_input.js',
             'website_sale/static/src/xml/website_sale_image_viewer.xml',
             'website_sale/static/src/js/components/website_sale_image_viewer.js',
             'website_sale/static/src/xml/website_sale_reorder_modal.xml',
@@ -166,8 +166,22 @@
             'website_sale/static/src/js/components/wysiwyg_adapter/wysiwyg_adapter.js',
         ],
         'web.assets_tests': [
-            'website_sale/static/tests/**/*',
+            'website_sale/static/tests/tours/**/*',
             'website_sale/static/src/js/tours/product_configurator_tour_utils.js',
+        ],
+        'web.assets_unit_tests': [
+            'website_sale/static/tests/interactions/**/*',
+        ],
+        'web.assets_unit_tests_setup': [
+            'website_sale/static/src/interactions/**/*',
+            'website_sale/static/src/snippets/s_dynamic_snippet_products/dynamic_snippet_products.js',
+            # TODO Find out why these do not work:
+            #'website_sale/static/src/snippets/**/*.js',
+            # ('remove', 'website_sale/static/src/snippets/**/options.js'),
+            # TODO Re-activate when testing edit mode
+            #('remove', 'website_sale/static/src/snippets/**/*.edit.js'),
+            # TODO Remove when all 000 have been adapted
+            #('remove', 'website_sale/static/src/snippets/**/000.js'),
         ],
     },
     'license': 'LGPL-3',

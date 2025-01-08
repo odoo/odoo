@@ -1,14 +1,16 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, click } from "@odoo/hoot-dom";
-import { advanceTime } from "@odoo/hoot-mock";
-
 import {
     startInteractions,
     setupInteractionWhiteList,
 } from "@web/../tests/public/helpers";
+
+import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame, click } from "@odoo/hoot-dom";
+import { advanceTime } from "@odoo/hoot-mock";
+
 import { onceAllImagesLoaded } from "@website/utils/images";
 
 setupInteractionWhiteList("website.gallery_slider");
+
 describe.current.tags("interaction_dev");
 
 const SLIDE_DURATION = 1000;
@@ -99,7 +101,7 @@ const defaultLightbox = `
     </main>
 `;
 
-// TODO Maybe recover from `website.gallery.slideshow` template.
+// TODO Obtain rendering from `website.gallery.slideshow` template.
 const defaultOldLightbox = `
     <main class="modal-body o_slideshow bg-transparent">
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="position: absolute; right: 10px; top: 10px;">
@@ -141,18 +143,19 @@ const defaultOldLightbox = `
         </div>
     </main>
 `;
-test("gallery slider does nothing if there is no o_slideshow s_image_gallery", async () => {
+
+test("gallery_slider does nothing if there is no o_slideshow s_image_gallery", async () => {
     const { core } = await startInteractions(`
         <div id="wrapwrap">
             <section class="s_image_gallery"/>
         </div>
     `);
-    expect(core.interactions.length).toBe(0);
+    expect(core.interactions).toHaveLength(0);
 });
 
-test("gallery slider interaction on image gallery", async () => {
+test("gallery_slider interaction on image gallery", async () => {
     const { core, el } = await startInteractions(defaultGallery);
-    expect(core.interactions.length).toBe(1);
+    expect(core.interactions).toHaveLength(1);
     await animationFrame();
     await onceAllImagesLoaded(el);
     await advanceTime(SLIDE_DURATION);
@@ -166,9 +169,9 @@ test("gallery slider interaction on image gallery", async () => {
     expect(imgEl).not.toBe(img2El);
 });
 
-test("gallery slider interaction on lightbox", async () => {
+test("gallery_slider interaction on lightbox", async () => {
     const { core, el } = await startInteractions(defaultLightbox);
-    expect(core.interactions.length).toBe(1);
+    expect(core.interactions).toHaveLength(1);
     await onceAllImagesLoaded(el);
     await advanceTime(SLIDE_DURATION);
     const imgEl = el.querySelector(".carousel-item.active img");
@@ -189,15 +192,16 @@ test("gallery slider interaction on lightbox", async () => {
     expect(img2El).not.toBe(img3El);
 });
 
-test("gallery slider interaction on old lightbox", async () => {
+test("gallery_slider interaction on old lightbox", async () => {
     const { core, el } = await startInteractions(defaultOldLightbox);
-    expect(core.interactions.length).toBe(1);
+    expect(core.interactions).toHaveLength(1);
+    const interaction = core.interactions[0].interaction;
     await onceAllImagesLoaded(el);
     await advanceTime(SLIDE_DURATION);
     // Fix parameters that are based on sizes.
-    core.interactions[0].interaction.page = 0;
-    core.interactions[0].interaction.nbPages = 6;
-    core.interactions[0].interaction.realNbPerPage = 1;
+    interaction.page = 0;
+    interaction.nbPages = 6;
+    interaction.realNbPerPage = 1;
     const imgEl = el.querySelector(".carousel-item.active img");
     const nextEl = el.querySelector(".o_indicators_right");
     const goToEls = el.querySelectorAll("li[data-bs-slide-to]");

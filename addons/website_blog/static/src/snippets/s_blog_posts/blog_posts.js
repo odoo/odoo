@@ -1,36 +1,35 @@
-import publicWidget from "@web/legacy/js/public/public_widget";
-import DynamicSnippet from "@website/snippets/s_dynamic_snippet/000";
+import { DynamicSnippet } from "@website/snippets/s_dynamic_snippet/dynamic_snippet";
+import { registry } from "@web/core/registry";
 
-const DynamicSnippetBlogPosts = DynamicSnippet.extend({
-    selector: '.s_dynamic_snippet_blog_posts',
-    disabledInEditableMode: false,
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+export class BlogPosts extends DynamicSnippet {
+    static selector = ".s_dynamic_snippet_blog_posts";
 
     /**
-     * Method to be overridden in child components in order to provide a search
-     * domain if needed.
      * @override
-     * @private
      */
-    _getSearchDomain: function () {
-        const searchDomain = this._super.apply(this, arguments);
-        const filterByBlogId = parseInt(this.$el.get(0).dataset.filterByBlogId);
+    getSearchDomain() {
+        const searchDomain = super.getSearchDomain(...arguments);
+        const filterByBlogId = parseInt(this.el.dataset.filterByBlogId);
         if (filterByBlogId >= 0) {
-            searchDomain.push(['blog_id', '=', filterByBlogId]);
+            searchDomain.push(["blog_id", "=", filterByBlogId]);
         }
         return searchDomain;
-    },
+    }
+
     /**
      * @override
-     * @private
      */
-    _getMainPageUrl() {
+    getMainPageUrl() {
         return "/blog";
-    },
-});
-publicWidget.registry.blog_posts = DynamicSnippetBlogPosts;
+    }
+}
 
-export default DynamicSnippetBlogPosts;
+registry
+    .category("public.interactions")
+    .add("website_blog.blog_posts", BlogPosts);
+
+registry
+    .category("public.interactions.edit")
+    .add("website_blog.blog_posts", {
+        Interaction: BlogPosts,
+    });

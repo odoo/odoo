@@ -5,6 +5,8 @@ import { advanceTime, Deferred } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Colibri } from "@web/public/colibri";
 import { Interaction } from "@web/public/interaction";
+import { patchDynamicContent } from "@web/public/utils";
+import { patch } from "@web/core/utils/patch";
 import { startInteraction } from "./helpers";
 import { Component, onWillDestroy, xml } from "@odoo/owl";
 
@@ -707,6 +709,31 @@ describe("using qualifiers", () => {
         expect("span").toHaveClass("a");
     });
 
+    test("add a listener with the .withTarget qualifier", async () => {
+        let clicked = false;
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                span: {
+                    "t-on-click.withTarget": this.doSomething,
+                    "t-att-class": () => ({ a: clicked }),
+                },
+            };
+            doSomething(ev, el) {
+                clicked = true;
+                expect(ev.defaultPrevented).toBe(false);
+                expect(ev.cancelBubble).toBe(false);
+                expect(el.tagName).toBe("SPAN");
+            }
+        }
+
+        await startInteraction(Test, TemplateTest);
+        expect(clicked).toBe(false);
+        await click("span");
+        expect(clicked).toBe(true);
+        expect("span").toHaveClass("a");
+    });
+
     test("add a listener with several qualifiers", async () => {
         let clicked = false;
         class Test extends Interaction {
@@ -730,6 +757,27 @@ describe("using qualifiers", () => {
         expect("span").not.toHaveClass("a");
         core.interactions[0].interaction.updateContent();
         expect("span").toHaveClass("a");
+    });
+
+    test("add a listener does not lose 'this' with qualifiers", async () => {
+        let clicked = false;
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                span: {
+                    "t-on-click.noupdate.stop.prevent": this.doSomething,
+                },
+            };
+            doSomething(ev) {
+                clicked = true;
+                expect(this).not.toBe(undefined);
+                expect(this.doSomething).not.toBe(undefined);
+            }
+        }
+        await startInteraction(Test, TemplateTest);
+        expect(clicked).toBe(false);
+        await click("span");
+        expect(clicked).toBe(true);
     });
 });
 
@@ -1512,6 +1560,7 @@ describe("components", () => {
         let isCDestroyed = false;
         class C extends Component {
             static template = xml`component`;
+            static props = {};
 
             setup() {
                 onWillDestroy(() => (isCDestroyed = true));
@@ -1574,6 +1623,7 @@ describe("components", () => {
     test("can insert a component with mountComponent", async () => {
         class C extends Component {
             static template = xml`component`;
+            static props = {};
         }
 
         class Test extends Interaction {
@@ -1625,7 +1675,7 @@ describe("insert", () => {
             static selector = ".test";
             setup() {
                 const node = document.createElement("inserted");
-                this.insert(node, this.el); // "beforeend"
+                this.insert(node, this.el);
             }
         }
 
@@ -1696,15 +1746,118 @@ describe("insert", () => {
     });
 });
 
-describe("blockedUntilDone", () => {
-    test("blockedUntilDone disable any further execution while already executing", async () => {
+describe("renderAt", () => {
+    test("can render a template inside an element", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                "[data-which]": {
+                    "t-on-click": (ev) => expect.step(ev.target.dataset.which),
+                },
+            };
+            setup() {
+                this.renderAt(
+                    "web.TestSubInteraction1",
+                    {
+                        first: "one",
+                        second: "two",
+                    },
+                    this.el
+                );
+            }
+        }
+        class Test2 extends Interaction {
+            static selector = "[data-which]";
+            dynamicContent = {
+                _root: {
+                    "t-att-x": () => "x",
+                },
+            };
+        }
+
+        const { core, el } = await startInteraction([Test, Test2], TemplateTest);
+        expect(core.interactions).toHaveLength(3); // 1*Test + 2*Test2
+        const testEl = el.querySelector(".test");
+        const subEls = testEl.querySelectorAll("[data-which][x=x]");
+        await click(subEls[1]);
+        await click(subEls[0]);
+        expect.verifySteps(["two", "one"]);
+        core.stopInteractions();
+        expect(testEl.querySelectorAll("[data-which]")).toHaveLength(0);
+        await click(subEls[0]);
+        expect.verifySteps([]);
+    });
+
+    function checkOrder(position) {
+        test(`order is preserved when inserting ${position} of an element`, async () => {
+            class Test extends Interaction {
+                static selector = ".test";
+                dynamicContent = {
+                    "[data-which]": {
+                        "t-on-click": (ev) => expect.step(ev.target.dataset.which),
+                    },
+                };
+                setup() {
+                    const els = this.renderAt(
+                        "web.TestSubInteraction1",
+                        {
+                            first: "one",
+                            second: "two",
+                        },
+                        this.el.querySelector("span"),
+                        position,
+                        (els) => {
+                            expect(els).toHaveLength(2);
+                            for (const el of els) {
+                                expect.step(`callback on ${el.dataset.which}`);
+                            }
+                        }
+                    );
+                    expect(els).toHaveLength(2);
+                    for (const el of els) {
+                        expect.step(`result has ${el.dataset.which}`);
+                    }
+                }
+            }
+
+            const { core, el } = await startInteraction([Test], TemplateTest);
+            expect(core.interactions).toHaveLength(1);
+            const testEl = el.querySelector(".test");
+            const subEls = testEl.querySelectorAll("[data-which]");
+            expect(subEls).toHaveLength(2);
+            expect(subEls[0].dataset.which).toBe("one");
+            expect(subEls[1].dataset.which).toBe("two");
+            await click(subEls[1]);
+            await click(subEls[0]);
+            expect.verifySteps([
+                "callback on one",
+                "callback on two",
+                "result has one",
+                "result has two",
+                "two",
+                "one",
+            ]);
+            core.stopInteractions();
+            expect(testEl.querySelectorAll("[data-which]")).toHaveLength(0);
+            await click(subEls[0]);
+            expect.verifySteps([]);
+        });
+    }
+    checkOrder("beforebegin");
+    checkOrder("afterbegin");
+    checkOrder("beforeend");
+    checkOrder("afterend");
+});
+
+describe("locked", () => {
+    test("locked disable any further execution while already executing", async () => {
         let started = 0;
         let finished = 0;
         class Test extends Interaction {
             static selector = ".test";
             dynamicContent = {
                 button: {
-                    "t-on-click": this.blockedUntilDone(this.onClickLong),
+                    "t-on-click": this.locked(this.onClickLong),
                 },
             };
             async onClickLong() {
@@ -1725,12 +1878,12 @@ describe("blockedUntilDone", () => {
         expect(finished).toBe(1);
     });
 
-    test("blockedUntilDone doesn't add a loading icon if not required", async () => {
+    test("locked doesn't add a loading icon if not required", async () => {
         class Test extends Interaction {
             static selector = ".test";
             dynamicContent = {
                 button: {
-                    "t-on-click": this.blockedUntilDone(this.onClickLong),
+                    "t-on-click": this.locked(this.onClickLong),
                 },
             };
             async onClickLong() {
@@ -1744,12 +1897,12 @@ describe("blockedUntilDone", () => {
         expect(el.querySelectorAll("span")).toHaveLength(0);
     });
 
-    test("blockedUntilDone add a loading icon when the execution takes more than 400ms", async () => {
+    test("locked add a loading icon when the execution takes more than 400ms", async () => {
         class Test extends Interaction {
             static selector = ".test";
             dynamicContent = {
                 button: {
-                    "t-on-click": this.blockedUntilDone(this.onClickLong, true),
+                    "t-on-click": this.locked(this.onClickLong, true),
                 },
             };
             async onClickLong() {
@@ -1763,11 +1916,11 @@ describe("blockedUntilDone", () => {
         expect(el.querySelectorAll("span")).toHaveLength(1);
     });
 
-    test("blockedUntilDone automatically binds functions", async () => {
+    test("locked automatically binds functions", async () => {
         class Test extends Interaction {
             static selector = ".test";
             dynamicContent = {
-                button: { "t-on-click": this.blockedUntilDone(this.sayValue) },
+                button: { "t-on-click": this.locked(this.sayValue) },
             };
             setup() {
                 this.value = "value";
@@ -1931,6 +2084,48 @@ describe("debounced (2)", () => {
         await advanceTime(500);
         expect.verifySteps(["click"]);
     });
+
+    test("debounced requires .withTarget to access currentTarget", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                _root: {
+                    "t-on-click": this.debounced((ev) => {
+                        expect(ev.currentTarget).toBe(null);
+                        expect.step(ev.type);
+                    }, 500),
+                },
+            };
+        }
+        await startInteraction(Test, TemplateTest);
+        expect.verifySteps([]);
+        await click(".test");
+        await advanceTime(25);
+        expect.verifySteps([]);
+        await advanceTime(500);
+        expect.verifySteps(["click"]);
+    });
+
+    test("debounced receives currentTarget when using .withTarget", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                _root: {
+                    "t-on-click.withTarget": this.debounced((ev, el) => {
+                        expect(el.tagName).toBe("DIV");
+                        expect.step(ev.type);
+                    }, 500),
+                },
+            };
+        }
+        await startInteraction(Test, TemplateTest);
+        expect.verifySteps([]);
+        await click(".test");
+        await advanceTime(25);
+        expect.verifySteps([]);
+        await advanceTime(500);
+        expect.verifySteps(["click"]);
+    });
 });
 
 describe("throttled_for_animation (1)", () => {
@@ -1947,7 +2142,7 @@ describe("throttled_for_animation (1)", () => {
                 _root: { "t-on-click": () => this.throttle() },
             };
             setup() {
-                this.throttle = this.throttledForAnimation(this.doSomething);
+                this.throttle = this.throttled(this.doSomething);
             }
             doSomething() {
                 expect.step("done");
@@ -2014,7 +2209,7 @@ describe("throttled_for_animation (2)", () => {
             static selector = ".test";
             dynamicContent = { _root: { "t-att-a": () => "b" } };
             setup() {
-                const fn = this.throttledForAnimation(() => expect.step("throttle"));
+                const fn = this.throttled(() => expect.step("throttle"));
                 fn();
             }
             async willStart() {
@@ -2031,5 +2226,116 @@ describe("throttled_for_animation (2)", () => {
         expect.verifySteps(["throttle", "willstart"]);
         await advanceTime(150);
         expect.verifySteps(["updatecontent", "start"]);
+    });
+
+    test("throttled_for_animation forwards arguments", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                _root: { "t-on-click": this.throttled((ev) => expect.step(ev.type)) },
+            };
+        }
+        await startInteraction(Test, TemplateTest);
+        expect.verifySteps([]);
+        await click(".test");
+        expect.verifySteps(["click"]);
+    });
+
+    test("throttledForAnimation does not require .withTarget to access currentTarget", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                _root: {
+                    "t-on-click": this.throttled((ev) => {
+                        expect(ev.currentTarget.tagName).toBe("DIV");
+                        expect.step(ev.type);
+                    }),
+                },
+            };
+        }
+        await startInteraction(Test, TemplateTest);
+        expect.verifySteps([]);
+        await click(".test");
+        expect.verifySteps(["click"]);
+    });
+
+    test("throttledForAnimation receives currentTarget when using .withTarget", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                _root: {
+                    "t-on-click.withTarget": this.throttled((ev, el) => {
+                        expect(el.tagName).toBe("DIV");
+                        expect.step(ev.type);
+                    }),
+                },
+            };
+        }
+        await startInteraction(Test, TemplateTest);
+        expect.verifySteps([]);
+        await click(".test");
+        expect.verifySteps(["click"]);
+    });
+});
+
+describe("patching", () => {
+    test("'this' is kept through patches", async () => {
+        class Base extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                span: {
+                    "t-on-click": () => this.value++,
+                    "t-att-value": () => this.value,
+                    "t-att-class": () => ({
+                        base: true,
+                    }),
+                },
+            };
+            setup() {
+                this.value = 10;
+            }
+        }
+        patch(Base.prototype, {
+            setup() {
+                super.setup();
+                patchDynamicContent(this.dynamicContent, {
+                    span: {
+                        "t-att-value": (el, old) => old * 2 + this.value,
+                        "t-att-class": () => ({
+                            big: this.value >= 50,
+                        }),
+                    },
+                });
+            },
+        });
+        patch(Base.prototype, {
+            setup() {
+                super.setup();
+                patchDynamicContent(this.dynamicContent, {
+                    span: {
+                        "t-on-click": () => (this.value *= 5),
+                        "t-att-value": (el, old) => old * 10 - this.value,
+                        "t-att-class": () => ({
+                            bigger: this.value >= 100,
+                        }),
+                    },
+                });
+            },
+        });
+        const { core } = await startInteraction(Base, TemplateTest);
+        const interaction = core.interactions[0].interaction;
+        expect(interaction.value).toBe(10);
+        expect("span").toHaveAttribute("value", "290");
+        expect("span").toHaveClass("base");
+        expect("span").not.toHaveClass(["big", "bigger"]);
+        await click("span");
+        expect(interaction.value).toBe(50);
+        expect("span").toHaveAttribute("value", "1450");
+        expect("span").toHaveClass(["base", "big"]);
+        expect("span").not.toHaveClass("bigger");
+        await click("span");
+        expect(interaction.value).toBe(250);
+        expect("span").toHaveAttribute("value", "7250");
+        expect("span").toHaveClass(["base", "big", "bigger"]);
     });
 });

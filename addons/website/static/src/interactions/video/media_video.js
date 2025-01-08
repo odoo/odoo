@@ -3,10 +3,9 @@ import { registry } from "@web/core/registry";
 
 import { _t } from "@web/core/l10n/translation";
 import { escape } from "@web/core/utils/strings";
-
 import { setupAutoplay, triggerAutoplay } from "@website/utils/videos";
 
-class MediaVideo extends Interaction {
+export class MediaVideo extends Interaction {
     static selector = ".media_iframe_video";
 
     setup() {
@@ -76,7 +75,7 @@ class MediaVideo extends Interaction {
             return;
         }
 
-        const iframeEl = document.createElement("iframe")
+        const iframeEl = document.createElement("iframe");
         iframeEl.frameborder = "0";
         iframeEl.allowFullscreen = "allowfullscreen";
         iframeEl.ariaLabel = _t("Media video");

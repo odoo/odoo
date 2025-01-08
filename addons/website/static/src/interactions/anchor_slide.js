@@ -1,5 +1,6 @@
-import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { scrollTo } from "@web_editor/js/common/scrolling";
 
 export class AnchorSlide extends Interaction {
@@ -21,20 +22,14 @@ export class AnchorSlide extends Interaction {
             extraOffset: this.computeExtraOffset(),
         });
     }
-    /**
-     * To be overridden.
-     */
+
     computeExtraOffset() {
         return 0;
     }
-    /**
-     */
+
     animateClick(ev) {
         const ensureSlash = (path) => (path.endsWith("/") ? path : path + "/");
-        if (
-            ensureSlash(this.el.pathname) !==
-            ensureSlash(window.location.pathname)
-        ) {
+        if (ensureSlash(this.el.pathname) !== ensureSlash(window.location.pathname)) {
             return;
         }
         // Avoid flicker at destination in case of ending "/" difference.
@@ -65,9 +60,7 @@ export class AnchorSlide extends Interaction {
             this.addListener(
                 offcanvasEl,
                 "hidden.bs.offcanvas",
-                () => {
-                    this.manageScroll(hash, anchorEl, scrollValue);
-                },
+                () => this.manageScroll(hash, anchorEl, scrollValue),
                 // the listener must be automatically removed when invoked
                 { once: true },
             );
@@ -76,8 +69,8 @@ export class AnchorSlide extends Interaction {
             this.manageScroll(hash, anchorEl, scrollValue);
         }
     }
+
     /**
-     *
      * @param {string} hash
      * @param {HTMLElement} anchorEl the element to scroll to.
      * @param {string} [scrollValue='true'] scroll value
@@ -90,10 +83,7 @@ export class AnchorSlide extends Interaction {
             // parameter, the "scrollTo" function handles the scroll to the top
             // or to the bottom of the document even if the header or the
             // footer is removed from the DOM.
-            scrollTo(hash, {
-                duration: 500,
-                extraOffset: this.computeExtraOffset(),
-            });
+            this.scrollTo(hash);
         } else {
             this.scrollTo(anchorEl, scrollValue);
         }

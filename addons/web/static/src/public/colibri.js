@@ -47,35 +47,47 @@ export class Colibri {
                 "this.addListener can only be called after the interaction is started. Maybe move the call in the start method."
             );
         }
-        const re = /^(?<event>.*)\.(?<suffix>prevent|stop|capture|noupdate)$/;
+        const re = /^(?<event>.*)\.(?<suffix>prevent|stop|capture|noupdate|withTarget)$/;
         let groups = re.exec(event)?.groups;
         while (groups) {
             fn = {
-                prevent: (f) => (ev) => {
-                    ev.preventDefault();
-                    return f(ev);
-                },
-                stop: (f) => (ev) => {
-                    ev.stopPropagation();
-                    return f(ev);
-                },
+                prevent:
+                    (f) =>
+                    (ev, ...args) => {
+                        ev.preventDefault();
+                        return f.call(this.interaction, ev, ...args);
+                    },
+                stop:
+                    (f) =>
+                    (ev, ...args) => {
+                        ev.stopPropagation();
+                        return f.call(this.interaction, ev, ...args);
+                    },
                 capture: (f) => {
                     options ||= {};
                     options.capture = true;
                     return f;
                 },
-                noupdate: (f) => (ev) => {
-                    f(ev);
-                    return SKIP_IMPLICIT_UPDATE;
-                },
+                noupdate:
+                    (f) =>
+                    (...args) => {
+                        f.call(this.interaction, ...args);
+                        return SKIP_IMPLICIT_UPDATE;
+                    },
+                withTarget:
+                    (f) =>
+                    (ev, ...args) => {
+                        const currentTarget = ev.currentTarget;
+                        return f.call(this.interaction, ev, currentTarget, ...args);
+                    },
             }[groups.suffix](fn);
             event = groups.event;
             groups = re.exec(event)?.groups;
         }
         const handler = fn.isHandler
             ? fn
-            : (ev) => {
-                  if (SKIP_IMPLICIT_UPDATE !== fn.call(this.interaction, ev)) {
+            : (...args) => {
+                  if (SKIP_IMPLICIT_UPDATE !== fn.call(this.interaction, ...args)) {
                       this.updateContent();
                   }
               };

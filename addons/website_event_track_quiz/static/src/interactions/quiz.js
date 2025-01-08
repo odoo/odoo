@@ -1,7 +1,7 @@
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import { renderToElement } from "@web/core/utils/render";
 import { user } from "@web/core/user";
 
 /**
@@ -9,293 +9,182 @@ import { user } from "@web/core/user";
  * correction and decorate the answers according to the result. Error message can be displayed.
  *
  * This widget can be attached to DOM rendered server-side by `gamification_quiz.`
- *
  */
-var Quiz = publicWidget.Widget.extend({
-    template: 'quiz.main',
-    events: {
-        "click .o_quiz_quiz_answer": '_onAnswerClick',
-        "click .o_quiz_js_quiz_submit": '_submitQuiz',
-        "click .o_quiz_js_quiz_reset": '_onClickReset',
-    },
+export class Quiz extends Interaction {
+    // To match template: 'quiz.main',
+    //static selector = ".o_quiz_main div:has(> div > div.o_quiz_js_quiz_question)";
+    //static selector = "div:has(> div > div.o_quiz_js_quiz_question)";
+    static selector = ".o_quiz_main";
+    dynamicContent = {
+        ".o_quiz_quiz_answer": {
+            "t-on-click.prevent.withTarget": this.onAnswerClick,
+        },
+        ".o_quiz_js_quiz_submit": {
+            "t-on-click": this.submitQuiz,
+        },
+        ".o_quiz_js_quiz_reset": {
+            "t-on-click": this.onClickReset,
+        },
+        ".o_quiz_js_quiz_question": {
+            "t-att-class": () => ({
+                "completed-disabled": this.track.completed,
+            }),
+        },
+        "input[type=radio]": {
+            "t-att-disabled": () => this.track.completed || undefined,
+        },
+    };
 
-    /**
-    * @override
-    * @param {Object} parent
-    * @param {Object} data holding all the container information
-    * @param {Object} quizData : quiz data to display
-    */
-    init: function (parent, data, quizData) {
-        this._super.apply(this, arguments);
-        this.track = Object.assign({
-            id: 0,
-            name: '',
-            eventId: '',
-            completed: false,
-            isMember: false,
-            progressBar: false,
-            isEventUser: false,
-            repeatable: false
-        }, data);
-        this.quiz = quizData || false;
-        if (this.quiz) {
-            this.quiz.questionsCount = quizData.questions.length;
-        }
-        this.isMember = data.isMember || false;
+    setup() {
+        const questions = this.extractQuestionsAndAnswers();
+        const data = this.el.querySelector(".o_quiz_js_quiz").dataset;
+        this.track = {
+            id: parseInt(data.id) || 0,
+            name: data.name || "",
+            eventId: parseInt(data.eventId) || "",
+            completed: data.completed || false,
+            isMember: data.isMember || false,
+            progressBar: data.progressBar || false,
+            isEventUser: data.isEventUser || false,
+            repeatable: data.repeatable || false,
+        };
+        this.quiz = {
+            questions: questions,
+            questionsCount: questions.length,
+            sessionAnswers: data.sessionAnswers || [],
+            quizKarmaMax: data.quizKarmaMax,
+            quizKarmaWon: data.quizKarmaWon,
+            quizKarmaGain: data.quizKarmaGain,
+            quizPointsGained: data.quizPointsGained,
+            quizAttemptsCount: data.quizAttemptsCount,
+        };
+        this.isMember = this.track.isMember || false;
         this.userId = user.userId;
         this.redirectURL = encodeURIComponent(document.URL);
-
-        this.notification = this.bindService("notification");
-    },
-
-    /**
-     * @override
-     */
-    willStart: function () {
-        var defs = [this._super.apply(this, arguments)];
-        if (!this.quiz) {
-            defs.push(this._fetchQuiz());
-        }
-        return Promise.all(defs);
-    },
+    }
 
     /**
      * Overridden to add custom rendering behavior upon start of the widget.
      *
      * If the user has answered the quiz before having joined the course, we check
      * their answers (saved into their session) here as well.
-     *
-     * @override
      */
-    start: function () {
-        var self = this;
-        return this._super.apply(this, arguments).then(function ()  {
-            self._renderValidationInfo();
-        });
-    },
+    start() {
+        this.renderValidationInfo();
+    }
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    _alertShow: function (alertCode) {
-        var message = _t('There was an error validating this quiz.');
+    alertShow(alertCode) {
+        let message = _t('There was an error validating this quiz.');
         if (alertCode === 'quiz_incomplete') {
             message = _t('All questions must be answered!');
         } else if (alertCode === 'quiz_done') {
             message = _t('This quiz is already done. Retaking it is not possible.');
         }
-
-        this.notification.add(message, {
+        this.services.notification.add(message, {
             type: 'warning',
             title: _t('Quiz validation error'),
-            sticky: true
+            sticky: true,
         });
-    },
-
-    /**
-     * @private
-     * Decorate the answers according to state
-     */
-    _disableAnswers: function () {
-        this.$('.o_quiz_js_quiz_question').addClass('completed-disabled');
-        this.$('input[type=radio]').prop('disabled', true);
-    },
-
-    /**
-     * @private
-     * Decorate the answers according to state
-     */
-    _enableAnswers: function() {
-        this.$('.o_quiz_js_quiz_question').removeClass('completed-disabled');
-        this.$('input[type=radio]').prop('disabled', false);
-    },
-
-    /**
-     * Get all the questions ID from the displayed Quiz
-     * @returns {Array}
-     * @private
-     */
-    _getQuestionsIds: function () {
-        return this.$('.o_quiz_js_quiz_question').map(function () {
-            return $(this).data('question-id');
-        }).get();
-    },
+    }
 
     /**
      * Get the quiz answers filled in by the User
-     *
-     * @private
      */
-    _getQuizAnswers: function () {
-        return this.$('input[type=radio]:checked').map(function (index, element) {
-            return parseInt($(element).val());
-        }).get();
-    },
+    getQuizAnswers() {
+        return [...this.el.querySelectorAll("input[type=radio]:checked")].map((el) => parseInt(el.value));
+    }
 
     /**
      * Decorate the answer inputs according to the correction and adds the answer comment if
      * any.
-     *
-     * @private
      */
-    _renderAnswersHighlightingAndComments: function () {
-        var self = this;
-        this.$('.o_quiz_js_quiz_question').each(function () {
-            var $question = $(this);
-            var questionId = $question.data('questionId');
-            var answer = self.quiz.answers[questionId];
-            $question.find('a.o_quiz_quiz_answer').each(function () {
-                var $answer = $(this);
-                $answer.find('i.fa').addClass('d-none');
-                if ($answer.find('input[type=radio]').is(':checked')) {
+    renderAnswersHighlightingAndComments() {
+        for (const questionEl of this.el.querySelectorAll(".o_quiz_js_quiz_question")) {
+            const questionId = questionEl.dataset.questionId;
+            const answer = this.quiz.answers[questionId];
+            for (const answerEl of questionEl.querySelectorAll("a.o_quiz_quiz_answer")) {
+                for (const iEl of answerEl.querySelectorAll("i.fa")) {
+                    iEl.classList.add("d-none");
+                }
+                if (answerEl.querySelector("input[type=radio]").checked) {
                     if (answer.is_correct) {
-                        $answer.find('i.fa-check-circle').removeClass('d-none');
+                    answerEl.querySelector("i.fa-check-circle").classList.remove("d-none");
                     } else {
-                        $answer.find('label input').prop('checked', false);
-                        $answer.find('i.fa-times-circle').removeClass('d-none');
+                        answerEl.querySelector("label input").checked = false;
+                        answerEl.querySelector("i.fa-times-circle").classList.remove("d-none");
                     }
                     if (answer.awarded_points > 0) {
-                        $answer.append(renderToElement('quiz.badge', {'answer': answer}));
+                        this.renderAt("quiz.badge", {
+                           "answer": answer, 
+                        }, answerEl);
                     }
                 } else {
-                    $answer.find('i.fa-circle').removeClass('d-none');
+                    answerEl.querySelector("i.fa-circle").classList.remove("d-none");
                 }
-            });
-            var $list = $question.find('.list-group');
-            $list.append(renderToElement('quiz.comment', {'answer': answer}));
-        });
-    },
+            }
+            const listEl = questionEl.querySelector(".list-group");
+            if (listEl) {
+                this.renderAt("quiz.comment", {
+                    "answer": answer,
+                }, listEl);
+            }
+        }
+    }
 
     /*
-        * @private
-        * Update validation box (karma, buttons) according to widget state
-        */
-    _renderValidationInfo: function () {
-        var $validationElem = this.$('.o_quiz_js_quiz_validation');
-        $validationElem.empty().append(
-            renderToElement('quiz.validation', {'widget': this})
-        );
-    },
+     * Update validation box (karma, buttons) according to widget state
+     */
+    renderValidationInfo() {
+        const validationEl = this.el.querySelector(".o_quiz_js_quiz_validation");
+        validationEl.replaceChildren();
+        this.renderAt("quiz.validation", {
+            "widget": this,
+        }, validationEl);
+    }
 
     /**
      * Remove the answer decorators
      */
-     _resetQuiz: function () {
-        this.$('.o_quiz_js_quiz_question').each(function () {
-            var $question = $(this);
-            $question.find('a.o_quiz_quiz_answer').each(function () {
-                var $answer = $(this);
-                $answer.find('i.fa').addClass('d-none');
-                $answer.find('i.fa-circle').removeClass('d-none');
-                $answer.find('span.badge').remove();
-                $answer.find('input[type=radio]').prop('checked', false);
-            });
-            var $info = $question.find('.o_quiz_quiz_answer_info');
-            $info.remove();
-        });
+    resetQuiz() {
+        for (const questionEl of this.el.querySelectorAll(".o_quiz_js_quiz_question")) {
+            for (const answerEl of questionEl.querySelectorAll("a.o_quiz_quiz_answer")) {
+                for (const iEl of answerEl.querySelectorAll("i.fa")) {
+                    iEl.classList.add("d-none");
+                }
+                answerEl.querySelector("i.fa-circle").classList.remove("d-none");
+                answerEl.querySelector("span.badge")?.remove();
+                answerEl.querySelector("input[type=radio]").checked = false;
+            }
+            const infoEl = questionEl.querySelector(".o_quiz_quiz_answer_info");
+            infoEl?.remove();
+        }
         this.track.completed = false;
-        this._enableAnswers();
-        this._renderValidationInfo();
-    },
+        this.renderValidationInfo();
+    }
 
     /**
      * Submit a quiz and get the correction. It will display messages
      * according to quiz result.
-     *
-     * @private
      */
-    _submitQuiz: function () {
-        var self = this;
-
-        return rpc('/event_track/quiz/submit', {
-            event_id: self.track.eventId,
-            track_id: self.track.id,
-            answer_ids: this._getQuizAnswers(),
-        }).then(function (data) {
-            if (data.error) {
-                self._alertShow(data.error);
-            } else {
-                self.quiz = Object.assign(self.quiz, data);
-                self.quiz.quizPointsGained = data.quiz_points;
-                if (data.quiz_completed) {
-                    self._disableAnswers();
-                    self.track.completed = data.quiz_completed;
-                }
-                self._renderAnswersHighlightingAndComments();
-                self._renderValidationInfo();
-            }
-
-            return Promise.resolve(data);
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * When clicking on an answer, this one should be marked as "checked".
-     *
-     * @private
-     * @param OdooEvent ev
-     */
-    _onAnswerClick: function (ev) {
-        ev.preventDefault();
-        if (!this.track.completed) {
-            $(ev.currentTarget).find('input[type=radio]').prop('checked', true);
-        }
-    },
-
-    /**
-     * Resets the completion of the track so the user can take
-     * the quiz again
-     *
-     * @private
-     */
-    _onClickReset: function () {
-        rpc('/event_track/quiz/reset', {
+    async submitQuiz() {
+        const data = await this.waitFor(rpc("/event_track/quiz/submit", {
             event_id: this.track.eventId,
-            track_id: this.track.id
-        }).then(this._resetQuiz.bind(this));
-    },
-
-});
-
-publicWidget.registry.Quiz = publicWidget.Widget.extend({
-    selector: '.o_quiz_main',
-
-    //----------------------------------------------------------------------
-    // Public
-    //----------------------------------------------------------------------
-
-    /**
-     * @override
-     * @param {Object} parent
-     */
-    start: function () {
-        var self = this;
-        this.quizWidgets = [];
-        var defs = [this._super.apply(this, arguments)];
-        this.$('.o_quiz_js_quiz').each(function () {
-            var data = $(this).data();
-            data.quizData = {
-                questions: self._extractQuestionsAndAnswers(),
-                sessionAnswers: data.sessionAnswers || [],
-                quizKarmaMax: data.quizKarmaMax,
-                quizKarmaWon: data.quizKarmaWon,
-                quizKarmaGain: data.quizKarmaGain,
-                quizPointsGained: data.quizPointsGained,
-                quizAttemptsCount: data.quizAttemptsCount,
-            };
-            defs.push(new Quiz(self, data, data.quizData).attachTo($(this)));
-        });
-        return Promise.all(defs);
-    },
-
-    //----------------------------------------------------------------------
-    // Private
-    //---------------------------------------------------------------------
+            track_id: this.track.id,
+            answer_ids: this.getQuizAnswers(),
+        }));
+        if (data.error) {
+            this.alertShow(data.error);
+        } else {
+            this.quiz = Object.assign(this.quiz, data);
+            this.quiz.quizPointsGained = data.quiz_points;
+            if (data.quiz_completed) {
+                this.track.completed = data.quiz_completed;
+            }
+            this.renderAnswersHighlightingAndComments();
+            this.renderValidationInfo();
+        }
+        return data;
+    }
 
     /**
      * Extract data from exiting DOM rendered server-side, to have the list of questions with their
@@ -304,26 +193,49 @@ publicWidget.registry.Quiz = publicWidget.Widget.extend({
      *
      * @return {Array<Object>} list of questions with answers
      */
-    _extractQuestionsAndAnswers: function () {
-        var questions = [];
-        this.$('.o_quiz_js_quiz_question').each(function () {
-            var $question = $(this);
-            var answers = [];
-            $question.find('.o_quiz_quiz_answer').each(function () {
-                var $answer = $(this);
+    extractQuestionsAndAnswers() {
+        const questions = [];
+        for (const questionEl of this.el.querySelectorAll(".o_quiz_js_quiz_question")) {
+            const answers = [];
+            for (const answerEl of questionEl.querySelectorAll(".o_quiz_quiz_answer")) {
                 answers.push({
-                    id: $answer.data('answerId'),
-                    text: $answer.data('text'),
+                    id: answerEl.dataset.answerId,
+                    text: answerEl.dataset.text,
                 });
-            });
+            }
             questions.push({
-                id: $question.data('questionId'),
-                title: $question.data('title'),
+                id: questionEl.dataset.questionId,
+                title: questionEl.dataset.title,
                 answer_ids: answers,
             });
-        });
+        }
         return questions;
-    },
-});
+    }
 
-export default Quiz;
+    /**
+     * When clicking on an answer, this one should be marked as "checked".
+     * @param OdooEvent ev
+     * @param currentTargetEl
+     */
+    onAnswerClick(ev, currentTargetEl) {
+        if (!this.track.completed) {
+            currentTargetEl.querySelector("input[type=radio]").checked = true;
+        }
+    }
+
+    /**
+     * Resets the completion of the track so the user can take
+     * the quiz again
+     */
+    async onClickReset() {
+        await this.waitFor(rpc("/event_track/quiz/reset", {
+            event_id: this.track.eventId,
+            track_id: this.track.id
+        }));
+        this.resetQuiz();
+    }
+}
+
+registry
+    .category("public.interactions")
+    .add("website_event_track_quiz.quiz", Quiz);

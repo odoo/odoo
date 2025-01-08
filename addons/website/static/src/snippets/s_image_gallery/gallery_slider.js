@@ -1,12 +1,22 @@
-import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
-import { isVisible } from "@html_editor/utils/dom_info";
+import { registry } from "@web/core/registry";
 
+import { isVisible } from "@html_editor/utils/dom_info";
 
 export class GallerySlider extends Interaction {
     static selector = ".o_slideshow";
+    dynamicContent = {
+        ".carousel": {
+            "t-on-slide.bs.carousel": this.onSlideCarousel,
+            "t-on-slid.bs.carousel": this.onSlidCarousel,
+        },
+        ".carousel .carousel-indicators": {
+            "t-on-click": this.onClickIndicator,
+        },
+    };
 
     setup() {
+        this.hideOnClickIndicator = true;
         this.carouselEl = this.el.classList.contains("carousel") ? this.el : this.el.querySelector(".carousel");
         this.indicatorEl = this.carouselEl?.querySelector(".carousel-indicators");
         if (this.indicatorEl) {
@@ -40,20 +50,19 @@ export class GallerySlider extends Interaction {
             this.realNbPerPage = this.nbPerPage || 1;
             this.nbPages = Math.ceil(this.liEls.length / this.realNbPerPage);
         }
-        this.update();
+        this.onSlidCarousel();
     }
 
-    start() {
-        if (this.carouselEl) {
-            this.addListener(this.carouselEl, "slide.bs.carousel", this.slide);
-            this.addListener(this.carouselEl, "slid.bs.carousel", this.update);
+    destroy() {
+        if (this.prevEl) {
+            this.indicatorEl.prepend(this.prevEl);
         }
-        if (this.indicatorEl) {
-            this.addListener(this.indicatorEl, "click", this.clickIndicator);// Delegate on "> li:not([data-bs-slide-to])"
+        if (this.nextEl) {
+            this.indicatorEl.append(this.nextEl);
         }
     }
 
-    slide(ev) {
+    onSlideCarousel() {
         if (!this.carouselEl || !this.liEls) {
             return;
         }
@@ -70,7 +79,8 @@ export class GallerySlider extends Interaction {
             selectedLiEl?.classList.add("active");
         }, 0);
     }
-    clickIndicator(ev) {
+
+    onClickIndicator(ev) {
         // Delegate from this.indicatorEl.
         const dispatchedEl = ev.target.closest("li:not([data-bs-slide-to])");
         if (!dispatchedEl || dispatchedEl.parentElement !== this.indicatorEl) {
@@ -81,10 +91,11 @@ export class GallerySlider extends Interaction {
         window.Carousel.getOrCreateInstance(this.carouselEl).to(this.page * this.realNbPerPage);
         // We dont use hide() before the slide animation in the editor because there is a traceback
         // TO DO: fix this traceback
-        if (!this.editableMode) {
+        if (this.hideOnClickIndicator) {
             this.hide();
         }
     }
+
     hide() {
         for (let i = 0; i < this.liEls?.length; i++) {
             this.liEls[i].classList.toggle("d-none", i < this.page * this.nbPerPage || i >= (this.page + 1) * this.nbPerPage);
@@ -102,11 +113,12 @@ export class GallerySlider extends Interaction {
                 this.nextEl.remove();
             } else {
                 this.nextEl.classList.remove("d-none");
-                this.indicatorEl.appendChild(this.nextEl);
+                this.insert(this.nextEl, this.indicatorEl, "beforeend")
             }
         }
     }
-    update() {
+
+    onSlidCarousel() {
         if (this.liEls) {
             const active = [...this.liEls].filter((el) => el.classList.contains("active"));
             const index = active.length ? [...this.liEls].indexOf(active) : 0;
@@ -114,20 +126,9 @@ export class GallerySlider extends Interaction {
         }
         this.hide();
     }
-    destroy() {
-        if (this.prevEl) {
-            this.indicatorEl.prepend(this.prevEl);
-        }
-        if (this.nextEl) {
-            this.indicatorEl.append(this.nextEl);
-        }
-    }
+
 }
 
-registry.category("public.interactions").add("website.gallery_slider", GallerySlider);
-
 registry
-    .category("public.interactions.edit")
-    .add("website.gallery_slider", {
-        Interaction: GallerySlider,
-    });
+    .category("public.interactions")
+    .add("website.gallery_slider", GallerySlider);

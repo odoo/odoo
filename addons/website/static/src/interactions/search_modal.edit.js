@@ -1,12 +1,12 @@
-import { registry } from "@web/core/registry";
 import { SearchModal } from "./search_modal";
+import { registry } from "@web/core/registry";
 
 const SearchModalEdit = I => class extends I {
     dynamicContent = {
-        "_root": {
-            "t-on-show.bs.modal.prevent": () => {}
+        _root: {
+            "t-on-show.bs.modal.prevent": () => { },
         },
-    }
+    };
 };
 
 registry

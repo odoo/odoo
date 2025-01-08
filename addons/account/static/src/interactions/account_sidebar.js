@@ -1,69 +1,59 @@
+import { Sidebar } from "@portal/interactions/sidebar";
+import { registry } from "@web/core/registry";
+
 import { scrollTo } from "@web/core/utils/scrolling";
-import publicWidget from "@web/legacy/js/public/public_widget";
-import PortalSidebar from "@portal/js/portal_sidebar";
 
-publicWidget.registry.AccountPortalSidebar = PortalSidebar.extend({
-    selector: '.o_portal_invoice_sidebar',
-    events: {
-        'click .o_portal_invoice_print': '_onPrintInvoice',
-    },
+export class AccountSidebar extends Sidebar {
+    static selector = ".o_portal_invoice_sidebar";
+    dynamicContent = {
+        _window: { "t-on-resize": this.updateIframeSize },
+        ".o_portal_invoice_print": { "t-on-click.prevent.withTarget": this.onClickPrint },
+    };
 
-    /**
-     * @override
-     */
-    start: function () {
-        var def = this._super.apply(this, arguments);
+    setup() {
+        super.setup();
+        this.invoiceHTMLEl = undefined;
+    }
 
-        var $invoiceHtml = this.$el.find('iframe#invoice_html');
-        var updateIframeSize = this._updateIframeSize.bind(this, $invoiceHtml);
-
-        $(window).on('resize', updateIframeSize);
-
-        var iframeDoc = $invoiceHtml[0].contentDocument || $invoiceHtml[0].contentWindow.document;
+    start() {
+        super.start();
+        this.invoiceHTMLEl = document.querySelector("iframe");
+        const iframeDoc = this.invoiceHTMLEl.contentDocument || this.invoiceHTMLEl.contentWindow.document;
         if (iframeDoc.readyState === 'complete') {
-            updateIframeSize();
+            this.updateIframeSize();
         } else {
-            $invoiceHtml.on('load', updateIframeSize);
+            this.addListener(this.invoiceHTMLEl, "load", this.updateIframeSize);
         }
-
-        return def;
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+    }
 
     /**
      * Called when the iframe is loaded or the window is resized on customer portal.
      * The goal is to expand the iframe height to display the full report without scrollbar.
-     *
-     * @private
-     * @param {object} $el: the iframe
      */
-    _updateIframeSize: function ($el) {
-        var $wrapwrap = $el.contents().find('div#wrapwrap');
-        // Set it to 0 first to handle the case where scrollHeight is too big for its content.
-        $el.height(0);
-        $el.height($wrapwrap[0].scrollHeight);
-
+    updateIframeSize() {
+        const wrapwrapEl = this.invoiceHTMLEl.contentDocument.querySelector("div#wrapwrap");
+        this.invoiceHTMLEl.style.height = 0;
+        this.invoiceHTMLEl.style.height = wrapwrapEl.scrollHeight;
         // scroll to the right place after iframe resize
         const isAnchor = /^#[\w-]+$/.test(window.location.hash)
         if (!isAnchor) {
             return;
         }
-        var $target = $(window.location.hash);
-        if (!$target.length) {
+        const targetEl = document.querySelector(`${window.location.hash}`);
+        if (!targetEl) {
             return;
         }
-        scrollTo($target[0], { behavior: "instant" });
-    },
+        scrollTo(targetEl, { behavior: "instant" });
+    }
+
     /**
-     * @private
      * @param {MouseEvent} ev
      */
-    _onPrintInvoice: function (ev) {
-        ev.preventDefault();
-        var href = $(ev.currentTarget).attr('href');
-        this._printIframeContent(href);
-    },
-});
+    onClickPrint(ev, currentTargetEl) {
+        this.printIframeContent(currentTargetEl.getAttribute("href"));
+    }
+}
+
+registry
+    .category("public.interactions")
+    .add("account.account_sidebar", AccountSidebar);

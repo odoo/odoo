@@ -1,19 +1,20 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
+
 import {
     applyTextHighlight,
     removeTextHighlight,
     switchTextHighlight,
 } from "@website/js/text_processing";
 
-class TextHighlight extends Interaction {
-    static selector = '#wrapwrap'
+export class TextHighlight extends Interaction {
+    static selector = "#wrapwrap";
     dynamicContent = {
         _root: {
             "t-on-text_highlight_added": this.onTextHighlightAdded,
             "t-on-text_highlight_remove": this.onTextHighlightRemoved,
         },
-    }
+    };
 
     setup() {
         this.observerLock = new Map();
@@ -29,9 +30,7 @@ class TextHighlight extends Interaction {
                         return this.observerLock.set(target, false);
                     }
                     const topTextEl = target.closest(".o_text_highlight");
-                    for (const el of topTextEl ? [topTextEl]
-                        : target.querySelectorAll(".o_text_highlight")
-                    ) {
+                    for (const el of topTextEl ? [topTextEl] : target.querySelectorAll(".o_text_highlight")) {
                         textHighlightEls.add(el);
                     }
                 });
@@ -61,7 +60,7 @@ class TextHighlight extends Interaction {
      * @param {HTMLElement} el
      */
     closestToObserve(el) {
-        if (el === this.el || !el) {
+        if (!el || el === this.el) {
             return null;
         }
         if (window.getComputedStyle(el).display !== "inline") {
@@ -85,12 +84,11 @@ class TextHighlight extends Interaction {
         return [
             ...(closestToObserve ? [closestToObserve] : []),
             ...this.getTextHighlightItems(topTextEl),
-        ]
+        ];
     }
 
     /**
      * @param {HTMLElement} topTextEl
-     * be observed.
      */
     observeTextHighlightResize(topTextEl) {
         // The `ResizeObserver` cannot detect the width change on highlight
@@ -132,3 +130,9 @@ class TextHighlight extends Interaction {
 registry
     .category("public.interactions")
     .add("website.text_highlight", TextHighlight);
+
+registry
+    .category("public.interactions.edit")
+    .add("website.text_highlight", {
+        Interaction: TextHighlight,
+    });

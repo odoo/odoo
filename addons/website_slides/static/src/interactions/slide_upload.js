@@ -1,56 +1,41 @@
-import publicWidget from '@web/legacy/js/public/public_widget';
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { SlideUploadDialog } from "@website_slides/js/public/components/slide_upload_dialog/slide_upload_dialog";
 
-publicWidget.registry.websiteSlidesUpload = publicWidget.Widget.extend({
-    selector: '.o_wslides_js_slide_upload',
-    events: {
-        'click': '_onUploadClick',
-    },
+export class SlideUpload extends Interaction {
+    static selector = ".o_wslides_js_slide_upload";
+    dynamicContent = {
+        _root: {
+            "t-on-click.prevent": this.openDialog,
+        },
+    };
 
     /**
      * Automatically opens the upload dialog if requested from query string.
      * If openModal is defined ( === '' ), opens the category selection dialog.
      * If openModal is a category name, opens the category's upload dialog.
-     *
-     * @override
      */
-    start: function () {
-        if ('openModal' in this.$el.data()) {
-            this._openDialog(this.$el);
-            this.$el.data('openModal', false);
+    start() {
+        if ("openModal" in this.el.dataset) {
+            this.openDialog();
+            this.el.dataset.openModal = false;
         }
-        return this._super.apply(this, arguments);
-    },
+    }
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    _openDialog: function ($element) {
-        const dataset = $element.data();
-        this.call("dialog", "add", SlideUploadDialog, {
-            categoryId: dataset.categoryId,
-            channelId: dataset.channelId,
-            canPublish: dataset.canPublish === "True",
-            canUpload: dataset.canUpload === "True",
-            modulesToInstall: dataset.modulesToInstall || [],
-            openModal: dataset.openModal,
+    openDialog() {
+        const data = this.el.dataset;
+        this.services.dialog.add(SlideUploadDialog, {
+            categoryId: data.categoryId,
+            channelId: data.channelId,
+            canPublish: data.canPublish === "True",
+            canUpload: data.canUpload === "True",
+            modulesToInstall: data.modulesToInstall || [],
+            openModal: data.openModal,
         });
-    },
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+    }
+}
 
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onUploadClick: function (ev) {
-        ev.preventDefault();
-        this._openDialog($(ev.currentTarget));
-    },
-});
-
-export default {
-    websiteSlidesUpload: publicWidget.registry.websiteSlidesUpload
-};
+registry
+    .category("public.interactions")
+    .add("website_slides.slide_upload", SlideUpload);

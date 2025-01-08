@@ -1,36 +1,25 @@
-import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { patch } from "@web/core/utils/patch";
-import { isVisible } from "@web/core/utils/ui";
-
 import { closestScrollableY, isScrollableY } from "@web/core/utils/scrolling";
+import { isVisible } from "@web/core/utils/ui";
 import { AnchorSlide } from "@website/interactions/anchor_slide";
-
-const CLASS_NAME_DROPDOWN_ITEM = "dropdown-item";
-const CLASS_NAME_ACTIVE = "active";
-const SELECTOR_NAV_LIST_GROUP = ".nav, .list-group";
-const SELECTOR_NAV_LINKS = ".nav-link";
-const SELECTOR_NAV_ITEMS = ".nav-item";
-const SELECTOR_LIST_ITEMS = ".list-group-item";
-const SELECTOR_LINK_ITEMS = `${SELECTOR_NAV_LINKS}, ${SELECTOR_LIST_ITEMS}, .${CLASS_NAME_DROPDOWN_ITEM}`;
-const SELECTOR_DROPDOWN = ".dropdown";
-const SELECTOR_DROPDOWN_TOGGLE = ".dropdown-toggle";
 
 const getSelector = element => {
     let hrefAttr = element.getAttribute("href");
-    if (!hrefAttr || !hrefAttr.startsWith("#")) {
+    if (!hrefAttr?.startsWith("#")) {
         return null;
     }
-    const selector = hrefAttr && hrefAttr !== "#" ? hrefAttr.trim() : null;
-    return selector;
+    return hrefAttr !== "#" ? hrefAttr.trim() : null;
 };
 
 const parents = (element, selector) => {
     const parents = [];
-    let ancestor = element.parentNode.closest(selector);
+    let ancestor = element.parentElement.closest(selector);
     while (ancestor) {
         parents.push(ancestor);
-        ancestor = ancestor.parentNode.closest(selector);
+        ancestor = ancestor.parentElement.closest(selector);
     }
     return parents;
 };
@@ -49,9 +38,23 @@ const prev = (element, selector) => {
 export class TableOfContent extends Interaction {
     static selector = "section .s_table_of_content_navbar_sticky";
     dynamicContent = {
+        _root: {
+            "t-att-style": () => ({
+                "top": this.isHorizontal ? `${this.position}px` : undefined,
+            }),
+        },
+        ".s_table_of_content_navbar": {
+            "t-att-style": () => ({
+                "top": this.isHorizontal ? undefined : `${this.position}px`,
+                "maxHeight": this.isHorizontal ? undefined : `calc(100vh - ${this.position + 40}px)`,
+            }),
+        },
     };
 
     setup() {
+        this.position = 20;
+        this.isHorizontal = this.el.classList.contains("s_table_of_content_horizontal_navbar");
+
         this.scrollBound = this.process.bind(this);
         this.offsets = [];
         this.targets = [];
@@ -64,22 +67,13 @@ export class TableOfContent extends Interaction {
         this.scrollTarget = isScrollableY(this.scrollElement) ? this.scrollElement : this.scrollElement.ownerDocument.defaultView;
         this.tocElement = this.el.querySelector(".s_table_of_content_navbar");
         this.previousPosition = -1;
-        this.updateTableOfContentNavbarPosition();
-
-        this.registerCleanup(this.services.website_menus.registerCallback(this.updateTableOfContentNavbarPosition.bind(this)));
     }
 
     start() {
-        this.addListener(this.scrollTarget, "scroll", this.scrollBound);
-    }
+        this.updateTableOfContentNavbarPosition();
+        this.registerCleanup(this.services.website_menus.registerCallback(this.updateTableOfContentNavbarPosition.bind(this)));
 
-    destroy() {
-        this.el.style.top = "";
-        const navbarEl = this.el.querySelector(".s_table_of_content_navbar");
-        if (navbarEl) {
-            navbarEl.style.top = "";
-            navbarEl.style.maxHeight = "";
-        }
+        this.addListener(this.scrollTarget, "scroll", this.scrollBound);
     }
 
     //--------------------------------------------------------------------------
@@ -103,22 +97,21 @@ export class TableOfContent extends Interaction {
             // Do not start the scrollspy if the TOC is empty.
             return;
         }
-        let position = 0;
+
+        let position = 20;
         for (const el of this.el.ownerDocument.querySelectorAll(".o_top_fixed_element")) {
             position += el.getBoundingClientRect().bottom;
         }
-        const isHorizontalNavbar = this.el.classList.contains("s_table_of_content_horizontal_navbar");
-        this.el.style.top = isHorizontalNavbar ? `${position}px` : "";
-        const navbarEl = this.el.querySelector(".s_table_of_content_navbar");
-        navbarEl && (navbarEl.style.top = isHorizontalNavbar ? "" : `${position + 20}px`);
-        position += isHorizontalNavbar ? this.el.getBoundingClientRect().height : 0;
-        navbarEl && (navbarEl.style.maxHeight = isHorizontalNavbar ? "" : `calc(100vh - ${position + 40}px)`);
+        position += this.isHorizontal ? this.el.getBoundingClientRect().height : 0;
+        this.position = position;
+
         if (this.previousPosition !== position) {
             this.offset = position + 100;
             this.refresh();
             this.process();
-            this.previousPosition = position;
+            this.previousPosition = this.offset;
         }
+        this.updateContent();
     }
 
     getScrollHeight() {
@@ -129,7 +122,7 @@ export class TableOfContent extends Interaction {
         this.offsets = [];
         this.targets = [];
         this.scrollHeight = this.getScrollHeight();
-        const targets = [...this.tocElement.querySelectorAll(SELECTOR_LINK_ITEMS)];
+        const targets = [...this.tocElement.querySelectorAll(".nav-link, .list-group-item, .dropdown-item")];
         targets.map(element => {
             const targetSelector = getSelector(element);
             const target = targetSelector ? document.querySelector(targetSelector) : null;
@@ -158,30 +151,39 @@ export class TableOfContent extends Interaction {
         }
         this.activeTarget = target;
         this.clear();
-        const queries = SELECTOR_LINK_ITEMS.split(",").map(selector => `${selector}[href="${target}"]`);
+        const queries = ".nav-link, .list-group-item, .dropdown-item".split(",").map(selector => `${selector}[href="${target}"]`);
         const link = this.tocElement.querySelector(queries.join(","));
-        link.classList.add(CLASS_NAME_ACTIVE);
-        if (link.classList.contains(CLASS_NAME_DROPDOWN_ITEM)) {
-            link.closest(SELECTOR_DROPDOWN).querySelector(SELECTOR_DROPDOWN_TOGGLE).classList.add(CLASS_NAME_ACTIVE);
+        link.classList.add("active");
+        if (link.classList.contains("dropdown-item")) {
+            link.closest(".dropdown").querySelector(".dropdown-toggle").classList.add("active");
         } else {
-            parents(link, SELECTOR_NAV_LIST_GROUP).forEach(listGroup => {
+            const listGroupEls = parents(link, ".nav, .list-group");
+            for (const listGroupEl of listGroupEls) {
                 // Set triggered links parents as active
                 // With both <ul> and <nav> markup a parent is the previous sibling of any nav ancestor
-                prev(listGroup, `${SELECTOR_NAV_LINKS}, ${SELECTOR_LIST_ITEMS}`).forEach(item => item.classList.add(CLASS_NAME_ACTIVE)); // Handle special case when .nav-link is inside .nav-item
-                prev(listGroup, SELECTOR_NAV_ITEMS).forEach(navItem => {
-                    [...navItem.children].filter(child => child.matches(SELECTOR_NAV_LINKS)).forEach(item => item.classList.add(CLASS_NAME_ACTIVE));
-                });
-            });
+                const itemEls = prev(listGroupEl, ".nav-link, .list-group-item");
+                for (const itemEl of itemEls) {
+                    itemEl.classList.add("active")
+                }
+                // Handle special case when .nav-link is inside .nav-item
+                const navItemEls = prev(listGroupEl, ".nav-item");
+                for (const navItemEl of navItemEls) {
+                    for (const childEl of navItemEl.children) {
+                        if (childEl.matches(".nav-link")) {
+                            childEl.classList.add("active")
+                        }
+                    }
+                }
+            }
         }
     }
 
     clear() {
-        [...this.tocElement.querySelectorAll(SELECTOR_LINK_ITEMS)].filter(node => node.classList.contains(CLASS_NAME_ACTIVE)).forEach(node => node.classList.remove(CLASS_NAME_ACTIVE));
+        const itemEls = this.tocElement.querySelectorAll(".nav-link, .list-group-item, .dropdown-item");
+        for (const itemEl of itemEls) {
+            itemEl.classList.remove("active");
+        }
     }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
 
     process() {
         const scrollTop = this.scrollElement.scrollTop + this.offset;
@@ -202,7 +204,11 @@ export class TableOfContent extends Interaction {
             this.clear();
         } else {
             for (let i = this.offsets.length; i--;) {
-                const isActiveTarget = this.activeTarget !== this.targets[i] && scrollTop >= this.offsets[i] && (typeof this.offsets[i + 1] === "undefined" || scrollTop < this.offsets[i + 1]);
+                const isActiveTarget =
+                    this.activeTarget !== this.targets[i]
+                    && scrollTop >= this.offsets[i]
+                    && (typeof this.offsets[i + 1] === "undefined"
+                        || scrollTop < this.offsets[i + 1]);
 
                 if (isActiveTarget) {
                     this.activate(this.targets[i]);
@@ -240,4 +246,6 @@ registry
 
 registry
     .category("public.interactions.edit")
-    .add("website.table_of_content", { Interaction: TableOfContent });
+    .add("website.table_of_content", {
+        Interaction: TableOfContent,
+    });

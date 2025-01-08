@@ -259,7 +259,7 @@
         'web.assets_tests': [
             'website/static/tests/tour_utils/focus_blur_snippets_options.js',
             'website/static/tests/tour_utils/website_preview_test.js',
-            'website/static/tests/tour_utils/widget_lifecycle_dep_widget.js',
+            'website/static/tests/tour_utils/lifecycle_dep_interaction.js',
             'website/static/tests/tours/**/*',
         ],
         'web.assets_backend': [
@@ -307,6 +307,7 @@
         'web.assets_unit_tests_setup': [
             'web/static/src/legacy/js/core/class.js',
             'web/static/src/legacy/js/public/lazyloader.js',
+            'web/static/src/legacy/js/public/minimal_dom.js',
             'web/static/src/legacy/js/public/public_widget.js',
             'web/static/src/legacy/js/public/public_root.js',
             'website/static/lib/multirange/*.js',
@@ -314,10 +315,11 @@
             'website/static/src/utils/**/*',
             'website/static/src/interactions/**/*',
             'website/static/src/snippets/**/*.js',
-            ('remove', 'website/static/src/snippets/**/000.js'),
             ('remove', 'website/static/src/snippets/**/options.js'),
             'website/static/src/snippets/**/*.xml',
             'website/static/src/xml/**/*.xml',
+            ('remove', 'website/static/src/xml/website.editor.xml'),
+            ('remove', 'website/static/src/xml/web_editor.xml'),
             'website/static/src/snippets/s_table_of_content/000.scss',
             'google_recaptcha/static/src/js/recaptcha.js',
         ],

@@ -1,28 +1,26 @@
-import publicWidget from '@web/legacy/js/public/public_widget';
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { parseDate } from '@web/core/l10n/dates';
 
-publicWidget.registry.ProjectRatingImage = publicWidget.Widget.extend({
-    selector: '.o_portal_project_rating .o_rating_image',
+export class ProjectRatingImage extends Interaction {
+    static selector = ".o_portal_project_rating .o_rating_image";
 
-    /**
-     * @override
-     */
-    start: function () {
-        this.$el.popover({
-            placement: 'bottom',
-            trigger: 'hover',
+    start() {
+        window.Popover.getOrCreateInstance(this.el, {
+            placement: "bottom",
+            trigger: "hover",
             html: true,
-            content: function () {
-                var $elem = $(this);
-                var id = $elem.data('id');
-                var ratingDate = $elem.data('rating-date');
-                var baseDate = parseDate(ratingDate);
-                var duration = baseDate.toRelative();
-                var $rating = $('#rating_' + id);
-                $rating.find('.rating_timeduration').text(duration);
-                return $rating.html();
+            content: () => {
+                const duration = parseDate(this.el.dataset.ratingDate).toRelative();
+                const ratingEl = document.querySelector('#rating_' + this.el.dataset.id);
+                ratingEl.querySelector(".rating_timeduration").textContent = duration;
+                return ratingEl.outerHTML;
             },
         });
-        return this._super.apply(this, arguments);
-    },
-});
+    }
+}
+
+registry
+    .category("public.interactions")
+    .add("project.project_rating_image", ProjectRatingImage);

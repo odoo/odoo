@@ -1,39 +1,43 @@
-import { describe, expect, test } from "@odoo/hoot";
+import {
+    startInteractions,
+    setupInteractionWhiteList,
+} from "@web/../tests/public/helpers";
 
-import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
+import { describe, expect, test } from "@odoo/hoot";
 import { advanceTime } from "@odoo/hoot-mock";
 
 setupInteractionWhiteList("website.countdown");
+
 describe.current.tags("interaction_dev");
 
 const getTemplate = function (options = {}) {
     return `
-    <div style="background-color: white;">
-        <section class="s_countdown pt48 pb48"
-        data-display="dhms"
-        data-end-action="nothing"
-        data-size="175"
-        data-layout="circle"
-        data-layout-background="none"
-        data-progress-bar-style="surrounded"
-        data-progress-bar-weight="thin"
-        id="countdown-section"
-        data-text-color="o-color-1"
-        data-layout-background-color="400"
-        data-progress-bar-color="o-color-1"
-        data-end-time="12345678900">
-            <div class="container">
-                <div class="s_countdown_canvas_wrapper"
-                style="
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;">
+        <div style="background-color: white;">
+            <section class="s_countdown pt48 pb48"
+            data-display="dhms"
+            data-end-action="nothing"
+            data-size="175"
+            data-layout="circle"
+            data-layout-background="none"
+            data-progress-bar-style="surrounded"
+            data-progress-bar-weight="thin"
+            id="countdown-section"
+            data-text-color="o-color-1"
+            data-layout-background-color="400"
+            data-progress-bar-color="o-color-1"
+            data-end-time="12345678900">
+                <div class="container">
+                    <div class="s_countdown_canvas_wrapper"
+                    style="
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;">
+                    </div>
                 </div>
-            </div>
-        </section>
-    </div>
+            </section>
+        </div>
     `
-}
+};
 
 const getCommonLength = function (data1, data2, data3) {
     const length1 = data1.length;
@@ -44,7 +48,7 @@ const getCommonLength = function (data1, data2, data3) {
     } else {
         return 0;
     }
-}
+};
 
 const wasDataChanged = function (data1, data2, l) {
     for (let i = 0; i < l; i++) {
@@ -57,7 +61,7 @@ const wasDataChanged = function (data1, data2, l) {
 
 test("countdown is started when there is an element .s_countdown", async () => {
     const { core } = await startInteractions(getTemplate());
-    expect(core.interactions.length).toBe(1);
+    expect(core.interactions).toHaveLength(1);
 });
 
 /**

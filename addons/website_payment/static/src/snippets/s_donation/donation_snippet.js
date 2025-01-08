@@ -1,152 +1,104 @@
+
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { formatCurrency } from "@web/core/currency";
-import { _t } from "@web/core/l10n/translation";
-import publicWidget from '@web/legacy/js/public/public_widget';
 import { rpc } from "@web/core/network/rpc";
+import { _t } from "@web/core/l10n/translation";
 
 const CUSTOM_BUTTON_EXTRA_WIDTH = 10;
 let cachedCurrency;
 
-publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
-    selector: '.s_donation',
-    disabledInEditableMode: false,
-    events: {
-        'click .s_donation_btn': '_onClickPrefilledButton',
-        'click .s_donation_donate_btn': '_onClickDonateNowButton',
-        'input #s_donation_range_slider': '_onInputRangeSlider',
-    },
+export class DonationSnippet extends Interaction {
+    static selector = ".s_donation";
+    dynamicContent = {
+        ".s_donation_btn": {
+            "t-on-click.withTarget": this.onClickPrefilled,
+            "t-att-class": (el) => ({ "active": el === this.activeButtonEl }),
+        },
+        ".s_donation_donate_btn": { "t-on-click.withTarget": this.onClickDonate },
+        "#s_donation_range_slider": { "t-on-input": this.onInputRangeSlider },
+    };
 
-    /**
-     * @override
-     */
-    async start() {
-        await this._super(...arguments);
-        this.$rangeSlider = this.$('#s_donation_range_slider');
+    setup() {
+        this.currency = null;
+        this.activeButtonEl = null;
+        this.rangeSliderEl = this.el.querySelector('#s_donation_range_slider');
         this.defaultAmount = this.el.dataset.defaultAmount;
-        if (this.$rangeSlider.length) {
-            this.$rangeSlider.val(this.defaultAmount);
-            this._setBubble(this.$rangeSlider);
+        if (!!this.rangeSliderEl) {
+            this.rangeSliderEl.value = this.defaultAmount;
+            this.setBubble();
         }
-        await this._displayCurrencies();
+    }
+
+    async willStart() {
+        cachedCurrency ||= await this.waitFor(rpc("/website/get_current_currency"));
+        this.currency = cachedCurrency;
+    }
+
+    start() {
+        const prefilledButtonEls = this.el.querySelectorAll('.s_donation_btn, .s_range_bubble');
+        for (const prefilledButtonEl of prefilledButtonEls) {
+            const insertBefore = this.currency.position === "before";
+            const currencyEl = document.createElement('span');
+            currencyEl.innerText = this.currency.symbol;
+            currencyEl.classList.add('s_donation_currency', insertBefore ? "pe-1" : "ps-1");
+            this.insert(currencyEl, prefilledButtonEl, insertBefore ? "afterbegin" : "beforeend");
+        }
+
         const customButtonEl = this.el.querySelector("#s_donation_amount_input");
         if (customButtonEl) {
+            this.registerCleanup(() => { customButtonEl.style.maxWidth = "" });
             const canvasEl = document.createElement("canvas");
             const context = canvasEl.getContext("2d");
             context.font = window.getComputedStyle(customButtonEl).font;
             const width = context.measureText(customButtonEl.placeholder).width;
             customButtonEl.style.maxWidth = `${Math.ceil(width) + CUSTOM_BUTTON_EXTRA_WIDTH}px`;
         }
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        const customButtonEl = this.el.querySelector("#s_donation_amount_input");
-        if (customButtonEl) {
-            customButtonEl.style.maxWidth = "";
-        }
-        this.$el.find('.s_donation_currency').remove();
-        this._deselectPrefilledButtons();
-        this.$('.alert-danger').remove();
-        this._super(...arguments);
-    },
+    }
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _deselectPrefilledButtons() {
-        this.$('.s_donation_btn').removeClass('active');
-    },
-    /**
-     * @private
-     * @param {jQuery} $range
-     */
-    _setBubble($range) {
-        const $bubble = this.$('.s_range_bubble');
-        const val = $range.val();
-        const min = $range[0].min || 0;
-        const max = $range[0].max || 100;
+    setBubble() {
+        const bubbleEl = this.el.querySelector('.s_range_bubble');
+        const val = this.rangeSliderEl.value;
+        const min = this.rangeSliderEl.min || 0;
+        const max = this.rangeSliderEl.max || 100;
         const newVal = Number(((val - min) * 100) / (max - min));
         const tipOffsetLow = 8 - (newVal * 0.16); // the range thumb size is 16px*16px. The '8' and the '0.16' are related to that 16px (50% and 1% of 16px)
-        $bubble.contents().filter(function () {
-            return this.nodeType === 3;
-        }).replaceWith(val);
 
-        // Sorta magic numbers based on size of the native UI thumb (source: https://css-tricks.com/value-bubbles-for-range-inputs/)
-        $bubble[0].style.insetInlineStart = `calc(${newVal}% + (${tipOffsetLow}px))`;
-    },
-    /**
-     * @private
-     */
-    _displayCurrencies() {
-        return this._getCachedCurrency().then((result) => {
-            // No need to recreate the elements if the currency is already set.
-            if (this.currency === result) {
-                return;
+        for (const child of bubbleEl.childNodes) {
+            if (child.nodeType === 3) {
+                child.nodeValue = val;
             }
-            this.currency = result;
-            this.$('.s_donation_currency').remove();
-            const $prefilledButtons = this.$('.s_donation_btn, .s_range_bubble');
-            $prefilledButtons.toArray().forEach((button) => {
-                const before = result.position === "before";
-                const $currencySymbol = document.createElement('span');
-                $currencySymbol.innerText = result.symbol;
-                $currencySymbol.classList.add('s_donation_currency', before ? "pe-1" : "ps-1");
-                if (before) {
-                    $(button).prepend($currencySymbol);
-                } else {
-                    $(button).append($currencySymbol);
-                }
-            });
-        });
-    },
-    /**
-     * @private
-     */
-    _getCachedCurrency() {
-        return cachedCurrency
-            ? Promise.resolve(cachedCurrency)
-            : rpc("/website/get_current_currency").then((result) => {
-                cachedCurrency = result;
-                return result;
-            });
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onClickPrefilledButton(ev) {
-        const $button = $(ev.currentTarget);
-        this._deselectPrefilledButtons();
-        $button.addClass('active');
-        if (this.$rangeSlider.length) {
-            this.$rangeSlider.val($button[0].dataset.donationValue);
-            this._setBubble(this.$rangeSlider);
         }
-    },
+        // Sorta magic numbers based on size of the native UI thumb (source: https://css-tricks.com/value-bubbles-for-range-inputs/)
+        bubbleEl.style.insetInlineStart = `calc(${newVal}% + (${tipOffsetLow}px))`;
+    }
+
     /**
-     * @private
+     * @param {Event} ev
+     * @param {HTMLElement} currentTargetEl
      */
-    _onClickDonateNowButton(ev) {
-        if (this.editableMode) {
-            return;
-        };
-        this.$('.alert-danger').remove();
-        const $buttons = this.$('.s_donation_btn');
-        const $selectedButton = $buttons.filter('.active');
-        let amount = $selectedButton.length ? $selectedButton[0].dataset.donationValue : 0;
+    onClickPrefilled(ev, currentTargetEl) {
+        this.activeButtonEl = currentTargetEl;
+        if (this.rangeSliderEl) {
+            this.rangeSliderEl.value = this.activeButtonEl.dataset.donationValue;
+            this.setBubble();
+        }
+    }
+
+    /**
+     * @param {Event} ev
+     * @param {HTMLElement} currentTargetEl
+     */
+    onClickDonate(ev, currentTargetEl) {
+        this.el.querySelector('.alert-danger')?.remove();
+        const donationButtonEls = this.el.querySelectorAll('.s_donation_btn');
+        let amount = this.activeButtonEl ? parseFloat(this.activeButtonEl.dataset.donationValue) : 0;
         if (this.el.dataset.displayOptions && !amount) {
-            if (this.$rangeSlider.length) {
-                amount = this.$rangeSlider.val();
-            } else if ($buttons.length) {
-                amount = parseFloat(this.$('#s_donation_amount_input').val());
+            if (this.rangeSliderEl) {
+                amount = parseFloat(this.rangeSliderEl.value);
+            } else if (donationButtonEls.length) {
+                amount = parseFloat(this.el.querySelector('#s_donation_amount_input').value);
                 let errorMessage = '';
                 const minAmount = parseFloat(this.el.dataset.minimumAmount);
                 if (!amount) {
@@ -160,10 +112,10 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
                     );
                 }
                 if (errorMessage) {
-                    $(ev.currentTarget).before($('<p>', {
-                        class: 'alert alert-danger',
-                        text: errorMessage,
-                    }));
+                    const pEl = document.createElement("p");
+                    pEl.classList.add("alert", "alert-danger");
+                    pEl.innerText = errorMessage;
+                    this.insert(pEl, currentTargetEl, "beforebegin");
                     return;
                 }
             }
@@ -171,22 +123,32 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
         if (!amount) {
             amount = this.defaultAmount;
         }
-        const $form = this.$('.s_donation_form');
-        $('<input>').attr({type: 'hidden', name: 'amount', value: amount}).appendTo($form);
-        $('<input>').attr({type: 'hidden', name: 'currency_id', value: this.currency.id}).appendTo($form);
-        $('<input>').attr({type: 'hidden', name: 'csrf_token', value: odoo.csrf_token}).appendTo($form);
-        $('<input>').attr({type: 'hidden', name: 'donation_options', value: JSON.stringify(this.el.dataset)}).appendTo($form);
-        $form.submit();
-    },
-    /**
-     * @private
-     */
-    _onInputRangeSlider(ev) {
-        this._deselectPrefilledButtons();
-        this._setBubble($(ev.currentTarget));
-    },
-});
+        const formEl = this.el.querySelector('.s_donation_form');
 
-export default {
-    DonationSnippet: publicWidget.registry.DonationSnippet,
-};
+        const inputsParams = [
+            ["amount", amount],
+            ["currency_id", this.currency.id],
+            ["csrf_token", odoo.csrf_token],
+            ["donation_options", JSON.stringify(this.el.dataset)],
+        ];
+
+        for (const inputParams of inputsParams) {
+            const inputEl = document.createElement("input");
+            inputEl.setAttribute("type", "hidden");
+            inputEl.setAttribute("name", inputParams[0]);
+            inputEl.setAttribute("value", inputParams[1]);
+            this.insert(inputEl, formEl);
+        }
+
+        formEl.submit();
+    }
+
+    onInputRangeSlider() {
+        this.activeButtonEl = null;
+        this.setBubble();
+    }
+}
+
+registry
+    .category("public.interactions")
+    .add("website_payment.donation_snippet", DonationSnippet);

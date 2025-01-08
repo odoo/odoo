@@ -1,9 +1,10 @@
-import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { rpc } from "@web/core/network/rpc";
-import { uniqueId } from "@web/core/utils/functions";
-import { renderToElement } from "@web/core/utils/render";
 import { listenSizeChange, utils as uiUtils } from "@web/core/ui/ui_service";
+import { uniqueId } from "@web/core/utils/functions";
+import { renderToFragment } from "@web/core/utils/render";
 
 import { markup } from "@odoo/owl";
 
@@ -16,6 +17,11 @@ export class DynamicSnippet extends Interaction {
         "[data-url]": {
             "t-on-click": this.callToAction,
         },
+        _root: {
+            "t-att-class": () => ({
+                "o_dynamic_snippet_empty": !this.isVisible,
+            }),
+        },
     };
 
     setup() {
@@ -27,89 +33,90 @@ export class DynamicSnippet extends Interaction {
          * @type {*|jQuery.fn.init|jQuery|HTMLElement}
          */
         this.data = [];
-        this.renderedContentEl = document.createTextNode("");
+        this.renderedContentNode = document.createDocumentFragment();
         this.uniqueId = uniqueId("s_dynamic_snippet_");
         this.templateKey = "website.s_dynamic_snippet.grid";
+        this.isVisible = true;
+        this.withSample = false;
     }
+
     async willStart() {
         return this.fetchData();
     }
+
     start() {
         this.registerCleanup(listenSizeChange(this.render.bind(this)));
-        // TODO Editor behavior.
-        // this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
         this.render();
-        // TODO Editor behavior.
-        // this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
     }
+
     destroy() {
-        // TODO Editor behavior.
-        // this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
         this.toggleVisibility(false);
         // Clear content.
         const templateAreaEl = this.el.querySelector(".dynamic_snippet_template");
         // Nested interactions are stopped implicitly.
         templateAreaEl.replaceChildren();
-        // TODO Editor behavior.
-        // this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
     }
+
     /**
-     * Method to be overridden in child components if additional configuration elements
-     * are required in order to fetch data.
+     * To be overridden
+     * Check if additional configuration elements are required in order to fetch data.
      */
     isConfigComplete() {
         return this.el.dataset.filterId !== undefined && this.el.dataset.templateKey !== undefined;
     }
+
     /**
-     * Method to be overridden in child components in order to provide a search
-     * domain if needed.
+     * To be overridden
+     * Provide a search domain if needed.
      */
     getSearchDomain() {
         return [];
     }
+
     /**
-     * Method to be overridden in child components in order to add custom parameters if needed.
+     * To be overridden
+     * Add custom parameters if needed.
      */
     getRpcParameters() {
         return {};
     }
-    /**
-     * Fetches the data.
-     */
+
     async fetchData() {
         if (this.isConfigComplete()) {
             const nodeData = this.el.dataset;
-            const filterFragments = await rpc(
+            const filterFragments = await this.waitFor(rpc(
                 "/website/snippet/filters",
                 Object.assign({
-                        "filter_id": parseInt(nodeData.filterId),
-                        "template_key": nodeData.templateKey,
-                        "limit": parseInt(nodeData.numberOfRecords),
-                        "search_domain": this.getSearchDomain(),
-                        "with_sample": this.editableMode,
-                    },
+                    "filter_id": parseInt(nodeData.filterId),
+                    "template_key": nodeData.templateKey,
+                    "limit": parseInt(nodeData.numberOfRecords),
+                    "search_domain": this.getSearchDomain(),
+                    "with_sample": this.withSample,
+                },
                     this.getRpcParameters(),
                     JSON.parse(this.el.dataset?.customTemplateData || "{}")
                 )
-            );
+            ));
             this.data = filterFragments.map(markup);
         } else {
             this.data = [];
         }
     }
+
     /**
-     * Method to be overridden in child components in order to prepare content
-     * before rendering.
+     * To be overridden
+     * Prepare the content before rendering.
      */
     prepareContent() {
-        this.renderedContentEl = renderToElement(
+        this.renderedContentNode = renderToFragment(
             this.templateKey,
             this.getQWebRenderOptions()
         );
     }
+
     /**
-     * Method to be overridden in child components in order to prepare QWeb
-     * options.
+     * To be overridden
+     * Prepare QWeb options.
      */
     getQWebRenderOptions() {
         const dataset = this.el.dataset;
@@ -129,13 +136,14 @@ export class DynamicSnippet extends Interaction {
             columnClasses: dataset.columnClasses || "",
         };
     }
+
     render() {
-        if (this.data.length > 0 || this.editableMode) {
-            this.el.classList.remove("o_dynamic_snippet_empty");
+        if (this.data.length > 0 || this.withSample) {
+            this.isVisible = true;
             this.prepareContent();
         } else {
-            this.el.classList.add("o_dynamic_snippet_empty");
-            this.renderedContentEl = document.createTextNode("");
+            this.isVisible = false;
+            this.renderedContentNode = document.createDocumentFragment();
         }
         this.renderContent();
         // TODO What was this about ? Rendered content is already started.
@@ -143,6 +151,7 @@ export class DynamicSnippet extends Interaction {
         //     this.services["public.interactions"].startInteractions(childEl);
         // }
     }
+
     renderContent() {
         const templateAreaEl = this.el.querySelector(".dynamic_snippet_template");
         this.services["public.interactions"].stopInteractions(templateAreaEl);
@@ -152,7 +161,7 @@ export class DynamicSnippet extends Interaction {
             allContentLink.href = mainPageUrl;
             allContentLink.classList.remove("d-none");
         }
-        templateAreaEl.replaceChildren(this.renderedContentEl);
+        templateAreaEl.replaceChildren(this.renderedContentNode);
         // TODO this is probably not the only public widget which creates DOM
         // which should be attached to another public widget. Maybe a generic
         // method could be added to properly do this operation of DOM addition.
@@ -170,29 +179,27 @@ export class DynamicSnippet extends Interaction {
                     delete carouselEl.dataset.bsInterval;
                 }
                 window.Carousel.getInstance(carouselEl)?.dispose();
-                if (!this.editableMode) {
+                if (!this.withSample) {
                     window.Carousel.getOrCreateInstance(carouselEl);
                 }
             });
         }, 0);
     }
+
     /**
-     *
-     * @param visible
+     * @param {Boolean} visible
      */
     toggleVisibility(visible) {
-        this.el.classList.toggle("o_dynamic_snippet_empty", !visible);
+        this.isVisible = visible;
     }
+
     /**
+     * To be overriden
      * Returns the main URL of the module related to the active filter.
      */
     getMainPageUrl() {
         return "";
     }
-
-    //------------------------------------- -------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
 
     /**
      * Navigates to the call to action url.
@@ -202,4 +209,6 @@ export class DynamicSnippet extends Interaction {
     }
 }
 
-registry.category("public.interactions").add("website.dynamic_snippet", DynamicSnippet);
+registry
+    .category("public.interactions")
+    .add("website.dynamic_snippet", DynamicSnippet);

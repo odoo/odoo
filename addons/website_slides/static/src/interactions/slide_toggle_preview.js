@@ -1,32 +1,32 @@
-    import publicWidget from '@web/legacy/js/public/public_widget';
-    import { rpc } from "@web/core/network/rpc";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 
-    publicWidget.registry.websiteSlidesSlideToggleIsPreview = publicWidget.Widget.extend({
-        selector: '.o_wslides_js_slide_toggle_is_preview',
-        events: {
-            'click': '_onPreviewSlideClick',
+import { rpc } from "@web/core/network/rpc";
+
+export class SlideTogglePreview extends Interaction {
+    static selector = ".o_wslides_js_slide_toggle_is_preview";
+    dynamicContent = {
+        _root: {
+            "t-on-click.prevent": this.toggleSlidePreview,
+            "t-att-class": () => ({
+                "text-bg-success": this.isPreview,
+                "text-bg-light": !this.isPreview,
+                "badge-hide": !this.isPreview,
+                "border": !this.isPreview,
+            }),
         },
-
-        _toggleSlidePreview: function($slideTarget) {
-            rpc('/slides/slide/toggle_is_preview', {
-                slide_id: $slideTarget.data('slideId')
-            }).then(function (isPreview) {
-                if (isPreview) {
-                    $slideTarget.removeClass('text-bg-light badge-hide border');
-                    $slideTarget.addClass('text-bg-success');
-                } else {
-                    $slideTarget.removeClass('text-bg-success');
-                    $slideTarget.addClass('text-bg-light badge-hide border');
-                }
-            });
-        },
-
-        _onPreviewSlideClick: function (ev) {
-            ev.preventDefault();
-            this._toggleSlidePreview($(ev.currentTarget));
-        },
-    });
-
-    export default {
-        websiteSlidesSlideToggleIsPreview: publicWidget.registry.websiteSlidesSlideToggleIsPreview
     };
+
+    setup() {
+        this.isPreview = false;
+    }
+
+    async toggleSlidePreview() {
+        const isPreview = await this.waitFor(rpc('/slides/slide/toggle_is_preview', { slide_id: this.el.dataset.slideId }));
+        this.isPreview = !!isPreview;
+    }
+}
+
+registry
+    .category("public.interactions")
+    .add("website_slides.slide_toggle_preview", SlideTogglePreview);

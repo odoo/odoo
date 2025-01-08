@@ -1,161 +1,139 @@
-import { renderToElement, renderToFragment } from "@web/core/utils/render";
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { post } from "@web/core/network/http_service";
 import { redirect } from "@web/core/utils/urls";
 
-publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
-    selector: '.o_wbooth_registration',
-    events: {
-        'change input[name="booth_category_id"]': '_onChangeBoothType',
-        'change .form-check > input[type="checkbox"]': '_onChangeBooth',
-        'click .o_wbooth_registration_submit': '_onSubmitBoothSelectionClick',
-        'click .o_wbooth_registration_confirm': '_onConfirmRegistrationClick',
-    },
+export class BoothRegistration extends Interaction {
+    static selector = ".o_wbooth_registration";
+    dynamicContent = {
+        "input[name='booth_category_id']": {
+            "t-on-change.prevent.withTarget": this.onChangeBoothType,
+        },
+        ".form-check > input[type='checkbox']": {
+            "t-on-change.withTarget": this.onChangeBooth,
+        },
+        ".o_wbooth_registration_submit": {
+            "t-on-click.prevent": this.onClickSubmit,
+        },
+        ".o_wbooth_registration_confirm": {
+            "t-on-click.prevent.stop.withTarget": this.onClickConfirm,
+        },
+        ".o_wbooth_registration_error_section": {
+            "t-att-class": () => ({
+                "d-none": !this.inError,
+            }),
+        },
+        "button.o_wbooth_registration_submit": {
+            "t-att-disabled": () => this.isSelectionEmpty ? true : undefined,
+        },
+    };
 
-    start() {
-        this.eventId = parseInt(this.el.dataset.eventId);
-        this.activeBoothCategoryId = false;
+    setup() {
+        this.inError = false;
         this.boothCache = {};
-        this.boothsFirstRendering = true;
+        this.isFirstRender = true;
+
+        this.eventId = parseInt(this.el.dataset.eventId);
+
+        this.activeBoothCategoryId = false;
         this.selectedBoothIds = [];
-        return this._super.apply(this, arguments).then(() => {
-            this.selectedBoothCategory = this.el.querySelector('input[name="booth_category_id"]:checked');
-            if (this.selectedBoothCategory) {
-                this.selectedBoothIds = this.el.querySelector('.o_wbooth_booths').dataset.selectedBoothIds.split(',').map(Number);
-                this.activeBoothCategoryId = this.selectedBoothCategory.value;
-                this._fetchBoothsAndUpdateUI();
-            }
-        });
-    },
+        this.selectedBoothCategory = this.el.querySelector('input[name="booth_category_id"]:checked');
+        if (this.selectedBoothCategory) {
+            const boothEl = this.el.querySelector('.o_wbooth_booths');
+            this.selectedBoothIds = boothEl.dataset.selectedBoothIds.split(',').map(Number);
+            this.activeBoothCategoryId = this.selectedBoothCategory.value;
+            this.updateAvailableBoothsUI();
+        }
+    }
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    _check_booths_availability(eventBoothIds) {
-        const self = this;
-        return rpc("/event/booth/check_availability", {
+    async checkBoothsAvailability(eventBoothIds) {
+        const data = await this.waitFor(rpc("/event/booth/check_availability", {
             event_booth_ids: eventBoothIds,
-        }).then(function (result) {
-            if (result.unavailable_booths.length) {
-                for (const el of self.el.querySelectorAll("input[name='event_booth_ids']")) {
-                    if (result.unavailable_booths.includes(parseInt(el.value))) {
-                        el.closest(".form-check").classList.add("text-danger");
-                    }
-                }
-                self.el
-                    .querySelector(".o_wbooth_unavailable_booth_alert")
-                    .classList.remove("d-none");
-                return Promise.resolve(false);
-            }
-            return Promise.resolve(true);
-        })
-    },
-
-    _countSelectedBooths() {
-        return this.el.querySelectorAll(".form-check > input[type='checkbox']:checked").length;
-    },
-
-    _fillBooths() {
-        const boothsElem = this.el.querySelector('.o_wbooth_booths');
-        boothsElem.replaceChildren(renderToFragment('event_booth_checkbox_list', {
-            'event_booth_ids': this.boothCache[this.activeBoothCategoryId],
-            'selected_booth_ids': this.boothsFirstRendering ? this.selectedBoothIds : [],
         }));
+        if (data && data.unavailable_booths.length) {
+            const boothIdEls = this.el.querySelectorAll("input[name='event_booth_ids']");
+            for (const boothIdEl of boothIdEls) {
+                if (data.unavailable_booths.includes(parseInt(boothIdEl.value))) {
+                    boothIdEl.closest(".form-check").classList.add("text-danger");
+                }
+            }
+            const unavailableBoothAlertEl = this.el.querySelector(".o_wbooth_unavailable_booth_alert");
+            unavailableBoothAlertEl.classList.remove("d-none");
+            return false;
+        }
+        return true;
+    }
 
-        this.boothsFirstRendering = false;
-    },
+    countSelectedBooths() {
+        return this.el.querySelectorAll(".form-check > input[type='checkbox']:checked").length;
+    }
+
+    updateBoothsList() {
+        const boothsElem = this.el.querySelector('.o_wbooth_booths');
+        boothsElem.replaceChildren();
+        this.renderAt("event_booth_checkbox_list", {
+            'event_booth_ids': this.boothCache[this.activeBoothCategoryId],
+            'selected_booth_ids': this.isFirstRender ? this.selectedBoothIds : [],
+        }, boothsElem);
+        this.isFirstRender = false;
+    }
 
     /**
      * Check if the confirmation form is valid by testing each of its inputs
      *
-     * @private
      * @param formEl
      * @return {boolean} - true if no errors else false
      */
-    _isConfirmationFormValid(formEl) {
+    checkConfirmationForm(formEl) {
+        const formControlEls = formEl.querySelectorAll(".form-control");
         const formErrors = [];
-        for (const el of formEl.querySelectorAll(".form-control")) {
-            el.classList.remove("is-invalid");
-            if (!el.checkValidity()) {
-                el.classList.add("is-invalid");
+        for (const formControlEl of formControlEls) {
+            formControlEl.classList.remove("is-invalid");
+            if (!formControlEl.checkValidity()) {
+                formControlEl.classList.add("is-invalid");
                 formErrors.push('invalidFormInputs');
             }
         }
-
-        this._updateErrorDisplay(formErrors);
+        this.updateErrorDisplay(formErrors);
         return formErrors.length === 0;
-    },
+    }
 
-    _showBoothCategoryDescription() {
-        for (const el of this.el.querySelectorAll(".o_wbooth_booth_category_description")) {
-            el.classList.add("d-none");
+    showBoothCategoryDescription() {
+        const boothCategoryDescriptionEls = this.el.querySelectorAll(".o_wbooth_booth_category_description");
+        for (const boothCategoryDescriptionEl of boothCategoryDescriptionEls) {
+            boothCategoryDescriptionEl.classList.add("d-none");
         }
-        this.el
-            .querySelector("#o_wbooth_booth_description_" + this.activeBoothCategoryId)
-            .classList.remove("d-none");
-    },
+        const activeBoothEl = this.el.querySelector("#o_wbooth_booth_description_" + this.activeBoothCategoryId);
+        activeBoothEl.classList.remove("d-none");
+    }
 
     /**
      * Display the errors with a custom message when confirming
      * the registration if there is any.
      *
-     * @private
      * @param errors
      */
-    _updateErrorDisplay(errors) {
-        this.el
-            .querySelector(".o_wbooth_registration_error_section")
-            .classList.toggle("d-none", !errors.length);
+    updateErrorDisplay(errors) {
+        this.inError = errors.length;
 
-        let errorMessages = [];
-        const errorMessageEl = this.el.querySelector(".o_wbooth_registration_error_message");
-
+        const errorMessages = [];
         if (errors.includes('invalidFormInputs')) {
             errorMessages.push(_t("Please fill out the form correctly."));
         }
-
         if (errors.includes('boothError')) {
             errorMessages.push(_t("Booth registration failed."));
         }
-
         if (errors.includes('boothCategoryError')) {
             errorMessages.push(_t("The booth category doesn't exist."));
         }
 
+        const errorMessageEl = this.el.querySelector(".o_wbooth_registration_error_message");
         errorMessageEl.textContent = errorMessages.join(" ");
         errorMessageEl.dispatchEvent(new Event("change"));
-    },
-
-    _updateUiAfterBoothCategoryChange() {
-        this._fillBooths();
-        this._showBoothCategoryDescription();
-        this._updateUiAfterBoothChange(this._countSelectedBooths());
-    },
-
-    _updateUiAfterBoothChange(boothCount) {
-        const buttonEl = this.el.querySelector("button.o_wbooth_registration_submit");
-        if (buttonEl) {
-            buttonEl.disabled = !boothCount;
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    _onChangeBooth(ev) {
-        ev.currentTarget.closest(".form-check").classList.remove("text-danger");
-        this._updateUiAfterBoothChange(this._countSelectedBooths());
-    },
-
-    _onChangeBoothType(ev) {
-        ev.preventDefault();
-        this.activeBoothCategoryId = parseInt(ev.currentTarget.value);
-        this._fetchBoothsAndUpdateUI();
-    },
+    }
 
     /**
      * Load all the booths related to the activeBoothCategoryId booth category and
@@ -163,77 +141,83 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
      * user change the booth category.
      *
      * Then the selection input will be filled with the fetched booth values.
-     *
-     * @private
      */
-    _fetchBoothsAndUpdateUI() {
+    async updateAvailableBoothsUI() {
         if (this.boothCache[this.activeBoothCategoryId] === undefined) {
-            var self = this;
-            rpc('/event/booth_category/get_available_booths', {
+            const data = await this.waitFor(rpc('/event/booth_category/get_available_booths', {
                 event_id: this.eventId,
                 booth_category_id: this.activeBoothCategoryId,
-            }).then(function (result) {
-                self.boothCache[self.activeBoothCategoryId] = result;
-                self._updateUiAfterBoothCategoryChange();
-            });
-        } else {
-            this._updateUiAfterBoothCategoryChange();
+            }));
+            if (data) {
+                this.boothCache[this.activeBoothCategoryId] = data;
+            }
         }
-    },
-
-    async _onSubmitBoothSelectionClick(ev) {
-        ev.preventDefault();
-        const formEl = this.el.querySelector(".o_wbooth_registration_form");
-        const eventBoothIds = [
-            ...this.el.querySelectorAll("input[name=event_booth_ids]:checked"),
-        ].map((el) => parseInt(el.value));
-        if (await this._check_booths_availability(eventBoothIds)) {
-            formEl.submit();
-        }
-    },
+        this.updateBoothsList();
+        this.showBoothCategoryDescription();
+        this.isSelectionEmpty = !!this.countSelectedBooths().length;
+    }
 
     /**
-     * Submit the confirmation form if no errors are present after validation.
-     *
-     * If the submission succeed, we replace the form with a success message template.
-     *
-     * @param ev
-     * @return {Promise<void>}
-     * @private
+     * @param {Event} ev
+     * @param {HTMLElement} currentTargetEl
      */
-    async _onConfirmRegistrationClick(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
+    onChangeBoothType(ev, currentTargetEl) {
+        this.activeBoothCategoryId = parseInt(currentTargetEl.value);
+        this.updateAvailableBoothsUI();
+    }
 
-        ev.currentTarget.classList.add("disabled");
-        ev.currentTarget.disabled = true;
+    /**
+     * @param {Event} ev
+     * @param {HTMLElement} currentTargetEl
+     */
+    onChangeBooth(ev, currentTargetEl) {
+        currentTargetEl.closest(".form-check").classList.remove("text-danger");
+        this.isSelectionEmpty = !!this.countSelectedBooths().length;
+    }
+
+    async onClickSubmit() {
+        const selectedBoothEls = this.el.querySelectorAll("input[name=event_booth_ids]:checked");
+        const selectedBoothIds = [...selectedBoothEls].map((el) => parseInt(el.value));
+        const data = await this.waitFor(this.checkBoothsAvailability(selectedBoothIds));
+        if (data) {
+            this.el.querySelector(".o_wbooth_registration_form").submit();
+        }
+    }
+
+    /**
+     * @param {Event} ev
+     * @param {HTMLElement} currentTargetEl
+     */
+    async onClickConfirm(ev, currentTargetEl) {
+        currentTargetEl.classList.add("disabled");
+        currentTargetEl.disabled = true;
 
         const formEl = this.el.querySelector("#o_wbooth_contact_details_form");
-        if (this._isConfirmationFormValid(formEl)) {
+        if (this.checkConfirmationForm(formEl)) {
             const formData = new FormData(formEl);
-            const jsonResponse = await post(`/event/${encodeURIComponent(this.el.dataset.eventId)}/booth/confirm`, formData);
+            const jsonResponse = await this.waitFor(post(`/event/${encodeURIComponent(this.el.dataset.eventId)}/booth/confirm`, formData));
             if (jsonResponse.success) {
                 this.el.querySelector('.o_wevent_booth_order_progress').remove();
                 const boothCategoryId = this.el.querySelector('input[name=booth_category_id]').value;
-                const boothRegistrationCompleteFormEl = renderToElement("event_booth_registration_complete", {
+                this.renderAt("event_booth_registration_complete", {
                     booth_category_id: boothCategoryId,
                     event_id: this.eventId,
                     event_name: jsonResponse.event_name,
                     contact: jsonResponse.contact,
-                });
-                formEl.insertAdjacentElement("afterend", boothRegistrationCompleteFormEl);
+                }, formEl, "afterend");
                 formEl.remove();
             } else if (jsonResponse.redirect) {
                 redirect(jsonResponse.redirect);
             } else if (jsonResponse.error) {
-                this._updateErrorDisplay(jsonResponse.error);
+                this.updateErrorDisplay(jsonResponse.error);
             }
         }
 
-        ev.currentTarget.classList.remove("disabled");
-        ev.currentTarget.removeAttribute("disabled");
-    },
+        currentTargetEl.classList.remove("disabled");
+        currentTargetEl.removeAttribute("disabled");
+    }
+}
 
-});
-
-export default publicWidget.registry.boothRegistration;
+registry
+    .category("public.interactions")
+    .add("website_event_booth.booth_registration", BoothRegistration);

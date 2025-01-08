@@ -1,102 +1,83 @@
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
+import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { scrollTo } from "@web_editor/js/common/scrolling";
-import publicWidget from "@web/legacy/js/public/public_widget";
-import { share } from "./contentshare";
 
-publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
-    selector: '.website_blog',
-    events: {
-        'click #o_wblog_next_container': '_onNextBlogClick',
-        'click #o_wblog_post_content_jump': '_onContentAnchorClick',
-        'click .o_twitter, .o_facebook, .o_linkedin, .o_google, .o_twitter_complete, .o_facebook_complete, .o_linkedin_complete, .o_google_complete': '_onShareArticle',
-    },
-
-    /**
-     * @override
-     */
-    start: function () {
-        document.querySelectorAll(".js_tweet, .js_comment").forEach((el) => {
-            share(el);
-        });
-        return this._super.apply(this, arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+export class WebsiteBlog extends Interaction {
+    static selector = ".website_blog";
+    dynamicContent = {
+        "#o_wblog_next_container": {
+            "t-on-click.prevent": this.onNextBlogClick,
+        },
+        "#o_wblog_post_content_jump": {
+            "t-on-click.prevent": this.onContentAnchorClick,
+        },
+        ".o_twitter, .o_facebook, .o_linkedin, .o_google, .o_twitter_complete, .o_facebook_complete, .o_linkedin_complete, .o_google_complete": {
+            "t-on-click.prevent": this.onShareArticle,
+        },
+    };
 
     /**
-     * @private
      * @param {Event} ev
      */
-    _onNextBlogClick: function (ev) {
-        ev.preventDefault();
-        const nexInfo = ev.currentTarget.querySelector("#o_wblog_next_post_info").dataset;
+    async onNextBlogClick(ev) {
+        const nextInfo = ev.currentTarget.querySelector("#o_wblog_next_post_info").dataset;
         const recordCoverContainerEl = ev.currentTarget.querySelector(".o_record_cover_container");
-        const classes = nexInfo.size.split(" ");
-        recordCoverContainerEl.classList.add(...classes, nexInfo.textContent);
+        const classes = nextInfo.size.split(" ");
+        recordCoverContainerEl.classList.add(...classes, nextInfo.textContent);
         ev.currentTarget.querySelectorAll(".o_wblog_toggle").forEach(el => el.classList.toggle("d-none"));
         // Appending a placeholder so that the cover can scroll to the top of the
         // screen, regardless of its height.
-        const placeholder = document.createElement('div');
-        placeholder.style.minHeight = '100vh';
-        this.el.querySelector("#o_wblog_next_container").append(placeholder);
+        const placeholder = document.createElement("div");
+        placeholder.style.minHeight = "100vh";
+        this.insert(placeholder, this.el.querySelector("#o_wblog_next_container"), "beforeend");
+        await this.forumScrollAction(ev.currentTarget, 300, () => browser.location.href = nextInfo.url);
+    }
 
-        // Use setTimeout() to calculate the 'offset()'' only after that size classes
-        // have been applyed and that $el has been resized.
-        setTimeout(() => {
-            this._forumScrollAction(ev.currentTarget, 300, function () {
-                window.location.href = nexInfo.url;
-            });
-        });
-    },
     /**
-     * @private
      * @param {Event} ev
      */
-    _onContentAnchorClick: function (ev) {
-        ev.preventDefault();
+    async onContentAnchorClick(ev) {
         ev.stopImmediatePropagation();
         const currentTargetEl = document.querySelector(ev.currentTarget.hash);
 
-        this._forumScrollAction(currentTargetEl, 500, function () {
-            window.location.hash = 'blog_content';
-        });
-    },
+        await this.forumScrollAction(currentTargetEl, 500, () => browser.location.hash = "blog_content");
+    }
+
     /**
-     * @private
      * @param {Event} ev
      */
-    _onShareArticle: function (ev) {
-        ev.preventDefault();
+    onShareArticle(ev) {
         let url = "";
         const blogPostTitle = document.querySelector("#o_wblog_post_name").textContent || "";
-        const articleURL = window.location.href;
+        const articleURL = browser.location.href;
         if (ev.currentTarget.classList.contains("o_twitter")) {
             const tweetText = _t("Amazing blog article: %(title)s! Check it live: %(url)s", {
                 title: blogPostTitle,
                 url: articleURL,
             });
-            url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=' + encodeURIComponent(tweetText);
+            url = "https://twitter.com/intent/tweet?tw_p=tweetbutton&text=" + encodeURIComponent(tweetText);
         } else if (ev.currentTarget.classList.contains("o_facebook")) {
-            url = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(articleURL);
+            url = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(articleURL);
         } else if (ev.currentTarget.classList.contains("o_linkedin")) {
-            url = 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(articleURL);
+            url = "https://www.linkedin.com/sharing/share-offsite/?url=" + encodeURIComponent(articleURL);
         }
-        window.open(url, '', 'menubar=no, width=500, height=400');
-    },
-
-    //--------------------------------------------------------------------------
-    // Utils
-    //--------------------------------------------------------------------------
+        window.open(url, "", "menubar=no, width=500, height=400");
+    }
 
     /**
-     * @private
      * @param {HTMLElement} el - the element we are scrolling to
      * @param {Integer} duration - scroll animation duration
      * @param {Function} callback - to be executed after the scroll is performed
      */
-    _forumScrollAction: function (el, duration, callback) {
-        scrollTo(el, { duration: duration }).then(() => callback());
-    },
-});
+    async forumScrollAction(el, duration, callback) {
+        await this.waitFor(scrollTo(el, { duration }));
+        callback();
+    }
+}
+
+registry
+    .category("public.interactions")
+    .add("website_blog.website_blog", WebsiteBlog);

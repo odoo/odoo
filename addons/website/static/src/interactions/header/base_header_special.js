@@ -1,12 +1,12 @@
-import { registry } from "@web/core/registry";
 import { BaseHeader } from "@website/interactions/header/base_header";
+import { registry } from "@web/core/registry";
 
 export class BaseHeaderSpecial extends BaseHeader {
     dynamicSelectors = {
         ...this.dynamicSelectors,
         _dropdown: () => this.hideEl?.querySelector(".dropdown-toggle"),
         _searchbar: () => this.searchbarEl,
-    }
+    };
     dynamicContent = {
         ...this.dynamicContent,
         _dropdown: {
@@ -15,7 +15,7 @@ export class BaseHeaderSpecial extends BaseHeader {
         _searchbar: {
             "t-on-input": this.onSearchbarInput,
         },
-    }
+    };
 
     setup() {
         super.setup();
@@ -54,8 +54,6 @@ export class BaseHeaderSpecial extends BaseHeader {
     }
 
     onScroll() {
-        super.onScroll();
-
         const scroll = this.scrollingElement.scrollTop;
 
         this.atTop = (scroll <= this.topGap);
@@ -75,13 +73,11 @@ export class BaseHeaderSpecial extends BaseHeader {
             this.toggleCSSAffixed(false);
         }
 
+        this.el.style.setProperty("transition", (this.hideEl && scroll < this.hideElHeight) && this.transitionActive ? "none" : "");
+
         if (this.isVisible && this.hideEl) {
             this.forcedScroll = Math.min(scroll, this.hideElHeight);
-            if (scroll < this.hideElHeight && this.transitionActive) {
-                this.el.style.setProperty("transition", "none");
-            }
             this.el.style.transform = this.atTop ? "" : `translate(0, -${this.forcedScroll + this.topGap}px)`;
-            this.waitForTimeout(() => this.el.style.removeProperty("transition"), 0);
         }
 
         if (!this.cssAffixed && this.dropdownClickedEl) {

@@ -1,28 +1,33 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
-class FaqHorizontal extends Interaction {
+export class FaqHorizontal extends Interaction {
     static selector = ".s_faq_horizontal";
+    dynamicContent = {
+        ".s_faq_horizontal_entry_title": {
+            "t-att-style": () => ({
+                "top": `${this.offset}px`,
+                "maxHeight": `calc(100vh - ${this.offset + 40}px)`,
+            }),
+        },
+    };
 
     setup() {
-        this.titles = this.el.getElementsByClassName("s_faq_horizontal_entry_title");
-        this.registerCleanup(this.services.website_menus.registerCallback(this.updateTitlesPosition.bind(this)));
+        this.offset = 16;
     }
 
     start() {
         this.updateTitlesPosition();
+        this.registerCleanup(this.services.website_menus.registerCallback(this.updateTitlesPosition.bind(this)));
     }
 
     updateTitlesPosition() {
-        let position = 16; // Add 1rem equivalent in px to provide a visual gap by default
-        for (const el of document.querySelectorAll(".o_top_fixed_element")) {
-            position += el.getBoundingClientRect().bottom;
+        let offset = 16; // Add 1rem equivalent in px to provide a visual gap by default
+        for (const el of this.el.ownerDocument.querySelectorAll(".o_top_fixed_element")) {
+            offset += el.getBoundingClientRect().bottom;
         }
-
-        for (const title of this.titles) {
-            title.style.top = `${position}px`;
-            title.style.maxHeight = `calc(100vh - ${position + 40}px)`;
-        }
+        this.offset = offset;
+        this.updateContent();
     }
 }
 
@@ -32,4 +37,6 @@ registry
 
 registry
     .category("public.interactions.edit")
-    .add("website.faq_horizontal", { Interaction: FaqHorizontal });
+    .add("website.faq_horizontal", {
+        Interaction: FaqHorizontal,
+    });

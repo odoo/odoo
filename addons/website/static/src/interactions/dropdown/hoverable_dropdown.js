@@ -7,13 +7,13 @@ export class HoverableDropdown extends Interaction {
     static selector = "header.o_hoverable_dropdown";
     dynamicContent = {
         ".dropdown": {
-            "t-on-mouseenter": this.onMouseEnter,
-            "t-on-mouseleave": this.onMouseLeave,
+            "t-on-mouseenter.withTarget": this.onMouseEnter,
+            "t-on-mouseleave.withTarget": this.onMouseLeave,
         },
         ".dropdown-menu": {
             "t-att-style": () => ({
-                "top": this.isSmall ? "" : "unset",
-                "margin-top": this.isSmall ? "" : "0",
+                "top": this.isSmall() ? "" : "unset",
+                "margin-top": this.isSmall() ? "" : "0",
             }),
         },
         _window: {
@@ -35,15 +35,15 @@ export class HoverableDropdown extends Interaction {
     }
 
     /**
-     * @param {Event} ev
+     * @param {Event} dropdownEl
      * @param {boolean} show
      */
-    updateDropdownVisibility(ev, show) {
-        const dropdownToggleEl = ev.currentTarget.querySelector(".dropdown-toggle");
+    updateDropdownVisibility(dropdownEl, show) {
+        const dropdownToggleEl = dropdownEl.querySelector(".dropdown-toggle");
         if (
-            this.isSmall
+            this.isSmall()
             || !dropdownToggleEl
-            || ev.currentTarget.closest(".o_extra_menu_items")
+            || dropdownEl.closest(".o_extra_menu_items")
         ) {
             return;
         }
@@ -53,14 +53,15 @@ export class HoverableDropdown extends Interaction {
 
     /**
      * @param {Event} ev
+     * @param {HTMLElement} currentTargetEl
      */
-    onMouseEnter(ev) {
+    onMouseEnter(ev, currentTargetEl) {
         const focusedEl = this.el.ownerDocument.querySelector(":focus")
             || window.frameElement?.ownerDocument.querySelector(":focus");
 
         // The user must click on the dropdown if he is on mobile (no way to
         // hover) or if the dropdown is the (or in the) extra menu ('+').
-        this.updateDropdownVisibility(ev, true);
+        this.updateDropdownVisibility(currentTargetEl, true);
 
         // Keep the focus on the previously focused element if any, otherwise do
         // not focus the dropdown on hover.
@@ -76,13 +77,13 @@ export class HoverableDropdown extends Interaction {
 
     /**
      * @param {Event} ev
+     * @param {HTMLElement} currentTargetEl
      */
-    onMouseLeave(ev) {
-        this.updateDropdownVisibility(ev, false);
+    onMouseLeave(ev, targelEl) {
+        this.updateDropdownVisibility(targelEl, false);
     }
 
     onResize() {
-        this.isSmall = uiUtils.getSize() < SIZES.LG;
         for (const dropdownMenuEl of this.dropdownMenuEls) {
             dropdownMenuEl.setAttribute("data-bs-popper", "none");
         }

@@ -1,83 +1,57 @@
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { rpc } from "@web/core/network/rpc";
-import publicWidget from "@web/legacy/js/public/public_widget";
 
-publicWidget.registry.MailGroupMessage = publicWidget.Widget.extend({
-    selector: '.o_mg_message',
-    events: {
-        'click .o_mg_link_hide': '_onHideLinkClick',
-        'click .o_mg_link_show': '_onShowLinkClick',
-        'click button.o_mg_read_more': '_onReadMoreClick',
-    },
+export class MailGroupMessage extends Interaction {
+    static selector = ".o_mg_message";
+    dynamicContent = {
+        ".o_mg_link_hide": {
+            "t-on-click.prevent.stop": () => this.isShown = false,
+            "t-att-class": () => ({ "d-none": !this.isShown }),
+        },
+        ".o_mg_link_show": {
+            "t-on-click.prevent.stop": () => this.isShown = true,
+            "t-att-class": () => ({ "d-none": !this.isShown }),
+        },
+        ".o_mg_link_content": { "t-att-class": () => ({ "d-none": this.isShown }) },
+        "button.o_mg_read_more": { "t-on-click": this.onClickReadMore },
+    };
 
-    /**
-     * @override
-     */
-    start: function () {
+    setup() {
+        this.isShown = true;
+
         // By default hide the mention of the previous email for which we reply
         // And add a button "Read more" to show the mention of the parent email
-        const body = this.$el.find('.card-body').first();
-        const quoted = body.find('*[data-o-mail-quote]');
-        const readMore = $('<button class="btn btn-light btn-sm ms-1"/>').text('. . .');
-        quoted.first().before(readMore);
-        readMore.on('click', () => {
-            quoted.toggleClass('visible');
-        });
+        const quoted = this.el.querySelector(".card-body *[data-o-mail-quote]");
+        const readMore = document.createElement("button");
+        readMore.classList.add("btn btn-light btn-sm ms-1");
+        readMore.innerText = ". . .";
+        quoted.insertBefore(readMore);
+        readMore.addEventListener("click", () => quoted.classList.toggle("visible"));
+    }
 
-        return this._super.apply(this, arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onHideLinkClick: function (ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        const $link = $(ev.currentTarget);
-        const $container = $link.closest('.o_mg_link_parent');
-        $container.find('.o_mg_link_hide').first().addClass('d-none');
-        $container.find('.o_mg_link_show').first().removeClass('d-none');
-        $container.find('.o_mg_link_content').first().removeClass('d-none');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onShowLinkClick: function (ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        const $link = $(ev.currentTarget);
-        const $container = $link.closest('.o_mg_link_parent');
-        $container.find('.o_mg_link_hide').first().removeClass('d-none');
-        $container.find('.o_mg_link_show').first().addClass('d-none');
-        $container.find('.o_mg_link_content').first().addClass('d-none');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-     _onReadMoreClick: function (ev) {
-        const $link = $(ev.target);
-        rpc($link.data('href'), {
-            last_displayed_id: $link.data('last-displayed-id'),
-        }).then(function (data) {
-            if (!data) {
-                return;
+    async onClickReadMore(ev) {
+        const data = await this.waitFor(rpc(ev.target.getAttribute('href'), {
+            last_displayed_id: ev.target.dataset.listDisplayedId,
+        }));
+        if (data) {
+            const threadContainer = ev.target.closest(".o_mg_replies")?.querySelector("ul.list-unstyled");
+            if (threadContainer) {
+                const messages = threadContainer.querySelectorAll(":scope > li.media");
+                let lastMessage = messages[messages.length - 1];
+                const newMessages = data.querySelector("ul.list-unstyled").querySelectorAll(":scope > li.media");
+                for (const newMessage in newMessages) {
+                    this.insert(newMessage, lastMessage, "afterend");
+                    lastMessage = newMessage;
+                }
+                this.insert(data.querySelector('.o_mg_read_more').parentElement, threadContainer);
             }
-            const $threadContainer = $link.parents('.o_mg_replies').first().find('ul.list-unstyled').first();
-            if ($threadContainer) {
-                const $data = $(data);
-                const $lastMsg = $threadContainer.children('li.media').last();
-                const $newMessages = $data.find('ul.list-unstyled').first().children('li.media');
-                $newMessages.insertAfter($lastMsg);
-                $data.find('.o_mg_read_more').parent().appendTo($threadContainer);
-            }
-            const $showMore = $link.parent();
-            $showMore.remove();
-        });
-     },
-});
+            ev.target.parentElement.remove();
+        }
+    }
+}
+
+registry
+    .category("public.interactions")
+    .add("mail_group.mail_group_message", MailGroupMessage);

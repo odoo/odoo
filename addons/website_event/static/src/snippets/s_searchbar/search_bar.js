@@ -1,11 +1,8 @@
-import publicWidget from '@web/legacy/js/public/public_widget';
+import { patch } from "@web/core/utils/patch";
+import { SearchBar } from "@website/snippets/s_searchbar/search_bar";
 
-publicWidget.registry.searchBar.include({
-    /**
-     *
-     * @override
-     */
-    _getFieldsNames() {
-        return [...this._super(), 'address_name'];
+patch(SearchBar.prototype, {
+    getFieldsNames() {
+        return [...super.getFieldsNames(), "address_name"];
     }
 });

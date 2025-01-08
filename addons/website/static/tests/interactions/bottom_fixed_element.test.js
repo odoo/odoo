@@ -1,13 +1,13 @@
-import { describe, expect, test } from "@odoo/hoot";
-
 import {
     startInteractions,
     setupInteractionWhiteList,
 } from "@web/../tests/public/helpers";
 
+import { describe, expect, test } from "@odoo/hoot";
 import { scroll } from "@odoo/hoot-dom";
 
 setupInteractionWhiteList("website.bottom_fixed_element");
+
 describe.current.tags("interaction_dev");
 
 const scrollTo = async function (el, scrollTarget, bottomFixedElement) {
@@ -32,33 +32,31 @@ const scrollToBottom = async function (el, bottomFixedElement) {
 }
 
 const getTemplate = function (options = {}) {
-    const withButtonCenter = options.withButtonCenter || false;
     const withButtonLeft = options.withButtonLeft || false;
+    const withButtonCenter = options.withButtonCenter || false;
 
-    const emptyDiv = `<div style="height: 50px; width: 150px;"></div>`
-    const buttonEl = `<a href="#" style="background-color: white; border: solid; height: 50px; width: 150px;"></a>`
+    const emptyDiv = `<div style="height: 50px; width: 150px;"></div>`;
+    const buttonEl = `<a href="#" style="background-color: white; border: solid; height: 50px; width: 150px;"></a>`;
 
     return `
-    <header style="height: 50px; background-color: #CCCCFF;">
-    </header>
-    <main style="height: 2000px; background-color: #CCFFCC;">
-        <div class="o_bottom_fixed_element" style="height: 100px; width: 100px; background-color: black;">
-        </div>
-    </main>
-    <footer style="height: 500px; background-color: #FFCCCC; display: flex; justify-content: space-between; align-items: end;">
-        ${withButtonLeft ? buttonEl : emptyDiv}
-        ${withButtonCenter ? buttonEl : emptyDiv}
-        ${emptyDiv}
-    </footer >
-    `
+        <header style="height: 50px; background-color: #CCCCFF;"></header>
+        <main style="height: 2000px; background-color: #CCFFCC;">
+            <div class="o_bottom_fixed_element" style="height: 100px; width: 100px; background-color: black;"></div>
+        </main>
+        <footer style="height: 500px; background-color: #FFCCCC; display: flex; justify-content: space-between; align-items: end;">
+            ${withButtonLeft ? buttonEl : emptyDiv}
+            ${withButtonCenter ? buttonEl : emptyDiv}
+            ${emptyDiv}
+        </footer>
+    `;
 }
 
 test("bottom_fixed_element is started when there is an element #wrapwrap", async () => {
     const { core } = await startInteractions(getTemplate());
-    expect(core.interactions.length).toBe(1);
+    expect(core.interactions).toHaveLength(1);
 });
 
-test("show button fixed element when over no button (0 button present)", async () => {
+test("show button fixed element when over no button (0 button)", async () => {
     const { el } = await startInteractions(getTemplate({ withButtonCenter: false, withButtonLeft: false }));
     el.style.overflowY = "scroll";
     const bottomFixedElement = el.querySelector(".o_bottom_fixed_element");
@@ -68,7 +66,7 @@ test("show button fixed element when over no button (0 button present)", async (
     expect(bottomFixedElement).not.toHaveClass("o_bottom_fixed_element_hidden");
 });
 
-test("show button fixed element when over no button (1 button present)", async () => {
+test("show button fixed element when over no button (1 button)", async () => {
     const { el } = await startInteractions(getTemplate({ withButtonCenter: false, withButtonLeft: true }));
     el.style.overflowY = "scroll";
     const bottomFixedElement = el.querySelector(".o_bottom_fixed_element");
@@ -78,7 +76,7 @@ test("show button fixed element when over no button (1 button present)", async (
     expect(bottomFixedElement).not.toHaveClass("o_bottom_fixed_element_hidden");
 });
 
-test("hide button fixed element when over one button (1 button present)", async () => {
+test("hide button fixed element when over one button (1 button)", async () => {
     const { el } = await startInteractions(getTemplate({ withButtonCenter: true, withButtonLeft: false }));
     el.style.overflowY = "scroll";
     const bottomFixedElement = el.querySelector(".o_bottom_fixed_element");
@@ -88,7 +86,7 @@ test("hide button fixed element when over one button (1 button present)", async 
     expect(bottomFixedElement).toHaveClass("o_bottom_fixed_element_hidden");
 });
 
-test("hide button fixed element when over one button (2 button present)", async () => {
+test("hide button fixed element when over one button (2 buttons)", async () => {
     const { el } = await startInteractions(getTemplate({ withButtonCenter: true, withButtonLeft: true }));
     el.style.overflowY = "scroll";
     const bottomFixedElement = el.querySelector(".o_bottom_fixed_element");

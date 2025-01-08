@@ -17,8 +17,11 @@ Module holding mail improvements for website. It holds the follow widget.
     'auto_install': True,
     'assets': {
         'web.assets_frontend': [
-            'website_mail/static/src/js/follow.js',
+            'website_mail/static/src/interactions/follow.js',
             'website_mail/static/src/css/website_mail.scss',
+        ],
+        'web.assets_edit_frontend': [
+            'website/static/src/interactions/follow.edit.js',
         ],
     },
     'license': 'LGPL-3',

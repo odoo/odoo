@@ -1,16 +1,16 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-dom";
-
 import {
     startInteractions,
     setupInteractionWhiteList,
 } from "@web/../tests/public/helpers";
 
+import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-dom";
+
 setupInteractionWhiteList("website.text_highlight");
+
 describe.current.tags("interaction_dev");
 
-const getTemplate = function (options = {}) {
-    return `
+const highlightTemplate = `
     <p>
         Great stories have a <b>personality</b>.
         <span class="o_text_highlight o_translate_inline o_text_highlight_circle_1" style="--text-highlight-width: 2px;">
@@ -23,16 +23,15 @@ const getTemplate = function (options = {}) {
         </span>
          Writing a story with personality for potential clients will assist with making a relationship connection. This shows up in small quirks like word choices or phrases. Write from your point of view, not from someone else's experience.
     </p>
-    `
-}
+`;
 
 test("text_highlight is started when there is an element #wrapwrap", async () => {
-    const { core } = await startInteractions(getTemplate());
-    expect(core.interactions.length).toBe(1);
+    const { core } = await startInteractions(highlightTemplate);
+    expect(core.interactions).toHaveLength(1);
 });
 
 test("[resize] update the number of highlight items when necessary", async () => {
-    const { el } = await startInteractions(getTemplate());
+    const { el } = await startInteractions(highlightTemplate);
     el.querySelector("div").style.width = "1000px";
 
     // Ensure the update is finished

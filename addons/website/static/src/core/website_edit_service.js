@@ -1,5 +1,7 @@
 import { registry } from "@web/core/registry";
-import { PublicRoot } from '@web/legacy/js/public/public_root';
+import { PublicRoot } from "@web/legacy/js/public/public_root";
+import { Colibri } from "@web/public/colibri";
+import { patch } from "@web/core/utils/patch";
 
 export function buildEditableInteractions(builders) {
     const result = [];
@@ -66,12 +68,12 @@ registry.category("services").add("website_edit", {
                         editableInteractions = buildEditableInteractions(builders);
                     }
                     editMode = true;
+                    publicInteractions.editMode = true;
                     publicInteractions.activate(editableInteractions);
                 } else {
                     publicInteractions.startInteractions(target);
                 }
-
-            }
+            },
         };
     },
 });
@@ -87,5 +89,26 @@ PublicRoot.include({
     _restartInteractions(targetEl, options) {
         const websiteEdit = this.bindService("website_edit");
         websiteEdit.update(targetEl, options?.editableMode || false);
+    },
+});
+
+// Patch Colibri.
+
+patch(Colibri.prototype, {
+    addListener(target, event, fn, options) {
+        fn = fn.bind(this.interaction);
+        // TODO No jQuery ?
+        const wysiwyg = window.$?.("#wrapwrap").data("wysiwyg");
+        let stealthFn = fn;
+        if (wysiwyg?.odooEditor && !fn.isHandler) {
+            const name = `${this.interaction.constructor.name}/${event}`;
+            stealthFn = async (...args) => {
+                wysiwyg.odooEditor.observerUnactive(name);
+                const result = await fn(...args);
+                wysiwyg.odooEditor.observerActive(name);
+                return result;
+            };
+        }
+        return super.addListener(target, event, stealthFn, options);
     },
 });

@@ -1,9 +1,7 @@
-/** @odoo-module **/
+import { patch } from "@web/core/utils/patch";
+import { Animation } from "@website/interactions/animation";
 
-import publicWidget from '@web/legacy/js/public/public_widget';
-import '@website/js/content/snippets.animation';
-
-publicWidget.registry.WebsiteAnimate.include({
+patch(Animation.prototype, {
     /**
      * @override
      * @todo This should be avoided: the natural scrollbar of the browser should
@@ -16,7 +14,7 @@ publicWidget.registry.WebsiteAnimate.include({
      * it is the only main scrollable element of the page).
      */
     findScrollingElement() {
-        const articleContent = document.querySelector('.o_wslide_fs_article_content');
-        return articleContent ? $(articleContent) : this._super(...arguments);
-    }
+        const articleContent = document.querySelector(".o_wslide_fs_article_content");
+        return articleContent ? articleContent : super.findScrollingElement(...arguments);
+    },
 });

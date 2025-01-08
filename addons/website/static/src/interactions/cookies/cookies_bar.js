@@ -1,49 +1,41 @@
+import { Popup } from "@website/interactions/popup/popup";
+import { registry } from "@web/core/registry";
+
 import { cookie } from "@web/core/browser/cookie";
 import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
 import { isVisible } from "@web/core/utils/ui";
-import { setUtmsHtmlDataset } from "@website/utils/misc";
-import { Popup } from "@website/interactions/popup/popup";
 import { cloneContentEls } from "@website/js/utils";
+import { setUtmsHtmlDataset } from "@website/utils/misc";
 
 // Extending the Popup class with cookiebar functionality.
 // This allows for refusing optional cookies for now and can be
 // extended to picking which cookies categories are accepted.
 export class CookiesBar extends Popup {
     static selector = "#website_cookies_bar";
-    dynamicContent = Object.assign(this.dynamicContent, {
-        "#cookies-consent-essential, #cookies-consent-all": {
-            "t-on-click": this.onAcceptClick,
+    dynamicSelectors = {
+        ...this.dynamicSelectors,
+        _cookiesbus: () => this.services.website_cookies.bus,
+    };
+    dynamicContent = {
+        ...this.dynamicContent,
+        _cookiesbus: {
+            "t-on-cookiesBar.show": this.onShowCookiesBar,
+            "t-on-cookiesBar.toggle": this.onToggleCookiesBar,
         },
+        "#cookies-consent-essential, #cookies-consent-all": { "t-on-click": this.onAcceptClick },
         // Override to avoid side effects on hide.
-        ".js_close_popup": {
-            "t-on-click": () => {},
-        },
-    });
+        ".js_close_popup": { "t-on-click": () => { } },
+    };
 
     setup() {
         super.setup();
         this.showToggle();
     }
 
-    start() {
-        super.start();
-        this.addListener(
-            this.services.website_cookies.bus,
-            "cookiesBar.show",
-            this.onShowCookiesBar
-        );
-        this.addListener(
-            this.services.website_cookies.bus,
-            "cookiesBar.toggle",
-            this.toggleCookiesBar,
-        );
-    }
-
     showPopup() {
         super.showPopup();
         if (this.toggleEl) {
-            this.toggleCookiesBar();
+            this.onToggleCookiesBar();
         }
     }
 
@@ -56,15 +48,14 @@ export class CookiesBar extends Popup {
             </button>
             `).firstElementChild;
             this.insert(this.toggleEl, this.el, "beforebegin");
-            this.services["public.interactions"].startInteractions(this.toggleEl);
         }
     }
 
-    toggleCookiesBar() {
+    onToggleCookiesBar() {
         this.bsModal.toggle();
         // As we're using Bootstrap's events, the Popup class prevents the modal
         // from being shown after hiding it: override that behavior.
-        this._popupAlreadyShown = false;
+        this.popupAlreadyShown = false;
         cookie.delete(this.el.id);
     }
 
@@ -103,7 +94,7 @@ export class CookiesBar extends Popup {
      */
     onShowCookiesBar() {
         const currCookie = cookie.get(this.el.id);
-        if (currCookie && JSON.parse(currCookie).optional || !this._popupAlreadyShown) {
+        if (currCookie && JSON.parse(currCookie).optional || !this.popupAlreadyShown) {
             return;
         }
         this.bsModal.show();
@@ -119,4 +110,6 @@ export class CookiesBar extends Popup {
     }
 }
 
-registry.category("public.interactions").add("website.cookies_bar", CookiesBar);
+registry
+    .category("public.interactions")
+    .add("website.cookies_bar", CookiesBar);

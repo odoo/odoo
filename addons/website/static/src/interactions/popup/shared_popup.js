@@ -1,6 +1,7 @@
-import { registry } from "@web/core/registry";
-import { getScrollingElement } from "@web/core/utils/scrolling";
 import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
+import { getScrollingElement } from "@web/core/utils/scrolling";
 
 export class SharedPopup extends Interaction {
     static selector = ".s_popup";
@@ -16,12 +17,15 @@ export class SharedPopup extends Interaction {
         // `contenteditable=true` attribute in edit mode. It will result in a
         // ugly white bar.
         // tl;dr: this is keeping those 2 elements visibility synchronized.
-        "_root": {
+        _root: {
             "t-on-show.bs.modal": () => this.popupShown = true,
+            "t-on-shown.bs.modal": () => this.popupShown = true,
             "t-on-hidden.bs.modal": this.onModalHidden,
-            "t-att-class": () => ({ "d-none": !this.popupShown }),
+            "t-att-class": () => ({
+                "d-none": !this.popupShown,
+            }),
         },
-    }
+    };
 
     setup() {
         this.popupShown = false;
@@ -42,7 +46,3 @@ export class SharedPopup extends Interaction {
 registry
     .category("public.interactions")
     .add("website.shared_popup", SharedPopup);
-
-registry
-    .category("public.interactions.edit")
-    .add("website.shared_popup", { Interaction: SharedPopup });

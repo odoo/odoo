@@ -1,12 +1,12 @@
-import { registry } from "@web/core/registry";
-import { isVisible } from "@web/core/utils/ui";
 import { AnchorSlide } from "@website/interactions/anchor_slide";
+import { registry } from "@web/core/registry";
+
+import { isVisible } from "@web/core/utils/ui";
 
 export class ScrollButton extends AnchorSlide {
     static selector = ".o_scroll_button";
 
-    animateClick(ev) {
-        ev.preventDefault();
+    animateClick() {
         // Scroll to the next visible element after the current one.
         const currentSectionEl = this.el.closest("section");
         let nextEl = currentSectionEl.nextElementSibling;

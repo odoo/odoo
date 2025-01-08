@@ -1,79 +1,83 @@
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 
-publicWidget.registry.PortalPrepayment = publicWidget.Widget.extend({
-    selector: '.o_portal_sale_sidebar',
-    events: Object.assign({}, publicWidget.Widget.prototype.events, {
-        'click button[name="o_sale_portal_amount_prepayment_button"]': '_onClickAmountPrepaymentButton',
-        'click button[name="o_sale_portal_amount_total_button"]': '_onClickAmountTotalButton',
-    }),
+export class PortalPrepayment extends Interaction {
+    static selector = ".o_portal_sale_sidebar";
+    dynamicSelectors = {
+        ...this.dynamicSelectors,
+        _amountPrepaymentButton: () => this.amountPrepaymentButton,
+        _amountTotalButton: () => this.amountPrepaymentButton,
+    };
+    dynamicContent = {
+        _amountPrepaymentButton: {
+            "t-on-click": this.onClickAmountPrepaymentButton,
+            "t-att-class": () => ({
+                "active": this.isPartialPayment,
+            }),
+        },
+        _amountTotalButton: {
+            "t-on-click": this.onClickAmountTotalButton,
+            "t-att-class": () => ({
+                "active": !this.isPartialPayment,
+            }),
+        },
+        "span[id='o_sale_portal_use_amount_prepayment'], span[id='o_sale_portal_use_amount_total']": {
+            "t-att-style": () => ({
+                "transition-duration": "400ms",
+                "transition-property": "opacity",
+            }),
+        },
+        "span[id='o_sale_portal_use_amount_prepayment']": {
+            "t-att-style": () => ({
+                "opacity": this.displayTotal ? 0 : 1,
+            }),
+        },
+        "span[id='o_sale_portal_use_amount_total']": {
+            "t-att-style": () => ({
+                "opacity": this.displayTotal ? 1 : 0,
+            }),
+        },
+    };
 
-    start: async function () {
-        this.AmountTotalButton = document.querySelector(
-            'button[name="o_sale_portal_amount_total_button"]'
-        );
-        this.AmountPrepaymentButton = document.querySelector(
-            'button[name="o_sale_portal_amount_prepayment_button"]'
-        );
+    start() {
+        this.amountTotalButton = document.querySelector("button[name='o_sale_portal_amount_total_button']");
+        this.amountPrepaymentButton = document.querySelector("button[name='o_sale_portal_amount_prepayment_button']");
 
-        if (!this.AmountTotalButton) {
+        if (!this.amountTotalButton) {
             // Button not available in dom => confirmed SO or partial payment not enabled on this SO
             // this widget has nothing to manage
             return;
         }
 
         const params = new URLSearchParams(window.location.search);
-        const isPartialPayment = params.has('downpayment') ? params.get('downpayment') === 'true': true;
+        this.isPartialPayment = !(params.has('downpayment') ? params.get('downpayment') === 'true' : true);
+        this.displayTotal = !this.isPartialPayment;
         const showPaymentModal = params.get('showPaymentModal') === 'true';
-
-        // Prepare the modal to show if the down payment amount is selected or not.
-        if (isPartialPayment) {
-            this._onClickAmountPrepaymentButton(false);
-        } else {
-            this._onClickAmountTotalButton(false);
-        }
 
         // When updating the amount re-open the modal.
         if (showPaymentModal) {
-            const payNowButton = this.$('#o_sale_portal_paynow')[0];
-            payNowButton && payNowButton.click();
+            this.querySelector("#o_sale_portal_paynow")?.click();
         }
-    },
+    }
 
-    _onClickAmountPrepaymentButton: function (doReload=true) {
-        this.AmountTotalButton?.classList.remove('active');
-        this.AmountPrepaymentButton?.classList.add('active');
+    onClickAmountPrepaymentButton() {
+        this.isPartialPayment = true;
+        this.reloadAmount();
+    }
 
-        if (doReload) {
-            this._reloadAmount(true);
-        } else {
-            this.$('span[id="o_sale_portal_use_amount_total"]').hide();
-            this.$('span[id="o_sale_portal_use_amount_prepayment"]').show();
-        }
-    },
+    onClickAmountTotalButton() {
+        this.isPartialPayment = false;
+        this.reloadAmount();
+    }
 
-    _onClickAmountTotalButton: function(doReload=true) {
-        this.AmountPrepaymentButton?.classList.remove('active');
-        this.AmountTotalButton?.classList.add('active');
-
-        if (doReload) {
-            this._reloadAmount(false);
-        } else {
-            this.$('span[id="o_sale_portal_use_amount_total"]').show();
-            this.$('span[id="o_sale_portal_use_amount_prepayment"]').hide();
-        }
-    },
-
-    _reloadAmount: function (partialPayment) {
+    reloadAmount() {
         const searchParams = new URLSearchParams(window.location.search);
-
-        if (partialPayment) {
-            searchParams.set('downpayment', true);
-        } else {
-            searchParams.set('downpayment', false);
-        }
-        searchParams.set('showPaymentModal', true);
-
+        searchParams.set("downpayment", this.isPartialPayment);
+        searchParams.set("showPaymentModal", true);
         window.location.search = searchParams.toString();
-    },
-});
-export default publicWidget.registry.PortalPrepayment;
+    }
+}
+
+registry
+    .category("public.interactions")
+    .add("sale.portal_prepayment", PortalPrepayment);

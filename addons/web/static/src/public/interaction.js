@@ -1,3 +1,4 @@
+import { renderToFragment } from "@web/core/utils/render";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import { SKIP_IMPLICIT_UPDATE } from "./colibri";
 import { makeAsyncHandler, makeButtonHandler } from "./utils";
@@ -26,6 +27,20 @@ export class Interaction {
     static selector = "";
 
     /**
+     * The `selectorHas` attribute, if defined, allows to filter elements found
+     * through the `selector` attribute by only considering those which contain
+     * at least an element which matches this `selectorHas` selector.
+     *
+     * Note that this is the equivalent of setting up a `selector` using the
+     * `:has` pseudo-selector but that pseudo-selector is known to not be fully
+     * supported in all browsers. To prevent useless crashes, using this
+     * `selectorHas` attribute should be preferred.
+     *
+     * @type {string}
+     */
+    static selectorHas = "";
+
+    /**
      * Note that a dynamic selector is allowed to return a falsy value, for ex
      * the result of a querySelector. In that case, the directive will simply be
      * ignored.
@@ -46,9 +61,9 @@ export class Interaction {
      *
      * Its syntax looks like the following:
      * dynamicContent = {
-     *      ".some-selector:t-on-click": (ev) => this.onClick(ev),
-     *      ".some-other-selector:t-att-class": () => ({ "some-class": true}),
-     *      "_root:t-component": () => [Component, { someProp: "value" }],
+     *      ".some-selector": { "t-on-click": (ev) => this.onClick(ev) },
+     *      ".some-other-selector": { "t-att-class": () => ({ "some-class": true}) },
+     *      _root: { "t-component": () => [Component, { someProp: "value" }] },
      * }
      *
      * A selector is either a standard css selector, or a special keyword
@@ -215,24 +230,11 @@ export class Interaction {
     }
 
     /**
-     * Make sure the function is not started again before it is completed.
-     * If required, add a loading animation on button if the execution takes
-     * more than 400ms.
-     */
-    blockedUntilDone(fn, useLoadingAnimation = false) {
-        if (useLoadingAnimation) {
-            return makeButtonHandler(fn);
-        } else {
-            return makeAsyncHandler(fn);
-        }
-    }
-
-    /**
      * Throttles a function for animation and makes sure it is cancelled upon destroy.
      */
-    throttledForAnimation(fn) {
-        const throttledFn = throttleForAnimation(() => {
-            fn.call(this);
+    throttled(fn) {
+        const throttledFn = throttleForAnimation((...args) => {
+            fn.apply(this, args);
             if (this.isReady) {
                 this.updateContent();
             }
@@ -242,8 +244,8 @@ export class Interaction {
         });
         return Object.assign(
             {
-                [throttledFn.name]: () => {
-                    throttledFn();
+                [throttledFn.name]: (...args) => {
+                    throttledFn(...args);
                     return SKIP_IMPLICIT_UPDATE;
                 },
             }[throttledFn.name],
@@ -251,6 +253,19 @@ export class Interaction {
                 cancel: throttledFn.cancel,
             }
         );
+    }
+
+    /**
+     * Make sure the function is not started again before it is completed.
+     * If required, add a loading animation on button if the execution takes
+     * more than 400ms.
+     */
+    locked(fn, useLoadingAnimation = false) {
+        if (useLoadingAnimation) {
+            return makeButtonHandler(fn);
+        } else {
+            return makeAsyncHandler(fn);
+        }
     }
 
     /**
@@ -276,8 +291,8 @@ export class Interaction {
     }
 
     /**
-     * Insert an node at a specific location. The inserted node will be removed
-     * when the interaction is destroyed.
+     * Insert and activate an element at a specific location.
+     * The inserted element will be removed when the interaction is destroyed.
      *
      * @param { HTMLElement } el
      * @param { HTMLElement } [locationEl] the target
@@ -286,6 +301,33 @@ export class Interaction {
     insert(el, locationEl = this.el, position = "beforeend") {
         locationEl.insertAdjacentElement(position, el);
         this.registerCleanup(() => el.remove());
+        this.services["public.interactions"].startInteractions(el);
+        this.refreshListeners();
+    }
+
+    /**
+     * Renders, insert and activate an element at a specific location.
+     * The inserted element will be removed when the interaction is destroyed.
+     *
+     * @param { string } template
+     * @param { Object } renderContext
+     * @param { HTMLElement } [locationEl] the target
+     * @param { "afterbegin" | "afterend" | "beforebegin" | "beforeend" } [position]
+     * @param { Function } callback called with rendered elements before insertion
+     * @returns { HTMLElement[] } rendered elements
+     */
+    renderAt(template, renderContext, locationEl, position = "beforeend", callback) {
+        const fragment = renderToFragment(template, renderContext);
+        const result = [...fragment.children];
+        const els = [...fragment.children];
+        callback?.(els);
+        if (["afterend", "afterbegin"].includes(position)) {
+            els.reverse();
+        }
+        for (const el of els) {
+            this.insert(el, locationEl, position);
+        }
+        return result;
     }
 
     /**

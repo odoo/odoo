@@ -109,3 +109,70 @@ export function makeButtonHandler(fct) {
         return result;
     };
 }
+
+/**
+ * Patches a "t-" entry of a dynamic content.
+ *
+ * @param {Object} dynamicContent
+ * @param {string} selector
+ * @param {string} t
+ * @param {any|function} replacement, if a function, takes the element and the
+ *     replaced's function output as parameters
+ */
+export function patchDynamicContentEntry(dynamicContent, selector, t, replacement) {
+    dynamicContent[selector] = dynamicContent[selector] || {};
+    const forSelector = dynamicContent[selector];
+    if (replacement === undefined) {
+        delete forSelector[t];
+    } else if (typeof replacement === "function" && t !== "t-component") {
+        if (!forSelector[t]) {
+            forSelector[t] = () => {};
+        }
+        const oldFn = forSelector[t];
+        if (["t-att-class", "t-att-style"].includes(t)) {
+            forSelector[t] = (el, oldResult) => {
+                const result = oldResult || {};
+                Object.assign(result, oldFn(el, result));
+                Object.assign(result, replacement(el, result));
+                return result;
+            };
+        } else if (t.startsWith("t-on-")) {
+            forSelector[t] = (el) => replacement(el, oldFn);
+        } else {
+            forSelector[t] = (el, oldResult) => {
+                let result = oldResult;
+                result = oldFn(el, result);
+                result = replacement(el, result);
+                return result;
+            };
+        }
+    } else {
+        forSelector[t] = replacement;
+    }
+}
+
+/**
+ * Patches several entries in a dynamicContent.
+ * Example usage:
+ * patchDynamicContent(this.dynamicContent, {
+ *     _root: {
+ *         "t-att-class": (el, old) => ({
+ *             "test": this.condition && old.test,
+ *         }),
+ *         "t-on-click": (el, oldFn) => {
+ *             oldFn(el);
+ *             this.doMoreStuff();
+ *         },
+ *     },
+ * })
+ *
+ * @param {Object} dynamicContent
+ * @param {Object} replacement
+ */
+export function patchDynamicContent(dynamicContent, replacement) {
+    for (const [selector, forSelector] of Object.entries(replacement)) {
+        for (const [t, forT] of Object.entries(forSelector)) {
+            patchDynamicContentEntry(dynamicContent, selector, t, forT);
+        }
+    }
+}
