@@ -62,6 +62,11 @@ class ResUsers(models.Model):
         store.add_global_values(
             hasGifPickerFeature=bool(get_param("discuss.tenor_api_key")),
             hasMessageTranslationFeature=bool(get_param("mail.google_translate_api_key")),
+            hasCannedResponses=bool(self.env["mail.canned.response"].sudo().search([
+                "|",
+                ("create_uid", "=", self.env.user.id),
+                ("group_ids", "in", self.env.user.groups_id.ids),
+            ], limit=1)) if self.env.user else False,
             channel_types_with_seen_infos=sorted(
                 self.env["discuss.channel"]._types_allowing_seen_infos()
             ),
