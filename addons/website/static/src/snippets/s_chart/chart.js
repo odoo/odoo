@@ -1,34 +1,27 @@
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { loadBundle } from "@web/core/assets";
-import publicWidget from "@web/legacy/js/public/public_widget";
 import weUtils from "@web_editor/js/common/utils";
 
-const ChartWidget = publicWidget.Widget.extend({
-    selector: '.s_chart',
-    disabledInEditableMode: false,
+export class Chart extends Interaction {
+    static selector = ".s_chart";
 
-    /**
-     * @override
-     * @param {Object} parent
-     * @param {Object} options The default value of the chartbar.
-     */
-    init: function (parent, options) {
-        this._super.apply(this, arguments);
+    setup() {
+        this.chart = null;
+        this.noAnimation = false;
         this.style = window.getComputedStyle(document.documentElement);
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        // Convert Theme colors to css color
+    }
+
+    async willStart() {
+        await loadBundle("web.chartjs_lib");
+    }
+
+    start() {
         const data = JSON.parse(this.el.dataset.data);
         data.datasets.forEach(el => {
-            if (Array.isArray(el.backgroundColor)) {
-                el.backgroundColor = el.backgroundColor.map(el => this._convertToCssColor(el));
-                el.borderColor = el.borderColor.map(el => this._convertToCssColor(el));
-            } else {
-                el.backgroundColor = this._convertToCssColor(el.backgroundColor);
-                el.borderColor = this._convertToCssColor(el.borderColor);
-            }
+            el.backgroundColor = this.convertToCSS(el.backgroundColor);
+            el.borderColor = this.convertToCSS(el.borderColor);
             el.borderWidth = this.el.dataset.borderWidth;
         });
 
@@ -48,18 +41,17 @@ const ChartWidget = publicWidget.Widget.extend({
             type: "category",
         };
 
-        // Make chart data
         const chartData = {
             type: this.el.dataset.type,
             data: data,
             options: {
                 plugins: {
                     legend: {
-                        display: this.el.dataset.legendPosition !== 'none',
+                        display: this.el.dataset.legendPosition !== "none",
                         position: this.el.dataset.legendPosition,
                     },
                     tooltip: {
-                        enabled: this.el.dataset.tooltipDisplay === 'true',
+                        enabled: this.el.dataset.tooltipDisplay === "true",
                         position: "custom",
                     },
                     title: {
@@ -75,8 +67,7 @@ const ChartWidget = publicWidget.Widget.extend({
             },
         };
 
-        // Add type specific options
-        if (this.el.dataset.type === 'radar') {
+        if (this.el.dataset.type === "radar") {
             chartData.options.scales = {
                 r: radialAxis,
             };
@@ -87,70 +78,47 @@ const ChartWidget = publicWidget.Widget.extend({
                 y: categoryAxis,
             };
             chartData.options.indexAxis = "y";
-        } else if (['pie', 'doughnut'].includes(this.el.dataset.type)) {
+        } else if (["pie", "doughnut"].includes(this.el.dataset.type)) {
             chartData.options.scales = {};
             chartData.options.plugins.tooltip.callbacks = {
                 label: (tooltipItem) => {
                     const label = tooltipItem.label;
                     const secondLabel = tooltipItem.dataset.label;
                     let final = label;
-                    if (label) {
-                        if (secondLabel) {
-                            final = label + ' - ' + secondLabel;
-                        }
+                    if (label && secondLabel) {
+                        final = label + " - " + secondLabel;
                     } else if (secondLabel) {
                         final = secondLabel;
                     }
-                    return final + ':' + tooltipItem.formattedValue;
+                    return final + ":" + tooltipItem.formattedValue;
                 },
             };
         }
 
-        // Disable animation in edit mode
-        if (this.editableMode) {
-            chartData.options.animation = {
-                duration: 0,
-            };
+        if (this.noAnimation) {
+            chartData.options.animation = { duration: 0 };
         }
 
-        const canvas = this.el.querySelector('canvas');
-        window.Chart.Tooltip.positioners.custom = (elements, eventPosition) => eventPosition;
-        this.chart = new window.Chart(canvas, chartData);
-        return this._super.apply(this, arguments);
-    },
-
-    willStart: async function () {
-        await loadBundle("web.chartjs_lib");
-    },
-    /**
-     * @override
-     * Discard all library changes to reset the state of the Html.
-     */
-    destroy: function () {
-        if (this.chart) { // The widget can be destroyed before start has completed
+        const canvasEl = this.el.querySelector("canvas");
+        window.Chart.Tooltip.positioners.custom = (_, eventPosition) => eventPosition;
+        this.chart = new window.Chart(canvasEl, chartData);
+        this.registerCleanup(() => {
             this.chart.destroy();
-            this.el.querySelectorAll('.chartjs-size-monitor').forEach(el => el.remove());
-        }
-        this._super.apply(this, arguments);
-    },
+            this.el.querySelectorAll(".chartjs-size-monitor").forEach(el => el.remove());
+        });
+    }
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+    convertToCSS(paramColor) {
+        return Array.isArray(paramColor)
+            ? paramColor.map(color => this.convertToCSSColor(color))
+            : this.convertToCSSColor(paramColor);
+    }
 
-    /**
-     * @private
-     * @param {string} color A css color or theme color string
-     * @returns {string} Css color
-     */
-    _convertToCssColor: function (color) {
-        if (!color) {
-            return 'transparent';
-        }
-        return weUtils.getCSSVariableValue(color, this.style) || color;
-    },
-});
+    convertToCSSColor(color) {
+        return color ? weUtils.getCSSVariableValue(color, this.style) || color : "transparent";
+    }
+}
 
-publicWidget.registry.chart = ChartWidget;
-
-export default ChartWidget;
+registry
+    .category("public.interactions")
+    .add("website.chart", Chart);

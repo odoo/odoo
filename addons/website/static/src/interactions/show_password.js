@@ -1,44 +1,27 @@
-//
-// This file is meant to allow to switch the type of an input #password
-// from password to text on mousedown on an input group.
-// On mouse down, we see the password in clear text
-// On mouse up, we hide it again.
-//
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 
-import publicWidget from "@web/legacy/js/public/public_widget";
+export class ShowPassword extends Interaction {
+    static selector = "#showPass";
+    dynamicContent = {
+        _root: { "t-on-pointerdown": this.showText },
+    };
 
-publicWidget.registry.ShowPassword = publicWidget.Widget.extend({
-    selector: '#showPass',
-    events: {
-        'mousedown': '_onShowText',
-        'touchstart': '_onShowText',
-    },
+    setup() {
+        this.passwordEl = this.el.closest(".input-group").querySelector("#password");
+    }
 
-    /**
-     * @override
-     */
-    destroy: function () {
-        this._super(...arguments);
-        $('body').off(".ShowPassword");
-    },
+    showText() {
+        this.passwordEl.setAttribute("type", "text");
+        this.addListener(
+            document.body,
+            "pointerup",
+            () => this.passwordEl.setAttribute("type", "password"),
+            { once: true },
+        );
+    }
+}
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onShowPassword: function () {
-        this.$el.closest('.input-group').find('#password').attr('type', 'password');
-    },
-    /**
-     * @private
-     */
-    _onShowText: function () {
-        $('body').one('mouseup.ShowPassword touchend.ShowPassword', this._onShowPassword.bind(this));
-        this.$el.closest('.input-group').find('#password').attr('type', 'text');
-    },
-});
-
-export default publicWidget.registry.ShowPassword;
+registry
+    .category("public.interactions")
+    .add("website.show_password", ShowPassword);

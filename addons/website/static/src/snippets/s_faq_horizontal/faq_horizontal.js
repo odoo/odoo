@@ -1,52 +1,42 @@
-import {extraMenuUpdateCallbacks} from "@website/js/content/menu";
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 
-const faqHorizontal = publicWidget.Widget.extend({
-    selector: '.s_faq_horizontal',
-    disabledInEditableMode: false,
+export class FaqHorizontal extends Interaction {
+    static selector = ".s_faq_horizontal";
+    dynamicContent = {
+        ".s_faq_horizontal_entry_title": {
+            "t-att-style": () => ({
+                "top": `${this.offset}px`,
+                "maxHeight": `calc(100vh - ${this.offset + 40}px)`,
+            }),
+        },
+    };
 
-    /**
-     * @override
-     */
-    async start() {
-        await this._super(...arguments);
+    setup() {
+        this.offset = 16;
+    }
 
-        this.titles = this.$el[0].getElementsByClassName('s_faq_horizontal_entry_title');
+    start() {
+        this.updateTitlesPosition();
+        this.registerCleanup(this.services.website_menus.registerCallback(this.updateTitlesPosition.bind(this)));
+    }
 
-        this._updateTitlesPosition();
-        this._updateTitlesPositionBound = this._updateTitlesPosition.bind(this);
-        extraMenuUpdateCallbacks.push(this._updateTitlesPositionBound);
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        const indexCallback = extraMenuUpdateCallbacks.indexOf(this._updateTitlesPositionBound);
-        if (indexCallback >= 0) {
-            extraMenuUpdateCallbacks.splice(indexCallback, 1);
+    updateTitlesPosition() {
+        let offset = 16; // Add 1rem equivalent in px to provide a visual gap by default
+        for (const el of this.el.ownerDocument.querySelectorAll(".o_top_fixed_element")) {
+            offset += el.getBoundingClientRect().bottom;
         }
-    },
+        this.offset = offset;
+        this.updateContent();
+    }
+}
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+registry
+    .category("public.interactions")
+    .add("website.faq_horizontal", FaqHorizontal);
 
-    /**
-     * @private
-     */
-    _updateTitlesPosition() {
-        let position = 16; // Add 1rem equivalent in px to provide a visual gap by default
-        const fixedElements = document.getElementsByClassName('o_top_fixed_element');
-
-        Array.from(fixedElements).forEach((el) => position += el.offsetHeight);
-
-        Array.from(this.titles).forEach((title) => {
-            title.style.top = `${position}px`;
-            title.style.maxHeight = `calc(100vh - ${position + 40}px)`;
-        });
-    },
-});
-
-publicWidget.registry.snippetFaqHorizontal = faqHorizontal;
-
-export default faqHorizontal;
+registry
+    .category("public.interactions.edit")
+    .add("website.faq_horizontal", {
+        Interaction: FaqHorizontal,
+    });

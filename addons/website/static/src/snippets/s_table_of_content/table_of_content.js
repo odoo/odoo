@@ -1,32 +1,25 @@
-import publicWidget from "@web/legacy/js/public/public_widget";
-import {extraMenuUpdateCallbacks} from "@website/js/content/menu";
-import { closestScrollable } from "@web_editor/js/common/scrolling";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 
-const CLASS_NAME_DROPDOWN_ITEM = 'dropdown-item';
-const CLASS_NAME_ACTIVE = 'active';
-const SELECTOR_NAV_LIST_GROUP = '.nav, .list-group';
-const SELECTOR_NAV_LINKS = '.nav-link';
-const SELECTOR_NAV_ITEMS = '.nav-item';
-const SELECTOR_LIST_ITEMS = '.list-group-item';
-const SELECTOR_LINK_ITEMS = `${SELECTOR_NAV_LINKS}, ${SELECTOR_LIST_ITEMS}, .${CLASS_NAME_DROPDOWN_ITEM}`;
-const SELECTOR_DROPDOWN = '.dropdown';
-const SELECTOR_DROPDOWN_TOGGLE = '.dropdown-toggle';
+import { patch } from "@web/core/utils/patch";
+import { closestScrollableY, isScrollableY } from "@web/core/utils/scrolling";
+import { isVisible } from "@web/core/utils/ui";
+import { AnchorSlide } from "@website/interactions/anchor_slide";
 
 const getSelector = element => {
-    let hrefAttr = element.getAttribute('href');
-    if (!hrefAttr || !hrefAttr.startsWith('#')) {
+    let hrefAttr = element.getAttribute("href");
+    if (!hrefAttr?.startsWith("#")) {
         return null;
     }
-    const selector = hrefAttr && hrefAttr !== '#' ? hrefAttr.trim() : null;
-    return selector;
+    return hrefAttr !== "#" ? hrefAttr.trim() : null;
 };
 
 const parents = (element, selector) => {
     const parents = [];
-    let ancestor = element.parentNode.closest(selector);
+    let ancestor = element.parentElement.closest(selector);
     while (ancestor) {
         parents.push(ancestor);
-        ancestor = ancestor.parentNode.closest(selector);
+        ancestor = ancestor.parentElement.closest(selector);
     }
     return parents;
 };
@@ -42,101 +35,95 @@ const prev = (element, selector) => {
     return [];
 };
 
-const TableOfContent = publicWidget.Widget.extend({
-    selector: 'section .s_table_of_content_navbar_sticky',
-    disabledInEditableMode: false,
+export class TableOfContent extends Interaction {
+    static selector = "section .s_table_of_content_navbar_sticky";
+    dynamicContent = {
+        _root: {
+            "t-att-style": () => ({
+                "top": this.isHorizontal ? `${this.position}px` : undefined,
+            }),
+        },
+        ".s_table_of_content_navbar": {
+            "t-att-style": () => ({
+                "top": this.isHorizontal ? undefined : `${this.position}px`,
+                "maxHeight": this.isHorizontal ? undefined : `calc(100vh - ${this.position + 40}px)`,
+            }),
+        },
+    };
 
-    init() {
-        this._super(...arguments);
-        this._onScrollBound = this._process.bind(this);
-        this._offsets = [];
-        this._targets = [];
-        this._activeTarget = null;
-        this._scrollHeight = 0;
-        this._offset = 0;
-    },
+    setup() {
+        this.position = 20;
+        this.isHorizontal = this.el.classList.contains("s_table_of_content_horizontal_navbar");
 
-    /**
-     * @override
-     */
-    async start() {
-        this._stripNavbarStyles();
-        this._scrollElement = closestScrollable(this.$target.closest(".s_table_of_content")[0]);
-        this._scrollTarget = $().getScrollingTarget(this._scrollElement)[0];
-        this._tocElement = this.el.querySelector('.s_table_of_content_navbar');
+        this.scrollBound = this.process.bind(this);
+        this.offsets = [];
+        this.targets = [];
+        this.activeTarget = null;
+        this.scrollHeight = 0;
+        this.offset = 0;
+
+        this.stripNavbarStyles();
+        this.scrollElement = closestScrollableY(this.el.closest(".s_table_of_content")) || this.el.ownerDocument.scrollingElement;
+        this.scrollTarget = isScrollableY(this.scrollElement) ? this.scrollElement : this.scrollElement.ownerDocument.defaultView;
+        this.tocElement = this.el.querySelector(".s_table_of_content_navbar");
         this.previousPosition = -1;
-        this._updateTableOfContentNavbarPosition();
-        this._updateTableOfContentNavbarPositionBound = this._updateTableOfContentNavbarPosition.bind(this);
-        extraMenuUpdateCallbacks.push(this._updateTableOfContentNavbarPositionBound);
-        this._scrollTarget.addEventListener("scroll", this._onScrollBound);
-        await this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        this._scrollTarget?.removeEventListener("scroll", this._onScrollBound);
-        const indexCallback = extraMenuUpdateCallbacks.indexOf(this._updateTableOfContentNavbarPositionBound);
-        if (indexCallback >= 0) {
-            extraMenuUpdateCallbacks.splice(indexCallback, 1);
-        }
-        this.$el.css('top', '');
-        this.$el.find('.s_table_of_content_navbar').css({top: '', maxHeight: ''});
-        this._super(...arguments);
-    },
+    }
+
+    start() {
+        this.updateTableOfContentNavbarPosition();
+        this.registerCleanup(this.services.website_menus.registerCallback(this.updateTableOfContentNavbarPosition.bind(this)));
+
+        this.addListener(this.scrollTarget, "scroll", this.scrollBound);
+    }
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     */
-    _stripNavbarStyles() {
+    stripNavbarStyles() {
         // This is needed for styles added on translations when the master text
         // has no style.
-        for (let el of this.el.querySelectorAll('.s_table_of_content_navbar .table_of_content_link')) {
-            const translationEl = el.querySelector('span[data-oe-translation-state]');
+        for (let el of this.el.querySelectorAll(".s_table_of_content_navbar .table_of_content_link")) {
+            const translationEl = el.querySelector("span[data-oe-translation-state]");
             if (translationEl) {
                 el = translationEl;
             }
             const text = el.textContent; // Get text from el.
             el.textContent = text; // Replace all of el's content with that text.
         }
-    },
-    /**
-     * @private
-     */
-    _updateTableOfContentNavbarPosition() {
-        if (!this.el.querySelector('a.table_of_content_link')) {
+    }
+    updateTableOfContentNavbarPosition() {
+        if (!this.el.querySelector("a.table_of_content_link")) {
             // Do not start the scrollspy if the TOC is empty.
             return;
         }
-        let position = 0;
-        const $fixedElements = $('.o_top_fixed_element');
-        $fixedElements.toArray().forEach((el) => position += $(el).outerHeight());
-        const isHorizontalNavbar = this.$el.hasClass('s_table_of_content_horizontal_navbar');
-        this.$el.css('top', isHorizontalNavbar ? position : '');
-        this.$el.find('.s_table_of_content_navbar').css('top', isHorizontalNavbar ? '' : position + 20);
-        position += isHorizontalNavbar ? this.$el.outerHeight() : 0;
-        this.$el.find('.s_table_of_content_navbar').css('maxHeight', isHorizontalNavbar ? '' : `calc(100vh - ${position + 40}px)`);
+
+        let position = this.isHorizontal ? 0 : 20;
+        for (const el of this.el.ownerDocument.querySelectorAll(".o_top_fixed_element")) {
+            position += el.getBoundingClientRect().bottom;
+        }
+
+        this.position = position;
+        position += (this.isHorizontal ? this.el.offsetHeight : 0);
+
         if (this.previousPosition !== position) {
-            this._offset = position + 100;
-            this._refresh();
-            this._process();
+            this.offset = position + 100;
+            this.refresh();
+            this.process();
             this.previousPosition = position;
         }
-    },
+        this.updateContent();
+    }
 
-    _getScrollHeight() {
-        return this._scrollElement.scrollHeight || Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
-    },
+    getScrollHeight() {
+        return this.scrollElement.scrollHeight || Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+    }
 
-    _refresh() {
-        this._offsets = [];
-        this._targets = [];
-        this._scrollHeight = this._getScrollHeight();
-        const targets = [...this._tocElement.querySelectorAll(SELECTOR_LINK_ITEMS)];
+    refresh() {
+        this.offsets = [];
+        this.targets = [];
+        this.scrollHeight = this.getScrollHeight();
+        const targets = [...this.tocElement.querySelectorAll(".nav-link, .list-group-item, .dropdown-item")];
         targets.map(element => {
             const targetSelector = getSelector(element);
             const target = targetSelector ? document.querySelector(targetSelector) : null;
@@ -149,104 +136,117 @@ const TableOfContent = publicWidget.Widget.extend({
             }
             return null;
         }).filter(item => item).sort((a, b) => a[0] - b[0]).forEach(item => {
-            this._offsets.push(item[0]);
-            this._targets.push(item[1]);
+            this.offsets.push(item[0]);
+            this.targets.push(item[1]);
         });
-        const baseScrollTop = this._scrollElement.scrollTop;
-        for (let i = 0; i < this._offsets.length; i++) {
-            this._offsets[i] += baseScrollTop;
+        const baseScrollTop = this.scrollElement.scrollTop;
+        for (let i = 0; i < this.offsets.length; i++) {
+            this.offsets[i] += baseScrollTop;
         }
-    },
+    }
 
-    _activate(target) {
+    activate(target) {
         const element = document.querySelector(`[href="${target}"]`);
-        if (!element || $(element).is(':hidden')) {
+        if (!element || !isVisible(element)) {
             return;
         }
-        this._activeTarget = target;
-        this._clear();
-        const queries = SELECTOR_LINK_ITEMS.split(',').map(selector => `${selector}[href="${target}"]`);
-        const link = this._tocElement.querySelector(queries.join(','));
-        link.classList.add(CLASS_NAME_ACTIVE);
-        if (link.classList.contains(CLASS_NAME_DROPDOWN_ITEM)) {
-            link.closest(SELECTOR_DROPDOWN).querySelector(SELECTOR_DROPDOWN_TOGGLE, link.closest(SELECTOR_DROPDOWN)).classList.add(CLASS_NAME_ACTIVE);
+        this.activeTarget = target;
+        this.clear();
+        const queries = ".nav-link, .list-group-item, .dropdown-item".split(",").map(selector => `${selector}[href="${target}"]`);
+        const link = this.tocElement.querySelector(queries.join(","));
+        link.classList.add("active");
+        if (link.classList.contains("dropdown-item")) {
+            link.closest(".dropdown").querySelector(".dropdown-toggle").classList.add("active");
         } else {
-            parents(link, SELECTOR_NAV_LIST_GROUP).forEach(listGroup => {
+            const listGroupEls = parents(link, ".nav, .list-group");
+            for (const listGroupEl of listGroupEls) {
                 // Set triggered links parents as active
                 // With both <ul> and <nav> markup a parent is the previous sibling of any nav ancestor
-                prev(listGroup, `${SELECTOR_NAV_LINKS}, ${SELECTOR_LIST_ITEMS}`).forEach(item => item.classList.add(CLASS_NAME_ACTIVE)); // Handle special case when .nav-link is inside .nav-item
-                prev(listGroup, SELECTOR_NAV_ITEMS).forEach(navItem => {
-                    [...navItem.children].filter(child => child.matches(SELECTOR_NAV_LINKS)).forEach(item => item.classList.add(CLASS_NAME_ACTIVE));
-                });
-            });
-        }
-    },
-
-    _clear() {
-        [...this._tocElement.querySelectorAll(SELECTOR_LINK_ITEMS)].filter(node => node.classList.contains(CLASS_NAME_ACTIVE)).forEach(node => node.classList.remove(CLASS_NAME_ACTIVE));
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    _process() {
-        const scrollTop = this._scrollElement.scrollTop + this._offset;
-        const scrollHeight = this._getScrollHeight();
-        const maxScroll = this._offset + scrollHeight - this._scrollElement.getBoundingClientRect().height;
-        if (this._scrollHeight !== scrollHeight) {
-            this._refresh();
-        }
-        if (scrollTop >= maxScroll) {
-            const target = this._targets[this._targets.length - 1];
-            if (this._activeTarget !== target) {
-                this._activate(target);
-            }
-            return;
-        }
-        if (this._activeTarget && scrollTop < this._offsets[0] && this._offsets[0] > 0) {
-            this._activeTarget = null;
-            this._clear();
-        } else {
-            for (let i = this._offsets.length; i--;) {
-                const isActiveTarget = this._activeTarget !== this._targets[i] && scrollTop >= this._offsets[i] && (typeof this._offsets[i + 1] === 'undefined' || scrollTop < this._offsets[i + 1]);
-
-                if (isActiveTarget) {
-                    this._activate(this._targets[i]);
+                const itemEls = prev(listGroupEl, ".nav-link, .list-group-item");
+                for (const itemEl of itemEls) {
+                    itemEl.classList.add("active")
+                }
+                // Handle special case when .nav-link is inside .nav-item
+                const navItemEls = prev(listGroupEl, ".nav-item");
+                for (const navItemEl of navItemEls) {
+                    for (const childEl of navItemEl.children) {
+                        if (childEl.matches(".nav-link")) {
+                            childEl.classList.add("active")
+                        }
+                    }
                 }
             }
         }
-        if (this._activeTarget === null) {
-            this._activate(this._targets[0]);
+    }
+
+    clear() {
+        const itemEls = this.tocElement.querySelectorAll(".nav-link, .list-group-item, .dropdown-item");
+        for (const itemEl of itemEls) {
+            itemEl.classList.remove("active");
         }
-    },
-});
+    }
 
-publicWidget.registry.anchorSlide.include({
+    process() {
+        const scrollTop = this.scrollElement.scrollTop + this.offset;
+        const scrollHeight = this.getScrollHeight();
+        const maxScroll = this.offset + scrollHeight - this.scrollElement.getBoundingClientRect().height;
+        if (this.scrollHeight !== scrollHeight) {
+            this.refresh();
+        }
+        if (scrollTop >= maxScroll) {
+            const target = this.targets[this.targets.length - 1];
+            if (this.activeTarget !== target) {
+                this.activate(target);
+            }
+            return;
+        }
+        if (this.activeTarget && scrollTop < this.offsets[0] && this.offsets[0] > 0) {
+            this.activeTarget = null;
+            this.clear();
+        } else {
+            for (let i = this.offsets.length; i--;) {
+                const isActiveTarget =
+                    this.activeTarget !== this.targets[i]
+                    && scrollTop >= this.offsets[i]
+                    && (typeof this.offsets[i + 1] === "undefined"
+                        || scrollTop < this.offsets[i + 1]);
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+                if (isActiveTarget) {
+                    this.activate(this.targets[i]);
+                }
+            }
+        }
+        if (this.activeTarget === null) {
+            this.activate(this.targets[0]);
+        }
+    }
+}
 
+patch(AnchorSlide.prototype, {
     /**
      * Overridden to add the height of the horizontal sticky navbar at the scroll value
      * when the link is from the table of content navbar
      *
      * @override
-     * @private
      */
-    _computeExtraOffset() {
-        let extraOffset = this._super(...arguments);
-        if (this.$el.hasClass('table_of_content_link')) {
-            const tableOfContentNavbarEl = this.$el.closest('.s_table_of_content_navbar_sticky.s_table_of_content_horizontal_navbar');
-            if (tableOfContentNavbarEl.length > 0) {
-                extraOffset += $(tableOfContentNavbarEl).outerHeight();
+    computeExtraOffset() {
+        let extraOffset = super.computeExtraOffset(...arguments);
+        if (this.el.classList.contains("table_of_content_link")) {
+            const tableOfContentNavbarEl = this.el.closest(".s_table_of_content_navbar_sticky.s_table_of_content_horizontal_navbar");
+            if (tableOfContentNavbarEl) {
+                extraOffset += tableOfContentNavbarEl.getBoundingClientRect().height;
             }
         }
         return extraOffset;
     },
 });
 
-publicWidget.registry.snippetTableOfContent = TableOfContent;
+registry
+    .category("public.interactions")
+    .add("website.table_of_content", TableOfContent);
 
-export default TableOfContent;
+registry
+    .category("public.interactions.edit")
+    .add("website.table_of_content", {
+        Interaction: TableOfContent,
+    });
