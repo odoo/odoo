@@ -1,12 +1,11 @@
 from odoo import Command
 from odoo.tools import misc
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.addons.account_reports.tests.common import TestAccountReportsCommon
 
 
 class JoEdiCommon(AccountTestInvoicingCommon):
     @classmethod
-    @TestAccountReportsCommon.setup_country('jo')
+    @AccountTestInvoicingCommon.setup_country('jo')
     def setUpClass(cls):
         super().setUpClass()
         cls.company_data['company'].write({
