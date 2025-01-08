@@ -66,7 +66,7 @@ class ProductProduct(models.Model):
                 continue
             line_qty = bom_line.product_uom_id._compute_quantity(bom_lines[bom_line]['qty'], bom_line.product_id.uom_id)
             moves = self.env['stock.move'].concat(*moves_list)
-            value += line_qty * bom_line.product_id._compute_average_price(qty_invoiced * line_qty, qty_to_invoice * line_qty, moves, is_returned=is_returned)
+            value += line_qty * bom_line.product_id.with_company(stock_moves.company_id)._compute_average_price(qty_invoiced * line_qty, qty_to_invoice * line_qty, moves, is_returned=is_returned)
         return value
 
     def _compute_bom_price(self, bom, boms_to_recompute=False, byproduct_bom=False):
