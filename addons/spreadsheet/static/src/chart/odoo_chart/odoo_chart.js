@@ -111,7 +111,7 @@ export class OdooChart extends AbstractChart {
     /**
      * @returns {OdooChart}
      */
-    copyForSheetId() {
+    duplicateInDuplicatedSheet() {
         return this;
     }
 
