@@ -2375,249 +2375,236 @@
 
     <!-- /shop/address route -->
     <template id="website_sale.address" name="Address Management">
-        <t t-set="no_footer" t-value="1"/>
-        <t t-call="website.layout">
-            <div id="wrap">
-                <div class="oe_website_sale o_wsale_address_fill container py-2">
-                    <div class="row">
-                        <div class="col-12">
-                            <t t-call="website_sale.wizard_checkout"/>
-                        </div>
+        <t t-call="website_sale.checkout_layout">
+            <div class="o_wsale_address_fill">
+                <div>
+                    <t t-if="not is_anonymous_cart">
+                        <t t-if="use_delivery_as_billing">
+                            <h3 class="mb-3">Your address</h3>
+                        </t>
+                        <t t-elif="address_type == 'delivery'">
+                            <h3 class="mb-3">Delivery address</h3>
+                        </t>
+                        <t t-else="">
+                            <h3 class="mb-3">Billing address</h3>
+                        </t>
+                    </t>
+                    <div
+                        t-if="use_delivery_as_billing and not only_services"
+                        class="alert alert-warning"
+                        role="alert"
+                        groups="account.group_delivery_invoice_address"
+                    >
+                        <p class="mb-0">
+                            You are editing your <b>delivery and billing</b> addresses
+                            at the same time!<br/>
+                            If you want to modify your billing address, create a
+                            <a href="/shop/address?address_type=billing">new address</a>.
+                        </p>
                     </div>
-                    <div class="row">
-                        <div class="oe_cart col-12 col-lg-8">
-                            <div>
-                                <t t-if="not is_anonymous_cart">
-                                    <t t-if="use_delivery_as_billing">
-                                        <h3 class="mb-3">Your address</h3>
-                                    </t>
-                                    <t t-elif="address_type == 'delivery'">
-                                        <h3 class="mb-3">Delivery address</h3>
-                                    </t>
-                                    <t t-else="">
-                                        <h3 class="mb-3">Billing address</h3>
-                                    </t>
-                                </t>
+                    <div id="errors"/> <!-- for js -->
+                    <form
+                        action="/shop/address/submit"
+                        method="post"
+                        class="checkout_autoformat"
+                        t-att-data-company-country-code="res_company.country_id.code"
+                    >
+                        <t t-if="is_anonymous_cart">
+                            <div id="div_email_public" t-attf-class="col-lg-12">
+                                <label class="col-form-label" for="o_email">Email</label>
                                 <div
-                                    t-if="use_delivery_as_billing and not only_services"
-                                    class="alert alert-warning"
-                                    role="alert"
-                                    groups="account.group_delivery_invoice_address"
+                                    t-if="website.account_on_checkout != 'disabled'"
+                                    class="align-items-center float-end"
+                                    style="margin-top: -11px"
                                 >
-                                    <h4 class="alert-heading">Be aware!</h4>
-                                    <p>
-                                        You are editing your <b>delivery and billing</b> addresses
-                                        at the same time!<br/>
-                                        If you want to modify your billing address, create a
-                                        <a href="/shop/address?address_type=billing">new address</a>.
-                                    </p>
+                                    <span>Already have an account?</span>
+                                    <a
+                                        role="button"
+                                        href='/web/login?redirect=/shop/checkout'
+                                        class="btn btn-primary"
+                                    >
+                                        Sign in
+                                    </a>
                                 </div>
-                                <div id="errors"/> <!-- for js -->
-                                <form
-                                    action="/shop/address/submit"
-                                    method="post"
-                                    class="checkout_autoformat"
-                                    t-att-data-company-country-code="res_company.country_id.code"
-                                >
-                                    <t t-if="is_anonymous_cart">
-                                        <div id="div_email_public" t-attf-class="col-lg-12">
-                                            <label class="col-form-label" for="o_email">Email</label>
-                                            <div
-                                                t-if="website.account_on_checkout != 'disabled'"
-                                                class="align-items-center float-end"
-                                                style="margin-top: -11px"
-                                            >
-                                                <span>Already have an account?</span>
-                                                <a
-                                                    role="button"
-                                                    href='/web/login?redirect=/shop/checkout'
-                                                    class="btn btn-primary"
-                                                >
-                                                    Sign in
-                                                </a>
-                                            </div>
-                                            <input
-                                                id="o_email"
-                                                type="email"
-                                                name="email"
-                                                class="form-control"
-                                                t-att-value="partner_sudo.email"
-                                            />
-                                        </div>
-                                        <h4 class="mb-1 mt-5">Fill in your address</h4>
-                                    </t>
-                                    <div class="row">
-                                        <div id="div_name" class="col-lg-12 mb-2">
-                                            <label class="col-form-label" for="o_name">Full name</label>
-                                            <input
-                                                id="o_name"
-                                                type="text"
-                                                name="name"
-                                                t-att-value="partner_sudo.name"
-                                                class="form-control"
-                                            />
-                                        </div>
-                                        <div class="w-100"/>
-                                        <div
-                                            t-if="not is_anonymous_cart"
-                                            id="div_email"
-                                            class="col-lg-6 mb-2"
+                                <input
+                                    id="o_email"
+                                    type="email"
+                                    name="email"
+                                    class="form-control"
+                                    t-att-value="partner_sudo.email"
+                                />
+                            </div>
+                            <h4 class="mb-1 mt-5">Fill in your address</h4>
+                        </t>
+                        <div class="row">
+                            <div id="div_name" class="col-lg-12 mb-2">
+                                <label class="col-form-label" for="o_name">Full name</label>
+                                <input
+                                    id="o_name"
+                                    type="text"
+                                    name="name"
+                                    t-att-value="partner_sudo.name"
+                                    class="form-control"
+                                />
+                            </div>
+                            <div class="w-100"/>
+                            <div
+                                t-if="not is_anonymous_cart"
+                                id="div_email"
+                                class="col-lg-6 mb-2"
+                            >
+                                <label class="col-form-label" for="o_email">Email</label>
+                                <input
+                                    id="o_email"
+                                    type="email"
+                                    name="email"
+                                    t-att-value="partner_sudo.email"
+                                    class="form-control"
+                                />
+                            </div>
+                            <div id="div_phone" class="col-lg-6 mb-2">
+                                <label class="col-form-label" for="o_phone">Phone</label>
+                                <input
+                                    id="o_phone"
+                                    type="tel"
+                                    name="phone"
+                                    t-att-value="partner_sudo.phone"
+                                    class="form-control"
+                                />
+                            </div>
+                            <t t-if="website._display_partner_b2b_fields()">
+                                <div class="w-100"/>
+                                <t t-if="show_vat">
+                                    <t t-set="vat_warning" t-value="partner_sudo.vat and not can_edit_vat"/>
+                                    <div id="company_name_div" class="col-lg-6 mb-2">
+                                        <label
+                                            class="col-form-label fw-normal label-optional"
+                                            for="o_company_name"
                                         >
-                                            <label class="col-form-label" for="o_email">Email</label>
-                                            <input
-                                                id="o_email"
-                                                type="email"
-                                                name="email"
-                                                t-att-value="partner_sudo.email"
-                                                class="form-control"
-                                            />
-                                        </div>
-                                        <div id="div_phone" class="col-lg-6 mb-2">
-                                            <label class="col-form-label" for="o_phone">Phone</label>
-                                            <input
-                                                id="o_phone"
-                                                type="tel"
-                                                name="phone"
-                                                t-att-value="partner_sudo.phone"
-                                                class="form-control"
-                                            />
-                                        </div>
-                                        <t t-if="website._display_partner_b2b_fields()">
-                                            <div class="w-100"/>
-                                            <t t-if="show_vat">
-                                                <t t-set="vat_warning" t-value="partner_sudo.vat and not can_edit_vat"/>
-                                                <div id="company_name_div" class="col-lg-6 mb-2">
-                                                    <label
-                                                        class="col-form-label fw-normal label-optional"
-                                                        for="o_company_name"
-                                                    >
-                                                        Company Name
-                                                    </label>
-                                                    <input
-                                                        id="o_company_name"
-                                                        type="text"
-                                                        name="company_name"
-                                                        t-att-value="partner_sudo.commercial_company_name"
-                                                        t-att-readonly="'1' if vat_warning else None"
-                                                        class="form-control"
-                                                    />
-                                                    <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">
-                                                        Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.
-                                                    </small>
-                                                </div>
-                                                <div id="div_vat" class="col-lg-6 mb-2">
-                                                    <label class="col-form-label fw-normal label-optional" for="o_vat">
-                                                        <t t-out="vat_label"/>
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        id="o_vat"
-                                                        name="vat"
-                                                        t-att-value="partner_sudo.vat"
-                                                        t-att-readonly="'1' if vat_warning else None"
-                                                        class="form-control"
-                                                    />
-                                                    <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">
-                                                        Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.
-                                                    </small>
-                                                </div>
-                                                <div t-if="vat_warning" class="col-12 d-none d-lg-block mb-1">
-                                                    <small class="form-text text-muted">
-                                                        Changing company name or VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.
-                                                    </small>
-                                                </div>
-                                            </t>
-                                        </t>
-                                        <div id="div_street" class="col-lg-12 mb-2">
-                                            <label class="col-form-label" for="o_street">Street and Number</label>
-                                            <input id="o_street" type="text" name="street" class="form-control" t-att-value="partner_sudo.street"/>
-                                        </div>
-                                        <div id="div_street2" class="col-lg-12 mb-2">
-                                            <label class="col-form-label label-optional" for="o_street2">Apartment, suite, etc.</label>
-                                            <input id="o_street2" type="text" name="street2" class="form-control" t-att-value="partner_sudo.street2" />
-                                        </div>
-                                        <div class="w-100"/>
-                                        <t t-if="zip_before_city">
-                                            <div id="div_zip" class="col-md-4 mb-2">
-                                                <label class="col-form-label label-optional" for="o_zip">Zip Code</label>
-                                                <input id="o_zip" type="text" name="zip" class="form-control" t-att-value="partner_sudo.zip"/>
-                                            </div>
-                                        </t>
-                                        <div id="div_city" class="col-md-8 mb-2">
-                                            <label class="col-form-label" for="o_city">City</label>
-                                            <input id="o_city" type="text" name="city" class="form-control" t-att-value="partner_sudo.city"/>
-                                        </div>
-                                        <t t-if="not zip_before_city">
-                                            <div id="div_zip" class="col-md-4 mb-2">
-                                                <label class="col-form-label label-optional" for="o_zip">Zip Code</label>
-                                                <input id="o_zip" type="text" name="zip" class="form-control" t-att-value="partner_sudo.zip"/>
-                                            </div>
-                                        </t>
-                                        <div class="w-100"/>
-                                        <div id="div_country" class="col-lg-6 mb-2">
-                                            <label class="col-form-label" for="o_country_id">Country</label>
-                                            <select id="o_country_id" name="country_id" class="form-select">
-                                                <option value="">Country...</option>
-                                                <t t-foreach="countries" t-as="c">
-                                                    <option t-att-value="c.id" t-att-selected="c.id == country.id" t-att-code="c.code">
-                                                        <t t-esc="c.name" />
-                                                    </option>
-                                                </t>
-                                            </select>
-                                        </div>
-                                        <div id="div_state" class="col-lg-6 mb-2"
-                                             t-att-style="not country_states and 'display: none'">
-                                            <label class="col-form-label" for="o_state_id">State / Province</label>
-                                            <select id="o_state_id" name="state_id" class="form-select">
-                                                <option value="">State / Province...</option>
-                                                <t t-foreach="country_states" t-as="s">
-                                                    <option t-att-value="s.id" t-att-selected="s.id == state_id">
-                                                        <t t-esc="s.name" />
-                                                    </option>
-                                                </t>
-                                            </select>
-                                        </div>
+                                            Company Name
+                                        </label>
+                                        <input
+                                            id="o_company_name"
+                                            type="text"
+                                            name="company_name"
+                                            t-att-value="partner_sudo.commercial_company_name"
+                                            t-att-readonly="'1' if vat_warning else None"
+                                            class="form-control"
+                                        />
+                                        <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">
+                                            Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.
+                                        </small>
                                     </div>
-                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
-                                    <input type="hidden" name="address_type" t-att-value="address_type"/>
-                                    <input
-                                        type="hidden"
-                                        name="use_delivery_as_billing"
-                                        t-att-value="use_delivery_as_billing"
-                                    />
-                                    <t t-if="partner_id">
-                                        <input type="hidden" name="partner_id" t-att-value="partner_id"/>
-                                    </t>
-                                    <t t-if="callback">
-                                        <input type="hidden" name="callback" t-att-value="callback"/>
-                                    </t>
-
-                                    <!-- Example -->
-                                    <input type="hidden" name="required_fields" t-att-value="'name,country_id'"/>
-
-                                    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between mt32 mb32">
-                                        <a role="button" t-att-href="discard_url" class="btn btn-outline-secondary w-100 w-md-auto order-md-1 order-3">
-                                            <i class="fw-light fa fa-angle-left me-2"/>Discard
-                                        </a>
-                                        <div class="position-relative w-100 d-flex d-md-none justify-content-center align-items-center order-2 my-2 opacity-75">
-                                            <hr class="w-100"/>
-                                            <span class="px-3">or</span>
-                                            <hr class="w-100"/>
-                                        </div>
-                                        <button id="save_address" class="btn btn-primary w-100 w-md-auto order-1 order-md-3">
-                                            <t t-if="is_anonymous_cart">
-                                                Continue checkout
-                                            </t>
-                                            <t t-else="">
-                                                Save address
-                                            </t>
-                                            <i class="fw-light fa fa-angle-right ms-2"/>
-                                        </button>
+                                    <div id="div_vat" class="col-lg-6 mb-2">
+                                        <label class="col-form-label fw-normal label-optional" for="o_vat">
+                                            <t t-out="vat_label"/>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="o_vat"
+                                            name="vat"
+                                            t-att-value="partner_sudo.vat"
+                                            t-att-readonly="'1' if vat_warning else None"
+                                            class="form-control"
+                                        />
+                                        <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">
+                                            Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.
+                                        </small>
                                     </div>
-                                </form>
+                                    <div t-if="vat_warning" class="col-12 d-none d-lg-block mb-1">
+                                        <small class="form-text text-muted">
+                                            Changing company name or VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.
+                                        </small>
+                                    </div>
+                                </t>
+                            </t>
+                            <div id="div_street" class="col-lg-12 mb-2">
+                                <label class="col-form-label" for="o_street">Street and Number</label>
+                                <input id="o_street" type="text" name="street" class="form-control" t-att-value="partner_sudo.street"/>
+                            </div>
+                            <div id="div_street2" class="col-lg-12 mb-2">
+                                <label class="col-form-label label-optional" for="o_street2">Apartment, suite, etc.</label>
+                                <input id="o_street2" type="text" name="street2" class="form-control" t-att-value="partner_sudo.street2" />
+                            </div>
+                            <div class="w-100"/>
+                            <t t-if="zip_before_city">
+                                <div id="div_zip" class="col-md-4 mb-2">
+                                    <label class="col-form-label label-optional" for="o_zip">Zip Code</label>
+                                    <input id="o_zip" type="text" name="zip" class="form-control" t-att-value="partner_sudo.zip"/>
+                                </div>
+                            </t>
+                            <div id="div_city" class="col-md-8 mb-2">
+                                <label class="col-form-label" for="o_city">City</label>
+                                <input id="o_city" type="text" name="city" class="form-control" t-att-value="partner_sudo.city"/>
+                            </div>
+                            <t t-if="not zip_before_city">
+                                <div id="div_zip" class="col-md-4 mb-2">
+                                    <label class="col-form-label label-optional" for="o_zip">Zip Code</label>
+                                    <input id="o_zip" type="text" name="zip" class="form-control" t-att-value="partner_sudo.zip"/>
+                                </div>
+                            </t>
+                            <div class="w-100"/>
+                            <div id="div_country" class="col-lg-6 mb-2">
+                                <label class="col-form-label" for="o_country_id">Country</label>
+                                <select id="o_country_id" name="country_id" class="form-select">
+                                    <option value="">Country...</option>
+                                    <t t-foreach="countries" t-as="c">
+                                        <option t-att-value="c.id" t-att-selected="c.id == country.id" t-att-code="c.code">
+                                            <t t-esc="c.name" />
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+                            <div id="div_state" class="col-lg-6 mb-2"
+                                    t-att-style="not country_states and 'display: none'">
+                                <label class="col-form-label" for="o_state_id">State / Province</label>
+                                <select id="o_state_id" name="state_id" class="form-select">
+                                    <option value="">State / Province...</option>
+                                    <t t-foreach="country_states" t-as="s">
+                                        <option t-att-value="s.id" t-att-selected="s.id == state_id">
+                                            <t t-esc="s.name" />
+                                        </option>
+                                    </t>
+                                </select>
                             </div>
                         </div>
-                    </div>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
+                        <input type="hidden" name="address_type" t-att-value="address_type"/>
+                        <input
+                            type="hidden"
+                            name="use_delivery_as_billing"
+                            t-att-value="use_delivery_as_billing"
+                        />
+                        <t t-if="partner_id">
+                            <input type="hidden" name="partner_id" t-att-value="partner_id"/>
+                        </t>
+                        <t t-if="callback">
+                            <input type="hidden" name="callback" t-att-value="callback"/>
+                        </t>
+
+                        <!-- Example -->
+                        <input type="hidden" name="required_fields" t-att-value="'name,country_id'"/>
+
+                        <div class="d-flex flex-column flex-md-row align-items-center justify-content-between mt32 mb32">
+                            <a role="button" t-att-href="discard_url" class="btn btn-outline-secondary w-100 w-md-auto order-md-1 order-3">
+                                <i class="fw-light fa fa-angle-left me-2"/>Discard
+                            </a>
+                            <div class="position-relative w-100 d-flex d-md-none justify-content-center align-items-center order-2 my-2 opacity-75">
+                                <hr class="w-100"/>
+                                <span class="px-3">or</span>
+                                <hr class="w-100"/>
+                            </div>
+                            <button id="save_address" class="btn btn-primary w-100 w-md-auto order-1 order-md-3">
+                                <t t-if="is_anonymous_cart">
+                                    Continue checkout
+                                </t>
+                                <t t-else="">
+                                    Save address
+                                </t>
+                                <i class="fw-light fa fa-angle-right ms-2"/>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </t>
