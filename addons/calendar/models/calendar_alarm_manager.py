@@ -40,7 +40,7 @@ class AlarmManager(models.AbstractModel):
                         END as last_alarm,
                         cal.start as first_event_date,
                         CASE
-                            WHEN cal.recurrency AND end_type = 'end_date' THEN rrule.until
+                            WHEN cal.recurrency AND rrule.end_type = 'end_date' THEN rrule.until
                             ELSE cal.stop
                         END as last_event_date,
                         calcul_delta.min_delta,
