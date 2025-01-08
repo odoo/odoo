@@ -343,3 +343,36 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
 
         event = self.env['calendar.event'].search([("microsoft_id", "=", ms_event[0]["id"])])
         self.assertEqual(event.videocall_location, ms_event[0]["onlineMeeting"]["joinUrl"])
+
+    def test_event_reminder_emails_with_microsoft_id(self):
+        """
+        Odoo shouldn't send email reminders for synced events.
+        Test that events synced to Microsoft (with a `microsoft_id`)
+        are excluded from email alarm notifications.
+        """
+        now = datetime.now()
+        start = now - relativedelta(minutes=30)
+        end = now + relativedelta(hours=2)
+        alarm = self.env['calendar.alarm'].create({
+            'name': 'Alarm',
+            'alarm_type': 'email',
+            'interval': 'minutes',
+            'duration': 30,
+        })
+        ms_event = self.single_event
+        ms_event[0].update({
+            'isOnlineMeeting': True,
+            'alarm_id': alarm.id,
+            'start': {
+                'dateTime': pytz.utc.localize(start).isoformat(),
+                'timeZone': 'Europe/Brussels'
+            },
+            'reminders': {'overrides': [{"method": "email", "minutes": 30}], 'useDefault': False},
+            'end': {
+                'dateTime': pytz.utc.localize(end).isoformat(),
+                'timeZone': 'Europe/Brussels'
+            },
+        })
+        self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(ms_event))
+        events_by_alarm = self.env['calendar.alarm_manager']._get_events_by_alarm_to_notify('email')
+        self.assertFalse(events_by_alarm, "Events with microsoft_id should not trigger reminders")
