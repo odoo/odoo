@@ -7,17 +7,18 @@
 //
 /*
 import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
-import publicWidget from '@web/legacy/js/public/public_widget';
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 
-publicWidget.registry.HelloWorldPopup = publicWidget.Widget.extend({
-    selector: '#wrapwrap',
+class HelloWorldPopup extends Interaction {
+    static selector = "#wrapwrap"
 
-    init() {
-        this.dialog = this.bindService("dialog");
-    },
     start() {
-        this.dialog.add(ConfirmationDialog, { body: 'Hello World' });
-        return this._super.apply(this, arguments);
-    },
-});
+        this.services.dialog.add(ConfirmationDialog, { body: "hello world"})
+    }
+};
+
+registry
+    .category("public.interactions")
+    .add("website.hello_world_popup", HelloWorldPopup);
 */

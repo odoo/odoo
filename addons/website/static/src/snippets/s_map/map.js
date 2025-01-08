@@ -1,15 +1,13 @@
-import publicWidget from '@web/legacy/js/public/public_widget';
-import {generateGMapLink, generateGMapIframe} from '@website/js/utils';
-import { ObservingCookieWidgetMixin } from "@website/snippets/observing_cookie_mixin";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 
-publicWidget.registry.Map = publicWidget.Widget.extend(ObservingCookieWidgetMixin, {
-    selector: '.s_map',
+import { generateGMapLink, generateGMapIframe } from "@website/js/utils";
 
-    /**
-     * @override
-     */
+export class Map extends Interaction {
+    static selector = ".s_map";
+
     start() {
-        if (!this.el.querySelector('.s_map_embedded')) {
+        if (!this.el.querySelector(".s_map_embedded")) {
             // The iframe is not found inside the snippet. This is probably due
             // to the sanitization of a field during the save, like in a product
             // description field.
@@ -17,12 +15,13 @@ publicWidget.registry.Map = publicWidget.Widget.extend(ObservingCookieWidgetMixi
             const dataset = this.el.dataset;
             if (dataset.mapAddress) {
                 const iframeEl = generateGMapIframe();
-                this.el.querySelector('.s_map_color_filter').before(iframeEl);
-                this._manageIframeSrc(this.el, generateGMapLink(dataset));
+                this.el.querySelector(".s_map_color_filter").before(iframeEl);
+                this.services.website_cookies.manageIframeSrc(iframeEl, generateGMapLink(dataset));
             }
         }
-        return this._super(...arguments);
-    },
-});
+    }
+}
 
-export default publicWidget.registry.Map;
+registry
+    .category("public.interactions")
+    .add("website.map", Map);

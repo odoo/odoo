@@ -1,30 +1,21 @@
-import publicWidget from '@web/legacy/js/public/public_widget';
+import { registry } from "@web/core/registry";
+import { Interaction } from "@web/public/interaction";
 
-publicWidget.registry.o_plausible_push = publicWidget.Widget.extend({
-    selector: '.js_plausible_push',
+export class PlausiblePush extends Interaction {
+    static selector = ".js_plausible_push";
 
-    /**
-     * @override
-     */
-    start() {
-        window.plausible = window.plausible || function () {
-            (window.plausible.q = window.plausible.q || []).push(arguments);
-        };
-        this._push();
-        return this._super(...arguments);
-    },
+    setup() {
+        const { eventName, eventParams } = this.el.dataset;
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+        window.plausible =
+            window.plausible ||
+            function () {
+                (window.plausible.q = window.plausible.q || []).push(arguments);
+            };
+        window.plausible(eventName, { props: eventParams || {} });
+    }
+}
 
-    /**
-     * Pushes the event `data-event-name` to Plausible with params
-     * `data-event-params`
-     */
-    _push() {
-        const evName = this.$el.data('event-name').toString();
-        const evParams = this.$el.data('event-params') || {};
-        window.plausible(evName, {props: evParams});
-    },
-});
+registry
+    .category("public.interactions")
+    .add("website.plausible_push", PlausiblePush);

@@ -1,3 +1,4 @@
+
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -192,7 +193,19 @@
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
+            'website/static/src/interactions/**/*',
+            'website/static/src/core/**/*',
+            'website/static/src/utils/**/*',
+            ('remove', 'website/static/src/interactions/**/*.edit.js'),
+            # Multi-range is an opt-in feature.
+            ('remove', 'website/static/src/interactions/multirange_input.js'),
+            # Activated on-demand by website.ripple_effect_js.
+            ('remove', 'website/static/src/interactions/ripple_effect.js'),
+            ('remove', 'website/static/src/core/website_edit_service.js'),
             ('replace', 'web/static/src/legacy/js/public/public_root_instance.js', 'website/static/src/js/content/website_root_instance.js'),
+            'website/static/src/snippets/**/*.js',
+            ('remove', 'website/static/src/snippets/**/*.edit.js'),
+            ('remove', 'website/static/src/snippets/**/options.js'),
             'website/static/src/libs/zoomodoo/zoomodoo.scss',
             'website/static/src/scss/website.scss',
             'website/static/src/scss/website_controller_page.scss',
@@ -205,12 +218,7 @@
             'website/static/src/js/tours/tour_utils.js',
             'website/static/src/js/content/website_root.js',
             'website/static/src/js/content/compatibility.js',
-            'website/static/src/js/content/menu.js',
             'website/static/src/js/content/snippets.animation.js',
-            'website/static/src/js/show_password.js',
-            'website/static/src/js/post_link.js',
-            'website/static/src/js/plausible.js',
-            'website/static/src/js/website_controller_page_listing_layout.js',
             'website/static/src/js/user_custom_javascript.js',
             'website/static/src/js/http_cookie.js',
             'website/static/src/xml/website.xml',
@@ -220,6 +228,7 @@
             'website/static/src/snippets/observing_cookie_mixin.js',
         ],
         'web.assets_frontend_minimal': [
+            'website/static/src/utils/misc.js',
             'website/static/src/js/content/inject_dom.js',
             'website/static/src/js/content/auto_hide_menu.js',
             'website/static/src/js/content/redirect.js',
@@ -227,10 +236,15 @@
         ],
         'web.assets_frontend_lazy': [
             # Remove assets_frontend_minimal
+            ('remove', 'website/static/src/utils/misc.js'),
             ('remove', 'website/static/src/js/content/inject_dom.js'),
             ('remove', 'website/static/src/js/content/auto_hide_menu.js'),
             ('remove', 'website/static/src/js/content/redirect.js'),
             ('remove', 'website/static/src/js/content/adapt_content.js'),
+        ],
+        'website.assets_edit_frontend': [
+            'website/static/src/**/*.edit.js',
+            'website/static/src/core/website_edit_service.js',
         ],
         'web._assets_primary_variables': [
             'website/static/src/scss/primary_variables.scss',
@@ -283,6 +297,29 @@
         ],
         'web.qunit_suite_tests': [
             'website/static/tests/redirect_field_tests.js',
+        ],
+        'web.assets_unit_tests': [
+            'web/static/src/legacy/js/public/minimal_dom.js',
+            'website/static/tests/core/**/*',
+            'website/static/tests/helpers.js',
+            'website/static/tests/interactions/**/*',
+        ],
+        'web.assets_unit_tests_setup': [
+            'web/static/src/legacy/js/core/class.js',
+            'web/static/src/legacy/js/public/lazyloader.js',
+            'web/static/src/legacy/js/public/public_widget.js',
+            'web/static/src/legacy/js/public/public_root.js',
+            'website/static/lib/multirange/*.js',
+            'website/static/src/core/**/*',
+            'website/static/src/utils/**/*',
+            'website/static/src/interactions/**/*',
+            'website/static/src/snippets/**/*.js',
+            ('remove', 'website/static/src/snippets/**/000.js'),
+            ('remove', 'website/static/src/snippets/**/options.js'),
+            'website/static/src/snippets/**/*.xml',
+            'website/static/src/xml/**/*.xml',
+            'website/static/src/snippets/s_table_of_content/000.scss',
+            'google_recaptcha/static/src/js/recaptcha.js',
         ],
         'web.tests_assets': [
             'website/static/tests/website_service_mock.js',

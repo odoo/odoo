@@ -5,40 +5,31 @@
 // On mouse up, we hide it again.
 //
 
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { registry } from "@web/core/registry";
+import { Interaction } from "@web/public/interaction";
 
-publicWidget.registry.ShowPassword = publicWidget.Widget.extend({
-    selector: '#showPass',
-    events: {
-        'mousedown': '_onShowText',
-        'touchstart': '_onShowText',
-    },
+class ShowPassword extends Interaction {
+    static selector = "#showPass";
+    dynamicContent = {
+        "_root": { "t-on-pointerdown": this.showText },
+    };
 
-    /**
-     * @override
-     */
-    destroy: function () {
-        this._super(...arguments);
-        $('body').off(".ShowPassword");
-    },
+    showText() {
+        const passwordEl = this.el
+            .closest(".input-group")
+            .querySelector("#password");
+        passwordEl.setAttribute("type", "text");
+        this.addListener(
+            document.body,
+            "pointerup",
+            () => {
+                passwordEl.setAttribute("type", "password");
+            },
+            { once: true },
+        );
+    }
+}
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onShowPassword: function () {
-        this.$el.closest('.input-group').find('#password').attr('type', 'password');
-    },
-    /**
-     * @private
-     */
-    _onShowText: function () {
-        $('body').one('mouseup.ShowPassword touchend.ShowPassword', this._onShowPassword.bind(this));
-        this.$el.closest('.input-group').find('#password').attr('type', 'text');
-    },
-});
-
-export default publicWidget.registry.ShowPassword;
+registry
+    .category("public.interactions")
+    .add("website.show_password", ShowPassword);

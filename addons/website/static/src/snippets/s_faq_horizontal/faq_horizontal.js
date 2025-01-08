@@ -1,52 +1,35 @@
-import {extraMenuUpdateCallbacks} from "@website/js/content/menu";
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 
-const faqHorizontal = publicWidget.Widget.extend({
-    selector: '.s_faq_horizontal',
-    disabledInEditableMode: false,
+class FaqHorizontal extends Interaction {
+    static selector = ".s_faq_horizontal";
 
-    /**
-     * @override
-     */
-    async start() {
-        await this._super(...arguments);
+    setup() {
+        this.titles = this.el.getElementsByClassName("s_faq_horizontal_entry_title");
+        this.registerCleanup(this.services.website_menus.registerCallback(this.updateTitlesPosition.bind(this)));
+    }
 
-        this.titles = this.$el[0].getElementsByClassName('s_faq_horizontal_entry_title');
+    start() {
+        this.updateTitlesPosition();
+    }
 
-        this._updateTitlesPosition();
-        this._updateTitlesPositionBound = this._updateTitlesPosition.bind(this);
-        extraMenuUpdateCallbacks.push(this._updateTitlesPositionBound);
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        const indexCallback = extraMenuUpdateCallbacks.indexOf(this._updateTitlesPositionBound);
-        if (indexCallback >= 0) {
-            extraMenuUpdateCallbacks.splice(indexCallback, 1);
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _updateTitlesPosition() {
+    updateTitlesPosition() {
         let position = 16; // Add 1rem equivalent in px to provide a visual gap by default
-        const fixedElements = document.getElementsByClassName('o_top_fixed_element');
+        for (const el of document.querySelectorAll(".o_top_fixed_element")) {
+            position += el.getBoundingClientRect().bottom;
+        }
 
-        Array.from(fixedElements).forEach((el) => position += el.offsetHeight);
-
-        Array.from(this.titles).forEach((title) => {
+        for (const title of this.titles) {
             title.style.top = `${position}px`;
             title.style.maxHeight = `calc(100vh - ${position + 40}px)`;
-        });
-    },
-});
+        }
+    }
+}
 
-publicWidget.registry.snippetFaqHorizontal = faqHorizontal;
+registry
+    .category("public.interactions")
+    .add("website.faq_horizontal", FaqHorizontal);
 
-export default faqHorizontal;
+registry
+    .category("public.interactions.edit")
+    .add("website.faq_horizontal", { Interaction: FaqHorizontal });

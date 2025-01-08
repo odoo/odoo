@@ -1,29 +1,35 @@
-import publicWidget from "@web/legacy/js/public/public_widget";
-import weUtils from "@web_editor/js/common/utils";
-import { isCSSColor } from '@web/core/utils/colors';
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { _t } from "@web/core/l10n/translation";
+import { isCSSColor } from "@web/core/utils/colors";
 import { renderToElement } from "@web/core/utils/render";
+import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 
-const CountdownWidget = publicWidget.Widget.extend({
-    selector: '.s_countdown',
-    disabledInEditableMode: false,
+class Countdown extends Interaction {
+    static selector = ".s_countdown";
+    dynamicContent = {
+        ".s_countdown_canvas_wrapper": { 
+            "t-att-class": () => ({
+                "d-flex": true,
+                "justify-content-center": true,
+            })
+        },
+    }
 
-    /**
-     * @override
-     */
-    start: function () {
+    setup() {
         // Remove SVG previews (used to simulated canvas)
-        this.$el[0].querySelectorAll('svg').forEach(el => {
+        this.el.querySelectorAll("svg").forEach(el => {
             el.parentNode.remove();
-        });
+        })
 
-        this.$wrapper = this.$('.s_countdown_canvas_wrapper');
-        this.$wrapper.addClass('d-flex justify-content-center');
+        this.wrapperEl = this.el.querySelector(".s_countdown_canvas_wrapper");
         this.hereBeforeTimerEnds = false;
         this.endAction = this.el.dataset.endAction;
         this.endTime = parseInt(this.el.dataset.endTime);
         this.size = parseInt(this.el.dataset.size);
         this.display = this.el.dataset.display;
+
         if (!this.display && this.el.dataset.bsDisplay) {
             // With the BS5 upgrade script of 16.0, countdowns' data-display may
             // have been converted to data-bs-display by mistake. This will fix
@@ -41,270 +47,245 @@ const CountdownWidget = publicWidget.Widget.extend({
         this.progressBarStyle = this.el.dataset.progressBarStyle;
         this.progressBarWeight = this.el.dataset.progressBarWeight;
 
-        this.textColor = this._ensureCssColor(this.el.dataset.textColor);
-        this.layoutBackgroundColor = this._ensureCssColor(this.el.dataset.layoutBackgroundColor);
-        this.progressBarColor = this._ensureCssColor(this.el.dataset.progressBarColor);
+        this.textColor = this.ensureCSSColor(this.el.dataset.textColor);
+        this.layoutBackgroundColor = this.ensureCSSColor(this.el.dataset.layoutBackgroundColor);
+        this.progressBarColor = this.ensureCSSColor(this.el.dataset.progressBarColor);
 
-        this.onlyOneUnit = this.display === 'd';
-        this.width = parseInt(this.size);
-        if (this.layout === 'boxes') {
+        this.onlyOneUnit = this.display === "d";
+        this.width = this.size;
+        if (this.layout === "boxes") {
             this.width /= 1.75;
         }
-        this._initTimeDiff();
+        this.initTimeDiff();
 
-        this._render();
+        this.render();
 
-        this.setInterval = setInterval(this._render.bind(this), 1000);
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    destroy: function () {
-        this.$('.s_countdown_end_redirect_message').remove();
-        this.$('.s_countdown_end_message').addClass('d-none');
-        this.$('.s_countdown_text_wrapper').remove();
-        this.$('.s_countdown_canvas_wrapper').removeClass('d-none');
-        this.$('.s_countdown_canvas_flex').remove();
+        this.setInterval = setInterval(this.render.bind(this), 1000);
+    }
+
+    destroy() {
+        this.el.querySelector(".s_countdown_end_message")?.classList.add("d-none");
+        this.el.querySelector(".s_countdown_canvas_wrapper")?.classList.remove("d-none");
 
         clearInterval(this.setInterval);
-        this._super(...arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+    }
 
     /**
-     * Ensures the color is an actual css color. In case of a color variable,
-     * the color will be mapped to hexa.
+     * Ensures the input is a valid CSS color
      *
-     * @private
      * @param {string} color
      * @returns {string}
      */
-    _ensureCssColor: function (color) {
+    ensureCSSColor(color) {
         if (isCSSColor(color)) {
             return color;
         }
-        return weUtils.getCSSVariableValue(color) || this.defaultColor;
-    },
-    /**
-     * Gets the time difference in seconds between now and countdown due date.
-     *
-     * @private
-     */
-    _getDelta: function () {
-        const currentTimestamp = Date.now() / 1000;
-        return this.endTime - currentTimestamp;
-    },
+        return getCSSVariableValue(color, getHtmlStyle(document)) || "";
+    }
+
     /**
      * Handles the action that should be executed once the countdown ends.
-     *
-     * @private
      */
-    _handleEndCountdownAction: function () {
-        if (this.endAction === 'redirect') {
-            const redirectUrl = this.el.dataset.redirectUrl || '/';
+    handleEndCountdownAction() {
+        if (this.endAction === "redirect") {
+            const redirectUrl = this.el.dataset.redirectUrl || "/";
             if (this.hereBeforeTimerEnds) {
-                // Wait a bit, if the landing page has the same publish date
                 setTimeout(() => window.location = redirectUrl, 500);
             } else {
-                // Show (non editable) msg when user lands on already finished countdown
-                if (!this.$('.s_countdown_end_redirect_message').length) {
-                    const $container = this.$('> .container, > .container-fluid, > .o_container_small');
-                    $container.append(
-                        $(renderToElement('website.s_countdown.end_redirect_message', {
-                            redirectUrl: redirectUrl,
-                        }))
-                    );
+                if (!this.el.querySelector(".s_countdown_end_redirect_message").length) {
+                    const container = this.el.querySelector("> .container, > .container-fluid, > .o_container_small");
+
+                    this.insert(renderToElement("website.s_countdown.end_redirect_message", {
+                        redirectUrl: redirectUrl,
+                    }), container);
                 }
             }
-        } else if (this.endAction === 'message' || this.endAction === 'message_no_countdown') {
-            this.$('.s_countdown_end_message').removeClass('d-none');
+        } else if (this.endAction === "message" || this.endAction === "message_no_countdown") {
+            this.el.querySelector(".s_countdown_end_message").removeClass("d-none");
         }
-    },
+    }
+
+    getDelta() {
+        return this.endTime - (Date.now() / 1000);
+    }
+
+    createCanvasWrapper() {
+        const divEl = document.createElement("div");
+        divEl.classList.add("s_countdown_canvas_flex");
+        const canvasEl = document.createElement("canvas");
+        canvasEl.classList.add("w-100");
+        divEl.appendChild(canvasEl);
+        return divEl;
+    }
+
     /**
-     * Initializes the `diff` object. It will contains every visible time unit
+     * The timeDiff object will contains every visible time unit
      * which will each contain its related canvas, total step, label..
-     *
-     * @private
      */
-    _initTimeDiff: function () {
-        const delta = this._getDelta();
-        this.diff = [];
-        if (this._isUnitVisible('d') && !(this.onlyOneUnit && delta < 86400)) {
-            this.diff.push({
-                canvas: $('<div class="s_countdown_canvas_flex"><canvas class="w-100"/></div>').appendTo(this.$wrapper)[0],
+    initTimeDiff() {
+        const delta = this.getDelta();
+        this.timeDiff = [];
+        if (this.isUnitVisible("d") && !(this.onlyOneUnit && delta < 86400)) {
+            const divEl = this.createCanvasWrapper();
+            this.insert(divEl, this.wrapperEl);
+            this.timeDiff.push({
+                canvas: divEl,
                 // There is no logical number of unit (total) on which day units
-                //  can be compared against, so we use an arbitrary number.
+                // can be compared against, so we use an arbitrary number.
                 total: 15,
                 label: _t("Days"),
                 nbSeconds: 86400,
             });
         }
-        if (this._isUnitVisible('h') || (this.onlyOneUnit && delta < 86400 && delta > 3600)) {
-            this.diff.push({
-                canvas: $('<div class="s_countdown_canvas_flex"><canvas class="w-100"/></div>').appendTo(this.$wrapper)[0],
+        if (this.isUnitVisible("h") || (this.onlyOneUnit && delta < 86400 && delta > 3600)) {
+            const divEl = this.createCanvasWrapper();
+            this.insert(divEl, this.wrapperEl);
+            this.timeDiff.push({
+                canvas: divEl,
                 total: 24,
                 label: _t("Hours"),
                 nbSeconds: 3600,
             });
         }
-        if (this._isUnitVisible('m') || (this.onlyOneUnit && delta < 3600 && delta > 60)) {
-            this.diff.push({
-                canvas: $('<div class="s_countdown_canvas_flex"><canvas class="w-100"/></div>').appendTo(this.$wrapper)[0],
+        if (this.isUnitVisible("m") || (this.onlyOneUnit && delta < 3600 && delta > 60)) {
+            const divEl = this.createCanvasWrapper();
+            this.insert(divEl, this.wrapperEl);
+            this.timeDiff.push({
+                canvas: divEl,
                 total: 60,
                 label: _t("Minutes"),
                 nbSeconds: 60,
             });
         }
-        if (this._isUnitVisible('s') || (this.onlyOneUnit && delta < 60)) {
-            this.diff.push({
-                canvas: $('<div class="s_countdown_canvas_flex"><canvas class="w-100"/></div>').appendTo(this.$wrapper)[0],
+        if (this.isUnitVisible("s") || (this.onlyOneUnit && delta < 60)) {
+            const divEl = this.createCanvasWrapper();
+            this.insert(divEl, this.wrapperEl);
+            this.timeDiff.push({
+                canvas: divEl,
                 total: 60,
                 label: _t("Seconds"),
                 nbSeconds: 1,
             });
         }
-    },
+    }
+
+    updateTimediff() {
+        let delta = this.getDelta();
+        this.isFinished = delta < 0;
+        if (this.isFinished) {
+            for (const unitData of this.timeDiff) {
+                unitData.nb = 0;
+            }
+            return;
+        }
+        this.hereBeforeTimerEnds = true;
+        for (const unitData of this.timeDiff) {
+            unitData.nb = Math.floor(delta / unitData.nbSeconds);
+            delta -= unitData.nb * unitData.nbSeconds;
+        }
+    }
+
     /**
-     * Returns weither or not the countdown should be displayed for the given
-     * unit (days, sec..).
-     *
-     * @private
-     * @param {string} unit - either 'd', 'm', 'h', or 's'
+     * @param {string} unit - either "d", "m", "h", or "s"
      * @returns {boolean}
      */
-    _isUnitVisible: function (unit) {
+    isUnitVisible(unit) {
         return this.display.includes(unit);
-    },
+    }
+
     /**
      * Draws the whole countdown, including one countdown for each time unit.
-     *
-     * @private
      */
-    _render: function () {
-
-        // If only one unit mode, restart widget on unit change to populate diff
-        if (this.onlyOneUnit && this._getDelta() < this.diff[0].nbSeconds) {
-            this.$('.s_countdown_canvas_flex').remove();
-            this._initTimeDiff();
+    render() {
+        if (this.onlyOneUnit && this.getDelta() < this.timeDiff[0].nbSeconds) {
+            this.el.querySelector(".s_countdown_canvas_flex").remove();
+            this.initTimeDiff();
         }
-        this._updateTimeDiff();
+        this.updateTimediff();
 
-        const hideCountdown = this.isFinished && !this.editableMode && this.$el.hasClass('hide-countdown');
-        if (this.layout === 'text') {
-            this.$('.s_countdown_canvas_flex').addClass('d-none');
-            if (!this.$textWrapper) {
-                this.$textWrapper = $('<span/>').attr({
-                    class: 's_countdown_text_wrapper d-none',
-                });
-                this.$textWrapper.text(_t("Countdown ends in"));
-                this.$textWrapper.append($('<span/>').attr({
-                    class: 's_countdown_text ms-1',
-                }));
-                this.$textWrapper.appendTo(this.$wrapper);
+        const hideCountdown = this.isFinished && !this.editableMode && this.el.classList.contains("hide-countdown");
+        if (this.layout === "text") {
+            const canvasEls = this.el.querySelectorAll(".s_countdown_canvas_flex")
+            for (const canvasEl of canvasEls) {
+                canvasEl.classList.add("d-none");
             }
+            if (!this.textWrapperEl) {
+                this.textWrapperEl = document.createElement("span");
+                this.textWrapperEl.classList.add("s_countdown_text_wrapper", "d-none");
+                this.textWrapperEl.textContent = _t("Countdown ends in");
+                const spanEl = document.createElement("span");
+                spanEl.classList.add("s_countdown_text", "ms-1");
+                this.textWrapperEl.appendChild(spanEl);
+                this.insert(this.textWrapperEl, this.wrapperEl);
+            }
+            this.textWrapperEl.classList.toggle("d-none", hideCountdown);
 
-            this.$textWrapper.toggleClass('d-none', hideCountdown);
-
-            const countdownText = this.diff.map(e => e.nb + ' ' + e.label).join(', ');
-            this.$('.s_countdown_text').text(countdownText.toLowerCase());
+            const countdownText = this.timeDiff.map(e => e.nb + " " + e.label).join(", ");
+            this.el.querySelector(".s_countdown_text").innerText = countdownText.toLowerCase();
         } else {
-            for (const val of this.diff) {
-                const canvas = val.canvas.querySelector('canvas');
+            for (const val of this.timeDiff) {
+                const canvas = val.canvas.querySelector("canvas");
                 const ctx = canvas.getContext("2d");
                 ctx.canvas.width = this.width;
                 ctx.canvas.height = this.size;
-                this._clearCanvas(ctx);
+                this.clearCanvas(ctx);
 
-                $(canvas).toggleClass('d-none', hideCountdown);
+                canvas.classList.toggle("d-none", hideCountdown);
                 if (hideCountdown) {
                     continue;
                 }
 
                 // Draw canvas elements
-                if (this.layoutBackground !== 'none') {
-                    this._drawBgShape(ctx, this.layoutBackground === 'plain');
+                if (this.layoutBackground !== "none") {
+                    this.drawBgShape(ctx, this.layoutBackground === "plain");
                 }
-                this._drawText(canvas, val.nb, val.label, this.layoutBackground === 'plain');
-                if (this.progressBarStyle === 'surrounded') {
-                    this._drawProgressBarBg(ctx, this.progressBarWeight === 'thin');
+                this.drawText(canvas, val.nb, val.label, this.layoutBackground === "plain");
+                if (this.progressBarStyle === "surrounded") {
+                    this.drawProgressBarBg(ctx, this.progressBarWeight === "thin");
                 }
-                if (this.progressBarStyle !== 'none') {
-                    this._drawProgressBar(ctx, val.nb, val.total, this.progressBarWeight === 'thin');
+                if (this.progressBarStyle !== "none") {
+                    this.drawProgressBar(ctx, val.nb, val.total, this.progressBarWeight === "thin");
                 }
-                this.$('.s_countdown_canvas_flex').toggleClass('mx-1', this.layout === 'boxes');
+                val.canvas.classList.toggle("mx-1", this.layout === "boxes");
             }
         }
 
         if (this.isFinished) {
             clearInterval(this.setInterval);
             if (!this.editableMode) {
-                this._handleEndCountdownAction();
+                this.handleEndCountdownAction();
             }
         }
-    },
-    /**
-     * Updates the remaining units into the `diff` object.
-     *
-     * @private
-     */
-    _updateTimeDiff: function () {
-        let delta = this._getDelta();
-        this.isFinished = delta < 0;
-        if (this.isFinished) {
-            for (const unitData of this.diff) {
-                  unitData.nb = 0;
-            }
-            return;
-        }
-
-        this.hereBeforeTimerEnds = true;
-        for (const unitData of this.diff) {
-              unitData.nb = Math.floor(delta / unitData.nbSeconds);
-              delta -= unitData.nb * unitData.nbSeconds;
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Canvas drawing methods
-    //--------------------------------------------------------------------------
+    }
 
     /**
-     * Erases the canvas.
-     *
-     * @private
-     * @param {RenderingContext} ctx - Context of the canvas
+     * @param {CanvasRenderingContext2D} ctx - Context of the canvas
      */
-    _clearCanvas: function (ctx) {
+    clearCanvas(ctx) {
         ctx.clearRect(0, 0, this.size, this.size);
-    },
+    }
+
     /**
-     * Draws a text into the canvas.
-     *
-     * @private
      * @param {HTMLCanvasElement} canvas
      * @param {string} textNb - text to display in the center of the canvas, in big
      * @param {string} textUnit - text to display bellow `textNb` in small
      * @param {boolean} full - if true, the shape will be drawn up to the progressbar
      */
-    _drawText: function (canvas, textNb, textUnit, full = false) {
+    drawText(canvas, textNb, textUnit, full = false) {
         const ctx = canvas.getContext("2d");
         const nbSize = this.size / 4;
         ctx.font = `${nbSize}px Arial`;
         ctx.fillStyle = this.textColor;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
         ctx.fillText(textNb, canvas.width / 2, canvas.height / 2);
 
         const unitSize = this.size / 12;
         ctx.font = `${unitSize}px Arial`;
         ctx.fillText(textUnit, canvas.width / 2, canvas.height / 2 + nbSize / 1.5, this.width);
 
-        if (this.layout === 'boxes' && this.layoutBackground !== 'none' && this.progressBarStyle === 'none') {
-            let barWidth = this.size / (this.progressBarWeight === 'thin' ? 31 : 10);
+        if (this.layout === "boxes" && this.layoutBackground !== "none" && this.progressBarStyle === "none") {
+            let barWidth = this.size / (this.progressBarWeight === "thin" ? 31 : 10);
             if (full) {
                 barWidth = 0;
             }
@@ -313,28 +294,26 @@ const CountdownWidget = publicWidget.Widget.extend({
             ctx.lineTo(this.width - barWidth, this.size / 2);
             ctx.stroke();
         }
-    },
+    }
+
     /**
-     * Draws a plain shape into the canvas.
-     *
-     * @private
-     * @param {RenderingContext} ctx - Context of the canvas
+     * @param {CanvasRenderingContext2D} ctx - Context of the canvas
      * @param {boolean} full - if true, the shape will be drawn up to the progressbar
      */
-    _drawBgShape: function (ctx, full = false) {
+    drawBgShape(ctx, full = false) {
         ctx.fillStyle = this.layoutBackgroundColor;
         ctx.beginPath();
-        if (this.layout === 'circle') {
+        if (this.layout === "circle") {
             let rayon = this.size / 2;
-            if (this.progressBarWeight === 'thin') {
+            if (this.progressBarWeight === "thin") {
                 rayon -= full ? this.size / 29 : this.size / 15;
             } else {
                 rayon -= full ? 0 : this.size / 10;
             }
             ctx.arc(this.size / 2, this.size / 2, rayon, 0, Math.PI * 2);
             ctx.fill();
-        } else if (this.layout === 'boxes') {
-            let barWidth = this.size / (this.progressBarWeight === 'thin' ? 31 : 10);
+        } else if (this.layout === "boxes") {
+            let barWidth = this.size / (this.progressBarWeight === "thin" ? 31 : 10);
             if (full) {
                 barWidth = 0;
             }
@@ -344,31 +323,29 @@ const CountdownWidget = publicWidget.Widget.extend({
             ctx.fill();
 
             const gradient = ctx.createLinearGradient(0, this.width, 0, 0);
-            gradient.addColorStop(0, '#ffffff24');
+            gradient.addColorStop(0, "#ffffff24");
             gradient.addColorStop(1, this.layoutBackgroundColor);
             ctx.fillStyle = gradient;
             ctx.rect(barWidth, barWidth, this.width - barWidth * 2, this.size - barWidth * 2);
             ctx.fill();
-            $(ctx.canvas).css({'border-radius': '8px'});
+            ctx.canvas.style.borderRadius = "8px";
         }
-    },
+    }
+
     /**
-     * Draws a progress bar around the countdown shape.
-     *
-     * @private
-     * @param {RenderingContext} ctx - Context of the canvas
-     * @param {string} nbUnit - how many unit should fill progress bar
-     * @param {string} totalUnit - number of unit to do a complete progress bar
-     * @param {boolean} thinLine - if true, the progress bar will be thiner
+     * @param {CanvasRenderingContext2D} ctx - Context of the canvas
+     * @param {number} nbUnit - how many unit should fill progress bar
+     * @param {number} totalUnit - number of unit to do a complete progress bar
+     * @param {boolean} useThinLine - if true, the progress bar will be thiner
      */
-    _drawProgressBar: function (ctx, nbUnit, totalUnit, thinLine) {
+    drawProgressBar(ctx, nbUnit, totalUnit, useThinLine) {
         ctx.strokeStyle = this.progressBarColor;
-        ctx.lineWidth = thinLine ? this.size / 35 : this.size / 10;
-        if (this.layout === 'circle') {
+        ctx.lineWidth = useThinLine ? this.size / 35 : this.size / 10;
+        if (this.layout === "circle") {
             ctx.beginPath();
             ctx.arc(this.size / 2, this.size / 2, this.size / 2 - this.size / 20, Math.PI / -2, (Math.PI * 2) * (nbUnit / totalUnit) + (Math.PI / -2));
             ctx.stroke();
-        } else if (this.layout === 'boxes') {
+        } else if (this.layout === "boxes") {
             ctx.lineWidth *= 2;
             let pc = nbUnit / totalUnit * 100;
 
@@ -389,23 +366,21 @@ const CountdownWidget = publicWidget.Widget.extend({
                 pc -= linePc;
             }
         }
-    },
+    }
+
     /**
-     * Draws a full lighter background progressbar around the shape.
-     *
-     * @private
-     * @param {RenderingContext} ctx - Context of the canvas
-     * @param {boolean} thinLine - if true, the progress bar will be thiner
+     * @param {CanvasRenderingContext2D} ctx - Context of the canvas
+     * @param {boolean} useThinLine
      */
-    _drawProgressBarBg: function (ctx, thinLine) {
+    drawProgressBarBg(ctx, useThinLine) {
         ctx.strokeStyle = this.progressBarColor;
         ctx.globalAlpha = 0.2;
-        ctx.lineWidth = thinLine ? this.size / 35 : this.size / 10;
-        if (this.layout === 'circle') {
+        ctx.lineWidth = useThinLine ? this.size / 35 : this.size / 10;
+        if (this.layout === "circle") {
             ctx.beginPath();
             ctx.arc(this.size / 2, this.size / 2, this.size / 2 - this.size / 20, 0, Math.PI * 2);
             ctx.stroke();
-        } else if (this.layout === 'boxes') {
+        } else if (this.layout === "boxes") {
             ctx.lineWidth *= 2;
 
             // Lines: Top(x1,y1,x2,y2) Right(x1,y1,x2,y2) Bottom(x1,y1,x2,y2) Left(x1,y1,x2,y2)
@@ -424,9 +399,13 @@ const CountdownWidget = publicWidget.Widget.extend({
             }
         }
         ctx.globalAlpha = 1;
-    },
-});
+    }
+}
 
-publicWidget.registry.countdown = CountdownWidget;
+registry
+    .category("public.interactions")
+    .add("website.countdown", Countdown);
 
-export default CountdownWidget;
+registry
+    .category("public.interactions.edit")
+    .add("website.countdown", { Interaction: Countdown });

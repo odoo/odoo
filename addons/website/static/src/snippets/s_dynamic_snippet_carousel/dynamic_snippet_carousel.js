@@ -1,35 +1,32 @@
-import publicWidget from "@web/legacy/js/public/public_widget";
-import DynamicSnippet from "@website/snippets/s_dynamic_snippet/000";
+import { registry } from "@web/core/registry";
 import { utils as uiUtils } from "@web/core/ui/ui_service";
+import { DynamicSnippet } from "@website/snippets/s_dynamic_snippet/dynamic_snippet";
 
-const DynamicSnippetCarousel = DynamicSnippet.extend({
-    selector: '.s_dynamic_snippet_carousel',
-    /**
-     * @override
-     */
-    init: function () {
-        this._super.apply(this, arguments);
-        this.template_key = 'website.s_dynamic_snippet.carousel';
-    },
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+export class DynamicSnippetCarousel extends DynamicSnippet {
+    static selector = ".s_dynamic_snippet_carousel";
 
-    /**
-     * @override
-     */
-    _getQWebRenderOptions: function () {
+    setup() {
+        super.setup();
+        this.templateKey = "website.s_dynamic_snippet.carousel";
+    }
+
+    getQWebRenderOptions() {
         return Object.assign(
-            this._super.apply(this, arguments),
+            super.getQWebRenderOptions(...arguments),
             {
                 interval: parseInt(this.el.dataset.carouselInterval),
                 rowPerSlide: parseInt(uiUtils.isSmall() ? 1 : this.el.dataset.rowPerSlide || 1),
-                arrowPosition: this.el.dataset.arrowPosition || '',
+                arrowPosition: this.el.dataset.arrowPosition || "",
             },
         );
-    },
-});
-publicWidget.registry.dynamic_snippet_carousel = DynamicSnippetCarousel;
+    }
+}
 
-export default DynamicSnippetCarousel;
+registry
+    .category("public.interactions")
+    .add("website.dynamic_snippet_carousel", DynamicSnippetCarousel);
+
+registry
+    .category("public.interactions.edit")
+    .add("website.dynamic_snippet_carousel", { Interaction: DynamicSnippetCarousel });

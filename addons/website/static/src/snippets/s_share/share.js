@@ -1,27 +1,25 @@
-import publicWidget from '@web/legacy/js/public/public_widget';
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 
-const ShareWidget = publicWidget.Widget.extend({
-    selector: '.s_share, .oe_share', // oe_share for compatibility
-    events: {
-        'click a': '_onShareLinkClick',
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+class Share extends Interaction {
+    static selector = ".s_share, .oe_share";
+    dynamicContent = {
+        "a": { "t-on-click": this.onClick },
+    }
 
     /**
      * Everything is done on click here (even changing the href) as the URL we
      * want to share may be updated during the page use (like when updating
      * variant on a product page then clicking on a share link).
      *
-     * @private
+     * @param {Event} ev
      */
-    _onShareLinkClick(ev) {
+    onClick(ev) {
         const urlParams = ["u", "url", "body"];
         const titleParams = ["title", "text", "subject", "description"];
         const mediaParams = ["media"];
         const aEl = ev.currentTarget;
+
         // We don't modify the original URL in case the user clicks again on the
         // sharer later.
         const modifiedUrl = new URL(aEl.href);
@@ -32,7 +30,7 @@ const ShareWidget = publicWidget.Widget.extend({
         // like sharer but are not but in that case, it was probably already
         // broken before).
         if (![...urlParams, ...titleParams, ...mediaParams]
-                .some(param => modifiedUrl.searchParams.has(param))) {
+            .some(param => modifiedUrl.searchParams.has(param))) {
             return;
         }
 
@@ -85,9 +83,9 @@ const ShareWidget = publicWidget.Widget.extend({
             aEl.target,
             "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=600",
         );
-    },
-});
+    }
+}
 
-publicWidget.registry.share = ShareWidget;
-
-export default ShareWidget;
+registry
+    .category("public.interactions")
+    .add("website.share", Share);
