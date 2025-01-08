@@ -165,7 +165,8 @@ class ProductProduct(models.Model):
             date_date_expected_domain_to = [('date', '<=', to_date)]
             domain_move_in += date_date_expected_domain_to
             domain_move_out += date_date_expected_domain_to
-
+        if self.env.context.get('with_expiration'):
+            domain_quant += ['|', ('removal_date', '>=', self.env.context['with_expiration']), ('removal_date', '=', False)]
         Move = self.env['stock.move'].with_context(active_test=False)
         Quant = self.env['stock.quant'].with_context(active_test=False)
         domain_move_in_todo = [('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))] + domain_move_in

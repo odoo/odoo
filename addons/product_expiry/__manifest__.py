@@ -31,4 +31,9 @@ Also implements the removal strategy First Expiry First Out (FEFO) widely used, 
             ],
     'post_init_hook': '_enable_tracking_numbers',
     'license': 'LGPL-3',
+    'assets': {
+        'web.assets_backend': [
+            'product_expiry/static/src/**/*',
+        ],
+    },
 }

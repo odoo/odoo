@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import datetime
 
 from odoo import fields, models
 
@@ -12,6 +13,10 @@ class ProductProduct(models.Model):
         if not any(product.use_expiration_date for product in self):
             self = self.with_context(hide_removal_date=True)
         return super().action_open_quants()
+
+    def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
+        return super(ProductProduct, self.with_context(with_expiration=to_date or datetime.datetime.now()))._compute_quantities_dict(lot_id, owner_id, package_id, from_date, to_date)
+
 
 
 class ProductTemplate(models.Model):
