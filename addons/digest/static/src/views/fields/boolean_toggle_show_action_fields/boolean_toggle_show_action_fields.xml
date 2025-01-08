@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="digest.BooleanToggleShowActionField" t-inherit="web.BooleanToggleField" t-inherit-mode="primary">
+        <xpath expr="//CheckBox" position="inside">
+            <t t-if="state.value">Show</t>
+            <t t-else="">Hide</t>
+        </xpath>
+    </t>
+
+</templates>
