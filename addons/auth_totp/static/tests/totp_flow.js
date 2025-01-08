@@ -110,7 +110,7 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
     }
 },
 {
-    trigger: ".modal button.btn-primary:contains(Activate)",
+    trigger: ".modal button.btn-primary:contains(Enable Two-Factor Authentication)",
     run: "click",
 },
 {

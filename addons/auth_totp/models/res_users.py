@@ -43,23 +43,32 @@ class ResUsers(models.Model):
         if self.totp_enabled:
             return 'totp'
 
-    def _should_alert_new_device(self):
-        """ Determine if an alert should be sent to the user regarding a new device
+    def authenticate(self, credential, user_agent_env):
+        """Send an alert on new connection.
+
         - 2FA enabled -> only for new device
         - Not enabled -> no alert
-
-        To be overriden if needs to be disabled for other 2FA providers
         """
-        if request and self._mfa_type():
+        auth_info = super().authenticate(credential, user_agent_env)
+
+        user = self.env(user=auth_info['uid']).user
+
+        if request and user.email and user._mfa_type():
+            # Check the `request` object to ensure that we will be able to get the
+            # user information (like IP, user-agent, etc) and the cookie `td_id`.
+            # (Can be unbounded if executed from a server action or a unit test.)
+
             key = request.cookies.get('td_id')
-            if key:
-                if request.env['auth_totp.device']._check_credentials_for_uid(
-                    scope="browser", key=key, uid=self.id):
-                    # the device is known
-                    return False
-            # 2FA enabled but not a trusted device
-            return True
-        return super()._should_alert_new_device()
+            if not key or not request.env['auth_totp.device']._check_credentials_for_uid(
+                    scope="browser", key=key, uid=user.id):
+                # 2FA enabled but not a trusted device
+                user._notify_security_setting_update(
+                    subject=_('New Connection to your Account'),
+                    content=_('A new device was used to sign in to your account.'),
+                )
+                _logger.info("New device alert email sent for user <%s> to <%s>", user.login, user.email)
+
+        return auth_info
 
     def _mfa_url(self):
         r = super()._mfa_url()
@@ -161,7 +170,7 @@ class ResUsers(models.Model):
             'name': _("Two-Factor Authentication Activation"),
             'res_id': w.id,
             'views': [(False, 'form')],
-            'context': self.env.context,
+            'context': self.env.context | {'dialog_size': 'medium'},
         }
 
     @check_identity

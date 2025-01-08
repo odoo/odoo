@@ -43,7 +43,7 @@ class ResUsers(models.Model):
         return res
 
     def _notify_security_setting_update_prepare_values(self, content, suggest_2fa=True, **kwargs):
-        """" Prepare rendering values for the 'mail.account_security_setting_update' qweb template
+        """" Prepare rendering values for the 'mail.account_security_alert' qweb template
 
           :param bool suggest_2fa:
             Whether or not to suggest the end-user to turn on 2FA authentication in the email sent.

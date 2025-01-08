@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+import contextlib
 
 from odoo import _, api, Command, fields, models, modules, tools
+from odoo.http import request
 from odoo.tools import email_normalize
 from odoo.addons.mail.tools.discuss import Store
 
@@ -169,11 +171,14 @@ class ResUsers(models.Model):
 
         mail_create_values = []
         for user in self:
-            body_html = self.env['ir.qweb']._render(
-                'mail.account_security_setting_update',
-                user._notify_security_setting_update_prepare_values(content, **kwargs),
-                minimal_qcontext=True,
-            )
+            body_html = self.env['mail.render.mixin']._render_template(
+                'mail.account_security_alert',
+                model='res.users',
+                res_ids=user.ids,
+                engine='qweb_view',
+                options={'post_process': True},
+                add_context=user._notify_security_setting_update_prepare_values(content, **kwargs),
+            )[user.id]
 
             body_html = self.env['mail.render.mixin']._render_encapsulate(
                 'mail.mail_notification_light',
@@ -204,20 +209,45 @@ class ResUsers(models.Model):
 
             mail_create_values.append(vals)
 
-        self.env['mail.mail'].sudo().create(mail_create_values)
+        mails = self.env['mail.mail'].sudo().create(mail_create_values)
+        with contextlib.suppress(Exception):
+            mails.send()
+        return mails
 
     def _notify_security_setting_update_prepare_values(self, content, **kwargs):
-        """" Prepare rendering values for the 'mail.account_security_setting_update' qweb template """
-
+        """"Prepare rendering values for the 'mail.account_security_alert' qweb template."""
         reset_password_enabled = self.env['ir.config_parameter'].sudo().get_param("auth_signup.reset_password", True)
-        return {
-            'company': self.company_id,
-            'password_reset_url': f"{self.get_base_url()}/web/reset_password",
-            'security_update_text': content,
+
+        values = {
+            'browser': False,
+            'content': content,
+            'event_datetime': fields.Datetime.now(),
+            'ip_address': False,
+            'location_address': False,
             'suggest_password_reset': kwargs.get('suggest_password_reset', True) and reset_password_enabled,
             'user': self,
-            'update_datetime': fields.Datetime.now(),
+            'useros': False,
         }
+        if not request:
+            return values
+
+        city = request.geoip.get('city') or False
+        region = request.geoip.get('region_name') or False
+        country = request.geoip.get('country') or False
+        if country:
+            if region and city:
+                values['location_address'] = _("Near %(city)s, %(region)s, %(country)s", city=city, region=region, country=country)
+            elif region:
+                values['location_address'] = _("Near %(region)s, %(country)s", region=region, country=country)
+            else:
+                values['location_address'] = _("In %(country)s", country=country)
+        values['ip_address'] = request.httprequest.environ['REMOTE_ADDR']
+        if request.httprequest.user_agent:
+            if request.httprequest.user_agent.browser:
+                values['browser'] = request.httprequest.user_agent.browser.capitalize()
+            if request.httprequest.user_agent.platform:
+                values['useros'] = request.httprequest.user_agent.platform.capitalize()
+        return values
 
     def _get_portal_access_update_body(self, access_granted):
         body = _('Portal Access Granted') if access_granted else _('Portal Access Revoked')
