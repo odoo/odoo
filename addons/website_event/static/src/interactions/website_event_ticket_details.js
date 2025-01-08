@@ -1,41 +1,52 @@
-    import publicWidget from "@web/legacy/js/public/public_widget";
+import { rpc } from "@web/core/network/rpc";
+import { registry } from "@web/core/registry";
+import { Interaction } from "@web/public/interaction";
 
-    publicWidget.registry.ticketDetailsWidget = publicWidget.Widget.extend({
-        selector: '.o_wevent_js_ticket_details',
-        events: {
-            'change .form-select': '_onTicketQuantityChange'
+export class TicketDetails extends Interaction {
+    static selector = ".o_wevent_js_ticket_details";
+    dynamicSelectors = {
+        ...this.dynamicSelectors,
+        _envBus: () => this.env.bus,
+    };
+    dynamicContent = {
+        _envBus: {
+            "t-on-websiteEvent.enableSubmit": () => this.buttonDisabled = false,
         },
-        start: function (){
-            this.foldedByDefault = parseInt(this.el.dataset.foldedByDefault) === 1;
-            return this._super.apply(this, arguments);
+        ".form-select": {
+            "t-on-change": () => {}, // use updateContent() to enable/disable submit button
         },
-
-        //--------------------------------------------------------------------------
-        // Private
-        //--------------------------------------------------------------------------
-
-        /**
-         * @private
-         */
-        _getTotalTicketCount: function (){
-            var ticketCount = 0;
-            const selectEls = this.el.querySelectorAll(".form-select");
-            selectEls.forEach(function (selectEl) {
-                ticketCount += parseInt(selectEl.value);
-            });
-            return ticketCount;
+        ".a-submit": {
+            "t-on-click.prevent.stop": this.onSubmitClick,
+            "t-att-disabled": () => this.noTicketsOrdered || this.buttonDisabled ? "disabled" : false,
         },
+    };
 
-        //--------------------------------------------------------------------------
-        // Handlers
-        //--------------------------------------------------------------------------
-        /**
-         * @private
-         */
-        _onTicketQuantityChange: function (){
-            const ticketQuantityChangeBtnEl = this.el.querySelector("button.btn-primary");
-            ticketQuantityChangeBtnEl.disabled = this._getTotalTicketCount() === 0;
-        }
-    });
+    get post() {
+        const post = {};
+        const selectEls = this.el.querySelectorAll("select");
+        selectEls.forEach((selectEl) => {
+            post[selectEl.name] = selectEl.value;
+        });
+        return post;
+    }
 
-export default publicWidget.registry.ticketDetailsWidget;
+    get noTicketsOrdered() {
+        return Object.values(this.post).every((value) => parseInt(value) === 0);
+    }
+
+    /**
+     * @param {Event} ev
+     */
+    async onSubmitClick(ev) {
+        const formEl = ev.currentTarget.closest("form");
+        this.buttonDisabled = true;
+        const modal = await this.waitFor(rpc(formEl.action, this.post));
+
+        const modalEl = new DOMParser().parseFromString(modal, "text/html").body.firstChild;
+        this.insert(modalEl, document.body);
+    }
+}
+
+registry
+    .category("public.interactions")
+    .add("website_event.ticket_details", TicketDetails);
