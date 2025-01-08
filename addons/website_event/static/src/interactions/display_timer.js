@@ -3,6 +3,12 @@ import { registry } from "@web/core/registry";
 
 export class DisplayTimer extends Interaction {
     static selector = ".o_display_timer";
+    dynamicContent = {
+        "span.o_timer_days": { "t-out": () => this.daysText },
+        "span.o_timer_hours": { "t-out": () => this.hoursText },
+        "span.o_timer_minutes": { "t-out": () => this.minutesText },
+        "span.o_timer_seconds": { "t-out": () => this.secondsText },
+    };
 
     /**
      * This interaction allows to display a DOM element at the end of a certain time laps.
@@ -10,21 +16,19 @@ export class DisplayTimer extends Interaction {
      *   - The main-timer: display the DOM element (using the displayClass) at the end of this timer.
      *   - The pre-timer: additional timer to display the main-timer. This pre-timer can be invisible or visible,
      *                    depending of the startCountdownDisplay option. Once the pre-timer is over,
-                          the main-timer is displayed.
+     *                    the main-timer is displayed.
      */
     setup() {
         const options = this.el.dataset;
-        this.preCountdownDisplay = options["preCountdownDisplay"];
-        this.preCountdownTime = parseInt(options["preCountdownTime"]);
-        this.preCountdownText = options["preCountdownText"];
 
+        this.preCountdownTime = parseInt(options["preCountdownTime"]);
         this.mainCountdownTime = parseInt(options["mainCountdownTime"]);
         this.mainCountdownText = options["mainCountdownText"];
-        this.mainCountdownDisplay = options["mainCountdownDisplay"];
+        this.hasMainTimeDisplay = options["mainCountdownDisplay"] === "true";
 
         this.displayClass = options["displayClass"];
 
-        if (this.preCountdownDisplay === "true") {
+        if (options["preCountdownDisplay"] === "true") {
             this.el.parentElement.classList.remove("d-none");
         }
 
@@ -47,7 +51,7 @@ export class DisplayTimer extends Interaction {
             if (countdownTextEl) {
                 countdownTextEl.textContent = this.mainCountdownText;
             }
-            if (this.mainCountdownDisplay === "true") {
+            if (this.hasMainTimeDisplay) {
                 this.el.parentElement.classList.remove("d-none");
             }
             const remainingMainSeconds = this.mainCountdownTime - (now.getTime() / 1000);
@@ -72,48 +76,27 @@ export class DisplayTimer extends Interaction {
      */
     updateCountdown(remainingTime) {
         let remainingSeconds = remainingTime;
-        const days = Math.floor(remainingSeconds / 86400);
+        this.daysText = Math.floor(remainingSeconds / 86400).toString();
 
         remainingSeconds = remainingSeconds % 86400;
-        const hours = Math.floor(remainingSeconds / 3600);
+        this.hoursText = this.formatTime(Math.floor(remainingSeconds / 3600));
 
         remainingSeconds = remainingSeconds % 3600;
-        const minutes = Math.floor(remainingSeconds / 60);
+        this.minutesText = this.formatTime(Math.floor(remainingSeconds / 60));
 
-        remainingSeconds = Math.floor(remainingSeconds % 60);
-
-        const daysEl = this.el.querySelector("span.o_timer_days");
-        if (daysEl) {
-            daysEl.textContent = days.toString();
-        }
-        this.setTimeString("span.o_timer_hours", hours);
-        this.setTimeString("span.o_timer_minutes", minutes);
-        this.setTimeString("span.o_timer_seconds", remainingSeconds);
+        this.secondsText = this.formatTime(Math.floor(remainingSeconds % 60));
     }
 
     /**
-     * @param {string} selector
-     * @param {number} remainingNumber
-     */
-    setTimeString(selector, remainingNumber) {
-        const el = this.el.querySelector(selector);
-        if (el) {
-            el.textContent = this.zeroPad(remainingNumber, 2);
-        }
-    }
-
-    /**
-     * Small tool to add leading zeros to the given number, according to the
-     * needed number of leading zeros.
-     *
+     * Format the number to a 2 char strings
+     * 
      * @param {number} num
-     * @param {number} places - number of characters wanted
      */
-    zeroPad(num, places) {
-      const zero = places - num.toString().length + 1;
-      return new Array(+(zero > 0 && zero)).join("0") + num;
+    formatTime(num) {
+        return (num < 10 ? "0" : "") + num;
     }
-
 }
 
-registry.category("public.interactions").add("website_event.display_timer", DisplayTimer);
+registry
+    .category("public.interactions")
+    .add("website_event.display_timer", DisplayTimer);
