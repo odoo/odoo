@@ -11,6 +11,7 @@ from odoo import fields
 from odoo.addons.mail.models.mail_mail import _UNFOLLOW_REGEX
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
+from odoo.tools.misc import limited_field_access_token
 from odoo.tests import tagged, users
 from odoo.tests.common import HttpCase
 from odoo.tools import email_normalize, mail, mute_logger, parse_contact_from_email
@@ -931,11 +932,17 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
             ),
             "res.partner": self._filter_partners_fields(
                 {
+                    "avatar_128_access_token": limited_field_access_token(
+                        self.env.user.partner_id, "avatar_128"
+                    ),
                     "id": self.env.user.partner_id.id,
                     "name": "Ernest Employee",
                     "write_date": fields.Datetime.to_string(self.env.user.write_date),
                 },
                 {
+                    "avatar_128_access_token": limited_field_access_token(
+                        self.partner_admin, "avatar_128"
+                    ),
                     "id": self.user_admin.partner_id.id,
                     "isInternalUser": True,
                     "is_company": False,

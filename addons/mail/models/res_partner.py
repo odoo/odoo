@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
@@ -6,6 +5,7 @@ import re
 import odoo
 from odoo import _, api, fields, models, tools
 from odoo.osv import expression
+from odoo.tools.misc import limited_field_access_token
 from odoo.addons.mail.tools.discuss import Store
 
 class Partner(models.Model):
@@ -214,7 +214,7 @@ class Partner(models.Model):
 
     def _to_store(self, store: Store, /, *, fields=None, main_user_by_partner=None):
         if fields is None:
-            fields = ["active", "email", "im_status", "is_company", "name", "user", "write_date"]
+            fields = ["active", "avatar_128", "email", "im_status", "is_company", "name", "user"]
         if not self.env.user._is_internal() and "email" in fields:
             fields.remove("email")
         for partner in self:
@@ -223,10 +223,21 @@ class Partner(models.Model):
                     field
                     for field in fields
                     if field
-                    not in ["country", "display_name", "isAdmin", "notification_type", "signature", "user"]
+                    not in [
+                        "avatar_128",
+                        "country",
+                        "display_name",
+                        "isAdmin",
+                        "notification_type",
+                        "signature",
+                        "user",
+                    ]
                 ],
                 load=False,
             )[0]
+            if "avatar_128" in fields:
+                data["avatar_128_access_token"] = limited_field_access_token(partner, "avatar_128")
+                data["write_date"] = partner.write_date
             if "country" in fields:
                 c = partner.country_id
                 data["country"] = {"code": c.code, "id": c.id, "name": c.name} if c else False
