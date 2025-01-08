@@ -28,7 +28,7 @@ export class BuilderSelectItem extends Component {
         });
         this.state = state;
         this.onClick = () => {
-            this.env.selectableContext.selectableBus.trigger("SELECT_ITEM");
+            this.env.onSelectItem();
             operation.commit();
         };
         this.onMouseenter = operation.preview;

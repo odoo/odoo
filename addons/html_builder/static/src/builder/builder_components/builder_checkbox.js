@@ -20,7 +20,7 @@ export class BuilderCheckbox extends Component {
     setup() {
         const { state, operation, isActive } = useClickableBuilderComponent();
         if (this.props.id) {
-            useDependencyDefinition({ id: this.props.id, isActive });
+            useDependencyDefinition(this.props.id, { isActive });
         }
         this.state = state;
         this.onChange = operation.commit;

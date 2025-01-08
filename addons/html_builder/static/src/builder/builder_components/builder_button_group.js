@@ -1,4 +1,4 @@
-import { Component, useSubEnv } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import {
     basicContainerBuilderComponentProps,
     useVisibilityObserver,
@@ -20,7 +20,6 @@ export class BuilderButtonGroup extends Component {
     setup() {
         useVisibilityObserver("root", useApplyVisibility("root"));
 
-        const selectableContext = useSelectableComponent(this.props.id);
-        useSubEnv({ selectableContext });
+        useSelectableComponent(this.props.id);
     }
 }

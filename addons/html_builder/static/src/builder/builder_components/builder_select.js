@@ -34,16 +34,17 @@ export class BuilderSelect extends Component {
                 buttonRef.el.innerHTML = currentLabel;
             }
         };
-        const selectableContext = useSelectableComponent(this.props.id, {
+        useSelectableComponent(this.props.id, {
             onItemChange(item) {
                 currentLabel = item.getLabel();
                 updateCurrentLabel();
             },
         });
         onMounted(updateCurrentLabel);
-        useSubEnv({ selectableContext });
-        useBus(selectableContext.selectableBus, "SELECT_ITEM", (item) => {
-            this.dropdown.close();
+        useSubEnv({
+            onSelectItem: () => {
+                this.dropdown.close();
+            },
         });
     }
 }

@@ -95,7 +95,7 @@ export function useBuilderComponent() {
     }
     useSubEnv(newEnv);
 }
-export function useDependencyDefinition({ id, ...item }) {
+export function useDependencyDefinition(id, item) {
     const comp = useComponent();
     comp.env.dependencyManager.add(id, item);
     onWillDestroy(() => {
@@ -128,7 +128,6 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
     const refreshCurrentItemDebounced = useDebounced(refreshCurrentItem, 0);
     let currentSelectedItem;
     const env = useEnv();
-    const selectableBus = new EventBus();
 
     function refreshCurrentItem() {
         let currentItem;
@@ -149,8 +148,7 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
     }
 
     if (id) {
-        useDependencyDefinition({
-            id,
+        useDependencyDefinition(id, {
             type: "select",
             getSelectableItems: () => selectableItems.slice(0),
         });
@@ -163,27 +161,28 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
         }
         refreshCurrentItem();
     });
-    useBus(selectableBus, "BEFORE_CALL_ACTIONS", () => {
+    function cleanSelectedItem() {
         if (currentSelectedItem) {
             currentSelectedItem.clean();
         }
-    });
+    }
 
-    const selectableContext = {
-        selectableBus,
-        addSelectableItem: (item) => {
-            selectableItems.push(item);
+    useSubEnv({
+        selectableContext: {
+            cleanSelectedItem,
+            addSelectableItem: (item) => {
+                selectableItems.push(item);
+            },
+            removeSelectableItem: (item) => {
+                const index = selectableItems.indexOf(item);
+                if (index !== -1) {
+                    selectableItems.splice(index, 1);
+                }
+            },
+            update: refreshCurrentItemDebounced,
+            getSelectedItem: () => currentSelectedItem,
         },
-        removeSelectableItem: (item) => {
-            const index = selectableItems.indexOf(item);
-            if (index !== -1) {
-                selectableItems.splice(index, 1);
-            }
-        },
-        update: refreshCurrentItemDebounced,
-        getSelectedItem: () => currentSelectedItem,
-    };
-    return selectableContext;
+    });
 }
 export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
     const { state, operation, isActive, getActions, priority, clean } =
@@ -204,19 +203,19 @@ export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
             getActions,
         };
 
-        env.selectableContext.addSelectableItem?.(selectableItem);
+        env.selectableContext.addSelectableItem(selectableItem);
         onMounted(env.selectableContext.update);
         onWillDestroy(() => {
-            env.selectableContext.removeSelectableItem?.(selectableItem);
+            env.selectableContext.removeSelectableItem(selectableItem);
         });
     }
 
     if (id) {
-        useDependencyDefinition({
-            id: id,
+        useDependencyDefinition(id, {
             isActive: isSelectableActive,
             getActions,
-            selectableBus: env.selectableContext?.selectableBus,
+            onBeforeApplyAction: () => {},
+            cleanSelectedItem: env.selectableContext?.cleanSelectedItem,
         });
     }
 
@@ -314,12 +313,12 @@ export function useClickableBuilderComponent() {
         return specs;
     }
     function callApply(applySpecs) {
-        comp.env.selectableContext?.selectableBus.trigger("BEFORE_CALL_ACTIONS");
-        const buses = comp.props.inheritedActions
-            .map((actionId) => comp.env.dependencyManager.get(actionId).selectableBus)
+        comp.env.selectableContext?.cleanSelectedItem();
+        const cleans = comp.props.inheritedActions
+            .map((actionId) => comp.env.dependencyManager.get(actionId).cleanSelectedItem)
             .filter(Boolean);
-        for (const selectableBus of new Set(buses)) {
-            selectableBus.trigger("BEFORE_CALL_ACTIONS");
+        for (const clean of new Set(cleans)) {
+            clean();
         }
         let shouldClean = shouldToggle && isActive();
         shouldClean = comp.props.inverseAction ? !shouldClean : shouldClean;
