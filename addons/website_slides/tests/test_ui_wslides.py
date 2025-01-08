@@ -197,14 +197,30 @@ class TestUi(TestUICommon):
         self.start_tour('/slides', 'course_reviews', login=user_demo.login)
 
     def test_course_reviews_reaction_public(self):
-        self.channel.message_post(
+        password = "Pl1bhD@2!kXZ"
+        manager = self.user_admin
+        manager.write({"password": password})
+
+        message = self.channel.message_post(
             body="Bad course!",
             message_type="comment",
             rating_value="1",
             subtype_xmlid="mail.mt_comment"
         )
+        self.authenticate(manager.login, password)
+        self._add_reaction(message, "😊")
 
         self.start_tour("/slides", "course_reviews_reaction_public", login=None)
+
+    def _add_reaction(self, message, reaction):
+        self.make_jsonrpc_request(
+            "/mail/message/reaction",
+            {
+                "action": "add",
+                "content": reaction,
+                "message_id": message.id,
+            },
+        )
 
 @tests.common.tagged('post_install', '-at_install')
 class TestUiPublisher(HttpCaseGamification):
