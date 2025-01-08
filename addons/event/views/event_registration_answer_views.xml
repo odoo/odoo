@@ -30,8 +30,9 @@
         <field name="name">event.registration.answer.view.graph</field>
         <field name="model">event.registration.answer</field>
         <field name="arch" type="xml">
-            <graph string="Answer Breakdown" sample="1">
-                <field name="value_answer_id" />
+            <graph string="Answer Breakdown" sample="1" type="bar">
+                <field name="value_answer_id" type="col"/>
+                <field name="event_id" type="row"/>
             </graph>
         </field>
     </record>
@@ -50,7 +51,7 @@
     <record id="action_event_registration_report" model="ir.actions.act_window">
         <field name="name">Answer Breakdown</field>
         <field name="res_model">event.registration.answer</field>
-        <field name="view_mode">list,graph,pivot</field>
+        <field name="view_mode">graph,list,pivot</field>
         <field name="search_view_id" ref="event_registration_answer_view_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

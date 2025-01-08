@@ -190,13 +190,12 @@ class EventEvent(models.Model):
         compute='_compute_ticket_instructions', store=True, readonly=False,
         help="This information will be printed on your tickets.")
     # questions
-    question_ids = fields.One2many(
-        'event.question', 'event_id', 'Questions', copy=True,
+    question_ids = fields.Many2many('event.question', string='Questions',
         compute='_compute_question_ids', readonly=False, store=True, precompute=True)
-    general_question_ids = fields.One2many('event.question', 'event_id', 'General Questions',
-                                           domain=[('once_per_order', '=', True)])
-    specific_question_ids = fields.One2many('event.question', 'event_id', 'Specific Questions',
-                                            domain=[('once_per_order', '=', False)])
+    general_question_ids = fields.Many2many('event.question', string='General Questions',
+                                           compute='_compute_general_question_ids')
+    specific_question_ids = fields.Many2many('event.question', string='Specific Questions',
+                                            compute='_compute_specific_question_ids')
 
     def _compute_use_barcode(self):
         use_barcode = self.env['ir.config_parameter'].sudo().get_param('event.use_event_barcode') == 'True'
@@ -207,6 +206,16 @@ class EventEvent(models.Model):
         """Get the URL to use to redirect to the event, overriden in website for fallback."""
         for event in self:
             event.event_share_url = event.event_url
+
+    @api.depends('question_ids')
+    def _compute_general_question_ids(self):
+        for record in self:
+            record.general_question_ids = record.question_ids.filtered(lambda r: r.once_per_order)
+
+    @api.depends('question_ids')
+    def _compute_specific_question_ids(self):
+        for record in self:
+            record.specific_question_ids = record.question_ids.filtered(lambda r: not r.once_per_order)
 
     @api.depends('event_type_id')
     def _compute_question_ids(self):
@@ -227,7 +236,7 @@ class EventEvent(models.Model):
         else:
             questions_tokeep_ids = []
         for event in self:
-            if not event.event_type_id and not event.question_ids:
+            if not event.id and not event.event_type_id and not event.question_ids:
                 event.question_ids = self._default_question_ids()
                 continue
 
@@ -241,8 +250,9 @@ class EventEvent(models.Model):
 
             # copy questions so changes in the event don't affect the event type
             event.question_ids += event.event_type_id.question_ids.copy({
-                'event_type_id': False,
+                'event_type_ids': False,
             })
+
 
     @api.depends('stage_id', 'kanban_state')
     def _compute_kanban_state_label(self):
@@ -574,6 +584,11 @@ class EventEvent(models.Model):
         if 'stage_id' in vals and 'kanban_state' not in vals:
             # reset kanban state when changing stage
             vals['kanban_state'] = 'normal'
+
+        # Delete the event registration answers with the removed questions.
+        if vals.get('question_ids'):
+            removed_question_ids = [question for command, question in vals.get('question_ids') if command == 3]
+            self.registration_ids.registration_answer_ids.filtered(lambda a: a.question_id.id in removed_question_ids).unlink()
         return super().write(vals)
 
     @api.depends('event_registrations_sold_out', 'seats_limited', 'seats_max', 'seats_available')
