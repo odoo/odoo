@@ -1043,3 +1043,7 @@ class PosConfig(models.Model):
         pos_restaurant_module = self.env['ir.module.module'].search([('name', '=', 'pos_restaurant')])
         pos_restaurant_module.button_immediate_install()
         return {'installed_with_demo': pos_restaurant_module.demo}
+    
+    def _get_available_pricelists(self):
+        self.ensure_one()
+        return self.available_pricelist_ids if self.use_pricelist else self.pricelist_id

@@ -28,14 +28,25 @@ patch(Thread.prototype, {
             },
         });
         this.chatbot = Record.one("Chatbot");
+        this._startChatbot = Record.attr(false, {
+            compute() {
+                return (
+                    this.chatbot?.thread?.eq(
+                        this.store.env.services["im_livechat.livechat"].thread
+                    ) && this.isLoaded
+                );
+            },
+            onUpdate() {
+                if (this._startChatbot) {
+                    this.store.env.services["im_livechat.chatbot"].start();
+                }
+            },
+        });
         this.requested_by_operator = false;
     },
 
     get isLastMessageFromCustomer() {
-        if (this.channel_type !== "livechat") {
-            return super.isLastMessageFromCustomer;
-        }
-        return this.newestMessage?.isSelfAuthored;
+        return this.newestPersistentOfAllMessage?.isSelfAuthored;
     },
 
     get membersThatCanSeen() {
