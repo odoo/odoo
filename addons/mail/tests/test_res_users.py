@@ -21,28 +21,33 @@ class TestNotifySecurityUpdate(MailCommon):
         with self.mock_mail_gateway():
             self.env.user.write({'email': 'new@example.com'})
 
-        self.assertMailMailWEmails(['e.e@example.com'], 'outgoing', fields_values={
-            'subject': 'Security Update: Email Changed',
-        })
+        self.assertSentEmail(
+            '"YourTestCompany" <your.company@example.com>',
+            ['e.e@example.com'],
+            subject='Security Update: Email Changed',
+        )
 
     @users('employee')
     def test_security_update_login(self):
         with self.mock_mail_gateway():
             self.env.user.write({'login': 'newlogin'})
 
-        self.assertMailMailWEmails([self.env.user.email_formatted], 'outgoing', fields_values={
-            'subject': 'Security Update: Login Changed',
-        })
+        self.assertSentEmail(
+            '"YourTestCompany" <your.company@example.com>',
+            [self.env.user.email_formatted],
+            subject='Security Update: Login Changed',
+        )
 
     @users('employee')
     def test_security_update_password(self):
         with self.mock_mail_gateway():
             self.env.user.write({'password': 'newpassword'})
 
-        self.assertMailMailWEmails([self.env.user.email_formatted], 'outgoing', fields_values={
-            'subject': 'Security Update: Password Changed',
-        })
-
+        self.assertSentEmail(
+            '"YourTestCompany" <your.company@example.com>',
+            [self.env.user.email_formatted],
+            subject='Security Update: Password Changed',
+        )
 
 @tagged('-at_install', 'post_install', 'mail_tools', 'res_users')
 class TestUser(MailCommon):
