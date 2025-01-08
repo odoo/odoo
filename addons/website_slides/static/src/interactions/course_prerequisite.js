@@ -7,15 +7,16 @@ export class CoursePrerequisite extends Interaction {
     static selector = ".o_wslides_js_prerequisite_course";
 
     start() {
-        this.services.popover.add(this.el, {
+        const bsPopover = window.Popover.getOrCreateInstance(this.el, {
             trigger: 'focus',
             placement: 'bottom',
             container: 'body',
             html: true,
             content: renderToElement('slide.course.prerequisite', {
-                channels: this.el.dataset.channels
+                channels: JSON.parse(this.el.dataset.channels)
             }),
         });
+        this.registerCleanup(() => bsPopover.dispose());
     }
 }
 

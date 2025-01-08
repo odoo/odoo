@@ -6,7 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 
 export class SlideLike extends Interaction {
-    static selector = "#wrapwrap";
+    static selector = ".o_wslides_js_slide_like";
     dynamicContent = {
         ".o_wslides_js_slide_like_up": { "t-on-click": (ev) => this.onClick(ev.currentTarget.dataset.slideId, 'like') },
         ".o_wslides_js_slide_like_down": { "t-on-click": (ev) => this.onClick(ev.currentTarget.dataset.slideId, 'dislike') },
@@ -16,7 +16,7 @@ export class SlideLike extends Interaction {
      * @param {String} message
      */
     showAlert(message) {
-        this.services.popover.add(this.el, {
+        const bsPopover = window.Popover.getOrCreateInstance(this.el, {
             trigger: 'focus',
             delay: { 'hide': 300 },
             placement: 'bottom',
@@ -26,6 +26,8 @@ export class SlideLike extends Interaction {
                 return message;
             }
         });
+        bsPopover.show();
+        this.registerCleanup(() => bsPopover.dispose());
     }
 
     async onClick(slideId, voteType) {
