@@ -2459,7 +2459,8 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertNotIn(message, discussion.important_messages)
 
         message.important = True
-        self.assertIn(message, discussion.important_messages)
+        with self.assertQueryCount(0):  # Previous write shouldn't invalidate the important_messages
+            self.assertIn(message, discussion.important_messages)
 
         # writing on very_important_messages should call its domain method
         self.assertIn(message, discussion.very_important_messages)
