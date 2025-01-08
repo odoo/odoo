@@ -1269,7 +1269,7 @@ class MailingMailing(models.Model):
                     'value': f'{self.replied_ratio}%',
                     'col_subtitle': _('REPLIED (%i)', self.replied),
                 },
-                'kpi_action': None,
+                'kpi_action_url': None,
                 'kpi_name': self.mailing_type,
             }
 
@@ -1299,7 +1299,7 @@ class MailingMailing(models.Model):
                                       expected=self.expected,
                                       mailing_type=mailing_type
                                      ),
-                    'kpi_action': None,
+                    'kpi_action_url': None,
                     'kpi_col1': {},
                     'kpi_col2': {},
                     'kpi_col3': {},

@@ -1,20 +1,69 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import pytz
 
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 from werkzeug.urls import url_encode, url_join
 
-from odoo import api, fields, models, tools, _
+from odoo import api, Command, fields, models, tools, _
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
-from odoo.exceptions import AccessError
-from odoo.fields import Domain
-from odoo.tools.float_utils import float_round
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
+
+
+class DigestDigestKpi(models.Model):
+    _name = 'digest.digest.kpi'
+    _description = 'Digest KPI'
+    _order = 'sequence, id'
+
+    sequence = fields.Integer('Sequence')
+    opt_out_user_ids = fields.Many2many('res.users', string='Opted Out Users', domain="[('id', 'in', digest.user_ids)]",
+                                        groups="base.group_system")
+    is_opted_in = fields.Boolean('Is Opted In', compute_sudo=True, compute="_compute_is_opted_in", inverse="_inverse_is_opted_in")
+    digest = fields.Many2one('digest.digest', 'Digest', required=True, ondelete='cascade')
+    kpi_id = fields.Many2one('digest.kpi', 'KPI', required=True, ondelete='cascade')
+
+    name = fields.Char(related='kpi_id.name')
+
+    module_name = fields.Char(related='kpi_id.module_id.name', compute_sudo=True)
+    icon_url = fields.Char(related='kpi_id.icon_url')
+
+    _digest_kpi_uniq = models.Constraint('UNIQUE (digest, kpi_id)', 'Kpi must be unique per digest.')
+
+    @api.depends('opt_out_user_ids')
+    @api.depends_context('uid')
+    def _compute_is_opted_in(self):
+        opted_out_records = self.filtered(lambda d: self.env.user in d.opt_out_user_ids)
+        opted_out_records.is_opted_in = False
+        (self - opted_out_records).is_opted_in = True
+
+    def _inverse_is_opted_in(self):
+        to_remove = self.env['digest.digest.kpi']
+        to_add = self.env['digest.digest.kpi']
+        for digest_kpi in self:
+            is_opted_in = self.env.user not in self.opt_out_user_ids
+            if is_opted_in == digest_kpi.is_opted_in:
+                continue
+            if digest_kpi.is_opted_in:
+                to_remove |= digest_kpi
+            else:
+                to_add |= digest_kpi
+        to_add.sudo().write({'opt_out_user_ids': [Command.link(self.env.user.id)]})
+        to_remove.sudo().write({'opt_out_user_ids': [Command.unlink(self.env.user.id)]})
+
+    def action_edit_kpi(self):
+        return self.kpi_id.action_edit()
+
+    def action_remove_kpi_from_digest(self):
+        self.ensure_one()
+        self.digest.write({'kpi_ids': [Command.unlink(self.kpi_id.id)]})
+
+    def action_toggle_opt_in_out(self):
+        self.ensure_one()
+        self.sudo().is_opted_in = not self.is_opted_in
 
 
 class DigestDigest(models.Model):
@@ -32,56 +81,17 @@ class DigestDigest(models.Model):
     next_run_date = fields.Date(string='Next Mailing Date')
     currency_id = fields.Many2one(related="company_id.currency_id", string='Currency', readonly=False)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
-    available_fields = fields.Char(compute='_compute_available_fields')
     is_subscribed = fields.Boolean('Is user subscribed', compute='_compute_is_subscribed')
     state = fields.Selection([('activated', 'Activated'), ('deactivated', 'Deactivated')], string='Status', readonly=True, default='activated')
-    # First base-related KPIs
-    kpi_res_users_connected = fields.Boolean('Connected Users')
-    kpi_res_users_connected_value = fields.Integer(compute='_compute_kpi_res_users_connected_value')
-    kpi_mail_message_total = fields.Boolean('Messages Sent')
-    kpi_mail_message_total_value = fields.Integer(compute='_compute_kpi_mail_message_total_value')
+    digest_kpi_ids = fields.One2many('digest.digest.kpi', 'digest')
+    kpi_ids = fields.Many2many(string='KPIs', comodel_name='digest.kpi',
+                               relation='digest_digest_kpi', column1='digest', column2='kpi_id',
+                               readonly=False)
 
     @api.depends('user_ids')
     def _compute_is_subscribed(self):
         for digest in self:
             digest.is_subscribed = self.env.user in digest.user_ids
-
-    def _compute_available_fields(self):
-        for digest in self:
-            kpis_values_fields = []
-            for field_name, field in digest._fields.items():
-                if field.type == 'boolean' and field_name.startswith(('kpi_', 'x_kpi_', 'x_studio_kpi_')) and digest[field_name]:
-                    kpis_values_fields += [field_name + '_value']
-            digest.available_fields = ', '.join(kpis_values_fields)
-
-    def _get_kpi_compute_parameters(self):
-        """Get the parameters used to computed the KPI value."""
-        companies = self.company_id
-        if any(not digest.company_id for digest in self):
-            # No company: we will use the current company to compute the KPIs
-            companies |= self.env.company
-
-        return (
-            fields.Datetime.to_string(self.env.context.get('start_datetime')),
-            fields.Datetime.to_string(self.env.context.get('end_datetime')),
-            companies,
-        )
-
-    def _compute_kpi_res_users_connected_value(self):
-        self._calculate_company_based_kpi(
-            'res.users',
-            'kpi_res_users_connected_value',
-            date_field='login_date',
-        )
-
-    def _compute_kpi_mail_message_total_value(self):
-        start, end, __ = self._get_kpi_compute_parameters()
-        self.kpi_mail_message_total_value = self.env['mail.message'].search_count([
-            ('create_date', '>=', start),
-            ('create_date', '<', end),
-            ('subtype_id', '=', self.env.ref('mail.mt_comment').id),
-            ('message_type', 'in', ('comment', 'email', 'email_outgoing')),
-        ])
 
     @api.onchange('periodicity')
     def _onchange_periodicity(self):
@@ -93,7 +103,29 @@ class DigestDigest(models.Model):
         for digest in digests:
             if not digest.next_run_date:
                 digest.next_run_date = digest._get_next_run_date()
+        # Ensure digest_kpi_ids.sequence are initialized with related kpi sequence when added through kpi_ids.
+        if any('digest_kpi_ids' not in vals for vals in vals_list):
+            digests.invalidate_recordset(['digest_kpi_ids'])  # as kpi_ids and kpi_digest_ids are the same relation
+            for digest, vals in zip(digests, vals_list):
+                if 'digest_kpi_ids' in vals:
+                    continue
+                for digest_kpi in digest.digest_kpi_ids:
+                    digest_kpi.sequence = digest_kpi.kpi_id.sequence
         return digests
+
+    def write(self, vals):
+        """ Ensure digest_kpi_ids.sequence are initialized with related kpi sequence when added through kpi_ids. """
+        kpi_before = {digest.id: digest.kpi_ids for digest in self}
+        res = super().write(vals)
+        if 'digest_kpi_ids' in vals:
+            return res
+        self.invalidate_recordset(['digest_kpi_ids'])  # as kpi_ids and kpi_digest_ids are the same relation
+        for digest in self:
+            added_kpi = digest.kpi_ids - kpi_before[digest.id]
+            for digest_kpi in digest.digest_kpi_ids:
+                if digest_kpi.kpi_id in added_kpi:
+                    digest_kpi.sequence = digest_kpi.kpi_id.sequence
+        return res
 
     # ------------------------------------------------------------
     # ACTIONS
@@ -136,7 +168,7 @@ class DigestDigest(models.Model):
         be considered as unwanted spam. """
         return self._action_send(update_periodicity=False)
 
-    def _action_send(self, update_periodicity=True):
+    def _action_send(self, update_periodicity=True, ignore_error=False):
         """ Send digests email to all the registered users.
 
         :param bool update_periodicity: if True, check user logs to update
@@ -145,17 +177,43 @@ class DigestDigest(models.Model):
         """
         to_slowdown = self._check_daily_logs() if update_periodicity else self.env['digest.digest']
 
+        all_recipients_user_companies = (self.user_ids or self.env.user).company_id
+        values_by_kpi_id_by_company_id = self.kpi_ids._calculate_values_by_company(all_recipients_user_companies)
+        # TODO: prefetch user.groups, opt_out_user_ids
         for digest in self:
             for user in digest.user_ids:
-                digest.with_context(
-                    digest_slowdown=digest in to_slowdown,
-                    lang=user.lang
-                )._action_send_to_user(user, tips_count=1)
+                try:
+                    values_by_kpi = values_by_kpi_id_by_company_id[user.company_id.id]
+                    digest.with_context(
+                        digest_slowdown=digest in to_slowdown,
+                        lang=user.lang,
+                    )._action_send_to_user(user, tips_count=1, values_by_kpi=values_by_kpi)
+                except MailDeliveryException:
+                    if not ignore_error:
+                        raise
+                    _logger.warning(
+                        'MailDeliveryException while sending digest %d to user %d. '
+                        'Digest is now scheduled for next cron update.',
+                        digest.id, user.id)
+                except UserError:
+                    if not ignore_error:
+                        raise
             if digest in to_slowdown:
                 digest.periodicity = digest._get_next_periodicity()[0]
             digest.next_run_date = digest._get_next_run_date()
 
-    def _action_send_to_user(self, user, tips_count=1, consume_tips=True):
+    def _action_send_to_user(self, user, tips_count=1, consume_tips=True, values_by_kpi=None):
+        self.ensure_one()
+        digest_kpi_authorized = self.digest_kpi_ids.filtered(
+            lambda dk: not dk.kpi_id.group_ids or user.all_group_ids & dk.kpi_id.group_ids)
+        if not digest_kpi_authorized:
+            raise UserError(_('The digest "%(digest_name)s" for "%(user_name)s" is empty '
+                              '(probably because the users have no access to the KPIs).',
+                              user_name=user.name, digest_name=self.name))
+        kpis = digest_kpi_authorized.filtered(lambda dk: user not in dk.opt_out_user_ids).kpi_id
+        if not values_by_kpi:
+            values_by_kpi = kpis._calculate_values_by_company(self.company_id)[self.company_id.id]
+        kpis = kpis.filtered(lambda kpi: not values_by_kpi[kpi.id].get('error', False))
         unsubscribe_token = self._get_unsubscribe_token(user.id)
 
         rendered_body = self.env['mail.render.mixin']._render_template(
@@ -173,7 +231,7 @@ class DigestDigest(models.Model):
                 'tips_count': tips_count,
                 'formatted_date': datetime.today().strftime('%B %d, %Y'),
                 'display_mobile_banner': True,
-                'kpi_data': self._compute_kpis(user.company_id, user),
+                'kpi_data': kpis._get_kpi_data(values_by_kpi),
                 'tips': self._compute_tips(user.company_id, user, tips_count=tips_count, consumed=consume_tips),
                 'preferences': self._compute_preferences(user.company_id, user),
             },
@@ -221,14 +279,33 @@ class DigestDigest(models.Model):
         self.env['mail.mail'].sudo().create(mail_values)
         return True
 
+    def action_add_kpi(self):
+        self.ensure_one()
+        form = self.env.ref('digest.digest_digest_view_form_add_remove_kpi', False)
+        return {
+            'name': _('Add/Remove KPIs in "%(digest_name)s"', digest_name=self.name),
+            'type': 'ir.actions.act_window',
+            'views': [(form.id, 'form')],
+            'view_id': form.id,
+            'target': 'new',
+            'res_model': 'digest.digest',
+            'res_id': self.id,
+        }
+
+    def action_create_kpi(self):
+        self.ensure_one()
+        return {
+            'name': _('Create Custom KPI'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'digest.kpi',
+            'view_mode': 'form',
+            'target': 'new',
+        }
+
     @api.model
     def _cron_send_digest_email(self):
         digests = self.search([('next_run_date', '<=', fields.Date.today()), ('state', '=', 'activated')])
-        for digest in digests:
-            try:
-                digest.action_send()
-            except MailDeliveryException as e:
-                _logger.warning('MailDeliveryException while sending digest %d. Digest is now scheduled for next cron update.', digest.id)
+        digests._action_send(ignore_error=True)
 
     def _get_unsubscribe_token(self, user_id):
         """Generate a secure hash for this digest and user. It allows to
@@ -241,69 +318,6 @@ class DigestDigest(models.Model):
     # ------------------------------------------------------------
     # KPIS
     # ------------------------------------------------------------
-
-    def _compute_kpis(self, company, user):
-        """ Compute KPIs to display in the digest template. It is expected to be
-        a list of KPIs, each containing values for 3 columns display.
-
-        :return: result [{
-            'kpi_name': 'kpi_mail_message',
-            'kpi_fullname': 'Messages',  # translated
-            'kpi_action': 'crm.crm_lead_action_pipeline',  # xml id of an action to execute
-            'kpi_col1': {
-                'value': '12.0',
-                'margin': 32.36,
-                'col_subtitle': 'Yesterday',  # translated
-            },
-            'kpi_col2': { ... },
-            'kpi_col3':  { ... },
-        }, { ... }] """
-        self.ensure_one()
-        digest_fields = self._get_kpi_fields()
-        invalid_fields = []
-        kpis = [
-            dict(kpi_name=field_name,
-                 kpi_fullname=self.env['ir.model.fields']._get(self._name, field_name).field_description,
-                 kpi_action=False,
-                 kpi_col1=dict(),
-                 kpi_col2=dict(),
-                 kpi_col3=dict(),
-                 )
-            for field_name in digest_fields
-        ]
-        kpis_actions = self._compute_kpis_actions(company, user)
-
-        for col_index, (tf_name, tf) in enumerate(self._compute_timeframes(company)):
-            digest = self.with_context(start_datetime=tf[0][0], end_datetime=tf[0][1]).with_user(user).with_company(company)
-            previous_digest = self.with_context(start_datetime=tf[1][0], end_datetime=tf[1][1]).with_user(user).with_company(company)
-            for index, field_name in enumerate(digest_fields):
-                kpi_values = kpis[index]
-                kpi_values['kpi_action'] = kpis_actions.get(field_name)
-                try:
-                    compute_value = digest[field_name + '_value']
-                    # Context start and end date is different each time so invalidate to recompute.
-                    digest.invalidate_model([field_name + '_value'])
-                    previous_value = previous_digest[field_name + '_value']
-                    # Context start and end date is different each time so invalidate to recompute.
-                    previous_digest.invalidate_model([field_name + '_value'])
-                except AccessError:  # no access rights -> just skip that digest details from that user's digest email
-                    invalid_fields.append(field_name)
-                    continue
-                margin = self._get_margin_value(compute_value, previous_value)
-                if self._fields['%s_value' % field_name].type == 'monetary':
-                    converted_amount = tools.misc.format_decimalized_amount(compute_value)
-                    compute_value = self._format_currency_amount(converted_amount, company.currency_id)
-                elif self._fields['%s_value' % field_name].type == 'float':
-                    compute_value = "%.2f" % compute_value
-
-                kpi_values['kpi_col%s' % (col_index + 1)].update({
-                    'value': compute_value,
-                    'margin': margin,
-                    'col_subtitle': tf_name,
-                })
-
-        # filter failed KPIs
-        return [kpi for kpi in kpis if kpi['kpi_name'] not in invalid_fields]
 
     def _compute_tips(self, company, user, tips_count=1, consumed=True):
         tips = self.env['digest.tip'].search([
@@ -326,15 +340,6 @@ class DigestDigest(models.Model):
             tips.user_ids += user
         return tip_descriptions
 
-    def _compute_kpis_actions(self, company, user):
-        """ Give an optional action to display in digest email linked to some KPIs.
-
-        :returns: key: kpi name (field name), value: an action that will be
-          concatenated with /odoo/action-{action}
-        :rtype: dict
-        """
-        return {}
-
     def _compute_preferences(self, company, user):
         """ Give an optional text for preferences, like a shortcut for configuration.
 
@@ -354,7 +359,7 @@ class DigestDigest(models.Model):
                 f'/digest/{self.id:d}/set_periodicity?periodicity=weekly',
                 _('Switch to weekly Digests')
             ))
-        if user.has_group('base.group_erp_manager'):
+        if user.has_group('base.group_user'):
             preferences.append(Markup('<p>%s<br /><a href="%s" target="_blank" style="color:#017e84; font-weight: bold;">%s</a></p>') % (
                 _('Want to customize this email?'),
                 f'/odoo/{self._name}/{self.id:d}',
@@ -375,72 +380,9 @@ class DigestDigest(models.Model):
             delta = relativedelta(months=3)
         return date.today() + delta
 
-    def _compute_timeframes(self, company):
-        start_datetime = datetime.utcnow()
-        tz_name = company.resource_calendar_id.tz
-        if tz_name:
-            start_datetime = pytz.timezone(tz_name).localize(start_datetime)
-        return [
-            (_('Last 24 hours'), (
-                (start_datetime + relativedelta(days=-1), start_datetime),
-                (start_datetime + relativedelta(days=-2), start_datetime + relativedelta(days=-1)))
-            ), (_('Last 7 Days'), (
-                (start_datetime + relativedelta(weeks=-1), start_datetime),
-                (start_datetime + relativedelta(weeks=-2), start_datetime + relativedelta(weeks=-1)))
-            ), (_('Last 30 Days'), (
-                (start_datetime + relativedelta(months=-1), start_datetime),
-                (start_datetime + relativedelta(months=-2), start_datetime + relativedelta(months=-1)))
-            )
-        ]
-
     # ------------------------------------------------------------
     # FORMATTING / TOOLS
     # ------------------------------------------------------------
-
-    def _calculate_company_based_kpi(self, model, digest_kpi_field, date_field='create_date',
-                                     additional_domain=None, sum_field=None):
-        """Generic method that computes the KPI on a given model.
-
-        :param model: Model on which we will compute the KPI
-            This model must have a "company_id" field
-        :param digest_kpi_field: Field name on which we will write the KPI
-        :param date_field: Field used for the date range
-        :param additional_domain: Additional domain
-        :param sum_field: Field to sum to obtain the KPI,
-            if None it will count the number of records
-        """
-        start, end, companies = self._get_kpi_compute_parameters()
-
-        base_domain = Domain([
-            ('company_id', 'in', companies.ids),
-            (date_field, '>=', start),
-            (date_field, '<', end),
-        ])
-
-        if additional_domain:
-            base_domain &= Domain(additional_domain)
-
-        values = self.env[model]._read_group(
-            domain=base_domain,
-            groupby=['company_id'],
-            aggregates=[f'{sum_field}:sum'] if sum_field else ['__count'],
-        )
-
-        values_per_company = {company.id: agg for company, agg in values}
-        for digest in self:
-            company = digest.company_id or self.env.company
-            digest[digest_kpi_field] = values_per_company.get(company.id, 0)
-
-    def _get_kpi_fields(self):
-        return [field_name for field_name, field in self._fields.items()
-                if field.type == 'boolean' and field_name.startswith(('kpi_', 'x_kpi_', 'x_studio_kpi_')) and self[field_name]
-               ]
-
-    def _get_margin_value(self, value, previous_value=0.0):
-        margin = 0.0
-        if (value != previous_value) and (value != 0.0 and previous_value != 0.0):
-            margin = float_round((float(value-previous_value) / previous_value or 1) * 100, precision_digits=2)
-        return margin
 
     def _check_daily_logs(self):
         """ Badly named method that checks user logs and slowdown the sending
@@ -470,8 +412,3 @@ class DigestDigest(models.Model):
         if self.periodicity == 'weekly':
             return 'monthly', _('monthly')
         return 'quarterly', _('quarterly')
-
-    def _format_currency_amount(self, amount, currency_id):
-        pre = currency_id.position == 'before'
-        symbol = u'{symbol}'.format(symbol=currency_id.symbol or '')
-        return u'{pre}{0}{post}'.format(amount, pre=symbol if pre else '', post=symbol if not pre else '')

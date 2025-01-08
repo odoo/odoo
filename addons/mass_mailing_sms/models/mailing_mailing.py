@@ -287,7 +287,7 @@ class MailingMailing(models.Model):
                     'value': f'{self.bounced_ratio}%',
                     'col_subtitle': _('BOUNCED (%i)', self.bounced),
                 },
-                'kpi_action': None,
+                'kpi_action_url': None,
                 'kpi_name': self.mailing_type,
             }
         return values

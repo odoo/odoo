@@ -65,10 +65,6 @@
                 color: #007e84;
                 font-size: 14px;
             }
-            .header_date {
-                color: #878d97;
-                font-size: 14px;
-            }
             .tip_title {
                 margin-top: 0;
                 font-weight: bold;
@@ -104,6 +100,11 @@
                 font-size: 14px;
                 font-weight: bold;
                 color: #374151;
+            }
+            .kpi_header_icon {
+                width: 2em;
+                height: 2em;
+                vertical-align: middle;
             }
             .kpi_cell {
                 width: 33%;
@@ -201,10 +202,6 @@
                 #button_connect {
                     font-size: 12px;
                 }
-                .header_date {
-                    margin-top: 10px;
-                    font-size: 10px;
-                }
                 .tip_title {
                     font-size: 14px;
                 }
@@ -293,14 +290,8 @@
                         <tr>
                             <td style="padding-left: 20px" class="p0" colspan="2">
                                 <div class="header_title">
-                                    <p t-esc="title"/>
-                                    <p t-if="sub_title" t-esc="sub_title"/>
+                                    <span t-esc="title"/> — <span t-esc="formatted_date"/>
                                 </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 10px 0px 20px 20px;" class="p0" colspan="2">
-                                <span t-esc="formatted_date" class="header_date"/>
                             </td>
                         </tr>
                     </tbody>
@@ -332,17 +323,23 @@
                                     <tr>
                                         <td style="padding-bottom: 20px;">
                                             <table t-if="kpi_info.get('kpi_col1') or kpi_info.get('kpi_col2') or kpi_info.get('kpi_col3')"
-                                                    t-att-data-field="kpi_info['kpi_name']" cellspacing="0" cellpadding="10" style="width: 100%;margin-bottom: 5px;">
+                                                    class="o_digest_kpi_card" cellspacing="0" cellpadding="10" style="width: 100%;margin-bottom: 5px;">
                                                 <tr class="kpi_header">
                                                     <td colspan="2" style="padding: 0px 0px 5px 0px;">
-                                                        <span style="text-transform: uppercase;" t-esc="kpi_info['kpi_fullname']"  />
+                                                        <t t-if="kpi_info.get('kpi_icon_url')">
+                                                            <img class="kpi_header_icon"
+                                                                 t-att-src="kpi_info['kpi_icon_url']"
+                                                                 onError="this.onerror=null; this.remove();"
+                                                                 valign="middle" width="30" height="30"/>
+                                                        </t>
+                                                        <span style="text-transform: uppercase;" t-esc="kpi_info['kpi_name']"  />
                                                     </td>
-                                                    <td t-if="kpi_info['kpi_action']" align="right" style="padding: 0px 0px 5px 0px;">
+                                                    <td t-if="kpi_info['kpi_action_url']" align="right" style="padding: 0px 0px 5px 0px;">
                                                         <table>
                                                             <tbody>
                                                                 <tr>
                                                                     <td class="td_button td_button_open_report" style="padding: 1px 5px;height: 24px;">
-                                                                        <a t-att-href="'/odoo/action-%s' % kpi_info['kpi_action']">
+                                                                        <a t-att-href="kpi_info['kpi_action_url']">
                                                                             <span class="button" id="button_open_report">➔ Open Report</span>
                                                                         </a>
                                                                     </td>
