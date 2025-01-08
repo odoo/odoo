@@ -50,7 +50,7 @@ registry.category("web_tour.tours").add('forum_question', {
     },
     {
         content: "Close modal once modal animation is done.",
-        trigger: ".modal:contains(thanks for posting!) .modal-header button.btn-close",
+        trigger: ".modal.modal_shown.show:contains(thanks for posting!) button.btn-close",
         run: "click",
     },
     {
