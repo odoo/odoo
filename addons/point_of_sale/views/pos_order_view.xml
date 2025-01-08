@@ -460,4 +460,16 @@ if records:
     action = records.action_pos_order_cancel()
         </field>
     </record>
+
+    <record id="model_pos_order_send_mail" model="ir.actions.server">
+        <field name="name">Send Email</field>
+        <field name="model_id" ref="point_of_sale.model_pos_order"/>
+        <field name="binding_model_id" ref="point_of_sale.model_pos_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.with_context(hide_default_template=True).action_send_mail()
+        </field>
+    </record>
 </odoo>
