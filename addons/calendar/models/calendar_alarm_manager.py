@@ -141,6 +141,14 @@ class AlarmManager(models.AbstractModel):
             })
         return result
 
+    @api.model
+    def _get_notify_alert_extra_conditions(self):
+        """
+        To be overriden on inherited modules
+        adding extra conditions to extract only the unsynced events
+        """
+        return ""
+
     def _get_events_by_alarm_to_notify(self, alarm_type):
         """
         Get the events with an alarm of the given type between the cron
@@ -159,13 +167,13 @@ class AlarmManager(models.AbstractModel):
                 ON "event"."id" = "event_alarm_rel"."calendar_event_id"
               JOIN "calendar_alarm" AS "alarm"
                 ON "event_alarm_rel"."calendar_alarm_id" = "alarm"."id"
-             WHERE (
+             WHERE
                    "alarm"."alarm_type" = %s
                AND "event"."active"
                AND "event"."start" - CAST("alarm"."duration" || ' ' || "alarm"."interval" AS Interval) >= %s
                AND "event"."start" - CAST("alarm"."duration" || ' ' || "alarm"."interval" AS Interval) < now() at time zone 'utc'
                AND "event"."stop" > now() at time zone 'utc'
-             )''', [alarm_type, lastcall])
+              ''' + self._get_notify_alert_extra_conditions(), [alarm_type, lastcall])
 
         events_by_alarm = {}
         for alarm_id, event_id in self.env.cr.fetchall():
