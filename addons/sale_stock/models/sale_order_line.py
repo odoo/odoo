@@ -65,6 +65,13 @@ class SaleOrderLine(models.Model):
             else:
                 line.display_qty_widget = False
 
+    def _read_qties(self, date, wh):
+        return self.mapped('product_id').with_context(to_date=date, warehouse_id=wh).read([
+            'qty_available',
+            'free_qty',
+            'virtual_available',
+        ])
+
     @api.depends(
         'product_id', 'customer_lead', 'product_uom_qty', 'product_uom_id', 'order_id.commitment_date',
         'move_ids', 'move_ids.forecast_expected_date', 'move_ids.forecast_availability',
@@ -120,11 +127,7 @@ class SaleOrderLine(models.Model):
             grouped_lines[(line.warehouse_id.id, line.order_id.commitment_date or line._expected_date())] |= line
 
         for (warehouse, scheduled_date), lines in grouped_lines.items():
-            product_qties = lines.mapped('product_id').with_context(to_date=scheduled_date, warehouse_id=warehouse).read([
-                'qty_available',
-                'free_qty',
-                'virtual_available',
-            ])
+            product_qties = lines._read_qties(scheduled_date, warehouse)
             qties_per_product = {
                 product['id']: (product['qty_available'], product['free_qty'], product['virtual_available'])
                 for product in product_qties

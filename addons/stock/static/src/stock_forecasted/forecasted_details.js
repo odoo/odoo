@@ -1,6 +1,7 @@
 import { formatFloat } from "@web/views/fields/formatters";
 import { useService } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 
 export class ForecastedDetails extends Component {
     static template = "stock.ForecastedDetails";
@@ -53,5 +54,21 @@ export class ForecastedDetails extends Component {
 
     get futureVirtualAvailable() {
         return this.props.docs.virtual_available + this.props.docs.qty.in - this.props.docs.qty.out;
+    }
+
+    get freeStockLabel() {
+        return _t('Free Stock');
+    }
+
+    classForLine(line) {
+        const greyBackground = !line.document_in && !line.reservation &&
+            (!line.in_transit && line.replenishment_filled && !line.document_out && !line.removal_date)
+            ||
+            (line.in_transit && !line.move_out);
+        return greyBackground ? 'bg-200' : '';
+    }
+
+    should_have_grey_bg(line){
+
     }
 }

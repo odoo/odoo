@@ -33,6 +33,9 @@ Also implements the removal strategy First Expiry First Out (FEFO) widely used, 
         'web.assets_tests': [
             'product_expiry/static/tests/tours/*.js',
         ],
+        'web.assets_backend': [
+            'product_expiry/static/src/**/*',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
