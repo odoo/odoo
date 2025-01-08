@@ -28,7 +28,7 @@
         }, {
             trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Lead 1')",
             content: "move to won stage",
-            run: "drag_and_drop_native .o_opportunity_kanban .o_kanban_group:eq(3) "
+            run: "drag_and_drop_native .o_opportunity_kanban .o_kanban_group:has(.o_column_title:contains('Won')) "
         }, {
             trigger: ".o_reward_rainbow",
             extra_trigger: ".o_reward_rainbow",
