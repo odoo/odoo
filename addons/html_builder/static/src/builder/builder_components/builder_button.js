@@ -1,10 +1,9 @@
 import { Component } from "@odoo/owl";
 import {
     clickableBuilderComponentProps,
-    useClickableBuilderComponent,
     BuilderComponent,
-    useDependencyDefinition,
     defaultBuilderComponentProps,
+    useSelectableItemComponent,
 } from "./utils";
 
 export class BuilderButton extends Component {
@@ -25,15 +24,7 @@ export class BuilderButton extends Component {
     static defaultProps = defaultBuilderComponentProps;
 
     setup() {
-        const { state, operation, isActive, getActions } = useClickableBuilderComponent();
-        if (this.props.id) {
-            useDependencyDefinition({
-                id: this.props.id,
-                isActive,
-                getActions,
-                bus: this.env.actionBus,
-            });
-        }
+        const { state, operation } = useSelectableItemComponent(this.props.id);
         this.state = state;
         this.onClick = operation.commit;
         this.onMouseenter = operation.preview;

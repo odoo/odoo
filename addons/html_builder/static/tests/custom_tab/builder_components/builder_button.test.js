@@ -11,6 +11,8 @@ import {
 
 defineWebsiteModels();
 
+const falsy = () => false;
+
 test("call a specific action with some params and value", async () => {
     addActionOption({
         customAction: {
@@ -132,6 +134,47 @@ test("clean another action", async () => {
         "test-options-target my-custom-class2"
     );
 });
+test("clean should only be called on the currently selected item", async () => {
+    function makeAction(n) {
+        const action = {
+            clean() {
+                expect.step(`customAction${n} clean`);
+            },
+            apply: () => {
+                expect.step(`customAction${n} apply`);
+            },
+        };
+        return { action };
+    }
+    addActionOption({
+        customAction1: makeAction(1).action,
+        customAction2: makeAction(2).action,
+        customAction3: makeAction(3).action,
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderButtonGroup>
+                <BuilderButton action="'customAction1'" classAction="'c1'" />
+                <BuilderButton action="'customAction2'" classAction="'c2'" />
+                <BuilderButton action="'customAction3'" classAction="'c3'" />
+            </BuilderButtonGroup>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    await click("[data-action-id='customAction1']");
+    expect(":iframe .test-options-target").toHaveClass("c1");
+    await click("[data-action-id='customAction2']");
+    expect(":iframe .test-options-target").toHaveClass("c2");
+    expect.verifySteps([
+        "customAction1 apply",
+        "customAction1 apply",
+        "customAction1 clean",
+        "customAction2 apply",
+        "customAction1 clean",
+        "customAction2 apply",
+    ]);
+});
 test("add the active class if the condition is met", async () => {
     addOption({
         selector: ".test-options-target",
@@ -203,8 +246,9 @@ test("hide/display base on applyTo", async () => {
     expect("[data-class-action='test']").not.toHaveClass("active");
 });
 describe("inherited actions", () => {
-    function makeAction(n, { async } = {}) {
+    function makeAction(n, { async, isActive } = {}) {
         const action = {
+            isActive,
             clean({ param, value }) {
                 expect.step(`customAction${n} clean ${param} ${value}`);
             },
@@ -229,24 +273,22 @@ describe("inherited actions", () => {
         addActionOption({
             customAction1: makeAction(1).action,
             customAction2: makeAction(2).action,
-            customAction3: makeAction(3).action,
+            customAction3: makeAction(3, { isActive: falsy }).action,
         });
         addOption({
             selector: ".test-options-target",
             template: xml`
                 <BuilderButtonGroup>
-                    <BuilderButton action="'customAction1'" actionParam="'myParam1'" actionValue="'myValue1'"  id="'c1'">MyAction1</BuilderButton>
+                    <BuilderButton action="'customAction1'" actionParam="'myParam1'" actionValue="'myValue1'"  classAction="'class1'" id="'c1'">MyAction1</BuilderButton>
                     <BuilderButton action="'customAction2'" actionParam="'myParam2'" actionValue="'myValue2'">MyAction2</BuilderButton>
                 </BuilderButtonGroup>
                 <BuilderButton action="'customAction3'" actionParam="'myParam3'" actionValue="'myValue3'" inheritedActions="['c1']" >MyAction2</BuilderButton>
             `,
         });
-        await setupWebsiteBuilder(`<div class="test-options-target">a</div>`);
+        await setupWebsiteBuilder(`<div class="test-options-target class1">a</div>`);
         await contains(":iframe .test-options-target").click();
-
         await contains("[data-action-id='customAction3']").hover();
         expect.verifySteps([
-            "customAction2 clean myParam2 myValue2",
             "customAction1 clean myParam1 myValue1",
 
             "customAction3 apply myParam3 myValue3",
@@ -257,7 +299,7 @@ describe("inherited actions", () => {
         const action1 = makeAction(1, { async: true });
         const action2 = makeAction(2, { async: true });
         const action3 = makeAction(3, { async: true });
-        const action4 = makeAction(4, { async: true });
+        const action4 = makeAction(4, { async: true, isActive: falsy });
         addActionOption({
             customAction1: action1.action,
             customAction2: action2.action,
@@ -268,14 +310,14 @@ describe("inherited actions", () => {
             selector: ".test-options-target",
             template: xml`
                 <BuilderButtonGroup>
-                    <BuilderButton action="'customAction1'" actionParam="'myParam1'" actionValue="'myValue1'"  id="'c1'">MyAction1</BuilderButton>
+                    <BuilderButton action="'customAction1'" actionParam="'myParam1'" actionValue="'myValue1'"  classAction="'class1'" id="'c1'">MyAction1</BuilderButton>
                     <BuilderButton action="'customAction2'" actionParam="'myParam2'" actionValue="'myValue2'">MyAction2</BuilderButton>
                 </BuilderButtonGroup>
                 <BuilderButton action="'customAction3'" actionParam="'myParam3'" actionValue="'myValue3'"  id="'c3'">MyAction1</BuilderButton>
                 <BuilderButton action="'customAction4'" actionParam="'myParam4'" actionValue="'myValue4'" inheritedActions="['c1', 'c3']" >MyAction2</BuilderButton>
             `,
         });
-        await setupWebsiteBuilder(`<div class="test-options-target">a</div>`);
+        await setupWebsiteBuilder(`<div class="test-options-target class1">a</div>`);
         await contains(":iframe .test-options-target").click();
 
         await contains("[data-action-id='customAction4']").hover();
@@ -288,7 +330,6 @@ describe("inherited actions", () => {
             "customAction1 load myParam1 myValue1",
             "customAction3 load myParam3 myValue3",
 
-            "customAction2 clean myParam2 myValue2",
             "customAction1 clean myParam1 myValue1",
 
             "customAction4 apply myParam4 myValue4",

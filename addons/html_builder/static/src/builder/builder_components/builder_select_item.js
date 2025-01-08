@@ -1,10 +1,9 @@
-import { Component, onMounted, onWillDestroy, useRef } from "@odoo/owl";
+import { Component, useRef } from "@odoo/owl";
 import {
     clickableBuilderComponentProps,
     defaultBuilderComponentProps,
-    useClickableBuilderComponent,
-    useDependencyDefinition,
     BuilderComponent,
+    useSelectableItemComponent,
 } from "./utils";
 
 export class BuilderSelectItem extends Component {
@@ -19,37 +18,18 @@ export class BuilderSelectItem extends Component {
     static components = { BuilderComponent };
 
     setup() {
-        if (!this.env.BuilderSelectContext) {
+        if (!this.env.selectableContext) {
             throw new Error("BuilderSelectItem must be used inside a BuilderSelect component.");
         }
         const item = useRef("item");
-        const { state, operation, isActive, getActions, priority } = useClickableBuilderComponent();
-        if (this.props.id) {
-            useDependencyDefinition({
-                id: this.props.id,
-                isActive: () =>
-                    this.env.BuilderSelectContext?.getSelectedItemId() === this.props.id,
-                getActions,
-            });
-        }
 
-        const selectableItem = {
-            id: this.props.id,
-            isActive,
-            priority,
+        const { state, operation } = useSelectableItemComponent(this.props.id, {
             getLabel: () => item.el?.innerHTML || "",
-        };
-
-        this.env.BuilderSelectContext.addSelectableItem?.(selectableItem);
-        onMounted(this.env.BuilderSelectContext.update);
-        onWillDestroy(() => {
-            this.env.BuilderSelectContext.removeSelectableItem?.(selectableItem);
         });
-
         this.state = state;
         this.onClick = () => {
+            this.env.selectableContext.selectableBus.trigger("SELECT_ITEM");
             operation.commit();
-            this.env.BuilderSelectContext.bus.trigger("select-item");
         };
         this.onMouseenter = operation.preview;
         this.onMouseleave = operation.revert;
