@@ -263,7 +263,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                                            reply_all=False, cc=False,
                                            force_email_from=False, force_return_path=False,
                                            extra=False, use_references=True, extra_references=False, use_in_reply_to=False,
-                                           debug_log=False):
+                                           debug_log=False,
+                                           target_model='mail.test.gateway'):
         """ Tool to simulate a reply, based on outgoing SMTP emails.
 
         :param list source_smtp_to_list: find outgoing SMTP email based on their
@@ -299,7 +300,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 force_email_from=force_email_from, force_email_to=replying_to,
                 force_return_path=force_return_path, cc=cc,
                 extra=extra, use_references=use_references, extra_references=extra_references, use_in_reply_to=use_in_reply_to,
-                debug_log=debug_log
+                debug_log=debug_log,
+                target_model=target_model,
             )
         return capture_messages
 
@@ -499,9 +501,10 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 for mail in self._new_mails
             )
             recipients_info = f'Missing: {[f"{r.name} ({r.id})" for r in recipients if r.id not in filtered.recipient_ids.ids]}'
+            author_info = f'{author.name} ({author.id})' if isinstance(author, self.env['res.partner'].__class__) else author
             raise AssertionError(
                 f'mail.mail not found for message {mail_message} / status {status} / recipients {sorted(recipients.ids)} / '
-                f'author {author.name} ({author.id}), email_from ({email_from})\n{recipients_info}\n{debug_info}'
+                f'author {author_info}, email_from ({email_from})\n{recipients_info}\n{debug_info}'
             )
         return mail
 

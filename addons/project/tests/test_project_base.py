@@ -89,15 +89,6 @@ class TestProjectCommon(TransactionCase):
                 })]
             })
 
-    def format_and_process(self, template, to='groups@example.com, other@gmail.com', subject='Frogs',
-                           extra='', email_from='Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>',
-                           cc='', msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>',
-                           model=None, target_model='project.task', target_field='name'):
-        self.assertFalse(self.env[target_model].search([(target_field, '=', subject)]))
-        mail = template.format(to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id)
-        self.env['mail.thread'].message_process(model, mail)
-        return self.env[target_model].search([(target_field, '=', subject)])
-
 
 class TestProjectBase(TestProjectCommon):
 
