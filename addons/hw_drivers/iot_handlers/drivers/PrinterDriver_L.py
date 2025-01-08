@@ -18,7 +18,7 @@ from odoo.addons.hw_drivers.driver import Driver
 from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.iot_handlers.interfaces.PrinterInterface_L import PPDs, conn, cups_lock
 from odoo.addons.hw_drivers.main import iot_devices
-from odoo.addons.hw_drivers.tools import helpers
+from odoo.addons.hw_drivers.tools import helpers, wifi
 from odoo.addons.hw_drivers.websocket_client import send_to_controller
 
 _logger = logging.getLogger(__name__)
@@ -86,15 +86,18 @@ class PrinterDriver(Driver):
         })
 
         self.receipt_protocol = 'star' if 'STR_T' in device['device-id'] else 'escpos'
+        self.connected_by_usb = self.device_connection == 'direct'
 
         if any(cmd in device['device-id'] for cmd in ['CMD:STAR;', 'CMD:ESC/POS;']):
             self.device_subtype = "receipt_printer"
+            if self.connected_by_usb:
+                self.print_status_receipt()
         elif any(cmd in device['device-id'] for cmd in ['COMMAND SET:ZPL;', 'CMD:ESCLABEL;']):
             self.device_subtype = "label_printer"
+            if self.connected_by_usb:
+                self.print_status_zpl()
         else:
             self.device_subtype = "office_printer"
-        if 'direct' in self.device_connection and any(cmd in device['device-id'] for cmd in ['CMD:STAR;', 'CMD:ESC/POS;']):
-            self.print_status()
 
     @classmethod
     def supported(cls, device):
@@ -351,7 +354,22 @@ class PrinterDriver(Driver):
             res = self.format_escpos_bit_image_raster(im)
         return res + RECEIPT_PRINTER_COMMANDS['escpos']['cut']
 
-    def print_status(self):
+    def _get_iot_status(self):
+        mac = helpers.get_mac_address()
+        pairing_code = connection_manager.pairing_code
+        ssid = wifi.get_access_point_ssid() if wifi.is_access_point() else wifi.get_current()
+
+        ips = []
+        for iface_id in ni.interfaces():
+            iface_obj = ni.ifaddresses(iface_id)
+            ifconfigs = iface_obj.get(ni.AF_INET, [])
+            for conf in ifconfigs:
+                if 'addr' in conf and conf['addr'] not in ['127.0.0.1', '10.11.12.1']:
+                    ips.append(conf['addr'])
+
+        return { "mac": mac, "pairing_code": pairing_code, "ssid": ssid, "ips": ips }
+
+    def print_status_receipt(self):
         """Prints the status ticket of the IoTBox on the current printer."""
         wlan = ''
         ip = ''
@@ -359,17 +377,10 @@ class PrinterDriver(Driver):
         homepage = ''
         pairing_code = ''
 
-        ssid = helpers.get_ssid()
-        wlan = '\nWireless network:\n%s\n\n' % ssid
+        iot_status = self._get_iot_status()
+        wlan = '\nWireless network:\n%s\n\n' % iot_status["ssid"]
 
-        interfaces = ni.interfaces()
-        ips = []
-        for iface_id in interfaces:
-            iface_obj = ni.ifaddresses(iface_id)
-            ifconfigs = iface_obj.get(ni.AF_INET, [])
-            for conf in ifconfigs:
-                if conf.get('addr') and conf.get('addr'):
-                    ips.append(conf.get('addr'))
+        ips = iot_status["ips"]
         if len(ips) == 0:
             ip = '\nERROR: Could not connect to LAN\n\nPlease check that the IoTBox is correc-\ntly connected with a network cable,\n that the LAN is setup with DHCP, and\nthat network addresses are available'
         elif len(ips) == 1:
@@ -378,18 +389,31 @@ class PrinterDriver(Driver):
             ip = '\nIP Addresses:\n%s\n' % '\n'.join(ips)
 
         if len(ips) >= 1:
-            ips_filtered = [i for i in ips if i != '127.0.0.1']
-            main_ips = ips_filtered and ips_filtered[0] or '127.0.0.1'
-            mac = '\nMAC Address:\n%s\n' % helpers.get_mac_address()
-            homepage = '\nHomepage:\nhttp://%s:8069\n\n' % main_ips
+            mac = '\nMAC Address:\n%s\n' % iot_status["mac"]
+            homepage = '\nHomepage:\nhttp://%s:8069\n\n' % ips[0]
 
-        code = connection_manager.pairing_code
-        if code:
-            pairing_code = '\nPairing Code:\n%s\n' % code
+        if iot_status["pairing_code"]:
+            pairing_code = '\nPairing Code:\n%s\n' % iot_status["pairing_code"]
 
         commands = RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
         title = commands['title'] % b'IoTBox Status'
         self.print_raw(commands['center'] + title + b'\n' + wlan.encode() + mac.encode() + ip.encode() + homepage.encode() + pairing_code.encode() + commands['cut'])
+
+    def print_status_zpl(self):
+        iot_status = self._get_iot_status()
+
+        command = f"^XA^CI28 ^FT35,40 ^A0N,30 ^FDIoT Box Status^FS"
+        if iot_status["ssid"]:
+            command += f"^FT35,85 ^A0N,25 ^FDWiFi: {iot_status['ssid']}^FS"
+        if iot_status["mac"]:
+            command += f"^FT35,120 ^A0N,25 ^FDMAC: {iot_status['mac']}^FS"
+        if iot_status["ips"]:
+            command += f"^FT35,155 ^A0N,25 ^FDIP: {', '.join(iot_status['ips'])}^FS"
+        if iot_status["pairing_code"]:
+            command += f"^FT35,190 ^A0N,25 ^FDPairing code: {iot_status['pairing_code']}^FS"
+        command += "^XZ"
+
+        self.print_raw(command.encode())
 
     def open_cashbox(self, data):
         """Sends a signal to the current printer to open the connected cashbox."""
