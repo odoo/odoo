@@ -3,7 +3,7 @@
 {
     'name': 'Invoicing',
     'version': '1.4',
-    'summary': 'Invoices, Payments, Follow-ups & Bank Synchronization',
+    'summary': 'Invoices & Payments',
     'sequence': 10,
     'description': """
 Invoicing & Payments
