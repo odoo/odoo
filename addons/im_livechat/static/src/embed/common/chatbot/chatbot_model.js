@@ -9,6 +9,7 @@ export class Chatbot extends Record {
     // Time to wait without user input before considering a multi line step as
     // completed.
     static MULTILINE_STEP_DEBOUNCE_DELAY = 10000;
+    static MULTILINE_STEP_DEBOUNCE_DELAY_TOUR = 500;
 
     isTyping = false;
     script = Record.one("chatbot.script");
@@ -20,6 +21,7 @@ export class Chatbot extends Record {
             this.delete();
         },
     });
+    tmpAnswer = "";
     typingMessage = Record.one("mail.message", {
         compute() {
             if (this.isTyping && this.thread) {
@@ -38,7 +40,9 @@ export class Chatbot extends Record {
         compute() {
             return debounce(
                 this._processAnswer,
-                this.script.isLivechatTourRunning ? 500 : Chatbot.MULTILINE_STEP_DEBOUNCE_DELAY
+                this.script.isLivechatTourRunning
+                    ? Chatbot.MULTILINE_STEP_DEBOUNCE_DELAY_TOUR
+                    : Chatbot.MULTILINE_STEP_DEBOUNCE_DELAY
             );
         },
     });
@@ -52,8 +56,9 @@ export class Chatbot extends Record {
         }
         if (this.currentStep.type === "free_input_multi") {
             await this._processAnswerDebounced(message);
+        } else {
+            await this._processAnswer(message);
         }
-        await this._processAnswer(message);
     }
 
     async triggerNextStep() {
@@ -128,6 +133,14 @@ export class Chatbot extends Record {
     }
 
     async _processAnswer(message) {
+        if (
+            this.currentStep.type === "free_input_multi" &&
+            this.thread.composer.text &&
+            this.tmpAnswer !== this.thread.composer.text
+        ) {
+            return await this._delayThenProcessAnswerAgain(message);
+        }
+        this.tmpAnswer = "";
         let stepCompleted = true;
         if (this.currentStep.type === "question_email") {
             stepCompleted = await this._processAnswerQuestionEmail();
@@ -135,6 +148,12 @@ export class Chatbot extends Record {
             stepCompleted = await this._processAnswerQuestionSelection(message);
         }
         this.currentStep.completed = stepCompleted;
+    }
+
+    async _delayThenProcessAnswerAgain(message) {
+        this.tmpAnswer = this.thread.composer.text;
+        await Promise.resolve(); // Ensure that it's properly debounced when called again
+        return this._processAnswerDebounced(message);
     }
 
     /**
