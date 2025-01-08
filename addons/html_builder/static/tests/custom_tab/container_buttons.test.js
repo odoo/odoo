@@ -20,7 +20,7 @@ const dummySnippet = `
 `;
 
 test("Use the sidebar 'remove' buttons", async () => {
-    await setupWebsiteBuilder(dummySnippet, { loadIframeBundles: true });
+    await setupWebsiteBuilder(dummySnippet);
 
     const removeSectionSelector =
         ".o_customize_tab .options-container > div:contains('Dummy Section') button.oe_snippet_remove";
@@ -38,7 +38,7 @@ test("Use the sidebar 'remove' buttons", async () => {
 });
 
 test("Use the sidebar 'clone' buttons", async () => {
-    await setupWebsiteBuilder(dummySnippet, { loadIframeBundles: true });
+    await setupWebsiteBuilder(dummySnippet);
 
     const cloneSectionSelector =
         ".o_customize_tab .options-container > div:contains('Dummy Section') button.oe_snippet_clone";
@@ -58,7 +58,7 @@ test("Use the sidebar 'clone' buttons", async () => {
 });
 
 test("Clicking on the options container title selects the corresponding element", async () => {
-    await setupWebsiteBuilder(dummySnippet, { loadIframeBundles: true });
+    await setupWebsiteBuilder(dummySnippet);
 
     await contains(":iframe .col-lg-7").click();
     expect(".o_customize_tab .options-container").toHaveCount(2);
