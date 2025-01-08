@@ -593,13 +593,13 @@ class TestUi(HttpCaseWithWebsiteUser):
 
         self.start_tour('/', 'website_no_dirty_page', login='admin')
 
-    def test_widget_lifecycle(self):
+    def test_interaction_lifecycle(self):
         self.env['ir.asset'].create({
             'name': 'wysiwyg_patch_start_and_destroy',
             'bundle': 'website.assets_wysiwyg',
-            'path': 'website/static/tests/tour_utils/widget_lifecycle_patch_wysiwyg.js',
+            'path': 'website/static/tests/tour_utils/lifecycle_patch_wysiwyg.js',
         })
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'widget_lifecycle', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'interaction_lifecycle', login='admin')
 
     def test_drop_404_ir_attachment_url(self):
         website_snippets = self.env.ref('website.snippets')

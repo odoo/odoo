@@ -27,13 +27,11 @@ class TestDisableSnippetsAssets(TransactionCase):
 
     def test_homepage_outdated_and_mega_menu_up_to_date(self):
         self.Website._disable_unused_snippets_assets()
-        # Old snippet with scss and js
+        # Old snippet with scss
         s_website_form_000_scss = self._get_snippet_asset('s_website_form', '000', 'scss')
         s_website_form_001_scss = self._get_snippet_asset('s_website_form', '001', 'scss')
-        s_website_form_000_js = self._get_snippet_asset('s_website_form', '000', 'js')
         self.assertEqual(s_website_form_000_scss.active, True)
         self.assertEqual(s_website_form_001_scss.active, True)
-        self.assertEqual(s_website_form_000_js.active, True)
 
         # Old snippet with scss and scss variables
         s_masonry_block_000_scss = self._get_snippet_asset('s_masonry_block', '000', 'scss')
@@ -84,10 +82,8 @@ class TestDisableSnippetsAssets(TransactionCase):
 
         s_website_form_000_scss = self._get_snippet_asset('s_website_form', '000', 'scss')
         s_website_form_001_scss = self._get_snippet_asset('s_website_form', '001', 'scss')
-        s_website_form_000_js = self._get_snippet_asset('s_website_form', '000', 'js')
         self.assertEqual(s_website_form_000_scss.active, False)
         self.assertEqual(s_website_form_001_scss.active, True)
-        self.assertEqual(s_website_form_000_js.active, True)
 
         s_masonry_block_000_scss = self._get_snippet_asset('s_masonry_block', '000', 'scss')
         s_masonry_block_000_variables_scss = self._get_snippet_asset('s_masonry_block', '000_variables', 'scss')

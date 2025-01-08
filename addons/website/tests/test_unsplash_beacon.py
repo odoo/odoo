@@ -21,25 +21,16 @@ class TestUnsplashBeacon(odoo.tests.HttpCase):
                     production system.
                 -->
                 <script>
-                    Object.defineProperty(window, "$", {
-                        get() {
-                            return this._patched$;
-                        },
-                        set(value) {
-                            delete this.$;
-                            this._patched$ = value;
-                            // Patch RPC call.
-                            const oldGet = value.get.bind(this);
-                            value.get = (url, data, success, dataType) => {
-                                if (url === "https://views.unsplash.com/v") {
-                                    const imageEl = document.querySelector(`img[src^="/unsplash/${data.photo_id}/"]`);
-                                    imageEl.dataset.beacon = "sent";
-                                    return;
-                                }
-                                return oldGet(url, data, success, dataType);
-                            };
-                        },
-                    });
+                    window._oldFetch = window.fetch;
+                    // Patch fetch call.
+                    window.fetch = async (url, options) => {
+                        const result = await window._oldFetch(url, options);
+                        if (url.origin === "https://views.unsplash.com" &amp;&amp; url.pathname === "/v") {
+                            const imageEl = document.querySelector(`img[src^="/unsplash/${url.searchParams.get("photo_id")}/"]`);
+                            imageEl.dataset.beacon = "sent";
+                        }
+                        return result;
+                    };
                 </script>
             </div>
             </t>
