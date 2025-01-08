@@ -115,6 +115,7 @@ class MrpBatchProduce(models.TransientModel):
         productions = self.env['mrp.production'].browse(productions_to_set)
         for production in reversed(productions):
             production.qty_producing = production.product_uom_qty
+            production.move_raw_ids.manual_consumption = True
             production.set_qty_producing()
             production.move_raw_ids.picked = True
 
