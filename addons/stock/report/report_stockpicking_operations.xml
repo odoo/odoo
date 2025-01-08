@@ -77,6 +77,10 @@
                                     <strong>Order</strong>
                                     <div t-field="o.origin">S0001</div>
                                 </div>
+                                <div t-if="o.picking_type_id.code == 'internal' and o.partner_id" class="col" name="div_contact">
+                                    <strong>Contact</strong>
+                                    <div t-field="o.partner_id" class="m-0"/>
+                                </div>
                                 <div class="col" name="div_state">
                                     <strong>Status</strong>
                                     <div t-field="o.state">Draft</div>
