@@ -15,9 +15,9 @@ export class SoundEffects {
             "member-leave": { defaultVolume: 0.5, path: "/mail/static/src/audio/channel_01_out" },
             mute: { defaultVolume: 0.2, path: "/mail/static/src/audio/mute_1" },
             "new-message": { path: "/mail/static/src/audio/dm_02" },
-            "push-to-talk-on": { defaultVolume: 0.05, path: "/mail/static/src/audio/ptt_push_1" },
+            "push-to-talk-on": { defaultVolume: 0.02, path: "/mail/static/src/audio/ptt_push_1" },
             "push-to-talk-off": {
-                defaultVolume: 0.05,
+                defaultVolume: 0.02,
                 path: "/mail/static/src/audio/ptt_release_1",
             },
             "screen-sharing": { defaultVolume: 0.5, path: "/mail/static/src/audio/share_02" },

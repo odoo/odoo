@@ -333,7 +333,7 @@ export class Rtc extends Record {
         this.state.pttReleaseTimeout = browser.setTimeout(() => {
             this.setTalking(false);
             if (!this.selfSession?.isMute) {
-                this.soundEffectsService.play("push-to-talk-off", { volume: 0.3 });
+                this.soundEffectsService.play("push-to-talk-off");
             }
         }, Math.max(this.store.settings.voice_active_duration || 0, duration));
     }
@@ -348,7 +348,7 @@ export class Rtc extends Record {
         }
         browser.clearTimeout(this.state.pttReleaseTimeout);
         if (!this.selfSession.isTalking && !this.selfSession.isMute) {
-            this.soundEffectsService.play("push-to-talk-on", { volume: 0.3 });
+            this.soundEffectsService.play("push-to-talk-on");
         }
         this.setTalking(true);
     }
