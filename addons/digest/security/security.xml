@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="digest_kpi_global_rule" model="ir.rule">
+        <field name="name">digest.kpi: global read rule</field>
+        <field name="model_id" ref="model_digest_kpi"/>
+        <field name="domain_force">['|', ('group_ids', '=', False), ('group_ids', 'in', user.all_group_ids.ids)]</field>
+    </record>
+
+    <record id="digest_digest_kpi_global_rule" model="ir.rule">
+        <field name="name">digest.digest.kpi: global read rule</field>
+        <field name="model_id" ref="model_digest_digest_kpi"/>
+        <field name="domain_force">['|', ('kpi_id.group_ids', '=', False), ('kpi_id.group_ids', 'in', user.all_group_ids.ids)]</field>
+    </record>
+</odoo>

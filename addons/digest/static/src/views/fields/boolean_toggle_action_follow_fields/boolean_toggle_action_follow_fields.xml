@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="digest.BooleanToggleActionFollowField" t-inherit="web.BooleanToggleField" t-inherit-mode="primary">
+        <xpath expr="//CheckBox" position="inside">
+            <t t-if="state.value">Follow</t>
+            <t t-else="">Unfollow</t>
+        </xpath>
+    </t>
+
+</templates>
