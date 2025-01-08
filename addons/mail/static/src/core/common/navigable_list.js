@@ -13,9 +13,7 @@ export class NavigableList extends Component {
     static template = "mail.NavigableList";
     static props = {
         anchorRef: { optional: true },
-        autoSelectFirst: { type: Boolean, optional: true },
         class: { type: String, optional: true },
-        hint: { type: String, optional: true },
         onSelect: { type: Function },
         options: { type: Array },
         optionTemplate: { type: String, optional: true },
@@ -25,7 +23,6 @@ export class NavigableList extends Component {
     static defaultProps = {
         position: "bottom",
         isLoading: false,
-        autoSelectFirst: true,
     };
 
     setup() {
@@ -80,9 +77,7 @@ export class NavigableList extends Component {
     open() {
         this.state.open = true;
         this.state.activeIndex = null;
-        if (this.props.autoSelectFirst) {
-            this.navigate("first");
-        }
+        this.navigate("first");
     }
 
     close() {

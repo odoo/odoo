@@ -16,7 +16,7 @@ export class SuggestionService {
     }
 
     getSupportedDelimiters(thread) {
-        return [["@"], ["#"], [":"]];
+        return [["@"], ["#"], ["::"]];
     }
 
     async fetchSuggestions({ delimiter, term }, { thread, abortSignal } = {}) {
@@ -29,7 +29,7 @@ export class SuggestionService {
             case "#":
                 await this.fetchThreads(cleanedSearchTerm, { abortSignal });
                 break;
-            case ":":
+            case "::":
                 await this.store.cannedReponses.fetch();
                 break;
         }
@@ -150,7 +150,7 @@ export class SuggestionService {
             }
             case "#":
                 return this.searchChannelSuggestions(cleanedSearchTerm, sort);
-            case ":":
+            case "::":
                 return this.searchCannedResponseSuggestions(cleanedSearchTerm, sort);
         }
         return {

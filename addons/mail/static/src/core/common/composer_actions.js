@@ -132,6 +132,18 @@ composerActionsRegistry
         name: _t("Open Full Composer"),
         onClick: (component) => component.onClickFullComposer(),
         sequence: 30,
+    })
+    .add("add-canned-response", {
+        condition: (component) =>
+            component.store.hasCannedResponses &&
+            component.thread &&
+            component.env.services["mail.suggestion"]
+                .getSupportedDelimiters(component.thread)
+                .find(([delimiter]) => delimiter === "::"),
+        icon: "fa fa-file-text-o",
+        name: _t("Insert a Canned response"),
+        onClick: (component, action, ev) => component.onClickInsertCannedResponse(ev),
+        sequence: 5,
     });
 
 function transformAction(component, id, action) {
