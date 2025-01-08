@@ -13,6 +13,11 @@ from odoo.tests.common import tagged
 @tagged('post_install', '-at_install')
 class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super(TestPurchaseRequisition, cls).setUpClass()
+        cls.env['res.currency.rate'].search([]).unlink()
+
     def test_00_purchase_requisition_users(self):
         self.assertTrue(self.user_purchase_requisition_manager, 'Manager Should be created')
         self.assertTrue(self.user_purchase_requisition_user, 'User Should be created')
