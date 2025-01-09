@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-29 09:38+0000\n"
-"PO-Revision-Date: 2024-10-29 09:38+0000\n"
+"POT-Creation-Date: 2025-03-28 16:01+0000\n"
+"PO-Revision-Date: 2025-03-28 16:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -35,11 +35,6 @@ msgid "API KEY"
 msgstr ""
 
 #. module: l10n_tr_nilvera
-#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_account_journal__is_nilvera_journal
-msgid "Journal used for Nilvera"
-msgstr ""
-
-#. module: l10n_tr_nilvera
 #: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_partner__l10n_tr_nilvera_customer_alias_id
 #: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_users__l10n_tr_nilvera_customer_alias_id
 msgid "Alias"
@@ -47,10 +42,19 @@ msgstr ""
 
 #. module: l10n_tr_nilvera
 #. odoo-python
-#: code:addons/l10n_tr_nilvera/lib/nilvera_client.py:0
-#: code:addons/l10n_tr_nilvera/lib/nilvera_client.py:0
+#: code:addons/l10n_tr_nilvera/models/res_config_settings.py:0
 #, python-format
 msgid "An error occurred. Try again later."
+msgstr ""
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_sa
+msgid "Bags"
+msgstr ""
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_bx
+msgid "Box"
 msgstr ""
 
 #. module: l10n_tr_nilvera
@@ -74,6 +78,11 @@ msgid "Contact"
 msgstr ""
 
 #. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_cr
+msgid "Crate"
+msgstr ""
+
+#. module: l10n_tr_nilvera
 #: model:ir.model.fields,field_description:l10n_tr_nilvera.field_l10n_tr_nilvera_alias__create_uid
 msgid "Created by"
 msgstr ""
@@ -81,6 +90,16 @@ msgstr ""
 #. module: l10n_tr_nilvera
 #: model:ir.model.fields,field_description:l10n_tr_nilvera.field_l10n_tr_nilvera_alias__create_date
 msgid "Created on"
+msgstr ""
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_cmq
+msgid "Cubic Centimeter - cm³"
+msgstr ""
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_mmq
+msgid "Cubic Millimeter - mm³"
 msgstr ""
 
 #. module: l10n_tr_nilvera
@@ -104,6 +123,11 @@ msgid "E-Invoice"
 msgstr ""
 
 #. module: l10n_tr_nilvera
+#: model:uom.category,name:l10n_tr_nilvera.product_uom_categ_energy
+msgid "Energy"
+msgstr ""
+
+#. module: l10n_tr_nilvera
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera.res_config_settings_view_form
 msgid "Environment"
 msgstr ""
@@ -112,6 +136,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_partner__ubl_cii_format
 #: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_users__ubl_cii_format
 msgid "Format"
+msgstr ""
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_gt
+msgid "Gross Ton"
 msgstr ""
 
 #. module: l10n_tr_nilvera
@@ -130,6 +159,27 @@ msgid "Journal"
 msgstr ""
 
 #. module: l10n_tr_nilvera
+#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_account_journal__is_nilvera_journal
+msgid "Journal used for Nilvera"
+msgstr ""
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_kwt
+msgid "Kilowatt"
+msgstr ""
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_kwh
+msgid "Kilowatt Hour"
+msgstr ""
+
+#. module: l10n_tr_nilvera
+#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_partner__l10n_tr_nilvera_customer_alias_ids
+#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_users__l10n_tr_nilvera_customer_alias_ids
+msgid "L10N Tr Nilvera Customer Alias"
+msgstr ""
+
+#. module: l10n_tr_nilvera
 #: model:ir.model.fields,field_description:l10n_tr_nilvera.field_l10n_tr_nilvera_alias__write_uid
 msgid "Last Updated by"
 msgstr ""
@@ -137,6 +187,31 @@ msgstr ""
 #. module: l10n_tr_nilvera
 #: model:ir.model.fields,field_description:l10n_tr_nilvera.field_l10n_tr_nilvera_alias__write_date
 msgid "Last Updated on"
+msgstr ""
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_mwh
+msgid "Megawatt Hour"
+msgstr ""
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_mgm
+msgid "Milligram - mg"
+msgstr ""
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_mlt
+msgid "Milliliter - ml"
+msgstr ""
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_d61
+msgid "Minute"
+msgstr ""
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_mon
+msgid "Month"
 msgstr ""
 
 #. module: l10n_tr_nilvera
@@ -203,19 +278,28 @@ msgid "Not Checked"
 msgstr ""
 
 #. module: l10n_tr_nilvera
-#. odoo-python
-#: code:addons/l10n_tr_nilvera/lib/nilvera_client.py:0
-#, python-format
-msgid "Odoo could not perform this action at the moment, try again later."
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_bg
+msgid "Pack"
 msgstr ""
 
 #. module: l10n_tr_nilvera
-#. odoo-python
-#: code:addons/l10n_tr_nilvera/lib/nilvera_client.py:0
-#, python-format
-msgid ""
-"Oops, seems like you're unauthorised to do this. Try another API key with "
-"more rights or contact Nilvera."
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_pa
+msgid "Package"
+msgstr ""
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_pr
+msgid "Pair"
+msgstr ""
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_pf
+msgid "Pallet"
+msgstr ""
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_pk
+msgid "Parcel"
 msgstr ""
 
 #. module: l10n_tr_nilvera
@@ -226,6 +310,26 @@ msgstr ""
 #. module: l10n_tr_nilvera
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera.selection__res_company__l10n_tr_nilvera_environment__production
 msgid "Production"
+msgstr ""
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_d62
+msgid "Second"
+msgstr ""
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_set
+msgid "Set"
+msgstr ""
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_cmk
+msgid "Square Centimeter - cm²"
+msgstr ""
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_standard_cubic_meter
+msgid "Standard Cubic Meter"
 msgstr ""
 
 #. module: l10n_tr_nilvera
@@ -246,4 +350,9 @@ msgstr ""
 #. module: l10n_tr_nilvera
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera.view_partner_property_form_inherit_ubl_tr
 msgid "Verify partner on Nilvera"
+msgstr ""
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_ann
+msgid "Year"
 msgstr ""
