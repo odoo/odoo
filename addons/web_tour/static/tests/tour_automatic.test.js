@@ -680,7 +680,7 @@ test("check for undeterminisms", async () => {
     await advanceTime(10000);
     expect.verifySteps([
         `error: FAILED: [2/3] Tour tour_und → Step .button1.
-Element has been found.
+ERROR IN ACTION: Element has been found.
 UNDETERMINISM: two differents elements have been found in 3000ms for trigger .button1`,
     ]);
 });
