@@ -961,4 +961,15 @@ describe("upload file via link popover", () => {
         // Label remains unchanged
         expect(".o_we_label_link").toHaveValue("label");
     });
+
+    test("popover in preview mode should display the file's mimetype as favicon", async () => {
+        onRpc("/web/dataset/call_kw/ir.attachment/read", () => {
+            return [{ name: "file.txt", mimetype: "text/plain" }];
+        });
+        await setupEditor(
+            '<p><a href="/web/content/1?download=true&unique=123">file.txt[]</a></p>'
+        );
+        const favIcon = await waitFor(".o_we_preview_favicon span.o_image");
+        expect(favIcon).toHaveAttribute("data-mimetype", "text/plain");
+    });
 });

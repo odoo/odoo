@@ -100,6 +100,21 @@ async function fetchInternalMetaData(url) {
     return result;
 }
 
+async function fetchAttachmentMetaData(url, ormService) {
+    try {
+        const urlParsed = new URL(url, window.location.origin);
+        const attachementId = parseInt(urlParsed.pathname.split("/").pop());
+        const [{ name, mimetype }] = await ormService.read(
+            "ir.attachment",
+            [attachementId],
+            ["name", "mimetype"]
+        );
+        return { name, mimetype };
+    } catch {
+        return { name: url, mimetype: undefined };
+    }
+}
+
 /**
  * @typedef { Object } LinkShared
  * @property { LinkPlugin['createLink'] } createLink
@@ -216,6 +231,9 @@ export class LinkPlugin extends Plugin {
 
         this.getExternalMetaData = memoize(fetchExternalMetaData);
         this.getInternalMetaData = memoize(fetchInternalMetaData);
+        this.getAttachmentMetadata = memoize((url) =>
+            fetchAttachmentMetaData(url, this.services.orm)
+        );
     }
 
     destroy() {
@@ -318,6 +336,7 @@ export class LinkPlugin extends Plugin {
             },
             getInternalMetaData: this.getInternalMetaData,
             getExternalMetaData: this.getExternalMetaData,
+            getAttachmentMetadata: this.getAttachmentMetadata,
             recordInfo: this.config.getRecordInfo?.() || {},
         };
         if (!selectionData.documentSelectionIsInEditable) {
