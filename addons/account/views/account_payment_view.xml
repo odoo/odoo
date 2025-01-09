@@ -159,7 +159,7 @@
                                 invisible="not id or not (state == 'draft' or (state == 'in_process' and is_sent))" data-hotkey="x"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,in_process,paid"/>
                     </header>
-                    <div class="alert alert-warning mb-0" role="alert" invisible="not duplicate_payment_ids or state!='draft'">
+                    <div class="alert alert-warning mb-2" role="alert" invisible="not duplicate_payment_ids or state!='draft'">
                         <span>This payment has the same partner, amount and date as </span>
                         <field name="duplicate_payment_ids" widget="x2many_buttons" string="Duplicated Payments"/>
                     </div>
