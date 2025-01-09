@@ -46,16 +46,17 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
      */
 
     /**
-     * Whether the provided record is a section, a note, or a combo.
-     *
-     * This method's name isn't ideal since it doesn't mention combos, but we'd have to override a
-     * few other methods to fix this, and the added complexity isn't worth it.
-     *
-     * @param record The record to check
-     * @return {Boolean} Whether the record is a section, a note, or a combo.
+     * @override
      */
-    isSectionOrNote(record=null) {
-        return super.isSectionOrNote(record) || this.isCombo(record);
+    getCellClass(column, record) {
+        let classNames = super.getCellClass(column, record);
+        if (
+            this.isCombo(record) &&
+            ![this.titleField, "product_uom_qty", "discount"].includes(column.name)
+        ) {
+            return classNames + " invisible";
+        }
+        return classNames;
     }
 
     getRowClass(record) {

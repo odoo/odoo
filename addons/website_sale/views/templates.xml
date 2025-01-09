@@ -2326,6 +2326,7 @@
                                     <t
                                         t-foreach="line.linked_line_ids"
                                         t-as="combo_item_line"
+                                        t-if="combo_item_line.combo_item_id"
                                     >
                                         <t t-call="website_sale.cart_combo_item_line"/>
                                     </t>
