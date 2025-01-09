@@ -36,7 +36,7 @@ class ResPartner(models.Model):
 
     def _compute_opportunity_count(self):
         self.opportunity_count = 0
-        if not self.env.user._has_group('sales_team.group_sale_salesman'):
+        if not self.env.user.has_group('sales_team.group_sale_salesman'):
             return
 
         # retrieve all children partners and prefetch 'parent_id' on them
