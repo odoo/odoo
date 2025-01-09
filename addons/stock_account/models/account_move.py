@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields, models, api
-from odoo.tools import float_is_zero
+from odoo.tools import float_compare, float_is_zero
 
 
 class AccountMove(models.Model):
@@ -297,3 +297,54 @@ class AccountMoveLine(models.Model):
     @api.onchange('product_id')
     def _inverse_product_id(self):
         super(AccountMoveLine, self.filtered(lambda l: l.display_type != 'cogs'))._inverse_product_id()
+
+    def _deduce_anglo_saxon_unit_price(self, account_moves, stock_moves):
+        self.ensure_one()
+
+        move_is_downpayment = self.env.context.get("move_is_downpayment")
+        if move_is_downpayment is None:
+            move_is_downpayment = self.move_id.invoice_line_ids.filtered(
+                lambda line: any(line.sale_line_ids.mapped("is_downpayment"))
+            )
+
+        is_line_reversing = False
+        if self.move_id.move_type == 'out_refund' and not move_is_downpayment:
+            is_line_reversing = True
+        qty_to_invoice = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
+        if self.move_id.move_type == 'out_refund' and move_is_downpayment:
+            qty_to_invoice = -qty_to_invoice
+        account_moves = account_moves.filtered(lambda m: m.state == 'posted' and bool(m.reversed_entry_id) == is_line_reversing)
+
+        posted_cogs = self.env['account.move.line'].search([
+            ('move_id', 'in', account_moves.ids),
+            ('display_type', '=', 'cogs'),
+            ('product_id', '=', self.product_id.id),
+            ('balance', '>', 0),
+        ])
+        qty_invoiced = 0
+        product_uom = self.product_id.uom_id
+        for line in posted_cogs:
+            if float_compare(line.quantity, 0, precision_rounding=product_uom.rounding) and line.move_id.move_type == 'out_refund' and any(line.move_id.invoice_line_ids.sale_line_ids.mapped('is_downpayment')):
+                qty_invoiced += line.product_uom_id._compute_quantity(abs(line.quantity), line.product_id.uom_id)
+            else:
+                qty_invoiced += line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id)
+        value_invoiced = sum(posted_cogs.mapped('balance'))
+        reversal_moves = self.env['account.move']._search([('reversed_entry_id', 'in', posted_cogs.move_id.ids)])
+        reversal_cogs = self.env['account.move.line'].search([
+            ('move_id', 'in', reversal_moves),
+            ('display_type', '=', 'cogs'),
+            ('product_id', '=', self.product_id.id),
+            ('balance', '>', 0)
+        ])
+        for line in reversal_cogs:
+            if float_compare(line.quantity, 0, precision_rounding=product_uom.rounding) and line.move_id.move_type == 'out_refund' and any(line.move_id.invoice_line_ids.sale_line_ids.mapped('is_downpayment')):
+                qty_invoiced -= line.product_uom_id._compute_quantity(abs(line.quantity), line.product_id.uom_id)
+            else:
+                qty_invoiced -= line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id)
+        value_invoiced -= sum(reversal_cogs.mapped('balance'))
+
+        product = self.product_id.with_company(self.company_id).with_context(value_invoiced=value_invoiced)
+        average_price_unit = product._compute_average_price(qty_invoiced, qty_to_invoice, stock_moves, is_returned=is_line_reversing)
+        price_unit = self.product_id.uom_id.with_company(self.company_id)._compute_price(average_price_unit, self.product_uom_id)
+
+        return price_unit
