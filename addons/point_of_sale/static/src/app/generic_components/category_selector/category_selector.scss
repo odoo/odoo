@@ -3,10 +3,12 @@
 }
 
 .category-list {
-    @include media-breakpoint-down(sm) {
-        overflow-y: auto;
-        flex-shrink: 0;
-        margin-bottom: map-get($spacers, 2);
+    overflow-y: auto;
+    flex-shrink: 0;
+    margin-bottom: map-get($spacers, 2);
+    max-height: 13.5rem;
+
+    @include media-breakpoint-down(md) {
         max-height: 9rem;
     }
 }
