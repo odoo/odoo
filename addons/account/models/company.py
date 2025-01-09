@@ -388,7 +388,9 @@ class ResCompany(models.Model):
     @api.depends('hard_lock_date')
     def _compute_user_hard_lock_date(self):
         for company in self:
-            company.user_hard_lock_date = max(c.hard_lock_date or date.min for c in company.sudo().parent_ids)
+            company.user_hard_lock_date = max(
+                c.hard_lock_date or date.min for c in company.sudo().with_context(active_test=False).parent_ids
+                )
 
     def _initiate_account_onboardings(self):
         account_onboarding_routes = [
