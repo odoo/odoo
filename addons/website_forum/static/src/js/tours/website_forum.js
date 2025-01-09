@@ -65,7 +65,7 @@ registerBackendAndFrontendTour("question", {
 },
 {
     isActive: ["auto"],
-    trigger: ".modal .modal-header button.btn-close",
+    trigger: ".modal.modal_shown.show:contains(thanks for posting!) button.btn-close",
     run: "click",
 },
 {
@@ -95,7 +95,7 @@ registerBackendAndFrontendTour("question", {
 },
 {
     isActive: ["auto"],
-    trigger: ".modal:contains(thanks for posting!) .modal-header button.btn-close",
+    trigger: ".modal.modal_shown.show:contains(thanks for posting!) button.btn-close",
     run: "click",
 }, {
     trigger: ".o_wforum_validate_toggler[data-karma]:first",
