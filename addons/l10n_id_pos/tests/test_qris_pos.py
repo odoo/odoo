@@ -26,6 +26,9 @@ class TestPosQris(AccountTestInvoicingHttpCommon):
             'l10n_id_qris_mid': 'mid',
         })
 
+        cls.env['product.combo.item'].search([]).unlink()
+        cls.env['product.product'].search([]).write({'available_in_pos': False})
+
         cls.product_1 = cls.env['product.product'].create({
             'name': 'Test Product',
             'available_in_pos': True,
