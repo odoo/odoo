@@ -352,7 +352,7 @@ class SaleOrderLine(models.Model):
             return True
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         procurements = []
-        for line in self:
+        for line in self: #if gelato i dont want lines that are gelato here
             line = line.with_company(line.company_id)
             if line.state != 'sale' or line.order_id.locked or line.product_id.type != 'consu':
                 continue
