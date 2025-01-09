@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.FollowerListDropDown">
+    <Dropdown position="'bottom-end'" menuClass="'o-mail-Followers-dropdown d-flex flex-column'" state="followerListDropdown">
+        <button t-att-class="'o-mail-Followers-button btn btn-link d-flex align-items-center text-action px-1 ' + (props.compactHeight ? '' : 'my-2')" t-att-disabled="isDisabled" t-att-title="followerButtonLabel">
+            <i class="fa fa-user-o me-1" role="img"/>
+            <i t-if="followerListView.followersCount === undefined" class="fa fa-circle-o-notch fa-spin"/>
+            <sup t-else="" class="o-mail-Followers-counter" t-esc="props.thread.followersCount ?? 0"/>
+        </button>
+        <t t-set-slot="content" t-if="followerListView">
+            <div t-if="props.thread.hasWriteAccess" class="d-flex o-mail-Followers-container justify-content-around px-2 flex-row">
+                <div t-if="!state.isSearchOpen" class="o-Add-followers flex-grow-1" t-on-click="() => this.onClickAddFollowers()" attrs="{ href: '#' }">
+                    Add Followers
+                </div>
+                <div t-if="(followerListView.selfFollower and followerListView.followersCount > 99) or followerListView.followersCount > 100" class="d-flex align-items-center justify-content-center">
+                    <SearchFollowerInput t-if="state.isSearchOpen" followerSearch="followerSearch" closeSearch.bind="toggleSearch" thread="props.thread"/>
+                    <div class="rounded border border-1 cursor-pointer" t-on-click="() => this.toggleSearch()" t-else="">
+                        <i class="oi oi-search py-2 px-3" role="img" aria-label="Search Followers" title="Search Followers"/>
+                    </div>
+                </div>
+            </div>
+            <div t-if="followerListView.followers.length > 0" role="separator" class="dropdown-divider"/>
+            <FollowerList thread="props.thread" onClickDetails.bind="onClickDetails" onClickEdit.bind="onClickEdit" onClickRemove.bind="onClickRemove" followerListView="followerListView"/>
+        </t>
+    </Dropdown>
+</t>
+
+</templates>

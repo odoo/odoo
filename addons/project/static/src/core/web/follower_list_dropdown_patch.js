@@ -1,11 +1,11 @@
-import { FollowerList } from "@mail/core/web/follower_list";
+import { FollowerListDropDown } from "@mail/core/web/follower_list_dropdown";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 import { patch } from "@web/core/utils/patch";
 
-const followerListPatch = {
+const FollowerListDropDownPatch = {
     setup() {
         super.setup();
         this.dialogService = useService("dialog");
@@ -31,4 +31,4 @@ const followerListPatch = {
         }
     },
 };
-patch(FollowerList.prototype, followerListPatch);
+patch(FollowerListDropDown.prototype, FollowerListDropDownPatch);

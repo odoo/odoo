@@ -84,7 +84,7 @@ test('click on "add followers" button', async () => {
     await contains(".o-mail-Followers-counter", { text: "1" });
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Followers-dropdown");
-    await click("a", { text: "Add Followers" });
+    await click(".o-Add-followers");
     await contains(".o-mail-Followers-dropdown", { count: 0 });
     await waitForSteps(["action:open_view"]);
     await contains(".o-mail-Followers-counter", { text: "2" });
@@ -157,72 +157,101 @@ test('Hide "Add follower" and subtypes edition/removal buttons except own user o
     });
 });
 
-test("Load 100 followers at once", async () => {
+test("Load 20 followers at once", async () => {
     const pyEnv = await startServer();
     const partnerIds = pyEnv["res.partner"].create(
-        [...Array(210).keys()].map((i) => ({ display_name: `Partner${i}`, name: `Partner${i}` }))
+        [...Array(60).keys()].map((i) => ({ display_name: `Partner${i}`, name: `Partner${i}` }))
     );
     pyEnv["mail.followers"].create(
-        [...Array(210).keys()].map((i) => {
-            return {
-                is_active: true,
-                partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
-                res_id: partnerIds[0],
-                res_model: "res.partner",
-            };
-        })
+        [...Array(60).keys()].map((i) => ({
+            is_active: true,
+            partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
+            res_id: partnerIds[0],
+            res_model: "res.partner",
+        }))
     );
     await start();
     await openFormView("res.partner", partnerIds[0]);
-    await contains("button[title='Show Followers']", { text: "210" });
+    await contains("button[title='Show Followers']", { text: "60" });
     await click("button[title='Show Followers']");
     await contains(".o-mail-Follower", { text: "Mitchell Admin" });
-    await contains(".o-mail-Follower", { count: 101 }); // 100 more followers + self follower (Mitchell Admin)
+    await contains(".o-mail-Follower", { count: 21 }); // 20 more followers + self follower (Mitchell Admin)
     await contains(".o-mail-Followers-dropdown", { text: "Load more" });
     await scroll(".o-mail-Followers-dropdown", "bottom");
-    await contains(".o-mail-Follower", { count: 201 });
+    await contains(".o-mail-Follower", { count: 41 });
     await tick(); // give enough time for the useVisible hook to register load more as hidden
     await scroll(".o-mail-Followers-dropdown", "bottom");
-    await contains(".o-mail-Follower", { count: 210 });
+    await contains(".o-mail-Follower", { count: 60 });
     await contains(".o-mail-Followers-dropdown span", { count: 0, text: "Load more" });
 });
 
-test("Load 100 recipients at once", async () => {
+test("Load 20 recipients at once", async () => {
     const pyEnv = await startServer();
     const partnerIds = pyEnv["res.partner"].create(
-        [...Array(210).keys()].map((i) => ({
+        [...Array(60).keys()].map((i) => ({
             display_name: `Partner${i}`,
             name: `Partner${i}`,
             email: `partner${i}@example.com`,
         }))
     );
     pyEnv["mail.followers"].create(
-        [...Array(210).keys()].map((i) => {
-            return {
-                is_active: true,
-                partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
-                res_id: partnerIds[0],
-                res_model: "res.partner",
-            };
-        })
+        [...Array(60).keys()].map((i) => ({
+            is_active: true,
+            partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
+            res_id: partnerIds[0],
+            res_model: "res.partner",
+        }))
     );
     await start();
     await openFormView("res.partner", partnerIds[0]);
-    await contains("button[title='Show Followers']", { text: "210" });
+    await contains("button[title='Show Followers']", { text: "60" });
     await click("button", { text: "Send message" });
     await contains(".o-mail-Chatter", {
-        text: "To: partner1, partner2, partner3, partner4, partner5, and 95 more",
+        text: "To: partner1, partner10, partner11, partner12, partner13, and 15 more",
     });
     await contains("button[title='Show all recipients']");
     await click("button[title='Show all recipients']");
-    await contains(".o-mail-RecipientList li", { count: 100 });
+    await contains(".o-mail-RecipientList li", { count: 20 });
     await contains(".o-mail-RecipientList", { text: "Load more" });
     await scroll(".o-mail-RecipientList", "bottom");
-    await contains(".o-mail-RecipientList li", { count: 200 });
+    await contains(".o-mail-RecipientList li", { count: 40 });
     await tick(); // give enough time for the useVisible hook to register load more as hidden
     await scroll(".o-mail-RecipientList", "bottom");
-    await contains(".o-mail-RecipientList li", { count: 209 });
+    await contains(".o-mail-RecipientList li", { count: 59 });
     await contains(".o-mail-RecipientList span", { count: 0, text: "Load more" });
+});
+
+test("Load Followers in alphabetical order", async () => {
+    const pyEnv = await startServer();
+    const partnerData = [
+        { name: "testuser", email: "testuser@example.com" },
+        { name: "Testuser", email: "testuser1234@example.com" },
+        { name: "1Testuser", email: "testuser@exam2ple.com" },
+        { name: "1testuser", email: "testuser23@example.com" },
+        { name: "Utestuser", email: "btestuser@example.com" },
+        { name: "tsuser", email: "bid@example.com" },
+    ];
+    const partnerIds = pyEnv["res.partner"].create(partnerData);
+    pyEnv["mail.followers"].create(
+        partnerIds.map((partnerId) => ({
+            is_active: true,
+            partner_id: partnerId,
+            res_id: partnerIds[0],
+            res_model: "res.partner",
+        }))
+    );
+    await start();
+    await openFormView("res.partner", partnerIds[0]);
+    await contains("button[title='Show Followers']", { text: "6" });
+    await click("button[title='Show Followers']");
+    await contains(".o-Add-followers", { text: "Add Followers" });
+    await contains(".dropdown-item:eq(0)", { text: "1Testuser" });
+    await contains(".dropdown-item:eq(1)", { text: "1testuser" });
+    await contains(".dropdown-item:eq(2)", { text: "Testuser" });
+    await contains(".dropdown-item:eq(3)", { text: "Utestuser" });
+    await contains(".dropdown-item:eq(4)", { text: "testuser" });
+    await contains(".dropdown-item:eq(5)", { text: "tsuser" });
+    await contains(".dropdown-item", { count: 6 });
 });
 
 test("Load recipient without email", async () => {
@@ -276,7 +305,7 @@ test('Show "Add follower" and subtypes edition/removal buttons on all followers 
     await start();
     await openFormView("res.partner", partnerId_1);
     await click(".o-mail-Followers-button");
-    await contains("a", { text: "Add Followers" });
+    await contains(".o-Add-followers");
     await contains(":nth-child(1 of .o-mail-Follower)", {
         contains: [["button[title='Edit subscription']"], ["button[title='Remove this follower']"]],
     });
