@@ -331,7 +331,8 @@ class TestAPI(MailCommon, TestRecipients):
         # test default computation of recipients
         self.env.invalidate_all()
         with self.assertQueryCount(20):
-            defaults = test_records._message_get_default_recipients()
+            defaults_withcc = test_records.with_context(mail_recipients_include_cc=True)._message_get_default_recipients()
+            defaults_withoutcc = test_records.with_context(mail_recipients_include_cc=False)._message_get_default_recipients()
         for record, expected in zip(test_records, [
             {
                 # customer_id first for partner_ids; partner > email
@@ -356,13 +357,14 @@ class TestAPI(MailCommon, TestRecipients):
             },
         ]):
             with self.subTest(name=record.name):
-                self.assertEqual(defaults[record.id], expected)
+                self.assertEqual(defaults_withcc[record.id], expected)
+                self.assertEqual(defaults_withoutcc[record.id], dict(expected, email_cc=''))
 
         # test default computation of recipients with email prioritized
         with patch.object(type(self.env["mail.test.recipients"]), "_mail_defaults_to_email", True):
             self.assertEqual(
                 test_records[1]._message_get_default_recipients()[test_records[1].id],
-                {'email_cc': '"CC" <email.cc@test.example.com>', 'email_to': '"Forced" <forced@test.example.com>', 'partner_ids': []},
+                {'email_cc': '', 'email_to': '"Forced" <forced@test.example.com>', 'partner_ids': []},
                 'Mail: prioritize email should not return partner if email is found'
             )
             self.assertEqual(
