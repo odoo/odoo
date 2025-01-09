@@ -23,7 +23,9 @@ class PosConfig(models.Model):
                 'tax_dest_id': tax_6.id,
                 'position_id': fp.id
             })
-            config.write({'takeaway': True, 'takeaway_fp_id': fp.id})
+            takeaway_preset = self.env.ref('pos_restaurant.pos_takeout_preset', raise_if_not_found=False)
+            if takeaway_preset:
+                takeaway_preset.write({'fiscal_position_id': fp.id})
 
     @api.model
     def load_onboarding_bar_scenario(self):
