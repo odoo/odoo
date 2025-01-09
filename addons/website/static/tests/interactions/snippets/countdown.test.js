@@ -39,17 +39,6 @@ const getTemplate = function (options = {}) {
     `
 };
 
-const getCommonLength = function (data1, data2, data3) {
-    const length1 = data1.length;
-    const length2 = data2.length;
-    const length3 = data3.length;
-    if (length1 == length2 && length2 == length3) {
-        return length1;
-    } else {
-        return 0;
-    }
-};
-
 const wasDataChanged = function (data1, data2, l) {
     for (let i = 0; i < l; i++) {
         if (Math.abs(data1[i] - data2[i]) > 1) {
@@ -73,48 +62,39 @@ test("countdown is started when there is an element .s_countdown", async () => {
 test("[time] countdown display is updated correctly when time pass", async () => {
     const { el } = await startInteractions(getTemplate());
 
+    const canvasEls = el.querySelectorAll('canvas');
+    const canvasHours = canvasEls[1];
+    const canvasSeconds = canvasEls[3];
+    const canvasHoursCtx = canvasHours.getContext('2d');
+    const canvasSecondsCtx = canvasSeconds.getContext('2d');
+
     // time T
-
-    const canvas1Els = el.querySelectorAll('canvas');
-    const canvas1Hours = canvas1Els[1];
-    const data1Hours = canvas1Hours.getContext('2d').getImageData(0, 0, canvas1Hours.width, canvas1Hours.height).data;
-    const canvas1Seconds = canvas1Els[3];
-    const data1Seconds = canvas1Seconds.getContext('2d').getImageData(0, 0, canvas1Seconds.width, canvas1Seconds.height).data;
-
-    await advanceTime(1000);
+    const data1Hours = canvasHoursCtx.getImageData(0, 0, canvasHours.width, canvasHours.height).data;
+    const data1Seconds = canvasSecondsCtx.getImageData(0, 0, canvasSeconds.width, canvasSeconds.height).data;
 
     // time T + 1s
-
-    const canvas2Els = el.querySelectorAll('canvas');
-    const canvas2Hours = canvas2Els[1];
-    const data2Hours = canvas2Hours.getContext('2d').getImageData(0, 0, canvas2Hours.width, canvas2Hours.height).data;
-    const canvas2Seconds = canvas2Els[3];
-    const data2Seconds = canvas2Seconds.getContext('2d').getImageData(0, 0, canvas2Seconds.width, canvas2Seconds.height).data;
-
     await advanceTime(1000);
+    const data2Hours = canvasHoursCtx.getImageData(0, 0, canvasHours.width, canvasHours.height).data;
+    const data2Seconds = canvasSecondsCtx.getImageData(0, 0, canvasSeconds.width, canvasSeconds.height).data;
 
     // time T + 2s
+    await advanceTime(1000);
+    const data3Hours = canvasHoursCtx.getImageData(0, 0, canvasHours.width, canvasHours.height).data;
+    const data3Seconds = canvasSecondsCtx.getImageData(0, 0, canvasSeconds.width, canvasSeconds.height).data;
 
-    const canvas3Els = el.querySelectorAll('canvas');
-    const canvas3Hours = canvas3Els[1];
-    const data3Hours = canvas3Hours.getContext('2d').getImageData(0, 0, canvas3Hours.width, canvas3Hours.height).data;
-    const canvas3Seconds = canvas3Els[3];
-    const data3Seconds = canvas3Seconds.getContext('2d').getImageData(0, 0, canvas3Seconds.width, canvas3Seconds.height).data;
+    // Check that the data are not empty & the same size
 
-    // Check data size and get common length
-
-    const dataHoursLength = getCommonLength(data1Hours, data2Hours, data3Hours)
-    expect(dataHoursLength).not.toBe(0);
-
-    const dataSecondsLength = getCommonLength(data1Seconds, data2Seconds, data3Seconds)
+    const dataHoursLength = data1Hours.length;
+    const dataSecondsLength = data1Seconds.length
+    expect(dataSecondsLength).toBe(dataHoursLength);
     expect(dataSecondsLength).not.toBe(0);
 
     // Compare data
 
     const hoursUpdate12 = wasDataChanged(data1Hours, data2Hours, dataHoursLength);
     const hoursUpdate23 = wasDataChanged(data2Hours, data3Hours, dataHoursLength);
-    const secondsUpdate12 = wasDataChanged(data1Seconds, data2Seconds, dataHoursLength);
-    const secondsUpdate23 = wasDataChanged(data2Seconds, data3Seconds, dataHoursLength);
+    const secondsUpdate12 = wasDataChanged(data1Seconds, data2Seconds, dataSecondsLength);
+    const secondsUpdate23 = wasDataChanged(data2Seconds, data3Seconds, dataSecondsLength);
 
     // Hour canvas must not have changed twice
     expect(hoursUpdate12 && hoursUpdate23).toBe(false);
