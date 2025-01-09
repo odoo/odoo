@@ -229,7 +229,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             'id': partner.vat,
         })
 
-        if partner.country_code == 'MY':
+        if partner.l10n_my_identification_type and partner.l10n_my_identification_number:
             vals.append({
                 'id_attrs': {'schemeID': partner.l10n_my_identification_type},
                 'id': partner.l10n_my_identification_number,
