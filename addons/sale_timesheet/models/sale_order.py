@@ -3,6 +3,7 @@
 from collections import defaultdict
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools import float_compare
 
@@ -70,6 +71,15 @@ class SaleOrder(models.Model):
         show_button_ids = self._get_order_with_valid_service_product()
         for order in self:
             order.show_hours_recorded_button = order.timesheet_count or order.project_count and order.id in show_button_ids
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        created_records = super().create(vals_list)
+        if self.env.context.get('create_for_employee_mapping'):
+            if not next((sol for sol in created_records.order_line if sol.is_service), False):
+                raise UserError(_('The Sales Order must contain at least one service product.'))
+            created_records.with_context(disable_project_task_generation=True).action_confirm()
+        return created_records
 
     def _get_order_with_valid_service_product(self):
         SaleOrderLine = self.env['sale.order.line']
@@ -153,3 +163,9 @@ class SaleOrder(models.Model):
         moves._link_timesheets_to_invoice(self.env.context.get("timesheet_start_date"), self.env.context.get("timesheet_end_date"))
         self._reset_has_displayed_warning_upsell_order_lines()
         return moves
+
+    def get_first_service_line(self):
+        line = next((sol for sol in self.order_line if sol.is_service), False)
+        if not line:
+            raise UserError(_('The Sales Order must contain at least one service product.'))
+        return line

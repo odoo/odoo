@@ -2,14 +2,15 @@
 
 from odoo import Command
 from odoo.fields import Datetime
-from odoo.tests import Form, HttpCase, new_test_user, tagged
+from odoo.exceptions import UserError
+from odoo.tests import Form, new_test_user, tagged
 from odoo.exceptions import UserError
 
 from .common import TestSaleProjectCommon
 
 
 @tagged('post_install', '-at_install')
-class TestSaleProject(HttpCase, TestSaleProjectCommon):
+class TestSaleProject(TestSaleProjectCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -95,24 +96,6 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
 
         # Create partner
         cls.partner = cls.env['res.partner'].create({'name': "Mur en béton"})
-
-        project = cls.env['project.project'].create({
-            'name': 'Test History Project',
-            'type_ids': [Command.create({'name': 'To Do'})],
-            'allow_billable': True
-        })
-
-        cls.env['project.task'].create({
-            'name': 'Test History Task',
-            'stage_id': project.type_ids[0].id,
-            'project_id': project.id,
-        })
-
-    def test_task_create_sol_ui(self):
-        self.start_tour('/odoo', 'task_create_sol_tour', login='admin')
-
-    def test_project_create_sol_ui(self):
-        self.start_tour('/odoo', 'project_create_sol_tour', login='admin')
 
     def test_sale_order_with_project_task(self):
         SaleOrder = self.env['sale.order'].with_context(tracking_disable=True)
@@ -655,26 +638,6 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         names = ['To Do', 'In Progress', 'Done', 'Cancelled']
         project = sale_order_line._timesheet_create_project()
         self.assertEqual(names, project.type_ids.mapped('name'), "The project stages' name should be equal to: %s" % names)
-
-    def test_quick_create_sol(self):
-        """
-        When creating a SOL on the fly through the quick create, use a product matching
-        what was typed in the field if there is one, and make sure the SOL name is computed correctly.
-        """
-        product_service = self.env['product.product'].create({
-            'name': 'Signage',
-            'type': 'service',
-            'invoice_policy': 'order',
-            'uom_id': self.env.ref('uom.product_uom_hour').id,
-        })
-        sale_line_id, sale_line_name = self.env['sale.order.line'].with_context(
-            default_partner_id=self.partner.id,
-            form_view_ref='sale_project.sale_order_line_view_form_editable',
-        ).name_create('gnag')
-
-        sale_line = self.env['sale.order.line'].browse(sale_line_id)
-        self.assertEqual(sale_line.product_id, product_service, 'The created SOL should use the right product.')
-        self.assertTrue(product_service.name in sale_line_name, 'The created SOL should use the full name of the product and not just what was typed.')
 
     def test_sale_order_items_of_the_project_status(self):
         """
@@ -1293,3 +1256,65 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
 
         displayed_sale_order = Task._group_expand_sales_order(None, [('sale_order_id', 'ilike', 'Test')] + domain)
         self.assertEqual(order, displayed_sale_order, 'The matching sale order should be displayed in the Gantt view')
+
+    def test_action_create_sales_order_from_task(self):
+        task = self.env['project.task'].create({
+            'name': 'Task',
+            'project_id': self.project_global.id,
+            'partner_id': self.partner.id,
+        })
+        action = task.action_create_sales_order_from_task()
+        with Form(self.env['sale.order'].with_context(action['context']), action['view_id']) as so_form:
+            with so_form.order_line.new() as line:
+                line.product_id = self.product
+            with self.assertRaises(UserError, msg='The created SO must contain at least one service product.'):
+                sale_order = so_form.save()
+            with so_form.order_line.new() as line:
+                line.product_id = self.product_order_service3
+            sale_order = so_form.save()
+
+        self.assertEqual(sale_order.state, 'sale', "The created SO should be confirmed.")
+        self.assertEqual(len(sale_order.order_line), 2, "There should be two lines in the created SO.")
+        self.assertEqual(sale_order.project_id, task.project_id, "The created SO should be linked to the task's project.")
+        self.assertEqual(sale_order.company_id, task.company_id, "The created SO and the task should have the same company.")
+        self.assertEqual(sale_order.partner_id, task.partner_id,  "The created SO and the task should have the same partner.")
+        self.assertEqual(sale_order.user_id, self.env.user, "The created SO's user should be the current user.")
+        self.assertFalse(sale_order.project_ids, "No project should have been generated after confirming the SO.")
+        self.assertEqual(sale_order.tasks_ids, task, "The task should be linked to the created SO.")
+        self.assertEqual(
+            task.sale_line_id,
+            sale_order.order_line.filtered(lambda sol: sol.product_id == self.product_order_service3),
+            "The task's SOL should be set to the service product with the lowest sequence.",
+        )
+
+    def test_action_create_sales_order_from_project(self):
+        project = self.project_global
+        project.partner_id = self.partner
+        action = project.action_create_sales_order_from_project()
+        with Form(self.env['sale.order'].with_context(action['context']), action['view_id']) as so_form:
+            with so_form.order_line.new() as line:
+                line.product_id = self.product
+            with self.assertRaises(UserError, msg='The created SO must contain at least one service product.'):
+                sale_order = so_form.save()
+            with so_form.order_line.new() as line:
+                line.product_id = self.product_order_service3
+            sale_order = so_form.save()
+
+        self.assertEqual(sale_order.state, 'sale', "The created SO should be confirmed.")
+        self.assertEqual(len(sale_order.order_line), 2, "There should be two lines in the created SO.")
+        self.assertEqual(sale_order.project_id, project, "The created SO should be linked to the project.")
+        self.assertEqual(sale_order.company_id, project.company_id, "The created SO and the project should have the same company.")
+        self.assertEqual(sale_order.partner_id, project.partner_id, "The created SO and the project should have the same partner.")
+        self.assertEqual(sale_order.user_id, self.env.user, "The created SO's user should be the current user.")
+        self.assertFalse(sale_order.tasks_ids, "No task should have been generated after confirming the SO.")
+        service_sol = sale_order.order_line.filtered(lambda sol: sol.product_id == self.product_order_service3)
+        self.assertEqual(
+            project.sale_line_id,
+            service_sol,
+            "The project's SOL should be set to the service product with the lowest sequence.",
+        )
+        self.assertEqual(
+            project.reinvoiced_sale_order_id,
+            service_sol.order_id,
+            "As this field was empty, the project's reinvoiced SO should be filled with the sales order of the project's SOL that was just set.",
+        )

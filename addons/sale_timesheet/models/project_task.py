@@ -117,3 +117,8 @@ class ProjectTask(models.Model):
 
     def _get_action_view_so_ids(self):
         return list(set((self.sale_order_id + self.timesheet_ids.so_line.order_id).ids))
+
+    def action_create_sales_order_from_task(self):
+        action = super().action_create_sales_order_from_task()
+        action['context']['with_remaining_hours'] = True
+        return action
