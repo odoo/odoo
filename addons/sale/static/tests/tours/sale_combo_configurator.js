@@ -105,3 +105,38 @@ registry
             ...stepUtils.saveForm(),
         ],
     });
+
+    registry
+    .category('web_tour.tours')
+    .add('sale_combo_configurator_with_optional_products', {
+        url: '/odoo',
+        steps: () => [
+            ...stepUtils.goToAppSteps('sale.sale_menu_root', "Open the sales app"),
+            ...tourUtils.createNewSalesOrder(),
+            ...tourUtils.selectCustomer("Test Partner"),
+            ...tourUtils.addProduct("Combo product"),
+            comboConfiguratorTourUtils.selectComboItem("Product A2"),
+            comboConfiguratorTourUtils.selectComboItem("Product B2"),
+            ...comboConfiguratorTourUtils.saveConfigurator(),
+            productConfiguratorTourUtils.addOptionalProduct("Optional product"),
+            {
+                content: "verify that we cannot reduce main product quantity",
+                trigger: 'button[name="sale_quantity_button_minus"]:disabled',
+            },
+            {
+                content: "verify that we cannot increase main product quantity",
+                trigger: 'button[name="sale_quantity_button_plus"]:disabled',
+            },
+            ...productConfiguratorTourUtils.saveConfigurator(),
+            {
+                content: "Verify the first combo item is added",
+                trigger: 'td[name="product_template_id"]:contains("Product A2")',
+            },
+            {
+                content: "Verify the second combo item is added",
+                trigger: 'td[name="product_template_id"]:contains("Product B2")',
+            },
+            // Don't end the tour with a form in edition mode.
+            ...stepUtils.saveForm(),
+        ],
+    });

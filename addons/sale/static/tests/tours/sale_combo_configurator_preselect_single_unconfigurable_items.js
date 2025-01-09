@@ -15,8 +15,8 @@ registry
             ...tourUtils.addProduct("Combo product"),
             // Assert that only single unconfigurable items are preselected.
             comboConfiguratorTourUtils.assertSelectedComboItemCount(2),
-            comboConfiguratorTourUtils.assertComboItemSelected("Product A"),
-            comboConfiguratorTourUtils.assertComboItemSelected("Product C"),
+            comboConfiguratorTourUtils.assertComboItemPreSelected("Product A"),
+            comboConfiguratorTourUtils.assertComboItemPreSelected("Product C"),
             comboConfiguratorTourUtils.assertConfirmButtonDisabled(),
             // Configure the remaining combos.
             comboConfiguratorTourUtils.selectComboItem("Product B"),

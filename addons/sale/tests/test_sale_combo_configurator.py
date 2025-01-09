@@ -56,6 +56,39 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
         )
         self.start_tour('/', 'sale_combo_configurator', login='salesman')
 
+    def test_sale_combo_configurator_with_optional_products(self):
+        if self.env['ir.module.module']._get('sale_management').state != 'installed':
+            self.skipTest("Sale App is not installed, Sale menu is not accessible.")
+
+        combo_a = self.env['product.combo'].create({
+            'name': "Combo A",
+            'combo_item_ids': [
+                Command.create({'product_id': self._create_product(name="Product A1").id}),
+                Command.create({'product_id': self._create_product(name="Product A2").id}),
+            ],
+        })
+        combo_b = self.env['product.combo'].create({
+            'name': "Combo B",
+            'combo_item_ids': [
+                Command.create({'product_id': self._create_product(name="Product B1").id}),
+                Command.create({'product_id': self._create_product(name="Product B2").id}),
+            ],
+        })
+        optional_product = self.env['product.template'].create({
+            'name': "Optional Product",
+        })
+        self.env['product.template'].create({
+            'name': "Combo product",
+            'list_price': 25,
+            'type': 'combo',
+            'combo_ids': [
+                Command.link(combo_a.id),
+                Command.link(combo_b.id),
+            ],
+            'optional_product_ids': [Command.link(optional_product.id)],
+        })
+        self.start_tour('/', 'sale_combo_configurator_with_optional_products', login='salesman')
+
     def test_sale_combo_configurator_preselect_single_unconfigurable_items(self):
         self.env['res.users'].search([('login', '=', 'salesman')]).group_ids += self.env.ref("product.group_product_manager")
         if self.env['ir.module.module']._get('sale_management').state != 'installed':
