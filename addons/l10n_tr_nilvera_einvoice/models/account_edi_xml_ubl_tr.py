@@ -1,5 +1,31 @@
 from odoo import models
 
+UOM_TO_UNECE_CODE = {
+    'l10n_tr_nilvera.product_uom_pk': 'PK',
+    'l10n_tr_nilvera.product_uom_pf': 'PF',
+    'l10n_tr_nilvera.product_uom_cr': 'CR',
+    'l10n_tr_nilvera.product_uom_standard_cubic_meter': 'SM3',
+    'l10n_tr_nilvera.product_uom_sa': 'SA',
+    'l10n_tr_nilvera.product_uom_cmq': 'CMQ',
+    'l10n_tr_nilvera.product_uom_mlt': 'MLT',
+    'l10n_tr_nilvera.product_uom_mmq': 'MMQ',
+    'l10n_tr_nilvera.product_uom_cmk': 'CMK',
+    'l10n_tr_nilvera.product_uom_bg': 'BG',
+    'l10n_tr_nilvera.product_uom_bx': 'BX',
+    'l10n_tr_nilvera.product_uom_pr': 'PR',
+    'l10n_tr_nilvera.product_uom_mgm': 'MGM',
+    'l10n_tr_nilvera.product_uom_mon': 'MON',
+    'l10n_tr_nilvera.product_uom_gt': 'GT',
+    'l10n_tr_nilvera.product_uom_ann': 'ANN',
+    'l10n_tr_nilvera.product_uom_d61': 'D61',
+    'l10n_tr_nilvera.product_uom_d62': 'D62',
+    'l10n_tr_nilvera.product_uom_pa': 'PA',
+    'l10n_tr_nilvera.product_uom_mwh': 'MWH',
+    'l10n_tr_nilvera.product_uom_kwh': 'KWH',
+    'l10n_tr_nilvera.product_uom_kwt': 'KWT',
+    'l10n_tr_nilvera.product_uom_set': 'SET',
+}
+
 
 class AccountEdiXmlUblTr(models.AbstractModel):
     _name = "account.edi.xml.ubl.tr"
@@ -150,6 +176,26 @@ class AccountEdiXmlUblTr(models.AbstractModel):
                 'document_type_code': "SEND_TYPE",
             })
         return additional_document_reference_list
+
+    def _get_invoice_line_price_vals(self, line):
+        # EXTEND 'account.edi.common'
+        invoice_line_price_vals = super()._get_invoice_line_price_vals(line)
+        invoice_line_price_vals['base_quantity_attrs'] = {'unitCode': self._get_uom_unece_code(line)}
+        return invoice_line_price_vals
+
+    def _get_invoice_line_vals(self, line, line_id, taxes_vals):
+        invoice_line_vals = super()._get_invoice_line_vals(line, line_id, taxes_vals)
+        invoice_line_vals['line_quantity_attrs'] = {'unitCode': self._get_uom_unece_code(line)}
+        return invoice_line_vals
+
+    def _get_uom_unece_code(self, line):
+        """ This depends on the mapping from https://developer.nilvera.com/en/code-lists#birim-kodlari """
+        uom = super()._get_uom_unece_code(line)
+        if uom == 'C62':
+            xmlid = line.product_uom_id.get_external_id()
+            if xmlid and line.product_uom_id.id in xmlid:
+                return UOM_TO_UNECE_CODE.get(xmlid[line.product_uom_id.id], 'C62')
+        return uom
 
     # -------------------------------------------------------------------------
     # IMPORT
