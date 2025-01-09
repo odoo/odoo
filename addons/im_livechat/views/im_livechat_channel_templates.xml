@@ -95,8 +95,10 @@
                 if (!window.odoo) {
                     window.odoo = {};
                 }
-                odoo.__session_info__ = Object.assign(odoo.__session_info__ || {}, {
-                    websocket_worker_version: <t t-out="json.dumps(info.get('websocket_worker_version', ''))"/>,
+                odoo.__session_info__ = odoo.__session_info__ || {
+                    websocket_worker_version: <t t-out="json.dumps(info.get('websocket_worker_version', ''))"/>
+                }
+                odoo.__session_info__ = Object.assign(odoo.__session_info__, {
                     livechatData: {
                         isAvailable: <t t-out="'true' if info['available'] else 'false'"/>,
                         serverUrl: "<t t-out="info['server_url']"/>",
