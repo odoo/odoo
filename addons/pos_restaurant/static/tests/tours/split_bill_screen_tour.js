@@ -42,6 +42,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
 
             // click pay to split, go back to check the lines
             SplitBillScreen.clickPay(),
+            ProductScreen.totalAmountIs("8.0"),
             ProductScreen.clickOrderline("Water", "3.0"),
             ProductScreen.clickOrderline("Coca-Cola", "1.0"),
 
@@ -75,6 +76,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
             SplitBillScreen.orderlineHas("Coca-Cola", "1", "1"),
             SplitBillScreen.clickPay(),
             PaymentScreen.clickBack(),
+            ProductScreen.totalAmountIs("4.00"),
             Chrome.clickMenuOption("Orders"),
             TicketScreen.selectOrder("-0002"),
             TicketScreen.loadSelectedOrder(),
@@ -109,14 +111,10 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
 
             // click pay to split, and pay
             SplitBillScreen.clickPay(),
+            ProductScreen.totalAmountIs("2.0"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            {
-                ...Dialog.confirm(),
-                content:
-                    "acknowledge printing error ( because we don't have printer in the test. )",
-            },
             ReceiptScreen.clickContinueOrder(),
 
             // Check if there is still water in the order
@@ -125,12 +123,6 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
             ProductScreen.clickPayButton(true),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            // Check if there is no more order to continue
-            {
-                ...Dialog.confirm(),
-                content:
-                    "acknowledge printing error ( because we don't have printer in the test. )",
-            },
             ReceiptScreen.clickNextOrder(),
         ].flat(),
 });
@@ -176,14 +168,10 @@ registry.category("web_tour.tours").add("SplitBillScreenTour4PosCombo", {
 
             ...SplitBillScreen.subtotalIs("53.80"),
             ...SplitBillScreen.clickPay(),
+            ProductScreen.totalAmountIs("53.80"),
             ProductScreen.clickPayButton(),
             ...PaymentScreen.clickPaymentMethod("Bank"),
             ...PaymentScreen.clickValidate(),
-            {
-                ...Dialog.confirm(),
-                content:
-                    "acknowledge printing error ( because we don't have printer in the test. )",
-            },
             ...ReceiptScreen.clickContinueOrder(),
 
             // Check if there is still water in the order

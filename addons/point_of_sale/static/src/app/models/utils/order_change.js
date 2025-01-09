@@ -47,9 +47,8 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
 
         if (prepaCategoryIds.size === 0 || productCategoryIds.length > 0) {
             const quantity = orderline.get_quantity();
-            const quantityDiff = oldChanges[lineKey]
-                ? quantity - oldChanges[lineKey].quantity
-                : quantity;
+            const quantityDiff =
+                (oldChanges[lineKey] ? quantity - oldChanges[lineKey].quantity : quantity) || 0;
 
             if (quantityDiff && orderline.skip_change === skipped) {
                 changes[lineKey] = {
@@ -79,6 +78,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
     // was last sent to the preparation tools. If so we add this to the changes.
     for (const [lineKey, lineResume] of Object.entries(order.last_order_preparation_change)) {
         if (!order.models["pos.order.line"].getBy("uuid", lineResume["uuid"])) {
+            const quantity = isNaN(lineResume["quantity"]) ? 0 : lineResume["quantity"];
             if (!changes[lineKey]) {
                 changes[lineKey] = {
                     uuid: lineResume["uuid"],
@@ -86,12 +86,12 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                     name: lineResume["name"],
                     note: lineResume["note"],
                     attribute_value_ids: lineResume["attribute_value_ids"],
-                    quantity: -lineResume["quantity"],
+                    quantity: -quantity,
                 };
-                changeAbsCount += Math.abs(lineResume["quantity"]);
-                changesCount += lineResume["quantity"];
+                changeAbsCount += Math.abs(quantity);
+                changesCount += quantity;
             } else {
-                changes[lineKey]["quantity"] -= lineResume["quantity"];
+                changes[lineKey]["quantity"] -= quantity;
             }
         }
     }

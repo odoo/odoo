@@ -105,11 +105,6 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            {
-                ...Dialog.confirm(),
-                content:
-                    "acknowledge printing error ( because we don't have printer in the test. )",
-            },
             ReceiptScreen.clickNextOrder(),
 
             // order on another table with a product variant
@@ -193,7 +188,8 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
             FloorScreen.clickTable("4"),
 
             // Test if products still get merged after transfering the order
-            ProductScreen.clickDisplayedProduct("Water", true, "2.0"),
+            ProductScreen.totalAmountIs("4.40"),
+            ProductScreen.clickDisplayedProduct("Water"),
             ProductScreen.totalAmountIs("6.60"),
             ProductScreen.clickNumpad("1"),
             ProductScreen.totalAmountIs("4.40"),
