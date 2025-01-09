@@ -8,6 +8,7 @@ For sending and receiving electronic invoices to Nilvera.
     'depends': ['l10n_tr_nilvera', 'account_edi_ubl_cii'],
     'data': [
         'data/cron.xml',
+        'data/uom_data.xml',
         'views/account_journal_dashboard_views.xml',
         'views/account_move_views.xml',
         'wizard/account_move_send_views.xml',
