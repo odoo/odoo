@@ -54,6 +54,16 @@ class L10nMyEDITestFileSubmission(AccountTestInvoicingCommon):
             'city': 'Main city',
             'phone': '+60123456786',
         })
+        cls.partner_b.write({
+            'vat': 'EI00000000020',
+            'l10n_my_identification_type': 'BRN',
+            'l10n_my_identification_number': 'NA',
+            'country_id': cls.env.ref('base.us').id,
+            'state_id': cls.env.ref('base.state_us_1'),
+            'street': 'that other street, 3',
+            'city': 'Main city',
+            'phone': '+60123456785',
+        })
 
         cls.fakenow = datetime(2024, 7, 15, 10, 00, 00)
         cls.startClassPatcher(freeze_time(cls.fakenow))
@@ -288,6 +298,34 @@ class L10nMyEDITestFileSubmission(AccountTestInvoicingCommon):
         # Check the invoice type to endure that it is marked as credit note.
         node = root.xpath('cac:OrderReference', namespaces=NS_MAP)
         self.assertEqual(node, [])
+
+    def test_06_foreigner(self):
+        """
+        Check that the file is correct with a foreign customer.
+        """
+        basic_invoice = self.init_invoice(
+            'out_invoice', amounts=[100], partner=self.partner_b
+        )
+        basic_invoice.action_post()
+
+        file, errors = basic_invoice._l10n_my_edi_generate_invoice_xml()
+        self.assertEqual(errors, set())
+        self.assertTrue(file)
+        # The file is working! Now we assert that the foreign customer information is in there.
+        root = etree.fromstring(file)
+        customer_root = root.xpath('cac:AccountingCustomerParty/cac:Party', namespaces=NS_MAP)[0]
+
+        # Party Identifications - TIN and BRN should be set.
+        self._assert_node_values(
+            customer_root,
+            'cac:PartyIdentification/cbc:ID[@schemeID="TIN"]',
+            self.partner_b.vat,
+        )
+        self._assert_node_values(
+            customer_root,
+            'cac:PartyIdentification/cbc:ID[@schemeID="BRN"]',
+            self.partner_b.l10n_my_identification_number,
+        )
 
     def _assert_node_values(self, root, node_path, text, attributes=None):
         node = root.xpath(node_path, namespaces=NS_MAP)
