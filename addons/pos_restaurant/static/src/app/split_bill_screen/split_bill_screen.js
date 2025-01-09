@@ -121,8 +121,7 @@ export class SplitBillScreen extends Component {
             newOrder.last_order_preparation_change[linePreparationKey]["quantity"] =
                 sentQty[linePreparationKey];
         });
-        this.pos.addPendingOrder([originalOrder.id, newOrder.id]);
-
+        await this.pos.syncAllOrders({ orders: [originalOrder, newOrder] });
         originalOrder.customer_count -= 1;
         await this.postSplitOrder(originalOrder, newOrder);
         originalOrder.set_screen_data({ name: "ProductScreen" });

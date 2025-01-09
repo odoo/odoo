@@ -5,6 +5,7 @@ import { FloorScreen } from "@pos_restaurant/app/floor_screen/floor_screen";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt_screen";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
+import { uuidv4 } from "@point_of_sale/utils";
 
 const NON_IDLE_EVENTS = [
     "mousemove",
@@ -390,7 +391,6 @@ patch(PosStore.prototype, {
         this.set_order(destinationOrder || order);
         if (!destinationOrder) {
             order.update({ table_id: destinationTable });
-            return;
         } else if (destinationTable.id !== originalTable?.id || destinationOrder.id !== order.id) {
             for (const orphanLine of [...order.lines]) {
                 const adoptingLine = destinationOrder.lines.find((l) =>
@@ -398,19 +398,21 @@ patch(PosStore.prototype, {
                 );
                 if (adoptingLine) {
                     adoptingLine.merge(orphanLine);
-                    orphanLine.delete();
                 } else {
                     // We cannot just change the order_id of the line because it will be deleted by the
                     // server when cancelling the order. We need to create a new line with the same values.
                     const serialized = orphanLine.serialize();
                     serialized.order_id = destinationOrder.id;
+                    serialized.uuid = uuidv4();
                     this.models["pos.order.line"].create(serialized, false, true);
                 }
+                orphanLine.delete();
             }
 
             await this.deleteOrders([order]);
         }
 
+        await this.syncAllOrders({ orders: [destinationOrder || order] });
         await this.setTable(destinationTable);
     },
     getCustomerCount(tableId) {

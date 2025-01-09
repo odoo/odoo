@@ -62,6 +62,14 @@ export class Navbar extends Component {
     get showCashMoveButton() {
         return Boolean(this.pos.config.cash_control && this.pos.session._has_cash_move_perm);
     }
+    async clearCache() {
+        await this.pos.data.resetIndexedDB();
+        const items = { ...localStorage };
+        for (const key in items) {
+            localStorage.removeItem(key);
+        }
+        window.location.reload();
+    }
     onCashMoveButtonClick() {
         this.hardwareProxy.openCashbox(_t("Cash in / out"));
         this.dialog.add(CashMovePopup);
