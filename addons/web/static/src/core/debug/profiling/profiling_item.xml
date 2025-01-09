@@ -18,6 +18,11 @@
                                 t-att-checked="profiling.isCollectorEnabled('sql')"/>
                             <label class="form-check-label" for="profile_sql">Record sql</label>
                         </span>
+                        <span t-if="profiling.isCollectorEnabled('sql')" class="o_profiling_switch form-check form-switch mt-2" t-on-click.stop.prevent="(ev) => this.toggleParam('explain_sql', ev)">
+                            <input type="checkbox" class="form-check-input" id="profile_explain_sql"
+                                t-att-checked="!!profiling.state.params.explain_sql"/>
+                            <label class="form-check-label" for="profile_explain_sql">EXPLAIN ANALYZE</label>
+                        </span>
                         <span class="o_profiling_switch form-check form-switch mt-2" t-on-click.stop.prevent="() => this.profiling.toggleCollector('traces_async')">
                             <input type="checkbox" class="form-check-input" id="profile_traces_async"
                                 t-att-checked="profiling.isCollectorEnabled('traces_async')"/>
