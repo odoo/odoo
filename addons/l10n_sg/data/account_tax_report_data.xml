@@ -181,7 +181,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">REV.balance</field>
-                                <field name="subformula">cross_report</field>
+                                <field name="subformula">cross_report(account_reports.profit_and_loss)</field>
                             </record>
                         </field>
                     </record>

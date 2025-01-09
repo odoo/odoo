@@ -45,8 +45,7 @@
                                             <record id="account_tax_report_line_1a_other_sales_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">LUTAX_021.balance + LUTAX_022.balance - LUTAX_456.balance - LUTAX_455.balance - LUTAX_471.balance</field>
-                                                <field name="subformula">cross_report</field>
+                                                <field name="formula">LUTAX_021.balance + LUTAX_022.balance - LUTAX_456.balance + LUTAX_455.balance - LUTAX_471.balance</field>
                                             </record>
                                         </field>
                                     </record>
@@ -214,7 +213,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">LUTAX_037.balance</field>
-                                <field name="subformula">cross_report</field>
+                                <field name="subformula">cross_report(l10n_lu.l10n_lu_tax_report_section_2)</field>
                             </record>
                         </field>
                     </record>
