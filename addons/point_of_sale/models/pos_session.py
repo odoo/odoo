@@ -104,7 +104,7 @@ class PosSession(models.Model):
         relations = {}
 
         for name, params in model_fields.items():
-            if name not in fields and len(fields) != 0:
+            if (name not in fields and len(fields)) or (params.manual and not len(fields)):
                 continue
 
             if params.comodel_name:
