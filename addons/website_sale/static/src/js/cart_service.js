@@ -131,6 +131,15 @@ export class CartService {
             })
         }
 
+        const shouldShowProductConfigurator = await this.rpc(
+            '/website_sale/should_show_product_configurator',
+            {
+                product_template_id: productTemplateId,
+                ptav_ids: ptavs,
+                is_product_configured: isConfigured,
+            }
+        );
+
         if(isCombo) {
             const { combos, ...remainingData } = await this.rpc(
                 '/website_sale/combo_configurator/get_data',
@@ -145,23 +154,44 @@ export class CartService {
                  .map(combo => new ProductCombo(combo))
                  .map(combo => combo.selectedComboItem)
                  .filter(Boolean);
+            const comboSaveCallBack = async (comboProductData, selectedComboItems, options) => {
+                if (shouldShowProductConfigurator){
+                    return this._openProductConfigurator(
+                        productTemplateId,
+                        comboProductData.quantity,
+                        ptavs.concat(noVariantAttributeValues),
+                        productCustomAttributeValues,
+                        selectedComboItems.map(item => item.product.display_name),
+                        {
+                            isBuyNow: isBuyNow,
+                            isMainProductConfigurable: !isConfigured,
+                        },
+                        {
+                            'linked_combo_lines': selectedComboItems,
+                            ...rest
+                        }
+                    )
+                }
+                return this._makeRequest({
+                    productTemplateId: productTemplateId,
+                    productId: productId,
+                    quantity: comboProductData.quantity,
+                    is_combo: true,
+                    linked_products: selectedComboItems.map(
+                        (comboItem) => this._serializeComboItem(
+                            comboItem, productTemplateId, comboProductData.quantity
+                        )
+                    ),
+                    shouldRedirectToCart: options.goToCart,
+                    ...rest,
+                })
+            }
+
             // If the combo product is already fully configured (i.e. a combo item has been selected
             // for each combo choice), then it can be added to the cart without opening the combo
             // configurator.
             if (selectedComboItems.length === combos.length) {
-                return this._makeRequest({
-                    productTemplateId: productTemplateId,
-                    productId: productId,
-                    quantity: remainingData.quantity,
-                    is_combo: true,
-                    linked_products: selectedComboItems.map(
-                        (comboItem) => this._serializeComboItem(
-                            comboItem, productTemplateId, remainingData.quantity
-                        )
-                    ),
-                    shouldRedirectToCart: isBuyNow && redirectToCart,
-                    ...rest
-                });
+                return comboSaveCallBack(remainingData, selectedComboItems, {goToCart: isBuyNow && redirectToCart});
             }
             // If some combo choices need to be configured, open the combo configurator.
             return this._openComboConfigurator(
@@ -173,6 +203,7 @@ export class CartService {
                     isBuyNow: isBuyNow,
                     showQuantity: Boolean(document.querySelector('.css_quantity')),
                 },
+                comboSaveCallBack,
                 rest
             );
         }
@@ -189,20 +220,13 @@ export class CartService {
             });
         }
 
-        const shouldShowProductConfigurator = await this.rpc(
-            '/website_sale/should_show_product_configurator',
-            {
-                product_template_id: productTemplateId,
-                ptav_ids: ptavs,
-                is_product_configured: isConfigured,
-            }
-        );
         if (shouldShowProductConfigurator) {
             return this._openProductConfigurator(
                 productTemplateId,
                 quantity,
                 ptavs.concat(noVariantAttributeValues),
                 productCustomAttributeValues,
+                [],
                 {
                     isBuyNow: isBuyNow,
                     isMainProductConfigurable: !isConfigured,
@@ -254,9 +278,10 @@ export class CartService {
         combos,
         remainingData,
         options,
+        saveCallBack,
         additionalData
     ) {
-        return await new Promise((resolve) => {
+        await new Promise((resolve) => {
             this.dialog.add(ComboConfiguratorDialog, {
                 combos: combos,
                 ...remainingData,
@@ -266,19 +291,7 @@ export class CartService {
                 options,
                 ...additionalData,
                 save: async (comboProductData, selectedComboItems, options) => {
-                    resolve(this._makeRequest({
-                        productTemplateId: productTemplateId,
-                        productId: productId,
-                        quantity: comboProductData.quantity,
-                        is_combo: true,
-                        linked_products: selectedComboItems.map(
-                            (comboItem) => this._serializeComboItem(
-                                comboItem, productTemplateId, comboProductData.quantity
-                            )
-                        ),
-                        shouldRedirectToCart: options.goToCart,
-                        ...additionalData,
-                    }));
+                    resolve(saveCallBack(comboProductData, selectedComboItems, options));
                 },
                 discard: () => resolve(0),
             });
@@ -295,6 +308,8 @@ export class CartService {
      *      `product.template.attribute.value` ids.
      * @param {CustomAttributeValues[]} productCustomAttributeValues - An array of objects
      *      representing custom attribute values for the product.
+     * @param {Array} selected_combo_products - An array of strings representing the names of
+     * combo products related to the main product.
      * @param {Object} [options] - Define how to add products to the cart.
      * @param {Boolean} [options.isBuyNow] - Whether the product should be added immediately,
      *      bypassing optional configurations.
@@ -309,6 +324,7 @@ export class CartService {
         quantity,
         combination,
         productCustomAttributeValues,
+        selected_combo_products,
         options,
         additionalData
     ) {
@@ -324,17 +340,29 @@ export class CartService {
                 soDate: serializeDateTime(DateTime.now()),
                 edit: false,
                 isFrontend: true,
+                selected_combo_products:selected_combo_products,
                 options,
                 ...additionalData,
                 save: async (mainProduct, optionalProducts, options) => {
                     const product = this._serializeProduct(mainProduct);
+                    const combo_lines = additionalData?.hasOwnProperty('linked_combo_lines')
+                        ? additionalData['linked_combo_lines']
+                        : [];
                     resolve(this._makeRequest({
                         productTemplateId: product.product_template_id,
                         productId: product.product_id,
                         quantity: product.quantity,
                         productCustomAttributeValues: product.product_custom_attribute_values,
                         noVariantAttributeValues: product.no_variant_attribute_value_ids,
-                        linked_products: optionalProducts.map(this._serializeProduct),
+                        is_combo: Boolean(combo_lines.length),
+                        linked_products: [
+                            ...combo_lines.map(
+                                    (comboItem) => this._serializeComboItem(
+                                        comboItem, productTemplateId, product.quantity
+                                    )
+                                ),
+                            ...optionalProducts.map(this._serializeProduct),
+                        ],
                         shouldRedirectToCart: options.goToCart,
                         ...additionalData,
                     }));

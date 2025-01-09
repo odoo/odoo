@@ -915,6 +915,13 @@ class SaleOrder(models.Model):
                 # Clear `selected_combo_items` to avoid applying the same changes multiple times.
                 line.selected_combo_items = False
                 self.order_line = delete_commands + create_commands + update_commands
+            elif line.product_type == 'combo':
+                for combo_line in line._get_linked_lines():
+                    if not combo_line.combo_item_id:
+                        continue
+                    combo_line.product_uom_qty = line.product_uom_qty
+                    combo_line.discount = line.discount
+
 
     #=== CRUD METHODS ===#
 

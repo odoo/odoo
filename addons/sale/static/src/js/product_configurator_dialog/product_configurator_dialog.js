@@ -23,6 +23,7 @@ export class ProductConfiguratorDialog extends Component {
         companyId: { type: Number, optional: true },
         pricelistId: { type: Number, optional: true },
         currencyId: { type: Number, optional: true },
+        selected_combo_products: { type: Array, optional: true },
         soDate: String,
         edit: { type: Boolean, optional: true },
         options: {
@@ -77,6 +78,7 @@ export class ProductConfiguratorDialog extends Component {
                 optional_products,
                 currency_id,
             } = await this._loadData(this.props.edit);
+            products[0].selected_combo_products = this.props.selected_combo_products || []
             this.state.products = products;
             this.state.optionalProducts = optional_products;
             for (const customPtav of this.props.customPtavs) {

@@ -16,6 +16,15 @@
                     t-out="this.props.description_sale"
                     class="text-muted small text-truncate"
                 />
+                <div t-if="this.props.selected_combo_products" class="text-muted small">
+                    <t
+                        t-foreach="this.props.selected_combo_products"
+                        t-as="product"
+                        t-key="product_index"
+                    >
+                        <div t-out="product"/>
+                    </t>
+                </div>
             </div>
             <t t-foreach="this.props.attribute_lines" t-as="ptal" t-key="ptal.id">
                 <PTAL
