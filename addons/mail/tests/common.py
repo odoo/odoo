@@ -404,7 +404,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 f"From: {mail['email_from']} - To {mail['email_to']}"
                 for mail in self._mails
             )
-            raise AssertionError(f'sent mail not found for email_to {emails_to}\n{debug_info}')
+            raise AssertionError(f'sent mail not found for email_to {emails_to} from {email_from}\n{debug_info}')
 
         return sent_email
 
@@ -1217,7 +1217,7 @@ class MailCase(MockEmail):
                 raise ValueError(f'Unsupported values: {extra_keys}')
 
             mbody, mtype = message_info.get('content', ''), message_info.get('message_type', 'comment')
-            msubtype = self.env.ref(message_info.get('subtype', 'mail.mt_comment'))
+            msubtype = message_info.get('message_values', {}).get('subtype_id', self.env.ref(message_info.get('subtype', 'mail.mt_comment')))
 
             # find message
             if messages:
@@ -1333,6 +1333,7 @@ class MailCase(MockEmail):
             # check emails that should be sent (hint: mail.mail per group, email par recipient)
             email_values = {
                 'body_content': mbody,
+                'email_from': message.email_from,
                 'references_content': message.message_id,
             }
             if message_info.get('email_values'):
@@ -1356,7 +1357,7 @@ class MailCase(MockEmail):
                     self.assertMailMail(
                         partners,
                         mail_status,
-                        author=message_info.get('mail_mail_values', {}).get('author_id') or message.author_id or message.email_from,
+                        author=message_info.get('mail_mail_values', {}).get('author_id') or message.author_id,
                         content=mbody,
                         email_to_recipients=group['email_to_recipients'] or None,
                         email_values=email_values,
