@@ -122,7 +122,11 @@ export function deduceURLfromText(text, link) {
    // Check for telephone url.
    match = label.match(PHONE_REGEX);
    if (match) {
-        return (match[1] ? match[0] : "tel:" + match[0]).replace(/\s+/g, "");
+        if (match[1]) {
+            return match[0].replace(/\s+/g, "");
+        } else if (link?.href.startsWith("tel:")) {
+            return ("tel:" + match[0]).replace(/\s+/g, "");
+        }
    }
    return null;
 }
