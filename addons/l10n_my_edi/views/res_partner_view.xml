@@ -9,10 +9,10 @@
                 <field name="l10n_my_tin_validation_state" invisible="1"/>
                 <field name="l10n_my_edi_display_tin_warning" invisible="1"/>
                 <!-- Foreigner with a tax number registered in Malaysia could be customer of an e-invoice. -->
-                <group name="l10n_my_edi" string="MyInvois Information">
+                <group name="l10n_my_edi" string="MyInvois Information" invisible="'MY' not in fiscal_country_codes">
                     <group colspan="2">
                         <label for="l10n_my_identification_type" string="Identification"/>
-                        <div class="d-flex gap-2" invisible="'MY' not in fiscal_country_codes">
+                        <div class="d-flex gap-2">
                             <field name="l10n_my_identification_type"/>
                             <span class="d-flex gap-2 w-100">
                                 <field name="l10n_my_identification_number_placeholder" invisible="1"/> <!-- Needed for the placeholder widget -->
