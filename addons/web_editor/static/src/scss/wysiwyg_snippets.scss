@@ -1615,6 +1615,14 @@
                     font-weight: 600;
                 }
             }
+            // For layout having button-group + we-select, to avoid the long
+            // text to overflow the row.
+            &:has(div > we-button-group + we-select.o_grid) {
+                we-button-group we-selection-items {
+                    display: grid !important;
+                    grid-template-columns: auto auto;
+                }
+            }
         }
 
         %o-we-inline {
