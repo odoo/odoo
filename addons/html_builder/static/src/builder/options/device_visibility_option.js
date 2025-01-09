@@ -51,8 +51,8 @@ class DeviceVisibilityOptionPlugin extends Plugin {
                 clean: ({ editingElement }) => {
                     this.clean(editingElement);
                 },
-                isActive: ({ editingElement, param: visibilityParam }) =>
-                    this.isActive(editingElement, visibilityParam),
+                isApplied: ({ editingElement, param: visibilityParam }) =>
+                    this.isApplied(editingElement, visibilityParam),
             },
         };
     }
@@ -70,7 +70,7 @@ class DeviceVisibilityOptionPlugin extends Plugin {
         editingElement.classList.remove(`d-md-${display}`, `d-lg-${display}`);
         this.dependencies["builder-options"].updateContainers(editingElement);
     }
-    isActive(editingElement, visibilityParam) {
+    isApplied(editingElement, visibilityParam) {
         const classList = [...editingElement.classList];
         if (
             visibilityParam === "no_mobile" &&

@@ -6,6 +6,7 @@ import {
     BuilderComponent,
     useDependencyDefinition,
     defaultBuilderComponentProps,
+    useDomState,
 } from "./utils";
 
 export class BuilderCheckbox extends Component {
@@ -18,11 +19,13 @@ export class BuilderCheckbox extends Component {
     static defaultProps = defaultBuilderComponentProps;
 
     setup() {
-        const { state, operation, isActive } = useClickableBuilderComponent();
+        const { operation, isApplied } = useClickableBuilderComponent();
         if (this.props.id) {
-            useDependencyDefinition(this.props.id, { isActive });
+            useDependencyDefinition(this.props.id, { isActive: isApplied });
         }
-        this.state = state;
+        this.state = useDomState(() => ({
+            isActive: isApplied(),
+        }));
         this.onChange = operation.commit;
     }
 

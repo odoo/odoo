@@ -4,8 +4,9 @@ import { Plugin } from "@html_editor/plugin";
  * @typedef {Object} BuilderAction
  * @property {string} id
  * @property {Function} apply
- * @property {Function} [isActive]
+ * @property {Function} [isApplied]
  * @property {Function} [clean]
+ * @property {() => Promise<any>} [load]
  */
 
 export class BuilderActionsPlugin extends Plugin {

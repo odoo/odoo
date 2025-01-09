@@ -46,7 +46,7 @@ export const coreBuilderActions = {
     classAction: {
         getPriority: ({ param: classNames = "" }) =>
             classNames?.trim().split(/\s+/).filter(Boolean).length || 0,
-        isActive: ({ editingElement, param: classNames }) => {
+        isApplied: ({ editingElement, param: classNames }) => {
             if (classNames === "") {
                 return true;
             }
@@ -90,7 +90,7 @@ export const coreBuilderActions = {
     attributeAction: {
         getValue: ({ editingElement, param: attributeName }) =>
             editingElement.getAttribute(attributeName),
-        isActive: ({ editingElement, param: attributeName, value }) => {
+        isApplied: ({ editingElement, param: attributeName, value }) => {
             if (value) {
                 return (
                     editingElement.hasAttribute(attributeName) &&

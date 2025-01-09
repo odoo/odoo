@@ -32,7 +32,7 @@ class ImageToolOptionPlugin extends Plugin {
     getActions() {
         return {
             cropImage: {
-                isActive: ({ editingElement }) =>
+                isApplied: ({ editingElement }) =>
                     editingElement.classList.contains("o_we_image_cropped"),
                 apply: () => {
                     this.dependencies.userCommand.getCommand("cropImage").run();
@@ -82,7 +82,7 @@ class ImageToolOptionPlugin extends Plugin {
                 },
             },
             transformImage: {
-                isActive: ({ editingElement }) => editingElement.matches(`[style*="transform"]`),
+                isApplied: ({ editingElement }) => editingElement.matches(`[style*="transform"]`),
                 apply: () => {
                     this.dependencies.userCommand.getCommand("transformImage").run();
                 },
@@ -100,7 +100,7 @@ class ImageToolOptionPlugin extends Plugin {
                 },
             },
             glFilter: {
-                isActive: ({ editingElement, param: glFilterName }) => {
+                isApplied: ({ editingElement, param: glFilterName }) => {
                     if (glFilterName) {
                         return editingElement.dataset.glFilter === glFilterName;
                     } else {

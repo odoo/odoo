@@ -1,7 +1,6 @@
 import { isTextNode } from "@html_editor/utils/dom_info";
 import {
     Component,
-    EventBus,
     onMounted,
     onWillDestroy,
     useComponent,
@@ -125,7 +124,7 @@ export function useDependencies(dependencies) {
 export function useSelectableComponent(id, { onItemChange } = {}) {
     useBuilderComponent();
     const selectableItems = [];
-    const refreshCurrentItemDebounced = useDebounced(refreshCurrentItem, 0);
+    const refreshCurrentItemDebounced = useDebounced(refreshCurrentItem, 0, { immediate: true });
     let currentSelectedItem;
     const env = useEnv();
 
@@ -133,7 +132,7 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
         let currentItem;
         let itemPriority = 0;
         for (const selectableItem of selectableItems) {
-            if (selectableItem.isActive() && selectableItem.priority >= itemPriority) {
+            if (selectableItem.isApplied() && selectableItem.priority >= itemPriority) {
                 currentItem = selectableItem;
                 itemPriority = selectableItem.priority;
             }
@@ -180,23 +179,23 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
                 }
             },
             update: refreshCurrentItemDebounced,
-            getSelectedItem: () => currentSelectedItem,
+            getSelectedItem: () => {
+                refreshCurrentItem();
+                return currentSelectedItem;
+            },
         },
     });
 }
 export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
-    const { state, operation, isActive, getActions, priority, clean } =
-        useClickableBuilderComponent();
+    const { operation, isApplied, getActions, priority, clean } = useClickableBuilderComponent();
     const env = useEnv();
 
-    let isSelectableActive = isActive;
+    let isSelectableActive = isApplied;
     if (env.selectableContext) {
-        isSelectableActive = () => {
-            return env.selectableContext.getSelectedItem() === selectableItem;
-        };
+        isSelectableActive = () => env.selectableContext.getSelectedItem() === selectableItem;
 
         const selectableItem = {
-            isActive,
+            isApplied,
             priority,
             getLabel,
             clean,
@@ -218,6 +217,10 @@ export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
             cleanSelectedItem: env.selectableContext?.cleanSelectedItem,
         });
     }
+
+    const state = useDomState(() => ({
+        isActive: isSelectableActive(),
+    }));
 
     return { state, operation };
 }
@@ -251,10 +254,6 @@ export function useClickableBuilderComponent() {
     ) {
         operation.preview = () => {};
     }
-
-    const state = useDomState(() => ({
-        isActive: isActive(),
-    }));
 
     function clean() {
         for (const { actionId, actionParam, actionValue } of getAllActions()) {
@@ -320,7 +319,7 @@ export function useClickableBuilderComponent() {
         for (const clean of new Set(cleans)) {
             clean();
         }
-        let shouldClean = shouldToggle && isActive();
+        let shouldClean = shouldToggle && isApplied();
         shouldClean = comp.props.inverseAction ? !shouldClean : shouldClean;
         for (const applySpec of applySpecs) {
             if (shouldClean) {
@@ -387,31 +386,31 @@ export function useClickableBuilderComponent() {
 
         return actions.concat(inheritedActions);
     }
-    function isActive() {
+    function isApplied() {
         const editingElements = comp.env.getEditingElements();
         if (!editingElements.length) {
             return;
         }
         const areActionsActiveTabs = getAllActions().map((o) => {
             const { actionId, actionParam, actionValue } = o;
-            // TODO isActive === first editing el or all ?
+            // TODO isApplied === first editing el or all ?
             const editingElement = editingElements[0];
-            const isActive = getAction(actionId).isActive?.({
+            const isApplied = getAction(actionId).isApplied?.({
                 editingElement,
                 param: actionParam,
                 value: actionValue,
             });
-            return comp.props.inverseAction ? !isActive : isActive;
+            return comp.props.inverseAction ? !isApplied : isApplied;
         });
-        // If there is no `isActive` method for the widget return false
+        // If there is no `isApplied` method for the widget return false
         if (areActionsActiveTabs.every((el) => el === undefined)) {
             return false;
         }
-        // If `isActive` is explicitly false for an action return false
+        // If `isApplied` is explicitly false for an action return false
         if (areActionsActiveTabs.some((el) => el === false)) {
             return false;
         }
-        // `isActive` is true for at least one action
+        // `isApplied` is true for at least one action
         return true;
     }
     function getPriority() {
@@ -429,9 +428,8 @@ export function useClickableBuilderComponent() {
     }
 
     return {
-        state,
         operation,
-        isActive,
+        isApplied,
         clean,
         priority: getPriority(),
         getActions: getAllActions,

@@ -22,7 +22,7 @@ class AnimateOptionPlugin extends Plugin {
     getActions() {
         return {
             setAnimationMode: {
-                isActive: () => true,
+                isApplied: () => true,
                 apply: () => {
                     console.warn("todo");
                 },

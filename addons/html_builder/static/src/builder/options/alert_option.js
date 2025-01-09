@@ -25,7 +25,7 @@ class AlertOptionPlugin extends Plugin {
                     }
                     icon.classList.remove(className);
                 },
-                isActive: ({ editingElement, param }) => {
+                isApplied: ({ editingElement, param }) => {
                     const iconEl = editingElement.querySelector(".s_alert_icon");
                     if (!iconEl) {
                         return;

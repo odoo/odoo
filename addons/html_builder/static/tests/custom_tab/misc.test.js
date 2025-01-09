@@ -341,7 +341,7 @@ test("don't rerender the OptionsContainer every time you click on the same eleme
     expect.verifySteps([]);
 });
 
-test("no need to define 'isActive' method for custom action if the widget already has a generic action", async () => {
+test("no need to define 'isApplied' method for custom action if the widget already has a generic action", async () => {
     addOption({
         selector: ".s_test",
         template: xml`

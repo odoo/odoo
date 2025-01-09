@@ -246,9 +246,9 @@ test("hide/display base on applyTo", async () => {
     expect("[data-class-action='test']").not.toHaveClass("active");
 });
 describe("inherited actions", () => {
-    function makeAction(n, { async, isActive } = {}) {
+    function makeAction(n, { async, isApplied } = {}) {
         const action = {
-            isActive,
+            isApplied,
             clean({ param, value }) {
                 expect.step(`customAction${n} clean ${param} ${value}`);
             },
@@ -273,7 +273,7 @@ describe("inherited actions", () => {
         addActionOption({
             customAction1: makeAction(1).action,
             customAction2: makeAction(2).action,
-            customAction3: makeAction(3, { isActive: falsy }).action,
+            customAction3: makeAction(3, { isApplied: falsy }).action,
         });
         addOption({
             selector: ".test-options-target",
@@ -299,7 +299,7 @@ describe("inherited actions", () => {
         const action1 = makeAction(1, { async: true });
         const action2 = makeAction(2, { async: true });
         const action3 = makeAction(3, { async: true });
-        const action4 = makeAction(4, { async: true, isActive: falsy });
+        const action4 = makeAction(4, { async: true, isApplied: falsy });
         addActionOption({
             customAction1: action1.action,
             customAction2: action2.action,

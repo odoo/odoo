@@ -44,7 +44,7 @@ describe("classAction", () => {
 
         await contains("[data-class-action='x y z']").click();
         expect(":iframe .test-options-target").toHaveClass("x y z");
-        expect("[data-class-action='x']").toHaveClass("active");
+        expect("[data-class-action='x']").not.toHaveClass("active");
         expect("[data-class-action='x y z']").toHaveClass("active");
 
         await contains("[data-class-action='x']").click();
