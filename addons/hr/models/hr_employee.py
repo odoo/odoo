@@ -678,6 +678,9 @@ class HrEmployeePrivate(models.Model):
         demo_tag = self.env.ref('hr.employee_category_demo', raise_if_not_found=False)
         if demo_tag:
             return
+        dep_administration = self.env.ref('hr.dep_administration', raise_if_not_found=False)
+        if not dep_administration:
+            convert.convert_file(self.env, 'hr', 'data/hr_data.xml', None, noupdate=True, mode='init', kind='data')
         convert.convert_file(self.env, 'hr', 'data/scenarios/hr_scenario.xml', None, mode='init', kind='data')
 
     # ---------------------------------------------------------
