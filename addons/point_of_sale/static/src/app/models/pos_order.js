@@ -16,7 +16,7 @@ export class PosOrder extends Base {
     setup(vals) {
         super.setup(vals);
 
-        if (!this.session_id && typeof this.id === "string") {
+        if (!this.session_id && (!this.finalized || typeof this.id !== "number")) {
             this.session_id = this.session;
         }
 
@@ -335,10 +335,7 @@ export class PosOrder extends Base {
     hasSkippedChanges() {
         return Boolean(
             this.lines.find(
-                (orderline) =>
-                    orderline.skip_change &&
-                    !orderline.uiState.hideSkipChangeClass &&
-                    !orderline.origin_order_id
+                (orderline) => orderline.skip_change && !orderline.uiState.hideSkipChangeClass
             )
         );
     }
