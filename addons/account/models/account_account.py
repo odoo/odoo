@@ -1,6 +1,7 @@
 from bisect import bisect_left
 from collections import defaultdict
 from collections.abc import Iterable
+from markupsafe import Markup, escape
 import contextlib
 import itertools
 import re
@@ -16,6 +17,7 @@ from odoo.tools import SQL, Query
 ACCOUNT_REGEX = re.compile(r'(?:(\S*\d+\S*))?(.*)')
 ACCOUNT_CODE_REGEX = re.compile(r'^[A-Za-z0-9.]+$')
 ACCOUNT_CODE_NUMBER_REGEX = re.compile(r'(.*?)(\d*)(\D*?)$')
+XML_TAG_REGEX = re.compile(r"(<[^>]+>)")
 
 
 class AccountAccount(models.Model):
@@ -44,6 +46,7 @@ class AccountAccount(models.Model):
             raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)', [a.code for a in account_unaffected_earnings]))
 
     name = fields.Char(string="Account Name", required=True, index='trigram', tracking=True, translate=True)
+    description = fields.Text()
     currency_id = fields.Many2one('res.currency', string='Account Currency', tracking=True,
         help="Forces all journal items in this account to have a specific currency (i.e. bank journals). If no currency is set, entries can use any currency.")
     company_currency_id = fields.Many2one('res.currency', compute='_compute_company_currency_id')
@@ -790,18 +793,116 @@ class AccountAccount(models.Model):
     def _order_accounts_by_frequency_for_partner(self, company_id, partner_id, move_type=None):
         return self._get_most_frequent_accounts_for_partner(company_id, partner_id, move_type)
 
+    def _order_to_sql(self, order: str, query: Query, alias: (str | None) = None, reverse: bool = False) -> SQL:
+        sql_order = super()._order_to_sql(order, query, alias, reverse)
+
+        if order == self._order and (preferred_internal_group := self.env.context.get('preferred_internal_group')):
+            sql_order = SQL(
+                "%(field_sql)s = %(preferred_internal_group)s %(direction)s, %(base_order)s",
+                field_sql=self._field_to_sql(alias or self._table, 'internal_group').code,
+                preferred_internal_group=preferred_internal_group,
+                direction=SQL('ASC') if reverse else SQL('DESC'),
+                base_order=sql_order,
+            )
+        if order == self._order and (preferred_account_ids := self.env.context.get('preferred_account_ids')):
+            sql_order = SQL(
+                "%(alias)s.id in %(preferred_account_ids)s %(direction)s, %(base_order)s",
+                alias=SQL.identifier(alias or self._table),
+                preferred_account_ids=tuple(map(int, preferred_account_ids)),
+                direction=SQL('ASC') if reverse else SQL('DESC'),
+                base_order=sql_order
+            )
+        return sql_order
+
     @api.model
-    def name_search(self, name='', domain=None, operator='ilike', limit=100) -> list[tuple[int, str]]:
-        if (
-            not name
-            and (partner := self.env.context.get('partner_id'))
-            and (move_type := self._context.get('move_type'))
-            and (ordered_accounts := self._order_accounts_by_frequency_for_partner(self.env.company.id, partner, move_type))
-        ):
-            records = self.sudo().browse(ordered_accounts)
-            records.fetch(['display_name'])
+    @api.readonly
+    def name_search(self, name='', domain=None, operator='ilike', limit=100) -> list[tuple]:
+        move_type = self._context.get('move_type')
+        if not move_type:
+            return super().name_search(name, domain, operator, limit)
+
+        template = self.env.context.get('option_template_ref')
+        partner = self.env.context.get('partner_id')
+        suggested_accounts = self._order_accounts_by_frequency_for_partner(self.env.company.id, partner, move_type) if partner else []
+        extra_vals = {
+            'recent_accounts': suggested_accounts,
+        }
+
+        def _records_to_list(records, highlight=None):
+            if template:
+                return [
+                    (
+                        record.id,
+                        record.display_name,
+                        record._to_qweb(template, highlight, extra_values=extra_vals),
+                    )
+                    for record in records
+                ]
             return [(record.id, record.display_name) for record in records]
-        return super().name_search(name, domain, operator, limit)
+
+        if not name and suggested_accounts:
+            records = self.sudo().browse(suggested_accounts)
+            return _records_to_list(records)
+
+        search_domain = Domain('display_name', 'ilike', name) if name else []
+
+        move_type_accounts = {
+            'out': ['income'],
+            'in': ['expense', 'asset'],
+        }
+        move_type_prefix = move_type.split('_')[0]
+        # search all account types if the search contains a number
+        digit_in_search_term = any(c.isdigit() for c in name)
+        internal_group_domain = [('internal_group', 'in', move_type_accounts.get(move_type_prefix, []))] if not digit_in_search_term else []
+
+        domain = Domain.AND([search_domain, internal_group_domain, domain])
+        records = self.with_context(preferred_account_ids=suggested_accounts).search(domain, limit=limit)
+        return _records_to_list(records, highlight=name)
+
+    @api.model
+    @api.readonly
+    def web_name_search(self, name, specification, domain=None, operator='ilike', limit=100):
+        if self.env.context.get('option_template_ref'):
+            record_tuples = self.name_search(name, domain, operator, limit)
+            return [
+                {
+                    'id': id_,
+                    'display_name': display_name,
+                    'html': html,
+                }
+                for id_, display_name, html in record_tuples
+            ]
+        return super().web_name_search(name, specification, domain, operator, limit)
+
+    def _to_qweb(self, template=None, highlight=None, tag='span', extra_values={}):
+        self.ensure_one()
+        re_search_term = self._get_search_term_regex(highlight)
+        if not template:
+            content = self._highlight(self.display_name, re_search_term) if highlight else self.display_name
+            return Markup(f"<{escape(tag)}>{content}</{escape(tag)}>")
+
+        qweb_content = self.env['ir.qweb']._render(
+            template=template,
+            values={
+                'record': self,
+                **extra_values,
+            },
+        )
+        return self._highlight(qweb_content, re_search_term) if highlight else qweb_content
+
+    def _get_search_term_regex(self, name):
+        return re.compile(fr"{name}", re.IGNORECASE) if name else None
+
+    @api.model
+    def _highlight(self, qweb_content, re_text_to_highlight, highlight_class="text-primary bg-secondary fw-bold"):
+        text_content = str(qweb_content)
+        parts = XML_TAG_REGEX.split(text_content)
+
+        for i, part in enumerate(parts):
+            if not (part.startswith("<") and part.endswith(">")):  # Skip HTML tags
+                parts[i] = re_text_to_highlight.sub(lambda m: f'<span class="{highlight_class}">{escape(m.group(0))}</span>', part)
+
+        return Markup("").join(Markup(part) for part in parts)
 
     @api.model
     def _search_display_name(self, operator, value):
@@ -816,7 +917,7 @@ class AccountAccount(models.Model):
             ]
         if isinstance(value, str):
             name = value or ''
-            return ['|', ('code', '=like', name.split(' ')[0] + '%'), ('name', operator, name)]
+            return ['|', '|', ('code', '=like', name.split(' ')[0] + '%'), ('name', operator, name), ('description', 'ilike', name)]
         return NotImplemented
 
     @api.onchange('account_type')
