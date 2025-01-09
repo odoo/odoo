@@ -8,16 +8,16 @@ import { user } from "@web/core/user";
 export class MeetingRoom extends Interaction {
     static selector = ".o_wevent_meeting_room_card";
     dynamicContent = {
-        '.o_wevent_meeting_room_delete': { "t-on-click.prevent.stop": this.onClickDelete },
-        '.o_wevent_meeting_room_duplicate': { "t-on-click.prevent.stop": this.onClickDuplicate },
-        '.o_wevent_meeting_room_is_pinned': { "t-on-click.prevent.stop.withTarget": this.onTogglePinned },
+        ".o_wevent_meeting_room_delete": { "t-on-click.prevent.stop": this.onDeleteRoomClick },
+        ".o_wevent_meeting_room_duplicate": { "t-on-click.prevent.stop": this.onDuplicateRoomClick },
+        ".o_wevent_meeting_room_is_pinned": { "t-on-click.prevent.stop.withTarget": this.onTogglePinnedClick },
     };
 
     setup() {
         this.meetingRoomId = parseInt(this.el.dataset["meetingRoomId"]);
     }
 
-    onClickDelete() {
+    onDeleteRoomClick() {
         this.services.dialog.add(ConfirmationDialog, {
             body: _t("Are you sure you want to close this room?"),
             confirm: async () => {
@@ -34,7 +34,7 @@ export class MeetingRoom extends Interaction {
         })
     }
 
-    onClickDuplicate() {
+    onDuplicateRoomClick() {
         this.services.dialog.add(ConfirmationDialog, {
             body: _t("Are you sure you want to duplicate this room?"),
             confirm: async () => {
@@ -47,7 +47,7 @@ export class MeetingRoom extends Interaction {
         });
     }
 
-    async onTogglePinned(ev, currentTargetEl) {
+    async onTogglePinnedClick(ev, currentTargetEl) {
         const wasPinned = currentTargetEl.classList.contains("o_wevent_meeting_room_pinned");
 
         await this.waitFor(this.services.orm.write(

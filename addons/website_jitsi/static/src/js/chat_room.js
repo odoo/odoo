@@ -54,7 +54,7 @@ export class ChatRoom extends Interaction {
         this.defaultUsername = this.el.dataset.defaultUsername || false;
 
         // FIXME: 'meet.jit.si' should not be used in production.
-        this.jitsiServer = this.el.dataset.jitsiServer || 'meet.jit.si';
+        this.jitsiServer = this.el.dataset.jitsiServer || "meet.jit.si";
 
         this.maxCapacity = parseInt(this.el.dataset.maxCapacity) || Infinity;
     }

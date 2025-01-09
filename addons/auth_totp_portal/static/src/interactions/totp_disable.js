@@ -1,14 +1,13 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
-import { user } from "@web/core/user";
-
 import { handleCheckIdentity } from "@portal/js/portal_security";
+import { user } from "@web/core/user";
 
 export class TOTPDisable extends Interaction {
     static selector = "#auth_totp_portal_disable";
     dynamicContent = {
-        _root: { "t-on-click": this.onClick }
+        _root: { "t-on-click.prevent": this.onClick }
     }
 
     async onClick() {

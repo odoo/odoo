@@ -13,7 +13,7 @@ export class PortalMyInvoicesPaymentList extends Interaction {
         const today = DateTime.now().startOf("day");
         const dueDateEls = this.el.querySelectorAll(".o_portal_invoice_due_date");
         for (const dueDateEl of dueDateEls) {
-            const dateTime = deserializeDateTime(dueDateEl.getAttribute("datetime")).startOf('day');
+            const dateTime = deserializeDateTime(dueDateEl.getAttribute("datetime")).startOf("day");
             const diff = dateTime.diff(today).as("days");
 
             const dueDateLabel =

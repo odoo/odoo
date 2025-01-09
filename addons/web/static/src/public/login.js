@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 
 import { addLoadingEffect } from "@web/core/utils/ui";
 
-export class LogIn extends Interaction {
+export class Login extends Interaction {
     static selector = ".oe_login_form";
     dynamicContent = {
         _root: {
@@ -23,7 +23,7 @@ export class LogIn extends Interaction {
      */
     onSubmit(ev) {
         if (!ev.defaultPrevented) {
-            const btnEl = ev.currentTarget.querySelector('button[type="submit"]');
+            const btnEl = ev.currentTarget.querySelector("button[type='submit']");
             const removeLoadingEffect = addLoadingEffect(btnEl);
             const oldPreventDefault = ev.preventDefault.bind(ev);
             ev.preventDefault = () => {
@@ -34,4 +34,6 @@ export class LogIn extends Interaction {
     }
 }
 
-registry.category("public.interactions").add("public.log_in", LogIn);
+registry
+    .category("public.interactions")
+    .add("public.login", Login);

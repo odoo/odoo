@@ -15,7 +15,7 @@ export class PurchaseSidebar extends Sidebar {
     start() {
         super.start();
         const spyWatcheElement = this.el.querySelector("[data-id='portal_sidebar']");
-        this.setElementId(spyWatcheElement);
+        this.setElementId("", spyWatcheElement);
         // Nav Menu ScrollSpy
         this.generateMenu();
     }
@@ -28,7 +28,7 @@ export class PurchaseSidebar extends Sidebar {
      */
     setElementId(prefix, el) {
         const id = uniqueId(prefix);
-        el.setAttribute("id", id);
+        el?.setAttribute("id", id);
         return id;
     }
 
@@ -85,7 +85,7 @@ export class PurchaseSidebar extends Sidebar {
                             const ulEl = document.createElement("ul");
                             ulEl.classList.add("nav", "flex-column");
 
-                            this.insert(ulEl, liEl);
+                            this.insert(ulEl, lastLI);
 
                             lastUL = ulEl;
                         }

@@ -16,9 +16,9 @@ export class PasskeyLogin extends Interaction {
         if (!auth) {
             return false;
         }
-        const form = document.querySelector('form.oe_login_form');
-        form.querySelector('input[name="webauthn_response"]').value = JSON.stringify(auth);
-        form.querySelector('input[name="type"]').value = 'webauthn';
+        const form = document.querySelector("form.oe_login_form");
+        form.querySelector("input[name='webauthn_response']").value = JSON.stringify(auth);
+        form.querySelector("input[name='type']").value = "webauthn";
         form.submit();
     }
 }

@@ -10,16 +10,12 @@ export class PortalPrepayment extends Interaction {
     };
     dynamicContent = {
         _amountPrepaymentButton: {
-            "t-on-click": this.onClickAmountPrepaymentButton,
-            "t-att-class": () => ({
-                "active": this.isPartialPayment,
-            }),
+            "t-on-click": this.onAmountPrepaymentButtonClick,
+            "t-att-class": () => ({ "active": this.isPartialPayment }),
         },
         _amountTotalButton: {
-            "t-on-click": this.onClickAmountTotalButton,
-            "t-att-class": () => ({
-                "active": !this.isPartialPayment,
-            }),
+            "t-on-click": this.onAmountTotalButtonClick,
+            "t-att-class": () => ({ "active": !this.isPartialPayment }),
         },
         "span[id='o_sale_portal_use_amount_prepayment'], span[id='o_sale_portal_use_amount_total']": {
             "t-att-style": () => ({
@@ -28,14 +24,10 @@ export class PortalPrepayment extends Interaction {
             }),
         },
         "span[id='o_sale_portal_use_amount_prepayment']": {
-            "t-att-style": () => ({
-                "opacity": this.displayTotal ? 0 : 1,
-            }),
+            "t-att-style": () => ({ "opacity": this.displayTotal ? 0 : 1 }),
         },
         "span[id='o_sale_portal_use_amount_total']": {
-            "t-att-style": () => ({
-                "opacity": this.displayTotal ? 1 : 0,
-            }),
+            "t-att-style": () => ({ "opacity": this.displayTotal ? 1 : 0 }),
         },
     };
 
@@ -60,12 +52,12 @@ export class PortalPrepayment extends Interaction {
         }
     }
 
-    onClickAmountPrepaymentButton() {
+    onAmountPrepaymentButtonClick() {
         this.isPartialPayment = true;
         this.reloadAmount();
     }
 
-    onClickAmountTotalButton() {
+    onAmountTotalButtonClick() {
         this.isPartialPayment = false;
         this.reloadAmount();
     }

@@ -7,7 +7,7 @@ import { rpc } from "@web/core/network/rpc";
 export class ProfileValidation extends Interaction {
     static selector = ".o_wprofile_email_validation_container";
     dynamicContent = {
-        ".send_validation_email": { "t-on-click.prevent.withTarget": this.onClickSend },
+        ".send_validation_email": { "t-on-click.prevent.withTarget": this.onSendMailClick },
         ".validated_email_close": { "t-on-click": () => rpc("/profile/validate_email/close") },
     };
 
@@ -15,7 +15,7 @@ export class ProfileValidation extends Interaction {
      * @param {Event} ev
      * @param {HTMLElement} currentTargetEl
      */
-    async onClickSend(ev, currentTargetEl) {
+    async onSendMailClick(ev, currentTargetEl) {
         const data = await this.waitFor(rpc('/profile/send_validation_email', {
             redirect_url: currentTargetEl.dataset["redirect_url"],
         }));

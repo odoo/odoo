@@ -12,10 +12,10 @@ export class WebsiteBlog extends Interaction {
             "t-on-click.prevent": this.onNextBlogClick,
         },
         "#o_wblog_post_content_jump": {
-            "t-on-click.prevent": this.onContentAnchorClick,
+            "t-on-click.prevent.withTarget": this.onContentAnchorClick,
         },
         ".o_twitter, .o_facebook, .o_linkedin, .o_google, .o_twitter_complete, .o_facebook_complete, .o_linkedin_complete, .o_google_complete": {
-            "t-on-click.prevent": this.onShareArticle,
+            "t-on-click.prevent.withTarget": this.onShareArticle,
         },
     };
 
@@ -38,30 +38,32 @@ export class WebsiteBlog extends Interaction {
 
     /**
      * @param {Event} ev
+     * @param {HTMLElement} currentTargetEl
      */
-    async onContentAnchorClick(ev) {
+    async onContentAnchorClick(ev, currentTargetEl) {
         ev.stopImmediatePropagation();
-        const currentTargetEl = document.querySelector(ev.currentTarget.hash);
+        const scrollTargetEl = document.querySelector(currentTargetEl.hash);
 
-        await this.forumScrollAction(currentTargetEl, 500, () => browser.location.hash = "blog_content");
+        await this.forumScrollAction(scrollTargetEl, 500, () => browser.location.hash = "blog_content");
     }
 
     /**
      * @param {Event} ev
+     * @param {HTMLElement} currentTargetEl
      */
-    onShareArticle(ev) {
+    onShareArticle(ev, currentTargetEl) {
         let url = "";
         const blogPostTitle = document.querySelector("#o_wblog_post_name").textContent || "";
         const articleURL = browser.location.href;
-        if (ev.currentTarget.classList.contains("o_twitter")) {
+        if (currentTargetEl.classList.contains("o_twitter")) {
             const tweetText = _t("Amazing blog article: %(title)s! Check it live: %(url)s", {
                 title: blogPostTitle,
                 url: articleURL,
             });
             url = "https://twitter.com/intent/tweet?tw_p=tweetbutton&text=" + encodeURIComponent(tweetText);
-        } else if (ev.currentTarget.classList.contains("o_facebook")) {
+        } else if (currentTargetEl.classList.contains("o_facebook")) {
             url = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(articleURL);
-        } else if (ev.currentTarget.classList.contains("o_linkedin")) {
+        } else if (currentTargetEl.classList.contains("o_linkedin")) {
             url = "https://www.linkedin.com/sharing/share-offsite/?url=" + encodeURIComponent(articleURL);
         }
         window.open(url, "", "menubar=no, width=500, height=400");

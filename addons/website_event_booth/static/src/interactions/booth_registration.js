@@ -2,24 +2,24 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
 import { post } from "@web/core/network/http_service";
+import { rpc } from "@web/core/network/rpc";
 import { redirect } from "@web/core/utils/urls";
 
 export class BoothRegistration extends Interaction {
     static selector = ".o_wbooth_registration";
     dynamicContent = {
         "input[name='booth_category_id']": {
-            "t-on-change.prevent.withTarget": this.onChangeBoothType,
+            "t-on-change.prevent.withTarget": this.onBoothTypeChange,
         },
         ".form-check > input[type='checkbox']": {
-            "t-on-change.withTarget": this.onChangeBooth,
+            "t-on-change.withTarget": this.onBoothChange,
         },
         ".o_wbooth_registration_submit": {
-            "t-on-click.prevent": this.onClickSubmit,
+            "t-on-click.prevent": this.onSubmitClick,
         },
         ".o_wbooth_registration_confirm": {
-            "t-on-click.prevent.stop.withTarget": this.onClickConfirm,
+            "t-on-click.prevent.stop.withTarget": this.onConfirmClick,
         },
         ".o_wbooth_registration_error_section": {
             "t-att-class": () => ({
@@ -40,10 +40,10 @@ export class BoothRegistration extends Interaction {
 
         this.activeBoothCategoryId = false;
         this.selectedBoothIds = [];
-        this.selectedBoothCategory = this.el.querySelector('input[name="booth_category_id"]:checked');
+        this.selectedBoothCategory = this.el.querySelector("input[name='booth_category_id']:checked");
         if (this.selectedBoothCategory) {
-            const boothEl = this.el.querySelector('.o_wbooth_booths');
-            this.selectedBoothIds = boothEl.dataset.selectedBoothIds.split(',').map(Number);
+            const boothEl = this.el.querySelector(".o_wbooth_booths");
+            this.selectedBoothIds = boothEl.dataset.selectedBoothIds.split(",").map(Number);
             this.activeBoothCategoryId = this.selectedBoothCategory.value;
             this.updateAvailableBoothsUI();
         }
@@ -72,11 +72,11 @@ export class BoothRegistration extends Interaction {
     }
 
     updateBoothsList() {
-        const boothsElem = this.el.querySelector('.o_wbooth_booths');
+        const boothsElem = this.el.querySelector(".o_wbooth_booths");
         boothsElem.replaceChildren();
         this.renderAt("event_booth_checkbox_list", {
-            'event_booth_ids': this.boothCache[this.activeBoothCategoryId],
-            'selected_booth_ids': this.isFirstRender ? this.selectedBoothIds : [],
+            "event_booth_ids": this.boothCache[this.activeBoothCategoryId],
+            "selected_booth_ids": this.isFirstRender ? this.selectedBoothIds : [],
         }, boothsElem);
         this.isFirstRender = false;
     }
@@ -94,7 +94,7 @@ export class BoothRegistration extends Interaction {
             formControlEl.classList.remove("is-invalid");
             if (!formControlEl.checkValidity()) {
                 formControlEl.classList.add("is-invalid");
-                formErrors.push('invalidFormInputs');
+                formErrors.push("invalidFormInputs");
             }
         }
         this.updateErrorDisplay(formErrors);
@@ -120,13 +120,13 @@ export class BoothRegistration extends Interaction {
         this.inError = errors.length;
 
         const errorMessages = [];
-        if (errors.includes('invalidFormInputs')) {
+        if (errors.includes("invalidFormInputs")) {
             errorMessages.push(_t("Please fill out the form correctly."));
         }
-        if (errors.includes('boothError')) {
+        if (errors.includes("boothError")) {
             errorMessages.push(_t("Booth registration failed."));
         }
-        if (errors.includes('boothCategoryError')) {
+        if (errors.includes("boothCategoryError")) {
             errorMessages.push(_t("The booth category doesn't exist."));
         }
 
@@ -144,7 +144,7 @@ export class BoothRegistration extends Interaction {
      */
     async updateAvailableBoothsUI() {
         if (this.boothCache[this.activeBoothCategoryId] === undefined) {
-            const data = await this.waitFor(rpc('/event/booth_category/get_available_booths', {
+            const data = await this.waitFor(rpc("/event/booth_category/get_available_booths", {
                 event_id: this.eventId,
                 booth_category_id: this.activeBoothCategoryId,
             }));
@@ -161,7 +161,7 @@ export class BoothRegistration extends Interaction {
      * @param {Event} ev
      * @param {HTMLElement} currentTargetEl
      */
-    onChangeBoothType(ev, currentTargetEl) {
+    onBoothTypeChange(ev, currentTargetEl) {
         this.activeBoothCategoryId = parseInt(currentTargetEl.value);
         this.updateAvailableBoothsUI();
     }
@@ -170,12 +170,12 @@ export class BoothRegistration extends Interaction {
      * @param {Event} ev
      * @param {HTMLElement} currentTargetEl
      */
-    onChangeBooth(ev, currentTargetEl) {
+    onBoothChange(ev, currentTargetEl) {
         currentTargetEl.closest(".form-check").classList.remove("text-danger");
         this.isSelectionEmpty = !!this.countSelectedBooths().length;
     }
 
-    async onClickSubmit() {
+    async onSubmitClick() {
         const selectedBoothEls = this.el.querySelectorAll("input[name=event_booth_ids]:checked");
         const selectedBoothIds = [...selectedBoothEls].map((el) => parseInt(el.value));
         const data = await this.waitFor(this.checkBoothsAvailability(selectedBoothIds));
@@ -188,7 +188,7 @@ export class BoothRegistration extends Interaction {
      * @param {Event} ev
      * @param {HTMLElement} currentTargetEl
      */
-    async onClickConfirm(ev, currentTargetEl) {
+    async onConfirmClick(ev, currentTargetEl) {
         currentTargetEl.classList.add("disabled");
         currentTargetEl.disabled = true;
 
@@ -197,8 +197,8 @@ export class BoothRegistration extends Interaction {
             const formData = new FormData(formEl);
             const jsonResponse = await this.waitFor(post(`/event/${encodeURIComponent(this.el.dataset.eventId)}/booth/confirm`, formData));
             if (jsonResponse.success) {
-                this.el.querySelector('.o_wevent_booth_order_progress').remove();
-                const boothCategoryId = this.el.querySelector('input[name=booth_category_id]').value;
+                this.el.querySelector(".o_wevent_booth_order_progress").remove();
+                const boothCategoryId = this.el.querySelector("input[name=booth_category_id]").value;
                 this.renderAt("event_booth_registration_complete", {
                     booth_category_id: boothCategoryId,
                     event_id: this.eventId,

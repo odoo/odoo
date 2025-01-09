@@ -7,19 +7,19 @@ import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFrom
 export class ProfileEditor extends Interaction {
     static selector = ".o_wprofile_editor_form";
     dynamicContent = {
-        ".o_forum_file_upload": { "t-on-change.withTarget": this.onUploadFile },
-        ".o_forum_profile_pic_edit": { "t-on-click.prevent.withTarget": this.onClickEditProfilePic },
-        ".o_forum_profile_pic_clear": { "t-on-click.withTarget": this.onClickClearProfilePic },
+        ".o_forum_file_upload": { "t-on-change": this.onFileChange },
+        ".o_forum_profile_pic_edit": { "t-on-click.prevent": this.onEditProfilePicClick },
+        ".o_forum_profile_pic_clear": { "t-on-click": this.onClearProfilePicClick },
         ".o_forum_profile_bio_edit": {
             "t-on-click.prevent": () => this.isEditingBio = true,
-            "t-att-class": () => ({ "d-none": this.editingBio }),
+            "t-att-class": () => ({ "d-none": this.isEditingBio }),
         },
         ".o_forum_profile_bio_cancel_edit": {
             "t-on-click.prevent": () => this.isEditingBio = false,
-            "t-att-class": () => ({ "d-none": !this.editingBio }),
+            "t-att-class": () => ({ "d-none": !this.isEditingBio }),
         },
-        ".o_forum_profile_bio_form": { "t-att-class": () => ({ "d-none": !this.editingBio }) },
-        ".o_forum_profile_bio": { "t-att-class": () => ({ "d-none": this.editingBio, }) },
+        ".o_forum_profile_bio_form": { "t-att-class": () => ({ "d-none": !this.isEditingBio }) },
+        ".o_forum_profile_bio": { "t-att-class": () => ({ "d-none": this.isEditingBio, }) },
     };
 
     setup() {
@@ -41,49 +41,38 @@ export class ProfileEditor extends Interaction {
         if (this.textareaEl.attributes.placeholder) {
             this.options.placeholder = this.textareaEl.attributes.placeholder.value;
         }
+
+        this.fileUploadEl = this.el.querySelector(".o_forum_file_upload");
+        this.avatarImgEl = this.el.querySelector(".o_wforum_avatar_img");
     }
 
     async willStart() {
         await loadWysiwygFromTextarea(this, this.textareaEl, this.options);
     }
 
-    /**
-     * @param {Event} ev
-     * @param {HTMLElement} currentTargetEl
-     */
-    onClickEditProfilePic(ev, currentTargetEl) {
-        currentTargetEl.closest("form").querySelector(".o_forum_file_upload").click();
+    onEditProfilePicClick() {
+        this.fileUploadEl.click();
     }
 
-    /**
-     * @param {Event} ev
-     * @param {HTMLElement} currentTargetEl
-     */
-    onClickClearProfilePic(ev, currentTargetEl) {
-        const formEl = currentTargetEl.closest("form");
-        formEl.querySelector(".o_wforum_avatar_img").src = "/web/static/img/placeholder.png";
+    onClearProfilePicClick() {
+        this.fileUploadEl.value = null;
+        this.avatarImgEl.src = "/web/static/img/placeholder.png";
         const inputElement = document.createElement("input");
         inputElement.setAttribute("name", "clear_image");
         inputElement.setAttribute("id", "forum_clear_image");
         inputElement.setAttribute("type", "hidden");
-        this.insert(inputElement, formEl);
+        this.insert(inputElement);
     }
 
-    /**
-     * @param {Event} ev
-     * @param {HTMLElement} currentTargetEl
-     */
-    onUploadFile(ev, currentTargetEl) {
-        if (!currentTargetEl.files.length) {
+    onFileChange() {
+        if (!this.fileUploadEl.files.length) {
             return;
         }
-        const formEl = currentTargetEl.closest("form");
         const reader = new window.FileReader();
-        reader.readAsDataURL(currentTargetEl.files[0]);
-        this.addListener(reader, "load", (ev) => formEl.querySelector(".o_wforum_avatar_img").src = ev.target.result);
-        formEl.querySelector("#forum_clear_image")?.remove();
+        reader.readAsDataURL(this.fileUploadEl.files[0]);
+        this.addListener(reader, "load", (ev) => this.avatarImgEl.src = ev.target.result);
+        this.el.querySelector("#forum_clear_image")?.remove();
     }
-
 }
 
 registry

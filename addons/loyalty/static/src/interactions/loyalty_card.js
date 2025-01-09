@@ -5,13 +5,13 @@ import { rpc } from '@web/core/network/rpc';
 import { PortalLoyaltyCardDialog } from '../js/portal/loyalty_card_dialog/loyalty_card_dialog';
 
 export class LoyaltyCard extends Interaction {
-    static selector = ".o_loyalty_container";
+    static selector = ".o_loyalty_container .o_loyalty_card";
     dynamicContent = {
-        ".o_loyalty_card": { "t-on-click.withTarget": this.onClickLoyaltyCard },
+        _root: { "t-on-click": this.onLoyaltyCardClick },
     };
 
-    async onClickLoyaltyCard(ev, currentTargetEl) {
-        const data = await this.waitFor(rpc(`/my/loyalty_card/${currentTargetEl.dataset.card_id}/values`));
+    async onLoyaltyCardClick() {
+        const data = await this.waitFor(rpc(`/my/loyalty_card/${this.el.dataset.card_id}/values`));
         this.services.dialog.add(PortalLoyaltyCardDialog, data);
     }
 }

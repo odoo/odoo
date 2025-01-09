@@ -13,7 +13,7 @@ export class Follow extends Interaction {
             "t-att-class": () => ({ "d-none": false }),
         },
         ".js_follow_btn, .js_unfollow_btn": {
-            "t-on-click.prevent.withTarget": this.onClick,
+            "t-on-click.prevent.withTarget": this.onToggleFollowClick,
         },
     };
 
@@ -35,7 +35,7 @@ export class Follow extends Interaction {
         }
 
         const promises = [
-            rpc('/website_mail/is_follower', { records: records }),
+            rpc("/website_mail/is_follower", { records: records }),
             this.recaptcha.loadLibs(),
         ];
         const [data] = await this.waitFor(Promise.all(promises));
@@ -87,10 +87,10 @@ export class Follow extends Interaction {
      * @param {boolean} status
      */
     toggleEmailError(jsFollowEl, status) {
-        jsFollowEl.classList.toggle('o_has_error', status)
-        const formEls = jsFollowEl.querySelectorAll('.form-control, .form-select')
+        jsFollowEl.classList.toggle("o_has_error", status)
+        const formEls = jsFollowEl.querySelectorAll(".form-control, .form-select")
         for (const formEl of formEls) {
-            formEl.classList.toggle('is-invalid', status);
+            formEl.classList.toggle("is-invalid", status);
         }
     }
 
@@ -98,7 +98,7 @@ export class Follow extends Interaction {
      * @param {Event} ev
      * @param {HTMLElement} currentTargetEl
      */
-    async onClick(ev, currentTargetEl) {
+    async onToggleFollowClick(ev, currentTargetEl) {
         const jsFollowEl = currentTargetEl.closest(".js_follow");
         let email = jsFollowEl.querySelector(".js_follow_email");
 
@@ -124,7 +124,7 @@ export class Follow extends Interaction {
 
             const turnstileCaptcha = document.querySelector("input[name='turnstile_captcha']");
             const turnstile = turnstileCaptcha ? turnstileCaptcha.value : "";
-            
+
             const data = await this.waitFor(rpc("/website_mail/follow", {
                 "id": parseInt(jsFollowEl.dataset.id),
                 "object": jsFollowEl.dataset.object,

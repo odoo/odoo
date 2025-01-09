@@ -1,9 +1,9 @@
 import { Form } from "@website/snippets/s_website_form/form";
-import { uniqueId } from "@web/core/utils/functions";
 import { patch } from "@web/core/utils/patch";
+
+import { uniqueId } from "@web/core/utils/functions";
 import { session } from "@web/session";
 import { TurnStile } from "./turnstile";
-
 
 patch(Form.prototype, {
     /**
@@ -13,12 +13,12 @@ patch(Form.prototype, {
         super.start();
         TurnStile.clean(this.el);
         if (
-            !this.el.querySelector(".s_turnstile") &&
-            session.turnstile_site_key
+            !this.el.querySelector(".s_turnstile")
+            && session.turnstile_site_key
         ) {
             this.uniq = uniqueId("turnstile_");
             this.el.classList.add(this.uniq);
-            const {turnstileEl, script1El, script2El} = new TurnStile(
+            const { turnstileEl, script1El, script2El } = new TurnStile(
                 "website_form",
                 `.${this.uniq} .s_website_form_send,.${this.uniq} .o_website_form_send`,
             );

@@ -10,13 +10,13 @@ export class CRMPartnerAssign extends Interaction {
     static selector = "#wrapwrap";
     static selectorHas = ".interested_partner_assign_form, .desinterested_partner_assign_form, .opp-stage-button, .new_opp_form";
     dynamicContent = {
-        ".interested_partner_assign_confirm": { "t-on-click.prevent.stop": this.locked(this.onInterestedPartnerConfirm) },
-        ".desinterested_partner_assign_confirm": { "t-on-click.prevent.stop": this.locked(this.onDesinterestedPartnerConfirm) },
+        ".interested_partner_assign_confirm": { "t-on-click.prevent.stop": this.locked(this.onInterestedPartnerConfirmClick) },
+        ".desinterested_partner_assign_confirm": { "t-on-click.prevent.stop": this.locked(this.onDesinterestedPartnerConfirmClick) },
         ".opp-stage-button": { "t-on-click.withTarget": this.locked(this.onOppStageButtonClick) },
-        ".edit_contact_confirm": { "t-on-click.prevent.stop": this.locked(this.editContact) },
-        ".new_opp_confirm": { "t-on-click.prevent.stop": this.locked(this.createOpportunity) },
-        ".edit_opp_confirm": { "t-on-click.prevent.stop": this.locked(this.editOpportunity) },
-        ".edit_opp_form .next_activity": { "t-on-change": this.onChangeNextActivity },
+        ".edit_contact_confirm": { "t-on-click.prevent.stop": this.locked(this.onEditContactClick) },
+        ".new_opp_confirm": { "t-on-click.prevent.stop": this.locked(this.onCreateOppClick) },
+        ".edit_opp_confirm": { "t-on-click.prevent.stop": this.locked(this.onEditOppClick) },
+        ".edit_opp_form .next_activity": { "t-on-change": this.onNextActivityChange },
         ".edit_opp_form .activity_date_deadline": { "t-att-value": () => formatDate(this.dateNextActivity) },
         "#new-opp-dialog .contact_name": { "t-on-change": (ev) => this.contactName = ev.currentTarget.value.trim() },
         ".title": { "t-att-value": (el) => this.contactName && !el.value.trim() ? _t("%s's Opportunity", this.contactName) : "" },
@@ -28,25 +28,33 @@ export class CRMPartnerAssign extends Interaction {
         },
         ".interested_partner_assign_form .error_partner_assign_interested": {
             "t-att-style": () => ({
-                "display": this.confirmationFailed ? "block" : undefined,
+                "display": this.confirmationFailed ? "block" : "",
             }),
         },
     };
 
+    setup() {
+        this.newOppFormEl = this.el.querySelector(".new_opp_form");
+        this.editOppFormEl = this.el.querySelector(".edit_opp_form");
+        this.contactFormEl = this.el.querySelector(".edit_contact_form");
+        this.interestedPartnerFormEl = this.el.querySelector(".interested_partner_assign_form");
+        this.desinterestedPartnerFormEl = this.el.querySelector(".desinterested_partner_assign_form");
+    }
+
     async confirmInterestedPartner() {
         await this.services.orm.call("crm.lead", "partner_interested", [
-            [parseInt(this.el.querySelector(".interested_partner_assign_form .assign_lead_id").value)],
-            this.el.querySelector(".interested_partner_assign_form .comment_interested").value,
+            [parseInt(this.interestedPartnerFormEl.querySelector(".assign_lead_id").value)],
+            this.interestedPartnerFormEl.querySelector(".comment_interested").value,
         ]);
         window.location.href = "/my/leads";
     }
 
-    async onDesinterestedPartnerConfirm() {
+    async onDesinterestedPartnerConfirmClick() {
         await this.services.orm.call("crm.lead", "partner_desinterested", [
-            [parseInt(this.el.querySelector(".desinterested_partner_assign_form .assign_lead_id").value)],
-            this.el.querySelector(".desinterested_partner_assign_form .comment_desinterested").value,
-            this.el.querySelector(".desinterested_partner_assign_form .contacted_desinterested").checked,
-            this.el.querySelector(".desinterested_partner_assign_form .customer_mark_spam").checked,
+            [parseInt(this.desinterestedPartnerFormEl.querySelector(".assign_lead_id").value)],
+            this.desinterestedPartnerFormEl.querySelector(".comment_desinterested").value,
+            this.desinterestedPartnerFormEl.querySelector(".contacted_desinterested").checked,
+            this.desinterestedPartnerFormEl.querySelector(".customer_mark_spam").checked,
         ]);
         window.location.href = "/my/leads";
     }
@@ -58,30 +66,30 @@ export class CRMPartnerAssign extends Interaction {
         window.location.reload();
     }
 
-    async editContact() {
+    async onEditContactClick() {
         await this.services.orm.call("crm.lead", "update_contact_details_from_portal", [
-            [parseInt(this.el.querySelector(".edit_contact_form .opportunity_id").value)],
+            [parseInt(this.contactFormEl.querySelector(".opportunity_id").value)],
             {
-                partner_name: this.el.querySelector(".edit_contact_form .partner_name").value,
-                phone: this.el.querySelector(".edit_contact_form .phone").value,
-                mobile: this.el.querySelector(".edit_contact_form .mobile").value,
-                email_from: this.el.querySelector(".edit_contact_form .email_from").value,
-                street: this.el.querySelector(".edit_contact_form .street").value,
-                street2: this.el.querySelector(".edit_contact_form .street2").value,
-                city: this.el.querySelector(".edit_contact_form .city").value,
-                zip: this.el.querySelector(".edit_contact_form .zip").value,
-                state_id: parseInt(this.el.querySelector(".edit_contact_form .state_id").selectedOptions[0].value),
-                country_id: parseInt(this.el.querySelector(".edit_contact_form .country_id").selectedOptions[0].value),
+                partner_name: this.contactFormEl.querySelector(".partner_name").value,
+                phone: this.contactFormEl.querySelector(".phone").value,
+                mobile: this.contactFormEl.querySelector(".mobile").value,
+                email_from: this.contactFormEl.querySelector(".email_from").value,
+                street: this.contactFormEl.querySelector(".street").value,
+                street2: this.contactFormEl.querySelector(".street2").value,
+                city: this.contactFormEl.querySelector(".city").value,
+                zip: this.contactFormEl.querySelector(".zip").value,
+                state_id: parseInt(this.contactFormEl.querySelector(".state_id").selectedOptions[0].value),
+                country_id: parseInt(this.contactFormEl.querySelector(".country_id").selectedOptions[0].value),
             },
         ]);
         window.location.reload();
     }
 
-    async createOpportunity() {
+    async onCreateOppClick() {
         const response = await this.services.orm.call("crm.lead", "create_opp_portal", [{
-            contact_name: this.el.querySelector(".new_opp_form .contact_name").value,
-            title: this.el.querySelector(".new_opp_form .title").value,
-            description: this.el.querySelector(".new_opp_form .description").value,
+            contact_name: this.newOppFormEl.querySelector(".contact_name").value,
+            title: this.newOppFormEl.querySelector(".title").value,
+            description: this.newOppFormEl.querySelector(".description").value,
         }]);
         if (response.errors) {
             this.el.querySelector("#new-opp-dialog .alert")?.remove();
@@ -95,7 +103,7 @@ export class CRMPartnerAssign extends Interaction {
         }
     }
 
-    async editOpportunity() {
+    async onEditOppClick() {
         const checkAndParseDate = function (value) {
             var date = parseDate(value);
             if (!date.isValid || date.year < 1900) {
@@ -105,23 +113,23 @@ export class CRMPartnerAssign extends Interaction {
         }
 
         await this.services.orm.call("crm.lead", "update_lead_portal", [
-            [parseInt(this.el.querySelector(".edit_opp_form .opportunity_id").value)],
+            [parseInt(this.editOppFormEl.querySelector(".opportunity_id").value)],
             {
-                date_deadline: checkAndParseDate(this.el.querySelector(".edit_opp_form .date_deadline").value),
-                expected_revenue: parseFloat(this.el.querySelector(".edit_opp_form .expected_revenue").value),
-                probability: parseFloat(this.el.querySelector(".edit_opp_form .probability").value),
-                activity_type_id: parseInt(this.el.querySelector(".edit_opp_form .next_activity").selectedOptions[0].getAttribute("data")),
-                activity_summary: this.el.querySelector(".edit_opp_form .activity_summary").value,
-                activity_date_deadline: checkAndParseDate(this.el.querySelector(".edit_opp_form .activity_date_deadline").value),
+                date_deadline: checkAndParseDate(this.editOppFormEl.querySelector(".date_deadline").value),
+                expected_revenue: parseFloat(this.editOppFormEl.querySelector(".expected_revenue").value),
+                probability: parseFloat(this.editOppFormEl.querySelector(".probability").value),
+                activity_type_id: parseInt(this.editOppFormEl.querySelector(".next_activity").selectedOptions[0].getAttribute("data")),
+                activity_summary: this.editOppFormEl.querySelector(".activity_summary").value,
+                activity_date_deadline: checkAndParseDate(this.editOppFormEl.querySelector(".activity_date_deadline").value),
                 priority: this.el.querySelector("input[name='PriorityRadioOptions']:checked").value,
             },
         ]);
         window.location.reload();
     }
 
-    async onInterestedPartnerConfirm() {
-        const comment = this.el.querySelector(".interested_partner_assign_form .comment_interested").value;
-        const contacted = this.el.querySelector(".interested_partner_assign_form .contacted_interested").checked;
+    async onInterestedPartnerConfirmClick() {
+        const comment = this.interestedPartnerFormEl.querySelector(".comment_interested").value;
+        const contacted = this.interestedPartnerFormEl.querySelector(".contacted_interested").checked;
         this.confirmationFailed = !(comment && contacted);
         if (!this.confirmationFailed) {
             await this.confirmInterestedPartner();
@@ -132,10 +140,10 @@ export class CRMPartnerAssign extends Interaction {
         await this.changeOppStage(parseInt(currentTargetEl.getAttribute("opp")), parseInt(currentTargetEl.getAttribute("data")));
     }
 
-    onChangeNextActivity() {
-        const selectedEl = this.el.querySelector(".edit_opp_form .next_activity").selectedOptions[0];
+    onNextActivityChange() {
+        const selectedEl = this.editOppFormEl.querySelector(".next_activity").selectedOptions[0];
         if (selectedEl.getAttribute("activity_summary")) {
-            this.el.querySelector(".edit_opp_form .activity_summary").value = selectedEl.getAttribute("activity_summary");
+            this.editOppFormEl.querySelector(".activity_summary").value = selectedEl.getAttribute("activity_summary");
         }
         if (selectedEl.getAttribute("delay_count")) {
             const delayCount = parseInt(selectedEl.getAttribute("delay_count"));

@@ -7,7 +7,7 @@ export class AccountSidebar extends Sidebar {
     static selector = ".o_portal_invoice_sidebar";
     dynamicContent = {
         _window: { "t-on-resize": this.updateIframeSize },
-        ".o_portal_invoice_print": { "t-on-click.prevent.withTarget": this.onClickPrint },
+        ".o_portal_invoice_print": { "t-on-click.prevent.withTarget": this.onInvoicePrintClick },
     };
 
     setup() {
@@ -49,7 +49,7 @@ export class AccountSidebar extends Sidebar {
     /**
      * @param {MouseEvent} ev
      */
-    onClickPrint(ev, currentTargetEl) {
+    onInvoicePrintClick(ev, currentTargetEl) {
         this.printIframeContent(currentTargetEl.getAttribute("href"));
     }
 }

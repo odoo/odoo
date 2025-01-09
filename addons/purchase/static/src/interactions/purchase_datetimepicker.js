@@ -7,7 +7,7 @@ export class PurchaseDatetimePicker extends Interaction {
     static selector = ".o-purchase-datetimepicker";
 
     start() {
-        this.disableDateTimePicker = this.services.datetime_picker
+        this.registerCleanup(this.services.datetime_picker
             .create({
                 target: this.el,
                 onChange: (newDate) => {
@@ -22,12 +22,7 @@ export class PurchaseDatetimePicker extends Interaction {
                     type: "date",
                     value: luxon.DateTime.fromISO(this.el.dataset.value),
                 },
-            })
-            .enable();
-    }
-
-    destroy() {
-        this.disableDateTimePicker();
+            }).enable());
     }
 }
 

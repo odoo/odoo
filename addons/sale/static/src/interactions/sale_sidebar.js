@@ -15,7 +15,7 @@ export class SaleSidebar extends Sidebar {
     start() {
         super.start();
         const spyWatcheElement = this.el.querySelector("[data-id='portal_sidebar']");
-        this.setElementId(spyWatcheElement);
+        this.setElementId("", spyWatcheElement);
         // Nav Menu ScrollSpy
         this.generateMenu();
         // After signature, automatically open the popup for payment
@@ -84,7 +84,7 @@ export class SaleSidebar extends Sidebar {
                             const ulEl = document.createElement("ul");
                             ulEl.classList.add("nav", "flex-column");
 
-                            this.insert(ulEl, liEl);
+                            this.insert(ulEl, lastLI);
 
                             lastUL = ulEl;
                         }

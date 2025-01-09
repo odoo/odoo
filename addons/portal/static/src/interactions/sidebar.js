@@ -57,10 +57,10 @@ export class Sidebar extends Interaction {
      */
     extractText(quoteHeaderEl) {
         const rawText = [];
-        for (const el of quoteHeaderEl.children) {
-            const text = el.innerText.trim();
-            const tagName = el.tagName.toLowerCase();
-            if (text && this.authorizedTextTag.includes(tagName.toLowerCase())) {
+        for (const el of quoteHeaderEl.childNodes) {
+            const text = el.textContent.trim();
+            const tagName = el.tagName?.toLowerCase();
+            if (text && (!tagName || this.authorizedTextTag.includes(tagName))) {
                 rawText.push(text);
             }
         }

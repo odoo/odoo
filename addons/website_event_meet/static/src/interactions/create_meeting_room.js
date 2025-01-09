@@ -6,10 +6,10 @@ import { rpc } from "@web/core/network/rpc";
 export class CreateMeetingRoom extends Interaction {
     static selector = ".o_wevent_create_room_button";
     dynamicContent = {
-        _root: { "t-on-click": this.onClickCreate }
+        _root: { "t-on-click": this.onCreateRoomClick }
     };
 
-    async onClickCreate() {
+    async onCreateRoomClick() {
         if (!this.createModalEl) {
             const langs = await this.waitFor(rpc("/event/active_langs"));
             if (langs) {

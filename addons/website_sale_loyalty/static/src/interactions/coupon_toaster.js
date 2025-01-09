@@ -6,8 +6,8 @@ export class CouponToaster extends Interaction {
 
     start() {
         let options = {};
-        const titleEl = this.el.querySelector('.coupon-message-title');
-        const contentEl = this.el.querySelector('.coupon-message-content');
+        const titleEl = this.el.querySelector(".coupon-message-title");
+        const contentEl = this.el.querySelector(".coupon-message-content");
         let message = null;
 
         if (contentEl) {
@@ -19,12 +19,12 @@ export class CouponToaster extends Interaction {
             message = titleEl.innerHTML;
         }
 
-        if (this.el.classList.contains('coupon-info-message')) {
-            this.services.notification.add(message, Object.assign({ type: 'success' }, options));
-        } else if (this.el.classList.contains('coupon-error-message')) {
-            this.services.notification.add(message, Object.assign({ type: 'danger' }, options));
-        } else if (this.el.classList.contains('coupon-warning-message')) {
-            this.services.notification.add(message, Object.assign({ type: 'warning' }, options));
+        if (this.el.classList.contains("coupon-info-message")) {
+            this.services.notification.add(message, Object.assign({ type: "success" }, options));
+        } else if (this.el.classList.contains("coupon-error-message")) {
+            this.services.notification.add(message, Object.assign({ type: "danger" }, options));
+        } else if (this.el.classList.contains("coupon-warning-message")) {
+            this.services.notification.add(message, Object.assign({ type: "warning" }, options));
         }
     }
 }

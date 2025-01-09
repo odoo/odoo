@@ -15,7 +15,7 @@ export class MailGroupMessage extends Interaction {
             "t-att-class": () => ({ "d-none": !this.isShown }),
         },
         ".o_mg_link_content": { "t-att-class": () => ({ "d-none": this.isShown }) },
-        "button.o_mg_read_more": { "t-on-click": this.onClickReadMore },
+        "button.o_mg_read_more": { "t-on-click": this.onReadMoreClick },
     };
 
     setup() {
@@ -31,8 +31,8 @@ export class MailGroupMessage extends Interaction {
         readMore.addEventListener("click", () => quoted.classList.toggle("visible"));
     }
 
-    async onClickReadMore(ev) {
-        const data = await this.waitFor(rpc(ev.target.getAttribute('href'), {
+    async onReadMoreClick(ev) {
+        const data = await this.waitFor(rpc(ev.target.getAttribute("href"), {
             last_displayed_id: ev.target.dataset.listDisplayedId,
         }));
         if (data) {
@@ -45,7 +45,7 @@ export class MailGroupMessage extends Interaction {
                     this.insert(newMessage, lastMessage, "afterend");
                     lastMessage = newMessage;
                 }
-                this.insert(data.querySelector('.o_mg_read_more').parentElement, threadContainer);
+                this.insert(data.querySelector(".o_mg_read_more").parentElement, threadContainer);
             }
             ev.target.parentElement.remove();
         }

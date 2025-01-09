@@ -20,10 +20,10 @@ export class Quiz extends Interaction {
             "t-on-click.prevent.withTarget": this.onAnswerClick,
         },
         ".o_quiz_js_quiz_submit": {
-            "t-on-click": this.submitQuiz,
+            "t-on-click": this.onSubmitQuizClick,
         },
         ".o_quiz_js_quiz_reset": {
-            "t-on-click": this.onClickReset,
+            "t-on-click": this.onResetQuizClick,
         },
         ".o_quiz_js_quiz_question": {
             "t-att-class": () => ({
@@ -74,15 +74,15 @@ export class Quiz extends Interaction {
     }
 
     alertShow(alertCode) {
-        let message = _t('There was an error validating this quiz.');
-        if (alertCode === 'quiz_incomplete') {
-            message = _t('All questions must be answered!');
-        } else if (alertCode === 'quiz_done') {
-            message = _t('This quiz is already done. Retaking it is not possible.');
+        let message = _t("There was an error validating this quiz.");
+        if (alertCode === "quiz_incomplete") {
+            message = _t("All questions must be answered!");
+        } else if (alertCode === "quiz_done") {
+            message = _t("This quiz is already done. Retaking it is not possible.");
         }
         this.services.notification.add(message, {
-            type: 'warning',
-            title: _t('Quiz validation error'),
+            type: "warning",
+            title: _t("Quiz validation error"),
             sticky: true,
         });
     }
@@ -108,14 +108,14 @@ export class Quiz extends Interaction {
                 }
                 if (answerEl.querySelector("input[type=radio]").checked) {
                     if (answer.is_correct) {
-                    answerEl.querySelector("i.fa-check-circle").classList.remove("d-none");
+                        answerEl.querySelector("i.fa-check-circle").classList.remove("d-none");
                     } else {
                         answerEl.querySelector("label input").checked = false;
                         answerEl.querySelector("i.fa-times-circle").classList.remove("d-none");
                     }
                     if (answer.awarded_points > 0) {
                         this.renderAt("quiz.badge", {
-                           "answer": answer, 
+                            "answer": answer,
                         }, answerEl);
                     }
                 } else {
@@ -166,7 +166,7 @@ export class Quiz extends Interaction {
      * Submit a quiz and get the correction. It will display messages
      * according to quiz result.
      */
-    async submitQuiz() {
+    async onSubmitQuizClick() {
         const data = await this.waitFor(rpc("/event_track/quiz/submit", {
             event_id: this.track.eventId,
             track_id: this.track.id,
@@ -227,7 +227,7 @@ export class Quiz extends Interaction {
      * Resets the completion of the track so the user can take
      * the quiz again
      */
-    async onClickReset() {
+    async onResetQuizClick() {
         await this.waitFor(rpc("/event_track/quiz/reset", {
             event_id: this.track.eventId,
             track_id: this.track.id

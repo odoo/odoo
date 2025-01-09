@@ -1,9 +1,8 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
-import { user } from "@web/core/user";
-
 import { handleCheckIdentity } from "@portal/js/portal_security";
+import { user } from "@web/core/user";
 
 export class RevokeAllTrustedDevices extends Interaction {
     static selector = "#auth_totp_portal_revoke_all_devices";
