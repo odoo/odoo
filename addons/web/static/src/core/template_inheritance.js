@@ -1,3 +1,10 @@
+function setTranslationContext(node, translationCtx) {
+    if (!translationCtx) {
+        return; // do that another way?
+    }
+    node.setAttribute?.("t-translation-context", translationCtx); // remove ?  ???
+}
+
 const RSTRIP_REGEXP = /(?=\n[ \t]*$)/;
 /**
  * The child nodes of operation represent new content to create before target or
@@ -6,9 +13,10 @@ const RSTRIP_REGEXP = /(?=\n[ \t]*$)/;
  * Note: we assume that target has a parent element.
  * @param {Element} target
  * @param {Element} operation
+ * @param {string} [translationCtx=""]
  */
-function addBefore(target, operation) {
-    const nodes = getNodes(target, operation);
+function addBefore(target, operation, translationCtx = "") {
+    const nodes = getNodes(target, operation, translationCtx);
     if (nodes.length === 0) {
         return;
     }
@@ -22,6 +30,7 @@ function addBefore(target, operation) {
         }
         if (text2 && nodes.some((n) => n.nodeType !== Node.TEXT_NODE)) {
             const textNode = document.createTextNode(text2);
+            setTranslationContext(textNode, translationCtx);
             target.before(textNode);
             if (textNode.previousSibling.nodeType === Node.TEXT_NODE) {
                 mergeTextNodes(textNode.previousSibling, textNode);
@@ -58,19 +67,19 @@ function getXpath(operation) {
             const templateName = parent.getAttribute("t-name") || parent.getAttribute("t-inherit");
             console.warn(
                 `Error-prone use of @class in template "${templateName}" (or one of its inheritors).` +
-                " Use the hasclass(*classes) function to filter elements by their classes"
+                    " Use the hasclass(*classes) function to filter elements by their classes"
             );
         }
     }
     // hasclass does not exist in XPath 1.0 but is a custom function defined server side (see _hasclass) usable in lxml.
     // Here we have to replace it by a complex condition (which is not nice).
     // Note: we assume that classes do not contain the 2 chars , and )
-    return xpath.replaceAll(HASCLASS_REGEXP, (_, capturedGroup) => {
-        return capturedGroup
+    return xpath.replaceAll(HASCLASS_REGEXP, (_, capturedGroup) =>
+        capturedGroup
             .split(",")
             .map((c) => `contains(concat(' ', @class, ' '), ' ${c.trim().slice(1, -1)} ')`)
-            .join(" and ");
-    });
+            .join(" and ")
+    );
 }
 
 /**
@@ -118,16 +127,19 @@ function getElement(element, operation) {
 /**
  * @param {Element} element
  * @param {Element} operation
+ * @param {string} [translationCtx=""]
  * @returns {Node[]}
  */
-function getNodes(element, operation) {
+function getNodes(element, operation, translationCtx = "") {
     const nodes = [];
     for (const childNode of operation.childNodes) {
         if (childNode.tagName === "xpath" && childNode.getAttribute?.("position") === "move") {
             const node = getElement(element, childNode);
+            setTranslationContext(node, translationCtx);
             removeNode(node);
             nodes.push(node);
         } else {
+            setTranslationContext(childNode, translationCtx);
             nodes.push(childNode);
         }
     }
@@ -268,6 +280,7 @@ export function applyInheritance(root, operations, url = "") {
         const target = getElement(root, operation);
         const position = operation.getAttribute("position") || "inside";
 
+        const translationCtx = url.split("/")[1] ?? ""; // = addon
         if (odoo.debug && url) {
             const attributes = [...operation.attributes].map(
                 ({ name, value }) =>
@@ -295,19 +308,19 @@ export function applyInheritance(root, operations, url = "") {
             case "inside": {
                 const sentinel = document.createElement("sentinel");
                 target.append(sentinel);
-                addBefore(sentinel, operation);
+                addBefore(sentinel, operation, translationCtx);
                 removeNode(sentinel);
                 break;
             }
             case "after": {
                 const sentinel = document.createElement("sentinel");
                 target.after(sentinel);
-                addBefore(sentinel, operation);
+                addBefore(sentinel, operation, translationCtx);
                 removeNode(sentinel);
                 break;
             }
             case "before": {
-                addBefore(target, operation);
+                addBefore(target, operation, translationCtx);
                 break;
             }
             default:
