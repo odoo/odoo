@@ -1461,7 +1461,7 @@ export const rtcService = {
                 if (!rtc.selfSession) {
                     return;
                 }
-                if (rtc.serverInfo?.url === serverInfo?.url) {
+                if (rtc.serverInfo?.channelUUID === serverInfo.channelUUID) {
                     // no reason to swap if the server is the same, if at some point we want to force a swap
                     // there should be an explicit flag in the event payload.
                     return;
