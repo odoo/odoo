@@ -4,10 +4,12 @@
  * Most of the time the conversion is simply to replace - with _.
  * Example: fr-BE → fr_BE
  *
- * Exception: Serbian can be written in both Latin and Cyrillic scripts
- * interchangeably, therefore its locale includes a special modifier
- * to indicate which script to use.
- * Example: sr-Latn → sr@latin
+ * Exceptions:
+ *  - Serbian can be written in both Latin and Cyrillic scripts interchangeably,
+ *  therefore its locale includes a special modifier to indicate which script to
+ *  use. Example: sr-Latn → sr@latin
+ *  - Tagalog/Filipino: The "fil" locale is replaced by "tl" for compatibility
+ *  with the Python side (where the "fil" locale doesn't exist).
  *
  * BCP 47 (JS):
  *  language[-extlang][-script][-region][-variant][-extension][-privateuse]
@@ -25,6 +27,10 @@ export function jsToPyLocale(locale) {
     }
     try {
         var { language, script, region } = new Intl.Locale(locale);
+        // new Intl.Locale("tl-PH") produces fil-PH, which one might not expect
+        if (language === "fil") {
+            language = "tl";
+        }
     } catch {
         return locale;
     }
