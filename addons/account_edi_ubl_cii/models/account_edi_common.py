@@ -34,6 +34,10 @@ UOM_TO_UNECE_CODE = {
     'uom.product_uom_gal': 'GLL',
     'uom.product_uom_cubic_inch': 'INQ',
     'uom.product_uom_cubic_foot': 'FTQ',
+    'uom.uom_square_meter': 'MTK',
+    'uom.uom_square_foot': 'FTK',
+    'uom.product_uom_yard': 'YRD',
+    'uom.product_uom_millimeter': 'MMT',
 }
 
 # -------------------------------------------------------------------------
