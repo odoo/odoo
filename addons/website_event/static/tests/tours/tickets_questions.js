@@ -27,6 +27,10 @@ registry.category("web_tour.tours").add("test_tickets_questions", {
             run: "click",
         },
         {
+            content: "Wait the modal is shown before continue",
+            trigger: ".modal.modal_shown.show form[id=attendee_registration]",
+        },
+        {
             trigger: 'div.o_wevent_registration_question_global select[name*="0-simple_choice"]',
             run: "selectByLabel A friend",
         },
