@@ -22,27 +22,26 @@ export const notificationPermissionService = {
     },
 
     /**
+     *
+     * @returns {"prompt" | "granted" | "denied"}
+     * @private
+     */
+    _queryPermission() {
+        if (isIosApp() || isAndroidApp()) {
+            return "denied";
+        }
+        return this._normalizePermission(browser.Notification?.permission);
+    },
+
+    /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services
      */
     async start(env, services) {
         const notification = services.notification;
-        let permission;
-        try {
-            permission = await browser.navigator?.permissions?.query({
-                name: "notifications",
-            });
-        } catch {
-            // noop
-        }
         const state = reactive({
             /** @type {"prompt" | "granted" | "denied"} */
-            permission:
-                isIosApp() || isAndroidApp()
-                    ? "denied"
-                    : this._normalizePermission(
-                          permission?.state ?? browser.Notification?.permission
-                      ),
+            permission: this._queryPermission(),
             requestPermission: async () => {
                 if (browser.Notification && state.permission === "prompt") {
                     state.permission = this._normalizePermission(
@@ -62,9 +61,20 @@ export const notificationPermissionService = {
                 }
             },
         });
-        if (permission) {
-            permission.addEventListener("change", () => (state.permission = permission.state));
+
+        try {
+            const permission = await browser.navigator?.permissions?.query({
+                name: "notifications",
+            });
+            if (permission) {
+                permission.addEventListener("change", () => {
+                    state.permission = this._queryPermission();
+                });
+            }
+        } catch {
+            // noop
         }
+
         return state;
     },
 };
