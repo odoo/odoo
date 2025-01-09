@@ -60,6 +60,8 @@
             'website_blog/static/src/interactions/**/*',
             ('remove', 'website_blog/static/src/interactions/**/*.edit.js'),
             'website_blog/static/src/scss/website_blog.scss',
+            'website_blog/static/src/snippets/**/*.js',
+            ('remove', 'website_blog/static/src/snippets/**/options.js'),
         ],
         'website.assets_edit_frontend': [
             'website_blog/static/src/**/*.edit.js',
