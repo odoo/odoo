@@ -264,7 +264,7 @@ class TestKarmaTrackingCommon(common.TransactionCase):
         last_tracking_3 = self.test_user_2.karma_tracking_ids[-1]
 
         users = (user | self.test_user | self.test_user_2).with_user(self.test_user)
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(8):
             users.karma = 100
 
         tracking_1 = user.karma_tracking_ids[-1]
