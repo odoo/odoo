@@ -152,7 +152,7 @@
             <field name="domain_force">['|', ('share', '=', False), ('company_ids', 'in', company_ids)]</field>
         </record>
 
-        <record id="res_users_rule" model="ir.rule">
+        <record id="res_users_rule_portal" model="ir.rule">
             <field name="name">portal user access</field>
             <field name="model_id" ref="model_res_users"/>
             <field name="groups" eval="[Command.set([ref('base.group_portal')])]"/>
