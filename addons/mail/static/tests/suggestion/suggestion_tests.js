@@ -312,10 +312,10 @@ QUnit.test("Current user that is a follower should be considered as such", async
     });
     await contains(".o-mail-Composer-suggestion", {
         text: "Person B(b@test.com)",
-        before: [".o-mail-Composer-suggestion", { text: "OdooBot" }],
+        before: [".o-mail-Composer-suggestion", { text: "Bot" }],
     });
     await contains(".o-mail-Composer-suggestion", {
-        text: "OdooBot",
+        text: "Bot",
         before: [".o-mail-Composer-suggestion", { text: "Person A(a@test.com)" }],
     });
 });

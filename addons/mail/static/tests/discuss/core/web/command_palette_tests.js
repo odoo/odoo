@@ -138,6 +138,6 @@ QUnit.test("only partners with dedicated users will be displayed in command pale
     await insertText(".o_command_palette_search input", "@");
     advanceTime(commandSetupRegistry.get("@").debounceDelay);
     await contains(".o_command_name", { text: "Mitchell Admin" });
-    await contains(".o_command_name", { text: "OdooBot" });
+    await contains(".o_command_name", { text: "Bot" });
     await contains(".o_command_name", { text: "test user", count: 0 });
 });

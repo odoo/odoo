@@ -1329,7 +1329,7 @@ QUnit.test(
         await contains(".o-mail-Discuss-header .o-mail-ImStatus [title='Idle']");
         await click(".o-mail-DiscussSidebarChannel", { text: "Robert Fired" });
         await contains(".o-mail-Discuss-header .o-mail-ImStatus [title='No IM status available']");
-        await click(".o-mail-DiscussSidebarChannel", { text: "OdooBot" });
+        await click(".o-mail-DiscussSidebarChannel", { text: "Bot" });
         await contains(".o-mail-Discuss-header .o-mail-ImStatus [title='Bot']");
     }
 );

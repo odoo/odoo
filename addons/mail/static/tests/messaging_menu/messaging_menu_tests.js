@@ -62,7 +62,7 @@ QUnit.test("counter is taking into account failure notification", async () => {
     await contains(".o-mail-MessagingMenu-counter", { text: "1" });
 });
 
-QUnit.test("rendering with OdooBot has a request (default)", async (assert) => {
+QUnit.test("rendering with Bot has a request (default)", async (assert) => {
     patchBrowserNotification("default");
     await start();
     await contains(".o-mail-MessagingMenu-counter");
@@ -74,10 +74,10 @@ QUnit.test("rendering with OdooBot has a request (default)", async (assert) => {
             .data("src")
             .includes("/web/image?field=avatar_128&id=2&model=res.partner")
     );
-    await contains(".o-mail-NotificationItem", { text: "OdooBot has a request" });
+    await contains(".o-mail-NotificationItem", { text: "Bot has a request" });
 });
 
-QUnit.test("rendering without OdooBot has a request (denied)", async () => {
+QUnit.test("rendering without Bot has a request (denied)", async () => {
     patchBrowserNotification("denied");
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -85,7 +85,7 @@ QUnit.test("rendering without OdooBot has a request (denied)", async () => {
     await contains(".o-mail-NotificationItem", { count: 0 });
 });
 
-QUnit.test("rendering without OdooBot has a request (accepted)", async () => {
+QUnit.test("rendering without Bot has a request (accepted)", async () => {
     patchBrowserNotification("granted");
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -116,7 +116,7 @@ QUnit.test("respond to notification prompt (granted)", async () => {
     });
 });
 
-QUnit.test("no 'OdooBot has a request' in mobile app", async () => {
+QUnit.test("no 'Bot has a request' in mobile app", async () => {
     patchBrowserNotification("default");
     // simulate Android Odoo App
     patchWithCleanup(browser.navigator, {
@@ -166,7 +166,7 @@ QUnit.test("rendering with PWA installation request", async (assert) => {
     );
     assert.strictEqual(
         target.querySelector(".o-mail-NotificationItem-name").textContent,
-        "OdooBot has a suggestion"
+        "Bot has a suggestion"
     );
     assert.strictEqual(
         target.querySelector(".o-mail-NotificationItem-text").textContent,
@@ -1121,5 +1121,5 @@ QUnit.test("can open messaging menu even if messaging is not initialized", async
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-DiscussSystray", { text: "No conversation yet..." });
     def.resolve();
-    await contains(".o-mail-NotificationItem", { text: "OdooBot has a request" });
+    await contains(".o-mail-NotificationItem", { text: "Bot has a request" });
 });
