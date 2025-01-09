@@ -1,0 +1,140 @@
+.s_countdown_inline {
+    font-variant-numeric: tabular-nums;
+
+    .o_skeletton {
+        display: block;
+
+        &:before {
+            content: '\00a0';
+        }
+    }
+
+    .o_colored_item {
+        border: $border-width solid $border-color;
+    }
+
+    // Defines color classes based on $theme-colors
+    @each $-state, $-value in $theme-colors {
+        &.o_countdown_#{$-state} {
+            .o_colored_item {
+                border-color: $-value;
+                background: $-value;
+                color: color-contrast($-value);
+            }
+
+            &.o_countdown_subtle {
+                .o_colored_item {
+                    border-color: var(--#{$prefix}#{$-state}-border-subtle);
+                    background: var(--#{$prefix}#{$-state}-bg-subtle);
+                    color: var(--#{$prefix}#{$-state}-text-emphasis);
+
+                    a {
+                        color: var(--#{$prefix}#{$-state}-text-emphasis);
+                    }
+                }
+            }
+
+            .o_colored_text {
+                color: $-value;
+            }
+        }
+    }
+
+    .o_count_item {
+        display: inline-flex;
+    }
+
+    .o_count_item_nbs {
+        // Force to keep ltr numbers
+        direction: ltr #{"/* rtl:ltr */"};
+    }
+
+    &.o_label_compact .o_count_item_label .o_other_letters, &.o_label_none .o_count_item_label {
+        display: none;
+    }
+
+    &.o_count_monospace .o_count_item_nbs {
+        font-family: $font-family-monospace;
+    }
+
+    // Hide unnecessary separator when changing the display option
+    .o_count_item:where(:has( ~ .o_count_item.d-none)):not(:has(~.o_count_item:not(.d-none))) ~ .o_count_separator {
+        display: none;
+    }
+
+    &:where(:not(.o_label_compact)) {
+        .o_count_inline_text {
+            .o_count_item_label {
+                margin-left: map-get($spacers, 1);
+            }
+        }
+    }
+
+    .o_count_inline_text {
+        .o_count_item_label {
+            text-transform: lowercase;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+
+        // Use "," as separator
+        .o_count_item:where(:not(:last-child):not(:has( + .d-none))):after {
+            content: ',\00a0';
+        }
+    }
+
+    &.o_label_none {
+        .o_count_inline_text {
+            .o_count_item {
+                // Replace "," separator with ":" when labels are hidden.
+                &:where(:not(:first-of-type)):before {
+                    content: ':\00a0';
+                }
+
+                &::after {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    .o_template_dominoes {
+        .o_count_item_nbs {
+            gap: 1px;
+        }
+    }
+
+    &.o_countdown_default .o_template_dominoes {
+        .o_count_item_nb {
+            &:after {
+                position: absolute;
+                inset: 50% 0 auto;
+                display: block;
+                border-bottom: $border-width solid $border-color;
+                content: '';
+                z-index: 1;
+            }
+        }
+    }
+
+    &:not(.o_countdown_default) .o_template_dominoes {
+        .o_count_item_nb {
+            // Simulates the horizontal line in the middle of the domino.
+            clip-path: polygon(0 0, 100% 0, 100% calc(50% - 0.5px), 0 calc(50% - 0.5px), 0 calc(50% + 0.5px), 100% calc(50% + 0.5px), 100% 100%, 0 100%);
+        }
+    }
+
+    .o_template_wrapped_numbers {
+        .o_count_item_nbs {
+            width: map-get($spacers, 5);
+            aspect-ratio: 1 / 1;
+        }
+
+        .o_count_separator {
+            display: flex;
+            height: map-get($spacers, 5);
+        }
+    }
+}
