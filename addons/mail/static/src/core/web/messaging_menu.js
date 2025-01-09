@@ -6,7 +6,7 @@ import { onExternalClick, useDiscussSystray } from "@mail/utils/common/hooks";
 
 import { Component, useState } from "@odoo/owl";
 
-import { hasTouch, isIOS } from "@web/core/browser/feature_detection";
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -83,7 +83,7 @@ export class MessagingMenu extends Component {
                 this.store.discuss.activeTab === "main" &&
                 !this.env.inDiscussApp) ||
             (this.store.odoobot &&
-                this.shouldAskPushPermission &&
+                this.notification.permission === "prompt" &&
                 this.store.discuss.activeTab === "main" &&
                 !this.env.inDiscussApp) ||
             (this.store.odoobot &&
@@ -112,7 +112,9 @@ export class MessagingMenu extends Component {
             displayName: _t("%s has a request", this.store.odoobot.name),
             iconSrc: this.threadService.avatarUrl(this.store.odoobot),
             partner: this.store.odoobot,
-            isShown: this.store.discuss.activeTab === "main" && this.shouldAskPushPermission,
+            isShown:
+                this.store.discuss.activeTab === "main" &&
+                this.notification.permission === "prompt",
         };
     }
 
@@ -257,7 +259,7 @@ export class MessagingMenu extends Component {
         if (this.canPromptToInstall) {
             value++;
         }
-        if (this.shouldAskPushPermission) {
+        if (this.notification.permission === "prompt") {
             value++;
         }
         return value;
@@ -275,10 +277,6 @@ export class MessagingMenu extends Component {
                 !this.state.addingChat &&
                 !(this.env.inDiscussApp && this.store.discuss.activeTab === "main"))
         );
-    }
-
-    get shouldAskPushPermission() {
-        return this.notification.permission === "prompt" && !isIOS();
     }
 }
 
