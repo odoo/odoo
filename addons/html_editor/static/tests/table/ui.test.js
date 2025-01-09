@@ -1023,7 +1023,7 @@ test("reset table size to remove custom width", async () => {
 
     await click("[data-type='row'].o-we-table-menu");
     await waitFor(".dropdown-menu");
-    await click(queryOne(".dropdown-menu [name='reset_size']"));
+    await click(queryOne(".dropdown-menu [name='reset_table_size']"));
     expect(getContent(el)).toBe(
         unformat(`
         <table>
@@ -1064,7 +1064,7 @@ test("reset table size to remove custom height", async () => {
 
     await click("[data-type='row'].o-we-table-menu");
     await waitFor(".dropdown-menu");
-    await click(queryOne(".dropdown-menu [name='reset_size']"));
+    await click(queryOne(".dropdown-menu [name='reset_table_size']"));
     expect(getContent(el)).toBe(
         unformat(`
         <table>
@@ -1084,5 +1084,177 @@ test("reset table size to remove custom height", async () => {
             <tr style="height: 50px;"><td class="b">2</td></tr>
             </tbody>
         </table>`)
+    );
+});
+
+test("reset row size to remove custom height", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+        <table class="table table-bordered o_table">
+            <tbody>
+                <tr style="height: 38px;">
+                    <td class="a">1</td>
+                    <td class="b">2</td>
+                    <td class="c">3</td>
+                </tr>
+                <tr style="height: 100px;">
+                    <td class="d">4[]</td>
+                    <td class="e">5</td>
+                    <td class="f">6</td>
+                </tr>
+                <tr style="height: 38px;">
+                    <td class="g">7</td>
+                    <td class="h">8</td>
+                    <td class="i">9</td>
+                </tr>
+            </tbody>
+        </table>`)
+    );
+    expect(".o-we-table-menu").toHaveCount(0);
+
+    await hover(el.querySelector("td.d"));
+    await waitFor(".o-we-table-menu");
+    expect("[data-type='row'].o-we-table-menu").toHaveCount(1);
+
+    await click("[data-type='row'].o-we-table-menu");
+    await waitFor(".dropdown-menu");
+    await click(queryOne(".dropdown-menu [name='reset_row_size']"));
+    expect(getContent(el)).toBe(
+        unformat(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr style="">
+                        <td class="a">1</td>
+                        <td class="b">2</td>
+                        <td class="c">3</td>
+                    </tr>
+                    <tr style="">
+                        <td class="d">4[]</td>
+                        <td class="e">5</td>
+                        <td class="f">6</td>
+                    </tr>
+                    <tr style="">
+                        <td class="g">7</td>
+                        <td class="h">8</td>
+                        <td class="i">9</td>
+                    </tr>
+                </tbody>
+            </table>`)
+    );
+});
+
+test("should redistribute excess width from current column to smaller columns", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+            <table class="table table-bordered o_table" style="width: 500px">
+                <tbody>
+                    <tr>
+                        <td style="width: 100px;" class="a">1</td>
+                        <td style="width: 120px;" class="b">2</td>
+                        <td style="width: 60px;" class="c">3[]</td>
+                        <td style="width: 120px;" class="d">4</td>
+                        <td style="width: 100px;" class="e">5</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;" class="f">6</td>
+                        <td style="width: 120px;" class="g">7</td>
+                        <td style="width: 60px;" class="h">8</td>
+                        <td style="width: 120px;" class="i">9</td>
+                        <td style="width: 100px;" class="j">10</td>
+                    </tr>
+                </tbody>
+            </table>`)
+    );
+    expect(".o-we-table-menu").toHaveCount(0);
+
+    await hover(el.querySelector("td.c"));
+    await waitFor(".o-we-table-menu");
+    expect("[data-type='column'].o-we-table-menu").toHaveCount(1);
+
+    await click("[data-type='column'].o-we-table-menu");
+    await waitFor(".dropdown-menu");
+    await click(queryOne(".dropdown-menu [name='reset_column_size']"));
+    expect(getContent(el)).toBe(
+        unformat(`
+            <table class="table table-bordered o_table" style="width: 500px">
+                <tbody>
+                    <tr>
+                        <td style="" class="a">1</td>
+                        <td style="" class="b">2</td>
+                        <td style="" class="c">3[]</td>
+                        <td style="" class="d">4</td>
+                        <td style="" class="e">5</td>
+                    </tr>
+                    <tr>
+                        <td style="" class="f">6</td>
+                        <td style="" class="g">7</td>
+                        <td style="" class="h">8</td>
+                        <td style="" class="i">9</td>
+                        <td style="" class="j">10</td>
+                    </tr>
+                </tbody>
+            </table>`)
+    );
+});
+
+test("should redistribute excess width from larger columns to current column", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+            <table class="table table-bordered o_table" style="width: 700px">
+                <tbody>
+                    <tr>
+                        <td style="width: 120px;" class="a">1</td>
+                        <td style="width: 80px;" class="b">2</td>
+                        <td style="width: 60px;" class="c">3</td>
+                        <td style="width: 180px;" class="d">4[]</td>
+                        <td style="width: 60px;" class="e">5</td>
+                        <td style="width: 80px;" class="f">6</td>
+                        <td style="width: 120px;" class="g">7</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 120px;" class="h">8</td>
+                        <td style="width: 80px;" class="i">9</td>
+                        <td style="width: 60px;" class="j">10</td>
+                        <td style="width: 180px;" class="k">11</td>
+                        <td style="width: 60px;" class="l">12</td>
+                        <td style="width: 80px;" class="m">13</td>
+                        <td style="width: 120px;" class="n">14</td>
+                    </tr>
+                </tbody>
+            </table>`)
+    );
+    expect(".o-we-table-menu").toHaveCount(0);
+
+    await hover(el.querySelector("td.d"));
+    await waitFor(".o-we-table-menu");
+    expect("[data-type='column'].o-we-table-menu").toHaveCount(1);
+
+    await click("[data-type='column'].o-we-table-menu");
+    await waitFor(".dropdown-menu");
+    await click(queryOne(".dropdown-menu [name='reset_column_size']"));
+    expect(getContent(el)).toBe(
+        unformat(`
+            <table class="table table-bordered o_table" style="width: 700px">
+                <tbody>
+                    <tr>
+                        <td style="width: 120px;" class="a">1</td>
+                        <td style="width: 80px;" class="b">2</td>
+                        <td style="" class="c">3</td>
+                        <td style="" class="d">4[]</td>
+                        <td style="" class="e">5</td>
+                        <td style="width: 80px;" class="f">6</td>
+                        <td style="width: 120px;" class="g">7</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 120px;" class="h">8</td>
+                        <td style="width: 80px;" class="i">9</td>
+                        <td style="" class="j">10</td>
+                        <td style="" class="k">11</td>
+                        <td style="" class="l">12</td>
+                        <td style="width: 80px;" class="m">13</td>
+                        <td style="width: 120px;" class="n">14</td>
+                    </tr>
+                </tbody>
+            </table>`)
     );
 });
