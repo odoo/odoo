@@ -1266,6 +1266,8 @@ class Task(models.Model):
                         if not project_link:
                             project_link = link_per_project_id[task.project_id.id] = task.project_id._get_html_link(title=task.project_id.display_name)
                         project_link_per_task_id[task.id] = project_link
+        if vals.get('parent_id') is False:
+            vals['display_in_project'] = True
         result = super().write(vals)
         if portal_can_write:
             super(Task, self_no_sudo).write(vals_no_sudo)
