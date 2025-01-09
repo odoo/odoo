@@ -2,14 +2,14 @@
 
 from odoo import Command
 from odoo.fields import Datetime
-from odoo.tests import Form, HttpCase, new_test_user, tagged
+from odoo.tests import Form, new_test_user, tagged
 from odoo.exceptions import UserError
 
 from .common import TestSaleProjectCommon
 
 
 @tagged('post_install', '-at_install')
-class TestSaleProject(HttpCase, TestSaleProjectCommon):
+class TestSaleProject(TestSaleProjectCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -95,24 +95,6 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
 
         # Create partner
         cls.partner = cls.env['res.partner'].create({'name': "Mur en béton"})
-
-        project = cls.env['project.project'].create({
-            'name': 'Test History Project',
-            'type_ids': [Command.create({'name': 'To Do'})],
-            'allow_billable': True
-        })
-
-        cls.env['project.task'].create({
-            'name': 'Test History Task',
-            'stage_id': project.type_ids[0].id,
-            'project_id': project.id,
-        })
-
-    def test_task_create_sol_ui(self):
-        self.start_tour('/odoo', 'task_create_sol_tour', login='admin')
-
-    def test_project_create_sol_ui(self):
-        self.start_tour('/odoo', 'project_create_sol_tour', login='admin')
 
     def test_sale_order_with_project_task(self):
         SaleOrder = self.env['sale.order'].with_context(tracking_disable=True)
@@ -655,26 +637,6 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         names = ['To Do', 'In Progress', 'Done', 'Cancelled']
         project = sale_order_line._timesheet_create_project()
         self.assertEqual(names, project.type_ids.mapped('name'), "The project stages' name should be equal to: %s" % names)
-
-    def test_quick_create_sol(self):
-        """
-        When creating a SOL on the fly through the quick create, use a product matching
-        what was typed in the field if there is one, and make sure the SOL name is computed correctly.
-        """
-        product_service = self.env['product.product'].create({
-            'name': 'Signage',
-            'type': 'service',
-            'invoice_policy': 'order',
-            'uom_id': self.env.ref('uom.product_uom_hour').id,
-        })
-        sale_line_id, sale_line_name = self.env['sale.order.line'].with_context(
-            default_partner_id=self.partner.id,
-            form_view_ref='sale_project.sale_order_line_view_form_editable',
-        ).name_create('gnag')
-
-        sale_line = self.env['sale.order.line'].browse(sale_line_id)
-        self.assertEqual(sale_line.product_id, product_service, 'The created SOL should use the right product.')
-        self.assertTrue(product_service.name in sale_line_name, 'The created SOL should use the full name of the product and not just what was typed.')
 
     def test_sale_order_items_of_the_project_status(self):
         """
