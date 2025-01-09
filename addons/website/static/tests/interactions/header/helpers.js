@@ -1,3 +1,4 @@
+import { expect } from "@odoo/hoot";
 import { animationFrame, scroll } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 
@@ -32,19 +33,12 @@ export const customScroll = async function (scrollingElement, start, end) {
 }
 
 export const checkHeader = function (header, main, core, expectedStatus) {
-    const visibility = core.interactions[0].interaction.isVisible
-    if (visibility != expectedStatus.visibility
-        || main.style.paddingTop != expectedStatus.paddingTop
-        || header.style.transform != expectedStatus.transform
-    ) {
-        return false;
-    }
-    const headerClasses = header.classList.value.split(" ");
-    headerClasses.sort();
-    if (headerClasses.toString() !== expectedStatus.classList) {
-        return false;
-    }
-    return true;
+    const message = `Interaction visibility should be ${expectedStatus.visibility}`;
+    expect(core.interactions[0].interaction.isVisible).toBe(expectedStatus.visibility, { message });
+    expect(main).toHaveStyle({ paddingTop: expectedStatus.paddingTop });
+    expect(header).toHaveStyle({ transform: expectedStatus.transform });
+    const headerClasses = [...header.classList].sort().join(" ");
+    expect(headerClasses).toEqual(expectedStatus.classList);
 }
 
 export const getTemplateWithoutHideOnScroll = function (class_name) {
