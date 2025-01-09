@@ -2242,7 +2242,7 @@ export class PosStore extends WithLazyGetterTrap {
                   if (b.is_favorite !== a.is_favorite) {
                       return b.is_favorite - a.is_favorite;
                   }
-                  return a.display_name.localeCompare(b.display_name);
+                  return a.name.localeCompare(b.name);
               });
     }
 
