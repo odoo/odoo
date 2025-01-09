@@ -39,11 +39,11 @@
                         </div>
                     </a>
                     <div class="o_carousel_product_card_body d-flex flex-wrap flex-column justify-content-between h-100 p-3">
-                        <div class="h6 card-title" t-esc="product_name"></div>
+                        <div class="h6 card-title" t-out="product_name"></div>
                         <div>
                             <div class="mt-2">
                                 <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
-                                    <span class="oe_currency_value" t-esc="product_price"></span>
+                                    <span class="oe_currency_value" t-out="product_price"></span>
                                 </span>
                             </div>
                         </div>
@@ -68,11 +68,11 @@
                     <img class="card-img-top rounded-0" loading="lazy" t-att-src="img_src" t-att-alt="img_alt"/>
                 </a>
                 <div class="o_carousel_product_card_body card-body d-flex flex-column justify-content-between">
-                    <div class="card-title h5 text-center" t-esc="product_name"></div>
+                    <div class="card-title h5 text-center" t-out="product_name"></div>
                     <div class="text-center">
                         <div class="h5">
                             <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
-                                <span class="oe_currency_value" t-esc="product_price"></span>
+                                <span class="oe_currency_value" t-out="product_price"></span>
                             </span>
                         </div>
                         <div class="h6 mb-0">
@@ -109,12 +109,12 @@
                     <div class="o_carousel_product_card_body card-body justify-content-between h-100 p-3">
                         <div class="row h-100">
                             <div class="col-8 d-flex flex-column">
-                                <div class="card-title h5" t-esc="product_name"></div>
+                                <div class="card-title h5" t-out="product_name"></div>
                                     <div class="d-flex justify-content-between align-items-center flex-wrap w-100 mt-auto">
                                         <div class="h5 text-primary mb-0 me-2">
                                             <span class="fw-bold">From</span>
                                                 <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
-                                                    <span class="oe_currency_value" t-esc="product_price"></span>
+                                                    <span class="oe_currency_value" t-out="product_price"></span>
                                                 </span>
                                                 <span class="fw-bold">
                                                     /
@@ -168,13 +168,13 @@
                     <div class="d-flex justify-content-between align-items-center flex-wrap mb-2">
                         <div class="h5 mb-0 me-4">
                             <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
-                                <span class="oe_currency_value" t-esc="product_price"></span>
+                                <span class="oe_currency_value" t-out="product_price"></span>
                             </span>
                         </div>
                         <div class="h6 mb-0">
                         </div>
                     </div>
-                    <div class="card-title h6 flex-grow-1 w-100 mt-2 mb-3" t-esc="product_name"></div>
+                    <div class="card-title h6 flex-grow-1 w-100 mt-2 mb-3" t-out="product_name"></div>
                     <div class="text-end o_dynamic_snippet_btn_wrapper">
                         <button type="button" role="button" class="btn btn-primary js_add_cart w-100" title="Add to Cart" >
                     Add to Cart
@@ -201,14 +201,14 @@
                 </a>
                 <div class="o_carousel_product_card_body card-body d-flex flex-wrap">
                     <a class="text-decoration-none d-block w-100" href="#">
-                        <div class="h6 card-title mb-0" t-esc="product_name"></div>
+                        <div class="h6 card-title mb-0" t-out="product_name"></div>
                     </a>
                     <div class="mt-2">
                     </div>
                     <div class="w-100 d-flex flex-wrap flex-md-column flex-lg-row align-items-center align-self-end justify-content-between mt-3">
                         <div class="py-2">
                             <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
-                                <span class="oe_currency_value" t-esc="product_price"></span>
+                                <span class="oe_currency_value" t-out="product_price"></span>
                             </span>
                         </div>
                         <div class="o_dynamic_snippet_btn_wrapper">
@@ -237,14 +237,14 @@
                     <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="img_src" t-att-alt="img_alt"/>
                 </a>
                 <div class="o_carousel_product_card_body card-body d-flex flex-column justify-content-between">
-                    <div class="card-title h5" t-esc="product_name"></div>
+                    <div class="card-title h5" t-out="product_name"></div>
                     <div class="card-text flex-grow-1 text-muted h6"></div>
                     <div class="mt-2">
                     </div>
                     <div class="d-flex justify-content-between flex-wrap flex-md-column flex-lg-row align-items-center align-self-end w-100 mt-2 pt-3 border-top">
                         <div class="pb-2">
                             <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
-                                <span class="oe_currency_value" t-esc="product_price"></span>
+                                <span class="oe_currency_value" t-out="product_price"></span>
                             </span>
                         </div>
                         <a class="btn btn-primary" href="#">
@@ -286,7 +286,7 @@
                     </div>
                     <div class="o_carousel_product_card_body col-lg-8 d-flex flex-column justify-content-between">
                         <div>
-                            <div class="card-title h6" t-esc="product_name"></div>
+                            <div class="card-title h6" t-out="product_name"></div>
                         </div>
                         <div>
                             <div class="mb-1">
@@ -294,7 +294,7 @@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="my-2">
                                     <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
-                                        <span class="oe_currency_value" t-esc="product_price"></span>
+                                        <span class="oe_currency_value" t-out="product_price"></span>
                                     </span>
                                 </div>
                                 <div class="o_dynamic_snippet_btn_wrapper ms-auto">
@@ -355,12 +355,12 @@
                 </a>
                 <div class="o_carousel_product_card_body d-flex flex-column justify-content-between h-100 bg-black-50 p-3 position-relative">
                     <div class="mb-3">
-                        <div class="card-title h5" t-esc="product_name"></div>
+                        <div class="card-title h5" t-out="product_name"></div>
                     </div>
                     <div class="d-flex justify-content-between align-items-center flex-wrap mt-3">
                         <div class="h5 mb-0 me-2">
                             <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
-                                <span class="oe_currency_value" t-esc="product_price"></span>
+                                <span class="oe_currency_value" t-out="product_price"></span>
                             </span>
                         </div>
                         <div class="o_dynamic_snippet_btn_wrapper">
@@ -430,7 +430,7 @@
                 <a class="o_carousel_product_img_link overflow-hidden" href="#">
                     <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="img_src" t-att-alt="img_alt"/>
                 </a>
-                <div class="h6 text-center mt-2 p-2" t-esc="product_name"></div>
+                <div class="h6 text-center mt-2 p-2" t-out="product_name"></div>
                 <div class="text-center">
                 </div>
             </div>
@@ -454,7 +454,7 @@
                 <div class="o_carousel_product_card_body mt-2 d-flex justify-content-between">
                     <div class="ms-auto">
                         <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
-                            $ <span class="oe_currency_value" t-esc="product_price"></span>
+                            $ <span class="oe_currency_value" t-out="product_price"></span>
                         </span>
                     </div>
                 </div>
