@@ -36,14 +36,7 @@
     <template id="event_confirmation" inherit_id="website_sale.confirmation">
         <xpath expr="//div[@id='oe_structure_website_sale_confirmation_2']" position="inside">
             <t t-if="events">
-                <section class="s_title pt40 mb-3" data-snippet="s_title" data-name="Title">
-                    <div class="s_allow_columns container">
-                        <h4>
-                            We are looking forward to meeting you at the following <t t-if="len(events) == 1">event</t><t t-else="">events</t>:
-                        </h4>
-                    </div>
-                </section>
-                <section class="card mb-5" t-foreach="events" t-as="event">
+                <section class="card" t-foreach="events" t-as="event">
                     <t t-set="attendees" t-value="attendee_ids_per_event.get(event, [])"/>
                     <div class="s_nb_column_fixed s_col_no_bgcolor o_wevent_index o_wevent_sale_event">
                         <t t-set="opt_event_description_cover_top" t-value="is_view_active('website_event.opt_event_description_cover_top')"/>
@@ -74,8 +67,7 @@
                         <div class="m-3">
                             <t t-if="attendees" t-call="website_event.registration_ticket_access"/>
                             <div class="row my-3">
-                                <h5>Don't miss out!</h5>
-                                <small>Add this event to your calendar</small>
+                                <h5>Add to your calendar</h5>
                                 <div id="add_to_calendar" class="o_event_add_to_calendar_btns d-flex flex-wrap gap-3 mt-2">
                                     <a role="button" class="o_outlook_calendar btn btn-block bg-white" t-att-href="urls_per_event.get(event.id, {}).get('iCal_url', '')">
                                         <img src="/event/static/src/img/outlook-calendar.svg" alt="Outlook" loading="lazy"/>
@@ -92,6 +84,30 @@
                     </div>
                 </section>
             </t>
+        </xpath>
+    </template>
+
+    <template id="address_inherit_website_sale" inherit_id="website_sale.address">
+        <xpath expr="//input[@id='o_name']" position="attributes">
+            <attribute
+                name="t-att-value"
+                add="(event_attendee and event_attendee.get('name', ''))"
+                separator=" or"
+            />
+        </xpath>
+        <xpath expr="//input[@id='o_email']"  position="attributes">
+            <attribute
+                name="t-att-value"
+                add="(event_attendee and event_attendee.get('email', ''))"
+                separator=" or"
+            />
+        </xpath>
+        <xpath expr="//input[@id='o_phone']" position="attributes">
+            <attribute
+                name="t-att-value"
+                add="(event_attendee and event_attendee.get('phone', ''))"
+                separator=" or"
+            />
         </xpath>
     </template>
 

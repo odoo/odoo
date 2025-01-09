@@ -25,6 +25,9 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
         this.addressType = this.addressForm['address_type'].value;
         this.countryCode = this.addressForm.dataset.companyCountryCode;
         this.requiredFields = this.addressForm.required_fields.value.split(',');
+        this.anonymousCart = document.querySelector('input[name="is_anonymous_cart"]').value;
+        this.wantInvoiceCheckbox = document.getElementById('o_want_invoice');
+        this.onlyServices = document.querySelector('input[name="only_services"]').value;
     },
 
     /**
@@ -37,6 +40,12 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
             this._markRequired(fname, true);
         })
         this._changeCountry(true);
+
+        if (this.wantInvoiceCheckbox){
+            this.wantInvoiceCheckbox.addEventListener(
+                'change', this._toggleInvoiceFields.bind(this)
+            );
+        }
 
         return def;
     },
@@ -63,10 +72,44 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
 
     /**
      * @private
+     * @param {Event} ev
+     */
+    _toggleInvoiceFields(ev) {
+        const wantInvoice = ev.target.checked; // Check the state of the checkbox
+
+        // Fields to toggle
+        const invoiceFields = [
+            'company_name', 'vat', 'street', 'street2', 'city', 'country_id', 'state_id','zip'
+        ];
+
+        // Show/hide fields based on the checkbox state
+        invoiceFields.forEach((fieldName) => {
+            if (wantInvoice) {
+                this._showInput(fieldName);
+                this._markDisabled(fieldName, false);
+            } else {
+                this._markRequired(fieldName, false);
+                this._clearInputField(fieldName);
+                this._markDisabled(fieldName, true);
+                this._hideInput(fieldName);
+            }
+        });
+    },
+
+    /**
+     * @private
      */
     async _changeCountry(init=false) {
         const countryId = parseInt(this.addressForm.country_id.value);
         if (!countryId) {
+            return;
+        }
+        if(
+            this.onlyServices
+            && this.anonymousCart
+            && this.wantInvoiceCheckbox
+            && !this.wantInvoiceCheckbox.checked
+        ) {
             return;
         }
 
@@ -135,6 +178,29 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
         })
     },
 
+    _shouldShowFields() {
+        return (
+            !this.onlyServices
+            || (
+                this.onlyServices
+                && this.anonymousCart
+                && this.wantInvoiceCheckbox
+                && !this.wantInvoiceCheckbox.checked
+            )
+        );
+    },
+
+    _clearInputField(fieldName) {
+        const input = this.addressForm[fieldName];
+        if (input) {
+            if (input.tagName === 'SELECT') {
+                input.selectedIndex = 0; // Reset dropdown to the first option
+            } else {
+                input.value = ''; // Clear text inputs
+            }
+        }
+    },
+
     _getInputDiv(name) {
         return this.addressForm[name].parentElement;
     },
@@ -162,6 +228,13 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
         this._getInputLabel(name)?.classList.toggle('label-optional', !required);
     },
 
+    _markDisabled(name, disabled) {
+        const input = this.addressForm[name];
+        if (input) {
+            input.disabled = disabled;
+        }
+    },
+
     /**
      * Disable the button, submit the form and add a spinner while the submission is ongoing
      *
@@ -181,10 +254,29 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
             const spinner = document.createElement('span');
             spinner.classList.add('fa', 'fa-cog', 'fa-spin');
             submitButton.appendChild(spinner);
-
+            const formData = new FormData(this.addressForm);
+            formData.delete('only_services');
+            // Remove all the fields other than name, email, phone when it is only_services,
+            // anonymous cart and want invoice is unchecked.
+            if (
+                this.onlyServices
+                && this.anonymousCart
+                && this.wantInvoiceCheckbox
+                && !this.wantInvoiceCheckbox.checked
+            ) {
+                const invoiceFields = [
+                    'company_name', 'vat', 'street', 'street2',
+                    'city', 'country_id', 'state_id', 'zip'
+                ];
+                invoiceFields.forEach((field) => {
+                    this._markRequired(field, false);
+                    this._clearInputField(field);
+                    formData.delete(field);
+                });
+            }
             const result = await this.http.post(
                 '/shop/address/submit',
-                new FormData(this.addressForm),
+                formData,
             )
             if (result.successUrl) {
                 window.location = result.successUrl;
