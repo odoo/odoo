@@ -129,12 +129,8 @@
                         options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
                     <field name="sale_line_id"
                         groups="sales_team.group_sale_salesman"
-                        options="{'no_edit': True, 'delete': False}"
-                        context="{
-                            'form_view_ref': 'sale_project.sale_order_line_view_form_editable',
-                            'default_partner_id': partner_id,
-                            'default_company_id': company_id,
-                        }"/>
+                        options="{'no_create': True}"
+                    />
                     <span
                         class="fa fa-exclamation-triangle text-warning"
                         title="The sales order associated with this project has been cancelled. We recommend either updating the sales order item or cancelling this project in alignment with the cancellation of the sales order."
@@ -196,17 +192,20 @@
                     <field name="sale_line_id"
                         groups="sales_team.group_sale_salesman"
                         string="Sales Order Item"
+                        options="{'no_create': True}"
                         readonly="0"
                         context="{
-                            'create': False, 'edit': False, 'delete': False,
-                            'with_price_unit': True,
-                            'form_view_ref': 'sale_project.sale_order_line_view_form_editable',
+                            'form_view_ref': 'sale_project.view_order_simple_form',
+                            'create_for_task_id': id,
                             'default_partner_id': partner_id,
                             'default_company_id': company_id,
-                            'default_order_id': project_sale_order_id,
-                        }"
+                            'default_project_id': project_id,
+                            'with_price_unit': True,
+                            'dialog_size': 'large',
+                         }"
+                        widget="so_line_create_button"
                         placeholder="Non-billable"/>
-                    <span 
+                    <span
                         class="fa fa-exclamation-triangle text-warning"
                         title="The sales order associated with this task has been cancelled. We recommend either updating the sales order item or cancelling this task in alignment with the cancellation of the sales order." 
                         invisible="sale_order_state != 'cancel'"/>

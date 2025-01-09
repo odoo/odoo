@@ -7,14 +7,22 @@ import {
     openListView,
     registerArchs,
     start,
-    startServer
+    startServer,
+    mailModels,
 } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
-import { asyncStep, onRpc, waitForSteps, mountView } from "@web/../tests/web_test_helpers";
-import { defineSaleTimesheetModels } from "./sale_timesheet_test_helpers";
+import { asyncStep, onRpc, waitForSteps, defineModels } from "@web/../tests/web_test_helpers";
+import { AccountAnalyticLine } from "@analytic/../tests/mock_server/mock_models/account_analytic_line";
+import { ProjectTask } from "@project/../tests/mock_server/mock_models/project_task";
+import { SaleOrderLine } from "@sale/../tests/mock_server/mock_models/sale_order_line";
 
 describe.current.tags("desktop");
-defineSaleTimesheetModels();
+defineModels({
+    ...mailModels,
+    AccountAnalyticLine,
+    ProjectTask,
+    SaleOrderLine,
+});
 registerArchs({
     "account.analytic.line,false,form": `<form>
             <field name="so_line" widget="so_line_field"/>
@@ -93,17 +101,10 @@ test("Check placeholder string when no so_line linked", async () => {
     pyEnv["account.analytic.line"].create({ so_line: false });
     pyEnv["account.analytic.line"]._fields.so_line["falsy_value_label"] = "Non-billable";
 
-    await mountView({
-        type: "list",
-        resModel: "account.analytic.line",
-        arch: `
-            <list>
-                <field name="so_line" widget="so_line_field"/>
-            </list>
-        `,
-    });
+    await start();
+    await openListView("account.analytic.line");
     expect(".o_field_so_line_field.o_field_empty").toHaveText("Non-billable", {
         message: "Should display 'Non-billable' as placeholder for empty so_line field.",
     });
-    
+
 });
