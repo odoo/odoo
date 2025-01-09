@@ -3,7 +3,7 @@ from odoo import api, fields, models
 
 class CardDimension(models.Model):
     _name = "card.dimension"
-    _description = 'Card Dimension'
+    _description = 'Marketing Card Dimension'
     _order = 'ratio'
 
     name = fields.Char(required=True)
