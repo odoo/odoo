@@ -1662,12 +1662,10 @@ class ProjectTask(models.Model):
         create_context['mail_notify_author'] = True  # Allows sending stage updates to the author
         if custom_values is None:
             custom_values = {}
-        # Auto create partner if not existant when the task is created from email
+        # Auto create partner if not existent when the task is created from email
         if not msg.get('author_id') and msg.get('email_from'):
-            msg['author_id'] = self.env['res.partner'].create({
-                'email': msg['email_from'],
-                'name': msg['email_from'],
-            }).id
+            author = self.env['mail.thread']._mail_find_partner_from_emails([msg['email_from']], force_create=True)[0]
+            msg['author_id'] = author.id
 
         defaults = {
             'name': msg.get('subject') or _("No Subject"),
