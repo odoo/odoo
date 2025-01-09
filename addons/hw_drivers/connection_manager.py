@@ -21,9 +21,6 @@ class ConnectionManager(Thread):
         self.pairing_uuid = False
 
     def run(self):
-        if platform.system() == 'Linux' and wifi.is_access_point():
-            return
-
         if not helpers.get_odoo_server_url():
             end_time = datetime.now() + timedelta(minutes=5)
             while datetime.now() < end_time:
@@ -33,6 +30,9 @@ class ConnectionManager(Thread):
             self.pairing_uuid = False
 
     def _connect_box(self):
+        if not helpers.get_ip() or (platform.system() == 'Linux' and wifi.is_access_point()):
+            return
+
         data = {
             'jsonrpc': 2.0,
             'params': {

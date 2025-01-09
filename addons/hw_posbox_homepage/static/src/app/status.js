@@ -26,6 +26,10 @@ class StatusPage extends Component {
         }
     }
 
+    get accessPointSsid() {
+        return this.state.data.network_interfaces.filter(i => i.is_wifi)[0]?.ssid;
+    }
+
     static template = xml`
     <div t-if="!state.loading" class="container-fluid">
         <div class="text-center pt-5">
@@ -42,7 +46,7 @@ class StatusPage extends Component {
                 <hr/>
                 <p class="mb-3">
                     Please connect your IoT Box to internet via an ethernet cable or connect to Wi-FI network<br/>
-                    <a class="alert-link" t-out="'IoTBox-' + (state.data.network_interfaces[0].ssid or state.data.mac.replace(':', ''))" /><br/>
+                    <a class="alert-link" t-out="accessPointSsid" /><br/>
                     to configure a Wi-Fi connection on the IoT Box
                 </p>
             </div>
