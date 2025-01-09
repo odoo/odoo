@@ -233,11 +233,77 @@ class DiscussChannel(models.Model):
         It's created only if the mail channel is linked to a chatbot step.
         """
         if self.chatbot_current_step_id:
+<<<<<<< saas-18.1
             self.env['chatbot.message'].sudo().create({
                 'mail_message_id': message.id,
                 'discuss_channel_id': self.id,
                 'script_step_id': self.chatbot_current_step_id.id,
             })
+||||||| f283dddefc621779063283c27a1374c1d5b3fa36
+            selected_answer = (
+                self.env["chatbot.script.answer"]
+                .browse(self.env.context.get("selected_answer_id"))
+                .exists()
+            )
+            if selected_answer in self.chatbot_current_step_id.answer_ids:
+                # sudo - chatbot.message: finding the question message to update the user answer is allowed.
+                question_msg = (
+                    self.env["chatbot.message"]
+                    .sudo()
+                    .search(
+                        [
+                            ("discuss_channel_id", "=", self.id),
+                            ("script_step_id", "=", self.chatbot_current_step_id.id),
+                        ],
+                        order="id DESC",
+                        limit=1,
+                    )
+                )
+                question_msg.user_script_answer_id = selected_answer
+                if store := self.env.context.get("message_post_store"):
+                    store.add(question_msg.mail_message_id)
+
+            self.env["chatbot.message"].sudo().create(
+                {
+                    "mail_message_id": message.id,
+                    "discuss_channel_id": self.id,
+                    "script_step_id": self.chatbot_current_step_id.id,
+                }
+            )
+
+=======
+            selected_answer = (
+                self.env["chatbot.script.answer"]
+                .browse(self.env.context.get("selected_answer_id"))
+                .exists()
+            )
+            if selected_answer in self.chatbot_current_step_id.answer_ids:
+                # sudo - chatbot.message: finding the question message to update the user answer is allowed.
+                question_msg = (
+                    self.env["chatbot.message"]
+                    .sudo()
+                    .search(
+                        [
+                            ("discuss_channel_id", "=", self.id),
+                            ("script_step_id", "=", self.chatbot_current_step_id.id),
+                        ],
+                        order="id DESC",
+                        limit=1,
+                    )
+                )
+                question_msg.user_script_answer_id = selected_answer
+                if store := self.env.context.get("message_post_store"):
+                    store.add(message, for_current_user=True).add(question_msg.mail_message_id)
+
+            self.env["chatbot.message"].sudo().create(
+                {
+                    "mail_message_id": message.id,
+                    "discuss_channel_id": self.id,
+                    "script_step_id": self.chatbot_current_step_id.id,
+                }
+            )
+
+>>>>>>> 6cf090a9d3d823ffd4e75fe043833368d2f37235
         return super()._message_post_after_hook(message, msg_vals)
 
     def _chatbot_restart(self, chatbot_script):
