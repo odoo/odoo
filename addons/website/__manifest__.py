@@ -79,6 +79,7 @@
         'views/snippets/s_facebook_page.xml',
         'views/snippets/s_image_gallery.xml',
         'views/snippets/s_countdown.xml',
+        'views/snippets/s_countdown_inline.xml',
         'views/snippets/s_product_catalog.xml',
         'views/snippets/s_comparisons.xml',
         'views/snippets/s_comparisons_horizontal.xml',

@@ -10,7 +10,7 @@ import {
     ONLY_BG_IMAGE_SELECTOR,
 } from "./utils";
 import { withSequence } from "@html_editor/utils/resource";
-import { SNIPPET_SPECIFIC_BEFORE } from "@html_builder/utils/option_sequence";
+import { SNIPPET_SPECIFIC_BEFORE, SNIPPET_SPECIFIC_AFTER } from "@html_builder/utils/option_sequence";
 import { WEBSITE_BACKGROUND_OPTIONS } from "@website/builder/option_sequence";
 
 class WebsiteBackgroundOptionPlugin extends Plugin {
@@ -63,6 +63,17 @@ class WebsiteBackgroundOptionPlugin extends Plugin {
                     withVideos: true,
                     withShapes: true,
                     withColorCombinations: false,
+                },
+            }),
+            withSequence(SNIPPET_SPECIFIC_AFTER, {
+                OptionComponent: WebsiteBackgroundOption,
+                selector: ".s_countdown_inline",
+                exclude: ONLY_BG_COLOR_EXCLUDE,
+                applyTo: ".s_countdown_inline_wrapper",
+                props: {
+                    withColors: true,
+                    withImages: false,
+                    withColorCombinations: true,
                 },
             }),
         ],
