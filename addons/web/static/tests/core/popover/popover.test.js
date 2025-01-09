@@ -15,6 +15,7 @@ class Content extends Component {
 test("popover can have custom class", async () => {
     await mountWithCleanup(Popover, {
         props: {
+            close: () => {},
             target: getFixture(),
             class: "custom-popover",
             component: Content,
@@ -27,6 +28,7 @@ test("popover can have custom class", async () => {
 test("popover can have more than one custom class", async () => {
     await mountWithCleanup(Popover, {
         props: {
+            close: () => {},
             target: getFixture(),
             class: "custom-popover popover-custom",
             component: Content,
@@ -43,6 +45,7 @@ test("popover is rendered nearby target (default)", async () => {
     );
     await mountWithCleanup(Popover, {
         props: {
+            close: () => {},
             target: queryOne("#target"),
             component: Content,
             onPositioned: (_, { direction, variant }) => {
@@ -62,6 +65,7 @@ test("popover is rendered nearby target (bottom)", async () => {
 
     await mountWithCleanup(Popover, {
         props: {
+            close: () => {},
             target: queryOne("#target"),
             position: "bottom",
             component: Content,
@@ -82,6 +86,7 @@ test("popover is rendered nearby target (top)", async () => {
 
     await mountWithCleanup(Popover, {
         props: {
+            close: () => {},
             target: queryOne("#target"),
             position: "top",
             component: Content,
@@ -102,6 +107,7 @@ test("popover is rendered nearby target (left)", async () => {
 
     await mountWithCleanup(Popover, {
         props: {
+            close: () => {},
             target: queryOne("#target"),
             position: "left",
             component: Content,
@@ -122,6 +128,7 @@ test("popover is rendered nearby target (right)", async () => {
 
     await mountWithCleanup(Popover, {
         props: {
+            close: () => {},
             target: queryOne("#target"),
             position: "right",
             component: Content,
@@ -142,6 +149,7 @@ test("popover is rendered nearby target (bottom-start)", async () => {
 
     await mountWithCleanup(Popover, {
         props: {
+            close: () => {},
             target: queryOne("#target"),
             position: "bottom-start",
             component: Content,
@@ -162,6 +170,7 @@ test("popover is rendered nearby target (bottom-middle)", async () => {
 
     await mountWithCleanup(Popover, {
         props: {
+            close: () => {},
             target: queryOne("#target"),
             position: "bottom-middle",
             component: Content,
@@ -182,6 +191,7 @@ test("popover is rendered nearby target (bottom-end)", async () => {
 
     await mountWithCleanup(Popover, {
         props: {
+            close: () => {},
             target: queryOne("#target"),
             position: "bottom-end",
             component: Content,
@@ -202,6 +212,7 @@ test("popover is rendered nearby target (bottom-fit)", async () => {
 
     await mountWithCleanup(Popover, {
         props: {
+            close: () => {},
             target: queryOne("#target"),
             position: "bottom-fit",
             component: Content,
@@ -224,6 +235,7 @@ test("within iframe", async () => {
     const popoverTarget = queryOne(":iframe #target");
     const comp = await mountWithCleanup(Popover, {
         props: {
+            close: () => {},
             target: popoverTarget,
             component: Content,
             animation: false,
@@ -283,6 +295,7 @@ test("within iframe -- wrong element class", async () => {
 
     await mountWithCleanup(TestPopover, {
         props: {
+            close: () => {},
             target: wrongElement,
             component: Content,
         },
@@ -303,6 +316,7 @@ test("popover fixed position", async () => {
 
     await mountWithCleanup(Popover, {
         props: {
+            close: () => {},
             target: container,
             position: "bottom-fit",
             fixedPosition: true,
@@ -335,6 +349,7 @@ test("popover with arrow and onPositioned", async () => {
 
     await mountWithCleanup(TestPopover, {
         props: {
+            close: () => {},
             target: getFixture(),
             component: Content,
             arrow: true,
