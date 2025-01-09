@@ -2,14 +2,8 @@
 <odoo>
     <template id="ubl_21_InvoiceType_my" inherit_id="account_edi_ubl_cii.ubl_21_InvoiceType" primary="True">
         <xpath expr="//*[local-name()='DocumentCurrencyCode']" position="after">
-            <!-- When applicable, the tax exchange rate MUST be provided. -->
             <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
-                <cac:TaxExchangeRate t-if="invoice.currency_id.name.upper() != 'MYR'">
-                    <cbc:CalculationRate t-out="vals.get('tax_exchange_rate')"/>
-                    <cbc:SourceCurrencyCode t-out="vals.get('document_currency_code')"/>
-                    <cbc:TargetCurrencyCode>MYR</cbc:TargetCurrencyCode>
-                </cac:TaxExchangeRate>
                 <cac:AdditionalDocumentReference t-if="vals.get('invoice_incoterm_code')">
                     <cbc:ID t-out="vals['invoice_incoterm_code']"/>
                 </cac:AdditionalDocumentReference>
@@ -17,6 +11,17 @@
                     <cbc:ID t-out="vals['custom_form_reference']"/>
                     <cbc:DocumentType>CustomsImportForm</cbc:DocumentType>
                 </cac:AdditionalDocumentReference>
+            </t>
+        </xpath>
+        <xpath expr="//*[local-name()='Delivery']" position="after">
+            <!-- When applicable, the tax exchange rate MUST be provided. -->
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cac:TaxExchangeRate t-if="invoice.currency_id.name != 'MYR'">
+                    <cbc:SourceCurrencyCode t-out="invoice.currency_id.name"/>
+                    <cbc:TargetCurrencyCode>MYR</cbc:TargetCurrencyCode>
+                    <cbc:CalculationRate t-out="vals.get('tax_exchange_rate')"/>
+                </cac:TaxExchangeRate>
             </t>
         </xpath>
         <!-- MyInvois does not support order references, having one will cause issues -->
