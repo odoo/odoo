@@ -35,22 +35,22 @@
                         <div>
                             <h1 style="font-size: 1.9rem;">
                                 <div class="row">
-                                    <div class="col col-md-auto">
-                                        <label for="code" string="Code"/>
-                                        <div>
-                                            <field name="placeholder_code" invisible="1"/>
-                                            <field name="code" placeholder="e.g. 101000" class="oe_inline"
-                                                   options="{'placeholder_field': 'placeholder_code'}"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
                                     <div class="col col-md-8">
                                         <label for="name" string="Account Name"/>
                                         <div>
                                             <field name="name"
                                                    placeholder="e.g. Current Assets"
                                                    style="width:80% !important;"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col col-md-auto">
+                                        <label for="code" string="Code"/>
+                                        <div>
+                                            <field name="placeholder_code" invisible="1"/>
+                                            <field name="code" placeholder="e.g. 101000" class="oe_inline"
+                                                   options="{'placeholder_field': 'placeholder_code'}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -66,11 +66,15 @@
                                     </group>
                                     <group>
                                         <field name="internal_group" invisible="1" readonly="1"/>
-                                        <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
-                                        <field name="group_id"/>
+                                        <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency" string="Currency" placeholder="Any currency"/>
+                                        <field name="active" widget="boolean_toggle"/>
+                                        <field name="group_id" groups="base.group_no_one"/>
                                         <field name="company_ids" widget="many2many_tags" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     </group>
                                 </group>
+                            </page>
+                            <page name="Description">
+                                <field name="description"/>
                             </page>
                             <page name="mapping" string="Mapping" groups="base.group_multi_company" invisible="not display_mapping_tab">
                                 <field name="code_mapping_ids" nolabel="1">
