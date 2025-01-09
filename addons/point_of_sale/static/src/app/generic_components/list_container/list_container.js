@@ -12,7 +12,7 @@ class ListContainerDialog extends Component {
     };
     static template = xml`
         <Dialog title.translate="Choose an order" footer="false">
-            <div class="d-flex p-2 flex-wrap" style="gap: 0.5rem;">
+            <div class="list-container-items d-flex p-2 flex-wrap" style="gap: 0.5rem;">
                 <t t-foreach="props.items" t-as="item" t-key="item_index">
                     <t t-slot="default" item="item" />
                 </t>
@@ -40,7 +40,7 @@ export class ListContainer extends Component {
             <button t-if="this.sizing.isLarger or props.forceSmall" t-on-click="toggle"
                 class="btn btn-secondary mx-1 fa fa-caret-down" />
             <div class="overflow-hidden w-100 position-relative">
-                <div t-ref="container" class="d-flex w-100">
+                <div t-ref="container" class="list-container-items d-flex w-100">
                     <div t-if="!props.forceSmall" t-foreach="props.items" t-as="item" t-key="item_index" t-att-class="{'invisible': shouldBeInvisible(item_index)}">
                         <t t-slot="default" item="item"/>
                     </div>

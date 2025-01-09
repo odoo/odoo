@@ -241,7 +241,7 @@ class DiscussChannel(models.Model):
                 )
                 question_msg.user_script_answer_id = selected_answer
                 if store := self.env.context.get("message_post_store"):
-                    store.add(question_msg.mail_message_id)
+                    store.add(message, for_current_user=True).add(question_msg.mail_message_id)
 
             self.env["chatbot.message"].sudo().create(
                 {

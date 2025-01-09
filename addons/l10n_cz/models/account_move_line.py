@@ -5,17 +5,7 @@ from odoo import models, fields
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
-    def _compute_currency_rate(self):
-        super()._compute_currency_rate()
-        for line in self:
-            if line.move_id.country_code == 'CZ':
-                line.currency_rate = self.env['res.currency']._get_conversion_rate(
-                    from_currency=line.company_currency_id,
-                    to_currency=line.currency_id,
-                    company=line.company_id,
-                    date=line._get_rate_date(),
-                )
-
+    # TODO: remove in master
     def _get_rate_date(self):
         # EXTENDS 'account'
         self.ensure_one()

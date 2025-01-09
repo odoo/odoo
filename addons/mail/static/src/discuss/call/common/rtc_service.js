@@ -15,6 +15,18 @@ import { memoize } from "@web/core/utils/functions";
 import { callActionsRegistry } from "./call_actions";
 
 /**
+ *
+ * @param {EventTarget} target
+ * @param {string} event
+ * @param {Function} f event listener callback
+ * @return {Function} unsubscribe function
+ */
+function subscribe(target, event, f) {
+    target.addEventListener(event, f);
+    return () => target.removeEventListener(event, f);
+}
+
+/**
  * @typedef {'audio' | 'camera' | 'screen' } streamType
  */
 
@@ -182,6 +194,8 @@ export class Rtc extends Record {
     actionsStack = [];
     /** @type {string|undefined} String representing the last call action activated, or undefined if none are */
     lastSelfCallAction = undefined;
+    /** callbacks to be called when cleaning the state up after a call */
+    cleanups = [];
 
     callActions = Record.attr([], {
         compute() {
@@ -802,9 +816,13 @@ export class Rtc extends Record {
         this.soundEffectsService.play("channel-join");
         this.state.hasPendingRequest = false;
         await this.resetAudioTrack({ force: audio });
-        if (!this.state.channel?.id) {
-            return;
-        }
+        this.cleanups.push(
+            // only register the beforeunload event if there is a call as FireFox will not place
+            // the pages with beforeunload listeners in the bfcache.
+            subscribe(browser, "beforeunload", (event) => {
+                event.preventDefault();
+            })
+        );
     }
 
     async rpcLeaveCall(channel) {
@@ -857,6 +875,7 @@ export class Rtc extends Record {
                 this.removeVideoFromSession(session);
                 session.isTalking = false;
             }
+            this.cleanups.splice(0).forEach((cleanup) => cleanup());
         }
         this.sfuClient = undefined;
         this.network = undefined;
