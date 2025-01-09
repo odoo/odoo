@@ -86,9 +86,8 @@ const registerSteps = [
         run: "click",
     },
     {
-        content: "Fill attendees details",
-        trigger: '.modal form[id="attendee_registration"] .btn[type=submit]',
-        run: "hover",
+        content: "Wait the modal is shown before continue",
+        trigger: ".modal.modal_shown.show form[id=attendee_registration]",
     },
     {
         trigger: ".modal input[name*='1-name']",
