@@ -77,6 +77,7 @@ export class Popover extends Component {
                 );
             },
         },
+        close: { type: Function },
 
         // Styling and semantical props
         animation: { optional: true, type: Boolean },
@@ -101,7 +102,6 @@ export class Popover extends Component {
         },
 
         // Control props
-        close: { optional: true, type: Function },
         closeOnClickAway: { optional: true, type: Function },
         closeOnEscape: { optional: true, type: Boolean },
         setActiveElement: { optional: true, type: Boolean },
@@ -124,9 +124,6 @@ export class Popover extends Component {
         onMounted(() => POPOVERS.set(this.props.target, this.popoverRef.el));
         onWillDestroy(() => POPOVERS.delete(this.props.target));
 
-        if (!this.props.close) {
-            return;
-        }
         if (this.props.target.isConnected) {
             useClickAway((target) => this.onClickAway(target));
 
