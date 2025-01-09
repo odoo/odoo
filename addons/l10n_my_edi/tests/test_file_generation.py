@@ -156,7 +156,7 @@ class L10nMyEDITestFileSubmission(AccountTestInvoicingCommon):
         Simply ensure that in a multi currency environment, the rate is found in the file and is the expected one.
         """
         basic_invoice = self.init_invoice(
-            'out_invoice', amounts=[100], currency=self.other_currency
+            'out_invoice', amounts=[100], currency=self.other_currency, taxes=self.company_data['default_tax_sale']
         )
         basic_invoice.action_post()
 
@@ -174,6 +174,18 @@ class L10nMyEDITestFileSubmission(AccountTestInvoicingCommon):
             root,
             'cac:TaxExchangeRate/cbc:TargetCurrencyCode',
             'MYR',
+        )
+        self._assert_node_values(
+            root,
+            'cac:TaxExchangeRate/cbc:SourceCurrencyCode',
+            'EUR',
+        )
+        # Check that the TaxAmount node has the correct currency too
+        self._assert_node_values(
+            root,
+            'cac:TaxTotal/cbc:TaxAmount',
+            text='10.00',
+            attributes={'currencyID': 'EUR'},
         )
 
     def test_03_optional_fields(self):

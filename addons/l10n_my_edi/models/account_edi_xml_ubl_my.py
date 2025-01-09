@@ -196,19 +196,6 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             'registration_name': partner.name,
         }]
 
-    def _get_invoice_tax_totals_vals_list(self, invoice, taxes_vals):
-        # EXTENDS 'account_edi_ubl_cii'
-        vals_list = super()._get_invoice_tax_totals_vals_list(invoice, taxes_vals)
-        company_currency = invoice.company_id.currency_id
-        if invoice.currency_id != company_currency:
-            vals_list.append({
-                'currency': company_currency,
-                'currency_dp': company_currency.decimal_places,
-                'tax_amount': taxes_vals['tax_amount'],
-                'tax_subtotal_vals': [],
-            })
-        return vals_list
-
     def _get_partner_party_identification_vals_list(self, partner):
         """ The id vals list must be filled with two values.
         The TIN, and then one of either:
