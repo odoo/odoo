@@ -1582,6 +1582,11 @@
                     min-width: auto; // ... except for these ones
                 }
             }
+            &:has(div > we-button-group + we-select.o_grid) {
+                we-button-group {
+                    min-width: 0 !important;
+                }
+            }
 
             > div {
                 display: flex;
@@ -2597,16 +2602,12 @@ we-button:hover .o_we_shape_animated_label > span {
 
 // GRID LAYOUT
 we-button.o_grid {
-    min-width: fit-content;
+    flex: 1 !important;
     padding-left: 4.5px !important;
     padding-right: 4.5px !important;
 }
 
 we-select.o_grid we-toggler {
-    width: fit-content !important;
-}
-
-we-button-group.o_grid we-selection-items {
     width: fit-content !important;
 }
 
