@@ -1574,7 +1574,7 @@
             }
             we-button, .o_we_so_color_palette, we-button-group {
                 &.o_we_user_value_widget {
-                    min-width: auto; // ... except for these ones
+                    min-width: 0; // ... except for these ones
                 }
             }
 
@@ -1620,7 +1620,7 @@
                 width: 100%;
             }
             > div {
-                flex: 0 1 auto;
+                flex: 1 1 auto;
                 min-width: 0;
                 margin-top: $o-we-sidebar-content-field-spacing;
             }
@@ -2592,7 +2592,6 @@ we-button:hover .o_we_shape_animated_label > span {
 
 // GRID LAYOUT
 we-button.o_grid {
-    min-width: fit-content;
     padding-left: 4.5px !important;
     padding-right: 4.5px !important;
 }
