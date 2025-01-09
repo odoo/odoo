@@ -505,6 +505,11 @@ msgid "Hours / Minutes"
 msgstr ""
 
 #. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
+msgid "Hours By Task (Including Subtasks)"
+msgstr ""
+
+#. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__id
 msgid "ID"
@@ -663,6 +668,11 @@ msgid "Ok"
 msgstr ""
 
 #. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__overtime
+msgid "Overtime"
+msgstr ""
+
+#. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__parent_task_id
@@ -815,7 +825,7 @@ msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
-msgid "Sub-Task of '<t t-out=\"title\"/>': "
+msgid "Sub-Task of '"
 msgstr ""
 
 #. module: hr_timesheet
@@ -828,6 +838,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model,name:hr_timesheet.model_project_task
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__task_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__task_id
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -1204,11 +1215,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Total Time Spent"
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
-msgid "Hours By Task (Including Subtasks)"
 msgstr ""
 
 #. module: hr_timesheet
