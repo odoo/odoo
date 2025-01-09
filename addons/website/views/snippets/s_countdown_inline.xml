@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_countdown_inline" name="Countdown Inline">
+    <div class="s_countdown_inline d-flex flex-column align-items-start o_countdown_default" data-display="dhms" data-end-action="nothing" t-att-data-end-time="datetime.datetime.now().timestamp() + 228307">
+        <div class="s_countdown_inline_wrapper">
+            <t t-call="website.s_countdown_inline_default_template"/>
+        </div>
+    </div>
+</template>
+
+<template id="s_countdown_inline_default_template" groups="base.group_user">
+    <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
+    <div class="o_template_default o_count_inline_text o_colored_item alert mb-0">
+        <p>
+            <i class="fa fa-clock-o"/> Sale ends in
+            <span class="o_not_editable oe_unremovable" contenteditable="false">
+                <t t-foreach="metrics" t-as="metric">
+                    <span class="o_count_item">
+                        <span class="o_count_item_nbs d-inline-flex fw-bold"/>
+                        <span class="o_count_item_label fw-bold">
+                            <span class="o_skeletton rounded bg-200 ps-5"/>
+                        </span>
+                    </span>
+                </t>
+            </span>
+        </p>
+    </div>
+</template>
+
+<template id="s_countdown_inline_dominoes_template" groups="base.group_user">
+    <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
+    <div class="o_template_dominoes">
+        <div class="o_not_editable oe_unremovable d-flex gap-1" contenteditable="false">
+            <t t-foreach="metrics" t-as="metric">
+                <span class="o_count_item d-flex gap-1">
+                    <span class="d-flex flex-column align-items-center">
+                        <span class="o_count_item_nbs d-inline-flex">
+                            <span class="o_count_item_nb o_colored_item position-relative rounded py-1 px-2 fs-4 fw-bold"/>
+                            <span class="o_count_item_nb o_colored_item position-relative rounded py-1 px-2 fs-4 fw-bold"/>
+                        </span>
+                        <span class="o_count_item_label small"/>
+                    </span>
+                </span>
+                <span t-if="metric_last == false" class="o_count_separator mt-1 fs-4">:</span>
+            </t>
+        </div>
+    </div>
+</template>
+
+<template id="s_countdown_inline_wrapped_numbers_template" groups="base.group_user">
+    <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
+    <div class="o_template_wrapped_numbers">
+        <div class="o_not_editable oe_unremovable d-inline-flex gap-1" contenteditable="false">
+            <t t-foreach="metrics" t-as="metric">
+                <span class="o_count_item d-flex gap-1">
+                    <span class="d-flex flex-column align-items-center">
+                        <span class="o_count_item_nbs o_colored_item d-flex justify-content-center align-items-center rounded p-2"/>
+                        <span class="o_count_item_label small"/>
+                    </span>
+                </span>
+                <span t-if="metric_last == false" class="o_count_separator align-items-center">:</span>
+            </t>
+        </div>
+    </div>
+</template>
+
+<template id="s_countdown_inline_text_template" groups="base.group_user">
+    <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
+    <div class="o_template_text o_count_inline_text">
+        <p>
+            <i class="fa fa-clock-o"/> Sale ends in
+            <span class="o_not_editable oe_unremovable" contenteditable="false">
+                <t t-foreach="metrics" t-as="metric">
+                    <span class="o_count_item">
+                        <span class="o_count_item_nbs o_colored_text d-inline-flex fw-bold"/>
+                        <span class="o_count_item_label o_colored_text fw-bold"/>
+                    </span>
+                </t>
+            </span>
+        </p>
+    </div>
+</template>
+
+<template id="s_countdown_inline_big_numbers_template" groups="base.group_user">
+    <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
+    <div class="o_template_big_numbers">
+        <div class="o_not_editable oe_unremovable d-inline-flex gap-1" contenteditable="false">
+            <t t-foreach="metrics" t-as="metric">
+                <span class="o_count_item d-flex gap-1">
+                    <span class="d-flex flex-column align-items-center">
+                        <span class="o_count_item_nbs o_colored_text fs-3 fw-bold"/>
+                        <span class="o_count_item_label small"/>
+                    </span>
+                </span>
+                <span t-if="metric_last == false" class="o_count_separator fs-3 fw-bold">:</span>
+            </t>
+        </div>
+    </div>
+</template>
+
+<record id="website.s_countdown_inline_000_scss" model="ir.asset">
+    <field name="name">Countdown Inline 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_countdown_inline/000.scss</field>
+</record>
+
+</odoo>
