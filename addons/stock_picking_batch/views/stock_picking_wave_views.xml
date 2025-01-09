@@ -6,7 +6,7 @@
         <field name="view_mode">list</field>
         <field name="view_id" ref="view_move_line_tree_detailed_wave"/>
         <field name="target">new</field>
-        <field name="domain">[('state', '!=', 'done'), ('picking_type_id', '=', active_id)]</field>
+        <field name="domain">[('state', '!=', 'done'), ('picking_type_id', '=', active_id), ('picking_id', '!=', False)]</field>
         <field name="context">{'active_wave_id': False, 'search_default_by_location': True}</field>
     </record>
     <record id="action_prepare_wave" model="ir.actions.act_window">
@@ -15,7 +15,7 @@
         <field name="view_mode">list</field>
         <field name="view_id" ref="view_move_line_tree_detailed_wave"/>
         <field name="target">new</field>
-        <field name="domain">[('state', '!=', 'done')]</field>
+        <field name="domain">[('state', '!=', 'done'), ('picking_id', '!=', False)]</field>
         <field name="context">{'active_wave_id': False, 'search_default_by_location': True}</field>
     </record>
     <record id="stock_picking_wave_tree" model="ir.ui.view">
