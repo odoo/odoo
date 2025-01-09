@@ -8,7 +8,6 @@ class PosOrder(models.Model):
 
     table_id = fields.Many2one('restaurant.table', string='Table', help='The table where this order was served', index='btree_not_null', readonly=True)
     customer_count = fields.Integer(string='Guests', help='The amount of customers that have been served by this order.', readonly=True)
-    origin_table_id = fields.Many2one('restaurant.table', string='Original Table', help='The table where the order was originally created', readonly=True)
 
     def _get_open_order(self, order):
         config_id = self.env['pos.session'].browse(order.get('session_id')).config_id
@@ -21,13 +20,6 @@ class PosOrder(models.Model):
         else:
             domain += [('uuid', '=', order.get('uuid'))]
         return self.env["pos.order"].search(domain, limit=1)
-
-    @api.model
-    def remove_from_ui(self, server_ids):
-        tables = self.env['pos.order'].search([('id', 'in', server_ids)]).table_id
-        order_ids = super().remove_from_ui(server_ids)
-        self.send_table_count_notification(tables)
-        return order_ids
 
     @api.model
     def sync_from_ui(self, orders):
@@ -51,38 +43,3 @@ class PosOrder(models.Model):
                 result["product.attribute.custom.value"].extend(table_orders.lines.custom_attribute_value_ids.read(table_orders.lines.custom_attribute_value_ids._load_pos_data_fields(config_id), load=False))
 
         return result
-
-    def _process_saved_order(self, draft):
-        order_id = super()._process_saved_order(draft)
-        if not self.env.context.get('cancel_table_notification'):
-            self.send_table_count_notification(self.table_id)
-        return order_id
-
-    def send_table_count_notification(self, table_ids):
-        messages = []
-        a_config = []
-        for config in self.env['pos.config'].search([('floor_ids', 'in', table_ids.floor_id.ids)]):
-            if config.current_session_id:
-                a_config.append(config)
-                draft_order_ids = self.search([
-                    ('table_id', 'in', table_ids.ids),
-                    ('state', '=', 'draft')
-                ]).ids
-                messages.append(
-                    (
-                        "SYNC_ORDERS",
-                        {
-                            'table_ids': table_ids.ids,
-                            'login_number': self.env.context.get('login_number', False),
-                            'order_ids': draft_order_ids,
-                        }
-                    )
-                )
-        if messages:
-            for config in a_config:
-                config._notify(*messages, private=False)
-
-    def action_pos_order_cancel(self):
-        super().action_pos_order_cancel()
-        if self.table_id:
-            self.send_table_count_notification(self.table_id)
