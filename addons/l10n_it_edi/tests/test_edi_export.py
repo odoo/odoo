@@ -427,6 +427,7 @@ class TestItEdiExport(TestItEdi):
         invoice = self.env['account.move'].with_company(self.company).create({
             'partner_id': self.italian_partner_a.id,
             'move_type': 'out_invoice',
+            'invoice_date': '2024-01-01',
             'invoice_line_ids': [
                 Command.create({
                     'name': 'Example Product',
