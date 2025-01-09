@@ -15,7 +15,7 @@ registerWebsitePreviewTour(
     () => [
         ...insertSnippet({ id: "s_countdown", name: "Countdown", groupName: "Content" }),
         ...clickOnSnippet({ id: "s_countdown", name: "Countdown" }),
-        ...changeOptionInPopover("Countdown", "At The End", "Show Message and keep countdown"),
+        ...changeOptionInPopover("Countdown", "At The End", "Message + Timer"),
         changeOption("Countdown", "previewEndMessage"),
         // The next two steps check that the end message does not disappear when
         // a widgets_start_request is triggered.
@@ -45,7 +45,7 @@ registerWebsitePreviewTour(
         },
         // Next, we change the end action to message and no countdown while the
         // edit message toggle is still activated. It should hide the countdown.
-        ...changeOptionInPopover("Countdown", "At The End", "Show Message and hide countdown"),
+        ...changeOptionInPopover("Countdown", "At The End", "Message only"),
         {
             content: "Check that the countdown is not displayed",
             trigger: ":iframe .s_countdown:has(.s_countdown_canvas_wrapper:not(:visible))",

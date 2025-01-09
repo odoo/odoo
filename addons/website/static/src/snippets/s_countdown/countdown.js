@@ -174,6 +174,13 @@ export class Countdown extends Interaction {
                 nbSeconds: 1,
             });
         }
+        if (this.layout === "text") {
+            this.timeDiff.forEach((metric) => {
+                if (metric.label) {
+                    metric.label = this.wrapFirstLetter(metric.label);
+                }
+            });
+        }
     }
 
     updateTimediff() {
@@ -205,6 +212,14 @@ export class Countdown extends Interaction {
     }
 
     /**
+     * Isolates the first label letter to style correctly the "Compact" label style
+     */
+    wrapFirstLetter(string) {
+        const firstLetter = string[0];
+        const restOfString = string.slice(1);
+        return `<span class="o_first_letter">${firstLetter}</span><span class="o_other_letters">${restOfString}</span>`;
+    }
+    /**
      * Draws the whole countdown, including one countdown for each time unit.
      */
     render() {
@@ -214,24 +229,41 @@ export class Countdown extends Interaction {
         }
         this.updateTimediff();
 
+        this.el
+            .querySelector(".s_countdown_inline_wrapper")
+            ?.classList.toggle("d-none", this.layout !== "text" || this.shouldHideCountdown);
+        this.el
+            .querySelector(".s_countdown_canvas_wrapper")
+            ?.classList.toggle("d-none", this.layout === "text");
         if (this.layout === "text") {
-            const canvasEls = this.el.querySelectorAll(".s_countdown_canvas_flex");
-            for (const canvasEl of canvasEls) {
-                canvasEl.classList.add("d-none");
+            this.countItemEls = this.el.querySelectorAll(".o_count_item");
+            this.countItemNbsEls = this.el.querySelectorAll(".o_count_item_nbs");
+            this.countItemNbEls = this.el.querySelectorAll(".o_count_item_nb");
+            this.countItemLabelEls = this.el.querySelectorAll(".o_count_item_label");
+            if (
+                !this.countItemEls.length ||
+                !this.countItemNbsEls.length ||
+                !this.countItemLabelEls.length
+            ) {
+                return;
             }
-            if (!this.textWrapperEl) {
-                this.textWrapperEl = document.createElement("span");
-                this.textWrapperEl.classList.add("s_countdown_text_wrapper", "d-none");
-                this.textWrapperEl.textContent = _t("Countdown ends in");
-                const spanEl = document.createElement("span");
-                spanEl.classList.add("s_countdown_text", "ms-1");
-                this.textWrapperEl.appendChild(spanEl);
-                this.insert(this.textWrapperEl, this.wrapperEl);
+            [...this.countItemEls].map((countItemEl) => countItemEl.classList.add("d-none"));
+            for (const [index, metric] of this.timeDiff.entries()) {
+                // Force to always have 2 numbers by metric
+                metric.nb = String(metric.nb).padStart(2, "0");
+                // If the selected template have inner element, wrap each number in each of them
+                if (this.countItemNbEls.length > 0) {
+                    metric.nb.split("").forEach((number, i) => {
+                        this.countItemNbsEls[index].querySelectorAll("span")[i].textContent =
+                            number;
+                    });
+                } else {
+                    this.countItemNbsEls[index].textContent = String(metric.nb).padStart(2, "0");
+                }
+                const fragmentEl = document.createRange().createContextualFragment(metric.label);
+                this.countItemLabelEls[index].replaceChildren(fragmentEl);
+                this.countItemEls[index].classList.remove("d-none");
             }
-            this.textWrapperEl.classList.toggle("d-none", this.shouldHideCountdown);
-
-            const countdownText = this.timeDiff.map((e) => e.nb + " " + e.label).join(", ");
-            this.el.querySelector(".s_countdown_text").innerText = countdownText.toLowerCase();
         } else {
             for (const val of this.timeDiff) {
                 const canvas = val.canvas.querySelector("canvas");

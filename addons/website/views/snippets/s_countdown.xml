@@ -23,13 +23,113 @@
                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="175" height="175" class="w-100" viewBox="0 0 175 175"><defs></defs><g><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="43.75px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="87.5" text-anchor="middle" dominant-baseline="central">45</text><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="14.583333333333334px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="116.66666666666667" text-anchor="middle" dominant-baseline="central">Seconds</text><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 166.25 87.5 A 78.75 78.75 0 1 1 166.24996062500327 87.42125001312495" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 87.5 8.75 A 78.75 78.75 0 1 1 8.75 87.50000000000001" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
                 </div>
             </div>
+            <div class="s_countdown_inline d-flex flex-column align-items-start o_countdown_default">
+                <div class="s_countdown_inline_wrapper d-none">
+                    <t t-call="website.s_countdown_inline_default_template"/>
+                </div>
+            </div>
         </div>
     </section>
+</template>
+
+<template id="s_countdown_inline_default_template" groups="base.group_user">
+    <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
+    <div class="o_template_default o_count_inline_text o_colored_item alert mb-0">
+        <p>
+            <i class="fa fa-clock-o"/> Sale ends in
+            <span class="o_not_editable oe_unremovable" contenteditable="false">
+                <t t-foreach="metrics" t-as="metric">
+                    <span class="o_count_item">
+                        <span class="o_count_item_nbs d-inline-flex fw-bold"/>
+                        <span class="o_count_item_label fw-bold">
+                            <span class="o_skeletton rounded bg-200 ps-5"/>
+                        </span>
+                    </span>
+                </t>
+            </span>
+        </p>
+    </div>
+</template>
+
+<template id="s_countdown_inline_dominoes_template" groups="base.group_user">
+    <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
+    <div class="o_template_dominoes">
+        <div class="o_not_editable oe_unremovable d-flex gap-1" contenteditable="false">
+            <t t-foreach="metrics" t-as="metric">
+                <span class="o_count_item d-flex gap-1">
+                    <span class="d-flex flex-column align-items-center">
+                        <span class="o_count_item_nbs d-inline-flex">
+                            <span class="o_count_item_nb o_colored_item position-relative rounded py-1 px-2 fs-4 fw-bold"/>
+                            <span class="o_count_item_nb o_colored_item position-relative rounded py-1 px-2 fs-4 fw-bold"/>
+                        </span>
+                        <span class="o_count_item_label small"/>
+                    </span>
+                </span>
+                <span t-if="metric_last == false" class="o_count_separator mt-1 fs-4">:</span>
+            </t>
+        </div>
+    </div>
+</template>
+
+<template id="s_countdown_inline_wrapped_numbers_template" groups="base.group_user">
+    <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
+    <div class="o_template_wrapped_numbers">
+        <div class="o_not_editable oe_unremovable d-inline-flex gap-1" contenteditable="false">
+            <t t-foreach="metrics" t-as="metric">
+                <span class="o_count_item d-flex gap-1">
+                    <span class="d-flex flex-column align-items-center">
+                        <span class="o_count_item_nbs o_colored_item d-flex justify-content-center align-items-center rounded p-2"/>
+                        <span class="o_count_item_label small"/>
+                    </span>
+                </span>
+                <span t-if="metric_last == false" class="o_count_separator align-items-center">:</span>
+            </t>
+        </div>
+    </div>
+</template>
+
+<template id="s_countdown_inline_text_template" groups="base.group_user">
+    <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
+    <div class="o_template_text o_count_inline_text">
+        <p>
+            <i class="fa fa-clock-o"/> Sale ends in
+            <span class="o_not_editable oe_unremovable" contenteditable="false">
+                <t t-foreach="metrics" t-as="metric">
+                    <span class="o_count_item o_colored_text">
+                        <span class="o_count_item_nbs d-inline-flex fw-bold"/>
+                        <span class="o_count_item_label fw-bold"/>
+                    </span>
+                </t>
+            </span>
+        </p>
+    </div>
+</template>
+
+<template id="s_countdown_inline_big_numbers_template" groups="base.group_user">
+    <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
+    <div class="o_template_big_numbers">
+        <div class="o_not_editable oe_unremovable d-inline-flex gap-1" contenteditable="false">
+            <t t-foreach="metrics" t-as="metric">
+                <span class="o_count_item d-flex gap-1">
+                    <span class="d-flex flex-column align-items-center">
+                        <span class="o_count_item_nbs o_colored_text fs-3 fw-bold"/>
+                        <span class="o_count_item_label small"/>
+                    </span>
+                </span>
+                <span t-if="metric_last == false" class="o_count_separator fs-3 fw-bold">:</span>
+            </t>
+        </div>
+    </div>
 </template>
 
 <asset id="website.s_countdown_000_xml" name="Countdown 000 XML">
     <bundle>web.assets_frontend</bundle>
     <path>website/static/src/snippets/s_countdown/000.xml</path>
+</asset>
+
+<asset id="website.s_countdown_000_scss" name="Countdown 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_countdown/000.scss</path>
 </asset>
 
 </odoo>
