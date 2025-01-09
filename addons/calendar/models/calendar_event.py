@@ -532,7 +532,7 @@ class CalendarEvent(models.Model):
         # get list of models ids and filter out None values directly
         model_ids = list(filter(None, {values.get('res_model_id', defaults.get('res_model_id')) for values in vals_list}))
         model_name = defaults.get('res_model')
-        valid_activity_model_ids = model_name and self.env[model_name].sudo().browse(model_ids).filtered(lambda m: 'activity_ids' in m).ids or []
+        valid_activity_model_ids = model_name and model_name not in self._get_activity_excluded_models() and self.env[model_name].sudo().browse(model_ids).filtered(lambda m: 'activity_ids' in m).ids or []
         if meeting_activity_type and not defaults.get('activity_ids'):
             for values in vals_list:
                 # created from calendar: try to create an activity on the related record
@@ -1381,6 +1381,16 @@ class CalendarEvent(models.Model):
     # ------------------------------------------------------------
     # TOOLS
     # ------------------------------------------------------------
+
+    @api.model
+    def _get_activity_excluded_models(self):
+        """
+        For some models, we don't want to automatically create activities when a calendar.event is created.
+        (This is the case notably for appointment.types)
+        This hook method allows to specify those models.
+        See calendar.event create method for details.
+        """
+        return []
 
     def _reset_attendees_status(self):
         """ Reset attendees status to pending and accept event for current user. """
