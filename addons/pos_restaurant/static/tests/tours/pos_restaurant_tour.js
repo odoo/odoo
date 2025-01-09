@@ -106,11 +106,6 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            {
-                ...Dialog.confirm(),
-                content:
-                    "acknowledge printing error ( because we don't have printer in the test. )",
-            },
             ReceiptScreen.clickNextOrder(),
             // Check if there ids no active Order
             Chrome.activeTableOrOrderIs("Table"),
@@ -190,7 +185,8 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
             FloorScreen.clickTable("4"),
 
             // Test if products still get merged after transfering the order
-            ProductScreen.clickDisplayedProduct("Water", true, "2.0"),
+            ProductScreen.totalAmountIs("4.40"),
+            ProductScreen.clickDisplayedProduct("Water"),
             ProductScreen.totalAmountIs("6.60"),
             ProductScreen.clickNumpad("1"),
             ProductScreen.totalAmountIs("4.40"),
@@ -268,11 +264,6 @@ registry.category("web_tour.tours").add("OrderTrackingTour", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
-            {
-                content:
-                    "As the font can't be loaded, we wait printing failed modal before close tour",
-                trigger: ".modal:contains(printing failed)",
-            },
         ].flat(),
 });
 registry.category("web_tour.tours").add("CategLabelCheck", {

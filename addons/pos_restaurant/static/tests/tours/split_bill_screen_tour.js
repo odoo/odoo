@@ -44,6 +44,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
             // click pay to split, go back to check the lines
             SplitBillScreen.clickPay(),
             Chrome.activeTableOrOrderIs("2B"),
+            ProductScreen.totalAmountIs("8.0"),
             ProductScreen.clickOrderline("Water", "3.0"),
             ProductScreen.clickOrderline("Coca-Cola", "1.0"),
 
@@ -132,6 +133,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
 
             // click pay to split, and pay
             SplitBillScreen.clickPay(),
+            ProductScreen.totalAmountIs("2.0"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
@@ -188,6 +190,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour4ProductCombo", {
 
             ...SplitBillScreen.subtotalIs("53.80"),
             ...SplitBillScreen.clickPay(),
+            ProductScreen.totalAmountIs("53.80"),
             ProductScreen.clickPayButton(),
             ...PaymentScreen.clickPaymentMethod("Bank"),
             ...PaymentScreen.clickValidate(),

@@ -171,11 +171,6 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            {
-                ...Dialog.confirm(),
-                content:
-                    "acknowledge printing error ( because we don't have printer in the test. )",
-            },
             ReceiptScreen.clickNextOrder(),
             Utils.negateStep(FloorScreen.isChildTable("5")),
 
