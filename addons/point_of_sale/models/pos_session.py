@@ -102,7 +102,8 @@ class PosSession(models.Model):
             response[model]['relations'] = {}
 
         for name, params in model_fields.items():
-            if name not in response[model]['fields'] and len(response[model]['fields']) != 0:
+            fields_count = len(response[model]['fields'])
+            if (fields_count and name not in response[model]['fields']) or (params.manual and not fields_count):
                 continue
 
             if params.comodel_name:
