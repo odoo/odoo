@@ -14,13 +14,15 @@ export class ProductProduct {
      * @param {string} display_name
      * @param {ProductTemplateAttributeLine[]|object[]} ptals
      * @param {string} image_src
+     * @param {string} description
      */
-    setup({id, product_tmpl_id, display_name, ptals, image_src}) {
+    setup({id, product_tmpl_id, display_name, ptals, image_src, description}) {
         this.id = id;
         this.product_tmpl_id = product_tmpl_id;
         this.display_name = display_name;
         this.ptals = ptals.map(ptal => new ProductTemplateAttributeLine(ptal));
         this.image_src = image_src;
+        this.description = description;
     }
 
     /**
@@ -71,5 +73,14 @@ export class ProductProduct {
             'id': ptav.id,
             'value': ptav.custom_value,
         }));
+    }
+
+    get isSimpleProductOrHasSelectedPtavs() {
+        return (
+            !this.ptals.length
+            || this.ptals.some(
+                ptal => ptal.selected_ptavs.length > 0
+            )
+        );
     }
 }
