@@ -1,3 +1,4 @@
+import { closestElement } from "@html_editor/utils/dom_traversal";
 import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -13,6 +14,8 @@ export class TableMenu extends Component {
         moveRow: Function,
         addRow: Function,
         removeRow: Function,
+        resetRowSize: Function,
+        resetColumnSize: Function,
         resetTableSize: Function,
         clearColumnContent: Function,
         clearRowContent: Function,
@@ -36,11 +39,24 @@ export class TableMenu extends Component {
         this.items = this.props.type === "column" ? this.colItems() : this.rowItems();
     }
 
-    get hasCustomSize() {
-        return (
-            !!this.props.target.closest("tr").style.height ||
-            !!this.props.target.closest("td").style.width
-        );
+    get hasCustomTableSize() {
+        const table = closestElement(this.props.target, "table");
+        if (!table) {
+            return false;
+        }
+        const rows = table.querySelectorAll("tr");
+        const rowHasHeight = Array.from(rows).some((row) => row.style.height);
+        const firstRowCells = table.querySelectorAll("tr:first-child td");
+        const cellHasWidth = Array.from(firstRowCells).some((cell) => cell.style.width);
+        return rowHasHeight || cellHasWidth;
+    }
+
+    get hasCustomRowSize() {
+        return !!this.props.target.closest("tr").style.height;
+    }
+
+    get hasCustomColumnSize() {
+        return !!this.props.target.closest("td").style.width;
     }
 
     onSelected(item) {
@@ -81,10 +97,16 @@ export class TableMenu extends Component {
                 text: _t("Delete"),
                 action: this.props.removeColumn.bind(this),
             },
-            this.hasCustomSize && {
-                name: "reset_size",
+            this.hasCustomColumnSize && {
+                name: "reset_column_size",
                 icon: "fa-table",
-                text: _t("Reset Size"),
+                text: _t("Reset column size"),
+                action: (target) => this.props.resetColumnSize(target.closest("td")),
+            },
+            this.hasCustomTableSize && {
+                name: "reset_table_size",
+                icon: "fa-table",
+                text: _t("Reset table size"),
                 action: (target) => this.props.resetTableSize(target.closest("table")),
             },
             {
@@ -128,10 +150,16 @@ export class TableMenu extends Component {
                 text: _t("Delete"),
                 action: (target) => this.props.removeRow(target.parentElement),
             },
-            this.hasCustomSize && {
-                name: "reset_size",
+            this.hasCustomRowSize && {
+                name: "reset_row_size",
                 icon: "fa-table",
-                text: _t("Reset Size"),
+                text: _t("Reset row size"),
+                action: (target) => this.props.resetRowSize(target.closest("tr")),
+            },
+            this.hasCustomTableSize && {
+                name: "reset_table_size",
+                icon: "fa-table",
+                text: _t("Reset table size"),
                 action: (target) => this.props.resetTableSize(target.closest("table")),
             },
             {
