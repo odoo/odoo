@@ -74,7 +74,6 @@ class AccountBankStatement(models.Model):
         comodel_name='account.bank.statement.line',
         inverse_name='statement_id',
         string='Statement lines',
-        required=True,
     )
 
     # A statement assumed to be complete when the sum of encoded lines is equal to the difference between start and
