@@ -443,6 +443,7 @@
             <!-- Inner snippets -->
             <snippets id="snippet_content" string="Inner content">
                 <t t-snippet="website.s_inline_text" string="Text" t-thumbnail="/website/static/src/img/snippets_thumbs/s_inline_text.svg"/>
+                <t t-snippet="website.s_countdown_inline" string="Countdown Inline" t-thumbnail="/website/static/src/img/snippets_thumbs/s_countdown.svg"/>
                 <t t-snippet="website.s_button" string="Button" t-thumbnail="/website/static/src/img/snippets_thumbs/s_button.svg"/>
                 <t t-snippet="website.s_image" string="Image" t-thumbnail="/website/static/src/img/snippets_thumbs/s_image.svg"/>
                 <t t-snippet="website.s_video" string="Video" t-thumbnail="/website/static/src/img/snippets_thumbs/s_video.svg"/>
@@ -1171,7 +1172,7 @@
     <t t-set="so_content_addition_selector" t-translation="off">
         blockquote, .s_alert, .o_facebook_page, .s_share, .s_social_media, .s_rating,
         .s_hr, .s_google_map, .s_map, .s_countdown, .s_chart, .s_text_highlight, .s_progress_bar, .s_badge,
-        .s_embed_code, .s_donation, .s_add_to_cart, .s_online_appointment, .o_snippet_drop_in_only, .s_image, .s_cta_badge, .s_accordion
+        .s_embed_code, .s_donation, .s_add_to_cart, .s_online_appointment, .o_snippet_drop_in_only, .s_image, .s_cta_badge, .s_accordion, .s_countdown_inline
     </t>
 
     <t t-set="special_cards_selector" t-valuef=".s_card.s_timeline_card, div:is(#{card_parent_handlers}) > .s_card"/>
