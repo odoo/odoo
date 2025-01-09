@@ -80,7 +80,7 @@
         'web.assets_frontend': [
             'website_sale/static/src/interactions/**/*',
             'website_sale/static/src/snippets/**/*.js',
-            ('remove', 'website_sale/static/src/snippets/**/*.edit.js'),
+            ('remove', 'website_sale/static/src/snippets/**/000.js'),
             ('remove', 'website_sale/static/src/snippets/**/options.js'),
             'website_sale/static/src/js/tours/tour_utils.js',
             'website_sale/static/src/scss/website_sale.scss',
