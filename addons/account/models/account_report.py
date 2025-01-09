@@ -20,6 +20,7 @@ FIGURE_TYPE_SELECTION_VALUES = [
 ]
 
 DOMAIN_REGEX = re.compile(r'(-?sum)\((.*)\)')
+CROSS_REPORT_REGEX = re.compile(r'^cross_report\((.*)\)$')
 
 
 class AccountReport(models.Model):
@@ -749,8 +750,23 @@ class AccountReportExpression(models.Model):
                 else:
                     labels_by_code = candidate_expr._get_aggregation_terms_details()
 
-                    cross_report_domain = []
-                    if candidate_expr.subformula != 'cross_report':
+                    if candidate_expr.subformula and candidate_expr.subformula.startswith('cross_report'):
+                        subformula_match = CROSS_REPORT_REGEX.match(candidate_expr.subformula)
+                        if not subformula_match:
+                            raise UserError(_("Cross report expressions must follow this format: cross_report(xml_id|id)"))
+                        cross_report_value = subformula_match.groups()[0]
+                        try:
+                            report_id = int(cross_report_value)
+                        except ValueError:
+                            report_id = self.env.ref(cross_report_value).id
+
+                        if not report_id:
+                            raise UserError(_("Failed to parse cross_report id or xml_id"))
+                        elif report_id == candidate_expr.report_line_id.report_id.id:
+                            raise UserError(_("You cannot use cross report on itself"))
+
+                        cross_report_domain = [('report_line_id.report_id', '=', report_id)]
+                    else:
                         cross_report_domain = [('report_line_id.report_id', '=', candidate_expr.report_line_id.report_id.id)]
 
                     for line_code, expr_labels in labels_by_code.items():
