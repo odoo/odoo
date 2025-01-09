@@ -24,6 +24,7 @@ export class NotificationSettings extends Component {
     setup() {
         this.store = useService("mail.store");
         this.dialog = useService("dialog");
+        this.ui = useService("ui");
     }
 
     setMute(minutes) {
