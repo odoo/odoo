@@ -11,7 +11,7 @@ class ReportProjectTaskUser(models.Model):
     remaining_hours = fields.Float('Time Remaining', readonly=True, groups="hr_timesheet.group_hr_timesheet_user")
     remaining_hours_percentage = fields.Float('Time Remaining Percentage', readonly=True, groups="hr_timesheet.group_hr_timesheet_user")
     progress = fields.Float('Progress', aggregator='avg', readonly=True, groups="hr_timesheet.group_hr_timesheet_user")
-    overtime = fields.Float(readonly=True, export_string_translation=False, groups="hr_timesheet.group_hr_timesheet_user")
+    overtime = fields.Float(readonly=True, groups="hr_timesheet.group_hr_timesheet_user")
 
     def _select(self):
         return super()._select() + """,
