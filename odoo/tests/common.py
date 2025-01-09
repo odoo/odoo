@@ -905,6 +905,14 @@ class ChromeBrowser:
         self._websocket_send('Runtime.enable')
         self._logger.info('Chrome headless enable page notifications')
         self._websocket_send('Page.enable')
+        emulated_device = {
+            'mobile': False,
+            'width': None,
+            'height': None,
+            'deviceScaleFactor': 1,
+        }
+        emulated_device['width'], emulated_device['height'] = [int(size) for size in self.window_size.split(",")]
+        self._websocket_request('Emulation.setDeviceMetricsOverride', params=emulated_device)
         if os.name == 'posix':
             self.sigxcpu_handler = signal.getsignal(signal.SIGXCPU)
             signal.signal(signal.SIGXCPU, self.signal_handler)
@@ -1012,7 +1020,6 @@ class ChromeBrowser:
             '--disable-translate': '',
             # required for tours that use Youtube autoplay conditions (namely website_slides' "course_tour")
             '--autoplay-policy': 'no-user-gesture-required',
-            '--window-size': self.window_size,
             '--remote-debugging-address': HOST,
             '--remote-debugging-port': str(self.remote_debugging_port),
             '--no-sandbox': '',
