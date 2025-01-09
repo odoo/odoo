@@ -49,6 +49,8 @@ function isUnremovableTableComponent(node, root) {
  * @property { TablePlugin['moveRow'] } moveRow
  * @property { TablePlugin['removeColumn'] } removeColumn
  * @property { TablePlugin['removeRow'] } removeRow
+ * @property { TablePlugin['resetRowHeight'] } resetRowHeight
+ * @property { TablePlugin['resetColumnWidth'] } resetColumnWidth
  * @property { TablePlugin['resetTableSize'] } resetTableSize
  * @property { TablePlugin['clearColumnContent'] } clearColumnContent
  * @property { TablePlugin['clearRowContent'] } clearRowContent
@@ -77,6 +79,8 @@ export class TablePlugin extends Plugin {
         "removeRow",
         "moveColumn",
         "moveRow",
+        "resetRowHeight",
+        "resetColumnWidth",
         "resetTableSize",
         "clearColumnContent",
         "clearRowContent",
@@ -370,6 +374,129 @@ export class TablePlugin extends Plugin {
         }
         this.dependencies.selection.setSelection(selectionToRestore);
     }
+
+    /**
+     * @param {HTMLTableElement} table
+     */
+    normalizeRowHeight(table) {
+        const rows = [...table.rows];
+        const referenceRow = rows.find((row) => !row.style.height);
+        const referenceRowHeight = parseFloat(getComputedStyle(referenceRow).height);
+        rows.forEach((row) => {
+            if (
+                row.style.height &&
+                Math.abs(parseFloat(row.style.height) - referenceRowHeight) <= 1
+            ) {
+                row.style.height = "";
+            }
+        });
+    }
+
+    /**
+     * @param {HTMLTableRowElement} row
+     */
+    resetRowHeight(row) {
+        const table = closestElement(row, "table");
+        row.style.height = "";
+        this.normalizeRowHeight(table);
+    }
+
+    /**
+     * @param {HTMLTableElement} table
+     */
+    normalizeColumnWidth(table) {
+        const rows = [...table.rows];
+        const firstRowCells = [...rows[0].cells];
+        const tableWidth = parseFloat(table.style.width);
+        if (tableWidth) {
+            const expectedCellWidth = tableWidth / firstRowCells.length;
+            firstRowCells.forEach((cell, i) => {
+                const cellWidth = parseFloat(cell.style.width);
+                if (cellWidth && Math.abs(cellWidth - expectedCellWidth) <= 1) {
+                    rows.forEach((row) => (row.cells[i].style.width = ""));
+                }
+            });
+        }
+    }
+
+    /**
+     * @param {HTMLTableCellElement} cell
+     */
+    resetColumnWidth(cell) {
+        const currentCellWidth = parseFloat(cell.style.width);
+        if (!currentCellWidth) {
+            return;
+        }
+
+        const table = closestElement(cell, "table");
+        const tableWidth = parseFloat(table.style.width);
+        const currentRow = cell.parentElement;
+        const currentRowCells = [...currentRow.cells];
+        const rowCellCount = currentRowCells.length;
+        const expectedCellWidth = tableWidth / rowCellCount;
+        const widthDifference = currentCellWidth - expectedCellWidth;
+        const currentColumnIndex = getColumnIndex(cell);
+
+        let totalWidthLeftOfCell = 0,
+            totalWidthRightOfCell = 0;
+        currentRowCells.forEach((rowCell, i) => {
+            const cellWidth = parseFloat(rowCell.style.width) || rowCell.clientWidth;
+            if (i < currentColumnIndex) {
+                totalWidthLeftOfCell += cellWidth;
+            } else if (i > currentColumnIndex) {
+                totalWidthRightOfCell += cellWidth;
+            }
+        });
+
+        let expectedWidthLeftOfCell = currentColumnIndex * expectedCellWidth;
+        let expectedWidthRightOfCell = (rowCellCount - 1 - currentColumnIndex) * expectedCellWidth;
+        let cellsToAdjust = [];
+        for (
+            let i = currentColumnIndex - 1;
+            i >= 0 && Math.abs(expectedWidthLeftOfCell - totalWidthLeftOfCell) > 1;
+            i--
+        ) {
+            cellsToAdjust.push(currentRowCells[i]);
+            totalWidthLeftOfCell -=
+                parseFloat(currentRowCells[i].style.width) || currentRowCells[i].clientWidth;
+            expectedWidthLeftOfCell -= expectedCellWidth;
+        }
+        for (
+            let j = currentColumnIndex + 1;
+            j < rowCellCount && Math.abs(expectedWidthRightOfCell - totalWidthRightOfCell) > 1;
+            j++
+        ) {
+            cellsToAdjust.push(currentRowCells[j]);
+            totalWidthRightOfCell -=
+                parseFloat(currentRowCells[j].style.width) || currentRowCells[j].clientWidth;
+            expectedWidthRightOfCell -= expectedCellWidth;
+        }
+
+        cellsToAdjust = cellsToAdjust.filter((adjCell) => {
+            const cellWidth = parseFloat(adjCell.style.width) || adjCell.clientWidth;
+            return widthDifference > 0
+                ? cellWidth < expectedCellWidth
+                : cellWidth > expectedCellWidth;
+        });
+
+        const totalWidthForAdjustment = cellsToAdjust.reduce((width, adjCell) => {
+            const cellWidth = parseFloat(adjCell.style.width) || adjCell.clientWidth;
+            return width + Math.abs(expectedCellWidth - cellWidth);
+        }, 0);
+
+        cell.style.width = `${expectedCellWidth}px`;
+        cellsToAdjust.forEach((adjCell) => {
+            const adjCellWidth = parseFloat(adjCell.style.width) || adjCell.clientWidth;
+            const adjustmentWidth =
+                (Math.abs(expectedCellWidth - adjCellWidth) / totalWidthForAdjustment) *
+                Math.abs(widthDifference);
+            adjCell.style.width = `${
+                adjCellWidth + (widthDifference > 0 ? adjustmentWidth : -adjustmentWidth)
+            }px`;
+        });
+        this.normalizeColumnWidth(table);
+    }
+
     /**
      * @param {HTMLTableElement} table
      */
