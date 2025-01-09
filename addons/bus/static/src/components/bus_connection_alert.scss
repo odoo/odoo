@@ -11,8 +11,11 @@ $o-bus-ConnectionAlert-color: mix($white, $warning, 40%);
 
 .o-bus-ConnectionAlert-failure {
     width: fit-content;
-    animation: o-bus-ConnectionAlert-failureAnimation ease-in-out .5s forwards;
     padding: map-get($spacers, 1) * 1.5;
+
+    &.o-long {
+        animation: o-bus-ConnectionAlert-failureAnimation ease-in-out .5s forwards;
+    }
 }
 
 .o-bus-ConnectionAlert-icon {
