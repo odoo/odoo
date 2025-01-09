@@ -207,9 +207,9 @@ export class Interaction {
      * Debounces a function and makes sure it is cancelled upon destroy.
      */
     debounced(fn, delay) {
-        const debouncedFn = debounce((...args) => {
-            fn.apply(this, args);
-            if (this.isReady) {
+        const debouncedFn = debounce(async (...args) => {
+            await fn.apply(this, args);
+            if (this.isReady && !this.isDestroyed) {
                 this.updateContent();
             }
         }, delay);
@@ -233,9 +233,9 @@ export class Interaction {
      * Throttles a function for animation and makes sure it is cancelled upon destroy.
      */
     throttled(fn) {
-        const throttledFn = throttleForAnimation((...args) => {
-            fn.apply(this, args);
-            if (this.isReady) {
+        const throttledFn = throttleForAnimation(async (...args) => {
+            await fn.apply(this, args);
+            if (this.isReady && !this.isDestroyed) {
                 this.updateContent();
             }
         });
