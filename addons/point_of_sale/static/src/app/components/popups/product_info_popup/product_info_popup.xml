@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ProductInfoPopup">
-        <Dialog title="props.productTemplate.display_name + ' | ' + env.utils.formatCurrency(props.info.productInfo.all_prices.price_with_tax)">
+        <Dialog>
+            <t t-set-slot="header">
+                <button t-on-click="toggleFavorite" class="border-0 bg-transparent mb-2" t-att-disabled="this.pos.cashier._role == 'minimal'">
+                    <i t-attf-class="fa fa-lg fa-fw  {{props.productTemplate.is_favorite ? 'fa-star' : 'fa-star-o'}}"
+                        t-att-style="props.productTemplate.is_favorite ? 'color: #f3cc00;' : ''"
+                        role="img"/>
+                </button>
+                <h3 class="section-title" t-out="props.productTemplate.display_name + ' | ' + env.utils.formatCurrency(props.info.productInfo.all_prices.price_with_tax)"/>
+                <button type="button" class="btn-close mb-2" aria-label="Close" tabindex="-1" t-on-click="props.close"/>
+            </t>
             <div class="section-public-description mt-3 mb-4 pb-4 border-bottom text-start" t-if="props.productTemplate.productDescriptionMarkup">
                 <h3 class="section-title">
                     Description
