@@ -55,13 +55,11 @@ const testTemplate = `
 
 test.tags("desktop")("dynamic snippet carousel loads items and displays them through template (desktop)", async () => {
     onRpc("/website/snippet/filters", async (args) => {
-        for await (const chunk of args.body) {
-            const json = JSON.parse(new TextDecoder().decode(chunk));
-            expect(json.params.filter_id).toBe(1);
-            expect(json.params.template_key).toBe("website.dynamic_filter_template_test_item");
-            expect(json.params.limit).toBe(16);
-            expect(json.params.search_domain).toEqual([]);
-        }
+        const json = JSON.parse(new TextDecoder().decode(await args.arrayBuffer()));
+        expect(json.params.filter_id).toBe(1);
+        expect(json.params.template_key).toBe("website.dynamic_filter_template_test_item");
+        expect(json.params.limit).toBe(16);
+        expect(json.params.search_domain).toEqual([]);
         return [`<div class="s_test_dynamic_carousel_item" data-test-param="test1">Test Record 1</div>`,
             `<div class="s_test_dynamic_carousel_item" data-test-param="test2">Test Record 2</div>`,
             `<div class="s_test_dynamic_carousel_item" data-test-param="test3">Test Record 3</div>`,
@@ -102,13 +100,11 @@ test.tags("desktop")("dynamic snippet carousel loads items and displays them thr
 
 test.tags("mobile")("dynamic snippet carousel loads items and displays them through template (mobile)", async () => {
     onRpc("/website/snippet/filters", async (args) => {
-        for await (const chunk of args.body) {
-            const json = JSON.parse(new TextDecoder().decode(chunk));
-            expect(json.params.filter_id).toBe(1);
-            expect(json.params.template_key).toBe("website.dynamic_filter_template_test_item");
-            expect(json.params.limit).toBe(16);
-            expect(json.params.search_domain).toEqual([]);
-        }
+        const json = JSON.parse(new TextDecoder().decode(await args.arrayBuffer()));
+        expect(json.params.filter_id).toBe(1);
+        expect(json.params.template_key).toBe("website.dynamic_filter_template_test_item");
+        expect(json.params.limit).toBe(16);
+        expect(json.params.search_domain).toEqual([]);
         return [`<div class="s_test_dynamic_carousel_item" data-test-param="test1">Test Record 1</div>`,
             `<div class="s_test_dynamic_carousel_item" data-test-param="test2">Test Record 2</div>`,
             `<div class="s_test_dynamic_carousel_item" data-test-param="test3">Test Record 3</div>`,

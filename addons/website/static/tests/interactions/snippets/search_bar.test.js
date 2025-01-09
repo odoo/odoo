@@ -35,17 +35,15 @@ const searchTemplate = `
 
 function supportAutocomplete() {
     onRpc("/website/snippet/autocomplete", async (args) => {
-        for await (const chunk of args.body) {
-            const json = JSON.parse(new TextDecoder().decode(chunk));
-            expect(json.params.search_type).toBe("test");
-            expect(json.params.term).toBe("xyz");
-            expect(json.params.order).toBe("test desc");
-            expect(json.params.limit).toBe(3);
-            expect(json.params.options.displayImage).toBe("false");
-            expect(json.params.options.displayDescription).toBe("false");
-            expect(json.params.options.displayExtraLink).toBe("true");
-            expect(json.params.options.displayDetail).toBe("false");
-        }
+        const json = JSON.parse(new TextDecoder().decode(await args.arrayBuffer()));
+        expect(json.params.search_type).toBe("test");
+        expect(json.params.term).toBe("xyz");
+        expect(json.params.order).toBe("test desc");
+        expect(json.params.limit).toBe(3);
+        expect(json.params.options.displayImage).toBe("false");
+        expect(json.params.options.displayDescription).toBe("false");
+        expect(json.params.options.displayExtraLink).toBe("true");
+        expect(json.params.options.displayDetail).toBe("false");
         return {
             "results": [
                 {

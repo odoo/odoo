@@ -24,17 +24,15 @@ describe.current.tags("interaction_dev");
 test.tags("desktop")("dynamic snippet products loads items and displays them through template", async () => {
     document.querySelector("html").dataset.mainObject = "product.public.category(2,)";
     onRpc("/website/snippet/filters", async (args) => {
-        for await (const chunk of args.body) {
-            const json = JSON.parse(new TextDecoder().decode(chunk));
-            expect(json.params.filter_id).toBe(3);
-            expect(json.params.template_key).toBe("website_sale.dynamic_filter_template_product_product_borderless_1");
-            expect(json.params.limit).toBe(16);
-            expect(json.params.search_domain).toEqual([[
-                "public_categ_ids",
-                "child_of",
-                2,
-            ]]);
-        }
+        const json = JSON.parse(new TextDecoder().decode(await args.arrayBuffer()));
+        expect(json.params.filter_id).toBe(3);
+        expect(json.params.template_key).toBe("website_sale.dynamic_filter_template_product_product_borderless_1");
+        expect(json.params.limit).toBe(16);
+        expect(json.params.search_domain).toEqual([[
+            "public_categ_ids",
+            "child_of",
+            2,
+        ]]);
         return [`
             <div class="s_test_item" data-test-param="test">
                 Some test record

@@ -21,13 +21,11 @@ setupInteractionWhiteList(["website_event.events", "website_event.test_events_it
 
 test("dynamic snippet loads items and displays them through template", async () => {
     onRpc("/website/snippet/filters", async (args) => {
-        for await (const chunk of args.body) {
-            const json = JSON.parse(new TextDecoder().decode(chunk));
-            expect(json.params.filter_id).toBe(1);
-            expect(json.params.template_key).toBe("website_event.dynamic_filter_template_event_event_picture");
-            expect(json.params.limit).toBe(3);
-            expect(json.params.search_domain).toEqual([["tag_ids", "in", [5]]]);
-        }
+        const json = JSON.parse(new TextDecoder().decode(await args.arrayBuffer()));
+        expect(json.params.filter_id).toBe(1);
+        expect(json.params.template_key).toBe("website_event.dynamic_filter_template_event_event_picture");
+        expect(json.params.limit).toBe(3);
+        expect(json.params.search_domain).toEqual([["tag_ids", "in", [5]]]);
         return [`
             <div class="s_test_item" data-test-param="test">
                 Some test record

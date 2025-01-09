@@ -39,8 +39,7 @@ test("listing_layout toggle to list mode", async () => {
         </div>
     `);
     MockServer.current.onRoute(["/website/save_session_layout_mode"], async (request) => {
-        const jsonResponse = await request.body.getReader().read();
-        const jsonParams = JSON.parse(new TextDecoder("utf-8").decode(jsonResponse.value)).params;
+        const jsonParams = JSON.parse(new TextDecoder("utf-8").decode(await request.arrayBuffer())).params;
         expect.step("rpc");
         expect(jsonParams.layout_mode).toBe("list");
         expect(jsonParams.view_id).toBe("123");
@@ -83,8 +82,7 @@ test("listing_layout toggle to grid mode", async () => {
         </div>
     `);
     MockServer.current.onRoute(["/website/save_session_layout_mode"], async (request) => {
-        const jsonResponse = await request.body.getReader().read();
-        const jsonParams = JSON.parse(new TextDecoder("utf-8").decode(jsonResponse.value)).params;
+        const jsonParams = JSON.parse(new TextDecoder("utf-8").decode(await request.arrayBuffer())).params;
         expect.step("rpc");
         expect(jsonParams.layout_mode).toBe("grid");
         expect(jsonParams.view_id).toBe("123");

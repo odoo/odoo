@@ -27,13 +27,11 @@ describe.current.tags("interaction_dev");
 
 test("dynamic snippet loads items and displays them through template", async () => {
     onRpc("/website/snippet/filters", async (args) => {
-        for await (const chunk of args.body) {
-            const json = JSON.parse(new TextDecoder().decode(chunk));
-            expect(json.params.filter_id).toBe(1);
-            expect(json.params.template_key).toBe("website.dynamic_filter_template_test_item");
-            expect(json.params.limit).toBe(16);
-            expect(json.params.search_domain).toEqual([]);
-        }
+        const json = JSON.parse(new TextDecoder().decode(await args.arrayBuffer()));
+        expect(json.params.filter_id).toBe(1);
+        expect(json.params.template_key).toBe("website.dynamic_filter_template_test_item");
+        expect(json.params.limit).toBe(16);
+        expect(json.params.search_domain).toEqual([]);
         return [
             `<div class="s_test_dynamic_item" data-test-param="test">Some test record </div>`,
             `<div class="s_test_dynamic_item" data-test-param="test2">Another test record</div>`,
