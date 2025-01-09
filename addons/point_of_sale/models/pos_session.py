@@ -1132,7 +1132,7 @@ class PosSession(models.Model):
         accounts = all_lines.mapped('account_id')
         lines_by_account = [all_lines.filtered(lambda l: l.account_id == account and not l.reconciled) for account in accounts if account.reconcile]
         for lines in lines_by_account:
-            lines.reconcile()
+            lines.with_context(no_cash_basis=True).reconcile()
 
 
         for payment_method, lines in payment_method_to_receivable_lines.items():
