@@ -4,10 +4,10 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { defineModels, mountView } from "@web/../tests/web_test_helpers";
 import { mailModels } from "@mail/../tests/mail_test_helpers";
 import { defineProjectModels, projectModels } from "@project/../tests/project_models";
-import { SaleOrderLine } from "./project_task_model";
+import { ProductProduct, SaleOrderLine } from "./project_task_model";
 
 describe.current.tags("desktop");
-defineModels([SaleOrderLine]);
+defineModels([SaleOrderLine, ProductProduct]);
 defineProjectModels();
 
 test("cannot edit sale_line_id when partners are different", async () => {

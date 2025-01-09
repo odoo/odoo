@@ -2,10 +2,10 @@ import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryFirst } from "@odoo/hoot-dom";
 import { defineModels, mountView } from "@web/../tests/web_test_helpers";
 import { defineProjectModels } from "@project/../tests/project_models";
-import { ProjectMilestone, SaleOrderLine } from "./project_task_model"
+import { ProductProduct, ProjectMilestone, SaleOrderLine } from "./project_task_model"
 
 describe.current.tags("desktop");
-defineModels([SaleOrderLine]);
+defineModels([SaleOrderLine, ProductProduct]);
 defineProjectModels();
 
 beforeEach(() => {

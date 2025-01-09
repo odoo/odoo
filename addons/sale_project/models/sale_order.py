@@ -12,6 +12,14 @@ from odoo.addons.project.models.project_task import CLOSED_STATES
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        if 'origin' in fields_list and (task_id := self.env.context.get('create_for_task_id')):
+            task = self.env['project.task'].browse(task_id)
+            res['origin'] = self.env._('[Project] %(task_name)s', task_name=task.name)
+        return res
+
     tasks_ids = fields.Many2many('project.task', compute='_compute_tasks_ids', search='_search_tasks_ids', groups="project.group_project_user", string='Tasks associated with this sale', export_string_translation=False)
     tasks_count = fields.Integer(string='Tasks', compute='_compute_tasks_ids', groups="project.group_project_user", export_string_translation=False)
 
@@ -124,6 +132,9 @@ class SaleOrder(models.Model):
 
     def _action_confirm(self):
         """ On SO confirmation, some lines should generate a task or a project. """
+        if self.env.context.get('disable_project_task_generation'):
+            return super()._action_confirm()
+
         if len(self.company_id) == 1:
             # All orders are in the same company
             self.order_line.sudo().with_company(self.company_id)._timesheet_service_generation()
@@ -283,12 +294,18 @@ class SaleOrder(models.Model):
     def create(self, vals_list):
         created_records = super().create(vals_list)
         project = self.env['project.project'].browse(self.env.context.get('create_for_project_id'))
-        if project:
+        task = self.env['project.task'].browse(self.env.context.get('create_for_task_id'))
+        if project or task:
             service_sol = next((sol for sol in created_records.order_line if sol.is_service), False)
             if not service_sol and not self.env.context.get('from_embedded_action'):
-                raise UserError(_('This Sales Order must contain at least one product of type "Service".'))
-            if not project.sale_line_id:
+                raise UserError(_('The Sales Order must contain at least one service product.'))
+            if project and not project.sale_line_id:
                 project.sale_line_id = service_sol
+                if not project.reinvoiced_sale_order_id:
+                    project.reinvoiced_sale_order_id = service_sol.order_id
+            if task and not task.sale_line_id:
+                created_records.with_context(disable_project_task_generation=True).action_confirm()
+                task.sale_line_id = service_sol
         return created_records
 
     def write(self, values):
