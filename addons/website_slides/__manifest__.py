@@ -92,7 +92,6 @@ Featuring
             'website_slides/static/src/js/slides_course_join.js',
             'website_slides/static/src/js/slides_course_quiz.js',
             'website_slides/static/src/js/slides_course_quiz_question_form.js',
-            'website_slides/static/src/js/portal_rating_composer.js',
             'website_slides/static/src/xml/website_slides_sidebar.xml',
             'website_slides/static/src/xml/website_slides_fullscreen.xml',
             'website_slides/static/src/xml/slide_management.xml',

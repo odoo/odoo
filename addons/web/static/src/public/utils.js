@@ -137,7 +137,7 @@ export function patchDynamicContentEntry(dynamicContent, selector, t, replacemen
                 return result;
             };
         } else if (t.startsWith("t-on-")) {
-            forSelector[t] = (el) => replacement(el, oldFn);
+            forSelector[t] = (el, ...args) => replacement(el, oldFn, ...args);
         } else {
             forSelector[t] = (el, oldResult) => {
                 let result = oldResult;

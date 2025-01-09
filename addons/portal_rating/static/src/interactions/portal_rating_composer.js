@@ -1,10 +1,8 @@
-import publicWidget from "@web/legacy/js/public/public_widget";
-import portalComposer from "@portal/js/portal_composer";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+import { PortalComposer } from "@portal/interactions/portal_composer";
 import { _t } from "@web/core/l10n/translation";
-import { renderToElement } from "@web/core/utils/render";
 import { user } from "@web/core/user";
-
-const PortalComposer = portalComposer.PortalComposer;
 
 /**
  * RatingPopupComposer
@@ -12,98 +10,86 @@ const PortalComposer = portalComposer.PortalComposer;
  * Display the rating average with a static star widget, and open
  * a popup with the portal composer when clicking on it.
  **/
-const RatingPopupComposer = publicWidget.Widget.extend({
-    selector: '.o_rating_popup_composer',
-    custom_events: {
-        reload_rating_popup_composer: '_onReloadRatingPopupComposer',
-    },
+export class RatingPopupComposer extends Interaction {
+    static selector = ".o_rating_popup_composer";
 
-    willStart: function (parent) {
-        const def = this._super.apply(this, arguments);
-
-        const options = this.$el.data();
-        this.rating_avg = Math.round(options['rating_avg'] * 100) / 100 || 0.0;
-        this.rating_count = options['rating_count'] || 0.0;
+    setup() {
+        const options = this.el.dataset;
+        this.rating_avg = Math.round(options["rating_avg"] * 100) / 100 || 0.0;
+        this.rating_count = options["rating_count"] || 0.0;
 
         this.options = Object.assign({
-            'token': false,
-            'res_model': false,
-            'res_id': false,
-            'pid': 0,
-            'display_rating': true,
-            'csrf_token': odoo.csrf_token,
-            'user_id': user.userId,
+            "token": false,
+            "res_model": false,
+            "res_id": false,
+            "pid": 0,
+            "display_rating": true,
+            "csrf_token": odoo.csrf_token,
+            "user_id": user.userId,
+            "reloadRatingPopupComposer": this.onReloadRatingPopupComposer.bind(this),
         }, options, {});
         this.options.send_button_label = this.options.default_message_id ? _t("Update review") : _t("Post review");
+    }
 
-        return def;
-    },
-
-    /**
-     * @override
-     */
-    start: function () {
-        return Promise.all([
-            this._super.apply(this, arguments),
-            this._reloadRatingPopupComposer(),
-        ]);
-    },
+    start() {
+        this.reloadRatingPopupComposer();
+    }
 
     /**
      * Destroy existing ratingPopup and insert new ratingPopup widget
-     *
-     * @private
-     * @param {Object} data
      */
-    _reloadRatingPopupComposer: function () {
+    reloadRatingPopupComposer() {
+        const starsEl = this.el.querySelector(".o_rating_popup_composer_stars");
         if (this.options.hide_rating_avg) {
-            this.$('.o_rating_popup_composer_stars').empty();
+            starsEl.replaceChildren();
         } else {
-            const ratingAverage = renderToElement(
-                'portal_rating.rating_stars_static', {
+            starsEl.replaceChildren();
+            this.renderAt(
+                "portal_rating.rating_stars_static", {
                 inline_mode: true,
                 widget: this,
                 val: this.rating_avg,
-            });
-            this.$('.o_rating_popup_composer_stars').empty().html(ratingAverage);
+            }, starsEl);
         }
 
         // Append the modal
-        const modal = renderToElement(
-            'portal_rating.PopupComposer', {
+        const modalEl = this.el.querySelector(".o_rating_popup_composer_modal");
+        this.renderAt(
+            "portal_rating.PopupComposer", {
             inline_mode: true,
             widget: this,
             val: this.rating_avg,
-        }) || '';
-        this.$('.o_rating_popup_composer_modal').html(modal);
+        }, modalEl) || "";
 
-        if (this._composer) {
-            this._composer.destroy();
+        if (this.composerEl) {
+            this.services["public.interactions"].stopInteractions(this.composerEl);
         }
 
         // Instantiate the "Portal Composer" widget and insert it into the modal
-        this._composer = new PortalComposer(this, this.options);
-        return this._composer.appendTo(this.$('.o_rating_popup_composer_modal .o_portal_chatter_composer')).then(() => {
-            // Change the text of the button
-            this.$('.o_rating_popup_composer_text').text(
-                this.options.is_fullscreen ?
-                _t('Review') : this.options.default_message_id ?
-                _t('Edit Review') : _t('Add Review')
-            );
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+        // TODO Exchange options through another mean ?
+        const options = PortalComposer.prepareOptions(this.options);
+        this.env.portalComposerOptions = options;
+        const locationEl = this.composerEl || this.el.querySelector(".o_rating_popup_composer_modal .o_portal_chatter_composer");
+        // TODO maybe always put in this.options - and prepare in setup ???
+        if (!locationEl) {
+            return;
+        }
+        this.composerEl = this.renderAt("portal.Composer", { widget: {options: this.env.portalComposerOptions }}, locationEl, "afterend")[0];
+        delete this.env.portalComposerOptions;
+        locationEl.remove();
+        // Change the text of the button
+        this.el.querySelector(".o_rating_popup_composer_text").textContent =
+            options.is_fullscreen
+                ? _t("Review")
+                : options.default_message_id
+                    ? _t("Edit Review")
+                    : _t("Add Review");
+    }
 
     /**
-     * @private
-     * @param {OdooEvent} event
+     * @param {Object} data
      */
-    _onReloadRatingPopupComposer: function (event) {
-        const data = event.data;
-
+    onReloadRatingPopupComposer(data) {
         // Refresh the internal state of the widget
         this.rating_avg = data.rating_avg || data["mail.thread"][0].rating_avg;
         this.rating_count = data.rating_count || data["mail.thread"][0].rating_count;
@@ -114,11 +100,11 @@ const RatingPopupComposer = publicWidget.Widget.extend({
         delete data.rating_count;
         delete data.rating_value;
 
-        this._update_options(data);
-        this._reloadRatingPopupComposer();
-    },
+        this.updateOptions(data);
+        this.reloadRatingPopupComposer();
+    }
 
-    _update_options: function (data) {
+    updateOptions(data) {
         const defaultOptions = {
             default_message:
                 data.default_message ||
@@ -129,9 +115,10 @@ const RatingPopupComposer = publicWidget.Widget.extend({
         };
         Object.assign(data, defaultOptions);
         this.options = Object.assign(this.options, data);
-    },
-});
+    }
+}
 
-publicWidget.registry.RatingPopupComposer = RatingPopupComposer;
 
-export default RatingPopupComposer;
+registry
+    .category("public.interactions")
+    .add("portal_rating.rating_popup_composer", RatingPopupComposer);
