@@ -64,6 +64,10 @@ export class PosData extends Reactive {
         });
     }
 
+    async resetIndexedDB() {
+        await this.indexedDB.reset();
+    }
+
     dispatchData(data) {
         let hasChanges = false;
         const recordIds = Object.entries(data).reduce((acc, [model, records]) => {
