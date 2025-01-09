@@ -3,6 +3,7 @@
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
 from odoo.fields import Command
 from odoo.tests import Form, tagged
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 @tagged('post_install', '-at_install')
 class TestProjectBilling(TestCommonSaleTimesheet):
@@ -87,6 +88,13 @@ class TestProjectBilling(TestCommonSaleTimesheet):
             'sale_line_id': cls.so1_line_deliver_no_task.id,
             'employee_id': cls.employee_user.id,
         })
+        cls.project_manager = mail_new_test_user(
+            cls.env,
+            name='Project Manager',
+            login='project_manager',
+            email='project_manager@example.com',
+            groups='project.group_project_manager',
+        )
 
     def test_billing_employee_rate(self):
         """ Check task and subtask creation, and timesheeting in a project billed at 'employee rate'. Then move the task into a 'task rate' project. """
@@ -301,7 +309,7 @@ class TestProjectBilling(TestCommonSaleTimesheet):
             3) Create an employee mapping in this project
             4) Check if the partner_id and pricing_type fields have been changed
         """
-        with Form(self.env['project.project']) as project_form:
+        with Form(self.env['project.project'].with_user(self.project_manager)) as project_form:
             project_form.name = 'Test Billable Project'
             project_form.allow_billable = True
             # `sale_line_employee_ids` is not visible if `partner_id` is not set

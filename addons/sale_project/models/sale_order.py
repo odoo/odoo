@@ -123,6 +123,9 @@ class SaleOrder(models.Model):
 
     def _action_confirm(self):
         """ On SO confirmation, some lines should generate a task or a project. """
+        if self.env.context.get('disable_project_task_generation'):
+            return super()._action_confirm()
+
         if len(self.company_id) == 1:
             # All orders are in the same company
             self.order_line.sudo().with_company(self.company_id)._timesheet_service_generation()
@@ -282,12 +285,20 @@ class SaleOrder(models.Model):
     def create(self, vals_list):
         created_records = super().create(vals_list)
         project = self.env['project.project'].browse(self.env.context.get('create_for_project_id'))
-        if project:
+        task = self.env['project.task'].browse(self.env.context.get('create_for_task_id'))
+        if project or task:
             service_sol = next((sol for sol in created_records.order_line if sol.is_service), False)
             if not service_sol and not self.env.context.get('from_embedded_action'):
-                raise UserError(_('This Sales Order must contain at least one product of type "Service".'))
-            if not project.sale_line_id:
+                raise UserError(_('The Sales Order must contain at least one service product.'))
+            if project and not project.sale_line_id:
+                if not self.env.context.get('action_view_sols'):
+                    created_records.with_context(disable_project_task_generation=True).action_confirm()
                 project.sale_line_id = service_sol
+                if not project.reinvoiced_sale_order_id:
+                    project.reinvoiced_sale_order_id = service_sol.order_id
+            if task and not task.sale_line_id:
+                created_records.with_context(disable_project_task_generation=True).action_confirm()
+                task.sale_line_id = service_sol
         return created_records
 
     def write(self, values):
