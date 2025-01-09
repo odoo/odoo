@@ -3,6 +3,7 @@
 import { registry } from '@web/core/registry';
 import { useService, useBus } from '@web/core/utils/hooks';
 import core from 'web.core';
+import { session } from "@web/session";
 import { AceEditorAdapterComponent } from '../../components/ace_editor/ace_editor';
 import { WebsiteEditorComponent } from '../../components/editor/editor';
 import { WebsiteTranslator } from '../../components/translator/translator';
@@ -57,7 +58,9 @@ export class WebsitePreview extends Component {
             this.backendWebsiteId = unslugHtmlDataObject(backendWebsiteRepr).id;
 
             const encodedPath = encodeURIComponent(this.path);
-            if (this.websiteDomain && !wUtils.isHTTPSorNakedDomainRedirection(this.websiteDomain, window.location.origin)) {
+            if (!session.website_bypass_domain_redirect // Used by the Odoo support (bugs to be expected)
+                    && this.websiteDomain
+                    && !wUtils.isHTTPSorNakedDomainRedirection(this.websiteDomain, window.location.origin)) {
                 // The website domain might be the naked one while the naked one
                 // is actually redirecting to `www` (or the other way around).
                 // In such a case, we need to consider those 2 from the same
