@@ -955,6 +955,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
     @freeze_time('2000-05-01')
     def test_mrp_subcontract_modify_date(self):
         """ Ensure consistent results when modifying date fields of a weakly-linked reception and
+<<<<<<< saas-18.2
         manufacturing order. Additionally, modifying `date_start` directly on an MO has a
         well-defined result.
         """
@@ -985,3 +986,29 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         with Form(mo) as production_form:
             production_form.date_start = original_mo_start_date
         self.assertEqual(mo.date_start, original_mo_start_date)
+||||||| e81f48e3388885ecf7d5fff32dcb6995d19b5f5d
+=======
+        manufacturing order.
+        """
+        self.bom_finished2.produce_delay = 35
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [Command.create({
+                'name': self.finished2.name,
+                'product_id': self.finished2.id,
+                'product_qty': 10,
+                'product_uom_id': self.finished2.uom_id.id,
+                'price_unit': 1,
+            })],
+        })
+        po.button_confirm()
+        mo = po.picking_ids.move_ids.move_orig_ids.production_id
+        original_mo_start_date = mo.date_start
+        with Form(po.picking_ids[0]) as receipt_form:
+            receipt_form.scheduled_date = '2000-06-01'
+        self.assertEqual(mo.date_start, datetime(year=2000, month=6, day=1) - timedelta(days=self.bom_finished2.produce_delay))
+        with Form(po.picking_ids[0]) as receipt_form:
+            receipt_form.scheduled_date = '2000-05-01'
+        new_mo_start_date = mo.date_start
+        self.assertEqual(original_mo_start_date, new_mo_start_date, f'{original_mo_start_date} != {new_mo_start_date}')
+>>>>>>> 46a354ca855b675c1f24612ecb387d99ed72915d
