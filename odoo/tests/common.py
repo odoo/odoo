@@ -946,7 +946,6 @@ class ChromeBrowser:
 
         self.chrome, self.devtools_port = self._chrome_start(
             user_data_dir=self.user_data_dir,
-            window_size=test_case.browser_size,
             touch_enabled=test_case.touch_enabled,
             headless=headless,
             debug=debug,
@@ -976,6 +975,14 @@ class ChromeBrowser:
         self._websocket_send('Runtime.enable')
         self._logger.info('Chrome headless enable page notifications')
         self._websocket_send('Page.enable')
+        emulated_device = {
+            'mobile': False,
+            'width': None,
+            'height': None,
+            'deviceScaleFactor': 1,
+        }
+        emulated_device['width'], emulated_device['height'] = [int(size) for size in test_case.browser_size.split(",")]
+        self._websocket_request('Emulation.setDeviceMetricsOverride', params=emulated_device)
 
     @property
     def screencasts_frames_dir(self):
@@ -1056,7 +1063,7 @@ class ChromeBrowser:
     def _chrome_start(
             self,
             user_data_dir: str,
-            window_size: str, touch_enabled: bool,
+            touch_enabled: bool,
             headless=True,
             debug=False,
     ):
@@ -1085,7 +1092,6 @@ class ChromeBrowser:
             '--remote-debugging-address': HOST,
             '--remote-debugging-port': str(self.remote_debugging_port),
             '--user-data-dir': user_data_dir,
-            '--window-size': window_size,
             '--no-first-run': '',
             # '--enable-precise-memory-info': '',  # uncomment to debug memory leaks in unit tests
             # FIXME: the next flag is temporarily uncommented to allow client
