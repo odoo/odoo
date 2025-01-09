@@ -224,6 +224,7 @@ class Base(models.AbstractModel):
 
         Override this method on a specific model to implement model-specific
         behavior. Also consider inheriting from ``mail.thread``. """
+        include_cc = self.env.context.get('mail_recipients_include_cc')
         res = {}
         customers = self._mail_get_partners()
         prioritize_email = getattr(self, '_mail_defaults_to_email', False)
@@ -254,7 +255,7 @@ class Base(models.AbstractModel):
                     fname for fname in ['email_cc', 'partner_email_cc', 'x_email_cc']
                     if fname in record and record[fname]
                 ), False
-            )
+            ) if include_cc else ''
             if cc_fn:
                 email_cc_lst = tools.mail.email_split_and_format_normalize(record[cc_fn]) or [record[cc_fn]]
             # prioritize recipients: default, or when to == recipients emails, or
