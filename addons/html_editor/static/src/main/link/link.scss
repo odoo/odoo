@@ -5,7 +5,13 @@
     margin: -1px;
 }
 
-.odoo-editor-editable .btn {
-    user-select: auto;
-    cursor: text !important;
+.odoo-editor-editable {
+    .btn {
+        user-select: auto;
+        cursor: text;
+    }
+
+    [contenteditable=false] .btn.btn-link {
+        cursor: pointer;
+    }
 }
