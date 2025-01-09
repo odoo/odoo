@@ -26,7 +26,10 @@ export class TourStepAutomatic extends TourStep {
                     } else {
                         reject(
                             new Error(
-                                `UNDETERMINISM: two differents elements have been found in ${delay}ms for trigger ${this.trigger}`
+                                [
+                                    ...this.describeWhyIFailed,
+                                    `UNDETERMINISM: two differents elements have been found in ${delay}ms for trigger ${this.trigger}`,
+                                ].join("\n")
                             )
                         );
                     }
