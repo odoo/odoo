@@ -75,12 +75,12 @@ patch(PosOrder.prototype, {
         this.invalidCoupons = true;
         this.uiState = {
             ...this.uiState,
-            disabledRewards: new Set(),
-            codeActivatedProgramRules: [],
-            couponPointChanges: {},
+            disabledRewards: this.uiState.disabledRewards || new Set(),
+            codeActivatedProgramRules: this.uiState.codeActivatedProgramRules || [],
+            couponPointChanges: this.uiState.couponPointChanges || {},
         };
         const oldCouponMapping = {};
-        if (this.uiState.couponPointChanges) {
+        if (Object.keys(this.uiState.couponPointChanges).length === 0) {
             for (const [key, pe] of Object.entries(this.uiState.couponPointChanges)) {
                 if (!this.models["loyalty.program"].get(pe.program_id)) {
                     // Remove points changes for programs that are not available anymore.

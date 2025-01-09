@@ -29,7 +29,7 @@ patch(Navbar.prototype, {
         return true;
     },
     onTicketButtonClick() {
-        return this.canClick() && this.pos.onTicketButtonClick();
+        return this.canClick() && this.pos.showScreen("TicketScreen");
     },
     onClickPlanButton() {
         return this.canClick() && this.pos.showScreen("FloorScreen");

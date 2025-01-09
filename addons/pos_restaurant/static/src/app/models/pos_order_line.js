@@ -35,7 +35,7 @@ patch(PosOrderline.prototype, {
         }
     },
     showSkipChange() {
-        return this.skip_change && !this.uiState.hideSkipChangeClass && !this.origin_order_id;
+        return this.skip_change && !this.uiState.hideSkipChangeClass;
     },
     getDisplayClasses() {
         return {
