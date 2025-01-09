@@ -80,7 +80,9 @@ test("correctly fill all standard fields", async () => {
             city: "Ramillies",
             country_id: 13,
             state_id: 2,
-            street: "rue des Bourlottes 9",
+            // this was input by the user
+            // save as is
+            street: "odoo farm 3",
             street2: "Ferme 2",
             zip: "1367",
         });
@@ -163,4 +165,22 @@ test("fills current field with values of unknown ones", async () => {
     for (const [field, value] of Object.entries(expectedFields)) {
         expect(`.o_field_widget[name='${field}'] input`).toHaveValue(value);
     }
+});
+
+test("typing in input should make form dirty", async () => {
+    onRpc("web_save", ({ args }) => {
+        expect.step(args[1])
+    });
+    await mountView({
+        type: "form",
+        resModel: "res.partner",
+        arch: `<form>
+            <field name="street" widget="google_address_autocomplete"/>
+        </form>`,
+        resId: 1,
+    });
+    expect(".o_form_button_save:visible").toHaveCount(0);
+    await contains(".o_field_widget[name='street'] input").edit("odoo farm 3", { confirm: false });
+    await contains(".o_form_button_save:visible").click();
+    expect.verifySteps([{street: 'odoo farm 3'}]);
 });

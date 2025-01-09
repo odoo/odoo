@@ -3,10 +3,22 @@ import { _t } from "@web/core/l10n/translation";
 import { CharField, charField } from "@web/views/fields/char/char_field";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { googlePlacesSession } from "../google_places_session";
+import { useChildRef } from "@web/core/utils/hooks";
+import { useInputField } from "@web/views/fields/input_field_hook";
 
 export class AddressAutoComplete extends CharField {
     static template = "google_address_autocomplete.AddressAutoCompleteTemplate";
     static components = { AutoComplete, ...CharField.components };
+
+    setup() {
+        super.setup();
+        this.input = useChildRef();
+        useInputField({
+            ref: this.input,
+            getValue: () => this.props.record.data[this.props.name] || "",
+            parse: (v) => this.parse(v),
+        });
+    }
 
     get sources() {
         return [
