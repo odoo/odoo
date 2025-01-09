@@ -61,6 +61,7 @@ class StockLot(models.Model):
             lot.avg_cost = avg_cost
             lot.total_value = avg_cost * quantity_sum
 
+    @api.model_create_multi
     def create(self, vals_list):
         lots = super().create(vals_list)
         for product, lots_by_product in lots.grouped('product_id').items():
