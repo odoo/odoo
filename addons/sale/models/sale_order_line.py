@@ -1559,4 +1559,6 @@ class SaleOrderLine(models.Model):
         """ A combo product line always has a zero price (by design). The actual price of the combo
         product can be computed by summing the prices of its combo items (i.e. its linked lines).
         """
-        return self.linked_line_ids if self.product_type == 'combo' else self
+        if self.product_type == 'combo':
+            return self.linked_line_ids.filtered(lambda line: line.combo_item_id)
+        return self

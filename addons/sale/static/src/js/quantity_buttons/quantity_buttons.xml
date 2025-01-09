@@ -6,8 +6,9 @@
                 t-attf-class="px-2 px-md-3 btn btn-secondary {{ props.btnClasses or 'd-md-inline-block' }}"
                 name="sale_quantity_button_minus"
                 aria-label="Remove one"
-                t-att-disabled="props.isMinusButtonDisabled"
-                t-on-click="decreaseQuantity">
+                t-att-disabled="props.isMinusButtonDisabled || props.canUpdateQuantity"
+                t-on-click="decreaseQuantity"
+            >
                 <i class="fa fa-minus"/>
             </button>
             <input
@@ -15,13 +16,16 @@
                 name="sale_quantity"
                 type="number"
                 t-att-value="props.quantity"
-                t-on-change="setQuantity"/>
+                t-att-disabled="props.canUpdateQuantity"
+                t-on-change="setQuantity"
+            />
             <button
                 t-attf-class="px-2 px-md-3 btn btn-secondary {{ props.btnClasses or 'd-md-inline-block' }}"
                 name="sale_quantity_button_plus"
                 aria-label="Add one"
-                t-att-disabled="props.isPlusButtonDisabled"
-                t-on-click="increaseQuantity">
+                t-att-disabled="props.isPlusButtonDisabled || props.canUpdateQuantity"
+                t-on-click="increaseQuantity"
+            >
                 <i class="fa fa-plus"/>
             </button>
         </div>
