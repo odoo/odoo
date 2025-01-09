@@ -2,7 +2,7 @@ import { setupInteractionWhiteList, startInteractions } from "@web/../tests/publ
 
 import { describe, expect, test } from "@odoo/hoot";
 
-setupInteractionWhiteList("public.log_in");
+setupInteractionWhiteList("public.login");
 
 describe.current.tags("interaction_dev");
 
