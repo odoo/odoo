@@ -4742,7 +4742,7 @@ class BaseModel(metaclass=MetaModel):
 
         # classify fields for each record
         data_list = []
-        determine_inverses = defaultdict(set)       # {inverse: fields}
+        determine_inverses = defaultdict(OrderedSet)       # {inverse: fields}
 
         for vals in new_vals_list:
             precomputed = vals.pop('__precomputed__', ())
@@ -4799,29 +4799,19 @@ class BaseModel(metaclass=MetaModel):
             for fields in determine_inverses.values():
                 # determine which records to inverse for those fields
                 inv_names = {field.name for field in fields}
-                rec_vals = [
-                    (data['record'], {
-                        name: data['inversed'][name]
-                        for name in inv_names
-                        if name in data['inversed'] and name not in data['stored']
+                inv_rec_ids = []
+                for data in data_list:
+                    if inv_names.isdisjoint(data['inversed']):
+                        continue
+                    record = data['record']
+                    record._update_cache({
+                        fname: value
+                        for fname, value in data['inversed'].items()
+                        if fname in inv_names and fname not in data['stored']
                     })
-                    for data in data_list
-                    if not inv_names.isdisjoint(data['inversed'])
-                ]
+                    inv_rec_ids.append(record.id)
 
-                # If a field is not stored, its inverse method will probably
-                # write on its dependencies, which will invalidate the field on
-                # all records. We therefore inverse the field record by record.
-                if all(field.store or field.company_dependent for field in fields):
-                    batches = [rec_vals]
-                else:
-                    batches = [[rec_data] for rec_data in rec_vals]
-
-                for batch in batches:
-                    for record, vals in batch:
-                        record._update_cache(vals)
-                    batch_recs = self.concat(*(record for record, vals in batch))
-                    next(iter(fields)).determine_inverse(batch_recs)
+                next(iter(fields)).determine_inverse(self.browse(inv_rec_ids))
 
         # check Python constraints for non-stored inversed fields
         for data in data_list:
