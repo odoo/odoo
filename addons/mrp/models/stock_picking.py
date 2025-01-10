@@ -75,7 +75,7 @@ class StockPickingType(models.Model):
         domains = {
             'count_mo_waiting': [('reservation_state', '=', 'waiting')],
             'count_mo_todo': ['|', ('state', 'in', ('confirmed', 'draft', 'progress', 'to_close')), ('is_planned', '=', True)],
-            'count_mo_late': [('date_start', '<', fields.Date.today()), ('state', '=', 'confirmed')],
+            'count_mo_late': ['|', ('delay_alert_date', '!=', False), '&', ('date_deadline', '<', fields.Date.today()), ('state', '=', 'confirmed')],
         }
         for key, domain in domains.items():
             data = self.env['mrp.production']._read_group(domain +
