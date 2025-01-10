@@ -1978,7 +1978,6 @@ class _String(Field[str | typing.Literal[False]]):
                 text2terms[self.get_text_content(term)].append(term)
 
             is_text = self.translate.is_text if hasattr(self.translate, 'is_text') else lambda term: True
-            term_adapter = self.translate.term_adapter if hasattr(self.translate, 'term_adapter') else None
             for old_term in list(translation_dictionary.keys()):
                 if old_term not in new_terms:
                     old_term_text = self.get_text_content(old_term)
@@ -1990,11 +1989,7 @@ class _String(Field[str | typing.Literal[False]]):
                         old_is_text = is_text(old_term)
                         closest_is_text = is_text(closest_term)
                         if old_is_text or not closest_is_text:
-                            if not closest_is_text and records.env.context.get("install_mode") and lang == 'en_US' and term_adapter:
-                                adapter = term_adapter(closest_term)
-                                translation_dictionary[closest_term] = {k: adapter(v) for k, v in translation_dictionary.pop(old_term).items()}
-                            else:
-                                translation_dictionary[closest_term] = translation_dictionary.pop(old_term)
+                            translation_dictionary[closest_term] = translation_dictionary.pop(old_term)
             # pylint: disable=not-callable
             new_translations = {
                 l: self.translate(lambda term: translation_dictionary.get(term, {l: None})[l], cache_value)

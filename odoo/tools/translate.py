@@ -304,47 +304,6 @@ def parse_xml(text):
 def serialize_xml(node):
     return etree.tostring(node, method='xml', encoding='unicode')
 
-
-MODIFIER_ATTRS = {"invisible", "readonly", "required", "column_invisible", "attrs", "states"}
-def xml_term_adapter(term_en):
-    """
-    Returns an `adapter(term)` function that will ensure the modifiers are copied
-    from the base `term_en` to the translated `term` when the XML structure of
-    both terms match. `term_en` and any input `term` to the adapter must be valid
-    XML terms. Using the adapter only makes sense if `term_en` contains some tags
-    from TRANSLATED_ELEMENTS.
-    """
-    orig_node = parse_xml(f"<div>{term_en}</div>")
-
-    def same_struct_iter(left, right):
-        if left.tag != right.tag:
-            raise ValueError("Non matching struct")
-        yield left, right
-        left_iter = left.iterchildren()
-        right_iter = right.iterchildren()
-        for lc, rc in zip(left_iter, right_iter):
-            yield from same_struct_iter(lc, rc)
-        if next(left_iter, None) is not None or next(right_iter, None) is not None:
-            raise ValueError("Non matching struct")
-
-    def adapter(term):
-        new_node = parse_xml(f"<div>{term}</div>")
-        try:
-            for orig_n, new_n in same_struct_iter(orig_node, new_node):
-                removed_attrs = [k for k in new_n.attrib if k in MODIFIER_ATTRS and k not in orig_n.attrib]
-                for k in removed_attrs:
-                    del new_n.attrib[k]
-                keep_attrs = {k: v for k, v in orig_n.attrib.items() if k in MODIFIER_ATTRS}
-                new_n.attrib.update(keep_attrs)
-        except ValueError:  # non-matching structure
-            return term
-
-        # remove tags <div> and </div> from result
-        return serialize_xml(new_node)[5:-6]
-
-    return adapter
-
-
 _HTML_PARSER = etree.HTMLParser(encoding='utf8')
 
 def parse_html(text):
@@ -432,8 +391,6 @@ html_translate.term_converter = html_term_converter
 
 xml_translate.is_text = is_text
 html_translate.is_text = is_text
-
-xml_translate.term_adapter = xml_term_adapter
 
 def translate_sql_constraint(cr, key, lang):
     cr.execute("""
