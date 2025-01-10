@@ -503,7 +503,7 @@ class TestLotValuation(TestStockValuationCommon):
             {'value': -13.5, 'lot_id': self.lot3.id, 'quantity': -3},
         ])
 
-    def test_lot_fifo_vaccum(self):
+    def test_lot_fifo_vacuum(self):
         """ Test lot fifo vacuum"""
         self.product1.standard_price = 9
         self._make_out_move(self.product1, 2, lot_ids=[self.lot1])

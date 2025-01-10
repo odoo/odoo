@@ -826,9 +826,8 @@ class IrCronTrigger(models.Model):
     def _gc_cron_triggers(self):
         domain = [('call_at', '<', datetime.now() + relativedelta(weeks=-1))]
         records = self.search(domain, limit=GC_UNLINK_LIMIT)
-        if len(records) >= GC_UNLINK_LIMIT:
-            self.env.ref('base.autovacuum_job')._trigger()
-        return records.unlink()
+        records.unlink()
+        return len(records), len(records) == GC_UNLINK_LIMIT  # done, remaining
 
 
 class IrCronProgress(models.Model):
@@ -844,4 +843,6 @@ class IrCronProgress(models.Model):
 
     @api.autovacuum
     def _gc_cron_progress(self):
-        self.search([('create_date', '<', datetime.now() - relativedelta(weeks=1))]).unlink()
+        records = self.search([('create_date', '<', datetime.now() - relativedelta(weeks=1))], limit=GC_UNLINK_LIMIT)
+        records.unlink()
+        return len(records), len(records) == GC_UNLINK_LIMIT  # done, remaining
