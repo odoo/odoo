@@ -84,7 +84,12 @@ export class Chart extends Interaction {
                 label: (tooltipItem) => {
                     const label = tooltipItem.label;
                     const secondLabel = tooltipItem.dataset.label;
-                    const final = label && secondLabel ? label + " - " + secondLabel : label || secondLabel;
+                    let final = label;
+                    if (label && secondLabel) {
+                        final = label + " - " + secondLabel;
+                    } else if (secondLabel) {
+                        final = secondLabel;
+                    }
                     return final + ":" + tooltipItem.formattedValue;
                 },
             };
@@ -94,9 +99,9 @@ export class Chart extends Interaction {
             chartData.options.animation = { duration: 0 };
         }
 
-        const canvasEls = this.el.querySelector("canvas");
+        const canvasEl = this.el.querySelector("canvas");
         window.Chart.Tooltip.positioners.custom = (_, eventPosition) => eventPosition;
-        this.chart = new window.Chart(canvasEls, chartData);
+        this.chart = new window.Chart(canvasEl, chartData);
         this.registerCleanup(() => {
             this.chart.destroy();
             this.el.querySelectorAll(".chartjs-size-monitor").forEach(el => el.remove());
@@ -104,7 +109,9 @@ export class Chart extends Interaction {
     }
 
     convertToCSS(paramColor) {
-        return Array.isArray(paramColor) ? paramColor.map(color => this.convertToCSSColor(color)) : this.convertToCSSColor(paramColor);
+        return Array.isArray(paramColor)
+            ? paramColor.map(color => this.convertToCSSColor(color))
+            : this.convertToCSSColor(paramColor);
     }
 
     convertToCSSColor(color) {
