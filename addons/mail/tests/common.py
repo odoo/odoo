@@ -736,10 +736,18 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         call with a dictionary of expected values. """
         for fname, fvalue in fields_values.items():
             with self.subTest(fname=fname, fvalue=fvalue):
-                self.assertEqual(
-                    message[fname], fvalue,
-                    f'Message: expected {fvalue} for {fname}, got {message[fname]}',
-                )
+                # email_{cc, to} are lists, hence order is not important
+                if fname in {'incoming_email_cc', 'incoming_email_to'}:
+                    self.assertEqual(
+                        sorted(tools.mail.email_split_and_format_normalize(message[fname])),
+                        sorted(tools.mail.email_split_and_format_normalize(fvalue)),
+                        f'Message: expected {fvalue} for {fname}, got {message[fname]}',
+                    )
+                else:
+                    self.assertEqual(
+                        message[fname], fvalue,
+                        f'Message: expected {fvalue} for {fname}, got {message[fname]}',
+                    )
 
     def assertNoMail(self, recipients, mail_message=None, author=None):
         """ Check no mail.mail and email was generated during gateway mock. """
