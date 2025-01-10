@@ -139,6 +139,7 @@ export class OverlayButtonsPlugin extends Plugin {
             buttons.push(...getOverlayButtons(this.target));
         }
         this.state.buttons = buttons;
+        this.overlay.updatePosition();
     }
 
     hideOverlayButtons() {
