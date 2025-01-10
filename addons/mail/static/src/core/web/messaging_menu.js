@@ -4,7 +4,7 @@ import { onExternalClick, useDiscussSystray } from "@mail/utils/common/hooks";
 
 import { Component, useState } from "@odoo/owl";
 
-import { hasTouch, isIOS } from "@web/core/browser/feature_detection";
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
@@ -237,7 +237,7 @@ export class MessagingMenu extends Component {
     }
 
     get shouldAskPushPermission() {
-        return this.notification.permission === "prompt" && !isIOS();
+        return this.notification.permission === "prompt";
     }
 }
 
