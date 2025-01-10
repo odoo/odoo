@@ -21,7 +21,6 @@ class AccountPayment(models.Model):
     check_number = fields.Char(
         string="Check Number",
         store=True,
-        readonly=True,
         copy=False,
         compute='_compute_check_number',
         inverse='_inverse_check_number',
@@ -112,6 +111,15 @@ class AccountPayment(models.Model):
             if payment.check_number:
                 sequence = payment.journal_id.check_sequence_id.sudo()
                 sequence.padding = len(payment.check_number)
+
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        result = super().fields_get(allfields, attributes)
+        # pretend the field 'check_number' to be readonly
+        field_desc = result.get('check_number') or {}
+        if 'readonly' in field_desc:
+            field_desc['readonly'] = True
+        return result
 
     def _get_aml_default_display_name_list(self):
         # Extends 'account'

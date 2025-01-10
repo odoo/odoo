@@ -4566,6 +4566,20 @@ class TestComputeQueries(TransactionCase):
         self.assertEqual(record.foo, 'Bar')
         self.assertEqual(record.bar, 'Bar')
 
+    def test_x2many_computed_inverse(self):
+        record = self.env['test_new_api.compute.inverse'].create(
+            {'child_ids': [Command.create({'foo': 'child'})]},
+        )
+        self.assertEqual(
+            len(record.child_ids), 1,
+            f"Should be a single record: {record.child_ids!r}",
+        )
+        self.assertTrue(
+            record.child_ids.id,
+            f"Should be database records: {record.child_ids!r}",
+        )
+        self.assertEqual(record.foo, 'has one child')
+
     def test_multi_create(self):
         model = self.env['test_new_api.foo']
         model.create({})
