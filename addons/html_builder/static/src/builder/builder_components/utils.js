@@ -231,6 +231,9 @@ export function useClickableBuilderComponent() {
     const getAction = comp.env.editor.shared.builderActions.getAction;
     const applyOperation = comp.env.editor.shared.history.makePreviewableOperation(callApply);
     const shouldToggle = !comp.env.actionBus;
+    const hasPreview =
+        comp.props.preview === true ||
+        (comp.props.preview === undefined && comp.env.weContext.preview !== false);
 
     const operation = {
         commit: () => {
@@ -251,10 +254,7 @@ export function useClickableBuilderComponent() {
         },
     };
 
-    if (
-        comp.props.preview === false ||
-        (comp.env.weContext.preview === false && comp.props.preview !== true)
-    ) {
+    if (!hasPreview) {
         operation.preview = () => {};
     }
 
