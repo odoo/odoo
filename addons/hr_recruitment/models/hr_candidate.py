@@ -185,7 +185,7 @@ class HrCandidate(models.Model):
             candidate.attachment_count = attach_data.get(candidate.id, 0)
 
     def _compute_application_count(self):
-        read_group_res = self.env['hr.applicant']._read_group(
+        read_group_res = self.env['hr.applicant'].with_context(active_test=False)._read_group(
             [('candidate_id', 'in', self.ids)],
             ['candidate_id'], ['__count'])
         application_data = dict(read_group_res)
