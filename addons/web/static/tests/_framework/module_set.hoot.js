@@ -325,7 +325,7 @@ const runTests = async () => {
         const running = await start(suite);
 
         moduleSetLoader.cleanup();
-        __gcAndLogMemory(suite.fullName, suite.reporting.tests);
+        await __gcAndLogMemory(suite.fullName, suite.reporting.tests);
 
         if (!running) {
             break;
@@ -333,7 +333,7 @@ const runTests = async () => {
     }
 
     await stop();
-    __gcAndLogMemory("tests done");
+    await __gcAndLogMemory("tests done");
 };
 
 /**
@@ -350,7 +350,7 @@ const runTests = async () => {
  * @param {string} label
  * @param {number} [testCount]
  */
-const __gcAndLogMemory = (label, testCount) => {
+const __gcAndLogMemory = async (label, testCount) => {
     if (typeof window.gc !== "function") {
         return;
     }
@@ -363,7 +363,7 @@ const __gcAndLogMemory = (label, testCount) => {
     textarea.remove();
 
     // Run garbage collection
-    window.gc();
+    await window.gc({ type: "major", execution: "async" });
 
     // Log memory usage
     const logs = [
