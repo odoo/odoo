@@ -21,7 +21,7 @@ class WebsiteForm(form.WebsiteForm):
         if not (custom or meta) or model.model != 'project.task':
             return res
         task = request.env['project.task'].sudo().browse(res)
-        custom = "<b>" + custom.replace('email_from', 'Email').replace(' :', ':</b>').replace('\n', '\n<b>').replace('\r\n<b>', '\r\n')
+        custom = "<b>" + custom.replace('email_from', _('Email')).replace(' :', ':</b>').replace('\n', '\n<b>').replace('\r\n<b>', '\r\n')
         custom_label = "<h4>%s</h4>\n\n" % _("Other Information")  # Title for custom fields
         default_field = model.website_form_default_field_id
         default_field_data = values.get(default_field.name, '')
