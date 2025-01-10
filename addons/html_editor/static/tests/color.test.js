@@ -2,6 +2,7 @@ import { test } from "@odoo/hoot";
 import { testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import { setColor } from "./_helpers/user_actions";
+import { getCharWidth, oeTab, TAB_WIDTH } from "./_helpers/tabs";
 
 test("should apply a color to a slice of text in a span in a font", async () => {
     await testEditor({
@@ -143,9 +144,8 @@ test("should not apply font tag to t nodes (protects if else nodes separation)",
                 </t>
             </p>
         ]`),
-        stepFunction: setColor('red', 'color'),
-        contentAfter:
-        unformat(`[
+        stepFunction: setColor("red", "color"),
+        contentAfter: unformat(`[
             <p>
                 <t t-if="object.partner_id.parent_id">
                     <t t-out="object.partner_id.parent_id.name or ''" style="color: red;">
@@ -322,5 +322,88 @@ test("should distribute color to texts and to button separately", async () => {
             '<p>a<font style="color: rgb(255, 0, 0);">[b</font>' +
             '<a class="btn"><font style="color: rgb(255, 0, 0);">c</font></a>' +
             '<font style="color: rgb(255, 0, 0);">d]</font>e</p>',
+    });
+});
+
+test("should apply background color to tab in middle of text", async () => {
+    await testEditor({
+        contentBefore: `<p>a[${oeTab(TAB_WIDTH)}]b</p>`,
+        stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
+        contentAfter: `<p>a[<font style="background-color: rgb(255, 0, 0);">${oeTab(
+            TAB_WIDTH - getCharWidth("p", "a")
+        )}]</font>b</p>`,
+    });
+});
+
+test("should NOT apply background color to tab in beginning of text(1)", async () => {
+    // background color only applied on the ZWS
+    await testEditor({
+        contentBefore: `<p>[${oeTab(TAB_WIDTH)}]ab</p>`,
+        stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
+        contentAfter: `<p>[<span class="oe-tabs" style="width: 40.0px;">\t</span><font style="background-color: rgb(255, 0, 0);">\u200b]</font>ab</p>`,
+    });
+});
+
+test("should NOT apply background color to tab in beginning of text(2)", async () => {
+    // background color only applied on the ZWS
+    await testEditor({
+        contentBefore: `<div>[<hr contenteditable="false">${oeTab(TAB_WIDTH)}]ab</div>`,
+        stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
+        contentAfter: `<div>[<hr><span class="oe-tabs" style="width: 40.0px;">\t</span><font style="background-color: rgb(255, 0, 0);">\u200b]</font>ab</div>`,
+    });
+});
+
+test("should apply background color to tab in end of text", async () => {
+    await testEditor({
+        contentBefore: `<p>ab[${oeTab(TAB_WIDTH)}]</p>`,
+        stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
+        contentAfter: `<p>ab[<font style="background-color: rgb(255, 0, 0);">${oeTab(
+            TAB_WIDTH - getCharWidth("p", "a") - getCharWidth("p", "b")
+        )}]</font></p>`,
+    });
+});
+
+test("should apply background color to selection including tabs", async () => {
+    await testEditor({
+        contentBefore: `<p>a[b${oeTab(TAB_WIDTH)}c]</p>`,
+        stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
+        contentAfter: `<p>a<font style="background-color: rgb(255, 0, 0);">[b${oeTab(
+            TAB_WIDTH - getCharWidth("p", "a") - getCharWidth("p", "b")
+        )}c]</font></p>`,
+    });
+});
+
+test("should remove background color in the middle of text", async () => {
+    await testEditor({
+        contentBefore: `<p>a<font style="background-color: rgb(255, 0, 0);">[${oeTab(
+            TAB_WIDTH,
+            false
+        )}]</font>b</p>`,
+        stepFunction: setColor("", "backgroundColor"),
+        contentAfter: `<p>a[${oeTab(TAB_WIDTH - getCharWidth("p", "a"))}]b</p>`,
+    });
+});
+
+test("should remove background color at the end of text", async () => {
+    await testEditor({
+        contentBefore: `<p>ab[<font style="background-color: rgb(255, 0, 0);">${oeTab(
+            TAB_WIDTH,
+            false
+        )}]</font></p>`,
+        stepFunction: setColor("", "backgroundColor"),
+        contentAfter: `<p>ab[${oeTab(
+            TAB_WIDTH - getCharWidth("p", "a") - getCharWidth("p", "b")
+        )}]</p>`,
+    });
+});
+
+test("should remove background color when selection includes tabs and text", async () => {
+    await testEditor({
+        contentBefore: `<p>[a<font style="background-color: rgb(255, 0, 0);">${oeTab(
+            TAB_WIDTH,
+            false
+        )}</font>b]</p>`,
+        stepFunction: setColor("", "backgroundColor"),
+        contentAfter: `<p>[a${oeTab(TAB_WIDTH - getCharWidth("p", "a"))}b]</p>`,
     });
 });

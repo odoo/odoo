@@ -666,3 +666,31 @@ export function isContentEditable(node) {
     const element = isTextNode(node) ? node.parentElement : node;
     return element.isContentEditable;
 }
+
+/**
+ * Returns true if the node and all its ancestors (up to stopNodeNames) are the first valid visible
+ * node in their respective parents.
+ *
+ * @param {Node} node - The node to start checking from
+ * @param {String[]} stopNodeNames - Stop checking when we hit a parent with one of these node names
+ * @param {Function} skipNode - Optional function to determine if a node should be skipped
+ * @returns {boolean} - True if no valid nodes exist before this node in each ancestor level
+ */
+export function isAtStart(node, stopNodeNames, skipNode = () => false) {
+    let currentNode = node;
+    while (!stopNodeNames.includes(currentNode.nodeName)) {
+        const parent = currentNode.parentNode;
+        while ((currentNode = currentNode.previousSibling)) {
+            if (
+                isVisible(currentNode) &&
+                isContentEditable(currentNode) &&
+                !skipNode(currentNode)
+            ) {
+                return false;
+            }
+        }
+        currentNode = parent;
+    }
+
+    return true;
+}

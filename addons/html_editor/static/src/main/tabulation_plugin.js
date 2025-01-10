@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { splitTextNode } from "@html_editor/utils/dom";
-import { isEditorTab, isTextNode, isZWS } from "@html_editor/utils/dom_info";
+import { isAtStart, isEditorTab, isTextNode, isZWS } from "@html_editor/utils/dom_info";
 import { descendants, getAdjacentPreviousSiblings } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { DIRECTIONS, childNodeIndex } from "@html_editor/utils/position";
@@ -63,6 +63,24 @@ export class TabulationPlugin extends Plugin {
 
         const selection = this.dependencies.selection.getEditableSelection();
         if (selection.isCollapsed) {
+            const { anchorOffset, anchorNode } = selection;
+            const stylingElement = anchorNode.parentElement;
+            if (stylingElement.nodeName === "FONT") {
+                const isFirstElement = isZWS(anchorNode)
+                    ? !anchorNode.previousSibling
+                    : anchorOffset === 0;
+                const isSelectionAtStartOfElement =
+                    isFirstElement && isAtStart(anchorNode, ["P", "DIV", "SPAN"]);
+                if (isSelectionAtStartOfElement) {
+                    this.dependencies.selection.setSelection(
+                        {
+                            anchorNode: stylingElement.parentElement,
+                            anchorOffset: childNodeIndex(stylingElement),
+                        },
+                        { normalize: false }
+                    );
+                }
+            }
             this.insertTab();
         } else {
             const traversedBlocks = this.dependencies.selection.getTraversedBlocks();

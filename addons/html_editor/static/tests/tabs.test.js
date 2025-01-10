@@ -313,6 +313,50 @@ describe("insert tabulation", () => {
                 `<blockquote>${oeTab(tabInBlockquote)}f${oeTab(tabAfterFinBlockquote)}]g</blockquote>`,
         });
     });
+
+    test("should insert a tab without background color if the selection is at the beginning of the `p`", async () => {
+        const expectedTabWidth = TAB_WIDTH;
+        await testTabulation({
+            contentBefore: `<p><font style="background-color: rgb(255, 0, 0);">[]ab</font></p>`,
+            stepFunction: keydownTab,
+            contentAfter: `<p>${oeTab(
+                expectedTabWidth
+            )}[]<font style="background-color: rgb(255, 0, 0);">ab</font></p>`,
+        });
+    });
+
+    test("should insert a tab character with background color when selection is inside text", async () => {
+        const expectedTabWidth = TAB_WIDTH;
+        await testTabulation({
+            contentBefore: `<p><font style="background-color: rgb(255, 0, 0);">a[]b</font></p>`,
+            stepFunction: keydownTab,
+            contentAfter: `<p><font style="background-color: rgb(255, 0, 0);">a${oeTab(
+                expectedTabWidth - getCharWidth("p", "a")
+            )}[]b</font></p>`,
+        });
+    });
+
+    test("should insert a tab character with background color when selection is at end of text", async () => {
+        const expectedTabWidth = TAB_WIDTH;
+        await testTabulation({
+            contentBefore: `<p><font style="background-color: rgb(255, 0, 0);">ab[]</font></p>`,
+            stepFunction: keydownTab,
+            contentAfter: `<p><font style="background-color: rgb(255, 0, 0);">ab${oeTab(
+                expectedTabWidth - getCharWidth("p", "b") - getCharWidth("p", "a")
+            )}[]</font></p>`,
+        });
+    });
+
+    test("should insert a tab character without background color when there is no `p` parent", async () => {
+        const expectedTabWidth = TAB_WIDTH;
+        await testTabulation({
+            contentBefore: `<h1><font style="background-color: rgb(255, 0, 0);">[]ab</font></h1>`,
+            stepFunction: keydownTab,
+            contentAfter: `<h1>${oeTab(
+                expectedTabWidth
+            )}[]<font style="background-color: rgb(255, 0, 0);">ab</font></h1>`,
+        });
+    });
 });
 
 describe("delete backward tabulation", () => {
