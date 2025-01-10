@@ -1200,3 +1200,17 @@ class TestDatePartNumber(TransactionCase):
 
         result = self.env["test_new_api.person.account"].search([('person_id.birthday.month_number', '=', 2)])
         self.assertEqual(result, account)
+
+
+class TestNonIntId(TransactionCase):
+    def test_query_non_int(self):
+        records = self.env['test_new_api.view.str.id'].search([('name', '=', 'test')])
+        self.assertEqual(records.id, 'hello')
+        records.invalidate_model()
+        self.assertEqual(records.name, 'test')
+
+    def test_query_non_int_read_group(self):
+        result = self.env['test_new_api.view.str.id'].read_group([], ['__count'], ['name'], lazy=False)
+        self.assertEqual(result, [{'name': 'test', '__count': 1, '__domain': [('name', '=', 'test')]}])
+        result = self.env['test_new_api.view.str.id'].read_group([], ['name:count'], [], lazy=False)
+        self.assertEqual(result, [{'name': 1, '__count': 1, '__domain': [(1, '=', 1)]}])

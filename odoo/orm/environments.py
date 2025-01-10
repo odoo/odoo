@@ -1002,7 +1002,7 @@ class Cache:
                 cached = field_cache[id_]
                 if value == cached or (not value and not cached):
                     continue
-                invalids.append((model.browse(id_), field, {'cached': cached, 'fetched': value}))
+                invalids.append((model.browse((id_,)), field, {'cached': cached, 'fetched': value}))
 
         for field, field_cache in self._data.items():
             # check column fields only
