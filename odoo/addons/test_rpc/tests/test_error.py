@@ -19,7 +19,11 @@ class TestError(common.HttpCase):
     def test_01_create(self):
         """ Create: mandatory field not provided """
         self.rpc("test_rpc.model_b", "create", {"name": "B1"})
-        with self.assertRaises(Fault) as ctx, mute_logger("odoo.sql_db"):
+        with (
+            self.assertRaises(Fault) as ctx,
+            mute_logger("odoo.http"),
+            mute_logger("odoo.sql_db")
+        ):
             self.rpc("test_rpc.model_b", "create", {})
 
         e = ctx.exception
@@ -38,7 +42,11 @@ class TestError(common.HttpCase):
         b2 = self.rpc("test_rpc.model_b", "create", {"name": "B2"})
         self.rpc("test_rpc.model_a", "create", {"name": "A1", "field_b1": b1, "field_b2": b2})
 
-        with self.assertRaises(Fault) as ctx, mute_logger("odoo.sql_db"):
+        with (
+            self.assertRaises(Fault) as ctx,
+            mute_logger("odoo.http"),
+            mute_logger("odoo.sql_db")
+        ):
             self.rpc("test_rpc.model_b", "unlink", b1)
 
         e = ctx.exception
@@ -51,7 +59,11 @@ class TestError(common.HttpCase):
         self.assertIn("Foreign key: 'required field'", e.faultString)
 
         # Unlink b2 => ON DELETE RESTRICT constraint raises
-        with self.assertRaises(Fault) as ctx, mute_logger("odoo.sql_db"):
+        with (
+            self.assertRaises(Fault) as ctx,
+            mute_logger("odoo.http"),
+            mute_logger("odoo.sql_db")
+        ):
             self.rpc("test_rpc.model_b", "unlink", b2)
 
         e = ctx.exception
@@ -64,7 +76,7 @@ class TestError(common.HttpCase):
         self.assertIn("Foreign key: 'restricted field'", e.faultString)
 
     def test_03_sql_constraint(self):
-        with mute_logger("odoo.sql_db"):
+        with mute_logger("odoo.http"), mute_logger("odoo.sql_db"):
             with self.assertRaisesRegex(Fault, r'The operation cannot be completed: The value must be positive'):
                 self.rpc("test_rpc.model_b", "create", {"name": "B1", "value": -1})
 
