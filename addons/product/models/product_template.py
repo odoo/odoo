@@ -7,6 +7,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
+from odoo.models import PREFETCH_MAX
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
@@ -556,9 +557,12 @@ class ProductTemplate(models.Model):
         templates = self.browse()
         while True:
             extra = templates and [('product_tmpl_id', 'not in', templates.ids)] or []
-            # Product._name_search has default value limit=100
-            # So, we either use that value or override it to None to fetch all products at once
-            products_ids = Product._name_search(name, domain + extra, operator, limit=None)
+            # Pathological case: there is no limit, so we'll need to search on all products.
+            # We iteratively _name_search with a larger bound, but not unbounded to avoid
+            # performance regressions or OOM errors while manipulating extremely large list of ids.
+            # For other cases, we use PREFETCH_MAX as an upper bound.
+            search_limit = PREFETCH_MAX * 10 if not limit else PREFETCH_MAX
+            products_ids = Product._name_search(name, domain + extra, operator, limit=search_limit)
             products = Product.browse(products_ids)
             new_templates = products.product_tmpl_id
             if new_templates & templates:
