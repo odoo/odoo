@@ -24,6 +24,7 @@ import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { getListMode, switchListMode } from "@html_editor/utils/list";
 import { withSequence } from "@html_editor/utils/resource";
 import { FONT_SIZE_CLASSES, getFontSizeOrClass } from "@html_editor/utils/formatting";
+import { getTextColorOrClass } from "@html_editor/utils/color";
 
 function isListActive(listMode) {
     return (selection) => {
@@ -567,7 +568,7 @@ export class ListPlugin extends Plugin {
         // Preserve style properties
         const dir = li.getAttribute("dir") || ul.getAttribute("dir");
         const textAlign = ul.style.getPropertyValue("text-align");
-        const listColor = li.style.color;
+        const liColorStyle = getTextColorOrClass(li);
         const liFontSizeStyle = getFontSizeOrClass(li);
         const wrapChildren = (parent, tag) => {
             const wrapper = this.document.createElement(tag);
@@ -586,9 +587,9 @@ export class ListPlugin extends Plugin {
                 block.style.setProperty("text-align", textAlign);
             }
             // text color
-            if (listColor) {
+            if (liColorStyle) {
                 const font = wrapChildren(block, "font");
-                this.dependencies.color.colorElement(font, listColor, "color");
+                this.dependencies.color.colorElement(font, liColorStyle.value, "color");
             }
             // font-size
             if (liFontSizeStyle && !isEmptyBlock(block)) {

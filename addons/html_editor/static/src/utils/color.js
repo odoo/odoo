@@ -187,3 +187,17 @@ export function hasAnyNodesColor(nodes, mode) {
     }
     return false;
 }
+
+export function getTextColorOrClass(node) {
+    if (!node) {
+        return null;
+    }
+    if (node.style.color) {
+        return { type: "style", value: node.style.color };
+    }
+    const textColorClass = [...node.classList].find((cls) => TEXT_CLASSES_REGEX.test(cls));
+    if (textColorClass) {
+        return { type: "class", value: textColorClass };
+    }
+    return null;
+}
