@@ -311,7 +311,11 @@ class StockRule(models.Model):
             picking_description += values['product_description_variants']
         # it is possible that we've already got some move done, so check for the done qty and create
         # a new move with the correct qty
-        qty_left = product_qty
+        if product_id.uom_id == product_id.uom_po_id:
+            qty_left = product_qty
+        else:
+            uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id, rounding_method='HALF-UP')
+            qty_left = uom_po_qty * product_id.uom_po_id.ratio
 
         move_dest_ids = []
         if not self.location_dest_id.should_bypass_reservation():

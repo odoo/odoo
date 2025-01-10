@@ -2481,6 +2481,39 @@ class TestStockFlow(TestStockCommon):
         pickings.button_validate()
         self.assertTrue(all(pickings.mapped(lambda p: p.state == 'done')), "Pickings should be set as done")
 
+    def test_demand_value_of_a_product_with_different_uom_using_replenish(self):
+        """
+        To validate the correct calculation of the Demand (product_uom_qty) in stock moves
+        when the product's UOM and Purchase UOM differ
+        """
+        self.env['uom.uom'].search([('category_id', '=', self.categ_unit), ('uom_type', '=', 'reference')], limit=1).write({'rounding':0.01})
+        purchase_uom = self.env['uom.uom'].create({
+            'name': 'KG_150',
+            'category_id': self.categ_unit,
+            'factor_inv': 150,
+            'uom_type': 'bigger',
+            'rounding': 0.01})
+        product = self.env['product.product'].create({
+            'name': 'Test',
+            'type':'product',
+            'uom_id': self.uom_unit.id,
+            'uom_po_id': purchase_uom.id,
+        })
+        partner = self.env['res.partner'].create({'name': 'Vendor'})
+        supplier = self.env['product.supplierinfo'].create({'partner_id':partner.id, 'product_tmpl_id': product.product_tmpl_id.id})
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        warehouse.reception_steps = 'two_steps'
+        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=product.product_tmpl_id.id).create({
+            'product_id': product.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'quantity': '100', # 100 units == 0.67 KG_150
+            'warehouse_id': warehouse.id,
+        })
+        replenish_wizard.launch_replenishment()
+        pickings = self.env['stock.picking'].search([('product_id', '=', product.id),('state','=','waiting')])
+        self.assertEqual(pickings.move_ids.product_uom_qty, 100.5)
+
 @tagged('-at_install', 'post_install')
 class TestStockFlowPostInstall(TestStockCommon):
 
