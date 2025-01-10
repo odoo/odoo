@@ -93,6 +93,7 @@ class Json(Field):
 
 class Id(Field[IdType | typing.Literal[False]]):
     """ Special case for field 'id'. """
+    # Note: This field type is not necessarily an integer!
     type = 'integer'  # note this conflicts with Integer
     column_type = ('int4', 'int4')
 
@@ -121,7 +122,7 @@ class Id(Field[IdType | typing.Literal[False]]):
         raise TypeError("field 'id' cannot be assigned")
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        return int(value)
+        return value
 
     def to_sql(self, model: BaseModel, alias: str, flush: bool = True) -> SQL:
         # do not flush, just return the identifier

@@ -2246,3 +2246,12 @@ class Test_New_ApiSharedCompute(models.Model):
                 record.start = 0
             if not record.end:
                 record.end = 10
+
+
+class Test_New_ViewStrId(models.Model):
+    _name = 'test_new_api.view.str.id'
+    _description = 'test_new_api.view.str.id'
+    _auto = False
+    _table_query = "SELECT 'hello' AS id, 'test' AS name"
+
+    name = fields.Char()
