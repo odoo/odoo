@@ -4985,7 +4985,7 @@ class BaseModel(metaclass=MetaModel):
                     (data['record'], {
                         name: data['inversed'][name]
                         for name in inv_names
-                        if name in data['inversed']
+                        if name in data['inversed'] and name not in data['stored']
                     })
                     for data in data_list
                     if not inv_names.isdisjoint(data['inversed'])
