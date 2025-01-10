@@ -7,8 +7,6 @@ from passlib.totp import TOTP
 
 from odoo import http
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
-from odoo.exceptions import AccessDenied
-from odoo.service import common as auth, model
 from odoo.tests import tagged, get_db_name
 from odoo.tools import mute_logger
 
@@ -64,7 +62,7 @@ class TestTOTP(TestTOTPCommon, HttpCaseWithUserDemo):
             'Trying to fake the auth type should not work'
         )
         uid = self.user_demo.id
-        with self.assertRaisesRegex(Fault, r'Access Denied'):
+        with self.assertRaisesRegex(Fault, r'Access Denied'), mute_logger('odoo.http'):
             self.xmlrpc_object.execute_kw(
                 get_db_name(), uid, 'demo',
                 'res.users', 'read', [uid, ['login']]
