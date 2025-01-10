@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 import odoo.tests
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
@@ -1833,6 +1834,55 @@ class TestPacking(TestPackingCommon):
             {'package_id': pack1.id, 'state': 'assigned', 'is_done': True},
             {'package_id': pack3.id, 'state': 'assigned', 'is_done': True},
         ])
+
+    def test_picking_validation_with_already_reserved_pack(self):
+        """
+        Check that you can validate a picking moving a pack that has
+        already being reserved by an other picking.
+        """
+        pack = self.env['stock.quant.package'].create({'name': 'The pack to pick'})
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10.0, package_id=pack)
+        destination_locations = self.env['stock.location'].create([
+            {
+                'name': 'Depot 1',
+                'usage': 'internal',
+                'location_id': self.warehouse.view_location_id.id,
+            },
+            {
+                'name': 'Depot 2',
+                'usage': 'internal',
+                'location_id': self.warehouse.view_location_id.id,
+            },
+        ])
+        pickings = self.env['stock.picking'].create([
+            {
+                'picking_type_id': self.warehouse.int_type_id.id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': destination_locations[i].id,
+                'move_ids': [Command.create({
+                    'name': self.productA.name,
+                    'location_id':  self.stock_location.id,
+                    'location_dest_id': destination_locations[i].id,
+                    'product_id': self.productA.id,
+                    'product_uom': self.productA.uom_id.id,
+                    'product_uom_qty': 10,
+                })],
+            } for i in range(2)
+        ])
+        pickings.action_confirm()
+        for i in range(2):
+            pickings[i].move_ids.move_line_ids = [Command.create({
+                'product_id': self.productA.id,
+                'product_uom_id': self.productA.uom_id.id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': destination_locations[i].id,
+                'quantity': 10.0,
+                'package_id': pack.id,
+                'result_package_id': pack.id,
+                'picked': True,
+            })]
+        pickings[0].button_validate()
+        self.assertEqual(pickings[0].state, 'done')
 
 
 @odoo.tests.tagged('post_install', '-at_install')
