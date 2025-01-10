@@ -70,7 +70,7 @@ class TestTOTP(TestTOTPMixin, HttpCase):
             'Trying to fake the auth type should not work'
         )
         uid = self.user_test.id
-        with self.assertRaisesRegex(Fault, r'Access Denied'):
+        with self.assertRaisesRegex(Fault, r'Access Denied'), mute_logger("odoo.http"):
             self.xmlrpc_object.execute_kw(
                 get_db_name(), uid, 'test_user',
                 'res.users', 'read', [uid, ['login']]
