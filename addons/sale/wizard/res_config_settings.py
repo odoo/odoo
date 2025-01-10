@@ -123,3 +123,7 @@ class ResConfigSettings(models.TransientModel):
         super().set_values()
         if self.default_invoice_policy != 'order':
             self.env['ir.config_parameter'].set_param(key='sale.automatic_invoice', value=False)
+
+    def action_enable_payment_provider(self):
+        menu = self.env.ref('sale.menu_sale_general_settings', raise_if_not_found=False)
+        return self._activate_payment_provider(menu and menu.id)
