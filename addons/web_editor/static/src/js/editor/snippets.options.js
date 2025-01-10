@@ -7281,7 +7281,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         if (flip.length) {
             searchParams.push(`flip=${encodeURIComponent(flip.sort().join(''))}`);
         }
-        return `/web_editor/shape/${encodeURIComponent(shape)}.svg?${searchParams.join('&')}`;
+        return `/web_editor/shape/${shape}.svg?${searchParams.join('&')}`;
     },
     /**
      * Retrieves current shape data from the target's dataset.
