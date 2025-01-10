@@ -105,3 +105,26 @@ test("hide title in content with table of content", async () => {
         "Design features",
     ]);
 });
+
+test("remove main content with table of content", async () => {
+    const { getEditor } = await setupWebsiteBuilder("<div></div>");
+    const editor = getEditor();
+    await insertStructureSnippet(editor, "s_table_of_content");
+    expect(":iframe .s_table_of_content").toHaveCount(1);
+    expect(queryAllTexts(":iframe .s_table_of_content_navbar a")).toEqual([
+        "Intuitive system",
+        "Design features",
+    ]);
+
+    await contains(":iframe .s_table_of_content_main h2").click();
+    await contains(".overlay .oe_snippet_remove").click();
+    expect(queryAllTexts(":iframe .s_table_of_content_navbar a")).toEqual(["Design features"]);
+
+    await contains(":iframe .s_table_of_content_main h2").click();
+    await contains(".overlay .oe_snippet_remove").click();
+    expect(":iframe .s_table_of_content").toHaveCount(0);
+    expect(":iframe .s_table_of_content_navbar a").toHaveCount(0);
+
+    undo(editor);
+    expect(queryAllTexts(":iframe .s_table_of_content_navbar a")).toEqual(["Design features"]);
+});

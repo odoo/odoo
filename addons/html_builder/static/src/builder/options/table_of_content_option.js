@@ -66,6 +66,12 @@ class TableOfContentOptionPlugin extends Plugin {
             href: el.getAttribute("href"),
         }));
 
+        if (tableOfContentMain.children.length === 0) {
+            // Remove the table of content if empty content.
+            tableOfContent.remove();
+            return;
+        }
+
         const targetedElements = "h1, h2";
         const currentHeadingItems = [...tableOfContentMain.querySelectorAll(targetedElements)]
             .filter((el) => !el.closest(".o_snippet_desktop_invisible"))
