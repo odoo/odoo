@@ -283,7 +283,9 @@ function bootstrapToTable(editable) {
                 } else {
                     // Fill the row with what was in the grid before it
                     // overflowed.
-                    _applyColspan(grid[gridIndex], 12 - gridIndex, containerWidth);
+                    if (grid[gridIndex]) {
+                        _applyColspan(grid[gridIndex], 12 - gridIndex, containerWidth);
+                    }
                     currentRow.append(...grid.filter(td => td.getAttribute('colspan')));
                     // Start a new row that starts with the current col.
                     const previousRow = currentRow;
