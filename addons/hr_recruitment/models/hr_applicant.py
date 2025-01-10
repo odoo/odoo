@@ -694,10 +694,9 @@ class HrApplicant(models.Model):
         return super(HrApplicant, self.with_context(just_unarchived=True)).action_archive()
 
     def action_unarchive(self):
-        active_applicants = super(HrApplicant, self.with_context(just_unarchived=True)).action_unarchive()
-        if active_applicants:
-            active_applicants.reset_applicant()
-        return active_applicants
+        res = super(HrApplicant, self.with_context(just_unarchived=True)).action_unarchive()
+        self.reset_applicant()
+        return res
 
     def action_send_email(self):
         return {
