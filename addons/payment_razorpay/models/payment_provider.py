@@ -59,15 +59,20 @@ class PaymentProvider(models.Model):
 
     # === ACTIONS METHODS === #
 
-    def action_razorpay_redirect_to_oauth_url(self):
-        """ Redirect to the Razorpay OAuth URL.
+    def action_start_onboarding(self, menu_id=None):
+        """ Override of `payment` to redirect to the Razorpay OAuth URL.
 
         Note: `self.ensure_one()`
 
+        :param int menu_id: The menu from which the onboarding is started, as an `ir.ui.menu` id.
         :return: An URL action to redirect to the Razorpay OAuth URL.
         :rtype: dict
+        :raise RedirectWarning: If the company's currency is not supported.
         """
         self.ensure_one()
+
+        if self.code != 'razorpay':
+            return super().action_start_onboarding(menu_id=menu_id)
 
         if self.company_id.currency_id.name not in const.SUPPORTED_CURRENCIES:
             raise RedirectWarning(
