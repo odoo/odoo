@@ -3,7 +3,6 @@ import { _t } from "@web/core/l10n/translation";
 import { uniqueId } from "@web/core/utils/functions";
 import { Reactive } from "@web/core/utils/reactive";
 import { escape } from "@web/core/utils/strings";
-import { useService } from "@web/core/utils/hooks";
 import { AddSnippetDialog } from "@html_builder/builder/builder_sidebar/tabs/block_tab/add_snippet_dialog/add_snippet_dialog";
 
 export class SnippetModel extends Reactive {
@@ -12,7 +11,7 @@ export class SnippetModel extends Reactive {
         this.orm = services.orm;
         this.dialog = services.dialog;
         this.snippetsName = snippetsName;
-        this.websiteService = useService("website");
+        this.websiteService = services.website;
         this.installSnippetModule = installSnippetModule;
 
         this.snippetsByCategory = {

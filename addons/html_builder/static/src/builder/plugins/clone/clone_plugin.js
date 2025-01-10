@@ -8,11 +8,11 @@ export class ClonePlugin extends Plugin {
     // TODO find why the images should not have the clone buttons.
     setup() {}
 
-    cloneElement(el) {
+    cloneElement(el, { position = "afterend" } = {}) {
         // TODO snippet_will_be_cloned ?
         // TODO cleanUI resource for each option
         const cloneEl = el.cloneNode(true);
-        el.insertAdjacentElement("afterEnd", cloneEl);
+        el.insertAdjacentElement(position, cloneEl);
         this.dependencies["builder-options"].updateContainers(cloneEl);
         // TODO onClone resource for each option
         // TODO snippet_cloned ?

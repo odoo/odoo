@@ -18,6 +18,7 @@ export class BuilderButton extends Component {
         iconImg: { type: String, optional: true },
         iconImgAlt: { type: String, optional: true },
         icon: { type: String, optional: true },
+        className: { type: String, optional: true },
 
         slots: { type: Object, optional: true },
     };
@@ -35,6 +36,9 @@ export class BuilderButton extends Component {
         let className = this.state.isActive ? "active" : "";
         const widthClass = this.env.actionBus ? " w-auto" : " w-25";
         className += widthClass;
+        if (this.props.className) {
+            className = `${className} ${this.props.className}`;
+        }
         if (!this.props.icon) {
             return className;
         }
