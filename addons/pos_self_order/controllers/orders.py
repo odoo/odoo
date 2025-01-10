@@ -83,7 +83,7 @@ class PosSelfOrderController(http.Controller):
 
                 for i, pos_order_line in enumerate(line.combo_line_ids):
                     child_product = pos_order_line.product_id
-                    price_unit = float_round(pos_order_line.combo_id.base_price * factor, precision_digits=sale_price_digits)
+                    price_unit = float_round(pos_order_line.combo_item_id.combo_id.base_price * factor, precision_digits=sale_price_digits)
                     remaining_total -= price_unit
 
                     if i == len(line.combo_line_ids) - 1:
