@@ -1,6 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import models
-from . import wizard
-from . import report
+
+
+def _membership_post_init(env):
+    # Need to initialize config parameter if the installation was not done with the settings of CRM
+    if not env['ir.config_parameter'].sudo().get_param('crm.membership_type'):
+        env['ir.config_parameter'].sudo().set_param('crm.membership_type', 'Member')
