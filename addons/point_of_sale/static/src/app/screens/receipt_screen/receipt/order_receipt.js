@@ -28,4 +28,19 @@ export class OrderReceipt extends Component {
     getPortalURL() {
         return `${this.props.data.base_url}/pos/ticket`;
     }
+
+    getTaxDetails(taxGroups) {
+        return taxGroups.map((tax_group) => {
+            let tax_name = tax_group.group_name;
+            if (!this.props.data.taxTotals.same_tax_base) {
+                tax_name += " on " + this.props.formatCurrency(tax_group.base_amount);
+            }
+            return {
+                id: tax_group.id,
+                tax_name: tax_name,
+                group_label: tax_group.group_label,
+                tax_amount_currency: tax_group.tax_amount_currency,
+            };
+        });
+    }
 }
