@@ -1528,6 +1528,9 @@ export class PosStore extends WithLazyGetterTrap {
         );
     }
     showScreen(name, props = {}, newOrder = false) {
+        if (name === "PaymentScreen" && !props.orderUuid) {
+            name = "ProductScreen";
+        }
         if (name === "ProductScreen") {
             this.getOrder()?.deselectOrderline();
         }
