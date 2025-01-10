@@ -12489,7 +12489,7 @@ test(`preserve current scroll position on form view while closing dialog`, async
 
     window.scrollTo({ top: 265, left: 0 });
     expect(window.scrollY).toBe(265, { message: "Should have scrolled 265 px vertically" });
-    expect(window.screenLeft).toBe(0, { message: "Should be 0 px from left as it is" });
+    expect(window.scrollX).toBe(0, { message: "Should be 0 px from left as it is" });
 
     // click on m2o field
     await contains(".o_field_many2one input").click();
@@ -12502,7 +12502,7 @@ test(`preserve current scroll position on form view while closing dialog`, async
     await contains(".modal .modal-header .oi-arrow-left").click();
 
     expect(window.scrollY).toBe(265, { message: "Should have scrolled 265 px vertically" });
-    expect(window.screenLeft).toBe(0, { message: "Should be 0 px from left as it is" });
+    expect(window.scrollX).toBe(0, { message: "Should be 0 px from left as it is" });
 });
 
 test.tags("mobile");
