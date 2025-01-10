@@ -38,6 +38,7 @@ export const SERIALIZABLE_MODELS = [
     "product.attribute.custom.value",
     "event.registration", // FIXME should be overrided from pos_event
     "event.registration.answer",
+    "restaurant.order.course",
 ];
 
 function processModelDefs(modelDefs) {

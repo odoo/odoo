@@ -26,21 +26,32 @@
 
             <!-- Receipt Body -->
             <div class="pos-receipt-body mb-4">
-                <div t-if="data.changes.data?.length" class="new-changes border-bottom w-100">
+                <t t-set="hasDataChanges" t-value="data.changes.data or data.changes.groupedData" />
+                <div t-if="hasDataChanges" class="new-changes border-bottom w-100">
                     <div class="pos-receipt-title text-center w-100">
                         <strong t-esc="data.changes.title" />
                     </div>
-                    <div t-foreach="data.changes.data" t-as="line" t-key="change_index">
-                        <t t-call="point_of_sale.OrderChangeReceiptLine" />
-                    </div>
+                    <t t-if="data.changes.groupedData">
+                        <div t-foreach="data.changes.groupedData" t-as="group" t-key="group_index">
+                            <div style="border-bottom: 1px dashed black;" class="mb-2 pb-1 fw-bold " t-att-class="{'mt-1': !group_first}" t-esc="group.name" />
+                            <div t-foreach="group.data" t-as="line" class="ps-2" t-key="change_index">
+                                <t t-call="point_of_sale.OrderChangeReceiptLine" />
+                            </div>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div t-foreach="data.changes.data" t-as="line" t-key="change_index">
+                            <t t-call="point_of_sale.OrderChangeReceiptLine" />
+                        </div>
+                    </t>
                 </div>
-                <div t-if="data.internal_note and !data.changes.data" class="new-changes border-bottom w-100">
+                <div t-if="data.internal_note and !hasDataChanges" class="new-changes border-bottom w-100">
                     <div class="pos-receipt-title text-center w-100">
                         <strong>INTERNAL NOTE</strong>
                     </div>
                     <div class="text-center fs-2" t-esc="data.internal_note.split('\n').join(', ')" />
                 </div>
-                <div t-if="data.general_customer_note and !data.changes.data" class="new-changes border-bottom w-100">
+                <div t-if="data.general_customer_note and !hasDataChanges" class="new-changes border-bottom w-100">
                     <div class="pos-receipt-title text-center w-100">
                         <strong>CUSTOMER NOTE</strong>
                     </div>

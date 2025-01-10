@@ -78,6 +78,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                 pos_categ_id: product.pos_categ_ids[0]?.id ?? 0,
                 pos_categ_sequence: product.pos_categ_ids[0]?.sequence ?? 0,
                 display_name: product.display_name,
+                group: receiptLineGrouper.getGroup(orderline),
             };
 
             if (quantityDiff && orderline.skip_change === skipped) {
@@ -128,6 +129,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                     isCombo: lineResume["isCombo"],
                     note: lineResume["note"],
                     attribute_value_names: lineResume["attribute_value_names"],
+                    group: lineResume["group"],
                     quantity: -quantity,
                 };
                 changeAbsCount += Math.abs(quantity);
@@ -156,4 +158,10 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
         result.internal_note = order.internal_note;
     }
     return result;
+};
+
+export const receiptLineGrouper = {
+    getGroup(orderLine) {
+        // To be overridden
+    },
 };

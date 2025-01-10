@@ -1193,9 +1193,7 @@ export class PosStore extends WithLazyGetterTrap {
     getPendingOrder() {
         const orderToCreate = this.models["pos.order"].filter(
             (order) =>
-                this.pendingOrder.create.has(order.id) &&
-                (order.lines.length > 0 ||
-                    order.payment_ids.some((p) => p.payment_method_id.type === "pay_later"))
+                this.pendingOrder.create.has(order.id) && this.shouldCreatePendingOrder(order)
         );
         const orderToUpdate = this.models["pos.order"].readMany(
             Array.from(this.pendingOrder.write)
@@ -1209,6 +1207,13 @@ export class PosStore extends WithLazyGetterTrap {
             orderToCreate,
             orderToUpdate,
         };
+    }
+
+    shouldCreatePendingOrder(order) {
+        return (
+            order.lines.length > 0 ||
+            order.payment_ids.some((p) => p.payment_method_id.type === "pay_later")
+        );
     }
 
     getOrderIdsToDelete() {
@@ -1683,9 +1688,10 @@ export class PosStore extends WithLazyGetterTrap {
             }
 
             if (changes.noteUpdate.length) {
+                const { noteUpdateTitle, printNoteUpdateData = true } = orderChange;
                 orderData.changes = {
-                    title: _t("NOTE UPDATE"),
-                    data: changes.noteUpdate,
+                    title: noteUpdateTitle || _t("NOTE UPDATE"),
+                    data: printNoteUpdateData ? changes.noteUpdate : [],
                 };
                 const result = await this.printOrderChanges(orderData, printer);
                 if (!result.successful) {
@@ -1714,6 +1720,18 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async printOrderChanges(data, printer) {
+        const dataChanges = data.changes?.data;
+        if (dataChanges && dataChanges.some((c) => c.group)) {
+            const groupedData = dataChanges.reduce((acc, c) => {
+                const { name = "", index = -1 } = c.group || {};
+                if (!acc[name]) {
+                    acc[name] = { name, index, data: [] };
+                }
+                acc[name].data.push(c);
+                return acc;
+            }, {});
+            data.changes.groupedData = Object.values(groupedData).sort((a, b) => a.index - b.index);
+        }
         const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
             data: data,
         });
