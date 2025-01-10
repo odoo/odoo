@@ -216,6 +216,93 @@ class TestMailMail(MailCommon):
                              email_cc=['"Herbert" <test.cc.2@example.com>', 'test.cc.1@example.com'])
         self.assertEqual(len(self._mails), 1)
 
+    def test_mail_mail_recipients_add_msg_to(self):
+        """ Test adding recipients in outgoing emails (email Message) without
+        impacting SMTP recipients. Use case is to have a given recipient
+        but forge the To of message to allow a reply-all behavior including
+        "virtual" recipients already mailed using another way. """
+        self.maxDiff = None
+        test_partners = self.env['res.partner'].create([
+            {
+                'name': name,
+                'email': email,
+            } for name, email in [('Partner1', 'partner.test@test.example.com'), ("Partner2", '<partner.test.2@test.example.com>')]
+        ])
+        for mail_values, exp_smtp, exp_to, exp_cc in [
+            (  # add "To" when having To and partners
+                {
+                    'email_to': '"Customer" <customer@test.example.com>, user2@test.mycompany.com',
+                    'recipient_ids': [(4, p.id) for p in test_partners],
+                    'headers': {
+                        'X-Msg-To-Add': 'add.1@test.example.com, "Add 2" <add.2@test.example.com>',
+                    },
+                }, [
+                    ['customer@test.example.com', 'user2@test.mycompany.com'],
+                    ['partner.test@test.example.com'], ['partner.test.2@test.example.com'],
+                ], [
+                    # To + added recipients
+                    ['"Customer" <customer@test.example.com>', 'user2@test.mycompany.com', 'add.1@test.example.com', '"Add 2" <add.2@test.example.com>'],
+                    # then each partner + added recipients
+                    ['"Partner1" <partner.test@test.example.com>', 'add.1@test.example.com', '"Add 2" <add.2@test.example.com>'],
+                    ['"Partner2" <partner.test.2@test.example.com>', 'add.1@test.example.com', '"Add 2" <add.2@test.example.com>'],
+                ],
+                [[], [], []],
+            ), (  # add "To" when having Cc and partners
+                {
+                    'email_cc': '"Cc Customer" <customer.cc@test.example.com>, customer.cc.2@test.example.com',
+                    'recipient_ids': [(4, p.id) for p in test_partners],
+                    'headers': {
+                        'X-Msg-To-Add': 'add.1@test.example.com, "Add 2" <add.2@test.example.com>',
+                    },
+                }, [
+                    ['customer.cc@test.example.com', 'customer.cc.2@test.example.com'],
+                    ['partner.test@test.example.com'], ['partner.test.2@test.example.com'],
+                ], [
+                    # Cc as solo + added recipients
+                    ['add.1@test.example.com', '"Add 2" <add.2@test.example.com>'],
+                    # then each partner + added recipients
+                    ['"Partner1" <partner.test@test.example.com>', 'add.1@test.example.com', '"Add 2" <add.2@test.example.com>'],
+                    ['"Partner2" <partner.test.2@test.example.com>', 'add.1@test.example.com', '"Add 2" <add.2@test.example.com>'],
+                ],
+                [['"Cc Customer" <customer.cc@test.example.com>', 'customer.cc.2@test.example.com'], [], []],
+            ), (  # additional "To" when having To + Cc + partners and duplicates and errors in Add To
+                {
+                    'email_cc': '"Cc Customer" <customer.cc@test.example.com>',
+                    'email_to': '"Customer" <customer@test.example.com>',
+                    'recipient_ids': [(4, p.id) for p in test_partners],
+                    'headers': {
+                        'X-Msg-To-Add': 'add.1@test.example.com, "Add 2" <add.2@test.example.com>, customer@test.example.com, ,wrong',
+                    },
+                }, [
+                    ['customer@test.example.com', 'customer.cc@test.example.com'],  # to and cc in same outgoing email
+                    ['partner.test@test.example.com'], ['partner.test.2@test.example.com'],
+                ], [
+                    # To + Cc
+                    ['"Customer" <customer@test.example.com>', 'add.1@test.example.com', '"Add 2" <add.2@test.example.com>'],
+                    # then each partner + added recipients
+                    ['"Partner1" <partner.test@test.example.com>', 'add.1@test.example.com', '"Add 2" <add.2@test.example.com>', 'customer@test.example.com'],
+                    ['"Partner2" <partner.test.2@test.example.com>', 'add.1@test.example.com', '"Add 2" <add.2@test.example.com>', 'customer@test.example.com'],
+                ],
+                [['"Cc Customer" <customer.cc@test.example.com>'], [], []],
+            ),
+        ]:
+            with self.subTest(mail_values=mail_values):
+                # with self.mock_smtplib_connection():
+                with self.mock_mail_gateway():
+                    self.env['mail.mail'].create({
+                        'subject': 'Test Recipients',
+                        **mail_values,
+                    }).send()
+                # self.assertEqual(len(self.emails), len(exp_smtp))
+                for exp_smtp_to_lst, exp_msg_to_lst, exp_msg_cc_lst in zip(exp_smtp, exp_to, exp_cc):
+                    self.assertSMTPEmailsSent(
+                        msg_from=f'{self.user_root.name} <{self.default_from}@{self.alias_domain}>',
+                        smtp_from=f'{self.default_from}@{self.alias_domain}',
+                        smtp_to_list=exp_smtp_to_lst,
+                        msg_cc_lst=exp_msg_cc_lst,
+                        msg_to_lst=exp_msg_to_lst,
+                    )
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_mail_return_path(self):
         # mail without thread-enabled record
