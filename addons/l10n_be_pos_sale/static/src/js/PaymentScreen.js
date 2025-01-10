@@ -18,7 +18,7 @@ patch(PaymentScreen.prototype, {
             this.dialog.add(AlertDialog, {
                 title: _t("This order needs to be invoiced"),
                 body: _t(
-                    "If you do not invoice imported orders you will encounter issues in your accounting. Especially in the EC Sale List report"
+                    "If you do not invoice imported orders containing intra-community taxes you will encounter issues in your accounting. Especially in the EC Sales List report"
                 ),
             });
         } else {
@@ -26,13 +26,16 @@ patch(PaymentScreen.prototype, {
         }
     },
     checkIsToInvoice() {
-        const has_origin_order = this.currentOrder
-            .getOrderlines()
-            .some((line) => line.sale_order_origin_id);
+        const orderLines = this.currentOrder.getOrderlines();
+        const has_origin_order = orderLines.some((line) => line.sale_order_origin_id);
+        const has_intracom_taxes = orderLines.some((line) =>
+            line.tax_ids?.some((tax) => this.pos.session._intracom_tax_ids?.includes(tax.id))
+        );
         if (
             this.pos.company.country_id &&
             this.pos.company.country_id.code === "BE" &&
-            has_origin_order
+            has_origin_order &&
+            has_intracom_taxes
         ) {
             return true;
         }
