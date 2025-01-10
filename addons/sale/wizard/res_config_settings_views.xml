@@ -69,8 +69,63 @@
                                 Payment
                                 <field name="prepayment_percent" widget="percentage" class="oe_inline"/>
                             </div>
-                            <div class="mt8" invisible="not portal_confirmation_pay">
-                                <button name='%(payment.action_payment_provider)d' icon="oi-arrow-right" type="action" string="Payment Providers" class="btn-link"/>
+                            <div
+                                class="row mt8"
+                                invisible="not portal_confirmation_pay or
+                                    providers_state == 'other_than_paypal'">
+                                <div
+                                    class="oe_inline"
+                                    invisible="not is_stripe_supported_country"
+                                >
+                                    <button
+                                        string="Activate Stripe"
+                                        name="action_activate_stripe"
+                                        type="object"
+                                        class="btn-primary"
+                                    />
+                                </div>
+                                <div
+                                    class="oe_inline"
+                                    title="Stripe Connect is not available in your country, please use another payment provider."
+                                    invisible="is_stripe_supported_country"
+                                >
+                                    <button
+                                        string="Activate Stripe"
+                                        class="btn-primary"
+                                        disabled=""
+                                    />
+                                </div>
+                                <button
+                                    name='%(payment.action_payment_provider)d'
+                                    icon="oi-arrow-right"
+                                    type="action"
+                                    string="View Alternatives"
+                                    class="btn-link oe_inline"
+                                />
+                            </div>
+                            <div
+                                class="mt8"
+                                invisible="not portal_confirmation_pay or
+                                    providers_state != 'other_than_paypal'"
+                            >
+                                <button
+                                    name="action_configure_first_provider"
+                                    type="object"
+                                    class="btn-primary col-auto"
+                                >
+                                    <field
+                                        name="first_provider_label"
+                                        nolabel="1"
+                                        class="oe_inline"
+                                    />
+                                </button>
+                                <button
+                                    type="action"
+                                    name="%(payment.action_payment_provider)d"
+                                    string="View other providers"
+                                    class="btn-link col-auto"
+                                    icon="oi-arrow-right"
+                                />
                             </div>
                         </setting>
                         <setting id="quotation_validity_days">
