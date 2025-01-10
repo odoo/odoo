@@ -103,7 +103,7 @@ class AccountMoveSend(models.TransientModel):
             'demo': _('Demo'),
         }
         for wizard in self:
-            edi_user = wizard.company_id.account_edi_proxy_client_ids.filtered(
+            edi_user = wizard.company_id.sudo().account_edi_proxy_client_ids.filtered(
                 lambda usr: usr.proxy_type == 'peppol'
             )
             mode = mode_strings.get(edi_user.edi_mode)
@@ -137,7 +137,7 @@ class AccountMoveSend(models.TransientModel):
         if self.checkbox_send_peppol and self.enable_peppol:
             for move in self.move_ids:
                 if not move.peppol_move_state or move.peppol_move_state == 'ready':
-                    move.peppol_move_state = 'to_send'
+                    move.sudo().peppol_move_state = 'to_send'
 
         return super().action_send_and_print(force_synchronous=force_synchronous, allow_fallback_pdf=allow_fallback_pdf, **kwargs)
 
