@@ -13,6 +13,10 @@ patch(PosOrderline.prototype, {
         return orderline;
     },
     toggleSkipChange() {
+        if (this.course_id) {
+            return;
+        }
+
         if (this.uiState.hasChange || this.skip_change) {
             this.setDirty();
             this.skip_change = !this.skip_change;
@@ -34,8 +38,15 @@ patch(PosOrderline.prototype, {
             }
         }
     },
+    serialize(options = {}) {
+        const data = super.serialize(...arguments);
+        if (options.orm && data.course_id) {
+            delete data.course_id;
+        }
+        return data;
+    },
     showSkipChange() {
-        return this.skip_change && !this.uiState.hideSkipChangeClass;
+        return this.skip_change && !this.uiState.hideSkipChangeClass && !this.course_id;
     },
     getDisplayClasses() {
         return {
@@ -43,5 +54,16 @@ patch(PosOrderline.prototype, {
             "has-change": this.uiState.hasChange && this.config.module_pos_restaurant,
             "skip-change": this.showSkipChange() && this.config.module_pos_restaurant,
         };
+    },
+    canBeMergedWith(orderline) {
+        if (this.course_id) {
+            if (this.course_id.uuid !== orderline.course_id?.uuid) {
+                return false;
+            }
+        } else if (orderline.course_id?.uuid) {
+            // In case of order merge
+            return false;
+        }
+        return super.canBeMergedWith(orderline);
     },
 });
