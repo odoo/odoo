@@ -15,4 +15,17 @@
     </BuilderRow>
 </t>
 
+<t t-name="html_builder.TableOfContentNavbarOption">
+    <BuilderRow label.translate="Position">
+        <BuilderButtonGroup>
+            <BuilderButton icon="'fa-long-arrow-left'" title="Left" action="'navbarPosition'" actionParam="'left'"/>
+            <BuilderButton icon="'fa-long-arrow-up'" title="Top" action="'navbarPosition'" actionParam="'top'"/>
+            <BuilderButton icon="'fa-long-arrow-right'" title="Right" action="'navbarPosition'" actionParam="'right'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+    <BuilderRow label.translate="Sticky">
+        <BuilderCheckbox classAction="'s_table_of_content_navbar_sticky'" preview="false"/>
+    </BuilderRow>
+</t>
+
 </templates>

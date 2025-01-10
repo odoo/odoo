@@ -323,7 +323,7 @@ export function useClickableBuilderComponent() {
         shouldClean = comp.props.inverseAction ? !shouldClean : shouldClean;
         for (const applySpec of applySpecs) {
             if (shouldClean) {
-                applySpec.clean({
+                applySpec.clean?.({
                     editingElement: applySpec.editingElement,
                     param: applySpec.actionParam,
                     value: applySpec.actionValue,

@@ -24,6 +24,10 @@ class TableOfContentOptionPlugin extends Plugin {
                 template: "html_builder.TableOfContentOption",
                 selector: ".s_table_of_content",
             },
+            {
+                template: "html_builder.TableOfContentNavbarOption",
+                selector: ".s_table_of_content_navbar_wrap",
+            },
         ],
         builder_actions: this.getActions(),
         normalize_handlers: this.normalize.bind(this),
@@ -41,6 +45,71 @@ class TableOfContentOptionPlugin extends Plugin {
                 apply: ({ editingElement, param: itemSelector }) => {
                     const itemEl = editingElement.querySelector(itemSelector);
                     this.dependencies.clone.cloneElement(itemEl);
+                },
+            },
+            navbarPosition: {
+                isApplied: ({ editingElement: navbarWrapEl, param: position }) => {
+                    if (navbarWrapEl.classList.contains("s_table_of_content_horizontal_navbar")) {
+                        return position === "top";
+                    } else {
+                        const mainContent = navbarWrapEl.parentNode.querySelector(
+                            ".s_table_of_content_main"
+                        );
+                        const previousSibling = navbarWrapEl.previousElementSibling;
+
+                        return (previousSibling === mainContent ? "right" : "left") === position;
+                    }
+                },
+                apply: ({ editingElement: navbarWrapEl, param: position }) => {
+                    const mainContentEl = navbarWrapEl.parentElement.querySelector(
+                        ".s_table_of_content_main"
+                    );
+                    const navbarEl = navbarWrapEl.querySelector(".s_table_of_content_navbar");
+
+                    if (position === "top" || position === "left") {
+                        const previousSibling = navbarWrapEl.previousElementSibling;
+                        if (previousSibling) {
+                            previousSibling.parentNode.insertBefore(navbarWrapEl, previousSibling);
+                        }
+                    }
+                    if (position === "left" || position === "right") {
+                        navbarWrapEl.classList.remove(
+                            "s_table_of_content_horizontal_navbar",
+                            "col-lg-12"
+                        );
+                        navbarWrapEl.classList.add(
+                            "s_table_of_content_vertical_navbar",
+                            "col-lg-3"
+                        );
+                        mainContentEl.classList.remove("col-lg-12");
+                        mainContentEl.classList.add("col-lg-9");
+
+                        navbarEl.classList.remove("list-group-horizontal-md");
+                    }
+                    if (position === "right") {
+                        const nextSibling = navbarWrapEl.nextElementSibling;
+                        if (nextSibling) {
+                            nextSibling.parentNode.insertBefore(
+                                navbarWrapEl,
+                                nextSibling.nextSibling
+                            );
+                        }
+                    }
+                    if (position === "top") {
+                        navbarWrapEl.classList.remove(
+                            "s_table_of_content_vertical_navbar",
+                            "col-lg-3"
+                        );
+                        navbarWrapEl.classList.add(
+                            "s_table_of_content_horizontal_navbar",
+                            "col-lg-12"
+                        );
+
+                        navbarEl.classList.add("list-group-horizontal-md");
+
+                        mainContentEl.classList.remove("col-lg-9");
+                        mainContentEl.classList.add("col-lg-12");
+                    }
                 },
             },
         };
