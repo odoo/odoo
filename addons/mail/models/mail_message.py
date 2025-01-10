@@ -144,6 +144,9 @@ class MailMessage(models.Model):
     # recipients: include inactive partners (they may have been archived after
     # the message was sent, but they should remain visible in the relation)
     partner_ids = fields.Many2many('res.partner', string='Recipients', context={'active_test': False})
+    # email recipients of incoming emails: comma separated list of emails (not necessarily normalized)
+    incoming_email_to = fields.Text('Emails To')
+    incoming_email_cc = fields.Char('Emails Cc')
     # list of partner having a notification. Caution: list may change over time because of notif gc cron.
     # mainly usefull for testing
     notified_partner_ids = fields.Many2many(
