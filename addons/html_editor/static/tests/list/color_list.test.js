@@ -128,6 +128,14 @@ test("should carry color of list item to paragraph (4)", async () => {
     });
 });
 
+test("should carry class-defined color of list item to paragraph", async () => {
+    await testEditor({
+        contentBefore: '<ol><li class="text-o-color-1">[]abc</li><li>def</li></ol>',
+        stepFunction: toggleOrderedList,
+        contentAfter: '<p><font class="text-o-color-1">[]abc</font></p><ol><li>def</li></ol>',
+    });
+});
+
 test("should keep list item color on toggling list twice", async () => {
     await testEditor({
         contentBefore:
