@@ -89,12 +89,12 @@ registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {
 },
 ...clickOnEditAndWaitEditMode(),
 {
-    content: 'Add a fake default value for the job_id field',
-    trigger: "body",
+    content: 'Add a fake default value for the job_id hidden field',
+    trigger: ":iframe form input[name=job_id]:not(:visible)",
     run() {
         // It must be done in this way because the editor does not allow to
         // put a default value on a field with type="hidden".
-        document.querySelector('.o_iframe:not(.o_ignore_in_tour)').contentDocument.querySelector('input[name="job_id"]').value = 'FAKE_JOB_ID_DEFAULT_VAL';
+        this.anchor.value = "FAKE_JOB_ID_DEFAULT_VAL";
     },
 }, {
     content: 'Edit the form',
@@ -122,24 +122,12 @@ registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {
     run: "click",
 }, {
     content: 'Check that a job_id has been loaded',
-    trigger: ':iframe form',
-    run() {
-        const selector =
-            'input[name="job_id"]:not([value=""]):not([value = "FAKE_JOB_ID_DEFAULT_VAL"])';
-        if (!document.querySelector('.o_iframe:not(.o_ignore_in_tour)').contentDocument.querySelector(selector)) {
-            console.error('The job_id field has a wrong value');
-        }
-    }
+    trigger: ":iframe form input[name=job_id]:not(:visible):not([value='']):not([value=FAKE_JOB_ID_DEFAULT_VAL])",
 },
 ...clickOnEditAndWaitEditMode(),
 {
     content: 'Verify that the job_id field has kept its default value',
-    trigger: "body",
-    run() {
-        if (!document.querySelector('.o_iframe:not(.o_ignore_in_tour)').contentDocument.querySelector('input[name="job_id"][value="FAKE_JOB_ID_DEFAULT_VAL"]')) {
-            console.error('The job_id field has lost its default value');
-        }
-    }
+    trigger: ":iframe form input[name=job_id][value=FAKE_JOB_ID_DEFAULT_VAL]:not(:visible)",
 },
 ]);
 
