@@ -51,22 +51,21 @@ class TestWebsiteResUsers(TransactionCase):
 
     def test_same_website_message(self):
         # Use a test cursor because retrying() does commit.
-        self.env.registry.enter_test_mode(self.env.cr)
-        self.addCleanup(self.env.registry.leave_test_mode)
-        env = self.env(context={'lang': 'en_US'}, cr=self.env.registry.cursor())
+        with self.enter_registry_test_mode():
+            env = self.env(context={'lang': 'en_US'}, cr=self.env.registry.cursor())
 
-        def create_user_pou():
-            return new_test_user(env, login='Pou', website_id=self.website_1.id, groups='base.group_portal')
+            def create_user_pou():
+                return new_test_user(env, login='Pou', website_id=self.website_1.id, groups='base.group_portal')
 
-        # First user creation works.
-        create_user_pou()
+            # First user creation works.
+            create_user_pou()
 
-        # Second user creation fails with ValidationError instead of
-        # IntegrityError. Do not use self.assertRaises as it would try
-        # to create and rollback to a savepoint that is removed by the
-        # rollback in retrying().
-        with TestCase.assertRaises(self, ValidationError), mute_logger('odoo.sql_db'):
-            retrying(create_user_pou, env)
+            # Second user creation fails with ValidationError instead of
+            # IntegrityError. Do not use self.assertRaises as it would try
+            # to create and rollback to a savepoint that is removed by the
+            # rollback in retrying().
+            with TestCase.assertRaises(self, ValidationError), mute_logger('odoo.sql_db'):
+                retrying(create_user_pou, env)
 
     def _create_user_via_website(self, website, login):
         # We need a fake request to _signup_create_user.

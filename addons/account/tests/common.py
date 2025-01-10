@@ -725,21 +725,6 @@ class AccountTestInvoicingCommon(ProductCommon):
         '''
         return etree.fromstring(xml_tree_str)
 
-    @contextmanager
-    def enter_test_mode(self):
-        """
-        Make so that all new cursors opened on this database registry
-        reuse the one currently used by the test.
-
-        Useful for printing PDFs inside a TransactionCase test when
-        using a HttpCase is not possible/desirable.
-        """
-        self.env.registry.enter_test_mode(self.env.cr)
-        try:
-            yield
-        finally:
-            self.env.registry.leave_test_mode()
-
 
 class AccountTestMockOnlineSyncCommon(HttpCase):
     def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
