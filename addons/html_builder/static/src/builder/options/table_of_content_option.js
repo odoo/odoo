@@ -73,18 +73,11 @@ class TableOfContentOptionPlugin extends Plugin {
                         }
                     }
                     if (position === "left" || position === "right") {
-                        navbarWrapEl.classList.remove(
-                            "s_table_of_content_horizontal_navbar",
-                            "col-lg-12"
-                        );
                         navbarWrapEl.classList.add(
                             "s_table_of_content_vertical_navbar",
                             "col-lg-3"
                         );
-                        mainContentEl.classList.remove("col-lg-12");
                         mainContentEl.classList.add("col-lg-9");
-
-                        navbarEl.classList.remove("list-group-horizontal-md");
                     }
                     if (position === "right") {
                         const nextSibling = navbarWrapEl.nextElementSibling;
@@ -96,19 +89,35 @@ class TableOfContentOptionPlugin extends Plugin {
                         }
                     }
                     if (position === "top") {
-                        navbarWrapEl.classList.remove(
-                            "s_table_of_content_vertical_navbar",
-                            "col-lg-3"
-                        );
                         navbarWrapEl.classList.add(
                             "s_table_of_content_horizontal_navbar",
                             "col-lg-12"
                         );
-
                         navbarEl.classList.add("list-group-horizontal-md");
-
-                        mainContentEl.classList.remove("col-lg-9");
                         mainContentEl.classList.add("col-lg-12");
+                    }
+                },
+                clean: ({ editingElement: navbarWrapEl, param: position }) => {
+                    const mainContentEl = navbarWrapEl.parentElement.querySelector(
+                        ".s_table_of_content_main"
+                    );
+                    const navbarEl = navbarWrapEl.querySelector(".s_table_of_content_navbar");
+
+                    if (position === "top") {
+                        navbarWrapEl.classList.remove(
+                            "s_table_of_content_horizontal_navbar",
+                            "col-lg-12"
+                        );
+                        mainContentEl.classList.remove("col-lg-12");
+                        navbarEl.classList.remove("list-group-horizontal-md");
+                    }
+
+                    if (position === "left" || position === "right") {
+                        navbarWrapEl.classList.remove(
+                            "s_table_of_content_vertical_navbar",
+                            "col-lg-3"
+                        );
+                        mainContentEl.classList.remove("col-lg-9");
                     }
                 },
             },
