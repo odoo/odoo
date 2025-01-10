@@ -23,8 +23,14 @@ class AccountEdiProxyClientUser(models.Model):
     # HELPER METHODS
     # -------------------------------------------------------------------------
 
-    @handle_demo
+
     def _make_request(self, url, params=False):
+        if self.proxy_type == 'peppol':
+            return self._make_request_peppol(url, params=params)
+        return super()._make_request(url, params=params)
+
+    @handle_demo
+    def _make_request_peppol(self, url, params=False):
         # extends account_edi_proxy_client to update peppol_proxy_state
         # of archived users
         try:

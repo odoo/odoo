@@ -119,7 +119,7 @@ def _mock_migrate_participant(func, self, *args, **kwargs):
     self.account_peppol_migration_key = 'I9cz9yw*ruDM%4VSj94s'
 
 _demo_behaviour = {
-    '_make_request': _mock_make_request,
+    '_make_request_peppol': _mock_make_request,
     'button_account_peppol_check_partner_endpoint': _mock_button_verify_partner_endpoint,
     'button_create_peppol_proxy_user': _mock_user_creation,
     'button_deregister_peppol_participant': _mock_deregister_participant,
