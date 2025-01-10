@@ -31,6 +31,7 @@ test("show warning when bus connection encounters issues", async () => {
         WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE
     );
     await waitForSteps(["reconnecting"]);
+    await runAllTimers();
     const alert = await waitFor(".o-bus-ConnectionAlert");
     expect(alert).toHaveText("Real-time connection lost...");
     await runAllTimers();

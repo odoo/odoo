@@ -50,7 +50,7 @@ class AccountCodeMapping(models.Model):
                 return self.browse([
                     account_id * COMPANY_OFFSET + company.id
                     for account_id in account_ids
-                    for company in self.env.user.company_ids.sorted(lambda c: (c.sequence, c.name))
+                    for company in self.env.user.with_context(active_test=True).company_ids.sorted(lambda c: (c.sequence, c.name))
                 ]).filtered_domain(remaining_domain)._as_query()
         raise NotImplementedError
 

@@ -3,12 +3,20 @@ import { reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 
+export const CONNECTION_LOST_WARNING_DELAY = 15000;
+export const CONNECTION_STATUS = Object.freeze({
+    CONNECTED: 0,
+    CONNECTION_LOST: 1,
+    CONNECTION_LOST_LONG: 2,
+});
+
 /**
  * Detect lost connections to the bus. A connection is considered as lost if it
  * couldn't be established after a reconnect attempt.
  */
 export class BusMonitoringService {
-    isConnectionLost = false;
+    connectionStatus = CONNECTION_STATUS.CONNECTED;
+    timeout;
 
     constructor(env, services) {
         const reactiveThis = reactive(this);
@@ -43,13 +51,22 @@ export class BusMonitoringService {
             }
             case WORKER_STATE.CONNECTED: {
                 this.isReconnecting = false;
-                this.isConnectionLost = false;
+                this.connectionStatus = CONNECTION_STATUS.CONNECTED;
+                if (this.timeout) {
+                    clearTimeout(this.timeout);
+                    this.timeout = undefined;
+                }
                 break;
             }
             case WORKER_STATE.DISCONNECTED: {
                 if (this.isReconnecting) {
-                    this.isConnectionLost = true;
                     this.isReconnecting = false;
+                }
+                if (!this.timeout) {
+                    this.connectionStatus = CONNECTION_STATUS.CONNECTION_LOST;
+                    this.timeout = browser.setTimeout(() => {
+                        this.connectionStatus = CONNECTION_STATUS.CONNECTION_LOST_LONG;
+                    }, CONNECTION_LOST_WARNING_DELAY);
                 }
                 break;
             }
