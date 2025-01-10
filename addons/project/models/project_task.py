@@ -1645,12 +1645,6 @@ class ProjectTask(models.Model):
                 self.with_context(lang=user.lang)._get_default_personal_stage_create_vals(user.id)
             )
 
-    def task_email_split(self, msg):
-        email_list = tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or ''))
-        # check left-part is not already an alias
-        aliases = self.mapped('project_id.alias_name')
-        return [x for x in email_list if x.split('@')[0] not in aliases]
-
     @api.model
     def message_new(self, msg, custom_values=None):
         # remove default author when going through the mail gateway. Indeed we
@@ -1675,13 +1669,13 @@ class ProjectTask(models.Model):
         defaults.update(custom_values)
 
         task = super(ProjectTask, self.with_context(create_context)).message_new(msg, custom_values=defaults)
-        partners = task._partner_find_from_emails_single(task.task_email_split(msg), no_create=True)
+        partners = task._partner_find_from_emails_single(tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or '')), no_create=True)
         task.message_subscribe(partners.ids)
         return task
 
     def message_update(self, msg, update_vals=None):
         for task in self:
-            partners = task._partner_find_from_emails_single(task.task_email_split(msg), no_create=True)
+            partners = task._partner_find_from_emails_single(tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or '')), no_create=True)
             task.message_subscribe(partners.ids)
         return super().message_update(msg, update_vals=update_vals)
 
