@@ -758,13 +758,23 @@ class PosConfig(models.Model):
     def _create_cash_payment_method(self, cash_journal_vals=None):
         if cash_journal_vals is None:
             cash_journal_vals = {}
-
-        cash_journal = self.env['account.journal'].create({
+        journal_vals = {
             'name': _('Cash'),
             'type': 'cash',
             'company_id': self.env.company.id,
             **cash_journal_vals,
-        })
+        }
+
+        default_cash_account = self.env['account.account'].search([
+            ('account_type', '=', 'asset_cash'),
+            ('name', '=', 'Cash'),
+            ('company_ids', 'in', self.env.company.root_id.id)
+        ], limit=1)
+
+        if default_cash_account:
+            journal_vals['default_account_id'] = default_cash_account.id
+
+        cash_journal = self.env['account.journal'].create(journal_vals)
         return self.env['pos.payment.method'].create({
             'name': _('Cash'),
             'journal_id': cash_journal.id,
