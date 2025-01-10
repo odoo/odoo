@@ -1973,23 +1973,26 @@ class _String(Field[str | typing.Literal[False]]):
             }
             from_lang_value = old_translations.pop(lang, old_translations['en_US'])
             translation_dictionary = self.get_translation_dictionary(from_lang_value, old_translations)
-            text2terms = defaultdict(list)
-            for term in new_terms:
-                text2terms[self.get_text_content(term)].append(term)
 
-            is_text = self.translate.is_text if hasattr(self.translate, 'is_text') else lambda term: True
-            for old_term in list(translation_dictionary.keys()):
-                if old_term not in new_terms:
-                    old_term_text = self.get_text_content(old_term)
-                    matches = get_close_matches(old_term_text, text2terms, 1, 0.9)
-                    if matches:
-                        closest_term = get_close_matches(old_term, text2terms[matches[0]], 1, 0)[0]
-                        if closest_term in translation_dictionary:
-                            continue
-                        old_is_text = is_text(old_term)
-                        closest_is_text = is_text(closest_term)
-                        if old_is_text or not closest_is_text:
-                            translation_dictionary[closest_term] = translation_dictionary.pop(old_term)
+            if not records.env.context.get("install_mode"):
+                text2terms = defaultdict(list)
+                for term in new_terms:
+                    if term_text := self.get_text_content(term):
+                        text2terms[term_text].append(term)
+
+                is_text = self.translate.is_text if hasattr(self.translate, 'is_text') else lambda term: True
+                for old_term in list(translation_dictionary.keys()):
+                    if old_term not in new_terms:
+                        old_term_text = self.get_text_content(old_term)
+                        matches = get_close_matches(old_term_text, text2terms, 1, 0.9)
+                        if matches:
+                            closest_term = get_close_matches(old_term, text2terms[matches[0]], 1, 0)[0]
+                            if closest_term in translation_dictionary:
+                                continue
+                            old_is_text = is_text(old_term)
+                            closest_is_text = is_text(closest_term)
+                            if old_is_text or not closest_is_text:
+                                translation_dictionary[closest_term] = translation_dictionary.pop(old_term)
             # pylint: disable=not-callable
             new_translations = {
                 l: self.translate(lambda term: translation_dictionary.get(term, {l: None})[l], cache_value)
