@@ -1582,6 +1582,9 @@ export class PosStore extends Reactive {
         );
     }
     showScreen(name, props) {
+        if (name === "PaymentScreen" && !props.orderUuid) {
+            name = "ProductScreen";
+        }
         if (name === "ProductScreen") {
             this.get_order()?.deselect_orderline();
         }
