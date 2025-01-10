@@ -2,6 +2,7 @@ import { test } from "@odoo/hoot";
 import { testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import { setColor } from "./_helpers/user_actions";
+import { getCharWidth, oeTab, TAB_WIDTH } from "./_helpers/tabs";
 
 test("should apply a color to a slice of text in a span in a font", async () => {
     await testEditor({
@@ -322,5 +323,26 @@ test("should distribute color to texts and to button separately", async () => {
             '<p>a<font style="color: rgb(255, 0, 0);">[b</font>' +
             '<a class="btn"><font style="color: rgb(255, 0, 0);">c</font></a>' +
             '<font style="color: rgb(255, 0, 0);">d]</font>e</p>',
+    });
+});
+
+test("should apply a background color to a tab", async () => {
+    await testEditor({
+        contentBefore: `<p>a[${oeTab(TAB_WIDTH, false)}]b</p>`,
+        stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
+        contentAfter: `<p>a[<font style="background-color: rgb(255, 0, 0);">${oeTab(
+            TAB_WIDTH - getCharWidth("p", "a")
+        )}]</font>b</p>`,
+    });
+});
+
+test("should remove a background color from a tab", async () => {
+    await testEditor({
+        contentBefore: `<p>a[<font style="background-color: rgb(255, 0, 0);">${oeTab(
+            TAB_WIDTH,
+            false
+        )}]</font>b</p>`,
+        stepFunction: setColor("", "backgroundColor"),
+        contentAfter: `<p>a[${oeTab(TAB_WIDTH - getCharWidth("p", "a"))}]b</p>`,
     });
 });
