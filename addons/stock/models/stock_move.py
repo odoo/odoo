@@ -898,6 +898,10 @@ Please change the quantity done or the rounding precision of your unit of measur
         self.move_line_ids = move_lines_commands
         return True
 
+    def _is_manually_picked(self):
+        self.ensure_one()
+        return not self.scrapped and self.picked
+
     def _create_lot_ids_from_move_line_vals(self, vals_list, product_id, company_id=False):
         """ This method will search or create the lot_id from the lot_name and set it in the vals_list
         """
