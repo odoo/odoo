@@ -6797,35 +6797,34 @@ class TransientModel(Model):
         - the 10 rows that have been created/changed the last 5 minutes will NOT
           be deleted
         """
+        has_remaining = False
         if self._transient_max_hours:
             # Age-based expiration
-            self._transient_clean_rows_older_than(self._transient_max_hours * 60 * 60)
+            has_remaining |= self._transient_clean_rows_older_than(self._transient_max_hours * 60 * 60)
 
         if self._transient_max_count:
             # Count-based expiration
-            self._transient_clean_old_rows(self._transient_max_count)
+            has_remaining |= self._transient_clean_old_rows(self._transient_max_count)
+        # This method is shared by all transient models therefore,
+        # return the model name to be logged and if whether there are more rows to process
+        return self._name, has_remaining
 
-    def _transient_clean_old_rows(self, max_count):
+    def _transient_clean_old_rows(self, max_count: int) -> bool:
         # Check how many rows we have in the table
         self._cr.execute(SQL("SELECT count(*) FROM %s", SQL.identifier(self._table)))
         [count] = self._cr.fetchone()
         if count > max_count:
-            self._transient_clean_rows_older_than(300)
+            return self._transient_clean_rows_older_than(300)
+        return False
 
-    def _transient_clean_rows_older_than(self, seconds):
+    def _transient_clean_rows_older_than(self, seconds: int) -> bool:
         # Never delete rows used in last 5 minutes
         seconds = max(seconds, 300)
-        self._cr.execute(SQL(
-            "SELECT id FROM %s WHERE %s < %s %s",
-            SQL.identifier(self._table),
-            SQL("COALESCE(write_date, create_date, (now() AT TIME ZONE 'UTC'))::timestamp"),
-            SQL("(now() AT TIME ZONE 'UTC') - interval %s", f"{seconds} seconds"),
-            SQL(f"LIMIT { GC_UNLINK_LIMIT }"),
-        ))
-        ids = [x[0] for x in self._cr.fetchall()]
-        self.sudo().browse(ids).unlink()
-        if len(ids) >= GC_UNLINK_LIMIT:
-            self.env.ref('base.autovacuum_job')._trigger()
+        now = self.env.cr.now()
+        domain = [('write_date', '<', now - datetime.timedelta(seconds=seconds))]
+        records = self.sudo().search(domain, limit=GC_UNLINK_LIMIT)
+        records.unlink()
+        return len(records) == GC_UNLINK_LIMIT
 
 
 def itemgetter_tuple(items):

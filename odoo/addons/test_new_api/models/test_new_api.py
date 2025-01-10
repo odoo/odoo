@@ -2254,8 +2254,14 @@ class Test_New_ApiAutovacuumed(models.Model):
     expire_at = fields.Datetime('Expires at')
 
     @api.autovacuum
-    def _gc(self):
+    def _gc_simple(self):
         self.search([('expire_at', '<', datetime.datetime.now() - datetime.timedelta(days=1))]).unlink()
+
+    @api.autovacuum
+    def _gc_proper(self, limit=5):
+        records = self.search([('expire_at', '<', datetime.datetime.now() - datetime.timedelta(days=1))], limit=limit)
+        records.unlink()
+        return len(records), len(records) == limit
 
 
 class Test_New_ApiSharedCompute(models.Model):

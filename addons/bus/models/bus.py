@@ -95,9 +95,8 @@ class BusBus(models.Model):
         timeout_ago = fields.Datetime.now() - datetime.timedelta(seconds=TIMEOUT*2)
         domain = [('create_date', '<', timeout_ago)]
         records = self.search(domain, limit=GC_UNLINK_LIMIT)
-        if len(records) >= GC_UNLINK_LIMIT:
-            self.env.ref('base.autovacuum_job')._trigger()
-        return records.unlink()
+        records.unlink()
+        return len(records), len(records) == GC_UNLINK_LIMIT  # done, remaining
 
     @api.model
     def _sendone(self, target, notification_type, message):
