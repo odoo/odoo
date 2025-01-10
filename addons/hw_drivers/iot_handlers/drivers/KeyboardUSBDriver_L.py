@@ -118,10 +118,11 @@ class KeyboardUSBDriver(Driver):
         try:
             manufacturer = util.get_string(self.dev, self.dev.iManufacturer)
             product = util.get_string(self.dev, self.dev.iProduct)
-            return re.sub(r"[^\w \-+/*&]", '', "%s - %s" % (manufacturer, product))
+            if manufacturer and product:
+                return re.sub(r"[^\w \-+/*&]", '', "%s - %s" % (manufacturer, product))
         except ValueError as e:
             _logger.warning(e)
-            return _('Unknown input device')
+        return _('Unknown input device')
 
     def run(self):
         try:
