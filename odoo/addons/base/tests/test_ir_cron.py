@@ -587,11 +587,53 @@ class TestIrCron(TransactionCase, CronMixinCase):
             run.assert_not_called()
             acquire.assert_called_once()
 
+    def test_cron_commit_progress(self):
+        with self.enter_registry_test_mode(), self.registry.cursor() as cr:
+            cron = self.cron.with_env(self.cron.env(cr=cr, context={'cron_id': self.cron.id}))
+
+            # check remaining time
+            cron, progress = cron._add_progress()
+            result = cron._commit_progress()
+            self.assertEqual(result, float('inf'))
+            result = cron.with_context(cron_end_time=time.monotonic() - 1)._commit_progress()
+            self.assertEqual(result, 0)
+
+            # check remaining count
+            cron, progress = cron._add_progress()
+            cron._commit_progress(remaining=5)
+            self.assertEqual(progress.done, 0)
+            self.assertEqual(progress.remaining, 5)
+            cron._commit_progress(processed=3, remaining=7)
+            self.assertEqual(progress.done, 3)
+            self.assertEqual(progress.remaining, 7)
+
+            # check processed count
+            cron, progress = cron._add_progress()
+            cron._commit_progress(remaining=5)
+            cron._commit_progress(2)
+            self.assertEqual(progress.done, 2)
+            self.assertEqual(progress.remaining, 3)
+            cron._commit_progress(2)
+            self.assertEqual(progress.done, 4)
+            self.assertEqual(progress.remaining, 1)
+            cron._commit_progress(2)
+            self.assertEqual(progress.done, 6)
+            self.assertEqual(progress.remaining, 0)
+
+            # check deactivate flag
+            cron, progress = cron._add_progress()
+            cron._commit_progress(1, deactivate=True)
+            self.assertEqual(progress.done, 1)
+            self.assertEqual(progress.deactivate, True)
+            cron._commit_progress(1)
+            self.assertEqual(progress.done, 2)
+            self.assertEqual(progress.deactivate, True)
+
     def test_cron_deactivate(self):
         default_progress_values = {'done': 0, 'remaining': 0, 'timed_out_counter': 0}
 
         def mocked_run(self):
-            self.env['ir.cron']._notify_progress(done=1, remaining=0, deactivate=True)
+            self.env['ir.cron']._commit_progress(processed=1, remaining=0, deactivate=True)
 
         self.cron._trigger()
         self.env.flush_all()
