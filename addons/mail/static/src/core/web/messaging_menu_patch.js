@@ -2,6 +2,20 @@ import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { useEffect, useState } from "@odoo/owl";
 
+<<<<<<< 18.0:addons/mail/static/src/core/web/messaging_menu_patch.js
+||||||| d8fa043f085ee1e1d11708e2bd1213b7ce3c9dd9:addons/mail/static/src/core/web/messaging_menu.js
+import { Component, useState } from "@odoo/owl";
+
+import { hasTouch, isDisplayStandalone, isIOS, isIosApp } from "@web/core/browser/feature_detection";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+=======
+import { Component, useState } from "@odoo/owl";
+
+import { hasTouch } from "@web/core/browser/feature_detection";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+>>>>>>> b2bc9d095b338f1cb7f08a18b479af9faf8728e1:addons/mail/static/src/core/web/messaging_menu.js
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
