@@ -10,6 +10,15 @@
     }
 
     .ui-menu-item {
+        > a {
+            @include o-hover-text-color($dropdown-link-color, $dropdown-link-hover-color);
+            &.ui-state-active {
+                font-weight: $font-weight-normal;
+                color: $dropdown-link-hover-color;
+                background-color: $dropdown-link-hover-bg;
+            }
+        }
+
         &.o_m2o_dropdown_option, &.o_m2o_start_typing, &.o_m2o_no_result {
             text-indent: $o-dropdown-hpadding * .5;
         }
