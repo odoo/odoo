@@ -49,7 +49,7 @@ class SaleOrderLine(models.Model):
                     try:
                         project_so = self.env['project.project'].browse(project_id).sale_order_id
                         project_so.check_access('write')
-                        sale_order = project_so
+                        sale_order = project_so or self.env['sale.order'].search([('project_id', '=', project_id)], limit=1)
                     except AccessError:
                         pass
                     if not sale_order:
