@@ -345,9 +345,8 @@ class PortalMailGroup(http.Controller):
         if not group:
             return request.render('mail_group.invalid_token_subscription')
 
-        partners = request.env['mail.thread'].sudo()._mail_find_partner_from_emails([email])
-        partner_id = partners[0].id if partners else None
-        group._join_group(email, partner_id)
+        partner = request.env['mail.thread'].sudo()._partner_find_from_emails_single([email], no_create=True)
+        group._join_group(email, partner.id)
 
         return request.render('mail_group.confirmation_subscription', {
             'group': group,

@@ -167,40 +167,36 @@ class TestMailFlow(MailCommon, TestRecipients):
         # ------------------------------------------------------------
         suggested_all = lead_as_emp._message_get_suggested_recipients()
         expected_all = [
-            {  # mail.thread.cc: email_cc field
-                'create_values': {},
-                'email': 'pay@zboing.com',
-                'lang': None,
-                'name': 'pay@zboing.com',
-                'reason': 'CC Email',
-            },
-            {  # mail.thread.cc: email_cc field (linked to partner)
-                'email': 'portal@zboing.com',
-                'lang': None,
-                'name': 'Portal Zboing',
-                'reason': 'CC Email',
-                'partner_id': self.customer_portal_zboing.id,
-            },
-            {  # then primary emailadditional_values
+            {  # first primary email
                 'create_values': {
                     'lang': 'fr_FR',
                     'mobile': False,
-                    'name': 'Sylvie Lelitre (Zboing)',
                     'phone': '+32455001122',
                 },
-                'email': '"Sylvie Lelitre" <sylvie.lelitre@zboing.com>',
-                'lang': None,
+                'email': 'sylvie.lelitre@zboing.com',
                 'name': 'Sylvie Lelitre (Zboing)',
+                'partner_id': False,
                 'reason': 'Customer Email',
+            },
+            {  # mail.thread.cc: email_cc field
+                'create_values': {},
+                'email': 'pay@zboing.com',
+                'name': '',
+                'partner_id': False,
+                'reason': 'CC Email',
+            },
+            {  # mail.thread.cc: email_cc field (linked to partner)
+                'create_values': {},
+                'email': 'portal@zboing.com',
+                'name': 'Portal Zboing',
+                'reason': 'CC Email',
+                'partner_id': self.customer_portal_zboing.id,
             },
         ]
         for suggested, expected in zip(suggested_all, expected_all):
             self.assertDictEqual(suggested, expected)
         # check recipients, which creates them (simulating discuss in a quick way)
-        self.env["res.partner"]._find_or_create_from_emails(
-            [sug['email'] for sug in suggested_all],
-            {email_normalize(sug['email']): sug.get('create_values') or {} for sug in suggested_all},
-        )
+        lead_as_emp._partner_find_from_emails_single([sug['email'] for sug in suggested_all])
         partner_sylvie = self.env['res.partner'].search(
             [('email_normalized', '=', 'sylvie.lelitre@zboing.com')]
         )
