@@ -1291,7 +1291,7 @@ class Lead(models.Model):
         else:
             help_title = _('Create an opportunity to start playing with your pipeline.')
         alias_domain = [
-            ('company_id', '=', self.env.company.id),
+            ('company_id', 'in', [self.env.company.id, False]),
             ('alias_id.alias_name', '!=', False),
             ('alias_id.alias_name', '!=', ''),
             ('alias_id.alias_model_id.model', '=', 'crm.lead'),

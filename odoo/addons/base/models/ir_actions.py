@@ -678,7 +678,11 @@ class IrActionsServer(models.Model):
             return ''
         model = self.env[self.model_id.model]
         pretty_path = []
+        field = None
         for field_name in path.split('.'):
+            if field and field.type == 'properties':
+                pretty_path.append(field_name)
+                continue
             field = model._fields[field_name]
             field_id = self.env['ir.model.fields']._get(model._name, field_name)
             if field.relational:
@@ -1019,6 +1023,12 @@ class IrActionsServer(models.Model):
                     expr = float(action.value)
             result[action.id] = expr
         return result
+
+    def copy_data(self, default=None):
+        default = default or {}
+        if not default.get('name'):
+            default['name'] = _('%s (copy)', self.name)
+        return super().copy_data(default=default)
 
 class IrActionsTodo(models.Model):
     """
