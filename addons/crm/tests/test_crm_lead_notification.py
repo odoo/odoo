@@ -38,7 +38,6 @@ class NewLeadNotification(TestCrmCommon):
     def test_lead_message_get_suggested_recipients(self):
         """ Test '_message_get_suggested_recipients' and its override in lead
         when dealing with various emails. """
-
         self.maxDiff = None  # to ease assertDictEqual usage
         partner_no_email = self.env['res.partner'].create({'name': 'Test Partner', 'email': False})
         leads = self.env['crm.lead'].create([
@@ -82,13 +81,12 @@ class NewLeadNotification(TestCrmCommon):
                 # here contact_name is guessed based on formatted email
                 {
                     'name': 'New Customer',
-                    'email': '"New Customer" <new.customer.format@test.example.com>',
-                    'lang': None,
+                    'email': 'new.customer.format@test.example.com',
+                    'partner_id': False,
                     'reason': 'Customer Email',
                     'create_values': {
                         'company_name': 'Format Name',
                         'is_company': False,
-                        'name': 'New Customer',
                         'type': 'contact',
                         'user_id': self.user_sales_leads.id,
                     },
@@ -97,12 +95,11 @@ class NewLeadNotification(TestCrmCommon):
                 # here no contact name, just a partner name -> company (+multi)
                 {
                     'name': 'Multi Name',
-                    'email': '"Multi Name" <new.customer.multi.1@test.example.com,new.customer.2@test.example.com>',
-                    'lang': None,
+                    'email': 'new.customer.multi.1@test.example.com',  # only first found normalized email is kept
+                    'partner_id': False,
                     'reason': 'Customer Email',
                     'create_values': {
                         'is_company': True,
-                        'name': 'Multi Name',
                         'type': 'contact',
                         'user_id': self.user_sales_leads.id,
                     },
@@ -111,12 +108,11 @@ class NewLeadNotification(TestCrmCommon):
                 # here contact name -> individual
                 {
                     'name': 'Std Name',
-                    'email': '"Std Name" <new.customer.simple@test.example.com>',
-                    'lang': None,
+                    'email': 'new.customer.simple@test.example.com',
+                    'partner_id': False,
                     'reason': 'Customer Email',
                     'create_values': {
                         'is_company': False,
-                        'name': 'Std Name',
                         'type': 'contact',
                         'user_id': self.user_sales_leads.id,
                     },
@@ -126,11 +122,10 @@ class NewLeadNotification(TestCrmCommon):
                 {
                     'name': 'test.lang@test.example.com',
                     'email': 'test.lang@test.example.com',
-                    'lang': 'en_US',
+                    'partner_id': False,
                     'reason': 'Customer Email',
                     'create_values': {
                         'is_company': False,
-                        'name': 'test.lang@test.example.com',
                         'lang': 'en_US',
                         'type': 'contact',
                     },
@@ -140,29 +135,30 @@ class NewLeadNotification(TestCrmCommon):
                     'partner_id': self.contact_1.id,
                     'name': 'Philip J Fry',
                     'email': 'philip.j.fry@test.example.com',
-                    'lang': self.contact_1.lang,
                     'reason': 'Customer',
-                },
-            ], [
-                {
-                    'partner_id': partner_no_email.id,
-                    'name': 'Test Partner',
-                    'lang': partner_no_email.lang,
-                    'reason': 'Customer',
-                },
-            ], [
-                {
-                    'name': 'test_cc@odoo.com',
-                    'email': 'test_cc@odoo.com',
-                    'lang': None,
-                    'reason': 'CC Email',
                     'create_values': {},
                 },
+            ], [
                 {
                     'partner_id': partner_no_email.id,
                     'name': 'Test Partner',
-                    'lang': partner_no_email.lang,
+                    'email': False,
                     'reason': 'Customer',
+                    'create_values': {},
+                },
+            ], [
+                {
+                    'partner_id': partner_no_email.id,
+                    'email': False,
+                    'name': 'Test Partner',
+                    'reason': 'Customer',
+                    'create_values': {},
+                }, {
+                    'name': '',
+                    'email': 'test_cc@odoo.com',
+                    'partner_id': False,
+                    'reason': 'CC Email',
+                    'create_values': {},
                 },
             ],
         ]):
@@ -171,51 +167,6 @@ class NewLeadNotification(TestCrmCommon):
                 self.assertEqual(len(res), len(expected_suggested))
                 for received, expected in zip(res, expected_suggested):
                     self.assertDictEqual(received, expected)
-
-    @users('user_sales_manager')
-    def test_lead_message_get_suggested_recipients_langs(self):
-        """This test checks that creating a contact from a lead with an inactive
-        language will ignore the language while creating a contact from a lead
-        with an active language will take it into account """
-        leads = self.env['crm.lead'].create([
-            {
-                'email_from': self.test_email,
-                'lang_id': self.lang_fr.id,
-                'name': 'TestLead',
-            }, {
-                'email_from': self.test_email,
-                'lang_id': self.lang_en.id,
-                'name': 'TestLead',
-            }
-        ])
-        expected_list = [
-            {
-                'name': 'Test Email',
-                'email': 'test.email@example.com',
-                'lang': None,
-                'reason': 'Customer Email',
-                'create_values': {'lang': None},
-            }, {
-                'name': 'Test Email',
-                'email': 'test.email@example.com',
-                'lang': 'en_US',
-                'reason': 'Customer Email',
-                'create_values': {'lang': 'en_US'},
-            },
-        ]
-        for lead, expected in zip(leads, expected_list):
-            with self.subTest(lead=lead):
-                res = lead._message_get_suggested_recipients()
-                self.assertEqual(len(res), 1)
-                res_customer_data = res[0].pop('create_values')
-                customer_data = expected.pop('create_values')
-                self.assertItemsEqual(res[0], expected)
-                for partner_fname in customer_data:
-                    found = res_customer_data.get(partner_fname)
-                    expected = customer_data[partner_fname]
-                    self.assertEqual(
-                        found, expected,
-                        f'Lead suggested customer: wrong value for {partner_fname} got {found} instead of {expected}')
 
     @users('user_sales_manager')
     def test_lead_message_get_suggested_recipients_values_for_create(self):
@@ -243,41 +194,40 @@ class NewLeadNotification(TestCrmCommon):
             ('', '', 'lenny.bar@gmail.com'),
         ]:
             if email == '"Contact Name" <default_create_with_name_in_email@example.com>':
-                formatted_email = email
+                suggested_email = 'default_create_with_name_in_email@example.com'
                 suggested_name = "Contact Name"
                 expected_is_company = False  # contact_name (in email) != partner_name
             else:
-                formatted_email = formataddr((contact_name or partner_name, email))
+                suggested_email = email
                 # if no contact_name: fallback on partner_name the email to at least have something
                 suggested_name = contact_name or partner_name or email
                 # a company is expected only if there is only a partner_name, otherwise it is a contact
                 # with a company_name
                 expected_is_company = bool(partner_name) and not contact_name
             with self.subTest(partner_name=partner_name, contact_name=contact_name, email=email):
-                lang = self.env['res.lang'].sudo().search([], limit=1)[0]
                 description = '<p>Top</p>'
                 lead1 = self.env['crm.lead'].create({
                     'name': 'TestLead',
                     'contact_name': contact_name,
                     'email_from': email,
-                    'lang_id': lang.id,
+                    'lang_id': self.lang_en.id,
                     'description': description,
                     'partner_name': partner_name,
                     **lead_details_for_contact,
                 })
                 suggestion = lead1._message_get_suggested_recipients()[0]
                 self.assertFalse(suggestion.get('partner_id'))
-                self.assertEqual(suggestion['email'], formatted_email)
-                self.assertEqual(suggestion['lang'], lang.code)
+                self.assertEqual(suggestion['email'], suggested_email)
                 self.assertEqual(suggestion['name'], suggested_name)
                 self.assertEqual(suggestion['reason'], 'Customer Email')
 
                 create_values = suggestion['create_values']
-                self.assertEqual(create_values, lead1._get_customer_information().get(email_normalize(email), {}))
+                customer_information = lead1._get_customer_information().get(email_normalize(email), {})
+                customer_information.pop('name', False)  # not keps in create_values, as already in name / email info
+                self.assertEqual(create_values, customer_information)
                 for field, value in lead_details_for_contact.items():
                     self.assertEqual(create_values.get(field), value)
                 self.assertEqual(create_values['comment'], description)  # description -> comment
-                self.assertEqual(create_values['name'], suggested_name)
                 # parent company not created even if partner_name is set
                 self.assertFalse(create_values.get('parent_id'))  # not supported, even if partner_name set
                 # company_name set only for contacts with partner_name (and no contact_name nor name in email)

@@ -13,7 +13,7 @@ class TestMessageController(MailControllerThreadCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.test_public_record = cls.env["mail.test.access.public"].create({"name": "Public Channel"})
+        cls.test_public_record = cls.env["mail.test.access.public"].create({"name": "Public Channel", "email": "john@test.be", "mobile": "+32455001122"})
 
     @mute_logger("odoo.http")
     def test_thread_attachment_hijack(self):
@@ -57,10 +57,9 @@ class TestMessageController(MailControllerThreadCommon):
             data=json.dumps(
                 {
                     "params": {
-                        # "thread_model": self.test_public_record._name,
-                        # "thread_id": self.test_public_record.id,
+                        "thread_model": self.test_public_record._name,
+                        "thread_id": self.test_public_record.id,
                         "emails": ["john@test.be"],
-                        'additional_values': {"john@test.be": {'phone': '123456789'}},
                     },
                 }
             ),
@@ -69,7 +68,7 @@ class TestMessageController(MailControllerThreadCommon):
         self.assertEqual(res3.status_code, 200)
         self.assertEqual(
             1,
-            self.env["res.partner"].search_count([('email', '=', "john@test.be"), ('phone', '=', "123456789")]),
+            self.env["res.partner"].search_count([('email', '=', "john@test.be"), ('mobile', '=', "+32455001122")]),
             "authenticated users can create a partner from an email",
         )
         # should not create another partner with same email
@@ -78,8 +77,8 @@ class TestMessageController(MailControllerThreadCommon):
             data=json.dumps(
                 {
                     "params": {
-                        # "thread_model": self.test_public_record._name,
-                        # "thread_id": self.test_public_record.id,
+                        "thread_model": self.test_public_record._name,
+                        "thread_id": self.test_public_record.id,
                         "emails": ["john@test.be"],
                     },
                 }
@@ -92,6 +91,8 @@ class TestMessageController(MailControllerThreadCommon):
             self.env["res.partner"].search_count([('email', '=', "john@test.be")]),
             "'mail/partner/from_email' does not create another user if there's already a user with matching email",
         )
+
+        self.test_public_record.write({'email': 'john2@test.be'})
         res5 = self.url_open(
             url="/mail/message/post",
             data=json.dumps(
@@ -102,11 +103,7 @@ class TestMessageController(MailControllerThreadCommon):
                         "post_data": {
                             "body": "test",
                         },
-                        "partner_emails": ["john2@test.be", "john3@test.be"],  # Both emails in one request
-                        "partner_additional_values": {
-                            "john2@test.be": {'phone': '123456789'},  # Original partner
-                            "john3 <john3@test.be>": {'phone': '987654321'}  # Name-Addr formatted partner
-                        },
+                        "partner_emails": ["john2@test.be"],
                     },
                 }
             ),
@@ -115,13 +112,8 @@ class TestMessageController(MailControllerThreadCommon):
         self.assertEqual(res5.status_code, 200)
         self.assertEqual(
             1,
-            self.env["res.partner"].search_count([('email', '=', "john2@test.be"), ('phone', '=', "123456789")]),
+            self.env["res.partner"].search_count([('email', '=', "john2@test.be"), ('mobile', '=', "+32455001122")]),
             "authenticated users can create a partner from an email from message_post",
-        )
-        self.assertEqual(
-            1,
-            self.env["res.partner"].search_count([('email', '=', "john3@test.be"), ('phone', '=', "987654321")]),
-            "additional_values should be handled correctly when using keys in name_addr format",
         )
         # should not create another partner with same email
         res6 = self.url_open(
