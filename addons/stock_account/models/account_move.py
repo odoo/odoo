@@ -342,8 +342,11 @@ class AccountMoveLine(models.Model):
             else:
                 qty_invoiced -= line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id)
         value_invoiced -= sum(reversal_cogs.mapped('balance'))
+        product = self.product_id.with_company(self.company_id)
 
-        product = self.product_id.with_company(self.company_id).with_context(value_invoiced=value_invoiced)
+        so_lines = stock_moves.sale_line_id.order_id.order_line.filtered(lambda l: l.product_id == self.product_id)
+        if len(posted_cogs) <= 1 or len(so_lines) == 1:
+            product = product.with_context(value_invoiced=value_invoiced)
         average_price_unit = product._compute_average_price(qty_invoiced, qty_to_invoice, stock_moves, is_returned=is_line_reversing)
         price_unit = self.product_id.uom_id.with_company(self.company_id)._compute_price(average_price_unit, self.product_uom_id)
 

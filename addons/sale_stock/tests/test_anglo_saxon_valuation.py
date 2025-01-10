@@ -4,6 +4,7 @@
 from odoo.tests import Form, tagged
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.exceptions import UserError
+from odoo import Command
 
 
 @tagged('post_install', '-at_install')
@@ -1124,6 +1125,79 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         revalued_anglo_expense_amls = sale_order.picking_ids.move_ids.stock_valuation_layer_ids[-1].stock_move_id.account_move_ids[-1].line_ids
         revalued_cogs_aml = revalued_anglo_expense_amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_expense'])
         self.assertEqual(revalued_cogs_aml.debit, 4, 'Price difference should have correctly reflected in expense account.')
+
+    def test_fifo_delivered_invoice_post_delivery_5(self):
+        """ Test valuation with same product on multiple lines
+        Receive 10@100, receive 30@300, sale 10@100, sale30@300, deliver all, invoice 10@100 and 15@300, invoice 15@300
+        Make sure stock valuation is correct on the second invoice."""
+        self.product.categ_id.property_cost_method = 'fifo'
+        self.product.invoice_policy = 'order'
+
+        # +10@100
+        in_move_1 = self.env['stock.move'].create({
+            'name': 'a',
+            'product_id': self.product.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 10,
+            'price_unit': 100,
+        })
+        in_move_1._action_confirm()
+        in_move_1.quantity_done = 10
+        in_move_1._action_done()
+
+        # +30@300
+        in_move_2 = self.env['stock.move'].create({
+            'name': 'a',
+            'product_id': self.product.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 30,
+            'price_unit': 300,
+        })
+        in_move_2._action_confirm()
+        in_move_2.quantity_done = 30
+        in_move_2._action_done()
+
+        # sale 10@100 + 30@300
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': self.product.name,
+                    'product_id': self.product.id,
+                    'product_uom_qty': quantity,
+                    'product_uom': self.product.uom_id.id,
+                    'price_unit': price,
+                    'tax_id': False,
+                }) for (quantity, price) in [(10, 100), (30, 300)]
+            ],
+        })
+        sale_order.action_confirm()
+        for move in sale_order.picking_ids.move_ids:
+            move.quantity_done = move.product_uom_qty
+        sale_order.picking_ids.button_validate()
+
+        # invoice 10@100, 15@300
+        invoice = sale_order._create_invoices()
+        invoice_form = Form(invoice)
+        with invoice_form.invoice_line_ids.edit(1) as invoice_line:
+            invoice_line.quantity = 15
+        invoice_form.save()
+        invoice.action_post()
+        cogs = invoice.line_ids.filtered(lambda l: l.account_id == self.company_data['default_account_expense'])
+        self.assertEqual(cogs.sorted('debit').mapped('debit'), [1000.0, 4500.0])
+
+        # invoice 15@300
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+
+        # check the last anglo saxon invoice line
+        amls = invoice.line_ids
+        cogs_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_expense'])
+        self.assertEqual(cogs_aml.debit, 4500)
 
     def test_fifo_delivered_invoice_post_delivery_with_return(self):
         """Receive 2@10. SO1 2@12. Return 1 from SO1. SO2 1@12. Receive 1@20.
