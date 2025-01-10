@@ -267,6 +267,8 @@ def autovacuum(method: C) -> C:
     Decorate a method so that it is called by the daily vacuum cron job (model
     ``ir.autovacuum``).  This is typically used for garbage-collection-like
     tasks that do not deserve a specific cron job.
+
+    A return value can be a tuple (done, remaining). These can be of any type.
     """
     assert method.__name__.startswith('_'), "%s: autovacuum methods must be private" % method.__name__
     method._autovacuum = True  # type: ignore
