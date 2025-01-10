@@ -792,7 +792,7 @@ class AccountBankStatementLine(models.Model):
                     'currency_id': (st_line.foreign_currency_id or journal_currency or company_currency).id,
                 })
 
-            move.write(move._cleanup_write_orm_values(move, move_vals_to_write))
+            move.with_context(skip_readonly_check=True).write(move._cleanup_write_orm_values(move, move_vals_to_write))
             st_line.write(move._cleanup_write_orm_values(st_line, st_line_vals_to_write))
 
     def _synchronize_to_moves(self, changed_fields):
