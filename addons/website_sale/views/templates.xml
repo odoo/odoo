@@ -1903,22 +1903,17 @@
 
     <!-- Lines that show items in the cart. Called in `website_sale.cart`. -->
     <template id="cart_lines" name="Shopping Cart Lines">
-        <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="js_cart_lines alert alert-info">
-            Your cart is empty!
-        </div>
-        <t t-if='website_sale_order'>
-            <div t-if='website_sale_order._get_shop_warning(clear=False)' class="alert alert-warning js_cart_lines" role="alert">
-                <strong>Warning!</strong> <t t-esc='website_sale_order._get_shop_warning()'/>
-            </div>
-        </t>
-        <div id="cart_products"
-             t-if="website_sale_order and website_sale_order.website_order_line"
-             class="js_cart_lines d-flex flex-column mb32">
-            <t t-set="show_qty" t-value="is_view_active('website_sale.product_quantity')"/>
-            <div t-foreach="website_sale_order.website_order_line"
-                 t-as="line"
-                 t-attf-class="o_cart_product d-flex align-items-stretch gap-3 #{line.linked_line_id and 'optional_product info'} #{not line_last and 'border-bottom pb-4'} #{line_index &gt; 0 and 'pt-4'}"
-                 t-attf-data-product-id="#{line.product_id and line.product_id.id}">
+        <!-- Checkout context:
+            - order_lines: The lines to render.
+            - website_sale_order: The current order.
+        -->
+        <t t-set="show_qty" t-value="is_view_active('website_sale.product_quantity')"/>
+        <div
+            t-foreach="order_lines"
+            t-as="line"
+            t-attf-class="o_cart_product d-flex align-items-stretch gap-3 py-4 {{line.linked_line_id and 'optional_product info' or ''}} {{not line_last and 'border-bottom pb-4'}}"
+            t-attf-data-product-id="#{line.product_id and line.product_id.id}"
+        >
                 <t t-if="line.product_id">
                     <div style="width: 64px">
                         <!--
@@ -2038,7 +2033,6 @@
                         </div>
                     </div>
                 </t>
-            </div>
         </div>
     </template>
 
@@ -2095,7 +2089,7 @@
             </t>
 
             <div class="col" id="shop_cart">
-                <h3 class="mb-4">Order overview</h3>
+                <h3>Order overview</h3>
                 <div t-if="abandoned_proceed or access_token" class="alert alert-info mt8 mb8" role="alert"> <!-- abandoned cart choices -->
                     <t t-if="abandoned_proceed">
                         <p>Your previous cart has already been completed.</p>
@@ -2115,23 +2109,56 @@
                         </p>
                     </t>
                 </div>
-                <t t-call="website_sale.cart_lines"/>
-                <div class="clearfix" />
+                <div
+                    t-if="not website_sale_order or not website_sale_order.website_order_line"
+                    class="js_cart_lines alert alert-info"
+                >
+                    Your cart is empty!
+                </div>
+                <t t-if="website_sale_order">
+                    <t t-set="shop_warning" t-value="website_sale_order._get_shop_warning()"/>
+                    <div
+                        t-if="shop_warning"
+                        class="alert alert-warning js_cart_lines"
+                        role="alert"
+                    >
+                        <strong>Warning!</strong>
+                        <t t-out="shop_warning"/>
+                    </div>
+                    <t
+                        t-if="website_sale_order.website_order_line"
+                        t-call="website_sale.cart_content"
+                    />
+                </t>
+                <div class="clearfix"/>
                 <div class="oe_structure" id="oe_structure_website_sale_cart_1"/>
             </div>
         </t>
     </template>
 
+    <template id="cart_content" name="Accessory Products in my cart">
+        <t t-set="displayed_lines" t-value="website_sale_order.website_order_line"/>
+        <div id="cart_products" class="js_cart_lines d-flex flex-column mb32">
+            <!-- This title is intended to be displayed only when products of different types are
+                 present in the order. The `t-if` condition is set to "False" by default but can be
+                 overridden in other modules to show the title dynamically when needed. -->
+            <h5 t-if="False" name="o_cart_sub_section_title" class="mt-3 mb-0">Purchases</h5>
+            <t t-call="website_sale.cart_lines">
+                <t t-set="order_lines" t-value="displayed_lines"/>
+            </t>
+        </div>
+    </template>
+
     <!-- Deactivatable through the website editor. -->
-    <template id="suggested_products_list" inherit_id="website_sale.cart_lines" name="Accessory Products in my cart">
+    <template id="suggested_products_list" inherit_id="website_sale.cart_content" name="Accessory Products in my cart">
         <xpath expr="//div[@id='cart_products']" position="inside">
-            <h5 t-attf-class="mt32 mb-3" t-if="suggested_products">Suggested accessories</h5>
+            <h5 t-if="suggested_products" class="mt-3 mb-0">Suggested accessories</h5>
             <div t-if="suggested_products"
                  id="suggested_products"
                  class="d-flex flex-column align-items-stretch mb32">
                 <div t-foreach="suggested_products"
                      t-as="product"
-                     t-attf-class="d-flex gap-3 #{not product_last and 'border-bottom pb-4'} #{product_index &gt; 0 and 'pt-4'}"
+                     t-attf-class="d-flex gap-3 py-3 #{not product_last and 'border-bottom'}"
                      t-att-data-publish="product.website_published and 'on' or 'off'">
                     <div style="width: 64px">
                         <a t-att-href="product.website_url">

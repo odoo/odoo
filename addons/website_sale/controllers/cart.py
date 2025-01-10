@@ -142,7 +142,7 @@ class Cart(PaymentPortal):
             order_sudo.amount_total, order_sudo.currency_id
         )
         values['website_sale.cart_lines'] = request.env['ir.ui.view']._render_template(
-            'website_sale.cart_lines', {
+            'website_sale.cart_content', {
                 'website_sale_order': order_sudo,
                 'date': fields.Date.today(),
                 'suggested_products': order_sudo._cart_accessories()

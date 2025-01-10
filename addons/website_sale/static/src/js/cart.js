@@ -70,18 +70,18 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
     /**
      * @private
      */
-    _changeCartQuantity: function ($input, value, $dom_optional, line_id, productIDs) {
+    async _changeCartQuantity($input, value, $dom_optional, line_id, productIDs) {
         $($dom_optional).toArray().forEach((elem) => {
             $(elem).find('.js_quantity').text(value);
             productIDs.push($(elem).find('span[data-product-id]').data('product-id'));
         });
         $input.data('update_change', true);
 
-        rpc('/shop/cart/update', {
+        const data = await rpc('/shop/cart/update', {
             line_id: line_id,
             product_id: parseInt($input.data('product-id'), 10),
             quantity: value,
-        }).then((data) => {
+        });
             $input.data('update_change', false);
             var check_value = parseInt($input.val() || 0, 10);
             if (isNaN(check_value)) {
@@ -101,7 +101,6 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
             wSaleUtils.showWarning(data.warning);
             // Propagating the change to the express checkout forms
             Component.env.bus.trigger('cart_amount_changed', [data.amount, data.minor_amount]);
-        });
     },
 });
 
