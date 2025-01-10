@@ -950,6 +950,20 @@ class TransactionCase(BaseCase):
         self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
         self.addCleanup(self.cr.execute, 'ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
 
+    @contextmanager
+    def enter_registry_test_mode(self):
+        """
+        Make so that all new cursors opened on this database registry reuse the
+        one currenly used by the tests. See ``Registry.enter_test_mode``.
+        """
+        env = self.env
+        registry = env.registry
+        registry.enter_test_mode(env.cr)
+        try:
+            yield
+        finally:
+            registry.leave_test_mode()
+
 
 class SingleTransactionCase(BaseCase):
     """ TestCase in which all test methods are run in the same transaction,
@@ -1867,6 +1881,11 @@ class HttpCase(TransactionCase):
         self.xmlrpc_object = xmlrpclib.ServerProxy(self.xmlrpc_url + 'object', transport=Transport(self.cr), use_datetime=True)
         # setup an url opener helper
         self.opener = Opener(self.cr)
+
+    @contextmanager
+    def enter_registry_test_mode(self):
+        _logger.warning("HTTPCase is already in test mode")
+        yield
 
     def parse_http_location(self, location):
         """ Parse a Location http header typically found in 201/3xx
