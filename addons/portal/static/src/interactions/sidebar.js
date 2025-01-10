@@ -71,6 +71,9 @@ export class Sidebar extends Interaction {
         let lastLI = false;
         let lastUL = null;
         const bsSidenavEl = this.el.querySelector(".bs-sidenav");
+        if (!bsSidenavEl) {
+            return;
+        }
 
         const quoteEls = document.querySelectorAll("#quote_content [id^=quote_header_], #quote_content [id^=quote_]");
         for (const quoteEl of quoteEls) {
