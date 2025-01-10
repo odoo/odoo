@@ -124,3 +124,10 @@ class ResConfigSettings(models.TransientModel):
         super().set_values()
         if self.default_invoice_policy != 'order':
             self.env['ir.config_parameter'].set_param(key='sale.automatic_invoice', value=False)
+
+    # === ACTION METHODS === #
+
+    # Unique name to avoid colliding with `website_payment`.
+    def action_sale_start_payment_onboarding(self):
+        menu = self.env.ref('sale.menu_sale_general_settings', raise_if_not_found=False)
+        return self._start_payment_onboarding(menu and menu.id)

@@ -12,7 +12,7 @@
                      invisible="context.get('stripe_onboarding', False) or (code != 'stripe' or stripe_secret_key or stripe_publishable_key)">
                     <button string="Connect Stripe"
                             type="object"
-                            name="action_stripe_connect_account"
+                            name="action_start_onboarding"
                             class="btn-primary"
                             colspan="2"
                             invisible="state == 'enabled'"/>

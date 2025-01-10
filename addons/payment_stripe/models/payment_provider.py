@@ -117,8 +117,9 @@ class PaymentProvider(models.Model):
 
     # === ACTION METHODS === #
 
-    def action_stripe_connect_account(self, menu_id=None):
-        """ Create a Stripe Connect account and redirect the user to the next onboarding step.
+    def action_start_onboarding(self, menu_id=None):
+        """ Override of `payment` to create a Stripe Connect account and redirect the user to the
+        next onboarding step.
 
         If the provider is already enabled, close the current window. Otherwise, generate a Stripe
         Connect onboarding link and redirect the user to it. If provided, the menu id is included in
@@ -126,14 +127,17 @@ class PaymentProvider(models.Model):
         generation failed, redirect the user to the provider form.
 
         Note: This method serves as a hook for modules that would fully implement Stripe Connect.
-        Note: self.ensure_one()
+        Note: `self.ensure_one()`
 
-        :param int menu_id: The menu from which the user started the onboarding step, as an
-                            `ir.ui.menu` id.
+        :param int menu_id: The menu from which the onboarding is started, as an `ir.ui.menu` id.
         :return: The next step action
         :rtype: dict
+        :raise RedirectWarning: If the company's country is not supported.
         """
         self.ensure_one()
+
+        if self.code != 'stripe':
+            return super().action_start_onboarding(menu_id=menu_id)
 
         if self.env.company.country_id.code not in const.SUPPORTED_COUNTRIES:
             raise RedirectWarning(
@@ -146,7 +150,6 @@ class PaymentProvider(models.Model):
             )
 
         if self.state == 'enabled':
-            self.env['onboarding.onboarding.step'].action_validate_step_payment_provider()
             action = {'type': 'ir.actions.act_window_close'}
         else:
             # Account creation
@@ -173,7 +176,6 @@ class PaymentProvider(models.Model):
                     'views': [[False, 'form']],
                     'res_id': self.id,
                 }
-
         return action
 
     def action_stripe_create_webhook(self):

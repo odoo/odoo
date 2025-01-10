@@ -69,8 +69,65 @@
                                 Payment
                                 <field name="prepayment_percent" widget="percentage" class="oe_inline"/>
                             </div>
-                            <div class="mt8" invisible="not portal_confirmation_pay">
-                                <button name='%(payment.action_payment_provider)d' icon="oi-arrow-right" type="action" string="Payment Providers" class="btn-link"/>
+                            <div
+                                class="row mt8"
+                                invisible="not portal_confirmation_pay or active_provider_id"
+                            >
+                                <div invisible="not onboarding_payment_module" class="oe_inline">
+                                    <button
+                                        type="object"
+                                        name="action_sale_start_payment_onboarding"
+                                        class="btn-primary"
+                                    >
+                                        Activate
+                                        <field
+                                            name="onboarding_payment_module"
+                                            nolabel="1"
+                                            class="oe_inline"
+                                        />
+                                    </button>
+                                </div>
+                                <div
+                                    title="Stripe Connect is not available in your country, please use another payment provider."
+                                    invisible="onboarding_payment_module"
+                                    class="oe_inline"
+                                >
+                                    <button
+                                        string="Activate Stripe" class="btn-primary" disabled=""
+                                    />
+                                </div>
+                                <button
+                                    string="View Alternatives"
+                                    type="action"
+                                    name='%(payment.action_payment_provider)d'
+                                    icon="oi-arrow-right"
+                                    class="btn-link oe_inline"
+                                />
+                            </div>
+                            <div
+                                class="mt8"
+                                invisible="not portal_confirmation_pay or not active_provider_id"
+                            >
+                                <button
+                                    type="object"
+                                    name="action_view_active_provider"
+                                    class="btn-primary col-auto"
+                                >
+                                    Configure
+                                    <field
+                                        name="active_provider_id"
+                                        class="oe_inline"
+                                        nolabel="1"
+                                        options="{'no_open': True}"
+                                    />
+                                </button>
+                                <button
+                                    string="View Other Providers"
+                                    type="action"
+                                    name="%(payment.action_payment_provider)d"
+                                    icon="oi-arrow-right"
+                                    class="btn-link col-auto"
+                                />
                             </div>
                         </setting>
                         <setting id="quotation_validity_days">
