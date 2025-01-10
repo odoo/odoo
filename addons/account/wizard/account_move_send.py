@@ -485,7 +485,7 @@ class AccountMoveSend(models.TransientModel):
         # create an attachment that will become 'invoice_pdf_report_file'
         # note: Binary is used for security reason
         attachment_to_create = [invoice_data['pdf_attachment_values'] for invoice_data in invoices_data.values()]
-        attachments = self.env['ir.attachment'].create(attachment_to_create)
+        attachments = self.sudo().env['ir.attachment'].create(attachment_to_create)
         res_id_to_attachment = {attachment.res_id: attachment for attachment in attachments}
 
         for invoice, invoice_data in invoices_data.items():
@@ -861,7 +861,7 @@ class AccountMoveSend(models.TransientModel):
             }
 
         return self._process_send_and_print(
-            self.move_ids,
+            self.move_ids.sudo(),
             wizard=self,
             allow_fallback_pdf=allow_fallback_pdf,
             **kwargs,
