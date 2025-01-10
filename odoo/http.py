@@ -1993,7 +1993,8 @@ class Request:
                         raise  # bubble up to odoo.http.Application.__call__
                     if 'werkzeug' in config['dev_mode'] and self.dispatcher.routing_type != 'json':
                         raise  # bubble up to werkzeug.debug.DebuggedApplication
-                    exc.error_response = self.registry['ir.http']._handle_error(exc)
+                    if not hasattr(exc, 'error_response'):
+                        exc.error_response = self.registry['ir.http']._handle_error(exc)
                     raise
 
 
