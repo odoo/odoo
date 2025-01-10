@@ -44,7 +44,13 @@
                                         <span t-field="job.name"/>
                                     </h3>
                                     <h5 t-if="job.no_of_recruitment &gt;= 1">
-                                        <t t-esc="job.no_of_recruitment"/> open positions
+                                        <t t-esc="job.no_of_recruitment"/>
+                                        <t t-if="job.no_of_recruitment == 1">
+                                            open position
+                                        </t>
+                                        <t t-else="">
+                                            open positions
+                                        </t>
                                     </h5>
                                     <div t-if="editable"
                                         t-field="job.description"
