@@ -38,4 +38,7 @@ class NewId:
         return "NewId_%s" % id_part
 
 
-IdType: typing.TypeAlias = int | NewId
+# By default, in the ORM we initialize it as an int, but any type should work.
+# However, and some parts of the ORM may assume it is an integer.
+# Non-exhaustive list: relational fields, references, hierarchies, etc.
+IdType: typing.TypeAlias = int | NewId | str
