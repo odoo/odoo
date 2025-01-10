@@ -11,6 +11,13 @@ import { goToCart } from '@website_sale/js/tours/tour_utils';
 
 const optionBlock = 'dynamic_snippet_products';
 const productsSnippet = {id: "s_dynamic_filter_template_product_product_borderless_1", name: "Products", groupName: "Products"};
+const modifiedProductsSnippet = {
+    ...productsSnippet,
+    id: "s_dynamic_filter_template_product_product_borderless_1".replace(
+        /s_dynamic_filter_template_/,
+        "s_"
+    ),
+};
 const templates = [
     "dynamic_filter_template_product_product_add_to_cart",
     "dynamic_filter_template_product_product_view_detail",
@@ -62,7 +69,7 @@ registerWebsitePreviewTour('website_sale.snippet_products', {
     }
     return [
         ...insertSnippet(productsSnippet),
-        ...clickOnSnippet(productsSnippet),
+        ...clickOnSnippet(modifiedProductsSnippet),
         ...templatesSteps,
         ...changeTemplate('dynamic_filter_template_product_product_add_to_cart'),
         ...clickOnSave(),
@@ -80,7 +87,7 @@ registerWebsitePreviewTour('website_sale.products_snippet_recently_viewed', {
 },
 () => [
     ...insertSnippet(productsSnippet),
-    ...clickOnSnippet(productsSnippet),
+    ...clickOnSnippet(modifiedProductsSnippet),
     ...changeTemplate('dynamic_filter_template_product_product_add_to_cart'),
     {
         content: "Click on dropped snippet to open options",
