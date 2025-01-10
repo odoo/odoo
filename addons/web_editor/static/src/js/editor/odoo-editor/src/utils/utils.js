@@ -1677,7 +1677,7 @@ export function isUnbreakable(node) {
                 node.getAttribute('t-out') ||
                 node.getAttribute('t-raw')) ||
                 node.getAttribute('t-field')) ||
-        node.matches(".oe_unbreakable, a.btn, a[role='tab'], a[role='button']")
+        node.matches(".oe_unbreakable, a.btn, a[role='tab'], a[role='button'], li.nav-item")
     );
 }
 
