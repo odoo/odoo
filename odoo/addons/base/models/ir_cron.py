@@ -1,10 +1,12 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from __future__ import annotations
+
 import logging
 import threading
 import time
 import os
 import psycopg2
 import psycopg2.errors
+import typing
 from datetime import datetime, timedelta, timezone
 from dateutil.relativedelta import relativedelta
 
@@ -14,6 +16,9 @@ from odoo.exceptions import UserError
 from odoo.modules.registry import Registry
 from odoo.tools import SQL
 from odoo.tools.constants import GC_UNLINK_LIMIT
+
+if typing.TYPE_CHECKING:
+    from odoo.sql_db import BaseCursor
 
 _logger = logging.getLogger(__name__)
 
@@ -33,6 +38,7 @@ ODOO_NOTIFY_FUNCTION = os.getenv('ODOO_NOTIFY_FUNCTION', 'pg_notify')
 class BadVersion(Exception):
     pass
 
+
 class BadModuleState(Exception):
     pass
 
@@ -40,7 +46,7 @@ class BadModuleState(Exception):
 _intervalTypes = {
     'days': lambda interval: relativedelta(days=interval),
     'hours': lambda interval: relativedelta(hours=interval),
-    'weeks': lambda interval: relativedelta(days=7*interval),
+    'weeks': lambda interval: relativedelta(days=7 * interval),
     'months': lambda interval: relativedelta(months=interval),
     'minutes': lambda interval: relativedelta(minutes=interval),
 }
@@ -104,9 +110,10 @@ class IrCron(models.Model):
     @api.model
     def default_get(self, fields_list):
         # only 'code' state is supported for cron job so set it as default
-        if not self._context.get('default_state'):
-            self = self.with_context(default_state='code')
-        return super().default_get(fields_list)
+        model = self
+        if not model.env.context.get('default_state'):
+            model = model.with_context(default_state='code')
+        return super(IrCron, model).default_get(fields_list)
 
     def method_direct_trigger(self):
         self.ensure_one()
@@ -124,7 +131,7 @@ class IrCron(models.Model):
         return True
 
     @staticmethod
-    def _process_jobs(db_name):
+    def _process_jobs(db_name: str) -> None:
         """ Execute every job ready to be run on this database. """
         try:
             db = odoo.sql_db.db_connect(db_name)
@@ -161,7 +168,7 @@ class IrCron(models.Model):
         except psycopg2.errors.UndefinedTable:
             # The table ir_cron does not exist; this is probably not an OpenERP database.
             _logger.warning('Tried to poll an undefined table on database %s.', db_name)
-        except psycopg2.ProgrammingError as e:
+        except psycopg2.ProgrammingError:
             raise
         except Exception:
             _logger.warning('Exception in cron:', exc_info=True)
@@ -210,7 +217,7 @@ class IrCron(models.Model):
         reset_modules_state(cr.dbname)
 
     @staticmethod
-    def _get_all_ready_jobs(cr):
+    def _get_all_ready_jobs(cr: BaseCursor) -> list[dict]:
         """ Return a list of all jobs that are ready to be executed """
         now = cr.now()
         cr.execute("""
@@ -229,7 +236,7 @@ class IrCron(models.Model):
         return cr.dictfetchall()
 
     @staticmethod
-    def _acquire_one_job(cr, job_id):
+    def _acquire_one_job(cr: BaseCursor, job_id: int) -> dict | None:
         """
         Acquire for update the job with id ``job_id``.
 
@@ -327,7 +334,7 @@ class IrCron(models.Model):
         _logger.warning(message)
 
     @classmethod
-    def _process_job(cls, db, cron_cr, job):
+    def _process_job(cls, db, cron_cr: BaseCursor, job) -> None:
         """
         Execute the cron's server action in a dedicated transaction.
 
@@ -385,10 +392,10 @@ class IrCron(models.Model):
             if os.getenv('ODOO_NOTIFY_CRON_CHANGES'):
                 cron_cr.postcommit.add(ir_cron._notifydb)  # See: `_notifydb`
         else:
-            raise RuntimeError("unreachable")
+            raise RuntimeError(f"unreachable {status=}")
 
     @classmethod
-    def _run_job(cls, job):
+    def _run_job(cls, job) -> CompletionStatus:
         """
         Execute the job's server action multiple times until it
         completes. The completion status is returned.
@@ -466,7 +473,8 @@ class IrCron(models.Model):
 
         return status
 
-    def _update_failure_count(self, job, status):
+    @api.model
+    def _update_failure_count(self, job: dict, status: CompletionStatus) -> None:
         """
         Update cron ``failure_count`` and ``first_failure_date`` given
         the job's completion status. Deactivate the cron when BOTH the
@@ -519,6 +527,7 @@ class IrCron(models.Model):
             job['id'],
         ])
 
+    @api.model
     def _clear_schedule(self, job):
         """Remove triggers for the given job."""
         now = self.env.cr.now().replace(microsecond=0)
@@ -528,7 +537,8 @@ class IrCron(models.Model):
               AND call_at <= %s
         """, [job['id'], now])
 
-    def _reschedule_later(self, job):
+    @api.model
+    def _reschedule_later(self, job: dict) -> None:
         """
         Reschedule the job to be executed later, after its regular
         interval or upon a trigger.
@@ -553,7 +563,8 @@ class IrCron(models.Model):
             WHERE id = %s
         """, [nextcall, now, job['id']])
 
-    def _reschedule_asap(self, job):
+    @api.model
+    def _reschedule_asap(self, job: dict) -> None:
         """
         Reschedule the job to be executed ASAP, after the other cron
         jobs had a chance to run.
@@ -719,6 +730,7 @@ class IrCron(models.Model):
             self._cr.postcommit.add(self._notifydb)
         return triggers
 
+    @api.model
     def _notifydb(self):
         """ Wake up the cron workers
         The ODOO_NOTIFY_CRON_CHANGES environment variable allows to force the notifydb on both
@@ -748,7 +760,7 @@ class IrCron(models.Model):
         }])
         return self.with_context(ir_cron_progress_id=progress.id), progress
 
-    def _notify_progress(self, *, done, remaining, deactivate=False):
+    def _notify_progress(self, *, done: int, remaining: int, deactivate: bool = False):
         """
         Log the progress of the cron job.
 
