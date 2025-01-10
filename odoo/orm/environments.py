@@ -329,6 +329,18 @@ class Environment(Mapping[str, "BaseModel"]):
             _logger.debug('translation went wrong for "%r", skipped', source, exc_info=True)
         return source
 
+    def cron_commit_progress(self, processed=0, *, remaining=None, deactivate=False):
+        """Progress the cron execution from the CRON function.
+
+        :param processed: Number of processed items in this step
+            (added to currenly done items)
+        :param remaining: When set, update the remaining count
+        :param deactivate: Deactivate the CRON after running it
+        :return: Remaining time (seconds) for the cron run
+        """
+        # XXX update documentation
+        return self['ir.cron']._commit_progress(processed=processed, remaining=remaining, deactivate=deactivate)
+
     def clear(self) -> None:
         """ Clear all record caches, and discard all fields to recompute.
             This may be useful when recovering from a failed ORM operation.
