@@ -1252,6 +1252,33 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'limitedProductPricelistLoading', login="pos_user")
 
+    def test_multi_product_pricelist_rules(self):
+        product_1 = self.env['product.product'].create({
+            'name': 'Test Product 1',
+            'list_price': 1,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+
+        pricelist_item = self.env['product.pricelist.item'].create([{
+            'applied_on': '3_global',
+            'fixed_price': 200,
+            'min_quantity': 0,
+        }, {
+            'applied_on': '1_product',
+            'product_tmpl_id': product_1.product_tmpl_id.id,
+            'fixed_price': 100,
+             'min_quantity': 2,
+        }, {
+            'applied_on': '0_product_variant',
+            'product_id': product_1.id,
+            'fixed_price': 50,
+            'min_quantity': 3,
+        }])
+        self.main_pos_config.pricelist_id.write({'item_ids': [(6, 0, pricelist_item.ids)]})
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'multiPricelistRulesTour', login="pos_user")
+
     def test_multi_product_options(self):
         self.pos_user.write({
             'groups_id': [
