@@ -2006,7 +2006,8 @@ class Request:
                         and self.dispatcher.routing_type != JsonRPCDispatcher.routing_type
                     ):
                         raise  # bubble up to werkzeug.debug.DebuggedApplication
-                    exc.error_response = self.registry['ir.http']._handle_error(exc)
+                    if not hasattr(exc, 'error_response'):
+                        exc.error_response = self.registry['ir.http']._handle_error(exc)
                     raise
 
 
