@@ -3,6 +3,7 @@
 
 <t t-name="html_builder.VisibilityOption">
     <BuilderRow label.translate="Visibility">
+        <t t-call="html_builder.DeviceVisibility"></t>
         <BuilderSelect attributeAction="'visibility'">
             <BuilderSelectItem attributeActionValue="null">No condition</BuilderSelectItem>
             <BuilderSelectItem attributeActionValue="'conditional'">Conditionally</BuilderSelectItem>

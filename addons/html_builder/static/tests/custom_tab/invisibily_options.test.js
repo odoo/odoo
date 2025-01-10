@@ -51,7 +51,9 @@ test("check invisible element after save", async () => {
     await setupWebsiteBuilder(getEditable(websiteContent));
     await contains(":iframe .col-lg-3").click();
 
-    await contains("button[data-action-id='toggleDeviceVisibility']").click();
+    await contains(
+        "[data-container-title='Column'] button[data-action-id='toggleDeviceVisibility']"
+    ).click();
     expect(":iframe .row").toHaveInnerHTML(`
         <div class="col-lg-3 d-lg-none o_snippet_desktop_invisible" data-invisible="1">
             <p>TEST</p>
@@ -98,8 +100,12 @@ test("click on 'Show/hide on desktop' in mobile view", async () => {
     await contains(":iframe .col-lg-3").click();
     await contains("button[data-action='mobile']").click();
 
-    await contains("button[data-action-id='toggleDeviceVisibility']").click();
-    expect("button[data-action-id='toggleDeviceVisibility']:first").toHaveClass("active");
+    await contains(
+        "[data-container-title='Column']  button[data-action-id='toggleDeviceVisibility']"
+    ).click();
+    expect(
+        "[data-container-title='Column']  button[data-action-id='toggleDeviceVisibility']:first"
+    ).toHaveClass("active");
     expect(":iframe .col-lg-3").toHaveClass("o_snippet_desktop_invisible");
 });
 

@@ -13,6 +13,7 @@ class DeviceVisibilityOptionPlugin extends Plugin {
         builder_options: {
             template: "html_builder.DeviceVisibilityOption",
             selector: this.selector,
+            exclude: ".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize",
             clean_for_save_handlers_options: this.cleanForSave,
         },
         builder_actions: this.getActions(),
