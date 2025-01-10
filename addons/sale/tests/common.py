@@ -196,3 +196,14 @@ class TestSaleCommon(AccountTestInvoicingCommon):
         })
 
         return company_data
+
+    @classmethod
+    def _enable_sale_salesman(cls, user=None):
+        """ Required to confirm a sale order """
+        user = user or cls.user
+        user.groups_id += cls.env.ref('sales_team.group_sale_salesman')
+
+    @classmethod
+    def _enable_sale_manager(cls, user=None):
+        user = user or cls.user
+        user.groups_id += cls.env.ref('sales_team.group_sale_manager')

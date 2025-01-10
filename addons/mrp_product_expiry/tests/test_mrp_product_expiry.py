@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
-from odoo.addons.stock.tests.common import TestStockCommon
+from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tests import Form
 from odoo.exceptions import UserError
 
 
-class TestStockLot(TestStockCommon):
+class TestStockLot(TestMrpCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -49,6 +49,7 @@ class TestStockLot(TestStockCommon):
             'product_qty': 1.0,
             'consumption': 'flexible',
             'type': 'normal',
+            'company_id': cls.stock_company.id,
             'bom_line_ids': [
                 (0, 0, {'product_id': cls.product_apple.id, 'product_qty': 3, 'manual_consumption': True}),
             ]})
@@ -62,6 +63,7 @@ class TestStockLot(TestStockCommon):
             'time_start': 10,
             'time_stop': 5,
             'time_efficiency': 80,
+            'company_id': cls.stock_company.id,
         })
 
     def test_01_product_produce(self):

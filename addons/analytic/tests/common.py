@@ -41,3 +41,8 @@ class AnalyticCommon(BaseCommon):
     def get_default_groups(cls):
         groups = super().get_default_groups()
         return groups + cls.env.ref('analytic.group_analytic_accounting')
+
+    @classmethod
+    def _enable_analytic_accounting(cls, user=None):
+        user = user or cls.user
+        user.groups_id += cls.env.ref('analytic.group_analytic_accounting')

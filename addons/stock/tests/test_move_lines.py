@@ -13,10 +13,6 @@ class StockMoveLine(TestStockCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.user.groups_id += cls.env.ref("stock.group_tracking_owner")
-        cls.env.user.groups_id += cls.env.ref("stock.group_tracking_lot")
-        cls.env.user.groups_id += cls.env.ref("stock.group_production_lot")
-        cls.env.user.groups_id += cls.env.ref('stock.group_stock_multi_locations')
         cls.product = cls.env['product.product'].create({
             'name': 'Product A',
             'is_storable': True,
@@ -25,7 +21,8 @@ class StockMoveLine(TestStockCommon):
         cls.shelf1 = cls.env['stock.location'].create({
             'name': 'Shelf 1',
             'usage': 'internal',
-            'location_id': cls.stock_location,
+            'location_id': cls.stock_location.id,
+            'company_id': cls.stock_company.id,
         })
         cls.pack = cls.env['stock.quant.package'].create({
             'name': 'Pack A',
@@ -47,11 +44,10 @@ class StockMoveLine(TestStockCommon):
             'package_id': cls.pack.id,
             'owner_id': cls.partner.id,
         })
-        cls.picking_type_internal = cls.env['ir.model.data']._xmlid_to_res_id('stock.picking_type_internal')
 
     def test_pick_from_1(self):
         """ test quant display_name """
-        self.assertEqual(self.quant.display_name, 'WH/Stock/Shelf 1 - Lot 1 - Pack A - The Owner')
+        self.assertEqual(self.quant.display_name, 'Test /Stock/Shelf 1 - Lot 1 - Pack A - The Owner')
 
     def test_pick_from_2(self):
         """ Create a move line from a quant"""
@@ -59,8 +55,8 @@ class StockMoveLine(TestStockCommon):
             'name': 'Test move',
             'product_id': self.product.id,
             'product_uom': self.product.uom_id.id,
-            'location_id': self.stock_location,
-            'location_dest_id': self.stock_location,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
         })
         move_form = Form(move, view='stock.view_stock_move_operations')
         with move_form.move_line_ids.new() as ml:
@@ -80,9 +76,9 @@ class StockMoveLine(TestStockCommon):
             'name': 'Test move',
             'product_id': self.product.id,
             'product_uom': self.product.uom_id.id,
-            'location_id': self.stock_location,
-            'location_dest_id': self.stock_location,
-            'picking_type_id': self.picking_type_internal,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.picking_type_int.id,
             'state': 'draft',
             'product_uom_qty': 5,
         })
@@ -104,8 +100,8 @@ class StockMoveLine(TestStockCommon):
             'name': 'Test move',
             'product_id': self.product.id,
             'product_uom': self.product.uom_id.id,
-            'location_id': self.stock_location,
-            'location_dest_id': self.stock_location,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
         })
         move_form = Form(move, view='stock.view_stock_move_operations')
         with move_form.move_line_ids.new() as ml:
@@ -115,14 +111,14 @@ class StockMoveLine(TestStockCommon):
 
     def test_pick_from_5(self):
         """ check small quantities get handled correctly """
-        precision = self.env.ref('product.decimal_product_uom')
-        precision.digits = 6
+        with self.with_user('admin'):
+            self.env.ref('product.decimal_product_uom').digits = 6
         self.product.uom_id = self.uom_kg
         move = self.env['stock.move'].create({
             'name': 'Test move',
             'product_id': self.product.id,
-            'location_id': self.stock_location,
-            'location_dest_id': self.stock_location,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
             'product_uom_qty': 1e-5,
         })
         move_form = Form(move, view='stock.view_stock_move_operations')
@@ -139,9 +135,9 @@ class StockMoveLine(TestStockCommon):
     def test_put_in_pack_with_several_move_lines(self):
         picking1 = self.env['stock.picking'].create({
             'name': 'Picking 1',
-            'location_id': self.env.ref('stock.stock_location_stock').id,
-            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
         })
         picking2 = picking1.copy({'name': 'picking 2'})
         move_line1 = self.env['stock.move.line'].create({
@@ -167,9 +163,9 @@ class StockMoveLine(TestStockCommon):
         quant_productA = self.env['stock.quant']._update_available_quantity(self.productA, self.shelf1, 20, owner_id=self.partner)
         picking1 = self.env['stock.picking'].create({
             'name': 'Picking 1',
-            'location_id': self.env.ref('stock.stock_location_stock').id,
-            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
         })
         move_line1 = self.env['stock.move.line'].create({
             'picking_id': picking1.id,
@@ -191,8 +187,8 @@ class StockMoveLine(TestStockCommon):
         with freeze_time() as freeze:
             move = self.env['stock.move'].create({
                 'name': 'test_move_line_date',
-                'location_id': self.stock_location,
-                'location_dest_id': self.customer_location,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
                 'product_id': self.productA.id,
                 'product_uom': self.uom_unit.id,
                 'product_uom_qty': 10.0,

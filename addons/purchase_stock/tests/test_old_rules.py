@@ -10,11 +10,10 @@ from odoo.addons.purchase_stock.tests.common import PurchaseTestCommon
 class TestPurchaseOldRules(PurchaseTestCommon):
 
     def create_picking_out(self, warehouse):
-        customer_location = self.env.ref('stock.stock_location_customers')
         picking_out = self.env['stock.picking'].create({
             'location_id': warehouse.out_type_id.default_location_src_id.id,
-            'location_dest_id': customer_location.id,
-            'partner_id': self.customer.id,
+            'location_dest_id': self.customer_location.id,
+            'partner_id': self.partner.id,
             'group_id': self.group.id,
             'picking_type_id': warehouse.out_type_id.id,
         })
@@ -26,7 +25,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
             'picking_id': picking_out.id,
             'group_id': self.group.id,
             'location_id': warehouse.out_type_id.default_location_src_id.id,
-            'location_dest_id': customer_location.id,
+            'location_dest_id': self.customer_location.id,
             'procure_method': 'make_to_order',
         })
         return picking_out
@@ -34,15 +33,15 @@ class TestPurchaseOldRules(PurchaseTestCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.customer = cls.env['res.partner'].create({'name': 'abc'})
-        cls.group = cls.env['procurement.group'].create({'partner_id': cls.customer.id, 'name': 'New Group'})
+        cls.group = cls.env['procurement.group'].create({'partner_id': cls.partner.id, 'name': 'New Group'})
         cls.product = cls.env['product.product'].create({
             'name': 'Geyser',
             'is_storable': True,
             'route_ids': [Command.link(cls.route_mto), Command.link(cls.route_buy)],
             'seller_ids': [Command.create({
-                'partner_id': cls.customer.id,
+                'partner_id': cls.partner.id,
                 'price': 100.0,
+                'company_id': cls.stock_company.id,
             })],
         })
 
@@ -55,6 +54,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
             'code': '3S',
             'reception_steps': 'three_steps',
             'delivery_steps': 'pick_pack_ship',
+            'company_id': cls.stock_company.id,
         })
         delivery_route_3 = cls.warehouse_3_steps.delivery_route_id
         delivery_route_3.rule_ids[0].write({
@@ -78,6 +78,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
             'code': '2S',
             'reception_steps': 'two_steps',
             'delivery_steps': 'pick_ship',
+            'company_id': cls.stock_company.id,
         })
         delivery_route_2 = cls.warehouse_2_steps.delivery_route_id
         delivery_route_2.rule_ids[0].write({
@@ -106,7 +107,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         picking_out.action_confirm()
 
         # Find purchase order related to picking.
-        purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.customer.id)])
+        purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.partner.id)])
         # Purchase order should be created for picking.
         self.assertTrue(purchase_order, 'No purchase order created.')
 
@@ -138,7 +139,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         picking_out.action_confirm()
 
         # Find PO related to picking.
-        purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.customer.id)])
+        purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.partner.id)])
         # Po should be create related picking.
         self.assertTrue(purchase_order, 'purchase order is created.')
 
@@ -173,7 +174,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         picking_out = self.create_picking_out(self.warehouse_3_steps)
         picking_out.action_confirm()
         # Find PO related to picking.
-        purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.customer.id)])
+        purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.partner.id)])
         # Po should be create related picking.
         self.assertTrue(purchase_order, 'No purchase order created.')
 
@@ -207,7 +208,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         picking_out.action_confirm()
 
         # Find PO related to picking.
-        purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.customer.id)])
+        purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.partner.id)])
         # Po should be create related picking.
         self.assertTrue(purchase_order, 'No purchase order created.')
 
@@ -237,8 +238,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         """ In order to check dates, set product's Delivery Lead Time
             and warehouse route's delay."""
 
-        company = self.env.ref('base.main_company')
-        company.write({'po_lead': 1.00})
+        self.company.sudo().write({'po_lead': 1.00})
 
         warehouse = self.warehouse_3_steps
         # Set delay on push rule

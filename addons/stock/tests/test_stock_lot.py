@@ -14,14 +14,17 @@ class TestLotSerial(TestStockCommon):
         cls.locationA = cls.env['stock.location'].create({
             'name': 'Location A',
             'usage': 'internal',
+            'company_id': cls.stock_company.id,
         })
         cls.locationB = cls.env['stock.location'].create({
             'name': 'Location B',
             'usage': 'internal',
+            'company_id': cls.stock_company.id,
         })
         cls.locationC = cls.env['stock.location'].create({
             'name': 'Location C',
             'usage': 'internal',
+            'company_id': cls.stock_company.id,
         })
         cls.productA.tracking = 'lot'
         cls.lot_p_a = cls.LotObj.create({
@@ -140,24 +143,23 @@ class TestLotSerial(TestStockCommon):
         """
         Check that the reservation of is bypassed when a stock move is added after the picking is done
         """
-        customer = self.PartnerObj.create({'name': 'bob'})
+        customer = self.PartnerObj.with_user(self.user_stock_manager).create({'name': 'bob'})
         delivery_picking = self.env['stock.picking'].create({
             'partner_id': customer.id,
-            'picking_type_id': self.picking_type_out,
+            'picking_type_id': self.picking_type_out.id,
             'move_ids': [Command.create({
                 'name': self.productC.name,
                 'product_id': self.productC.id,
                 'product_uom_qty': 5,
                 'quantity': 5,
-                'location_id': self.stock_location,
-                'location_dest_id': self.customer_location,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
             })]
         })
-        stock = self.env['stock.location'].browse(self.stock_location)
         additional_product = self.productA
         lot = self.lot_p_a
-        lot.location_id = stock
-        quant = additional_product.stock_quant_ids.filtered(lambda q: q.location_id == stock)
+        lot.location_id = self.stock_location
+        quant = additional_product.stock_quant_ids.filtered(lambda q: q.location_id == self.stock_location)
         self.assertRecordValues(quant, [{'quantity': 10.0, 'reserved_quantity': 0.0}])
         delivery_picking.button_validate()
         delivery_picking.is_locked = False
@@ -184,7 +186,7 @@ class TestLotSerial(TestStockCommon):
         move = self.env["stock.move"].create({
             'name': 'test_move',
             'location_id': self.locationA.id,
-            'location_dest_id': self.customer_location,
+            'location_dest_id': self.customer_location.id,
             'product_id': self.productB.id,
             'product_uom_qty': 1.0,
         })
@@ -197,11 +199,11 @@ class TestLotSerial(TestStockCommon):
         # check that the quantity of starting quant is moved to a new quant
         self.assertEqual(starting_quant.quantity, 0)
         # check that the sn is in customer location
-        self.assertEqual(self.lot_p_b.location_id.id, self.customer_location)
+        self.assertEqual(self.lot_p_b.location_id.id, self.customer_location.id)
         # create a return
         move = self.env['stock.move'].create({
             'name': 'test_move',
-            'location_id': self.customer_location,
+            'location_id': self.customer_location.id,
             'location_dest_id': self.locationA.id,
             'product_id': self.productB.id,
             'lot_ids': self.lot_p_b,

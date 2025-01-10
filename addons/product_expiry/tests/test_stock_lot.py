@@ -31,7 +31,7 @@ class TestStockLot(TestStockCommon):
         """ Test Scheduled Task on lot with an alert_date in the past creates an activity """
 
         # create product
-        self.productAAA = self.ProductObj.create({
+        self.productAAA = self.ProductObj.with_user(self.user_stock_manager).create({
             'name': 'Product AAA',
             'is_storable': True,
             'tracking':'lot',
@@ -46,9 +46,9 @@ class TestStockLot(TestStockCommon):
         })
 
         picking_in = self.PickingObj.create({
-            'picking_type_id': self.picking_type_in,
-            'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location,
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
             'state': 'draft',
         })
 
@@ -58,8 +58,8 @@ class TestStockLot(TestStockCommon):
             'product_uom_qty': 33,
             'product_uom': self.productAAA.uom_id.id,
             'picking_id': picking_in.id,
-            'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
         })
 
         self.assertEqual(picking_in.move_ids.state, 'draft', 'Wrong state of move line.')
@@ -129,7 +129,7 @@ class TestStockLot(TestStockCommon):
         """ Test Scheduled Task on lot with an alert_date in future does not create an activity """
 
         # create product
-        self.productBBB = self.ProductObj.create({
+        self.productBBB = self.ProductObj.with_user(self.user_stock_manager).create({
             'name': 'Product BBB',
             'is_storable': True,
             'tracking':'lot'
@@ -143,10 +143,11 @@ class TestStockLot(TestStockCommon):
         })
 
         picking_in = self.PickingObj.create({
-            'picking_type_id': self.picking_type_in,
-            'location_id': self.supplier_location,
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
             'state': 'draft',
-            'location_dest_id': self.stock_location})
+            'location_dest_id': self.stock_location.id,
+        })
 
         move_b = self.MoveObj.create({
             'name': self.productBBB.name,
@@ -154,8 +155,9 @@ class TestStockLot(TestStockCommon):
             'product_uom_qty': 44,
             'product_uom': self.productBBB.uom_id.id,
             'picking_id': picking_in.id,
-            'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location})
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+        })
 
         self.assertEqual(picking_in.move_ids.state, 'draft', 'Wrong state of move line.')
         picking_in.action_confirm()
@@ -185,16 +187,21 @@ class TestStockLot(TestStockCommon):
         """ Test Scheduled Task on lot without an alert_date does not create an activity """
 
         # create product
-        self.productCCC = self.ProductObj.create({'name': 'Product CCC', 'is_storable': True, 'tracking': 'lot'})
+        self.productCCC = self.ProductObj.with_user(self.user_stock_manager).create({
+            'name': 'Product CCC',
+            'is_storable': True,
+            'tracking': 'lot'
+        })
 
         # create a new lot with with alert date in the past
         self.lot1_productCCC = self.LotObj.create({'name': 'Lot 1 ProductCCC', 'product_id': self.productCCC.id})
 
         picking_in = self.PickingObj.create({
-            'picking_type_id': self.picking_type_in,
-            'location_id': self.supplier_location,
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
             'state': 'draft',
-            'location_dest_id': self.stock_location})
+            'location_dest_id': self.stock_location.id,
+        })
 
         move_c = self.MoveObj.create({
             'name': self.productCCC.name,
@@ -202,8 +209,9 @@ class TestStockLot(TestStockCommon):
             'product_uom_qty': 44,
             'product_uom': self.productCCC.uom_id.id,
             'picking_id': picking_in.id,
-            'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location})
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+        })
 
         self.assertEqual(picking_in.move_ids.state, 'draft', 'Wrong state of move line.')
         picking_in.action_confirm()
@@ -289,17 +297,13 @@ class TestStockLot(TestStockCommon):
     def test_04_expiration_date_on_receipt(self):
         """ Test we can set an expiration date on receipt and all expiration
         date will be correctly set. """
-        partner = self.env['res.partner'].create({
-            'name': 'Apple\'s Joe',
-            'company_id': self.env.ref('base.main_company').id,
-        })
         expiration_date = datetime.today() + timedelta(days=30)
         time_gap = timedelta(seconds=10)
 
         # Receives a tracked production using expiration date.
         picking_form = Form(self.env['stock.picking'])
-        picking_form.partner_id = partner
-        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = self.partner
+        picking_form.picking_type_id = self.picking_type_in
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.apple_product
             move.product_uom_qty = 4
@@ -333,10 +337,6 @@ class TestStockLot(TestStockCommon):
     def test_04_2_expiration_date_on_receipt(self):
         """ Test we can set an expiration date on receipt even if all expiration
         date related fields aren't set on product. """
-        partner = self.env['res.partner'].create({
-            'name': 'Apple\'s Joe',
-            'company_id': self.env.ref('base.main_company').id,
-        })
         # Unset some fields.
         self.apple_product.expiration_time = False
         self.apple_product.removal_time = False
@@ -346,8 +346,8 @@ class TestStockLot(TestStockCommon):
 
         # Receives a tracked production using expiration date.
         picking_form = Form(self.env['stock.picking'])
-        picking_form.partner_id = partner
-        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = self.partner
+        picking_form.picking_type_id = self.picking_type_in
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.apple_product
             move.quantity = 4
@@ -382,10 +382,6 @@ class TestStockLot(TestStockCommon):
     def test_05_confirmation_on_delivery(self):
         """ Test when user tries to delivery expired lot, he/she gets a
         confirmation wizard. """
-        partner = self.env['res.partner'].create({
-            'name': 'Cider & Son',
-            'company_id': self.env.ref('base.main_company').id,
-        })
         # Creates 3 lots (1 non-expired lot, 2 expired lots)
         lot_form = Form(self.LotObj)  # Creates the lot.
         lot_form.name = 'good-apple-lot'
@@ -402,8 +398,8 @@ class TestStockLot(TestStockCommon):
 
         # Case #1: make a delivery with no expired lot.
         picking_form = Form(self.env['stock.picking'])
-        picking_form.partner_id = partner
-        picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        picking_form.partner_id = self.partner
+        picking_form.picking_type_id = self.picking_type_out
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.apple_product
             move.product_uom_qty = 4
@@ -427,8 +423,8 @@ class TestStockLot(TestStockCommon):
 
         # Case #2: make a delivery with one non-expired lot and one expired lot.
         picking_form = Form(self.env['stock.picking'])
-        picking_form.partner_id = partner
-        picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        picking_form.partner_id = self.partner
+        picking_form.picking_type_id = self.picking_type_out
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.apple_product
             move.product_uom_qty = 8
@@ -462,8 +458,8 @@ class TestStockLot(TestStockCommon):
 
         # Case #3: make a delivery with only on expired lot.
         picking_form = Form(self.env['stock.picking'])
-        picking_form.partner_id = partner
-        picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        picking_form.partner_id = self.partner
+        picking_form.picking_type_id = self.picking_type_out
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.apple_product
             move.product_uom_qty = 4
@@ -489,14 +485,6 @@ class TestStockLot(TestStockCommon):
     def test_edit_removal_date_in_inventory_mode(self):
         """ Try to edit removal_date with the inventory mode.
         """
-        user_group_stock_manager = self.env.ref('stock.group_stock_manager')
-        self.demo_user = mail_new_test_user(
-            self.env,
-            name='Demo user',
-            login='userdemo',
-            email='d.d@example.com',
-            groups='stock.group_stock_manager',
-        )
         lot_form = Form(self.LotObj)
         lot_form.name = 'LOT001'
         lot_form.product_id = self.apple_product
@@ -504,13 +492,13 @@ class TestStockLot(TestStockCommon):
 
         quant = self.StockQuantObj.with_context(inventory_mode=True).create({
             'product_id': self.apple_product.id,
-            'location_id': self.stock_location,
+            'location_id': self.stock_location.id,
             'quantity': 10,
             'lot_id': apple_lot.id,
         })
         # Try to write on quant with inventory mode
         new_date = datetime.today() + timedelta(days=15)
-        quant.with_user(self.demo_user).with_context(inventory_mode=True).write({'removal_date': new_date})
+        quant.with_context(inventory_mode=True).write({'removal_date': new_date})
         self.assertEqual(quant.removal_date, new_date)
 
     def test_apply_lot_date_on_sml(self):
@@ -535,8 +523,8 @@ class TestStockLot(TestStockCommon):
             'product_uom': self.apple_product.uom_id.id,
         })
         sml = self.env['stock.move.line'].create({
-            'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
             'product_id': self.apple_product.id,
             'quantity': 3,
             'product_uom_id': self.apple_product.uom_id.id,
@@ -589,7 +577,7 @@ class TestStockLot(TestStockCommon):
 
         self.StockQuantObj.with_context(inventory_mode=True).create({
             'product_id': self.apple_product.id,
-            'location_id': self.stock_location,
+            'location_id': self.stock_location.id,
             'quantity': 100,
             'lot_id': apple_lot.id,
         })
@@ -597,9 +585,9 @@ class TestStockLot(TestStockCommon):
         self.assertEqual(self.apple_product.qty_available, 100, 'Wrong quantity.')
 
         picking_out = self.PickingObj.create({
-            'picking_type_id': self.picking_type_out,
-            'location_id': self.stock_location,
-            'location_dest_id': self.customer_location,
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
             'state': 'draft',
         })
 
@@ -609,8 +597,8 @@ class TestStockLot(TestStockCommon):
             'product_uom_qty': 10,
             'product_uom': self.apple_product.uom_id.id,
             'picking_id': picking_out.id,
-            'location_id': self.stock_location,
-            'location_dest_id': self.customer_location
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
         })
 
         self.assertEqual(picking_out.move_ids.state, 'draft', 'Wrong state of move line.')
@@ -634,17 +622,17 @@ class TestStockLot(TestStockCommon):
 
         self.StockQuantObj.with_context(inventory_mode=True).create([{
             'product_id': self.apple_product.id,
-            'location_id': self.stock_location,
+            'location_id': self.stock_location.id,
             'quantity': 100,
         }, {
             'product_id': self.apple_product.id,
-            'location_id': self.stock_location,
+            'location_id': self.stock_location.id,
             'quantity': 100,
             'lot_id': apple_lot.id,
         }])
 
         with Form(self.PickingObj) as picking_form:
-            picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
+            picking_form.picking_type_id = self.picking_type_out
             with picking_form.move_ids_without_package.new() as move:
                 move.product_id = self.apple_product
                 move.product_uom_qty = 10
@@ -654,19 +642,14 @@ class TestStockLot(TestStockCommon):
         self.assertEqual(picking_out.move_line_ids.lot_id, apple_lot)
 
     def test_compute_expiration_date_from_scheduled_date(self):
-        partner = self.env['res.partner'].create({
-            'name': 'Apple\'s Joe',
-            'company_id': self.env.ref('base.main_company').id,
-        })
-
         delta = timedelta(seconds=10)
         new_date = datetime.today() + timedelta(days=42)
         expiration_date = new_date + timedelta(days=self.apple_product.expiration_time)
 
         picking_form = Form(self.env['stock.picking'])
-        picking_form.partner_id = partner
+        picking_form.partner_id = self.partner
         picking_form.scheduled_date = new_date
-        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.picking_type_id = self.picking_type_in
 
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.apple_product

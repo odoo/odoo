@@ -98,6 +98,11 @@ class TestProjectCommon(TransactionCase):
         self.env['mail.thread'].message_process(model, mail)
         return self.env[target_model].search([(target_field, '=', subject)])
 
+    @classmethod
+    def _enable_project_manager(cls, user=None):
+        user = user or cls.user
+        user.groups_id += cls.env.ref('project.group_project_manager')
+
 
 class TestProjectBase(TestProjectCommon):
 
