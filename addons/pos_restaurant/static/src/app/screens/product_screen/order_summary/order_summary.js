@@ -36,15 +36,20 @@ patch(OrderSummary.prototype, {
                         o.finalized === false &&
                         !o.isBooked
                 ) &&
-                this.pos.getOrder().lines.length === 0
+                this.pos.getOrder().lines.length === 0 &&
+                !this.pos.getOrder().hasCourses()
             );
         }
         const currentOrder = this.pos.getOrder();
+        if (!currentOrder) {
+            return false;
+        }
         return (
             this.pos.config.module_pos_restaurant &&
             !currentOrder.finalized &&
             currentOrder.isBooked &&
-            currentOrder.lines.length === 0
+            currentOrder.lines.length === 0 &&
+            !currentOrder.hasCourses()
         );
     },
 });

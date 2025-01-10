@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
+       <xpath
+            expr="//button[hasclass('more-btn')]"
+            position="before">
+           <button t-if="pos.config.module_pos_restaurant and !props.showRemainingButtons and !pos.getOrder()?._isRefundOrder()"
+                   t-att-class="buttonClass" t-on-click="()=>this.pos.addCourse()">
+                <span>Course</span>
+           </button>
+       </xpath>
         <xpath
             expr="//t[@t-if='props.showRemainingButtons']/div/button[hasclass('o_pricelist_button')]"
             position="before">
@@ -28,6 +36,9 @@
                 </button>
                 <button class="btn btn-secondary btn-lg py-5" t-on-click.stop="() => this.clickTransferOrder()">
                     <i class="oi oi-arrow-right me-1" />Transfer / Merge
+                </button>
+                   <button t-att-disabled="!this.showTransferCourse()" class="btn btn-secondary btn-lg py-5" t-on-click.stop="() => this.clickTransferCourse()">
+                    <i class="oi oi-arrow-down me-1" />Transfer course
                 </button>
                 <button t-if="!pos.getOrder()?.table_id" class="btn btn-secondary btn-lg py-5" t-on-click="() => this.pos.editFloatingOrderName(this.pos.getOrder())">
                     <i class="fa fa-pencil-square-o me-1" />Edit Order Name
