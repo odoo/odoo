@@ -215,3 +215,18 @@ class TestRecruitment(TransactionCase):
         application3 = self.env['hr.applicant'].create({'candidate_id': candidate.id})
         res = application1.action_open_other_applications()
         self.assertEqual(len(res['domain'][0][2]), 3, "The list view should display 3 applications")
+
+    def test_candidate_application_count(self):
+        """
+            The computed field 'application_count' on the hr.candidate model should return the
+            number of all active and inactive applications linked to the candidate.
+        """
+        candidate = self.env['hr.candidate'].create({'partner_name': 'Test'})
+        application1, application2 = self.env['hr.applicant'].create([
+            {'candidate_id': candidate.id},
+            {'candidate_id': candidate.id}
+        ])
+        self.assertEqual(candidate.application_count, 2, "The application_count should return 2 applications")
+        application2.action_archive()
+        self.env.invalidate_all()
+        self.assertEqual(candidate.application_count, 2, 'The applications_count should not change after archiving an application')
