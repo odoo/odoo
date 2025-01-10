@@ -144,7 +144,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             type(self.env['payment.provider']), '_stripe_create_account_link',
             return_value='https://dummy.url',
         ):
-            onboarding_url = self.stripe.action_stripe_connect_account()
+            onboarding_url = self.stripe.action_start_onboarding()
         self.assertEqual(onboarding_url['url'], 'https://dummy.url')
 
     def test_only_create_webhook_if_not_already_done(self):

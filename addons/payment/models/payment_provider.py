@@ -443,6 +443,18 @@ class PaymentProvider(models.Model):
                 'tag': 'reload',
             }
 
+    def action_start_onboarding(self, menu_id=None):
+        """Start the provider-specific onboarding.
+
+        Providers implementing a specific onboarding must override this method and return the action
+        to run the onboarding.
+
+        :param int menu_id: The menu from which the onboarding is started, as an `ir.ui.menu` id.
+        :return: The onboarding action.
+        :rtype: dict
+        """
+        return {}
+
     def action_toggle_is_published(self):
         """ Toggle the field `is_published`.
 
