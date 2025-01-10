@@ -6552,7 +6552,7 @@ class BaseModel(metaclass=MetaModel):
             vals_list = []
             try:
                 for id_ in some_ids:
-                    record = model.browse(id_)
+                    record = model.browse((id_,))
                     vals_list.append({
                         f.name: f.convert_to_column_update(dirty_field_cache[f][id_], record)
                         for f, ids in dirty_field_ids.items()
