@@ -165,12 +165,12 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
     },
     {
         content: "Check that the outline effect has been applied on the image",
-        trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']",
+        trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']:not(:visible)",
     },
     ...clickOnSave(),
     {
         content: "Check that the image src is not the raw data",
-        trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']",
+        trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']:not(:visible)",
         run() {
             const imgEl = document.querySelector("iframe").contentDocument.querySelector(".s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']");
             const src = imgEl.getAttribute("src");
@@ -188,7 +188,7 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
     },
     {
         content: "Check that the Blur filter has been applied on the image",
-        trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-gl-filter='blur']",
+        trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-gl-filter='blur']:not(:visible)",
     },
     {
         content: "Click on the 'undo' button",
@@ -197,12 +197,12 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
     },
     {
         content: "Check that the Blur filter has been removed from the image",
-        trigger: ":iframe .s_three_columns .o_animate_on_scroll img:not([data-gl-filter='blur'])",
+        trigger: ":iframe .s_three_columns .o_animate_on_scroll img:not([data-gl-filter='blur']):not(:visible)",
     },
     ...clickOnSave(),
     {
         content: "Check that the image src is not the raw data",
-        trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']",
+        trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']:not(:visible)",
         run() {
             const imgEl = document.querySelector("iframe").contentDocument.querySelector(".s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']");
             const src = imgEl.getAttribute("src");
