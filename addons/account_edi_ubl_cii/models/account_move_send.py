@@ -120,7 +120,7 @@ class AccountMoveSend(models.AbstractModel):
 
         # during tests, no wkhtmltopdf, create the attachment for test purposes
         if tools.config['test_enable']:
-            self.env['ir.attachment'].create({
+            self.env['ir.attachment'].sudo().create({
                 'name': 'factur-x.xml',
                 'raw': xml_facturx,
                 'res_id': invoice.id,
