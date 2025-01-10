@@ -120,8 +120,9 @@ class MailMessage(models.Model):
                                         for guest in reactions.guest_id
                                     ]
                                     + [
+                                        # sudo: res.partner - reading partners of reaction on accessible message is allowed
                                         {"id": partner.id, "name": partner.name, "type": "partner"}
-                                        for partner in reactions.partner_id
+                                        for partner in reactions.partner_id.sudo()
                                     ],
                         "message": message.id,
                     }
