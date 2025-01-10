@@ -152,7 +152,7 @@ def _mock_check_company_on_peppol(func, self, *args, **kwargs):
 
 
 _demo_behaviour = {
-    '_make_request': _mock_make_request,
+    '_make_request_peppol': _mock_make_request,
     'button_account_peppol_check_partner_endpoint': _mock_button_verify_partner_endpoint,
     'button_peppol_sender_registration': _mock_user_creation,
     'button_deregister_peppol_participant': _mock_deregister_participant,
