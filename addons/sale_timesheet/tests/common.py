@@ -32,6 +32,16 @@ class TestCommonSaleTimesheet(TestSaleProjectCommon):
             company_id=cls.company_data_2['company'].id,
             company_ids=[cls.company_data_2['company'].id, cls.env.company.id],
         )
+        # What's important here is that this user does not have access to read Sales data,
+        # but can still log time on a timesheet.
+        cls.user_employee_without_sales_access = mail_new_test_user(
+            cls.env,
+            name='Tyrion Lannister Employee',
+            login='tyrion',
+            email='tyrion@example.com',
+            notification_type='email',
+            groups='project.group_project_manager,hr_timesheet.group_hr_timesheet_user',
+        )
 
         cls.employee_user = cls.env['hr.employee'].create({
             'name': 'Employee User',
@@ -52,6 +62,12 @@ class TestCommonSaleTimesheet(TestSaleProjectCommon):
             'name': 'Cersei Lannister',
             'user_id': cls.user_manager_company_B.id,
             'hourly_cost': 45,
+        })
+        
+        cls.employee_without_sales_access = cls.env['hr.employee'].create({
+            'name': 'Tyrion Lannister',
+            'user_id': cls.user_employee_without_sales_access.id,
+            'hourly_cost': 25,
         })
 
         # Account and project
