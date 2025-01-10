@@ -8,10 +8,9 @@ class OnboardingOnboardingStep(models.Model):
 
     @api.model
     def action_open_step_payment_provider(self):
-        self.env.company.payment_onboarding_payment_method = 'stripe'
         menu = self.env.ref('account_payment.payment_provider_menu', raise_if_not_found=False)
         menu_id = menu.id if menu else None
-        return self.env.company._run_payment_onboarding_step(menu_id)
+        return self.env.company._run_payment_onboarding_step(menu_id, 'stripe')
 
     @api.model
     def action_validate_step_payment_provider(self):

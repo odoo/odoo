@@ -439,6 +439,20 @@ class PaymentProvider(models.Model):
 
         return {}
 
+    def _run_onboarding_action(self, *, menu_id=None, **kwargs):
+        """ Override of `payment` to run the Stripe onboarding action.
+
+        :param int menu_id: The menu from which the user started the onboarding step, as an
+                            `ir.ui.menu` id
+        :param dict kwargs: The onboarding action's parameters.
+        :return: The action returned by `action_stripe_connect_account`.
+        :rtype: dict
+        """
+        default_action = super()._run_onboarding_action(menu_id=menu_id, **kwargs)
+        if self.code != 'stripe':
+            return default_action
+        return self.action_stripe_connect_account(menu_id=menu_id)
+
     #=== BUSINESS METHODS - GETTERS ===#
 
     def _stripe_get_publishable_key(self):
