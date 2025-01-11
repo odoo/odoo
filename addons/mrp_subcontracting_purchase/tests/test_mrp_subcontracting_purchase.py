@@ -956,3 +956,55 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             ]),
         ], limit=1)
         self.assertEqual(purchase_order.date_planned.date(), Date.today())
+
+    def test_automatic_route_selection(self):
+        """ Test to verify the automatic selection of product routes:
+            - If `purchase_ok` is True, the 'Buy' route is automatically selected.
+            - If `manufacturing_ok` is True, the 'Manufacturing' route is automatically selected.
+            - If a product is used as a component in a subcontracting BOM,
+                the 'Resupply Subcontractor on Order' route is selected automatically.
+        """
+
+        component = self.env['product.product'].create({
+            'name': 'Component',
+            'is_storable': True,
+        })
+        finished_product = self.env['product.product'].create({
+            'name': 'Finished Product',
+            'is_storable': True,
+        })
+
+        # Verify that default route is 'Buy' since `purchase_ok` is True by default.
+        self.assertEqual(len(component.route_ids), 1)
+        self.assertEqual(component.route_ids.name, 'Buy')
+
+        # Untick `purchase_ok` and verify that 'Buy' route is removed.
+        product_form = Form(component)
+        product_form.purchase_ok = False
+        product_form.save()
+        self.assertEqual(len(component.route_ids), 0)
+
+        # Tick `manufacturing_ok` and verify that 'Manufacturing' route is selected.
+        product_form = Form(component)
+        product_form.manufacturing_ok = True
+        product_form.save()
+        self.assertEqual(len(component.route_ids), 1)
+        self.assertEqual(component.route_ids.name, 'Manufacture')
+
+        self.env['stock.quant']._update_available_quantity(component, self.env.ref('stock.stock_location_stock'), 5)
+
+        # Create a subcontracting BOM with the component.
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'type': 'subcontract',
+            'subcontractor_ids': [(4, self.subcontractor_partner1.id)],
+            'bom_line_ids': [(0, 0, {
+                'product_id': component.id,
+                'product_qty': 2,
+            })],
+        })
+
+        # Verify that both 'Manufacture' and 'Resupply Subcontractor on Order' routes are selected.
+        self.assertEqual(len(component.route_ids), 2)
+        self.assertIn('Manufacture', component.route_ids.mapped('name'))
+        self.assertIn('Resupply Subcontractor on Order', component.route_ids.mapped('name'))

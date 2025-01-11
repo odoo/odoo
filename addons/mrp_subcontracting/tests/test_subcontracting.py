@@ -1415,7 +1415,6 @@ class TestSubcontractingTracking(TransactionCase):
     def test_flow_tracked_backorder02(self):
         """ Both component and finished product are tracked by lot. """
         todo_nb = 4
-        resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
         finished_product, component = self.env['product.product'].create([{
             'name': 'SuperProduct',
             'is_storable': True,
@@ -1424,8 +1423,14 @@ class TestSubcontractingTracking(TransactionCase):
             'name': 'Component',
             'is_storable': True,
             'tracking': 'lot',
-            'route_ids': [(4, resupply_sub_on_order_route.id)],
         }])
+
+        finished_lot, component_lot = self.env['stock.lot'].create([{
+            'name': 'lot_%s' % product.name,
+            'product_id': product.id,
+        } for product in [finished_product, component]])
+
+        self.env['stock.quant']._update_available_quantity(component, self.env.ref('stock.stock_location_stock'), todo_nb, lot_id=component_lot)
 
         bom_form = Form(self.env['mrp.bom'])
         bom_form.type = 'subcontract'
@@ -1435,13 +1440,6 @@ class TestSubcontractingTracking(TransactionCase):
             bom_line.product_id = component
             bom_line.product_qty = 1
         bom = bom_form.save()
-
-        finished_lot, component_lot = self.env['stock.lot'].create([{
-            'name': 'lot_%s' % product.name,
-            'product_id': product.id,
-        } for product in [finished_product, component]])
-
-        self.env['stock.quant']._update_available_quantity(component, self.env.ref('stock.stock_location_stock'), todo_nb, lot_id=component_lot)
 
         # Create a receipt picking from the subcontractor
         picking_form = Form(self.env['stock.picking'])
@@ -1497,6 +1495,8 @@ class TestSubcontractingTracking(TransactionCase):
             'route_ids': [(4, resupply_sub_on_order_route.id)],
         }])
 
+        self.env['stock.quant']._update_available_quantity(component, self.env.ref('stock.stock_location_stock'), todo_nb)
+
         bom_form = Form(self.env['mrp.bom'])
         bom_form.type = 'subcontract'
         bom_form.subcontractor_ids.add(self.subcontractor_partner1)
@@ -1510,8 +1510,6 @@ class TestSubcontractingTracking(TransactionCase):
             'name': 'sn_%s' % str(i),
             'product_id': finished_product.id,
         } for i in range(todo_nb)])
-
-        self.env['stock.quant']._update_available_quantity(component, self.env.ref('stock.stock_location_stock'), todo_nb)
 
         # Create a receipt picking from the subcontractor
         picking_form = Form(self.env['stock.picking'])

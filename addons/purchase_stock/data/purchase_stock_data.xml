@@ -11,6 +11,10 @@
             <field name="name">Buy</field>
             <field name="company_id"></field>
             <field name="sequence">5</field>
+            <field name="product_selectable" eval="False"/>
+            <field name="warehouse_selectable" eval="True"/>
+            <field name="allow_product_specific_route" eval="True"/>
+            <field name="warehouse_ids" eval="[(4, ref('stock.warehouse0'))]"/>
         </record>
 
         <!-- enable purchase on main warehouse -->
