@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Daye Jeong, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Daye Jeong, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,6 +45,27 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        안녕하세요,\n"
+"        <br/><br/>\n"
+"        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"/>님이 <span style=\"font-weight: bold;\" t-out=\"object.module_id.shortdesc\"/> 모듈 활성화를 요청하셨습니다. 해당 모듈은 이미 고객님의 구독 항목에 포함되어 있어 <span style=\"color: #875A7B; font-weight: bold;\">추가 비용은 따로 청구되지 않으나,</span> 활성화를 위해 관리자를 지정해 주셔야 합니다.\n"
+"        <br/><br/>\n"
+"        </p><blockquote data-o-mail-quote-node=\"1\" data-o-mail-quote=\"1\">\n"
+"            <t t-out=\"object.body_html\"/>\n"
+"        </blockquote>\n"
+"        <br/><br/>\n"
+"        <a style=\"background-color:#875A7B; padding:8px 16px 8px 16px; text-decoration:none; color:#fff; border-radius:5px\" t-attf-href=\"/odoo/{{ object.module_id.id }}/action-base_install_request.action_base_module_install_review?menu_id={{ ctx['menu_id'] }}\">요청 검토하기</a>\n"
+"        <br/><br/>\n"
+"        감사합니다.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    \n"
+"</div>\n"
+"            "
 
 #. module: base_install_request
 #. odoo-python

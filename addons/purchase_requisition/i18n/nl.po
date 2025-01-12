@@ -6,7 +6,7 @@
 # Tiffany Chang, 2024
 # Wil Odoo, 2024
 # Manon Rondou, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -360,7 +360,7 @@ msgstr "Aangemaakt op"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__creation_blocked
 msgid "Creation Blocked"
-msgstr "Aanmaken geblokkeerd"
+msgstr "Vergrendeld aanmaken"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__currency_id
@@ -520,8 +520,8 @@ msgid ""
 "we cannot recreate that in this case."
 msgstr ""
 "Als de gekozen leverancier of een van de producten in de oorspronkelijke "
-"bestelling een blokkeringswaarschuwing heeft, voorkomen we dat er een "
-"alternatieve bestelling wordt gemaakt. Dit komt omdat deze velden normaal "
+"order een blokkeringswaarschuwing heeft, voorkomen we dat er een "
+"alternatieve order wordt gemaakt. Dit komt omdat deze velden normaal "
 "gesproken worden gewist met een waarschuwingsbericht in de "
 "formulierweergave, maar dat kunnen we in dit geval niet opnieuw maken."
 
@@ -832,7 +832,7 @@ msgstr "Inkoopsjablonen"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_qty
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Quantity"
-msgstr "Hoeveelheid"
+msgstr "Aantal"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
@@ -980,7 +980,7 @@ msgid ""
 " to create an alternative."
 msgstr ""
 "De leverancier die je hebt geselecteerd of ten minste een van de producten "
-"die je kopieert van de oorspronkelijke bestelling, heeft een "
+"die je kopieert van de oorspronkelijke order, heeft een "
 "blokkeringswaarschuwing en kan niet worden geselecteerd om een alternatief "
 "te maken."
 
@@ -1016,7 +1016,7 @@ msgid ""
 msgstr ""
 "Om deze inkoopaanvraag te sluiten, annuleer je de gerelateerde inkoopoffertes.\n"
 "\n"
-"Stel je de puinhoop voor als iemand deze duplicaten bevestigt: verdubbel de bestelling, verdubbel de moeite :)"
+"Stel je de puinhoop voor als iemand deze duplicaten bevestigt: verdubbel de order, verdubbel de moeite :)"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -1153,8 +1153,7 @@ msgstr ""
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid "You cannot confirm a blanket order with lines missing a quantity."
 msgstr ""
-"Je kunt geen afroeporder bevestigen met regels waarin een hoeveelheid "
-"ontbreekt."
+"Je kunt geen afroeporder bevestigen met regels waarin een aantal ontbreekt."
 
 #. module: purchase_requisition
 #. odoo-python
