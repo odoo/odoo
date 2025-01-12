@@ -7,7 +7,7 @@
 # Felix Schubert <felix.schubert@go-erp.com>, 2024
 # Max-Milan Stoyanov, 2024
 # Wil Odoo, 2024
-# Larissa Manderfeld, 2024
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-19 11:52+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -630,7 +630,7 @@ msgstr ""
 "        <br/><br/>\n"
 "        hier ist Ihre\n"
 "        <t t-if=\"object.name\">\n"
-"           Gutschrift <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"           Gutschrift <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">GS/2021/05/0001</span>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            Gutschrift\n"
@@ -715,7 +715,7 @@ msgstr ""
 "        <br/><br/>\n"
 "        hier ist Ihre\n"
 "        <t t-if=\"object.name\">\n"
-"            Rechnung <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"            Rechnung <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RG/2021/05/0005</span>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            Rechnung\n"
@@ -732,7 +732,7 @@ msgstr ""
 "            Bitte überweisen Sie den Betrag schnellstmöglich.\n"
 "            <t t-if=\"object.payment_reference\">\n"
 "                <br/><br/>\n"
-"                Bitte verwenden Sie für Ihre Zahlung den folgenden Verwendungszweck: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                Bitte verwenden Sie für Ihre Zahlung den folgenden Verwendungszweck: <strong t-out=\"object.payment_reference or ''\">RG/2021/05/0005</strong>\n"
 "                <t t-if=\"object.partner_bank_id\">\n"
 "                    auf das Konto <strong t-out=\"object.partner_bank_id.acc_number\"/>\n"
 "                </t>\n"
@@ -8203,12 +8203,12 @@ msgstr "RE"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "INV/2023/00001"
-msgstr "INV/2023/00001"
+msgstr "RG/2023/00001"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "INV/2023/0001"
-msgstr "INV/2023/0001"
+msgstr "RG/2023/0001"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -10543,7 +10543,7 @@ msgstr "Sonstiges"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.journal,name:account.1_general
 msgid "Miscellaneous Operations"
-msgstr "Sonstiges"
+msgstr "Sonstige Vorgänge"
 
 #. module: account
 #. odoo-python
@@ -11492,7 +11492,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
 msgid "Ordering"
-msgstr "Bestellen"
+msgstr "Reihenfolge"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_origin
@@ -13166,7 +13166,7 @@ msgstr "Die kleinste Münze mit einem Nicht-Null-Wert darstellen (z. B. 0,05)."
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Request Cancel"
-msgstr "Antragsstornierung"
+msgstr "Stornierung anfordern"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__require_partner_bank_account
@@ -13182,7 +13182,7 @@ msgstr "Verantw. Partner-Bank"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_resequence
 msgid "Resequence"
-msgstr "Resequenzierung"
+msgstr "Resequenzieren"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form

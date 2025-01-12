@@ -6,7 +6,7 @@
 # Martin Trigaux, 2024
 # Yana Bystrytska, 2024
 # Wil Odoo, 2024
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-19 13:06+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -663,6 +663,9 @@ msgid ""
 "        ZATCA E-Invoicing, support for PoS\n"
 "    "
 msgstr ""
+"\n"
+"       Електронні рахунки ZATCA, підтримка для PoS\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_reports
@@ -791,6 +794,11 @@ msgid ""
 "\n"
 "Provides a common interface to be used when implementing apps to outsource tax calculation.\n"
 msgstr ""
+"\n"
+"Розрахунок податку третьою стороною\n"
+"=========================\n"
+"\n"
+"Надає загальний інтерфейс для використання під час впровадження програм для аутсорсингу розрахунку податків.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_external_tax
@@ -801,6 +809,11 @@ msgid ""
 "\n"
 "Provides a common interface to be used when implementing apps to outsource tax calculation.\n"
 msgstr ""
+"\n"
+"Розрахунок податку третьою стороною для продажу\n"
+"==================================\n"
+"\n"
+"Надає загальний інтерфейс для використання під час впровадження програм для аутсорсингу розрахунку податків.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_intrastat
@@ -829,6 +842,12 @@ msgid ""
 "\n"
 "\"Python Code\" defines the amount of the tax.\n"
 msgstr ""
+"\n"
+"Податок, визначений як код python, складається з двох фрагментів коду python, які виконуються в локальному середовищі та містять такі дані, як ціна за одиницю, товар або партнер.\n"
+"\n"
+"«Застосовуваний код» визначає, чи потрібно застосовувати податок.\n"
+"\n"
+"\"Код Python\" визначає суму податку.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_aba
@@ -1035,6 +1054,8 @@ msgid ""
 "\n"
 "ATS Report for Ecuador\n"
 msgstr ""
+"\n"
+"Звіт ATS для Еквадору\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_auto_transfer
@@ -1073,6 +1094,9 @@ msgid ""
 "Accounting Asset for India\n"
 "================================\n"
 msgstr ""
+"\n"
+"Бухгалтерські активи для Індії\n"
+"================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_hr_payroll_account
@@ -1370,6 +1394,8 @@ msgid ""
 "\n"
 "Accounting Reports for Nigeria\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Нігерії\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hu
@@ -1397,6 +1423,8 @@ msgid ""
 "\n"
 "Accounting reports for Bangladesh\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Бангладешу\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports
@@ -1473,6 +1501,8 @@ msgid ""
 "\n"
 "Accounting reports for Dominican Republic\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Домініканської республіки\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec_reports
@@ -1483,6 +1513,11 @@ msgid ""
 "* Adds Balance Sheet report adapted for Ecuador\n"
 "* Adds Profit and Loss report adapted for Ecuador\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Еквадору\n"
+"==============================\n"
+"* Додає балансовий звіт, адаптований для Еквадору\n"
+"* Додає звіт про доходи і витрати, адаптований для Еквадору\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fi_reports
@@ -1492,6 +1527,10 @@ msgid ""
 "================================\n"
 "\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Фінляндії\n"
+"================================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_reports
@@ -1505,6 +1544,14 @@ msgid ""
 "It adds a new button \"EDI VAT\" on the French vat report and a new menu item \"EDI exports\" (below \"Reporting\",\n"
 "in the \"Statement Reports\" section).\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Франції\n"
+"================================\n"
+"\n"
+"Цей модуль також дозволяє експортувати звіт про ПДВ у Франції та надсилати його до DGFiP, OGA або експерту-бухгалтеру.\n"
+"\n"
+"Він додає нову кнопку «EDI VAT» у французькому звіті з ПДВ і новий пункт меню «EDI Exports» (нижче «Reporting»,\n"
+"у розділі «Звіти про звітність»).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de_reports
@@ -1514,6 +1561,10 @@ msgid ""
 "Contains Balance sheet, Profit and Loss, VAT and Partner VAT reports\n"
 "Also adds DATEV export options to general ledger\n"
 msgstr ""
+"\n"
+"Бухгалтерська звітність для Німеччини\n"
+"Містить звіти про баланс, доходи та витрати, ПДВ і ПДВ партнерів\n"
+"Також додає параметри експорту DATEV до головної книги\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr_reports
@@ -1523,6 +1574,10 @@ msgid ""
 "================================\n"
 "\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Греції \n"
+"================================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hk_reports
@@ -1537,6 +1592,8 @@ msgid ""
 "\n"
 "Accounting reports for Hungary\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Угорщини\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_reports
@@ -1545,6 +1602,9 @@ msgid ""
 "Accounting reports for India\n"
 "================================\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Індії\n"
+"================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it_reports
@@ -1554,6 +1614,10 @@ msgid ""
 "============================\n"
 "\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Італії\n"
+"============================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_kz_reports
@@ -1562,6 +1626,9 @@ msgid ""
 "Accounting reports for Kazakhstan\n"
 "Contains Balance sheet, Profit and Loss reports\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Казахстану\n"
+"Містить звіт балансу та звіт доходів і витрат\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ke_reports
@@ -1571,6 +1638,10 @@ msgid ""
 "============================\n"
 "\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Кенії\n"
+"============================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt_reports
@@ -1580,6 +1651,10 @@ msgid ""
 "\n"
 "Contains Balance Sheet, Profit/Loss reports\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Литви\n"
+"\n"
+"Містить звіт балансу та звіт доходів і витрат\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu_reports
@@ -1591,6 +1666,12 @@ msgid ""
 "The first version of the SAF-T Financial is limited to the general ledger level including customer and supplier transactions.\n"
 "Necessary master data is also included.\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Люксембургу\n"
+"=================================\n"
+"Люксембурзький SAF-T (також відомий як FAIA) — це стандартний формат файлу для експорту різних типів облікових операційних даних у форматі XML.\n"
+"Перша версія SAF-T Financial обмежена рівнем бухгалтерської книги, включаючи транзакції клієнтів і постачальників.\n"
+"Також включено необхідні основні дані.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ma_reports
@@ -1600,6 +1681,10 @@ msgid ""
 "\n"
 "This module has been built with the help of Caudigef.\n"
 msgstr ""
+"\n"
+"Бухгалтерські книги для Марокко.\n"
+"\n"
+"Цей модуль було створено за допомогою Caudigef.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nz_reports
@@ -1614,6 +1699,8 @@ msgid ""
 "\n"
 "Accounting reports for Netherlands\n"
 msgstr ""
+"\n"
+"Бухгалтерські книги для Нідерландів\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no_reports
@@ -1623,6 +1710,10 @@ msgid ""
 "================================\n"
 "\n"
 msgstr ""
+"\n"
+"Бухгалтерські книги для Норвегії\n"
+"================================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_syscohada_reports
@@ -1631,6 +1722,9 @@ msgid ""
 "Accounting reports for OHADA\n"
 "=================================\n"
 msgstr ""
+"\n"
+"Бухгалтерські книги для ОХАДА\n"
+"=================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pk_reports
@@ -1638,6 +1732,8 @@ msgid ""
 "\n"
 "Accounting reports for Pakistan\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Пакистану\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl_reports
@@ -1654,6 +1750,17 @@ msgid ""
 "        - Operations through electronic interfaces (IED)\n"
 "        - Invoices done with KSef \n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Польщі\n"
+"\n"
+"        Цей модуль також надає можливість генерувати JPK_VAT у форматі xml для Польщі.\n"
+"\n"
+"Наразі не повідомляє про конкретні значення для:\n"
+"- Касова база для записів з вхідним податком (МК)\n"
+"- Маржинальні операції (MR_T/MR_UZ)\n"
+"- Рахунки за сільськогосподарську продукцію (VAT_RR)\n"
+"- Операції через електронні інтерфейси (IED)\n"
+"- Рахунки-фактури, оформлені за допомогою KSef\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pt_reports
@@ -1663,6 +1770,10 @@ msgid ""
 "================================\n"
 "\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Португалії\n"
+"================================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro_reports
@@ -1670,6 +1781,8 @@ msgid ""
 "\n"
 "Accounting reports for Romania\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Румунії\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_rw_reports
@@ -1677,6 +1790,8 @@ msgid ""
 "\n"
 "Accounting reports for Rwanda\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Руанди\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_rs_reports
@@ -1686,6 +1801,10 @@ msgid ""
 "This module is based on the official document \"Pravilnik o kontnom okviru i sadržini računa u kontnom okviru za privredna društva, zadruge i preduzetnike (\"Sl. glasnik RS\", br. 89/2020)\"\n"
 "Source: https://www.paragraf.rs/propisi/pravilnik-o-kontnom-okviru-sadrzini-racuna-za-privredna-drustva-zadruge.html\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Сербії.\n"
+"Цей модуль базується на офіційному документі \"Pravilnik o kontnom okviru i sadržini računa u kontnom okviru za privredna društva, zadruge i preduzetnike (\"Sl. glasnik RS\", br. 89/2020)\"\n"
+"Джерело: https://www.paragraf.rs/propisi/pravilnik-o-kontnom-okviru-sadrzini-racuna-za-privredna-drustva-zadruge.html\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sg_reports
@@ -1696,6 +1815,11 @@ msgid ""
 "This module allow to generate the IRAS Audit File.\n"
 " - To generate the IRAS Audit File, go to Accounting -> Reporting -> IRAS Audit File\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Сингапуру\n"
+"================================\n"
+"Цей модуль дозволяє створити файл аудиту IRAS.\n"
+"- Щоб створити файл аудиту IRAS, перейдіть в Бухгалтерський облік -> Звітність -> Файл аудиту IRAS\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_reports
@@ -1810,6 +1934,10 @@ msgid ""
 "================================\n"
 "    - Financial Reports (Balance Sheet & Profit and Loss & Tax Report)\n"
 msgstr ""
+"\n"
+"Бухгалтерський облік для Замбії\n"
+"================================\n"
+"    - Фінансові звіти (баланс, звіт про доходи і витрати та податки)\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ph_reports
@@ -1818,6 +1946,9 @@ msgid ""
 "Accounting reports for the Philippines\n"
 "    "
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Філліпін\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae_reports
@@ -1903,6 +2034,44 @@ msgid ""
 "\n"
 "This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.\n"
 msgstr ""
+"\n"
+"Додайте нову модель під назвою «Тип ідентифікації», яка розширює функціональні можливості поля ПДВ у партнері та дозволяє користувачеві ідентифікувати (зрештою рахунок-фактуру) для контактів не лише за допомогою свого фіскального податкового ідентифікаційного номера (ПДВ), але й за допомогою інших типів ідентифікації, наприклад національного документа , паспорт, іноземне посвідчення особи тощо. Після встановлення цього модуля ви побачите два поля у формі партнера:\n"
+"\n"
+"* Тип ідентифікації\n"
+"* Номер ідентифікації\n"
+"\n"
+"Така поведінка є загальною вимогою для деяких латамських країн, як-от Аргентина та Чилі. Якщо ваша локалізація має такі вимоги, вам потрібно покладатися на цей модуль і визначити у своєму модулі локалізації типи ідентифікацій, які використовуються у вашій країні. Зазвичай ці типи ідентифікації визначаються державними органами, які регулюють фіскальні операції. Наприклад:\n"
+"\n"
+"* AFIP в Аргентині визначає DNI, CUIT (ПДВ для юридичних осіб), CUIL (ПДВ для фізичних осіб) та ще 80 дійсних типів ідентифікації.\n"
+"\n"
+"Кожна ідентифікація містить таку інформацію:\n"
+"\n"
+"* назва: коротка назва ідентифікації\n"
+"* опис: може бути те саме коротке ім’я або довге ім’я\n"
+"* country_id: країна, до якої належить ця ідентифікація\n"
+"* is_vat: ідентифікувати цей запис як відповідний ПДВ для конкретної країни.\n"
+"* послідовність: давайте відсортуємо типи ідентифікації залежно від тих, які найчастіше використовуються.\n"
+"* активний: ми можемо активувати/деактивувати ідентифікацію, щоб полегшити роботу нашим клієнтам\n"
+"\n"
+"Щоб зробити цей модуль сумісним із кількома компаніями, де є компанії, які не потребують/підтримують цю вимогу, ми додали загальні типи ідентифікації та загальні правила для керування контактною інформацією та зробити її прозорою для користувача, коли використовується лише ПДВ, як ми знаємо раніше.\n"
+"\n"
+"Загальні ідентифікації:\n"
+"\n"
+"* ПДВ: Фіскальний податковий номер або номер платника ПДВ за замовчуванням буде вибрано як тип ідентифікації, тому користувачеві потрібно буде лише додати відповідний номер ПДВ.\n"
+"* Паспорт\n"
+"* Іноземне посвідчення особи (іноземний національний документ)\n"
+"\n"
+"Правила під час створення нового партнера: ми побачимо лише ті типи ідентифікації, які мають значення, враховуючи ці правила:\n"
+"\n"
+"* Якщо для партнера не встановлено адресу країни: відображатимуться загальні типи ідентифікації та ті, що визначені в країні пов’язаної компанії партнера (якщо партнер не має конкретної компанії, відображатимуться типи ідентифікації, пов’язані з поточною компанією користувача)\n"
+"\n"
+"* Якщо партнер має адресу в країні: буде показано загальні типи ідентифікації та ті, що визначені для країни партнера.\n"
+"\n"
+"Під час створення нової компанії для пов’язаного партнера завжди встановлюється тип ідентифікації пов’язаної країни is_vat.\n"
+"\n"
+"Усі визначені типи ідентифікації можна переглянути та активувати/деактивувати в меню «Контакти / Конфігурація / Тип ідентифікації».\n"
+"\n"
+"Цей модуль сумісний з модулем base_vat, щоб мати можливість перевіряти номери ПДВ для кожної країни, яка має або не має можливості керувати кількома типами ідентифікації.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract
@@ -1945,6 +2114,18 @@ msgid ""
 "- the company linked to the website is mexican\n"
 "- the option 'automatic_invoice' is enabled in the website settings (\"Generate the invoice automatically when the online payment is confirmed\")\n"
 msgstr ""
+"\n"
+"Додайте додаткову вкладку в процес оформлення замовлення веб-сайту/електронної комерції з мексиканськими полями:\n"
+"\n"
+"- l10n_mx_edi_cfdi_to_public (sale.order/account.move)\n"
+"- l10n_mx_edi_fiscal_regime (рес.партнер)\n"
+"- l10n_mx_edi_usage (sale.order/account.move)\n"
+"- l10n_mx_edi_no_tax_breakdown (рес.партнер)\n"
+"\n"
+"Додаткова вкладка з’являється, лише якщо:\n"
+"\n"
+"- компанія, пов’язана з веб-сайтом, є мексиканською\n"
+"- в налаштуваннях веб-сайту включена опція 'automatic_invoice' (\"Автоматично генерувати рахунок-фактуру після підтвердження онлайн-платежу\")\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm
@@ -1993,6 +2174,8 @@ msgid ""
 "\n"
 "Add support for the Declaration of Intent (Dichiarazione di Intento) to the Italian localization.\n"
 msgstr ""
+"\n"
+"Додайте підтримку Декларації про наміри (Dichiarazione di Intento) до італійської локалізації.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_facturx_chorus_pro
@@ -2000,6 +2183,8 @@ msgid ""
 "\n"
 "Add support to fill three optional fields used when using Chorus Pro, especially when invoicing public services.\n"
 msgstr ""
+"\n"
+"Додайте підтримку для заповнення трьох необов’язкових полів, які використовуються під час використання Chorus Pro, особливо під час виставлення рахунків за державні послуги.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_project
@@ -2158,6 +2343,16 @@ msgid ""
 "* Fast payment by just swiping/scanning a credit/debit card or a QR code while on the payment screen\n"
 "* Supported cards: Visa, MasterCard, Rupay, UPI\n"
 msgstr ""
+"\n"
+"Дозвольте платежі Paytm POS\n"
+"===============================\n"
+"\n"
+"Цей модуль дозволяє клієнтам оплачувати свої замовлення дебетовою/кредитною\n"
+"карткою та UPI. Транзакції обробляються Paytm POS. Потрібен обліковий запис продавця Paytm. Це дозволяє\n"
+"наступне:\n"
+"\n"
+"* Швидка оплата, просто провівши/сканувавши кредитну/дебетову картку або QR-код на екрані платежу\n"
+"* Підтримувані картки: Visa, MasterCard, Rupay, UPI\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_razorpay
@@ -2173,6 +2368,16 @@ msgid ""
 "* Fast payment by just swiping/scanning a credit/debit card or a QR code while on the payment screen\n"
 "* Supported cards: Visa, MasterCard, Rupay, UPI\n"
 msgstr ""
+"\n"
+"Дозвольте платежі через POS через Razorpay\n"
+"===============================\n"
+"\n"
+"Цей модуль дозволяє клієнтам оплачувати свої замовлення дебетовою/кредитною\n"
+"карткою та UPI. Транзакції обробляються через POS Razorpay. Необхідний обліковий запис продавця Razorpay. Це дозволяє\n"
+"наступне:\n"
+"\n"
+"* Швидка оплата, просто провівши/сканувавши кредитну/дебетову картку або QR-код на екрані платежу\n"
+"* Підтримувані картки: Visa, MasterCard, Rupay, UPI\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment
@@ -2294,6 +2499,10 @@ msgid ""
 "==================================================================================================\n"
 "This module allows the computation of the 'Vendor Bills', 'Other Costs' and 'Other Revenues' section for the project profitability, in the project update view.\n"
 msgstr ""
+"\n"
+"Дозволяє розрахувати деяку секцію прибутковості проєкту\n"
+"==================================================== ==================================================\n"
+"Цей модуль дозволяє обчислювати розділи «Рахунки постачальників», «Інші витрати» та «Інші доходи» для прибутковості проєкту в перегляді оновлення проєкту.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_purchase
@@ -2396,6 +2605,8 @@ msgid ""
 "\n"
 "Allows users to easily export accounting data that can be imported to a 3rd party that does 1099 e-filing.\n"
 msgstr ""
+"\n"
+"Дозволяє користувачам легко експортувати облікові дані, які можна імпортувати до третьої сторони, яка здійснює електронну подачу 1099.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_snailmail
@@ -2609,6 +2820,15 @@ msgid ""
 "    - activates a number of regional currencies.\n"
 "    - sets up Australian taxes.\n"
 msgstr ""
+"\n"
+"Австралійський модуль бухгалтерського обліку\n"
+"=============================\n"
+"\n"
+"Основні схеми оподаткування та локалізації бухгалтерського обліку в Австралії.\n"
+"\n"
+"також:\n"
+"- активує низку регіональних валют.\n"
+"- встановлює австралійські податки.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_reports
@@ -2764,6 +2984,13 @@ msgid ""
 "    - VAT tax structure\n"
 "    - Withholding tax structure\n"
 "    - Regional State listings\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_tr_nilvera
+msgid ""
+"\n"
+"Base module containing core functionalities required by other Nilvera modules.\n"
 msgstr ""
 
 #. module: base
@@ -4341,6 +4568,13 @@ msgstr ""
 msgid ""
 "\n"
 "Filters the stock lines out of the reconciliation widget\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_tr_nilvera_einvoice
+msgid ""
+"\n"
+"For sending and receiving electronic invoices to Nilvera.\n"
 msgstr ""
 
 #. module: base
@@ -38931,6 +39165,16 @@ msgstr "Туніс - Бухгалтерські звіти"
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__turkey
 msgid "Turkey"
 msgstr "Туреччина"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera
+msgid "Türkiye - Nilvera"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera_einvoice
+msgid "Türkiye - Nilvera E-Invoice"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.tm

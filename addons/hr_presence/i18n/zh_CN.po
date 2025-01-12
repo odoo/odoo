@@ -3,9 +3,9 @@
 # 	* hr_presence
 # 
 # Translators:
-# Chloe Wang, 2024
 # Wil Odoo, 2024
 # Odoo哥 <vnsoft.he@gmail.com>, 2024
+# Chloe Wang, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Odoo哥 <vnsoft.he@gmail.com>, 2024\n"
+"Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +39,14 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    亲爱的<t t-out=\"object.name or ''\">Abigail Peterson</t>，<br/><br/>\n"
+"希望您一切安好。我们注意到您目前没有上班，而系统并没有您的请假记录。如果您的缺勤是由于我们的疏忽造成的，我们诚挚地向您道歉。\n"
+"请采取必要的措施，处理这次意外缺勤。如果您有任何疑问或需要帮助，请尽早联系您的经理或人力资源部门。\n"
+"感谢您对此事作出及时关注。\n"
+"                    <br/>顺祝 安康<br/><br/>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
@@ -214,7 +222,7 @@ msgstr "意外缺席"
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 msgid "Unplanned Absence"
-msgstr ""
+msgstr "突发缺勤"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log

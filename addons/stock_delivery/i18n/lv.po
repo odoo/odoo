@@ -5,9 +5,9 @@
 # Translators:
 # ievaputnina <ievai.putninai@gmail.com>, 2024
 # Arnis Putniņš <arnis@allegro.lv>, 2024
-# Will Sensors, 2024
-# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
 # Martin Trigaux, 2024
+# Will Sensors, 2025
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2025\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -207,9 +207,21 @@ msgstr ""
 "Īstāas izmaksas: klientam tiks izrakstīts rēķins ar īstajām piegādes izmaksām, piegādes izmaksas tiks atjaunotas pārdošanas pasūtījumā pēc piegādes."
 
 #. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+msgid "Exception occurred with respect to carrier on the transfer"
+msgstr ""
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+msgid "Exception:"
+msgstr "Izņēmums:"
+
+#. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
 msgid "FedEx"
-msgstr ""
+msgstr "FedEx"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__hs_code
@@ -250,6 +262,12 @@ msgid "Last Updated on"
 msgstr "Pēdējās izmaiņas"
 
 #. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+msgid "Manual actions might be needed."
+msgstr ""
+
+#. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
 msgid "No carrier integration"
 msgstr ""
@@ -268,29 +286,29 @@ msgstr "Ražotājvalsts"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
 msgid "Package"
-msgstr "Paka"
+msgstr "Iepakojums"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Package Details"
-msgstr ""
+msgstr "Iepakojuma informācija"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/wizard/choose_delivery_package.py:0
 msgid "Package too heavy!"
-msgstr ""
+msgstr "Iepakojums ir pārāk smags!"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_quant_package
 msgid "Packages"
-msgstr ""
+msgstr "Iepakojumi"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__picking_id
 msgid "Picking"
-msgstr "Izsniegšana"
+msgstr "Komplektēšana"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
@@ -509,7 +527,7 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_picking
 msgid "Transfer"
-msgstr "Pārskaitījums"
+msgstr "Pārsūtījums"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move__weight
