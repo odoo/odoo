@@ -10,7 +10,6 @@
 # arya sadeghi <aryasadeghy@gmail.com>, 2023
 # Hamid Reza Kaveh <hamidrkp@riseup.net>, 2023
 # Sahar Daraye <sahar.daraye.1369@gmail.com>, 2023
-# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2023
 # Mohammad Tahmasebi <hit.tah75@gmail.com>, 2023
 # Arash Sardari <arashss77@gmail.com>, 2023
 # سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2023
@@ -34,6 +33,7 @@
 # Hamid Mirzapour, 2024
 # F Hariri <fhari1234@gmail.com>, 2024
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
+# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -41,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
+"Last-Translator: Faraz Sadri Alamdari <ifarazir@gmail.com>, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -650,6 +650,9 @@ msgid ""
 "('name', '!=', '/'), ('posted_before', '=', True), ('quick_edit_mode', '=', "
 "True)]}\">Draft</span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', '|', '|', ('state', '!=', 'draft'), "
+"('name', '!=', '/'), ('posted_before', '=', True), ('quick_edit_mode', '=', "
+"True)]}\">پیش‌نویس</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -6285,7 +6288,7 @@ msgstr "هر کاراکتری که نه رقم است و نه جداکننده �
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Example"
-msgstr ""
+msgstr "مثال"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__example_amount
@@ -6791,7 +6794,7 @@ msgstr "عنوان مالیات بر ارزش افزوده‌ی خارجی"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign account (%s)"
-msgstr ""
+msgstr "حساب خارجی (%s)"
 
 #. module: account
 #. odoo-python
@@ -7698,7 +7701,7 @@ msgstr "نصب بسته‌های بیشتر"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Install new module"
-msgstr ""
+msgstr "نصب ماژول جدید"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__integer
@@ -9599,7 +9602,7 @@ msgstr "به راحتی در گزارش ها حرکت کنید و ببینید �
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
 msgid "Nearest"
-msgstr ""
+msgstr "نزدیک‌ترین"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -9713,7 +9716,7 @@ msgstr "بدون پیگیری بعدی"
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__none
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__figure_type__none
 msgid "No Formatting"
-msgstr ""
+msgstr "بدون قالب‌بندی"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__no-message
@@ -11529,7 +11532,7 @@ msgstr "دوباره-دنباله"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__real_amount
 msgid "Real amount to apply"
-msgstr ""
+msgstr "مقدار واقعی جهت درخواست"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason

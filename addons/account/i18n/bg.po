@@ -31,7 +31,7 @@
 # Toma Tomov, 2024
 # Emil Krastev, 2024
 # Milena Georgieva, 2024
-# Petko Karamotchev, 2024
+# Petko Karamotchev, 2025
 # 
 msgid ""
 msgstr ""
@@ -39,7 +39,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Petko Karamotchev, 2024\n"
+"Last-Translator: Petko Karamotchev, 2025\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -13501,7 +13501,7 @@ msgstr "Данъци"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Taxes Applied"
-msgstr ""
+msgstr "Приложени данъци"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_form
@@ -13516,6 +13516,8 @@ msgid ""
 "Taxes exigible on payment and on invoice cannot be mixed on the same journal"
 " item if they share some tag."
 msgstr ""
+"Данъците, изискуеми при плащане и при фактуриране, не могат да бъдат "
+"смесвани в един и същи счетоводен запис, ако споделят някакъв етикет."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
@@ -13548,13 +13550,16 @@ msgid ""
 "tax-related features(hence the ones for which l10n modules need to show tax-"
 "related fields)."
 msgstr ""
+"Техническо поле, съдържащо страните, за които тази компания използва "
+"функции, свързани с данъци (и за които модулите за локализация (l10n) трябва"
+" да показват полета, свързани с данъци)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_partner_id
 #: model:ir.model.fields,help:account.field_account_move__bank_partner_id
 #: model:ir.model.fields,help:account.field_account_payment__bank_partner_id
 msgid "Technical field to get the domain on the bank"
-msgstr ""
+msgstr "Техническо поле за получаване на домейна за банката"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence_override_regex
@@ -13564,6 +13569,10 @@ msgid ""
 "The prefix* groups are the separators between the year, month and the actual increasing sequence number (seq).\n"
 "e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 msgstr ""
+"Техническо поле, което се използва за налагане на сложна композитна последователност, която системата обикновено би разбрала погрешно.\n"
+"Това е регулярното изражение (regex), което може да включва всички следните групи за улавяне: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"
+"Групите prefix са разделителите между годината, месеца и действителния увеличаващ се последователен номер (seq).\n"
+"Пример: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__chart_template_id
@@ -13583,7 +13592,7 @@ msgstr "Шаблон за фискална позиция"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
 msgid "Templates Found"
-msgstr ""
+msgstr "Намерени шаблони"
 
 #. module: account
 #: model:ir.model,name:account.model_account_account_template
@@ -13598,7 +13607,7 @@ msgstr "Шаблон за данъци"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__term_key
 msgid "Term Key"
-msgstr ""
+msgstr "Ключ за условие"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__line_ids
@@ -13610,25 +13619,25 @@ msgstr "Срокове"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_terms
 msgid "Terms & Conditions"
-msgstr ""
+msgstr "Условия и положения"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_terms_html
 msgid "Terms & Conditions as a Web page"
-msgstr ""
+msgstr "Условия и положения като уеб страница"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__terms_type
 #: model:ir.model.fields,field_description:account.field_res_config_settings__terms_type
 msgid "Terms & Conditions format"
-msgstr ""
+msgstr "Формат на условията и положенията"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Terms & Conditions: %s"
-msgstr ""
+msgstr "Условия и положения: %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__narration
@@ -13641,7 +13650,7 @@ msgstr "Срокове и условия"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
-msgstr ""
+msgstr "Това е датата на откриващия запис."
 
 #. module: account
 #. odoo-python
@@ -13661,6 +13670,8 @@ msgid ""
 "The Availability is set to 'Country Matches' but the field Country is not "
 "set."
 msgstr ""
+"Наличността е зададена на „Съвпадение с държава“, но полето „Държава“ не е "
+"зададено."
 
 #. module: account
 #. odoo-python
@@ -13668,6 +13679,8 @@ msgstr ""
 #, python-format
 msgid "The Bill/Refund date is required to validate this document."
 msgstr ""
+"Дата на фактурата/кредитното известие е задължителна за валидиране на този "
+"документ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__country_code
@@ -13695,6 +13708,8 @@ msgid ""
 "The Journal Entry sequence is not conform to the current format. Only the "
 "Accountant can change it."
 msgstr ""
+"Последователността на счетоводния запис не съответства на текущия формат. "
+"Само счетоводителят може да я промени."
 
 #. module: account
 #. odoo-python
@@ -13727,6 +13742,7 @@ msgstr ""
 #, python-format
 msgid "The account code can only contain alphanumeric characters and dots."
 msgstr ""
+"Кодът на сметката може да съдържа само алфавитни и числови символи и точки."
 
 #. module: account
 #. odoo-python
@@ -13736,6 +13752,8 @@ msgid ""
 "The account is already in use in a 'sale' or 'purchase' journal. This means "
 "that the account's type couldn't be 'receivable' or 'payable'."
 msgstr ""
+"Сметката вече се използва в дневник за „продажби“ или „покупки“. Това "
+"означава, че типът на сметката не може да бъде „вземания“ или „задължения“."
 
 #. module: account
 #. odoo-python
@@ -13745,6 +13763,8 @@ msgid ""
 "The account selected on your journal entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
 msgstr ""
+"Сметката, избрана във вашия счетоводен запис, изисква предоставяне на втора "
+"валута. Трябва да премахнете втората валута от сметката."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
@@ -13778,13 +13798,17 @@ msgid ""
 "same as the one from the company, this amount must strictly be equal to the "
 "balance."
 msgstr ""
+"The amount expressed in the secondary currency must be positive when account"
+" is debited and negative when account is credited. If the currency is the "
+"same as the one from the company, this amount must strictly be equal to the "
+"balance."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "The amount is not a number"
-msgstr ""
+msgstr "Сумата не е число"
 
 #. module: account
 #. odoo-python
@@ -13794,6 +13818,8 @@ msgid ""
 "The application scope of taxes in a group must be either the same as the "
 "group or left empty."
 msgstr ""
+"Обхватът на приложението на данъците в група трябва да бъде или същият като "
+"групата, или да бъде оставен празен."
 
 #. module: account
 #. odoo-python
@@ -13817,6 +13843,8 @@ msgid ""
 "The cash basis entries created from the taxes on this entry, when "
 "reconciling its lines."
 msgstr ""
+"Записите на касова основа, създадени от данъците върху този запис, при "
+"съгласуване на неговите редове."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__chart_template_id
@@ -13838,6 +13866,10 @@ msgid ""
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
 msgstr ""
+"Клиентът изрично се отказва от своите стандартни условия и положения, дори "
+"ако те са съставени след стандартните условия за продажба. За да бъдат "
+"валидни, всякакви отклонения трябва да бъдат изрично съгласувани "
+"предварително в писмен вид."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_account_code_company_uniq
@@ -13847,7 +13879,7 @@ msgstr "Кодът на сметката трябва да е уникален �
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_payment_method_name_code_unique
 msgid "The combination code/payment type already exists!"
-msgstr ""
+msgstr "Комбинацията код/тип плащане вече съществува!"
 
 #. module: account
 #. odoo-python
@@ -13857,11 +13889,13 @@ msgid ""
 "The combination of reference model and reference type on the journal is not "
 "implemented"
 msgstr ""
+"Комбинацията от модел на справка и тип на справка в дневника не е "
+"имплементирана."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
-msgstr ""
+msgstr "Компанията, към която принадлежи тази линия на разпределение."
 
 #. module: account
 #. odoo-python
@@ -13871,16 +13905,18 @@ msgid ""
 "The country code of the foreign VAT number does not match any country in the"
 " group."
 msgstr ""
+"Кодът на държавата за чуждестранния ДДС номер не съвпада с никаква държава в"
+" групата."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
 msgid "The country for which this tax group is applicable."
-msgstr ""
+msgstr "Държавата, за която е приложима тази данъчна група."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__country_id
 msgid "The country for which this tax is applicable."
-msgstr ""
+msgstr "Държавата, за която е приложим този данък."
 
 #. module: account
 #. odoo-python
@@ -13890,6 +13926,8 @@ msgid ""
 "The country set on the foreign VAT fiscal position must match the one set on"
 " the report."
 msgstr ""
+"Държавата, зададена във фискалната позиция за чуждестранен ДДС, трябва да "
+"съвпада с тази, зададена в отчета."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__country_id
@@ -13902,6 +13940,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_config_settings__account_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
 msgstr ""
+"Държавата, от която да се използват данъчните отчети за тази компания."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -13929,7 +13968,7 @@ msgstr "Валутата, използвана за да се въведе из�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "The current highest number is"
-msgstr ""
+msgstr "Настоящият най-висок номер е"
 
 #. module: account
 #. odoo-python
@@ -13968,7 +14007,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move__invoice_origin
 #: model:ir.model.fields,help:account.field_account_payment__invoice_origin
 msgid "The document(s) that generated the invoice."
-msgstr ""
+msgstr "Документ(ите), които са генерирали фактурата."
 
 #. module: account
 #. odoo-python
@@ -13995,7 +14034,7 @@ msgstr ""
 #: code:addons/account/controllers/portal.py:0
 #, python-format
 msgid "The field %s must be filled."
-msgstr ""
+msgstr "Полето %s трябва да бъде попълнено."
 
 #. module: account
 #. odoo-python
@@ -14005,6 +14044,8 @@ msgid ""
 "The field 'Customer' is required, please complete it to validate the "
 "Customer Invoice."
 msgstr ""
+"Полето 'Клиент' е задължително, моля попълнете го, за да валидирате "
+"фактурата за клиент."
 
 #. module: account
 #. odoo-python
@@ -14014,6 +14055,8 @@ msgid ""
 "The field 'Vendor' is required, please complete it to validate the Vendor "
 "Bill."
 msgstr ""
+"Полето 'Доставчик' е задължително, моля попълнете го, за да валидирате "
+"сметката за доставчик."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_position_id
@@ -14021,11 +14064,13 @@ msgstr ""
 msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
 msgstr ""
+"Фискалната позиция определя данъците/сметките, които се използват за този "
+"контакт."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "The following Journal Entries will be generated"
-msgstr ""
+msgstr "Следните счетоводни записи ще бъдат генерирани"
 
 #. module: account
 #. odoo-python
@@ -14035,6 +14080,8 @@ msgid ""
 "The following error prevented '%s' QR-code to be generated though it was "
 "detected as eligible: "
 msgstr ""
+"Следната грешка предотврати генерирането на QR код '%s' въпреки че беше "
+"открит като допустим:"
 
 #. module: account
 #. odoo-python
@@ -14052,6 +14099,8 @@ msgstr ""
 msgid ""
 "The following regular expression is invalid to create a partner mapping: %s"
 msgstr ""
+"Следното редовно изражение е невалидно за създаване на съответствие на "
+"партньор: %s"
 
 #. module: account
 #. odoo-python
@@ -14059,6 +14108,7 @@ msgstr ""
 #, python-format
 msgid "The foreign currency must be different than the journal one: %s"
 msgstr ""
+"Чуждестранната валута трябва да бъде различна от валутата на дневника: %s"
 
 #. module: account
 #. odoo-python
