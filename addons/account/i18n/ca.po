@@ -41,7 +41,7 @@
 # Eugeni Chafer <eugeni@chafer.cat>, 2024
 # Josep Anton Belchi, 2024
 # EstudiTIC - estuditic.com <odoo@estuditic.com>, 2024
-# Xavier, 2024
+# Xavier, 2025
 # 
 msgid ""
 msgstr ""
@@ -49,7 +49,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-11-14 14:13+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Xavier, 2024\n"
+"Last-Translator: Xavier, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7418,7 +7418,7 @@ msgstr "IBAN"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_preview
 msgid "IBAN: BE76 4294 6878 9995"
-msgstr ""
+msgstr "IBAN: BE76 4294 6878 9995"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
@@ -7736,29 +7736,29 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__ignore_abnormal_amount
 msgid "Ignore Abnormal Amount"
-msgstr ""
+msgstr "Ignora l'import anormal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__ignore_abnormal_date
 msgid "Ignore Abnormal Date"
-msgstr ""
+msgstr "Ignora la data anormal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__ignore_abnormal_invoice_amount
 #: model:ir.model.fields,field_description:account.field_res_users__ignore_abnormal_invoice_amount
 msgid "Ignore Abnormal Invoice Amount"
-msgstr ""
+msgstr "Ignoreu l'import anormal de la factura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__ignore_abnormal_invoice_date
 #: model:ir.model.fields,field_description:account.field_res_users__ignore_abnormal_invoice_date
 msgid "Ignore Abnormal Invoice Date"
-msgstr ""
+msgstr "Ignoreu la data anormal de la factura"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Ignore future alerts"
-msgstr ""
+msgstr "Ignorar les properes alertes"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -7856,7 +7856,7 @@ msgstr "Hash d'inalterabilitat"
 #: model:ir.model.fields,field_description:account.field_account_move__secure_sequence_number
 #: model:ir.model.fields,field_description:account.field_account_payment__secure_sequence_number
 msgid "Inalterability No Gap Sequence #"
-msgstr ""
+msgstr "Seqüència d'inalterabilitat sense espais #"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -7920,6 +7920,8 @@ msgid ""
 "Incorrect fiscal year date: day is out of range for month. Month: %(month)s;"
 " Day: %(day)s"
 msgstr ""
+"Data de l'any fiscal incorrecta: el dia està fora de l'interval del mes. "
+"Mes: %(month)s; Dia: %(day)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -8000,7 +8002,7 @@ msgstr "Enter"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__integer_rounding
 msgid "Integer Rounding"
-msgstr ""
+msgstr "Arredoniment d'enters"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__transfer_account_id
@@ -8096,6 +8098,7 @@ msgstr ""
 msgid ""
 "Internal field to shorten expression_ids creation for the tax_tags engine"
 msgstr ""
+"Camp intern per escurçar la creació d'expression_ids per al motor tax_tags"
 
 #. module: account
 #. odoo-javascript
@@ -8142,6 +8145,8 @@ msgstr ""
 msgid ""
 "Invalid domain for expression '%(label)s' of line '%(line)s': %(formula)s"
 msgstr ""
+"El domini per a l'expressió '%(label)s' de la línia '%(line)s' no és vàlid: "
+"%(formula)s"
 
 #. module: account
 #. odoo-python
@@ -16052,7 +16057,7 @@ msgstr "Unitat de mesura"
 #. odoo-python
 #: code:addons/account/models/template_generic_coa.py:0
 msgid "United States of America (Generic)"
-msgstr ""
+msgstr "Estats Units d'Amèrica (genèric)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -17050,6 +17055,8 @@ msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
 msgstr ""
+"No podeu restablir l'esborrany d'aquestes assentaments comptables. En el seu"
+" lloc, heu de sol·licitar una cancel·lació."
 
 #. module: account
 #. odoo-python
@@ -17192,6 +17199,8 @@ msgid ""
 "You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %(entry)s (%(id)s)"
 msgstr ""
+"No pot fer aquesta modificació en un assentament conciliat. Podeu canviar alguns camps no legals, o trencar abans la conciliació. \n"
+"Assentament (ID):%(entry)s (%(id)s)"
 
 #. module: account
 #. odoo-python
@@ -17213,6 +17222,9 @@ msgid ""
 "unless the name is removed or set to \"/\". This might create a gap in the "
 "sequence."
 msgstr ""
+"No podeu modificar el diari d'un assentament si ja s'ha publicat una vegada,"
+" llevat que s'elimini el nom o es posi \"/\". Això podria crear un espai a "
+"la seqüència."
 
 #. module: account
 #. odoo-python
@@ -17222,6 +17234,9 @@ msgid ""
 "assigned, unless the name is removed or set to \"/\". This might create a "
 "gap in the sequence."
 msgstr ""
+"No podeu editar el diari d'un assentament amb un número de seqüència "
+"assignat, llevat que s'elimini el nom o es posi \"/\". Això podria crear un "
+"espai a la seqüència."
 
 #. module: account
 #. odoo-python
@@ -17292,6 +17307,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot modify the following readonly fields on a posted move: %s"
 msgstr ""
+"No podeu modificar els següents camps de només lectura en un moviment "
+"publicat: %s"
 
 #. module: account
 #. odoo-python
@@ -17413,6 +17430,8 @@ msgid ""
 "You cannot use the field carryover_target in an expression that does not "
 "have the label starting with _carryover_"
 msgstr ""
+"No podeu utilitzar el camp carryover_target en una expressió que no tingui "
+"l'etiqueta que comenci per _carryover_"
 
 #. module: account
 #. odoo-python
@@ -17755,7 +17774,7 @@ msgstr "entrades"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "fall outside the typical range."
-msgstr ""
+msgstr "queden fora del rang típic."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -17796,7 +17815,7 @@ msgstr "factures"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "is a key action. Have you reviewed everything?"
-msgstr ""
+msgstr "és una acció clau. Ho has revisat tot?"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -17825,12 +17844,12 @@ msgstr "La llei."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "listed below for this customer."
-msgstr ""
+msgstr "que s'indiquen a continuació per a aquest client."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "listed below for this vendor."
-msgstr ""
+msgstr "que s'indiquen a continuació per a aquest proveïdor."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -17994,7 +18013,7 @@ msgstr "usuari"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "will auto-confirm on their respective dates."
-msgstr ""
+msgstr "confirmaran automàticament les dates respectives."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

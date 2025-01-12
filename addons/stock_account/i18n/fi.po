@@ -17,7 +17,7 @@
 # Martin Trigaux, 2024
 # Miku Laitinen <miku.laitinen@gmail.com>, 2024
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-15 18:11+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -293,6 +293,8 @@ msgid ""
 "Costing method change for product category %(category)s: from %(old_method)s"
 " to %(new_method)s."
 msgstr ""
+"Kustannuslaskentamenetelmän muutos tuoteryhmässä %(category)s: "
+"%(old_method)s-stä %(new_method)s-een."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
@@ -394,6 +396,9 @@ msgid ""
 "%(new_category)s), the costing method has changed for product %(product)s: "
 "from %(old_method)s to %(new_method)s."
 msgstr ""
+"Koska tuoteryhmä on muuttunut (%(old_category)s:sta %(new_category)s:ksi), "
+"kustannuslaskentamenetelmä on muuttunut tuotteen %(product)s osalta: "
+"%(old_method)s:sta %(new_method)s:ksi."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -585,6 +590,8 @@ msgstr "Tuotevariaatio"
 msgid ""
 "Product value manually modified (from %(original_price)s to %(new_price)s)"
 msgstr ""
+"Tuotteen arvoa muutettu manuaalisesti (arvosta %(original_price)s arvoon "
+"%(new_price)s)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
@@ -843,6 +850,9 @@ msgid ""
 "the locations in a way that changes the valuation logic defined during the "
 "initial processing."
 msgstr ""
+"Muuton varastoarvostus perustuu lähtö- ja määräpaikan tyyppiin. Koska siirto"
+" on jo käsitelty, et voi muuttaa sijainteja siten, että alkuperäisen "
+"käsittelyn aikana määritetty arvostuslogiikka muuttuu."
 
 #. module: stock_account
 #. odoo-python
@@ -994,6 +1004,8 @@ msgid ""
 "Valuation method change for product category %(category)s: from "
 "%(old_method)s to %(new_method)s."
 msgstr ""
+"Arviointimenetelmän muutos tuoteryhmässä %(category)s: %(old_method)s-stä "
+"%(new_method)s-een."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
@@ -1158,4 +1170,4 @@ msgstr "yksiköt"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_graph
 msgid "valuation graph"
-msgstr ""
+msgstr "arviointikaavio"

@@ -9326,7 +9326,7 @@ msgstr "Сообщение о дате блокировки"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Lock Entries Manually"
-msgstr ""
+msgstr "Ручная блокировка проводок"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -9334,7 +9334,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_payment__restrict_mode_hash_table
 msgid "Lock Sent Invoices with Hash"
-msgstr ""
+msgstr "Блокировка отправленных счетов с использованием хэша"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__lock_trust_fields
@@ -10156,7 +10156,7 @@ msgstr "Не оплачено"
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_sent_values__not_sent
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Not Sent"
-msgstr ""
+msgstr "Не отправлено"
 
 #. module: account
 #. odoo-javascript
@@ -11154,7 +11154,7 @@ msgstr "Квитанция об оплате"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_receipt_title
 msgid "Payment Receipt Title"
-msgstr ""
+msgstr "Название квитанции об оплате"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_reference
@@ -11552,7 +11552,7 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.1_prepaid_expenses
 msgid "Prepaid Expenses"
-msgstr ""
+msgstr "Авансовые расходы"
 
 #. module: account
 #: model:account.account,name:account.1_prepayments
@@ -12917,7 +12917,7 @@ msgstr "Отправка счетов-фактур"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
 msgid "Sending these invoices will create a gap in the sequence."
-msgstr ""
+msgstr "Отправка этих счетов создаст разрыв в последовательности."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__move_sent_values
@@ -13164,7 +13164,7 @@ msgstr "Налог на прибыль включен"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Show Journal Entries to Hash"
-msgstr ""
+msgstr "Показать записи журнала для хэширования"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_name_warning
@@ -13221,7 +13221,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Show draft entries"
-msgstr ""
+msgstr "Показать черновые записи"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -13257,6 +13257,8 @@ msgid ""
 "Some journal entries have not been hashed yet. You should hash them before "
 "locking the fiscal year."
 msgstr ""
+"Некоторые записи журнала ещё не хэшированы. Вам следует хэшировать их перед "
+"блокировкой финансового года."
 
 #. module: account
 #. odoo-python
@@ -14264,6 +14266,8 @@ msgid ""
 "The amount for %(partner_name)s appears unusual. Based on your historical data, the expected amount is %(mean)s (± %(wiggle)s).\n"
 "Please verify if this amount is accurate."
 msgstr ""
+"Сумма для %(partner_name)s кажется необычной. На основе ваших исторических данных ожидаемая сумма составляет %(mean)s (± %(wiggle)s).\n"
+"Пожалуйста, проверьте, верна ли эта сумма."
 
 #. module: account
 #. odoo-python
@@ -14302,6 +14306,8 @@ msgid ""
 "The billing frequency for %(partner_name)s appears unusual. Based on your historical data, the expected next invoice date is not before %(expected_date)s (every %(mean)s (± %(wiggle)s) days).\n"
 "Please verify if this date is accurate."
 msgstr ""
+"Частота выставления счетов для %(partner_name)s кажется необычной. На основе ваших исторических данных следующая ожидаемая дата счёта не раньше %(expected_date)s (каждые %(mean)s (± %(wiggle)s дней).\n"
+"Пожалуйста, проверьте, верна ли эта дата."
 
 #. module: account
 #. odoo-javascript
@@ -15138,6 +15144,8 @@ msgid ""
 "There are still draft entries in the period you want to lock. You should "
 "either post or delete them."
 msgstr ""
+"В периоде, который вы хотите заблокировать, всё ещё есть черновые записи. "
+"Вам следует либо провести их, либо удалить."
 
 #. module: account
 #. odoo-python
@@ -15164,6 +15172,8 @@ msgstr ""
 msgid ""
 "There is no journal entry flagged for accounting data inalterability yet."
 msgstr ""
+"На данный момент нет записей журнала, отмеченных как неизменяемые для "
+"бухгалтерских данных."
 
 #. module: account
 #. odoo-python
@@ -15312,6 +15322,8 @@ msgid ""
 "This document is protected by a hash. Therefore, you cannot edit the "
 "following fields: %s."
 msgstr ""
+"Этот документ защищён хэшем. Поэтому вы не можете редактировать следующие "
+"поля: %sё."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__name_searchable
@@ -15417,7 +15429,7 @@ msgstr "Этот журнал связан с методом оплаты. Вы 
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "This journal is not restricted"
-msgstr ""
+msgstr "Этот журнал не ограничен"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
@@ -15444,12 +15456,15 @@ msgid ""
 "- some move with the same sequence prefix has a higher number. You may need to resequence it.\n"
 "- the move's date is anterior to the lock date"
 msgstr ""
+"Эта проводка не может быть заблокирована, потому что:\n"
+"- некоторые проводки с тем же префиксом последовательности имеют больший номер. Возможно, потребуется изменить их последовательность.\n"
+"- дата проводки предшествует дате блокировки."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This move has been locked."
-msgstr ""
+msgstr "Эта проводка была заблокирована."
 
 #. module: account
 #. odoo-python
@@ -15988,12 +16003,12 @@ msgstr "Развернуть все"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_unhashed_entries
 msgid "Unhashed Entries"
-msgstr ""
+msgstr "Нехэшированные записи"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Unhashed entries"
-msgstr ""
+msgstr "Нехэшированные записи"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__code
@@ -17237,6 +17252,8 @@ msgstr "Вы не можете объединять счета."
 msgid ""
 "You cannot modify a sent entry of this journal because it is in strict mode."
 msgstr ""
+"Вы не можете изменить отправленную запись этого журнала, так как он "
+"находится в строгом режиме."
 
 #. module: account
 #. odoo-python
@@ -17580,7 +17597,7 @@ msgstr "активировать валюту счета-фактуры"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "alias"
-msgstr ""
+msgstr "псевдоним"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -17719,7 +17736,7 @@ msgstr "например https://www.ваш домейн.com"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. mycompany.com"
-msgstr ""
+msgstr "например, mycompany.com"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -17729,7 +17746,7 @@ msgstr "записи"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "fall outside the typical range."
-msgstr ""
+msgstr "выходят за пределы типичного диапазона."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -17986,6 +18003,8 @@ msgid ""
 "{amount} ({debit_credit}) from <strong>{account_source_name}</strong> were "
 "transferred to <strong>{account_target_name}</strong> by {link}"
 msgstr ""
+"{amount} ({debit_credit}) с <strong>{account_source_name}</strong> были "
+"переведены на <strong>{account_target_name}</strong> через {link}"
 
 #. module: account
 #. odoo-python
