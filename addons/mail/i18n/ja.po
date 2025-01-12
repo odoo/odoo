@@ -149,23 +149,6 @@ msgid "%(name)s: %(message)s)"
 msgstr "%(name)s: %(message)s)"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid ""
-"%(new_line)s%(new_line)sType %(bold_start)s@username%(bold_end)s to mention "
-"someone, and grab their attention.%(new_line)sType "
-"%(bold_start)s#channel%(bold_end)s to mention a channel.%(new_line)sType "
-"%(bold_start)s/command%(bold_end)s to execute a command.%(new_line)sType "
-"%(bold_start)s:shortcut%(bold_end)s to insert a canned response in your "
-"message."
-msgstr ""
-"%(new_line)s%(new_line)sタイプ %(bold_start)s@username%(bold_end)s "
-"して誰かをメンションし、その人の注意を引きます。%(new_line)sタイプ %(bold_start)s#channel%(bold_end)s "
-"してチャネルをメンションします。%(new_line)sタイプ %(bold_start)s/command%(bold_end)s "
-"でコマンドを実行します。%(new_line)sタイプ %(bold_start)s:shortcut%(bold_end)s "
-"でメッセージ内に定型回答を挿入します。"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid ""
@@ -4016,18 +3999,6 @@ msgstr "テンプレートの元となるファイル。壊れたテンプレー
 #: code:addons/mail/static/src/core/common/attachment_upload_service.js:0
 msgid "File too large"
 msgstr "ファイルが大きすぎます。"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
-msgid "File upload is disabled for external users"
-msgstr "ファイルのアップロードは外部ユーザに対しては無効です。"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
-msgid "File upload is enabled for external users"
-msgstr "外部ユーザに対してファイルアップロードを有効化されました。"
 
 #. module: mail
 #. odoo-javascript
@@ -9723,6 +9694,13 @@ msgid "This field is case insensitive."
 msgstr "このフィールドでは大文字と小文字は区別されません。"
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_discuss_channel__allow_public_upload
+msgid ""
+"This field is deprecated and has no effect, it will be removed in future "
+"versions."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__description
 msgid "This field is used for internal description of the template's usage."
 msgstr "このフィールドはテンプレート使用の内部説明用に使用されます。"
@@ -10536,12 +10514,6 @@ msgid "Username"
 msgstr "ユーザ名"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "Users in this channel: %(members)s."
-msgstr "このチャネルのユーザ: %(members)s。"
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__restrict_template_rendering
 msgid ""
 "Users will still be able to render templates.\n"
@@ -10879,24 +10851,6 @@ msgstr "このグループ会話から退出し、再度招待されない限り
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "You are alone in a private conversation."
-msgstr "プライベートな会話であなただけです。"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "You are alone in this channel."
-msgstr "あなたはこのチャンネルに一人でいます。"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "You are in a private conversation with %(member_names)s."
-msgstr "あなたは %(member_names)sとプライベートな会話中です。"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "You are in channel %(bold_start)s#%(channel_name)s%(bold_end)s."
 msgstr "あなたはチャネル%(bold_start)s#%(channel_name)s%(bold_end)sに居ます。"
 
@@ -10924,12 +10878,6 @@ msgstr "このスケジュール済メッセージを送る権利がありませ
 #: code:addons/mail/controllers/attachment.py:0
 msgid "You are not allowed to upload an attachment here."
 msgstr "ここに添付をアップロードする権限がありません。"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/controllers/attachment.py:0
-msgid "You are not allowed to upload attachments on this channel."
-msgstr "このチャネルに添付をアップロードする権限がありません。"
 
 #. module: mail
 #. odoo-javascript
@@ -11023,6 +10971,12 @@ msgid "You have been invited to #%s"
 msgstr " #%sに招待されました。"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
+msgid "You left %(channel)s."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__attachment_ids
 msgid ""
 "You may attach files to this template, to be added to all emails created "
@@ -11041,18 +10995,6 @@ msgstr "抽象モデルにテンプレートを定義することはできませ
 msgid ""
 "You sure want this message pinned to %(conversation)s forever and ever?"
 msgstr "本当にこのメッセージを今後ずっと%(conversation)sに固定しておきますか？"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
-msgid "You unpinned %(conversation_name)s"
-msgstr "%(conversation_name)sを固定しました"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
-msgid "You unpinned your conversation with %(user_name)s"
-msgstr "%(user_name)sとの会話を固定解除しました"
 
 #. module: mail
 #. odoo-javascript
@@ -11555,12 +11497,6 @@ msgid "months"
 msgstr "か月"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "more"
-msgstr "さらに"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_dialog.xml:0
 msgid "morning"
@@ -11740,12 +11676,6 @@ msgstr "WebSocketメッセージ処理"
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__weeks
 msgid "weeks"
 msgstr "週"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "you"
-msgstr "あなた"
 
 #. module: mail
 #. odoo-python

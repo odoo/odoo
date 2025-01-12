@@ -155,24 +155,6 @@ msgid "%(name)s: %(message)s)"
 msgstr "%(name)s: %(message)s)"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid ""
-"%(new_line)s%(new_line)sType %(bold_start)s@username%(bold_end)s to mention "
-"someone, and grab their attention.%(new_line)sType "
-"%(bold_start)s#channel%(bold_end)s to mention a channel.%(new_line)sType "
-"%(bold_start)s/command%(bold_end)s to execute a command.%(new_line)sType "
-"%(bold_start)s:shortcut%(bold_end)s to insert a canned response in your "
-"message."
-msgstr ""
-"%(new_line)s%(new_line)s พิมพ์ %(bold_start)s@username%(bold_end)s "
-"เพื่อกล่าวถึงใครบางคน และดึงดูดความสนใจของพวกเขา %(new_line)s พิมพ์ "
-"%(bold_start)s#channel%(bold_end)s เพื่อกล่าวถึงช่อง %(new_line)s พิมพ์ "
-"%(bold_start)s/command%(bold_end)s เพื่อดำเนินการคำสั่ง %(new_line)s พิมพ์ "
-"%(bold_start)s:shortcut%(bold_end)s "
-"เพื่อแทรกการตอบกลับสำเร็จรูปในข้อความของคุณ"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid ""
@@ -4090,18 +4072,6 @@ msgstr "ไฟล์จากที่ที่เทมเพลตเริ่
 #: code:addons/mail/static/src/core/common/attachment_upload_service.js:0
 msgid "File too large"
 msgstr "ไฟล์มีขนาดใหญ่เกินไป"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
-msgid "File upload is disabled for external users"
-msgstr "การอัปโหลดไฟล์ถูกปิดใช้งานสำหรับผู้ใช้ภายนอก"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
-msgid "File upload is enabled for external users"
-msgstr "เปิดใช้งานการอัปโหลดไฟล์สำหรับผู้ใช้ภายนอก"
 
 #. module: mail
 #. odoo-javascript
@@ -9896,6 +9866,13 @@ msgid "This field is case insensitive."
 msgstr "ฟิลด์นี้ไม่คำนึงถึงตัวพิมพ์เล็กและตัวพิมพ์ใหญ่"
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_discuss_channel__allow_public_upload
+msgid ""
+"This field is deprecated and has no effect, it will be removed in future "
+"versions."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__description
 msgid "This field is used for internal description of the template's usage."
 msgstr "ฟิลด์นี้ใช้สำหรับคำอธิบายภายในของการใช้งานเทมเพลต"
@@ -10716,12 +10693,6 @@ msgid "Username"
 msgstr "ชื่อผู้ใช้"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "Users in this channel: %(members)s."
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__restrict_template_rendering
 msgid ""
 "Users will still be able to render templates.\n"
@@ -11071,24 +11042,6 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "You are alone in a private conversation."
-msgstr "คุณอยู่คนเดียวในการสนทนาส่วนตัว"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "You are alone in this channel."
-msgstr "คุณอยู่คนเดียวในช่องนี้"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "You are in a private conversation with %(member_names)s."
-msgstr "คุณกำลังสนทนาส่วนตัวกับ %(member_names)s"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "You are in channel %(bold_start)s#%(channel_name)s%(bold_end)s."
 msgstr "คุณอยู่ในช่อง %(bold_start)s#%(channel_name)s%(bold_end)s"
 
@@ -11116,12 +11069,6 @@ msgstr "คุณไม่ได้รับอนุญาตให้ส่ง
 #: code:addons/mail/controllers/attachment.py:0
 msgid "You are not allowed to upload an attachment here."
 msgstr "คุณไม่ได้รับอนุญาตให้อัปโหลดไฟล์แนบที่นี่"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/controllers/attachment.py:0
-msgid "You are not allowed to upload attachments on this channel."
-msgstr "คุณไม่ได้รับอนุญาตให้อัปโหลดไฟล์แนบในช่องนี้"
 
 #. module: mail
 #. odoo-javascript
@@ -11224,6 +11171,12 @@ msgid "You have been invited to #%s"
 msgstr "คุณได้รับเชิญให้เข้าร่วม #%s"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
+msgid "You left %(channel)s."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__attachment_ids
 msgid ""
 "You may attach files to this template, to be added to all emails created "
@@ -11244,18 +11197,6 @@ msgid ""
 "You sure want this message pinned to %(conversation)s forever and ever?"
 msgstr ""
 "คุณแน่ใจหรือว่าต้องการให้ข้อความนี้ปักหมุดไว้ที่ %(conversation)s ตลอดไป?"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
-msgid "You unpinned %(conversation_name)s"
-msgstr "คุณได้ยกเลิกการปักหมุด %(conversation_name)s แล้ว"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
-msgid "You unpinned your conversation with %(user_name)s"
-msgstr "คุณได้ยกเลิกการปักหมุดการสนทนาของคุณกับ %(user_name)s แล้ว"
 
 #. module: mail
 #. odoo-javascript
@@ -11760,12 +11701,6 @@ msgid "months"
 msgstr "เดือน"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "more"
-msgstr "เพิ่มเติม"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_dialog.xml:0
 msgid "morning"
@@ -11947,12 +11882,6 @@ msgstr "การจัดการข้อความของ websocket"
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__weeks
 msgid "weeks"
 msgstr "สัปดาห์"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "you"
-msgstr "คุณ"
 
 #. module: mail
 #. odoo-python

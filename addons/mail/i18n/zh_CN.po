@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Odoo哥 <vnsoft.he@gmail.com>, 2025
-# Chloe Wang, 2025
 # Wil Odoo, 2025
+# Chloe Wang, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-24 15:31+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -148,22 +148,6 @@ msgstr "%(model_name)s.%(field_path)s 似乎不是有效的字段路径"
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "%(name)s: %(message)s)"
 msgstr "%(name)s: %(message)s)"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid ""
-"%(new_line)s%(new_line)sType %(bold_start)s@username%(bold_end)s to mention "
-"someone, and grab their attention.%(new_line)sType "
-"%(bold_start)s#channel%(bold_end)s to mention a channel.%(new_line)sType "
-"%(bold_start)s/command%(bold_end)s to execute a command.%(new_line)sType "
-"%(bold_start)s:shortcut%(bold_end)s to insert a canned response in your "
-"message."
-msgstr ""
-"%(new_line)s%(new_line)s输入 %(bold_start)s@username%(bold_end)s "
-"提及某人，以吸引他们注意。%(new_line)s输入 %(bold_start)s#channel%(bold_end)s "
-"以提及该频道。%(new_line)s输入 %(bold_start)s/command%(bold_end)s "
-"以执行指令。%(new_line)s输入 %(bold_start)s:shortcut%(bold_end)s 以在信息中插入预设回复。"
 
 #. module: mail
 #. odoo-javascript
@@ -4005,18 +3989,6 @@ msgstr "文件过大"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
-msgid "File upload is disabled for external users"
-msgstr "外部用户无法上传文件"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
-msgid "File upload is enabled for external users"
-msgstr "外部用户可上传文件"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
 msgid "Files"
 msgstr "文件"
@@ -7067,7 +7039,7 @@ msgstr "在讨论打开"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/attachment_view.xml:0
 msgid "Open preview in a separate window."
-msgstr ""
+msgstr "在单独窗口中打开预览。"
 
 #. module: mail
 #. odoo-python
@@ -9690,6 +9662,13 @@ msgid "This field is case insensitive."
 msgstr "此字段不区分大小写。"
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_discuss_channel__allow_public_upload
+msgid ""
+"This field is deprecated and has no effect, it will be removed in future "
+"versions."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__description
 msgid "This field is used for internal description of the template's usage."
 msgstr "此字段用于模板使用情况的内部描述。"
@@ -10499,12 +10478,6 @@ msgid "Username"
 msgstr "用户名"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "Users in this channel: %(members)s."
-msgstr "此频道内的用户：%(members)s。"
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__restrict_template_rendering
 msgid ""
 "Users will still be able to render templates.\n"
@@ -10842,24 +10815,6 @@ msgstr "您即将离开此群组对话，除非再次受到邀请，否则将无
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "You are alone in a private conversation."
-msgstr "您正独自一人在私人对话内。"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "You are alone in this channel."
-msgstr "您是此频道的唯一用户."
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "You are in a private conversation with %(member_names)s."
-msgstr "你正在私人对话内，其他成员有：%(member_names)s。"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "You are in channel %(bold_start)s#%(channel_name)s%(bold_end)s."
 msgstr "你正在频道 %(bold_start)s#%(channel_name)s%(bold_end)s。"
 
@@ -10887,12 +10842,6 @@ msgstr "不允许发送这则预定的消息"
 #: code:addons/mail/controllers/attachment.py:0
 msgid "You are not allowed to upload an attachment here."
 msgstr "您无权在此处上传附件。"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/controllers/attachment.py:0
-msgid "You are not allowed to upload attachments on this channel."
-msgstr "本频道不允许上传附件。"
 
 #. module: mail
 #. odoo-javascript
@@ -10986,6 +10935,12 @@ msgid "You have been invited to #%s"
 msgstr "您已受邀参加  #%s"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
+msgid "You left %(channel)s."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__attachment_ids
 msgid ""
 "You may attach files to this template, to be added to all emails created "
@@ -11004,18 +10959,6 @@ msgstr "无法在抽象模型上定义模板：%s"
 msgid ""
 "You sure want this message pinned to %(conversation)s forever and ever?"
 msgstr "您确定要把这条信息永久置顶在%(conversation)s上？"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
-msgid "You unpinned %(conversation_name)s"
-msgstr "您取消置顶了 %(conversation_name)s"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
-msgid "You unpinned your conversation with %(user_name)s"
-msgstr "您与%(user_name)s的对话已取消置顶"
 
 #. module: mail
 #. odoo-javascript
@@ -11516,12 +11459,6 @@ msgid "months"
 msgstr "月"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "more"
-msgstr "更多"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_dialog.xml:0
 msgid "morning"
@@ -11701,12 +11638,6 @@ msgstr "websocket消息处理"
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__weeks
 msgid "weeks"
 msgstr "周"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "you"
-msgstr "你"
 
 #. module: mail
 #. odoo-python

@@ -151,22 +151,6 @@ msgid "%(name)s: %(message)s)"
 msgstr "%(name)s: %(message)s)"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid ""
-"%(new_line)s%(new_line)sType %(bold_start)s@username%(bold_end)s to mention "
-"someone, and grab their attention.%(new_line)sType "
-"%(bold_start)s#channel%(bold_end)s to mention a channel.%(new_line)sType "
-"%(bold_start)s/command%(bold_end)s to execute a command.%(new_line)sType "
-"%(bold_start)s:shortcut%(bold_end)s to insert a canned response in your "
-"message."
-msgstr ""
-"%(new_line)s%(new_line)s%(bold_start)s@username%(bold_end)s을 입력하여 누군가를 태그하고 "
-"관심을 끌 수 있습니다. %(new_line)s%(bold_start)s#channel%(bold_end)s을 입력하여 채널을 "
-"멘션합니다.%(new_line)s%(bold_start)s/command%(bold_end)s를 입력하여 명령을 실행할 수 있습니다. "
-"%(new_line)s미리 준비된 응답을 메시지에 삽입하려면 %(bold_start)s:바로가기%(bold_end)s를 입력합니다."
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid ""
@@ -4033,18 +4017,6 @@ msgstr "서식이 만들어진 원래의 파일입니다. 서식이 손상된 �
 #: code:addons/mail/static/src/core/common/attachment_upload_service.js:0
 msgid "File too large"
 msgstr "파일이 너무 큽니다"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
-msgid "File upload is disabled for external users"
-msgstr "외부 사용자는 파일 업로드를 할 수 없습니다."
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
-msgid "File upload is enabled for external users"
-msgstr "외부 사용자가 파일 업로드를 할 수 있습니다."
 
 #. module: mail
 #. odoo-javascript
@@ -9751,6 +9723,13 @@ msgid "This field is case insensitive."
 msgstr "이 필드는 대소문자를 구분하지 않습니다."
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_discuss_channel__allow_public_upload
+msgid ""
+"This field is deprecated and has no effect, it will be removed in future "
+"versions."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__description
 msgid "This field is used for internal description of the template's usage."
 msgstr "이 필드는 서식 사용에 대한 내부 설명용으로 사용합니다."
@@ -10564,12 +10543,6 @@ msgid "Username"
 msgstr "사용자 이름"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "Users in this channel: %(members)s."
-msgstr "이 채널의 사용자: %(members)s."
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__restrict_template_rendering
 msgid ""
 "Users will still be able to render templates.\n"
@@ -10910,24 +10883,6 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "You are alone in a private conversation."
-msgstr "비공개 대화에 혼자 참여 중입니다."
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "You are alone in this channel."
-msgstr "채널에 아무도 없습니다."
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "You are in a private conversation with %(member_names)s."
-msgstr "%(member_names)s님과 비공개 대화 중입니다."
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "You are in channel %(bold_start)s#%(channel_name)s%(bold_end)s."
 msgstr "채널 %(bold_start)s#%(channel_name)s%(bold_end)s에 참여 중입니다."
 
@@ -10955,12 +10910,6 @@ msgstr "이 예약 메시지를 보낼 수 없습니다."
 #: code:addons/mail/controllers/attachment.py:0
 msgid "You are not allowed to upload an attachment here."
 msgstr "여기에 첨부 파일을 업로드할 수 없습니다."
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/controllers/attachment.py:0
-msgid "You are not allowed to upload attachments on this channel."
-msgstr "이 채널에는 첨부 파일을 업로드할 수 없습니다."
 
 #. module: mail
 #. odoo-javascript
@@ -11054,6 +11003,12 @@ msgid "You have been invited to #%s"
 msgstr "#%s에 초대되었습니다."
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
+msgid "You left %(channel)s."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__attachment_ids
 msgid ""
 "You may attach files to this template, to be added to all emails created "
@@ -11072,18 +11027,6 @@ msgstr "추상 모델에서 템플릿을 정의할 수 없습니다: %s"
 msgid ""
 "You sure want this message pinned to %(conversation)s forever and ever?"
 msgstr "이 메시지를 %(conversation)s로 핀 고정할까요?"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
-msgid "You unpinned %(conversation_name)s"
-msgstr "%(conversation_name)s의 고정을 해제했습니다."
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
-msgid "You unpinned your conversation with %(user_name)s"
-msgstr "%(user_name)s과의 대화를 고정 해제했습니다."
 
 #. module: mail
 #. odoo-javascript
@@ -11586,12 +11529,6 @@ msgid "months"
 msgstr "월"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "more"
-msgstr "더보기"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_dialog.xml:0
 msgid "morning"
@@ -11771,12 +11708,6 @@ msgstr "웹소켓 메시지 처리"
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__weeks
 msgid "weeks"
 msgstr "주"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "you"
-msgstr "귀하"
 
 #. module: mail
 #. odoo-python

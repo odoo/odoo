@@ -5546,12 +5546,12 @@ msgstr "Moneda"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__display_currency_helper
 msgid "Currency Conversion Helper"
-msgstr "Asistente de conversión de divisa"
+msgstr "Asistente de conversión de moneda"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__currency_exchange_journal_id
 msgid "Currency Exchange Journal"
-msgstr "Diario de conversión de divisa"
+msgstr "Diario de conversión de moneda"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_currency_rate
@@ -5569,7 +5569,7 @@ msgstr "Ajuste de moneda"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Currency exchange rate difference"
-msgstr "Diferencia en tasa de cambio de divisa"
+msgstr "Diferencia en tasa de cambio de moneda"
 
 #. module: account
 #. odoo-python
@@ -7254,7 +7254,7 @@ msgstr "Diferencia de cambio"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__currency_exchange_journal_id
 msgid "Exchange Gain or Loss Journal"
-msgstr "Diario de pérdidas y ganancias por cambio de divisa"
+msgstr "Diario de pérdidas y ganancias por cambio de moneda"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__exchange_move_id
@@ -7265,7 +7265,7 @@ msgstr "Movimiento de intercambio"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Exchange difference entries:"
-msgstr "Asientos de diferencia de cambio de divisa:"
+msgstr "Asientos de diferencia de cambio de monedas:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__excluded_journal_ids
@@ -7748,7 +7748,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__foreign_currency_id
 msgid "Foreign Currency"
-msgstr "Divisa extranjera"
+msgstr "Moneda extranjera"
 
 #. module: account
 #: model:account.account,name:account.1_income_currency_exchange
@@ -10705,7 +10705,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_partial_reconcile.py:0
 msgid "Missing foreign currencies on partials having ids: %s"
-msgstr "Faltan las divisas extranjeras en los parciales con ID: %s"
+msgstr "Monedas extranjeras faltantes en parciales con ID: %s"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_accountable_required_fields
@@ -13364,7 +13364,7 @@ msgstr "Restringir el uso de impuestos a un tipo de producto."
 msgid ""
 "Restrict to propositions having the same currency as the statement line."
 msgstr ""
-"Restringir que las propuestas tengan la misma divisa que la línea de estado "
+"Restringir que las propuestas tengan la misma moneda que la línea de estado "
 "de cuenta."
 
 #. module: account
@@ -15479,10 +15479,9 @@ msgid ""
 "same as the one from the company, this amount must strictly be equal to the "
 "balance."
 msgstr ""
-"El importe expresado en la divisa secundaria debe ser positivo cuando se "
-"carga la cuenta y negativo cuando se acredita la cuenta. Si la divisa es la "
-"misma que la de la empresa, este monto debe ser estrictamente igual al "
-"balance."
+"El importe expresado en la moneda secundaria debe ser positivo cuando se "
+"carga a la cuenta y negativo cuando se abona a la cuenta. Si la moneda es la"
+" misma que la de la empresa, este monto debe ser igual al balance."
 
 #. module: account
 #. odoo-python
@@ -15835,7 +15834,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid "The foreign currency must be different than the journal one: %s"
-msgstr "La divisa extranjera debe ser diferente a la del diario: %s"
+msgstr "La moneda extranjera debe ser diferente a la del diario: %s"
 
 #. module: account
 #. odoo-python
@@ -15844,8 +15843,8 @@ msgid ""
 "The foreign currency set on the journal '%(journal)s' and the account "
 "'%(account)s' must be the same."
 msgstr ""
-"La divisa extranjera establecida en el diario \"%(journal)s\" y la cuenta "
-"\"%(account)s\" debe ser la misma."
+"La moneda extranjera establecida en el diario \"%(journal)s\" y en la cuenta"
+" \"%(account)s\" debe ser la misma."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_external_value__foreign_vat_fiscal_position_id
@@ -16223,8 +16222,8 @@ msgid ""
 "The selected destination account is set to use a specific currency. Every entry transferred to it will be converted into this currency, causing\n"
 "                        the loss of any pre-existing foreign currency amount."
 msgstr ""
-"La cuenta destino seleccionada está configurada para usar una divisa específica. Cada asiento transferido se convertirá a esta divisa, lo que provocará\n"
-"                        la pérdida de cualquier monto en divisa extranjera preexistente."
+"La cuenta destino seleccionada está configurada para usar una moneda específica. Cada asiento transferido se cambiará a esta moneda, lo que provocará\n"
+"                        que se pierda cualquier monto expresado en la moneda extranjera preexistente."
 
 #. module: account
 #. odoo-python
@@ -18416,7 +18415,7 @@ msgid ""
 "You can't provide a foreign currency without specifying an amount in 'Amount"
 " in Currency' field."
 msgstr ""
-"No puede proporcionar una divisa extranjera sin especificar un importe en el"
+"No puede proporcionar una moneda extranjera sin especificar un importe en el"
 " campo \"Importe en moneda\"."
 
 #. module: account
@@ -18426,7 +18425,7 @@ msgid ""
 "You can't provide an amount in foreign currency without specifying a foreign"
 " currency."
 msgstr ""
-"No puede proporcionar una cantidad en divisa extranjera sin especificarla."
+"No puede proporcionar una cantidad en moneda extranjera sin especificarla."
 
 #. module: account
 #. odoo-python
@@ -18833,7 +18832,7 @@ msgid ""
 "entries having a different foreign currency."
 msgstr ""
 "No puede configurar una moneda en esta cuenta porque ya tiene algunos "
-"asientos contables que usan otra divisa extranjera."
+"asientos contables que usan otra moneda extranjera."
 
 #. module: account
 #. odoo-python

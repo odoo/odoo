@@ -158,24 +158,6 @@ msgid "%(name)s: %(message)s)"
 msgstr "%(name)s: %(message)s)"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid ""
-"%(new_line)s%(new_line)sType %(bold_start)s@username%(bold_end)s to mention "
-"someone, and grab their attention.%(new_line)sType "
-"%(bold_start)s#channel%(bold_end)s to mention a channel.%(new_line)sType "
-"%(bold_start)s/command%(bold_end)s to execute a command.%(new_line)sType "
-"%(bold_start)s:shortcut%(bold_end)s to insert a canned response in your "
-"message."
-msgstr ""
-"%(new_line)s%(new_line)sNhập %(bold_start)s@username%(bold_end)s để nhắc đến"
-" ai đó và thu hút sự chú ý của họ.%(new_line)sNhập "
-"%(bold_start)s#channel%(bold_end)s để nhắc đến một kênh.%(new_line)sNhập "
-"%(bold_start)s/command%(bold_end)s để thực thi một lệnh. %(new_line)sNhập "
-"%(bold_start)s:shortcut%(bold_end)s để chèn một câu trả lời soạn sẵn trong "
-"nội dung của bạn."
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid ""
@@ -4125,18 +4107,6 @@ msgstr "Tệp từ nơi hình thành mẫu. Được sử dụng để thiết l
 #: code:addons/mail/static/src/core/common/attachment_upload_service.js:0
 msgid "File too large"
 msgstr "Tệp quá lớn"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
-msgid "File upload is disabled for external users"
-msgstr "Tính năng tải tệp lên bị vô hiệu hóa đối với người dùng bên ngoài"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
-msgid "File upload is enabled for external users"
-msgstr "Tính năng tải tệp lên được bật cho người dùng bên ngoài"
 
 #. module: mail
 #. odoo-javascript
@@ -9977,6 +9947,13 @@ msgid "This field is case insensitive."
 msgstr "Trường này không phân biệt chữ hoa chữ thường."
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_discuss_channel__allow_public_upload
+msgid ""
+"This field is deprecated and has no effect, it will be removed in future "
+"versions."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__description
 msgid "This field is used for internal description of the template's usage."
 msgstr "Trường này được sử dụng trong mô tả nội bộ về cách sử dụng mẫu."
@@ -10811,12 +10788,6 @@ msgid "Username"
 msgstr "Tên đăng nhập"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "Users in this channel: %(members)s."
-msgstr "Người dùng trong kênh này: %(members)s."
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__restrict_template_rendering
 msgid ""
 "Users will still be able to render templates.\n"
@@ -11171,24 +11142,6 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "You are alone in a private conversation."
-msgstr "Chỉ có mình bạn trong một cuộc trò chuyện riêng tư."
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "You are alone in this channel."
-msgstr "Chỉ có mình bạn trong kênh này."
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "You are in a private conversation with %(member_names)s."
-msgstr "Bạn đang tham gia cuộc trò chuyện riêng với %(member_names)s."
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "You are in channel %(bold_start)s#%(channel_name)s%(bold_end)s."
 msgstr "Bạn đang tham gia kênh %(bold_start)s#%(channel_name)s%(bold_end)s."
 
@@ -11217,12 +11170,6 @@ msgstr "Bạn không được phép gửi tin nhắn đã lên lịch này"
 #: code:addons/mail/controllers/attachment.py:0
 msgid "You are not allowed to upload an attachment here."
 msgstr "Bạn không có quyền tải lên file đính kèm ở đây."
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/controllers/attachment.py:0
-msgid "You are not allowed to upload attachments on this channel."
-msgstr "Bạn không được phép tải lên tệp đính kèm trên kênh này."
 
 #. module: mail
 #. odoo-javascript
@@ -11325,6 +11272,12 @@ msgid "You have been invited to #%s"
 msgstr "Bạn đã được mời tới #%s"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
+msgid "You left %(channel)s."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__attachment_ids
 msgid ""
 "You may attach files to this template, to be added to all emails created "
@@ -11347,18 +11300,6 @@ msgid ""
 msgstr ""
 "Bạn có chắc chắn muốn ghim tin nhắn này trong %(conversation)s mãi mãi "
 "không?"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
-msgid "You unpinned %(conversation_name)s"
-msgstr "Bạn đã bỏ ghim %(conversation_name)s"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
-msgid "You unpinned your conversation with %(user_name)s"
-msgstr "Bạn đã bỏ ghim cuộc trò chuyện với %(user_name)s"
 
 #. module: mail
 #. odoo-javascript
@@ -11867,12 +11808,6 @@ msgid "months"
 msgstr "tháng"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "more"
-msgstr "thêm"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_dialog.xml:0
 msgid "morning"
@@ -12055,12 +11990,6 @@ msgstr "xử lý thông báo websocket"
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__weeks
 msgid "weeks"
 msgstr "tuần"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "you"
-msgstr "bạn"
 
 #. module: mail
 #. odoo-python

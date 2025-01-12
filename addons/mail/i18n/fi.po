@@ -5,7 +5,7 @@
 # Translators:
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Wil Odoo, 2025
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
+# Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-24 15:31+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025\n"
+"Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -155,24 +155,6 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "%(name)s: %(message)s)"
 msgstr "%(name)s: %(message)s)"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid ""
-"%(new_line)s%(new_line)sType %(bold_start)s@username%(bold_end)s to mention "
-"someone, and grab their attention.%(new_line)sType "
-"%(bold_start)s#channel%(bold_end)s to mention a channel.%(new_line)sType "
-"%(bold_start)s/command%(bold_end)s to execute a command.%(new_line)sType "
-"%(bold_start)s:shortcut%(bold_end)s to insert a canned response in your "
-"message."
-msgstr ""
-"%(new_line)s%(new_line)s Kirjoita %(bold_start)s@käyttäjänimi%(bold_end)s "
-"mainitaksesi jonkun ja kiinnittääksesi hänen huomionsa. %(new_line)sKirjoita"
-" %(bold_start)s#kanava%(bold_end)s mainitaksesi kanavan. "
-"%(new_line)sKirjoita %(bold_start)s/komento%(bold_end)s suorittaaksesi "
-"komennon.%(new_line)s Kirjoita %(bold_start)s:pikakomento%(bold_end)s "
-"lisätäksesi viestiin valmiiksi valmistellun vastauksen."
 
 #. module: mail
 #. odoo-javascript
@@ -4150,18 +4132,6 @@ msgstr "Tiedosto on liian suuri"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
-msgid "File upload is disabled for external users"
-msgstr "Tiedoston lataus on poistettu käytöstä ulkoisilta käyttäjiltä"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
-msgid "File upload is enabled for external users"
-msgstr "Tiedoston lataus on käytössä ulkoisille käyttäjille"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
 msgid "Files"
 msgstr "Tiedostot"
@@ -5704,7 +5674,7 @@ msgstr "Linkin esikatselut"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Link copied!"
-msgstr "Linkki kopioitu!"
+msgstr "Linkki on kopioitu!"
 
 #. module: mail
 #. odoo-javascript
@@ -10004,6 +9974,13 @@ msgid "This field is case insensitive."
 msgstr "Tämä kenttä on kirjainkoosta riippumaton."
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_discuss_channel__allow_public_upload
+msgid ""
+"This field is deprecated and has no effect, it will be removed in future "
+"versions."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__description
 msgid "This field is used for internal description of the template's usage."
 msgstr "Tätä kenttää käytetään mallin käytön sisäiseen kuvaukseen."
@@ -10833,12 +10810,6 @@ msgid "Username"
 msgstr "Käyttäjänimi"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "Users in this channel: %(members)s."
-msgstr "Tämän kanavan käyttäjät: %(members)s."
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__restrict_template_rendering
 msgid ""
 "Users will still be able to render templates.\n"
@@ -11190,24 +11161,6 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "You are alone in a private conversation."
-msgstr "Olet yksin yksityisessä keskustelussa."
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "You are alone in this channel."
-msgstr "Olet yksin kanavalla."
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "You are in a private conversation with %(member_names)s."
-msgstr "Olet yksityisessä keskustelussa %(member_names)s kanssa."
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "You are in channel %(bold_start)s#%(channel_name)s%(bold_end)s."
 msgstr "Olet kanavalla %(bold_start)s#%(channel_name)s%(bold_end)s."
 
@@ -11235,12 +11188,6 @@ msgstr "Sinulla ei ole oikeutta lähettää tätä ajastettua viestiä"
 #: code:addons/mail/controllers/attachment.py:0
 msgid "You are not allowed to upload an attachment here."
 msgstr "Sinulla ei ole oikeuksia ladata liitettä tähän."
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/controllers/attachment.py:0
-msgid "You are not allowed to upload attachments on this channel."
-msgstr "Tällä kanavalla ei saa ladata liitetiedostoja."
 
 #. module: mail
 #. odoo-javascript
@@ -11345,6 +11292,12 @@ msgid "You have been invited to #%s"
 msgstr "Sinut on kutsuttu #%s"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
+msgid "You left %(channel)s."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__attachment_ids
 msgid ""
 "You may attach files to this template, to be added to all emails created "
@@ -11365,18 +11318,6 @@ msgstr "Et voi määritellä mallia abstraktille mallille: %s"
 msgid ""
 "You sure want this message pinned to %(conversation)s forever and ever?"
 msgstr "Haluatko kiinnittää tämän viestin %(conversation)s pysyvästi?"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
-msgid "You unpinned %(conversation_name)s"
-msgstr "Poistit %(conversation_name)s kiinnityksen"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
-msgid "You unpinned your conversation with %(user_name)s"
-msgstr "Olet poistanut viestisi %(user_name)s kiinnityksen"
 
 #. module: mail
 #. odoo-javascript
@@ -11880,12 +11821,6 @@ msgid "months"
 msgstr "kuukaudet"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "more"
-msgstr "lisää"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_dialog.xml:0
 msgid "morning"
@@ -12069,12 +12004,6 @@ msgstr "websocket-viestien käsittely"
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__weeks
 msgid "weeks"
 msgstr "viikkoa"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-msgid "you"
-msgstr "sinä"
 
 #. module: mail
 #. odoo-python

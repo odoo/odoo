@@ -1072,6 +1072,13 @@ msgid "Leave Channel"
 msgstr "مغادرة القناة"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/close_confirmation.xml:0
+#: code:addons/im_livechat/static/src/core/public_web/thread_model_patch.js:0
+msgid "Leaving will end the livechat. Proceed leaving?"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel__max_sessions_mode__limited
 msgid "Limited"
 msgstr ""
@@ -1866,6 +1873,12 @@ msgstr ""
 "هذه رسالة ترحيب 'مرحبًا' تلقائية سيراها الزائر عندما يبدأ محادثة جديدة."
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/chat_window_patch.xml:0
+msgid "This livechat conversation has ended"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_res_users_settings__livechat_username
 msgid "This username will be used as your name in the livechat channels."
 msgstr "سوف يُستخدَم اسم المستخدم هذا كاسمك في قنوات الدردشة المباشرة. "
@@ -2049,7 +2062,7 @@ msgstr "هلّا تركت عنوان بريدك الإلكتروني حتى نت
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/close_confirmation.xml:0
+#: code:addons/im_livechat/static/src/core/common/close_confirmation.xml:0
 msgid "Yes, leave conversation"
 msgstr "نعم، قم بمغادرة المحادثة "
 
@@ -2094,12 +2107,6 @@ msgstr "لقد قمت بالانضمام إلى %s. "
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_model_patch.js:0
 msgid "You left %s."
 msgstr "لقد قمت بمغادرة %s. "
-
-#. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/close_confirmation.xml:0
-msgid "You're about to leave the conversation, proceed?"
-msgstr "أنت على وشك مغادرة المحادثة، أترغب في الاستمرار؟ "
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action

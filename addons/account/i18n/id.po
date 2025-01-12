@@ -3,8 +3,8 @@
 # 	* account
 # 
 # Translators:
-# Abe Manyo, 2024
 # Wil Odoo, 2024
+# Abe Manyo, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-24 15:30+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1106,6 +1106,7 @@ msgstr "<span class=\"text-warning\">Risiko medium</span>: Iban"
 msgid ""
 "<span invisible=\"name or name_placeholder or quick_edit_mode\">Draft</span>"
 msgstr ""
+"<span invisible=\"name or name_placeholder or quick_edit_mode\">Draft</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -2409,7 +2410,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Add a description to your item."
-msgstr ""
+msgstr "Tambahkan keterangan ke barang Anda."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -3040,6 +3041,9 @@ msgid ""
 "in accordance with its journal sequence. This lock date is irreversible and "
 "does not allow any exception."
 msgstr ""
+"Entry apa pun sampai dengan dan termasuk tanggal tersebut akan ditunda "
+"sampai tanggal berikutnya, sesuai dengan urutan jurnal. Tanggal kunci ini "
+"tidak dapat dibatalkan dan tidak mengizinkan pengecualian apa pun."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
@@ -3047,6 +3051,8 @@ msgid ""
 "Any entry up to and including that date will be postponed to a later time, "
 "in accordance with its journal's sequence."
 msgstr ""
+"Entry apa pun sampai dengan dan termasuk tanggal tersebut akan ditunda "
+"sampai tanggal berikutnya, sesuai dengan urutan jurnal."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__tax_lock_date
@@ -3055,6 +3061,9 @@ msgid ""
 "later time, in accordance with its journal's sequence. The tax lock date is "
 "automatically set when the tax closing entry is posted."
 msgstr ""
+"Entry apa pun dengan pajak sampai dengan dan termasuk tanggal tersebut akan "
+"ditunda sampai tanggal berikutnya, sesuai dengan urutan jurnal. Tanggal "
+"kunci pajak secara otomatis ditetapkan saat entry closing pajak dipost."
 
 #. module: account
 #. odoo-python
@@ -3081,6 +3090,8 @@ msgid ""
 "Any purchase entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
+"Entry pembelian apa pun sebelum dan termasuk tanggal ini akan ditunda sampai"
+" tanggal berikutnya, sesuai dengan urutan jurnal"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__sale_lock_date
@@ -3088,6 +3099,8 @@ msgid ""
 "Any sales entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
+"Entry penjualan apa pun sebelum dan termasuk tanggal ini akan ditunda sampai"
+" tanggal sebelumnya, sesuai dengan urutan jurnal."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
@@ -4520,7 +4533,7 @@ msgstr "Klik"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Click here to add a description to your product."
-msgstr ""
+msgstr "Klik di sini untuk menambahkan keterangan ke produk Anda."
 
 #. module: account
 #. odoo-javascript
@@ -4758,7 +4771,7 @@ msgstr "Perusahaan yang terkait dengan jurnal ini"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Complete the partner data with email."
-msgstr ""
+msgstr "Lengkapi data partner dengan email."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
@@ -5221,7 +5234,7 @@ msgstr "Buat pembulatan kas pertama kali"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Create the product."
-msgstr ""
+msgstr "Buat produk."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entries_move_ids
@@ -7385,7 +7398,7 @@ msgstr "Tipe Gambar"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Fill in the details of the product or see the suggestion."
-msgstr ""
+msgstr "Isi detail produk atau lihat saran."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_fiscal_position
@@ -9385,7 +9398,7 @@ msgstr "Is Between"
 #: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
 #: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
 msgid "Is Coa Installed"
-msgstr ""
+msgstr "Apakah Coa Diinstal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
@@ -10800,7 +10813,7 @@ msgstr "Nama"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__name_placeholder
 #: model:ir.model.fields,field_description:account.field_account_move__name_placeholder
 msgid "Name Placeholder"
-msgstr ""
+msgstr "Placeholder Nama"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name_searchable
@@ -10816,7 +10829,7 @@ msgstr "Navigasi laporan dengan mudah dan lihat makna di balik angka-angka"
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
 #: model:ir.model.fields.selection,name:account.selection__account_report__integer_rounding__half-up
 msgid "Nearest"
-msgstr ""
+msgstr "Terdekat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__need_cancel_request
@@ -11796,7 +11809,7 @@ msgstr "PDF tanpa Pembayaran"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "PEPPOL Electronic Invoicing"
-msgstr ""
+msgstr "Faktur Elektronik PEPPOL"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_peppol
@@ -14154,7 +14167,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Set a price."
-msgstr ""
+msgstr "Tetapkan harga."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -14445,7 +14458,7 @@ msgstr "Tentukan bagaimana jumlah pada faktur akan dibulatkan"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Standard communication"
-msgstr ""
+msgstr "Komunikasi standar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
@@ -17811,7 +17824,7 @@ msgstr "Pemasok"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Verify the price and update if necessary."
-msgstr ""
+msgstr "Verifikasi harga dan update bila diperlukan."
 
 #. module: account
 #. odoo-javascript
@@ -19004,7 +19017,7 @@ msgstr "tagihan untuk"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "by %s"
-msgstr ""
+msgstr "by %s"
 
 #. module: account
 #. odoo-python
