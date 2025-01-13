@@ -99,6 +99,9 @@ class Im_LivechatChannel(models.Model):
         Otherwise, only the users of each respective livechat channel are considered.
         """
         counts = {}
+        # FIXME: remove inactive call sessions so operators no longer in call are available
+        # sudo: required to use garbage collecting function.
+        self.env["discuss.channel.rtc.session"].sudo()._gc_inactive_sessions()
         if livechat_channels := self.filtered(lambda c: c.max_sessions_mode == "limited"):
             possible_users = users if users is not None else livechat_channels.user_ids
             limited_users = possible_users.filtered(lambda user: user._is_user_available())
