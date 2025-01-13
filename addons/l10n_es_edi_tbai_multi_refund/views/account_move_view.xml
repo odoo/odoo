@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <field name="l10n_es_tbai_refund_reason" position='after'>
-                <field name="l10n_es_tbai_reversed_ids" attrs="{'invisible': [('move_type', '!=', 'in_refund')]}" widget="many2many_tags"/>
+                <field name="l10n_es_tbai_reversed_ids" attrs="{'invisible': [('move_type', 'not in', ('in_refund', 'out_refund'))]}" widget="many2many_tags"/>
             </field>
         </field>
     </record>
