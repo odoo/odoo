@@ -12,6 +12,10 @@ export class PosPreset extends Base {
         this.uiState = {
             availabilities: {},
         };
+
+        // This will compute availabilities locally
+        // when selecting a preset it will be updated with the server data
+        this.computeAvailabilities();
     }
 
     get needsSlot() {
@@ -55,7 +59,7 @@ export class PosPreset extends Base {
         );
     }
 
-    computeAvailabilities(usages) {
+    computeAvailabilities(usages = {}) {
         this.generateSlots();
 
         const allSlots = Object.values(this.uiState.availabilities).reduce(
@@ -72,37 +76,13 @@ export class PosPreset extends Base {
         return this.uiState.availabilities;
     }
 
-    get actualPreset() {
+    get currentSlot() {
         const now = DateTime.now();
-        const dayOfWeek = now.weekday - 1;
-        const attToday = this.attendance_ids.filter((a) => a.dayofweek == dayOfWeek);
-        if (attToday.length === 0) {
-            return false;
-        }
-        for (const attendance of attToday) {
-            const dateOpening = DateTime.fromObject({
-                year: now.year,
-                month: now.month,
-                day: now.day,
-                hour: Math.floor(attendance.hour_from),
-                minute: (attendance.hour_from % 1) * 60,
-            });
-            const dateClosing = DateTime.fromObject({
-                year: now.year,
-                month: now.month,
-                day: now.day,
-                hour: Math.floor(attendance.hour_to),
-                minute: (attendance.hour_to % 1) * 60,
-            });
-            if (dateOpening > now) {
-                return false;
-            }
-            let start = dateOpening;
-            while (start >= dateOpening && start <= dateClosing) {
-                if (now > start && now < start.plus({ minutes: this.interval_time })) {
-                    return { start: start, end: start.plus({ minutes: this.interval_time }) };
-                }
-                start = start.plus({ minutes: this.interval_time });
+        const interval = this.interval_time;
+        const todayAvailabilities = this.availabilities[now.toFormat("yyyy-MM-dd")];
+        for (const slot of Object.values(todayAvailabilities)) {
+            if (slot.datetime < now && slot.datetime.plus({ minutes: interval }) > now) {
+                return slot;
             }
         }
         return false;
