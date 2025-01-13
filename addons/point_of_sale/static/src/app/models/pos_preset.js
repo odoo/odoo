@@ -12,6 +12,10 @@ export class PosPreset extends Base {
         this.uiState = {
             availabilities: {},
         };
+
+        // This will compute availabilities locally
+        // when selecting a preset it will be updated with the server data
+        this.computeAvailabilities();
     }
 
     get needsSlot() {
@@ -55,7 +59,7 @@ export class PosPreset extends Base {
         );
     }
 
-    computeAvailabilities(usages) {
+    computeAvailabilities(usages = {}) {
         this.generateSlots();
 
         const allSlots = Object.values(this.uiState.availabilities).reduce(
@@ -70,6 +74,18 @@ export class PosPreset extends Base {
         }
 
         return this.uiState.availabilities;
+    }
+
+    get currentSlot() {
+        const now = DateTime.now();
+        const interval = this.interval_time * 60 * 1000;
+        const todayAvailabilities = this.availabilities[now.toFormat("yyyy-MM-dd")];
+        for (const slot of Object.values(todayAvailabilities)) {
+            if (slot.datetime < now && slot.datetime.plus({ minutes: interval }) > now) {
+                return slot;
+            }
+        }
+        return false;
     }
 
     generateSlots() {
