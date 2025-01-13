@@ -279,8 +279,11 @@ class TestMailFlow(MailCommon, TestRecipients):
                 },
             ],
         )
-        # expected Msg['To'] : actual recipient, same as SMTP To
+        # expected Msg['To'] : Reply-All behavior: actual recipient, then
+        # all "not internal partners" and catchall (to receive answers)
         for partner in responsible_answer.notified_partner_ids:
+            exp_msg_to_partners = partner | external_partners
+            exp_msg_to = exp_msg_to_partners.mapped('email_formatted')
             with self.subTest(name=partner.name):
                 self.assertSMTPEmailsSent(
                     mail_server=self.mail_server_notification,
@@ -289,14 +292,14 @@ class TestMailFlow(MailCommon, TestRecipients):
                     ),
                     smtp_from=self.mail_server_notification.from_filter,
                     smtp_to_list=[partner.email_normalized],
-                    msg_to_lst=[partner.email_formatted],
+                    msg_to_lst=exp_msg_to,
                 )
 
-        # customer replies using "Reply" + adds new people
+        # customer replies using "Reply All" + adds new people
         # added: Cc: invoicing (email) and robert (partner)
         # ------------------------------------------------------------
         self.gateway_mail_reply_from_smtp_email(
-            MAIL_TEMPLATE, [partner_sylvie.email_normalized], reply_all=False,
+            MAIL_TEMPLATE, [partner_sylvie.email_normalized], reply_all=True,
             cc=f'{self.test_emails[3]}, {self.test_emails[4]}',  # used mainly for existing partners currently
         )
         external_partners += self.customer_zboing  # added in CC just above
@@ -318,15 +321,14 @@ class TestMailFlow(MailCommon, TestRecipients):
                         'email_from': partner_sylvie.email_formatted,
                         # Cc: received email CC - an email still not partnerized (invoicing) and customer_zboing
                         'incoming_email_cc': f'{self.test_emails[3]}, {self.test_emails[4]}',
-                        'incoming_email_to': expected_chatter_reply_to,  # reply_all not already implemented, hence just alias
+                        # To: received email Msg-To - customer who replies + email Reply-To
+                        'incoming_email_to': ', '.join((external_partners - partner_sylvie - self.customer_zboing).mapped('email_formatted') + [expected_chatter_reply_to]),
                         'mail_server_id': self.env['ir.mail_server'],
-                        # notified: followers, behaves like classic post, and not
-                        # customer in Cc as gateway does not do double notification
-                        'notified_partner_ids': internal_partners + self.partner_portal,
+                        # notified: followers - already mailed, aka internal only
+                        'notified_partner_ids': internal_partners,
                         'parent_id': incoming_email,
-                        # reply-all when being only recipients = only new To/Cc, with
-                        # recognized partners only
-                        'partner_ids': self.customer_zboing,
+                        # same reasoning as email_to/cc
+                        'partner_ids': external_partners - partner_sylvie,
                         'subject': f'Re: Re: {lead.name}',
                         'subtype_id': self.env.ref('mail.mt_comment'),
                     },
@@ -334,7 +336,6 @@ class TestMailFlow(MailCommon, TestRecipients):
                     'notif': [
                         {'partner': self.partner_employee, 'type': 'inbox'},
                         {'partner': self.partner_employee_2, 'type': 'email'},
-                        {'partner': self.partner_portal, 'type': 'email'},
                     ],
                 },
             ],

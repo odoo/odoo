@@ -295,17 +295,24 @@ class TestWebPushNotification(SMSCommon):
         self.assertEqual(test_record.message_partner_ids, self.user_email.partner_id)
         test_record.message_subscribe(partner_ids=[self.user_inbox.partner_id.id])
 
-        with self.mock_mail_gateway():
-            self.format_and_process(
-                MAIL_TEMPLATE, self.user_email.email_formatted,
-                f'{self.alias_gateway.display_name}, {self.user_inbox.email_formatted}',
-                subject='Repy By Email',
-                extra='In-Reply-To:\r\n\t%s\n' % test_record.message_ids.message_id,
-            )
-        self.assertPushNotification(
-            mail_push_count=0, title_content=self.user_email.name,
-            body_content='Please call me as soon as possible this afternoon!\n\n--\nSylvie',
-        )
+        for include_as_external, has_notif in ((False, True), (True, False)):
+            with self.mock_mail_gateway():
+                to = f'{self.alias_gateway.display_name}'
+                if include_as_external:
+                    to += f', {self.user_inbox.email_formatted}'
+                self.format_and_process(
+                    MAIL_TEMPLATE, self.user_email.email_formatted, to,
+                    subject='Repy By Email',
+                    extra=f'In-Reply-To:\r\n\t{test_record.message_ids[-1].message_id}\n',
+                )
+            if has_notif:
+                # user_inbox is notified by Odoo, hence receives a push notification
+                self.assertPushNotification(
+                    mail_push_count=0, title_content=self.user_email.name,
+                    body_content='Please call me as soon as possible this afternoon!\n\n--\nSylvie',
+                )
+            else:
+                self.assertNoPushNotification()
 
     @mute_logger('odoo.tests')
     def test_notify_by_push_message_notify(self):

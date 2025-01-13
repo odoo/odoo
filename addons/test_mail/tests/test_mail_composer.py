@@ -2120,6 +2120,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                 ):
                     message = record.message_ids[0]
                     for recipient in [self.partner_employee_2, new_partner, record.customer_id]:
+                        headers_recipients = f'{new_partner.email_formatted},{record.customer_id.email_formatted}'
                         self.assertMailMail(
                             recipient,
                             'sent',
@@ -2129,6 +2130,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                                 'headers': {
                                     'Return-Path': f'{exp_alias_domain.bounce_email}',
                                     'X-Odoo-Objects': f'{record._name}-{record.id}',
+                                    'X-Msg-To-Add': headers_recipients,
                                 },
                                 'subject': f'TemplateSubject {record.name}',
                             },
@@ -2136,6 +2138,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                                 'headers': {
                                     'Return-Path': f'{exp_alias_domain.bounce_email}',
                                     'X-Odoo-Objects': f'{record._name}-{record.id}',
+                                    'X-Msg-To-Add': headers_recipients,
                                 },
                                 'mail_server_id': self.env['ir.mail_server'],
                                 'record_alias_domain_id': exp_alias_domain,
