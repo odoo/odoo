@@ -119,4 +119,12 @@ patch(Colibri.prototype, {
         super.applyAttr(...arguments);
         wysiwyg?.odooEditor.observerActive(name);
     },
+    applyTOut(el, value) {
+        // TODO No jQuery ?
+        const wysiwyg = window.$?.("#wrapwrap").data("wysiwyg");
+        const name = `${this.interaction.constructor.name}/t-out`;
+        wysiwyg?.odooEditor.observerUnactive(name);
+        super.applyTOut(...arguments);
+        wysiwyg?.odooEditor.observerActive(name);
+    },
 });
