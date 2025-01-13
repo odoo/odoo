@@ -15,12 +15,16 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 class Cart(PaymentPortal):
 
     @route(route='/shop/cart', type='http', auth='public', website=True, sitemap=False)
-    def cart(self, id=None, access_token=None, revive='', **post):
-        """
-        Main cart management + abandoned cart revival
-        id: Abandoned cart SO id
-        access_token: Abandoned cart SO access token
-        revive: Revival method when abandoned cart. Can be 'merge' or 'squash'
+    def cart(self, id=None, access_token=None, revive_method='', **post):
+        """ Display the cart page.
+
+        This route is responsible for the main cart management and abandoned cart revival logic.
+
+        :param str id: The abandoned cart's id.
+        :param str access_token: The abandoned cart's access token.
+        :param str revive_method: The revival method for abandoned carts. Can be 'merge' or 'squash'.
+        :return: The rendered cart page.
+        :rtype: str
         """
         if not request.website.has_ecommerce_access():
             return request.redirect('/web/login')
@@ -39,10 +43,10 @@ class Cart(PaymentPortal):
                 raise NotFound()
             if abandoned_order.state != 'draft':  # abandoned cart already finished
                 values.update({'abandoned_proceed': True})
-            elif revive == 'squash' or (revive == 'merge' and not request.session.get('sale_order_id')):  # restore old cart or merge with unexistant
+            elif revive_method == 'squash' or (revive_method == 'merge' and not request.session.get('sale_order_id')):  # restore old cart or merge with unexistant
                 request.session['sale_order_id'] = abandoned_order.id
                 return request.redirect('/shop/cart')
-            elif revive == 'merge':
+            elif revive_method == 'merge':
                 abandoned_order.order_line.write({'order_id': request.session['sale_order_id']})
                 abandoned_order.action_cancel()
             elif abandoned_order.id != request.session.get('sale_order_id'):  # abandoned cart found, user have to choose what to do
@@ -180,7 +184,7 @@ class Cart(PaymentPortal):
         :param int product_id: The product to add to cart, as a
             `product.product` id.
         :param int quantity: The quantity to add to the cart.
-        :param list(dict) product_custom_attribute_values: A list of objects representing custom
+        :param list[dict] product_custom_attribute_values: A list of objects representing custom
             attribute values for the product. Each object contains:
             - `custom_product_template_attribute_value_id`: The custom attribute's id;
             - `custom_value`: The custom attribute's value.
@@ -264,10 +268,10 @@ class Cart(PaymentPortal):
             line.unlink()
 
     def _get_cart_notification_information(self, order, line_ids):
-        """ Get the information about the sale order lines to show in the notification.
+        """ Get the information about the sales order lines to show in the notification.
 
-        :param recordset order: The sale order containing the lines.
-        :param list(int) line_ids: The ids of the lines to display in the notification.
+        :param sale.order order: The sales order.
+        :param list[int] line_ids: The ids of the lines to display in the notification.
         :rtype: dict
         :return: A dict with the following structure:
             {
@@ -303,10 +307,10 @@ class Cart(PaymentPortal):
         }
 
     def _get_tracking_information(self, order_sudo, line_ids):
-        """ Get the tracking information about the sale order lines.
+        """ Get the tracking information about the sales order lines.
 
-        :param recordset order: The sale order containing the lines.
-        :param list(int) line_ids: The ids of the lines to track.
+        :param sale.order order: The sales order.
+        :param list[int] line_ids: The ids of the lines to track.
         :rtype: dict
         :return: The tracking information.
         """

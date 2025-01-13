@@ -2105,12 +2105,12 @@
                         <p>This is your current cart.</p>
                         <p>
                             <strong>
-                                <a t-attf-href="/shop/cart/?id=#{id}&amp;access_token=#{access_token}&amp;revive=squash">Click here</a>
+                                <a t-attf-href="/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=squash">Click here</a>
                             </strong> if you want to restore your previous cart. Your current cart will be replaced with your previous cart.
                         </p>
                         <p>
                             <strong>
-                                <a t-attf-href="/shop/cart/?id=#{id}&amp;access_token=#{access_token}&amp;revive=merge">Click here</a>
+                                <a t-attf-href="/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=merge">Click here</a>
                             </strong> if you want to merge your previous cart into current cart.
                         </p>
                     </t>

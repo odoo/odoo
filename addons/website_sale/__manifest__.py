@@ -90,6 +90,7 @@
 
             'website_sale/static/src/js/address.js',
             'website_sale/static/src/js/cart.js',
+            'website_sale/static/src/js/cart_service.js',
             'website_sale/static/src/js/checkout.js',
             'website_sale/static/src/js/payment_button.js',
             'website_sale/static/src/js/payment_form.js',
@@ -116,7 +117,6 @@
             'website_sale/static/src/js/notification/warning_notification/warning_notification.js',
             'website_sale/static/src/js/notification/warning_notification/warning_notification.xml',
             'website_sale/static/src/js/notification/notification_service.js',
-            'website_sale/static/src/js/website_sale_service.js',
             'sale/static/src/js/badge_extra_price/*',
             'sale/static/src/js/combo_configurator_dialog/*',
             'sale/static/src/js/models/*',
