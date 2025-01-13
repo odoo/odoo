@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="product.product_combo_view_form"/>
         <field name="arch" type="xml">
             <field name="product_id" position="attributes">
-                <attribute name="context">{'default_available_in_pos': True}</attribute>
+                <attribute name="context" operation="update">{'default_available_in_pos': True}</attribute>
             </field>
         </field>
     </record>

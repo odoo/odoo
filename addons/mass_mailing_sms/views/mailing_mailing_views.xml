@@ -146,10 +146,7 @@
             </xpath>
 
             <xpath expr="//field[@name='contact_list_ids']" position="attributes">
-                <attribute name="context">
-                    {'mailing_sms' : context.get('mailing_sms'),
-                    'form_view_ref': 'mass_mailing.mailing_list_view_form_simplified'}
-                </attribute>
+                <attribute name="context" operation="update">{'mailing_sms' : context.get('mailing_sms')}</attribute>
             </xpath>
             <!-- Option page tweaks -->
             <xpath expr="//field[@name='email_from']" position="attributes">

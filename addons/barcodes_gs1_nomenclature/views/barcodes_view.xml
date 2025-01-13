@@ -17,7 +17,7 @@
                 </xpath>
                 <!-- Rules table -->
                 <xpath expr="//field[@name='rule_ids']" position="attributes">
-                    <attribute name="context">{'is_gs1': is_gs1_nomenclature}</attribute>
+                    <attribute name="context" operation="update">{'is_gs1': is_gs1_nomenclature}</attribute>
                 </xpath>
                 <xpath expr="//field[@name='encoding']" position="attributes">
                     <attribute name="column_invisible">parent.is_gs1_nomenclature</attribute>
