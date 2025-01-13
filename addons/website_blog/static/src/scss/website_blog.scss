@@ -104,6 +104,20 @@ $o-wblog-loader-size: 50px;
         }
     }
 
+    #o_wblog_post_content, .blog_header {
+        // Remove the '/' separators from breadcrumbs on small devices, as only
+        // the blog category is displayed on small screens.
+        @include media-breakpoint-down(lg) {
+            > nav.breadcrumb .breadcrumb-item {
+                padding-left: 0;
+
+                &::before {
+                    content: "";
+                }
+            }
+        }
+    }
+
     #o_wblog_post_comments {
         .o_portal_chatter > hr {
             display: none;
