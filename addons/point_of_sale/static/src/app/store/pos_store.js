@@ -1388,7 +1388,7 @@ export class PosStore extends Reactive {
      * @param {str} terminalName
      */
     getPendingPaymentLine(terminalName) {
-        return this.get_order().payment_ids.find(
+        return this.get_order()?.payment_ids.find(
             (paymentLine) =>
                 paymentLine.payment_method_id.use_payment_terminal === terminalName &&
                 !paymentLine.is_done()
