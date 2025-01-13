@@ -2009,7 +2009,9 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         })
         order_payment.with_context(payment_context).check()
         self.pos_config.current_session_id.action_pos_session_closing_control()
-        self.assertEqual(order.picking_ids.move_line_ids_without_package.lot_id.name, '1001')
+        order_lot_id = order.picking_ids.move_line_ids_without_package.lot_id
+        self.assertEqual(order_lot_id.name, '1001')
+        self.assertTrue(all([quant.lot_id == order_lot_id for quant in self.env['stock.quant'].search([('product_id', '=', self.product2.id)])]))
 
     def test_pos_creation_in_branch(self):
         branch = self.env['res.company'].create({
