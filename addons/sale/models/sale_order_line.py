@@ -1451,6 +1451,12 @@ class SaleOrderLine(models.Model):
                     or bool(self.combo_item_id)
                 ),
             }
+            packaging = self.product_packaging_id
+            if packaging:
+                res['packaging'] = {
+                    'id': packaging.id,
+                    'qty': packaging.product_uom_id._compute_quantity(packaging.qty, self.product_uom),
+                }
             if self.product_id.sale_line_warn != 'no-message' and self.product_id.sale_line_warn_msg:
                 res['warning'] = self.product_id.sale_line_warn_msg
             return res

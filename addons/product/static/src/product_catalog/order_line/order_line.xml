@@ -37,6 +37,11 @@
                         t-on-click.stop="(ev) => this.env.increaseQuantity()">
                     <i class="fa fa-plus"/>
                 </button>
+                <button t-if="props.packaging"
+                        class="o_product_catalog_package_quantity btn btn-primary border"
+                        t-on-click.stop="addPackagingQty">
+                    <i class="fa fa-cube"/>
+                </button>
             </div>
             <t t-elif="props.warning">
                 <i class="fa fa-warning text-warning" t-att-title="props.warning"/>
