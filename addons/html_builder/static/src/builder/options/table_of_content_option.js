@@ -40,13 +40,6 @@ class TableOfContentOptionPlugin extends Plugin {
 
     getActions() {
         return {
-            // Should be move in a more generic plugin replace MultipleItems
-            addItem: {
-                apply: ({ editingElement, param: itemSelector }) => {
-                    const itemEl = editingElement.querySelector(itemSelector);
-                    this.dependencies.clone.cloneElement(itemEl);
-                },
-            },
             navbarPosition: {
                 isApplied: ({ editingElement: navbarWrapEl, param: position }) => {
                     if (navbarWrapEl.classList.contains("s_table_of_content_horizontal_navbar")) {
