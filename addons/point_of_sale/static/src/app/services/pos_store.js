@@ -1496,9 +1496,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     isProductQtyZero(qty) {
-        const dp = this.models["decimal.precision"].find(
-            (dp) => dp.name === "Product Unit of Measure"
-        );
+        const dp = this.models["decimal.precision"].find((dp) => dp.name === "Product Unit");
         return floatIsZero(qty, dp.digits);
     }
 

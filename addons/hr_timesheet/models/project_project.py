@@ -27,7 +27,7 @@ class ProjectProject(models.Model):
     timesheet_encode_uom_id = fields.Many2one('uom.uom', compute='_compute_timesheet_encode_uom_id', export_string_translation=False)
     total_timesheet_time = fields.Integer(
         compute='_compute_total_timesheet_time', groups='hr_timesheet.group_hr_timesheet_user',
-        string="Total number of time (in the proper UoM) recorded in the project, rounded to the unit.",
+        string="Total amount of time (in the proper unit) recorded in the project, rounded to the unit.",
         compute_sudo=True, export_string_translation=False)
     encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days', export_string_translation=False)
     is_internal_project = fields.Boolean(compute='_compute_is_internal_project', search='_search_is_internal_project', export_string_translation=False)
@@ -137,10 +137,10 @@ class ProjectProject(models.Model):
             # if the timesheet has no product_uom_id then we take the one of the project
             total_time = 0.0
             for product_uom, unit_amount in timesheet_time_dict[project.id]:
-                factor = (product_uom or project.timesheet_encode_uom_id).factor_inv
+                factor = (product_uom or project.timesheet_encode_uom_id).factor
                 total_time += unit_amount * (1.0 if project.encode_uom_in_days else factor)
             # Now convert to the proper unit of measure set in the settings
-            total_time *= project.timesheet_encode_uom_id.factor
+            total_time /= project.timesheet_encode_uom_id.factor
             project.total_timesheet_time = int(round(total_time))
 
     @api.model_create_multi

@@ -136,7 +136,6 @@
             <field name="list_price">250.00</field>
             <field name="standard_price">190.00</field>
             <field name="uom_id" ref="uom.product_uom_hour"/>
-            <field name="uom_po_id" ref="uom.product_uom_hour"/>
             <field name="service_policy">ordered_prepaid</field>
             <field name="service_tracking">task_global_project</field>
             <field name="project_id" ref="project_support"/>
@@ -150,7 +149,6 @@
             <field name="standard_price">150.00</field>
             <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_hour"/>
-            <field name="uom_po_id" ref="uom.product_uom_hour"/>
             <field name="service_policy">delivered_timesheet</field>
             <field name="service_tracking">task_in_project</field>
             <field name="project_template_id" ref="sale_project.so_template_project"/>
@@ -163,7 +161,6 @@
             <field name="standard_price">85.00</field>
             <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_hour"/>
-            <field name="uom_po_id" ref="uom.product_uom_hour"/>
             <field name="service_policy">delivered_timesheet</field>
             <field name="service_tracking">task_in_project</field>
             <field name="project_template_id" ref="sale_project.so_template_project"/>
@@ -176,7 +173,6 @@
             <field name="standard_price">420.00</field>
             <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
-            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="service_type" model="product.product" eval="'milestones' if obj().env.user.has_group('project.group_project_milestone') else 'manual'" />
             <field name="service_tracking">task_in_project</field>
             <field name="project_template_id" ref="sale_project.so_template_project"/>
@@ -189,7 +185,6 @@
             <field name="standard_price">5000.00</field>
             <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_hour"/>
-            <field name="uom_po_id" ref="uom.product_uom_hour"/>
             <field name="service_policy">ordered_prepaid</field>
             <field name="service_tracking">task_global_project</field>
             <field name="project_id" ref="project.project_home_construction"/>
@@ -202,7 +197,6 @@
             <field name="standard_price">4000.00</field>
             <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_hour"/>
-            <field name="uom_po_id" ref="uom.product_uom_hour"/>
             <field name="service_policy">delivered_timesheet</field>
             <field name="service_tracking">task_global_project</field>
             <field name="project_id" ref="project.project_home_construction"/>
@@ -215,7 +209,6 @@
             <field name="standard_price">2000.00</field>
             <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_hour"/>
-            <field name="uom_po_id" ref="uom.product_uom_hour"/>
             <field name="service_policy">delivered_milestones</field>
             <field name="service_tracking">task_global_project</field>
             <field name="project_id" ref="project.project_home_construction"/>
@@ -228,7 +221,6 @@
             <field name="standard_price">3500.00</field>
             <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_hour"/>
-            <field name="uom_po_id" ref="uom.product_uom_hour"/>
             <field name="service_policy">delivered_manual</field>
             <field name="service_tracking">task_global_project</field>
             <field name="project_id" ref="project.project_home_construction"/>
@@ -241,7 +233,6 @@
             <field name="standard_price">150.00</field>
             <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
-            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="service_policy">delivered_manual</field>
             <field name="service_tracking">task_in_project</field>
             <field name="project_template_id" ref="sale_project.so_template_project"/>

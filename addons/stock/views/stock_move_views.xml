@@ -40,14 +40,11 @@
                         decoration-muted="location_usage not in ('internal','transit')"/>
                     <field name="location_dest_id" options="{'no_create': True}" string="To"
                         decoration-muted="location_dest_usage not in ('internal','transit')"/>
-                    <field name="product_packaging_id" groups="product.group_stock_packaging"
-                        optional="hide" context="{'default_product_id': product_id}"
-                        readonly="not product_id"/>
                     <field name="product_uom_qty" sum="Total Demand" readonly="state == 'done'"/>
                     <field name="quantity" string="Quantity" sum="Total Quantity"
                         decoration-danger="(location_usage in ('internal','transit')) and (location_dest_usage not in ('internal','transit'))"
                         decoration-success="(location_usage not in ('internal','transit')) and (location_dest_usage in ('internal','transit'))"/>
-                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit" groups="uom.group_uom"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="state" widget='badge' optional="show"
                            decoration-danger="state=='cancel'"
@@ -78,14 +75,15 @@
                     <field name="additional" column_invisible="True"/>
                     <field name="move_lines_count" column_invisible="True"/>
                     <field name="is_locked" column_invisible="True"/>
-                    <field name="product_uom_category_id" column_invisible="True"/>
                     <field name="product_id" required="1" readonly="(state != 'draft' and not additional) or move_lines_count &gt; 0"/>
+                    <field name="packaging_uom_qty" optional="hide"/>
+                    <field name="packaging_uom_id" optional="hide"/>
                     <field name="is_initial_demand_editable" column_invisible="True"/>
                     <field name="is_quantity_done_editable" column_invisible="True"/>
                     <field name="product_uom_qty" string="Demand" readonly="not is_initial_demand_editable"/>
                     <field name="quantity" string="Quantity" readonly="not is_quantity_done_editable"/>
                     <field name="picked"/>
-                    <field name="product_uom" readonly="state != 'draft' and id" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
+                    <field name="product_uom" readonly="state != 'draft' and id" options="{'no_open': True, 'no_create': True}" widget="many2one_uom" groups="uom.group_uom"/>
                 </list>
             </field>
         </record>
@@ -138,7 +136,6 @@
                     <field name="picking_type_entire_packs" invisible="1"/>
                     <field name="display_assign_serial" invisible="1"/>
                     <field name="display_import_lot" invisible="1"/>
-                    <field name="product_uom_category_id" invisible="1"/>
                     <field name="product_uom" invisible="1" groups="!uom.group_uom"/>
                     <field name="picking_code" invisible="1"/>
                     <field name="has_tracking" invisible="1"/>
@@ -153,7 +150,7 @@
                             <label for="product_uom_qty"/>
                             <div class="o_row">
                                 <span><field name="product_uom_qty" readonly="state != 'draft'" nolabel="1"/></span>
-                                <span><field name="product_uom" groups="uom.group_uom" readonly="state != 'draft'" nolabel="1" options="{'no_open': True}"/></span>
+                                <span><field name="product_uom" groups="uom.group_uom" widget="many2one_uom" readonly="state != 'draft'" nolabel="1" options="{'no_open': True}"/></span>
                             </div>
                         </group>
                         <group/>
@@ -179,7 +176,6 @@
                     <field name="company_id" column_invisible="True" force_save="1"/>
                     <field name="picking_id" column_invisible="True" force_save="1"/>
                     <field name="move_id" column_invisible="True" force_save="1" />
-                    <field name="product_uom_category_id" column_invisible="True"/>
                     <field name="product_id" column_invisible="True"/>
                     <field name="package_level_id" column_invisible="True"/>
                     <field name="location_id" column_invisible="True"/>
@@ -220,7 +216,7 @@
                     <field name="picking_code" column_invisible="True"/>
                     <field name="picked" column_invisible="True"/>
                     <field name="quantity" string="Quantity" readonly="(state == 'done' and is_locked) or (package_level_id and parent.picking_type_entire_packs)" sum="Quantity"/>
-                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"
+                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom"
                         readonly="(package_level_id and parent.picking_type_entire_packs) or (state == 'done' and id)"/>
                 </list>
             </field>
@@ -242,7 +238,6 @@
                     <field name="picking_code" column_invisible="True"/>
                     <field name="picking_location_id" column_invisible="True"/>
                     <field name="picking_location_dest_id" column_invisible="True"/>
-                    <field name="product_uom_category_id" column_invisible="True"/>
                     <field name="location_id" column_invisible="True"/>
                     <field name="location_dest_id" column_invisible="True"/>
                     <field name="quant_id" column_invisible="context.get('picking_code') == 'incoming'"
@@ -262,7 +257,7 @@
                     <field name="state" column_invisible="True"/>
                     <field name="is_locked" column_invisible="True"/>
                     <field name="quantity" readonly="state in ('done', 'cancel') and is_locked" force_save="1"/>
-                    <field name="product_uom_id" force_save="1" readonly="state != 'draft' and id" groups="uom.group_uom"/>
+                    <field name="product_uom_id" force_save="1" readonly="state != 'draft' and id" groups="uom.group_uom" widget="many2one_uom"/>
                 </list>
             </field>
         </record>
@@ -290,11 +285,10 @@
                             </group>
                             <group name="main_grp_col2">
                                 <field name="product_id" readonly="state == 'done'"/>
-                                <field name="product_uom_category_id" invisible="1"/>
                                 <label for="product_uom_qty"/>
                                 <div class="o_row">
                                     <field name="product_uom_qty" readonly="state == 'done'"/>
-                                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
+                                    <field name="product_uom" widget="many2one_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                                 </div>
                                 <field name="name" invisible="1"/>
                                 <div class="o_td_label">
@@ -443,7 +437,7 @@
                     <field name="origin" optional="show"/>
                     <field name="product_id" readonly="state == 'done'"/>
                     <field name="product_uom_qty" readonly="state == 'done'"/>
-                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom"/>
                     <field name="location_id" options="{'no_create': True}" column_invisible="True"/>
                     <field name="location_dest_id" column_invisible="True"/>
                     <field name="state" optional="show"/>

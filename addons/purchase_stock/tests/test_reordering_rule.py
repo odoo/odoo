@@ -31,6 +31,7 @@ class TestReorderingRule(TransactionCase):
         product_form.description = 'Internal Notes'
         with product_form.seller_ids.new() as seller:
             seller.partner_id = cls.partner
+            seller.product_uom_id = cls.env.ref('uom.product_uom_unit')
         product_form.route_ids.add(cls.env.ref('purchase_stock.route_warehouse0_buy'))
         cls.product_01 = product_form.save()
 
@@ -313,7 +314,6 @@ class TestReorderingRule(TransactionCase):
             'product_id': self.product_01.id,
             'product_min_qty': 0,
             'product_max_qty': 0,
-            'qty_multiple': 1,
         })
 
         delivery = self.env['stock.picking'].create({
@@ -1173,9 +1173,8 @@ class TestReorderingRule(TransactionCase):
         product = self.env['product.product'].create({
             'name': 'Storable Product',
             'is_storable': True,
-            'uom_id': self.env.ref('uom.product_uom_categ_kgm').uom_ids[3].id,
-            'uom_po_id': self.env.ref('uom.product_uom_categ_kgm').uom_ids[4].id,
-            'seller_ids': [(0, 0, {'partner_id': self.partner.id, 'min_qty': 6})],
+            'uom_id': self.env.ref('uom.product_uom_kgm').id,
+            'seller_ids': [(0, 0, {'partner_id': self.partner.id, 'min_qty': 6, 'product_uom_id': self.env.ref('uom.product_uom_ton').id})],
         })
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         orderpoint = self.env['stock.warehouse.orderpoint'].create({

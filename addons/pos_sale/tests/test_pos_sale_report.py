@@ -48,7 +48,6 @@ class TestPoSSaleReport(TestPoSCommon):
         product_template = self.env['product.template'].create({
             'name': 'Sofa',
             'uom_id': uom_unit.id,
-            'uom_po_id': uom_unit.id,
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': prod_attr.id,
                 'value_ids': [(6, 0, prod_attr_values.ids)]

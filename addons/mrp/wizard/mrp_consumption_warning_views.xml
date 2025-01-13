@@ -27,7 +27,7 @@
                             <field name="mrp_production_id" column_invisible="parent.mrp_production_count == 1" force_save="1"/>
                             <field name="consumption" column_invisible="True" force_save="1"/>
                             <field name="product_id" force_save="1"/>
-                            <field name="product_uom_id" groups="uom.group_uom" force_save="1"/>
+                            <field name="product_uom_id" groups="uom.group_uom" force_save="1" widget="many2one_uom"/>
                             <field name="product_expected_qty_uom" force_save="1"/>
                             <field name="product_consumed_qty_uom" force_save="1"/>
                         </list>

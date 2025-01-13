@@ -65,7 +65,6 @@ class TestMrpCommon(TestStockCommon):
         ) = cls.env['product.product'].create([{
             'name': 'Stick',  # product_4
             'uom_id': cls.uom_dozen.id,
-            'uom_po_id': cls.uom_dozen.id,
         }, {
             'name': 'Stone Tools',  # product_5
         }, {
@@ -221,7 +220,6 @@ class TestMrpCommon(TestStockCommon):
         cls.laptop = cls.env['product.product'].create({
             'name': 'Acoustic Bloc Screens',
             'uom_id': cls.env.ref("uom.product_uom_unit").id,
-            'uom_po_id': cls.env.ref("uom.product_uom_unit").id,
             'type': 'consu',
             'is_storable': True,
             'tracking': 'none',
@@ -229,7 +227,6 @@ class TestMrpCommon(TestStockCommon):
         cls.graphics_card = cls.env['product.product'].create({
             'name': 'Individual Workplace',
             'uom_id': cls.env.ref("uom.product_uom_unit").id,
-            'uom_po_id': cls.env.ref("uom.product_uom_unit").id,
             'type': 'consu',
             'is_storable': True,
             'tracking': 'none',

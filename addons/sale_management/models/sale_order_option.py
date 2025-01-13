@@ -31,16 +31,16 @@ class SaleOrderOption(models.Model):
     quantity = fields.Float(
         string="Quantity",
         required=True,
-        digits='Product Unit of Measure',
+        digits='Product Unit',
         default=1)
+    allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     uom_id = fields.Many2one(
         comodel_name='uom.uom',
-        string="Unit of Measure",
+        string="Unit",
         compute='_compute_uom_id',
+        domain="[('id', 'in', allowed_uom_ids)]",
         store=True, readonly=False,
-        required=True, precompute=True,
-        domain="[('category_id', '=', product_uom_category_id)]")
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
+        required=True, precompute=True)
 
     price_unit = fields.Float(
         string="Unit Price",
@@ -62,6 +62,11 @@ class SaleOrderOption(models.Model):
              "already present in the quotation.")
 
     #=== COMPUTE METHODS ===#
+
+    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids')
+    def _compute_allowed_uom_ids(self):
+        for option in self:
+            option.allowed_uom_ids = option.product_id.uom_id | option.product_id.uom_ids
 
     @api.depends('product_id')
     def _compute_name(self):

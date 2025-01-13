@@ -32,7 +32,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_stock_replenishment_info']" position="before">
                     <field name="show_supplier" column_invisible="True"/>
-                    <field name="supplier_id" string="Vendor" optional="hidden" invisible="not show_supplier" options="{'no_create': True}"/>
+                    <field name="supplier_id" string="Vendor" optional="hidden" invisible="not show_supplier" options="{'no_create': True}" context="{'display_supplier_uom_qty': True}"/>
                 </xpath>
             </field>
         </record>

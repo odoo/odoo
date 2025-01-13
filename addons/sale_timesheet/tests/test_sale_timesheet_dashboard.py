@@ -17,7 +17,6 @@ class TestSaleTimesheetDashboard(Common):
             'type': 'service',
             'invoice_policy': 'delivery',
             'uom_id': cls.uom_hour.id,
-            'uom_po_id': cls.uom_hour.id,
             'default_code': 'SERV-DELI1',
             'service_type': 'timesheet',
             'service_tracking': 'no',
@@ -27,6 +26,8 @@ class TestSaleTimesheetDashboard(Common):
 
     def test_get_sale_item_data_various_sol_with_timesheet_installed(self):
         """This test ensures that when the timesheet module is installed, the sols are computed and put into the new profitability sections."""
+        hour_uom_id = self.env.ref('uom.product_uom_hour').id
+        unit_uom_id = self.env.ref('uom.product_uom_unit').id
 
         sol_service_1, sol_service_2, sol_service_3, sol_service_4, sol_service_5 = self.dashboardSaleOrderLine.create([{
             'product_id': self.product_milestone.id,
@@ -47,25 +48,25 @@ class TestSaleTimesheetDashboard(Common):
         sale_item_data = self.dashboard_project.get_sale_items_data(with_action=False, limit=5, section_id='materials')
         self.assertEqual(
             sale_item_data['sol_items'],
-            [{'id': sol_service_3.id, 'name': 'Material', 'product_uom_qty': 1.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom_id': (1, 'Units'), 'product_id': (self.material_product.id, 'Material')}]
+            [{'id': sol_service_3.id, 'name': 'Material', 'product_uom_qty': 1.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom_id': (unit_uom_id, 'Units'), 'product_id': (self.material_product.id, 'Material')}]
         )
         sale_item_data = self.dashboard_project.get_sale_items_data(with_action=False, limit=5, section_id='billable_fixed')
         self.assertEqual(
             sale_item_data['sol_items'],
-            [{'id': sol_service_2.id, 'name': '[SERV-ORDERED2] Product prepaid', 'product_uom_qty': 1.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom_id': (4, 'Hours'), 'product_id': (self.product_prepaid.id, '[SERV-ORDERED2] Product prepaid')}]
+            [{'id': sol_service_2.id, 'name': '[SERV-ORDERED2] Product prepaid', 'product_uom_qty': 1.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom_id': (hour_uom_id, 'Hours'), 'product_id': (self.product_prepaid.id, '[SERV-ORDERED2] Product prepaid')}]
         )
         sale_item_data = self.dashboard_project.get_sale_items_data(with_action=False, limit=5, section_id='billable_milestones')
         self.assertEqual(
             sale_item_data['sol_items'],
-            [{'id': sol_service_1.id, 'name': '[SERV-ORDERED2] Service Milestone', 'product_uom_qty': 1.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom_id': (4, 'Hours'), 'product_id': (self.product_milestone.id, '[SERV-ORDERED2] Service Milestone')}]
+            [{'id': sol_service_1.id, 'name': '[SERV-ORDERED2] Service Milestone', 'product_uom_qty': 1.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom_id': (hour_uom_id, 'Hours'), 'product_id': (self.product_milestone.id, '[SERV-ORDERED2] Service Milestone')}]
         )
         sale_item_data = self.dashboard_project.get_sale_items_data(with_action=False, limit=5, section_id='billable_time')
         self.assertEqual(
             sale_item_data['sol_items'],
-            [{'id': sol_service_4.id, 'name': '[SERV-DELI1] Service delivered', 'product_uom_qty': 1.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom_id': (4, 'Hours'), 'product_id': (self.dashboard_product_delivery_timesheet.id, '[SERV-DELI1] Service delivered')}]
+            [{'id': sol_service_4.id, 'name': '[SERV-DELI1] Service delivered', 'product_uom_qty': 1.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom_id': (hour_uom_id, 'Hours'), 'product_id': (self.dashboard_product_delivery_timesheet.id, '[SERV-DELI1] Service delivered')}]
         )
         sale_item_data = self.dashboard_project.get_sale_items_data(with_action=False, limit=5, section_id='billable_manual')
         self.assertEqual(
             sale_item_data['sol_items'],
-            [{'id': sol_service_5.id, 'name': '[SERV-ORDERED2] Service Delivery', 'product_uom_qty': 1.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom_id': (4, 'Hours'), 'product_id': (self.dashboard_product_delivery_service.id, '[SERV-ORDERED2] Service Delivery')}]
+            [{'id': sol_service_5.id, 'name': '[SERV-ORDERED2] Service Delivery', 'product_uom_qty': 1.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom_id': (hour_uom_id, 'Hours'), 'product_id': (self.dashboard_product_delivery_service.id, '[SERV-ORDERED2] Service Delivery')}]
         )

@@ -63,7 +63,6 @@
                                 -->
                                 <field name="sequence" invisible="1"/>
                                 <field name="display_type" invisible="1"/>
-                                <field name="product_uom_category_id" invisible="1"/>
                                 <field name="company_id" invisible="1"/>
                                 <group invisible="display_type">
                                     <group>
@@ -99,7 +98,6 @@
                                 <field name="product_id"/>
                                 <field name="name"/>
                                 <field name="product_uom_qty"/>
-                                <field name="product_uom_category_id" column_invisible="True"/>
                                 <field
                                     name="product_uom_id"
                                     groups="uom.group_uom"
@@ -113,8 +111,7 @@
                             <field name="product_id"/>
                             <field name="name"/>
                             <field name="quantity"/>
-                            <field name="product_uom_category_id" column_invisible="True"/>
-                            <field name="uom_id" groups="uom.group_uom"/>
+                            <field name="uom_id" widget="many2one_uom" groups="uom.group_uom"/>
                             <field name="company_id" column_invisible="True"/>
                           </list>
                         </field>

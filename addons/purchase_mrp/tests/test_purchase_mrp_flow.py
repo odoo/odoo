@@ -17,8 +17,6 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         super().setUpClass()
         # Useful models
         cls.UoM = cls.env['uom.uom']
-        cls.categ_unit = cls.env.ref('uom.product_uom_categ_unit')
-        cls.categ_kgm = cls.env.ref('uom.product_uom_categ_kgm')
         cls.warehouse = cls.env['stock.warehouse'].search([('company_id', '=', cls.env.company.id)])
         cls.stock_location = cls.warehouse.lot_stock_id
 
@@ -27,28 +25,10 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         group_user.write({'implied_ids': [(4, grp_uom.id)]})
         cls.env.user.write({'groups_id': [(4, grp_uom.id)]})
 
-        cls.uom_kg = cls.env['uom.uom'].search([('category_id', '=', cls.categ_kgm.id), ('uom_type', '=', 'reference')],
-                                                 limit=1)
-        cls.uom_kg.write({
-            'name': 'Test-KG',
-            'rounding': 0.000001})
-        cls.uom_gm = cls.UoM.create({
-            'name': 'Test-G',
-            'category_id': cls.categ_kgm.id,
-            'uom_type': 'smaller',
-            'factor': 1000.0,
-            'rounding': 0.001})
-        cls.uom_unit = cls.env['uom.uom'].search(
-            [('category_id', '=', cls.categ_unit.id), ('uom_type', '=', 'reference')], limit=1)
-        cls.uom_unit.write({
-            'name': 'Test-Unit',
-            'rounding': 0.01})
-        cls.uom_dozen = cls.UoM.create({
-            'name': 'Test-DozenA',
-            'category_id': cls.categ_unit.id,
-            'factor_inv': 12,
-            'uom_type': 'bigger',
-            'rounding': 0.001})
+        cls.uom_kg = cls.env.ref('uom.product_uom_kgm')
+        cls.uom_gm = cls.env.ref('uom.product_uom_gram')
+        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
+        cls.uom_dozen = cls.env.ref('uom.product_uom_dozen')
 
         # Creating all components
         cls.component_a = cls._create_product_with_form('Comp A', cls.uom_unit)
@@ -160,7 +140,6 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         p.is_storable = True
         p.categ_id = cls.env.ref('product.product_category_goods')
         p.uom_id = uom_id
-        p.uom_po_id = uom_id
         p.route_ids.clear()
         for r in routes:
             p.route_ids.add(r)
@@ -1015,10 +994,9 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         })
         # Compo D has 1 vendor with a min qty of 1 dozen
         self.component_d.write({
-            'uom_po_id': self.uom_dozen.id,
             'route_ids': [Command.link(buy_route.id)],
             'seller_ids': [
-                Command.create({'partner_id': self.partner_a.id, 'min_qty': 1, 'price': 10}),
+                Command.create({'partner_id': self.partner_a.id, 'product_uom_id': self.uom_dozen.id, 'min_qty': 1, 'price': 10}),
             ]
         })
 

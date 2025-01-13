@@ -19,9 +19,6 @@
     <menuitem id="menu_wms_barcode_nomenclature_all" parent="menu_product_in_config_stock" action="barcodes.action_barcode_nomenclature_form"
         sequence="50" groups="base.group_no_one"/>
 
-    <menuitem id="product_uom_menu" name="Units of Measures" parent="menu_stock_config_settings"
-        sequence="5" groups="uom.group_uom"/>
-
     <menuitem
         action="product.product_category_action_form" id="menu_product_category_config_stock"
         parent="stock.menu_product_in_config_stock" sequence="2"/>
@@ -30,16 +27,9 @@
         parent="stock.menu_product_in_config_stock" sequence="4" groups="product.group_product_variant"/>
 
     <menuitem
-        action="uom.product_uom_categ_form_action" id="menu_stock_uom_categ_form_action"
-        name="UoM Categories"
-        parent="product_uom_menu" sequence="5"/>
-    <menuitem
-        id="menu_stock_unit_measure_stock" name="Units of Measure"
-        parent="stock.menu_product_in_config_stock"  sequence="35" groups="uom.group_uom"/>
-
-    <menuitem id="menu_stock_uom_form_action" action="uom.product_uom_form_action"
-        name="UoM" active="False"
-        parent="product_uom_menu" sequence="35" groups="base.group_no_one"/>
+        action="uom.product_uom_form_action" id="menu_stock_uom_form_action"
+        name="Units &amp; Packagings" groups="uom.group_uom"
+        parent="menu_product_in_config_stock" sequence="5"/>
 
     <menuitem id="menu_stock_inventory_control" name="Products" parent="menu_stock_root" sequence="4"/>
 

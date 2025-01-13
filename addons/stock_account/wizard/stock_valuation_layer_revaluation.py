@@ -52,7 +52,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
     product_id = fields.Many2one('product.product', "Related product", required=True, check_company=True)
     lot_id = fields.Many2one('stock.lot', "Related lot/serial number", check_company=True)
     property_valuation = fields.Selection(related='product_id.valuation')
-    product_uom_name = fields.Char("Unit of Measure", related='product_id.uom_id.name')
+    product_uom_name = fields.Char("Unit", related='product_id.uom_id.name')
     current_value_svl = fields.Float("Current Value", compute='_compute_current_value_svl')
     current_quantity_svl = fields.Float("Current Quantity", compute='_compute_current_value_svl')
 

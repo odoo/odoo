@@ -255,7 +255,6 @@ class TestProductPricelist(ProductCommon):
         spam = self.env['product.product'].create({
             'name': '1 tonne of spam',
             'uom_id': self.uom_ton.id,
-            'uom_po_id': self.uom_ton.id,
             'list_price': 100,
             'type': 'consu'
         })
@@ -300,7 +299,7 @@ class TestProductPricelist(ProductCommon):
     def test_40_pricelist_item_min_quantity_precision(self):
         """Test that the min_quantity has the precision of Product UoM."""
         # Arrange: Change precision digits
-        uom_precision = self.env.ref("product.decimal_product_uom")
+        uom_precision = self.env.ref("uom.decimal_product_uom")
         uom_precision.digits = 3
         pricelist_item = self.customer_pricelist.item_ids[0]
         precise_value = 1.234

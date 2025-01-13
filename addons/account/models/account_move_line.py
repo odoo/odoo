@@ -320,19 +320,14 @@ class AccountMoveLine(models.Model):
     )
     product_uom_id = fields.Many2one(
         comodel_name='uom.uom',
-        string='Unit of Measure',
+        string='Unit',
         compute='_compute_product_uom_id', store=True, readonly=False, precompute=True,
-        domain="[('category_id', '=', product_uom_category_id)]",
         ondelete="restrict",
-    )
-    product_uom_category_id = fields.Many2one(
-        comodel_name='uom.category',
-        related='product_id.uom_id.category_id',
     )
     quantity = fields.Float(
         string='Quantity',
         compute='_compute_quantity', store=True, readonly=False, precompute=True,
-        digits='Product Unit of Measure',
+        digits='Product Unit',
         help="The optional quantity expressed by this line, eg: number of product sold. "
              "The quantity is not a legal requirement but is very useful for some reports.",
     )
@@ -792,7 +787,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             # vendor bills should have the product purchase UOM
             if line.move_id.is_purchase_document():
-                line.product_uom_id = line.product_id.uom_po_id
+                line.product_uom_id = line.product_id.seller_ids.filtered(lambda s: s.partner_id == line.partner_id).product_uom_id or line.product_id.uom_id
             else:
                 line.product_uom_id = line.product_id.uom_id
 
@@ -1224,18 +1219,6 @@ class AccountMoveLine(models.Model):
                     raise UserError(_("Account %s is of receivable type, but is used in a purchase operation.", line.account_id.code))
                 if (line.display_type == 'payment_term') ^ (account_type == 'liability_payable'):
                     raise UserError(_("Any journal item on a payable account must have a due date and vice versa."))
-
-    @api.constrains('product_uom_id')
-    def _check_product_uom_category_id(self):
-        for line in self:
-            if line.product_uom_id and line.product_id and line.product_uom_id.category_id != line.product_id.product_tmpl_id.uom_id.category_id:
-                raise UserError(_(
-                    "The Unit of Measure (UoM) '%(uom)s' you have selected for product '%(product)s', "
-                    "is incompatible with its category : %(category)s.",
-                    uom=line.product_uom_id.name,
-                    product=line.product_id.name,
-                    category=line.product_id.product_tmpl_id.uom_id.category_id.name
-                ))
 
     def _affect_tax_report(self):
         self.ensure_one()

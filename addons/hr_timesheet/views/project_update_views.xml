@@ -20,7 +20,7 @@
                 <b id="tasks_stats" position='after'>
                     <field name="display_timesheet_stats" invisible="1"/>
                     <div class="o_pupdate_kanban_width" invisible="not display_timesheet_stats">
-                        <field name="timesheet_time"/><span invisible="not allocated_time"> / <field name="allocated_time"/></span> <field name="uom_id" no_open="1"/><span invisible="not allocated_time"> (<field name="timesheet_percentage"/>%)</span>
+                        <field name="timesheet_time"/><span invisible="not allocated_time"> / <field name="allocated_time"/></span> <field name="uom_id" widget="many2one_uom" no_open="1"/><span invisible="not allocated_time"> (<field name="timesheet_percentage"/>%)</span>
                     </div>
                 </b>
             </field>

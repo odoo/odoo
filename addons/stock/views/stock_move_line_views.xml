@@ -21,7 +21,7 @@
                 <field name="quantity" string="Quantity"
                     decoration-danger="(location_usage in ('internal','transit')) and (location_dest_usage not in ('internal','transit'))"
                     decoration-success="(location_usage not in ('internal','transit')) and (location_dest_usage in ('internal','transit'))"/>
-                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" string="Unit" groups="uom.group_uom"/>
+                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" widget="many2one_uom" groups="uom.group_uom"/>
                 <field name="state" widget='badge' optional="show"
                        decoration-danger="state=='cancel'"
                        decoration-info="state== 'assigned'"
@@ -47,7 +47,7 @@
                 <field name="location_dest_id" groups="stock.group_stock_multi_locations" />
                 <field name="package_id" groups="stock.group_tracking_lot"/>
                 <field name="quantity" string="Quantity" optional="show"/>
-                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" optional="show" string="Unit of Measure" groups="uom.group_uom"/>
+                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" widget="many2one_uom" optional="show" groups="uom.group_uom"/>
                 <field name="company_id" groups="base.group_multi_company" force_save="1" optional="hide"/>
                 <field name="state" widget='badge' optional="show"
                        decoration-danger="state=='cancel'"
@@ -73,7 +73,6 @@
                     <field name="location_id" invisible="1"/>
                     <field name="location_dest_id" invisible="1"/>
                     <field name="package_id" invisible="1"/>
-                    <field name="product_uom_category_id" invisible="1"/>
                     <field name="tracking" invisible="1"/>
                     <field name="picked" invisible="1"/>
                     <group>
@@ -89,7 +88,7 @@
                             <label for="quantity" string="Quantity"/>
                             <div class="o_row">
                                 <field name="quantity"/>
-                                <field name="product_uom_id" options="{'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
+                                <field name="product_uom_id" options="{'no_create': True}" widget="many2one_uom" groups="uom.group_uom"/>
                             </div>
                             <field name="lot_id" groups="stock.group_production_lot" context="{'default_product_id': product_id, 'active_picking_id': picking_id}"
                                    invisible="tracking == 'none' or not lot_id and lot_name"/>
@@ -185,7 +184,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <field name="quantity" string="Quantity"/>
-                                <field name="product_uom_id" string="Unit of Measure" groups="uom.group_uom"/>
+                                <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                             </div>
                             <field class="col-6 text-end" name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'danger', 'waiting': 'warning', 'confirmed': 'warning', 'done': 'success'}}"/>
                         </div>

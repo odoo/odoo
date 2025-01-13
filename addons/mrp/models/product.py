@@ -28,7 +28,7 @@ class ProductTemplate(models.Model):
         compute='_compute_bom_count', compute_sudo=False)
     used_in_bom_count = fields.Integer('# of BoM Where is Used',
         compute='_compute_used_in_bom_count', compute_sudo=False)
-    mrp_product_qty = fields.Float('Manufactured', digits='Product Unit of Measure',
+    mrp_product_qty = fields.Float('Manufactured', digits='Product Unit',
         compute='_compute_mrp_product_qty', compute_sudo=False)
     is_kits = fields.Boolean(compute='_compute_is_kits', search='_search_is_kits')
 
@@ -121,7 +121,7 @@ class ProductProduct(models.Model):
         compute='_compute_bom_count', compute_sudo=False)
     used_in_bom_count = fields.Integer('# BoM Where Used',
         compute='_compute_used_in_bom_count', compute_sudo=False)
-    mrp_product_qty = fields.Float('Manufactured', digits='Product Unit of Measure',
+    mrp_product_qty = fields.Float('Manufactured', digits='Product Unit',
         compute='_compute_mrp_product_qty', compute_sudo=False)
     is_kits = fields.Boolean(compute="_compute_is_kits", search='_search_is_kits')
 

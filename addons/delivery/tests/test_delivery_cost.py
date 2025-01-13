@@ -73,7 +73,6 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
             'list_price': 75.0,
             'standard_price': 30.0,
             'uom_id': self.product_uom_hour.id,
-            'uom_po_id': self.product_uom_hour.id,
             'name': 'Service',
             'type': 'service'
         })
