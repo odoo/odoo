@@ -12,6 +12,7 @@ export class TableResizePlugin extends Plugin {
     static dependencies = ["table", "history"];
 
     setup() {
+        this.addDomListener(this.editable, "dblclick", this.fitToContent);
         this.addDomListener(this.editable, "mousedown", this.onMousedown);
         this.addDomListener(this.editable, "mousemove", this.onMousemove);
     }
@@ -240,6 +241,52 @@ export class TableResizePlugin extends Plugin {
                     item.style[sizeProp] = newSize + "px";
                 }
                 break;
+            }
+        }
+    }
+
+    /**
+     * Resizes rows and columns based on the mouse's double-click on the borders.
+     * Adjusts width of columns or height of rows depending on the cursor position.
+     * Adjacent rows/columns are resized as well.
+     *
+     * @param {MouseEvent} ev - The double-click mouse event.
+     */
+    fitToContent(ev) {
+        const isHoveringTdBorder = this.isHoveringTdBorder(ev);
+        if (!isHoveringTdBorder) {
+            return;
+        }
+        const cell = ev.target;
+        if (["left", "right"].includes(isHoveringTdBorder)) {
+            const table = closestElement(cell, "table");
+            const currentColumnIndex = getColumnIndex(cell);
+            const currentColumnCells = table.querySelectorAll(
+                `tr td:nth-of-type(${currentColumnIndex + 1})`
+            );
+            this.dependencies.table.resetColumnWidth(currentColumnCells[0]);
+            const isLeftSideClick = isHoveringTdBorder === "left";
+            if (
+                (isLeftSideClick && currentColumnIndex > 0) ||
+                (!isLeftSideClick && currentColumnIndex < table.rows[0].cells.length - 1)
+            ) {
+                const siblingColumnIndex = isLeftSideClick
+                    ? currentColumnIndex - 1
+                    : currentColumnIndex + 1;
+                const siblingColumnCells = table.querySelectorAll(
+                    `tr td:nth-of-type(${siblingColumnIndex + 1})`
+                );
+                this.dependencies.table.resetColumnWidth(siblingColumnCells[0]);
+            }
+        } else if (["top", "bottom"].includes(isHoveringTdBorder)) {
+            const currentRow = cell.parentElement;
+            this.dependencies.table.resetRowHeight(currentRow);
+            const siblingRow =
+                isHoveringTdBorder === "top"
+                    ? currentRow.previousElementSibling
+                    : currentRow.nextElementSibling;
+            if (siblingRow) {
+                this.dependencies.table.resetRowHeight(siblingRow);
             }
         }
     }
