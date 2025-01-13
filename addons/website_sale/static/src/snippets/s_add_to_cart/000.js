@@ -34,7 +34,7 @@ publicWidget.registry.AddToCartSnippet = publicWidget.Widget.extend({
             }
         }
 
-        this.call('websiteSale', 'addToCart',
+        this.call('cart', 'add',
             {
                 productTemplateId: productTemplateId,
                 productId: productId,

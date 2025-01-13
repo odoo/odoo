@@ -146,7 +146,7 @@ const DynamicSnippetProductsCard = publicWidget.Widget.extend({
         const productId = parseInt(dataset.productId);
         const isCombo = dataset.productType === 'combo';
 
-        await this.call('websiteSale', 'addToCart', {
+        await this.call('cart', 'add', {
             productTemplateId: productTemplateId,
             productId: productId,
             isCombo: isCombo,
