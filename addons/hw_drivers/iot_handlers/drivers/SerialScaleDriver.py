@@ -94,7 +94,7 @@ class ScaleDriver(SerialDriver):
     last_sent_value = None
 
     def __init__(self, identifier, device):
-        super(ScaleDriver, self).__init__(identifier, device)
+        super().__init__(identifier, device)
         self.device_type = 'scale'
         self._set_actions()
         self._is_reading = True

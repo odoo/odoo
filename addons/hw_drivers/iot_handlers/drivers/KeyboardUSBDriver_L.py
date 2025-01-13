@@ -47,7 +47,7 @@ class KeyboardUSBDriver(Driver):
             os.environ['XAUTHORITY'] = "/run/lightdm/pi/xauthority"
             KeyboardUSBDriver.display = xlib.XOpenDisplay(bytes(":0.0", "utf-8"))
 
-        super(KeyboardUSBDriver, self).__init__(identifier, device)
+        super().__init__(identifier, device)
         self.device_connection = 'direct'
         self.device_name = self._set_name()
 

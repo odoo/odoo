@@ -23,7 +23,7 @@ class ConnectionManager(Thread):
     daemon = True
 
     def __init__(self):
-        super(ConnectionManager, self).__init__()
+        super().__init__()
         self.pairing_code = False
         self.pairing_uuid = False
         self.pairing_code_expired = False
