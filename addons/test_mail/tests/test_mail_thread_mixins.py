@@ -90,17 +90,17 @@ class TestMailThreadCC(MailCommon):
         record = self.env['mail.test.cc'].create({
             'email_cc': 'cc1@example.com, cc2@example.com, cc3 <cc3@example.com>',
         })
-        suggestions = record._message_get_suggested_recipients()
+        suggestions = record._message_get_suggested_recipients(no_create=True)
         expected_list = [
             {
                 'name': '', 'email': 'cc1@example.com',
-                'reason': 'CC Email', 'partner_id': False, 'create_values': {},
+                'partner_id': False, 'create_values': {},
             }, {
                 'name': '', 'email': 'cc2@example.com',
-                'reason': 'CC Email', 'partner_id': False, 'create_values': {},
+                'partner_id': False, 'create_values': {},
             }, {
                 'name': 'cc3', 'email': 'cc3@example.com',
-                'reason': 'CC Email', 'partner_id': False, 'create_values': {},
+                'partner_id': False, 'create_values': {},
             }]
         self.assertEqual(len(suggestions), len(expected_list))
         for suggestion, expected in zip(suggestions, expected_list):

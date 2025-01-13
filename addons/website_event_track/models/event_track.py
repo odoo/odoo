@@ -480,15 +480,15 @@ class EventTrack(models.Model):
             } for track in self
         }
 
-    def _message_get_suggested_recipients(self):
-        recipients = super()._message_get_suggested_recipients()
+    def _message_add_suggested_recipients(self):
+        email_to_lst, partners = super()._message_add_suggested_recipients()
         if not self.partner_id:
             #  Priority: contact information then speaker information
-            if self.contact_email and self.contact_email != self.partner_id.email:
-                self._message_add_suggested_recipient(recipients, email=self.contact_email, reason=_('Contact Email'))
-            if not self.contact_email and self.partner_email and self.partner_email != self.partner_id.email:
-                self._message_add_suggested_recipient(recipients, email=self.partner_email, reason=_('Speaker Email'))
-        return recipients
+            if self.contact_email:
+                email_to_lst.append(self.contact_email)
+            elif self.partner_email:
+                email_to_lst.append(self.partner_email)
+        return email_to_lst, partners
 
     def _message_post_after_hook(self, message, msg_vals):
         #  OVERRIDE

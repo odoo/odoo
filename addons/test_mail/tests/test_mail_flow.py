@@ -1,7 +1,8 @@
+from odoo import tools
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
 from odoo.addons.test_mail.tests.common import TestRecipients
-from odoo.tools.mail import email_normalize, formataddr
+from odoo.tools.mail import formataddr
 from odoo.tests import tagged
 
 
@@ -187,64 +188,59 @@ class TestMailFlow(MailCommon, TestRecipients):
         # uses Chatter: fetches suggested recipients, post a message
         # - checks all suggested: email_cc field, primary email
         # ------------------------------------------------------------
-        suggested_all = lead_as_emp._message_get_suggested_recipients()
-        expected_all = [
-            {  # first primary email
-                'create_values': {
-                    'lang': 'fr_FR',
-                    'mobile': False,
-                    'phone': '+32455001122',
-                },
-                'email': 'sylvie.lelitre@zboing.com',
-                'name': 'Sylvie Lelitre (Zboing)',
-                'partner_id': False,
-                'reason': 'Customer Email',
-            },
-            {  # mail.thread.cc: email_cc field
-                'create_values': {},
-                'email': 'pay@zboing.com',
-                'name': '',
-                'partner_id': False,
-                'reason': 'CC Email',
-            },
-            {  # mail.thread.cc: email_cc field (linked to partner)
-                'create_values': {},
-                'email': 'portal@zboing.com',
-                'name': 'Portal Zboing',
-                'reason': 'CC Email',
-                'partner_id': self.customer_portal_zboing.id,
-            },
-        ]
-        for suggested, expected in zip(suggested_all, expected_all):
-            self.assertDictEqual(suggested, expected)
-
-        # check recipients, which creates them (simulating discuss in a quick way)
-        lead_as_emp._partner_find_from_emails_single([sug['email'] for sug in suggested_all])
+        suggested_all = lead_as_emp._message_get_suggested_recipients(
+            reply_discussion=True, no_create=False,
+        )
         partner_sylvie = self.env['res.partner'].search(
             [('email_normalized', '=', 'sylvie.lelitre@zboing.com')]
         )
         partner_pay = self.env['res.partner'].search(
             [('email_normalized', '=', 'pay@zboing.com')]
         )
-        self.assertEqual(
-            len(partner_sylvie + partner_pay), 2,
-            'Mail: should have created partners for emails')
-        self.assertFalse(
-            self.env['res.partner'].search([('email_normalized', '=', 'accounting@zboing.com')]),
-            'Mail: currently other "To" in incoming emails are lost if not linked to existing partners'
+        partner_accounting = self.env['res.partner'].search(
+            [('email_normalized', '=', 'accounting@zboing.com')]
         )
+        expected_all = [
+            {  # existing partners come first
+                'create_values': {},
+                'email': 'portal@zboing.com',
+                'name': 'Portal Zboing',
+                'partner_id': self.customer_portal_zboing.id,
+            },
+            {  # primary email comes first
+                'create_values': {},
+                'email': 'sylvie.lelitre@zboing.com',
+                'name': 'Sylvie Lelitre (Zboing)',
+                'partner_id': partner_sylvie.id,
+            },
+            {  # mail.thread.cc: email_cc field
+                'create_values': {},
+                'email': 'pay@zboing.com',
+                'name': 'pay@zboing.com',
+                'partner_id': partner_pay.id,
+            },
+            {  # reply message
+                'create_values': {},
+                'email': 'accounting@zboing.com',
+                'name': 'Josiane Quichopoils',
+                'partner_id': partner_accounting.id,
+            },
+        ]
+        for suggested, expected in zip(suggested_all, expected_all):
+            self.assertDictEqual(suggested, expected)
+
         # finally post the message with recipients
         with self.mock_mail_gateway():
             responsible_answer = lead_as_emp.message_post(
                 body='<p>Well received !',
-                partner_ids=(partner_sylvie + partner_pay + self.customer_portal_zboing).ids,
+                partner_ids=(partner_sylvie + partner_pay + partner_accounting + self.customer_portal_zboing).ids,
                 message_type='comment',
                 subject=f'Re: {lead.name}',
                 subtype_id=self.env.ref('mail.mt_comment').id,
             )
         self.assertEqual(lead_as_emp.message_partner_ids, self.partner_employee + self.partner_employee_2 + self.partner_portal)
 
-        external_partners = partner_sylvie + partner_pay + self.customer_portal_zboing + self.partner_portal
+        external_partners = partner_sylvie + partner_pay + partner_accounting + self.customer_portal_zboing + self.partner_portal
         internal_partners = self.partner_employee + self.partner_employee_2
         expected_chatter_reply_to = formataddr(
             (f'{self.env.company.name} {lead.name}', f'{self.alias_catchall}@{self.alias_domain}')
@@ -268,13 +264,14 @@ class TestMailFlow(MailCommon, TestRecipients):
                         'notified_partner_ids': external_partners + self.partner_employee_2,
                         'parent_id': incoming_email,
                         # matches posted message
-                        'partner_ids': partner_sylvie + partner_pay + self.customer_portal_zboing,
+                        'partner_ids': partner_sylvie + partner_pay + partner_accounting + self.customer_portal_zboing,
                         'reply_to': expected_chatter_reply_to,
                         'subtype_id': self.env.ref('mail.mt_comment'),
                     },
                     'notif': [
                         {'partner': partner_sylvie, 'type': 'email'},
                         {'partner': partner_pay, 'type': 'email'},
+                        {'partner': partner_accounting, 'type': 'email'},
                         {'partner': self.customer_portal_zboing, 'type': 'email'},
                         {'partner': self.partner_employee_2, 'type': 'email'},
                         {'partner': self.partner_portal, 'type': 'email'},
@@ -302,14 +299,16 @@ class TestMailFlow(MailCommon, TestRecipients):
             MAIL_TEMPLATE, [partner_sylvie.email_normalized], reply_all=False,
             cc=f'{self.test_emails[3]}, {self.test_emails[4]}',  # used mainly for existing partners currently
         )
+        external_partners += self.customer_zboing  # added in CC just above
         self.assertEqual(len(lead.message_ids), 3, 'Incoming email + chatter reply + customer reply')
         self.assertEqual(
             lead.message_partner_ids,
             partner_sylvie + internal_partners + self.partner_portal,
             'Mail gateway: author (partner_sylvie) added in followers')
 
+        customer_reply = lead.message_ids[0]
         self.assertMailNotifications(
-            lead.message_ids[0],
+            customer_reply,
             [
                 {
                     'content': 'Please call me as soon as possible',
@@ -317,6 +316,7 @@ class TestMailFlow(MailCommon, TestRecipients):
                     'message_values': {
                         'author_id': partner_sylvie,
                         'email_from': partner_sylvie.email_formatted,
+                        # Cc: received email CC - an email still not partnerized (invoicing) and customer_zboing
                         'incoming_email_cc': f'{self.test_emails[3]}, {self.test_emails[4]}',
                         'incoming_email_to': expected_chatter_reply_to,  # reply_all not already implemented, hence just alias
                         'mail_server_id': self.env['ir.mail_server'],
