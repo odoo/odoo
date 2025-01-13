@@ -14,9 +14,10 @@ class Interface(Thread):
     _loop_delay = 3  # Delay (in seconds) between calls to get_devices or 0 if it should be called only once
     _detected_devices = {}
     connection_type = ''
+    daemon = True
 
     def __init__(self):
-        super(Interface, self).__init__()
+        super().__init__()
         self.drivers = sorted([d for d in drivers if d.connection_type == self.connection_type], key=lambda d: d.priority, reverse=True)
 
     def __init_subclass__(cls):
@@ -30,7 +31,10 @@ class Interface(Thread):
                 break
             time.sleep(self._loop_delay)
 
-    def update_iot_devices(self, devices={}):
+    def update_iot_devices(self, devices=None):
+        if devices is None:
+            devices = {}
+
         added = devices.keys() - self._detected_devices
         removed = self._detected_devices - devices.keys()
         # keys() returns a dict_keys, and the values of that stay in sync with the
@@ -54,7 +58,6 @@ class Interface(Thread):
                 if driver.supported(devices[identifier]):
                     _logger.info('Device %s is now connected', identifier)
                     d = driver(identifier, devices[identifier])
-                    d.daemon = True
                     iot_devices[identifier] = d
                     # Start the thread after creating the iot_devices entry so the
                     # thread can assume the iot_devices entry will exist while it's
@@ -65,3 +68,9 @@ class Interface(Thread):
 
     def get_devices(self):
         raise NotImplementedError()
+
+    def start(self):
+        try:
+            super().start()
+        except Exception:
+            _logger.exception("Interface %s could not be started", str(self))

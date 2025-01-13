@@ -22,6 +22,7 @@ iot_devices = {}
 
 
 class Manager(Thread):
+    daemon = True
     ws_channel = ""
 
     @helpers.require_db
@@ -94,14 +95,8 @@ class Manager(Thread):
         helpers.download_iot_handlers()
         helpers.load_iot_handlers()
 
-        # Start the interfaces
         for interface in interfaces.values():
-            try:
-                i = interface()
-                i.daemon = True
-                i.start()
-            except Exception:
-                _logger.exception("Interface %s could not be started", str(interface))
+            interface().start()
 
         # Set scheduled actions
         schedule.every().day.at("00:00").do(helpers.get_certificate_status)
@@ -129,5 +124,4 @@ class Manager(Thread):
                 _logger.exception("Manager loop unexpected error")
 
 manager = Manager()
-manager.daemon = True
 manager.start()
