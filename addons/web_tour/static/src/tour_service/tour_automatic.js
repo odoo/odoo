@@ -59,18 +59,11 @@ export class TourAutomatic {
                 },
                 {
                     initialDelay: () => (this.previousStepIsJustACheck ? 0 : null),
-                    trigger: () => step.findTrigger(),
+                    trigger: step.trigger ? () => step.findTrigger() : null,
                     timeout: (step.timeout || 10000) + this.config.stepDelay,
                     action: async () => {
                         if (this.checkForUndeterminisms) {
-                            try {
-                                await step.checkForUndeterminisms();
-                            } catch (error) {
-                                this.throwError([
-                                    ...this.currentStep.describeWhyIFailed,
-                                    error.message,
-                                ]);
-                            }
+                            await step.checkForUndeterminisms();
                         }
                         this.previousStepIsJustACheck = !this.currentStep.hasAction;
                         if (this.debugMode) {
