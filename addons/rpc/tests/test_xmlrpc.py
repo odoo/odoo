@@ -12,7 +12,6 @@ from odoo.service import common as auth
 from odoo.service import model
 from odoo.tests import common
 from odoo.tools import DotDict
-from odoo.api import call_kw
 
 
 class TestExternalAPI(SavepointCaseWithUserDemo):
@@ -235,7 +234,7 @@ class TestAPIKeys(common.HttpCase):
         ])
         self.assertEqual(ctx['tz'], 'Australia/Eucla')
 
-        api_key = call_kw(
+        api_key = model.call_kw(
             model=self.env['res.users.apikeys.description'],
             name='create',
             args=[{'name': 'Name of the key'}],
