@@ -1,5 +1,12 @@
 .category-list {
     grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
+
+    @include media-breakpoint-down(sm) {
+        overflow-y: auto;
+        flex-shrink: 0;
+        margin-bottom: map-get($spacers, 2);
+        max-height: 11rem;
+    }
 }
 
 .category-button {
