@@ -65,6 +65,6 @@ export class OrderReceipt extends Component {
         return this.order.lines.some((line) => line.taxGroupLabels);
     }
     getPortalURL() {
-        return `${this.props.data.base_url}/pos/ticket`;
+        return `${this.order.session._base_url}/pos/ticket`;
     }
 }
