@@ -1,6 +1,9 @@
 import ast
 import fnmatch
 import os
+from collections.abc import Iterable
+from typing import Generic, TypeVar
+
 j = os.path.join
 
 from odoo.modules import get_modules, get_module_path
@@ -23,14 +26,19 @@ class LintCase(BaseCase):
                 yield from fnames
 
 
-class NodeVisitor():
-    """Simple NodeVisitor."""
+T = TypeVar('T')
+class NodeVisitor(Generic[T]):
+    """An expanded NodeVisitor which yields / returns the result of its visits.
 
-    def visit(self, node):
+    WARNING: ``visit_$NODE`` methods *must* return an iterable, and the result
+             of ``visit`` *must* be consumed
+    """
+
+    def visit(self, node: ast.AST) -> Iterable[T]:
         method = 'visit_' + node.__class__.__name__
         visitor = getattr(self, method, self.generic_visit)
         return visitor(node)
 
-    def generic_visit(self, node):
+    def generic_visit(self, node: ast.AST) -> Iterable[T]:
         for child in ast.iter_child_nodes(node):
             yield from self.visit(child)
