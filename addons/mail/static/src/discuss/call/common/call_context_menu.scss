@@ -1,0 +1,35 @@
+.volume-tooltip {
+    /* Visibility */
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.2s ease-out;
+    
+    /* Positioning */
+    position: absolute;
+    bottom: 150%;
+    left: calc(var(--progress) - 0.13 * (var(--progress)));
+    transform: translateX(calc(-50% + 8px));
+    z-index: 1;
+
+    /* Appearance */
+    background-color: #212529;
+    color: #F9FAFB;
+    padding: 4px 10px;
+    border-radius: 8px;
+    
+    &::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 6px;
+        border-style: solid;
+        border-color: #212529 transparent transparent transparent;
+    }
+}
+
+.form-range:hover + .volume-tooltip {
+    visibility: visible;
+    opacity: 1;
+}

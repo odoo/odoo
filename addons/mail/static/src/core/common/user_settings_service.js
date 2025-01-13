@@ -78,9 +78,9 @@ export class UserSettings {
 
     getVolume(rtcSession) {
         return (
-            rtcSession.volume ||
-            this.partnerVolumes.get(rtcSession.partnerId) ||
-            this.guestVolumes.get(rtcSession.guestId) ||
+            rtcSession.volume ??
+            this.partnerVolumes.get(rtcSession.partnerId) ??
+            this.guestVolumes.get(rtcSession.guestId) ??
             0.5
         );
     }

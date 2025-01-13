@@ -31,6 +31,7 @@
                         draggable="false"
                 />
             </div>
+            <button t-if="rootHover.isHover and isContextMenuAvailable and props.minimized" t-on-click="onContextMenu" class="btn btn-secondary btn-sm rounded-circle position-absolute translate-middle o-discuss-CallParticipantCard-contextButton"><i class="fa fa-chevron-down" /></button>
             <t t-if="rtcSession">
                 <!-- overlay -->
                 <span class="o-discuss-CallParticipantCard-overlay o-discuss-CallParticipantCard-overlayBottom z-index-1 position-absolute bottom-0 start-0 d-flex overflow-hidden">

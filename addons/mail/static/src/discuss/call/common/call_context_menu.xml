@@ -2,7 +2,13 @@
 <templates xml:space="preserve">
     <t t-name="discuss.CallContextMenu">
         <div class="d-flex flex-column p-3">
-            <input t-if="!isSelf" type="range" min="0.0" max="1" step="0.01" t-att-value="volume" t-on-change="onChangeVolume" class="form-range"/>
+            <div t-if="!isSelf" class="d-flex flex-row gap-2 align-items-center">
+                <i class="fa fa-lg fa-volume-up"/>
+                <div class="position-relative">
+                    <input type="range" min="0.0" max="1" step="0.01" class="form-range h-auto" t-att-value="volume" t-model="state.rangeVolume" t-on-change="onChangeVolume"/>
+                    <output t-esc="`${Math.round(state.rangeVolume * 200)}%`" class="volume-tooltip fw-bold" t-attf-style="--progress:{{state.rangeVolume * 100}}%;"/>
+                </div>
+            </div>
             <t t-if="env.debug and !isSelf and rtc.state.connectionType === rtcConnectionTypes.P2P">
                 <hr class="w-100 border-top"/>
                 <div><span class="fw-bolder">Connection type: </span><t t-out="rtc.state.connectionType"/></div>
