@@ -661,7 +661,8 @@ class AccountTax(models.Model):
 
         current_batch = None
         is_base_affected = None
-        for tax_data in reversed(taxes_data):
+        for index, tax_data in enumerate(reversed(taxes_data)):
+            is_base_affected = tax_data['is_base_affected']
             if current_batch is not None:
                 same_batch = (
                     tax_data['amount_type'] == current_batch['amount_type']
@@ -670,11 +671,19 @@ class AccountTax(models.Model):
                         (
                             tax_data['include_base_amount']
                             and tax_data['include_base_amount'] == current_batch['include_base_amount']
-                            and not is_base_affected
+                            and (
+                                not is_base_affected
+                                # "is_base_affected" can be ignored for the first tax if the current batch is not "is_base_affected"
+                                or (
+                                    not current_batch['is_base_affected']
+                                    and index == len(taxes_data) - 1
+                                )
+                            )
                         )
                         or (
                             tax_data['include_base_amount'] == current_batch['include_base_amount']
                             and not tax_data['include_base_amount']
+                            and is_base_affected == current_batch['is_base_affected']
                         )
                     )
                 )
@@ -693,9 +702,9 @@ class AccountTax(models.Model):
                     '_original_price_include': tax_data['_original_price_include'],
                     'is_tax_computed': False,
                     'is_base_computed': False,
+                    'is_base_affected': is_base_affected,
                 }
 
-            is_base_affected = tax_data['is_base_affected']
             current_batch['taxes'].append(tax_data)
 
         if current_batch is not None:
@@ -825,7 +834,8 @@ class AccountTax(models.Model):
                 if special_mode in (False, 'total_excluded'):
                     if batch['include_base_amount']:
                         for other_batch in batches_after:
-                            add_extra_base(other_batch, tax_data, 1)
+                            if other_batch['is_base_affected']:
+                                add_extra_base(other_batch, tax_data, 1)
 
                 # Suppose:
                 # 1.
