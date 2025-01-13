@@ -24,7 +24,7 @@ const EDITABLE_MEDIA_CLASS = "o_editable_media";
 export class MediaPlugin extends Plugin {
     static id = "media";
     static dependencies = ["selection", "history", "dom", "dialog"];
-    static shared = ["savePendingImages", "markMediaAsEditable", "isMediaEditable"];
+    static shared = ["savePendingImages", "markMediaAsEditable", "unmarkMediaAsEditable", "isMediaEditable"];
     resources = {
         user_commands: [
             {
@@ -143,6 +143,7 @@ export class MediaPlugin extends Plugin {
         // Collapse selection after the inserted/replaced element.
         const [anchorNode, anchorOffset] = rightPos(element);
         this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
+        this.delegateTo("afer_save_media_dialog_handlers", element);
         this.dependencies.history.addStep();
     }
 
@@ -346,6 +347,9 @@ export class MediaPlugin extends Plugin {
     }
     markMediaAsEditable(media) {
         media.classList.add(EDITABLE_MEDIA_CLASS);
+    }
+    unmarkMediaAsEditable(media) {
+        media.classList.remove(EDITABLE_MEDIA_CLASS);
     }
     isMediaEditable(media) {
         return media.classList.contains(EDITABLE_MEDIA_CLASS);
