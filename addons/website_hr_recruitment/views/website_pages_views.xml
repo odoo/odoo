@@ -40,8 +40,8 @@
             <attribute name="type">object</attribute>
             <attribute name="action">open_website_url</attribute>
         </kanban>
-        <xpath expr="//div[hasclass('o_kanban_card_header_title')]" position="inside">
-            <div class="text-muted fw-bold ps-3">
+        <xpath expr="//div[@name='kanban_boxes']" position="inside">
+            <div class="text-muted fw-bold ps-3 justify-content-end d-flex col-6">
                 <span class="me-3" t-if="record.website_id.value" groups="website.group_multi_website">
                     <i class="fa fa-globe me-1" title="Website"/>
                     <field name="website_id"/>

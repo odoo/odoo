@@ -132,10 +132,10 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="o_kanban_card_bottom">
-                            <a t-if="record.activities_today.raw_value > 0" name="action_open_today_activities" type="object" class="text-warning"><field name="activities_today"/> activities today</a>
+                        <div class="text-end mt-5 mb-2">
+                            <a t-if="record.activities_today.raw_value > 0" name="action_open_today_activities" type="object" class="text-warning"><field name="activities_today"/> Activities Today</a>
                             <br t-if="record.activities_today.raw_value > 0 and record.activities_overdue.raw_value > 0"/>
-                            <a t-if="record.activities_overdue.raw_value > 0" name="action_open_late_activities" type="object" class="text-danger"><field name="activities_overdue"/> late activities</a>
+                            <a t-if="record.activities_overdue.raw_value > 0" name="action_open_late_activities" type="object" class="text-danger"><field name="activities_overdue"/> Late Activities</a>
                         </div>
                         <div name="kanban_boxes" class="row g-0 flex-nowrap mt-auto" groups="hr_recruitment.group_hr_recruitment_user"></div>
                     </t>
