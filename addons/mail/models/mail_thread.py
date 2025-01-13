@@ -38,7 +38,7 @@ from odoo.tools import (
 )
 from odoo.tools.mail import (
     append_content_to_html, decode_message_header,
-    email_normalize, email_split,
+    email_normalize, email_normalize_all, email_split,
     email_split_and_format, formataddr, html_sanitize,
     generate_tracking_message_id,
     unfold_references,
@@ -3458,6 +3458,7 @@ class MailThread(models.AbstractModel):
 
         base_mail_values = self._notify_by_email_get_base_mail_values(
             message,
+            partners_data,
             additional_values={'auto_delete': mail_auto_delete}
         )
 
@@ -3790,12 +3791,14 @@ class MailThread(models.AbstractModel):
             mail_body = message.body
         return mail_body
 
-    def _notify_by_email_get_base_mail_values(self, message, additional_values=None):
+    def _notify_by_email_get_base_mail_values(self, message, recipients_data, additional_values=None):
         """ Return model-specific and message-related values to be used when
         creating notification emails. It serves as a common basis for all
         notification emails based on a given message.
 
         :param record message: <mail.message> record being notified;
+        :param list recipients_data: list of email recipients data based on <res.partner>
+          records formatted using a list of dicts. See ``MailThread._notify_get_recipients()``;
         :param dict additional_values: optional additional values to add (ease
           custom calls and inheritance);
 
@@ -3830,6 +3833,13 @@ class MailThread(models.AbstractModel):
 
         # prepare headers (as sudo as accessing mail.alias.domain, restricted)
         headers = {}
+        # prepare external emails to modify Msg[To] and enable Reply-All including external people
+        external = ','.join(
+            formataddr((r['name'], r['email_normalized']))
+            for r in recipients_data if r['id'] and r['active'] and r['email_normalized'] and r['share']
+        )
+        if external:
+            headers['X-Msg-To-Add'] = external
         if message_sudo.record_alias_domain_id.bounce_email:
             headers['Return-Path'] = message_sudo.record_alias_domain_id.bounce_email
         headers = self._notify_by_email_get_headers(headers=headers)
@@ -4033,10 +4043,18 @@ class MailThread(models.AbstractModel):
             if notify_author_mention and skip_author_id in pids:
                 skip_author_id = False
 
+        # avoid double email notification if already emailed in original email
+        emailed_normalized = [email for email in email_normalize_all(
+            f"{msg_vals.get('incoming_email_to', msg_sudo.incoming_email_to) or ''}, "
+            f"{msg_vals.get('incoming_email_cc', msg_sudo.incoming_email_cc) or ''}"
+        )]
+
         for pid, pdata in res.items():
             if pid and pid == skip_author_id:
                 continue
             if pdata['active'] is False:
+                continue
+            if pdata['email_normalized'] in emailed_normalized:
                 continue
             recipients_data.append(pdata)
 

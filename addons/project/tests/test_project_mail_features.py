@@ -367,22 +367,27 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                     ],
                 )
 
-                # SMTP emails really sent (not Inbox guy then), checking Msg[To] notably
-                # as well as Msg[From] which depends on smtp server
+                # SMTP emails really sent (not Inbox guy then)
+                # expected Msg['To'] : Reply-All behavior: actual recipient, then
+                # all "not internal partners" and catchall (to receive answers)
                 for partner in (responsible_answer.notified_partner_ids - self.user_projectmanager.partner_id):
+                    exp_msg_to_partners = partner | external_partners
+                    if author != self.user_employee.partner_id:  # external only !
+                        exp_msg_to_partners |= author
+                    exp_msg_to = exp_msg_to_partners.mapped('email_formatted')
                     with self.subTest(name=partner.name):
                         self.assertSMTPEmailsSent(
                             mail_server=self.mail_server_notification,
                             msg_from=formataddr((self.user_projectuser.name, f'{self.default_from}@{self.alias_domain}')),
                             smtp_from=self.mail_server_notification.from_filter,
                             smtp_to_list=[partner.email_normalized],
-                            msg_to_lst=[partner.email_formatted],
+                            msg_to_lst=exp_msg_to,
                         )
 
-                # customer replies using "Reply" + adds new people
+                # customer replies using "Reply All" + adds new people
                 # ------------------------------------------------------------
                 self.gateway_mail_reply_from_smtp_email(
-                    MAIL_TEMPLATE, [author.email_normalized], reply_all=False,
+                    MAIL_TEMPLATE, [author.email_normalized], reply_all=True,
                     cc=f'"Another Cc" <another.cc@test.agrolait.com>, {self.partner_3.email}',
                     target_model='project.task',
                 )
@@ -394,8 +399,8 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                 self.assertEqual(len(task.message_ids), 4, 'Incoming email + acknowledgement + chatter reply + customer reply')
                 self.assertEqual(
                     task.message_partner_ids,
-                    internal_followers + author + self.partner_1 + self.partner_2 + self.partner_3,
-                    'Recognized Cc added in followers by project')
+                    internal_followers + author + self.partner_1 + self.partner_2 + self.partner_3 + new_partner_cc + new_partner_customer,
+                    'Project adds recognized recipients as followers')
 
                 self.assertMailNotifications(
                     task.message_ids[0],
@@ -408,14 +413,14 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                                 'email_from': author.email_formatted,
                                 # coming from incoming email
                                 'incoming_email_cc': f'"Another Cc" <another.cc@test.agrolait.com>, {self.partner_3.email}',
-                                # expects an answer to reply-to
-                                'incoming_email_to': expected_chatter_reply_to,
+                                # To: received email Msg-To - customer who replies + email Reply-To
+                                'incoming_email_to': ', '.join(external_partners.mapped('email_formatted') + [expected_chatter_reply_to]),
                                 'mail_server_id': self.env['ir.mail_server'],
-                                # notified: followers, behaves like classic post
-                                'notified_partner_ids': internal_followers + self.partner_1 + self.partner_2 + self.partner_3,
+                                # notified: followers - already emailed, aka internal only
+                                'notified_partner_ids': internal_followers,
                                 'parent_id': incoming_email,
-                                # reply-all when being only recipients = no other recipients
-                                'partner_ids': self.partner_3,
+                                # same reasoning as email_to/cc
+                                'partner_ids': external_partners + self.partner_3,
                                 'reply_to': expected_chatter_reply_to,
                                 'subject': f'Re: Re: {task.name}',
                                 'subtype_id': self.env.ref('mail.mt_comment'),
@@ -423,9 +428,6 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                             'notif': [
                                 {'partner': self.user_projectuser.partner_id, 'type': 'email',},
                                 {'partner': self.user_projectmanager.partner_id, 'type': 'inbox',},
-                                {'partner': self.partner_1, 'type': 'email',},
-                                {'partner': self.partner_2, 'type': 'email',},
-                                {'partner': self.partner_3, 'type': 'email',},
                             ],
                         },
                     ],
