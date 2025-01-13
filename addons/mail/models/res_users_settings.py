@@ -7,6 +7,12 @@ from odoo import api, fields, models
 class ResUsersSettings(models.Model):
     _inherit = 'res.users.settings'
 
+<<<<<<< 17.0
+||||||| 1605b81b12e0dee78905e6eb3526fdb7e4908050
+    user_id = fields.Many2one('res.users', string="User", required=True, readonly=True, ondelete='cascade')
+=======
+    user_id = fields.Many2one('res.users', string="User", required=True, ondelete='cascade', domain=[("res_users_settings_id", "=", False)])
+>>>>>>> 4d74816c2e5f5582fb9598cfbe3c7ce5334dd2ae
     is_discuss_sidebar_category_channel_open = fields.Boolean(string="Is discuss sidebar category channel open?", default=True)
     is_discuss_sidebar_category_chat_open = fields.Boolean(string="Is discuss sidebar category chat open?", default=True)
 
