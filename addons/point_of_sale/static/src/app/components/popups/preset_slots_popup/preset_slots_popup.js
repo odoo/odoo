@@ -40,14 +40,14 @@ export class PresetSlotsPopup extends Component {
         const isPast = slot.datetime < DateTime.now();
 
         if (!isSelected && isFull) {
-            return "o_colorlist_item_color_transparent_1"; // Red
+            return "o_colorlist_item_numpad_color_1"; // Red
         }
 
         return isSelected
             ? "btn-primary"
             : isPast
             ? "btn-secondary"
-            : "o_colorlist_item_color_transparent_10"; // Green
+            : "o_colorlist_item_numpad_color_10"; // Green
     }
 
     isSelected(slot, preset) {
