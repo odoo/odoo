@@ -4,6 +4,7 @@ import {
     isIconElement,
     isProtected,
     isProtecting,
+    isMediaElement
 } from "@html_editor/utils/dom_info";
 import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_editor/utils/image";
 import { _t } from "@web/core/l10n/translation";
@@ -13,6 +14,7 @@ import { rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 
 const MEDIA_SELECTOR = `${ICON_SELECTOR} , .o_image, .media_iframe_video`;
+const EDITABLE_MEDIA_CLASS = "o_editable_media";
 
 /**
  * @typedef { Object } MediaShared
@@ -22,7 +24,7 @@ const MEDIA_SELECTOR = `${ICON_SELECTOR} , .o_image, .media_iframe_video`;
 export class MediaPlugin extends Plugin {
     static id = "media";
     static dependencies = ["selection", "history", "dom", "dialog"];
-    static shared = ["savePendingImages"];
+    static shared = ["savePendingImages", "markMediaAsEditable", "isMediaEditable"];
     resources = {
         user_commands: [
             {
@@ -60,6 +62,7 @@ export class MediaPlugin extends Plugin {
         power_buttons: withSequence(1, { commandId: "insertMedia" }),
 
         /** Handlers */
+        editable_node_predicates: this.isNodeEditable.bind(this),
         clean_handlers: this.clean.bind(this),
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
         normalize_handlers: this.normalizeMedia.bind(this),
@@ -339,6 +342,20 @@ export class MediaPlugin extends Plugin {
             delete el.dataset.bgSrc;
         } else {
             el.setAttribute("src", newAttachmentSrc);
+        }
+    }
+    markMediaAsEditable(media) {
+        media.classList.add(EDITABLE_MEDIA_CLASS);
+    }
+    isMediaEditable(media) {
+        return media.classList.contains(EDITABLE_MEDIA_CLASS);
+    }
+    isNodeEditableMedia(node) {
+        return (isMediaElement(node) || node.nodeName === "IMG") && this.isMediaEditable(node);
+    }
+    isNodeEditable(node) {
+        if (isMediaElement(node) || node.nodeName === "IMG") {
+            return this.isMediaEditable(node);
         }
     }
 }

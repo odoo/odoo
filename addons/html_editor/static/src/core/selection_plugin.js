@@ -6,6 +6,7 @@ import {
     isProtecting,
     isUnprotecting,
     previousLeaf,
+    isSelfClosingElement
 } from "@html_editor/utils/dom_info";
 import {
     childNodes,
@@ -19,7 +20,6 @@ import { Plugin } from "../plugin";
 import { DIRECTIONS, boundariesIn, endPos, leftPos, nodeSize, rightPos } from "../utils/position";
 import {
     getAdjacentCharacter,
-    normalizeCursorPosition,
     normalizeDeepCursorPosition,
     normalizeFakeBR,
 } from "../utils/selection";
@@ -155,6 +155,7 @@ export class SelectionPlugin extends Plugin {
     resources = {
         user_commands: { id: "selectAll", run: this.selectAll.bind(this) },
         shortcuts: [{ hotkey: "control+a", commandId: "selectAll" }],
+        editable_node_predicates: this.isNodeEditable.bind(this),
     };
 
     setup() {
@@ -247,12 +248,12 @@ export class SelectionPlugin extends Plugin {
                 direction = !direction;
             }
 
-            [anchorNode, anchorOffset] = normalizeCursorPosition(
+            [anchorNode, anchorOffset] = this.normalizeCursorPosition(
                 anchorNode,
                 anchorOffset,
                 direction ? "left" : "right"
             );
-            [focusNode, focusOffset] = normalizeCursorPosition(
+            [focusNode, focusOffset] = this.normalizeCursorPosition(
                 focusNode,
                 focusOffset,
                 direction ? "right" : "left"
@@ -437,10 +438,10 @@ export class SelectionPlugin extends Plugin {
             throw new Error("Selection is not in editor");
         }
         const isCollapsed = anchorNode === focusNode && anchorOffset === focusOffset;
-        [focusNode, focusOffset] = normalizeCursorPosition(focusNode, focusOffset, "right");
+        [focusNode, focusOffset] = this.normalizeCursorPosition(focusNode, focusOffset, "right");
         [anchorNode, anchorOffset] = isCollapsed
             ? [focusNode, focusOffset]
-            : normalizeCursorPosition(anchorNode, anchorOffset, "left");
+            : this.normalizeCursorPosition(anchorNode, anchorOffset, "left");
         if (normalize) {
             // normalize selection
             [anchorNode, anchorOffset] = normalizeDeepCursorPosition(anchorNode, anchorOffset);
@@ -755,6 +756,47 @@ export class SelectionPlugin extends Plugin {
         }
         this.activeSelection = this.makeActiveSelection(selection);
         return this.activeSelection;
+    }
+
+    normalizeSelfClosingElement(node, offset) {
+        if (isSelfClosingElement(node)) {
+            // Cannot put cursor inside those elements, put it after instead.
+            [node, offset] = rightPos(node);
+        }
+        return [node, offset];
+    }
+
+    normalizeNotEditableNode(node, offset, position = "right") {
+        const editable = closestElement(node, ".odoo-editor-editable");
+        let targetNode = node;
+        if (node.nodeType !== Node.TEXT_NODE) {
+            const targetOffset = position === "right" && offset ? offset - 1 : offset;
+            targetNode = targetOffset < nodeSize(node) ? node.childNodes[targetOffset] : node.lastChild;
+        }
+        targetNode = targetNode || node;
+        let didMove = false;
+        while (targetNode && targetNode !== editable && !this.getResource("editable_node_predicates").some(predicate => predicate(targetNode))) {
+            [targetNode, offset] = position === "right" ? rightPos(targetNode) : leftPos(targetNode);
+            didMove = true;
+        }
+        if (targetNode && didMove) {
+            // Put the selection _around_ the first editable node.
+            [node, offset] = position === "right" ? rightPos(targetNode) : leftPos(targetNode);
+        }
+        return [node, offset];
+    }
+
+    normalizeCursorPosition(node, offset, position = "right") {
+        [node, offset] = this.normalizeSelfClosingElement(node, offset);
+        [node, offset] = this.normalizeNotEditableNode(node, offset, position);
+        // todo @phoenix: we should maybe remove it
+        // // Be permissive about the received offset.
+        // offset = Math.min(Math.max(offset, 0), nodeSize(node));
+        return [node, offset];
+    }
+
+    isNodeEditable(node) {
+        return node.parentElement?.isContentEditable;
     }
 
     /**
