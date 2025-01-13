@@ -9,6 +9,7 @@ import { BuilderSelectItem } from "./builder_select_item";
 import { BuilderColorPicker } from "./builder_colorpicker";
 import { BuilderTextInput } from "./builder_text_input";
 import { BuilderCheckbox } from "./builder_checkbox";
+import { BuilderRange } from "./builder_range";
 
 export const defaultBuilderComponents = {
     BuilderRow,
@@ -18,6 +19,7 @@ export const defaultBuilderComponents = {
     BuilderButton,
     BuilderTextInput,
     BuilderNumberInput,
+    BuilderRange,
     BuilderColorPicker,
     BuilderSelect,
     BuilderSelectItem,
