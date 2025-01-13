@@ -5,6 +5,7 @@ import { CardLayout } from "@hr_attendance/components/card_layout/card_layout";
 import { KioskManualSelection } from "@hr_attendance/components/manual_selection/manual_selection";
 import { makeEnv, startServices } from "@web/env";
 import { templates } from "@web/core/assets";
+import { isIosApp } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useService, useBus } from "@web/core/utils/hooks";
@@ -79,8 +80,35 @@ class kioskAttendanceApp extends Component{
         this.notification.add(text, { type: "danger" });
     }
 
-    async onManualSelection(employeeId, enteredPin){
-        const result = await this.rpc('manual_selection',
+    async makeRpcWithGeolocation(route, params) {
+        if (!isIosApp()) { // iOS app lacks permissions to call `getCurrentPosition`
+            return new Promise((resolve) => {
+                navigator.geolocation.getCurrentPosition(
+                    async ({ coords: { latitude, longitude } }) => {
+                        const result = await this.rpc(route, {
+                            ...params,
+                            latitude,
+                            longitude,
+                        });
+                        resolve(result);
+                    },
+                    async (err) => {
+                        const result = await this.rpc(route, {
+                            ...params
+                        });
+                        resolve(result);
+                    },
+                    { enableHighAccuracy: true }
+                );
+            });
+        }
+        else {
+            return this.rpc(route, {...params})
+        }
+    }
+
+    async onManualSelection(employeeId, enteredPin) {
+        const result = await this.makeRpcWithGeolocation('manual_selection',
             {
                 'token': this.props.token,
                 'employee_id': employeeId,
