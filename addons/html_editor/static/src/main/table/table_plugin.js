@@ -1077,6 +1077,9 @@ export class TablePlugin extends Plugin {
 
     selectTableCells(selection) {
         const table = closestElement(selection.commonAncestorContainer, "table");
+        if (!table) {
+            return;
+        }
         table.classList.toggle("o_selected_table", true);
         const columns = getTableCells(table);
         const startCol =
