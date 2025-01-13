@@ -468,7 +468,7 @@ class EventMail(models.Model):
             # event-based: todo / attendee-based: running until event is not done
             '|',
             ('mail_done', '=', False),
-            '&', ('interval_type', '=', 'after_sub'), ('event_id.date_end', '<', self.env.cr.now()),
+            '&', ('interval_type', '=', 'after_sub'), ('event_id.date_end', '>', self.env.cr.now()),
         ])
 
         for scheduler in schedulers:
