@@ -3,7 +3,11 @@ import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { defaultBuilderComponents } from "../builder_components/default_builder_components";
 import { globalBuilderOptions } from "../builder_components/global_builder_options";
-import { useVisibilityObserver, useApplyVisibility } from "../builder_components/utils";
+import {
+    useVisibilityObserver,
+    useApplyVisibility,
+    useIsActiveItem,
+} from "../builder_components/utils";
 import { DependencyManager } from "../plugins/dependency_manager";
 import { getSnippetName } from "@html_builder/utils/utils";
 
@@ -27,6 +31,7 @@ export class OptionsContainer extends Component {
             getEditingElements: () => [this.props.editingElement],
             weContext: {},
         });
+        this.isActiveItem = useIsActiveItem();
         useVisibilityObserver("content", useApplyVisibility("root"));
     }
 

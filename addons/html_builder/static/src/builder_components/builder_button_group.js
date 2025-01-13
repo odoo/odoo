@@ -12,7 +12,6 @@ export class BuilderButtonGroup extends Component {
     static props = {
         ...basicContainerBuilderComponentProps,
         id: { type: String, optional: true },
-        dependencies: { type: [String, Array], optional: true },
         slots: { type: Object, optional: true },
     };
     static components = { BuilderComponent };

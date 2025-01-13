@@ -25,7 +25,7 @@
         </BuilderSelect>
     </BuilderRow>
 
-    <BuilderRow label.translate="Style" applyTo="'.s_blockquote_line_elt'" level="1" dependencies="'blockquote_with_line_opt'">
+    <BuilderRow label.translate="Style" applyTo="'.s_blockquote_line_elt'" level="1" t-if="this.isActiveItem('blockquote_with_line_opt')">
         <BuilderNumberInput styleAction="'width'" unit="'px'"/>
         <BuilderColorPicker styleAction="'backgroundColor'" />
     </BuilderRow>

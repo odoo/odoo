@@ -10,7 +10,7 @@
         </BuilderSelect>
         <BuilderColorPicker
             styleAction="'stroke'"
-            dependencies="'!no_connector_opt'"
+            t-if="!this.isActiveItem('no_connector_opt')"
             applyTo="'.s_process_step_connector path'"
             action="'changeArrowColor'"/>
     </BuilderRow>

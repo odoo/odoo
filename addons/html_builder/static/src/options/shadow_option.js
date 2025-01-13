@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { defaultBuilderComponents } from "../builder_components/default_builder_components";
+import { useIsActiveItem } from "@html_builder/builder_components/utils";
 
 const shadowClass = "shadow";
 
@@ -9,6 +10,9 @@ export class ShadowOption extends Component {
     static template = "html_builder.ShadowOption";
     static components = { ...defaultBuilderComponents };
     static props = {};
+    setup() {
+        this.isActiveItem = useIsActiveItem();
+    }
 }
 
 class ShadowOptionPlugin extends Plugin {

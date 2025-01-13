@@ -11,6 +11,7 @@ import { defaultBuilderComponents } from "../builder_components/default_builder_
 import { AddElementOption } from "./add_element_option";
 import { SpacingOption } from "./spacing_option";
 import { Plugin } from "@html_editor/plugin";
+import { useIsActiveItem } from "../builder_components/utils";
 
 class ImageToolOptionPlugin extends Plugin {
     static id = "ImageToolOption";
@@ -129,6 +130,9 @@ class ImageToolOption extends Component {
     static template = "html_builder.ImageToolOption";
     static components = { ...defaultBuilderComponents, SpacingOption, AddElementOption };
     static props = {};
+    setup() {
+        this.isActiveItem = useIsActiveItem();
+    }
 }
 
 /**

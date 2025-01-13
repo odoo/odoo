@@ -9,7 +9,7 @@
          <BuilderButton actionParam="'inset'" title.translate="Inset" iconImg="'/website/static/src/img/snippets_options/shadow_in.svg'"/>
        </BuilderButtonGroup>
     </BuilderRow>
-    <BuilderContext dependencies="'!no_shadow'">
+    <BuilderContext t-if="!this.isActiveItem('no_shadow')">
         <BuilderRow label.translate="Color" level="1">
             <BuilderColorPicker action="'setShadow'" actionParam="'color'"/>
         </BuilderRow>

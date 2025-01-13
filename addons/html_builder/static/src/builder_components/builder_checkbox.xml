@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.BuilderCheckbox">
-    <BuilderComponent dependencies="props.dependencies">
+    <BuilderComponent>
         <div t-att-data-action-id="this.props.action">
             <CheckBox className="getClassName()" onChange="onChange" value="state.isActive"/>
         </div>

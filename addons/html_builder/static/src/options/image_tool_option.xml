@@ -17,9 +17,9 @@
     </BuilderRow>
     <BuilderRow label.translate="Transform" preview="false">
         <BuilderButton title.translate="Crop image" action="'cropImage'" icon="'fa-crop'" id="'cropImage'" />
-        <BuilderButton title.translate="Reset crop" action="'resetCrop'" dependencies="'cropImage'">Reset</BuilderButton>
+        <BuilderButton title.translate="Reset crop" action="'resetCrop'" t-if="this.isActiveItem('cropImage')">Reset</BuilderButton>
         <BuilderButton title.translate="Transform the picture" action="'transformImage'" icon="'fa-object-ungroup'" id="'transformImage'" />
-        <BuilderButton title.translate="Reset transformation" action="'resetTransformImage'" dependencies="'transformImage'">Reset</BuilderButton>
+        <BuilderButton title.translate="Reset transformation" action="'resetTransformImage'" t-if="this.isActiveItem('transformImage')">Reset</BuilderButton>
     </BuilderRow>
     <BuilderRow label.translate="Filter">
         <BuilderSelect>

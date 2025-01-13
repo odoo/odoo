@@ -47,16 +47,7 @@ export function useBuilderComponent() {
         newEnv.getEditingElement = () => editingElements[0];
     }
     const weContext = {};
-    const contextKeys = [
-        "preview",
-        "action",
-        "actionParam",
-        "classAction",
-        "attributeAction",
-        "dataAttributeAction",
-        "styleAction",
-    ];
-    for (const key of contextKeys) {
+    for (const key of basicContainerBuilderComponentPropsNames) {
         if (key in comp.props) {
             weContext[key] = comp.props[key];
         }
@@ -91,6 +82,43 @@ export function useDependencies(dependencies) {
         });
     };
     return isDependenciesVisible;
+}
+
+export function useIsActiveItem() {
+    const env = useEnv();
+    const listenedKeys = new Set();
+
+    function isActive(itemId) {
+        const isActiveFn = env.dependencyManager.get(itemId)?.isActive;
+        if (!isActiveFn) {
+            return false;
+        }
+        return isActiveFn();
+    }
+
+    const getState = () => {
+        const newState = {};
+        for (const itemId of listenedKeys) {
+            newState[itemId] = isActive(itemId);
+        }
+        return newState;
+    };
+    const state = useDomState(getState);
+    const listener = () => {
+        const newState = getState();
+        Object.assign(state, newState);
+    };
+    env.dependencyManager.addEventListener("dependency-updated", listener);
+    onWillDestroy(() => {
+        env.dependencyManager.removeEventListener("dependency-updated", listener);
+    });
+    return function isActiveItem(itemId) {
+        listenedKeys.add(itemId);
+        if (state[itemId] === undefined) {
+            return isActive(itemId);
+        }
+        return state[itemId];
+    };
 }
 
 export function useSelectableComponent(id, { onItemChange } = {}) {
@@ -202,7 +230,9 @@ export function useClickableBuilderComponent() {
     const { getAllActions, callOperation } = getAllActionsAndOperations(comp);
     const getAction = comp.env.editor.shared.builderActions.getAction;
     const applyOperation = comp.env.editor.shared.history.makePreviewableOperation(callApply);
-    const shouldToggle = !comp.env.actionBus;
+    const shouldToggle = !comp.env.selectableContext;
+    const inheritedActionIds =
+        comp.props.inheritedActions || comp.env.weContext.inheritedActions || [];
     const hasPreview =
         comp.props.preview === true ||
         (comp.props.preview === undefined && comp.env.weContext.preview !== false);
@@ -254,8 +284,8 @@ export function useClickableBuilderComponent() {
 
     function callApply(applySpecs) {
         comp.env.selectableContext?.cleanSelectedItem(applySpecs);
-        const cleans = comp.props.inheritedActions
-            ?.map((actionId) => comp.env.dependencyManager.get(actionId).cleanSelectedItem)
+        const cleans = inheritedActionIds
+            .map((actionId) => comp.env.dependencyManager.get(actionId).cleanSelectedItem)
             .filter(Boolean);
         for (const clean of new Set(cleans)) {
             clean(applySpecs);
@@ -434,7 +464,7 @@ export function useVisibilityObserver(contentName, callback) {
 export const basicContainerBuilderComponentProps = {
     applyTo: { type: String, optional: true },
     preview: { type: Boolean, optional: true },
-    dependencies: { type: [String, Array], optional: true },
+    inheritedActions: { type: Array, element: String, optional: true },
     // preview: { type: Boolean, optional: true },
     // reloadPage: { type: Boolean, optional: true },
 
@@ -447,6 +477,7 @@ export const basicContainerBuilderComponentProps = {
     dataAttributeAction: { type: String, optional: true },
     styleAction: { type: String, optional: true },
 };
+const basicContainerBuilderComponentPropsNames = Object.keys(basicContainerBuilderComponentProps);
 const validateIsNull = { validate: (value) => value === null };
 export const clickableBuilderComponentProps = {
     ...basicContainerBuilderComponentProps,
@@ -467,6 +498,9 @@ export const clickableBuilderComponentProps = {
 };
 
 export function getAllActionsAndOperations(comp) {
+    const inheritedActionIds =
+        comp.props.inheritedActions || comp.env.weContext.inheritedActions || [];
+
     function getActionsSpecs(actions, userValueInput) {
         const getAction = comp.env.editor.shared.builderActions.getAction;
         const specs = [];
@@ -522,15 +556,16 @@ export function getAllActionsAndOperations(comp) {
         if (actionId) {
             actions.push({ actionId, actionParam, actionValue });
         }
-        const inheritedActions = comp.props.inheritedActions
-            ?.map(
-                (actionId) =>
-                    comp.env.dependencyManager
-                        // The dependency might not be loaded yet.
-                        .get(actionId)
-                        ?.getActions?.() || []
-            )
-            .flat();
+        const inheritedActions =
+            inheritedActionIds
+                .map(
+                    (actionId) =>
+                        comp.env.dependencyManager
+                            // The dependency might not be loaded yet.
+                            .get(actionId)
+                            ?.getActions?.() || []
+                )
+                .flat() || [];
         return actions.concat(inheritedActions || []);
     }
     function callOperation(fn, params = {}) {

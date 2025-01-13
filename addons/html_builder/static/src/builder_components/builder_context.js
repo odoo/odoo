@@ -4,7 +4,7 @@ import { BuilderComponent } from "./builder_component";
 
 export class BuilderContext extends Component {
     static template = xml`
-        <BuilderComponent dependencies="props.dependencies">
+        <BuilderComponent>
             <t t-slot="default"/>
         </BuilderComponent>
     `;

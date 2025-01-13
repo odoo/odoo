@@ -4,6 +4,7 @@ import { applyFunDependOnSelectorAndExclude } from "@html_builder/options/utils"
 import { Plugin } from "@html_editor/plugin";
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { useIsActiveItem } from "../builder_components/utils";
 
 class ProcessStepsOptionPlugin extends Plugin {
     static id = "ProcessStepsOption";
@@ -73,6 +74,7 @@ export class ProcessStepsOption extends Component {
     static props = {};
 
     setup() {
+        this.isActiveItem = useIsActiveItem();
         this.connectorOptionParams = connectorOptionParams;
     }
 

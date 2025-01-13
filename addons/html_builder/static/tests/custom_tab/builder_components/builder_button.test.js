@@ -105,11 +105,37 @@ test("prevent preview of a specific action", async () => {
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeDisplayed();
-    const c = contains("[data-action-id='customAction']");
-    await c.hover();
+    await contains("[data-action-id='customAction']").hover();
     expect.verifySteps([]);
-    await c.click();
+    await contains("[data-action-id='customAction']").click();
     expect.verifySteps(["customAction"]);
+});
+test("should toggle when not in a BuilderButtonGroup", async () => {
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderButton classAction="'c1'" preview="false"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    await contains("[data-class-action='c1']").click();
+    expect(":iframe .test-options-target").toHaveClass("test-options-target c1");
+    await contains("[data-class-action='c1']").click();
+    expect(":iframe .test-options-target").not.toHaveClass("test-options-target c1");
+});
+test("should not toggle when in a BuilderButtonGroup", async () => {
+    addOption({
+        selector: ".test-options-target",
+        template: xml`
+        <BuilderButtonGroup>
+            <BuilderButton classAction="'c1'" preview="false"/>
+        </BuilderButtonGroup>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    await contains("[data-class-action='c1']").click();
+    expect(":iframe .test-options-target").toHaveClass("test-options-target c1");
+    await contains("[data-class-action='c1']").click();
+    expect(":iframe .test-options-target").toHaveClass("test-options-target c1");
 });
 test("clean another action", async () => {
     addOption({
@@ -369,6 +395,34 @@ describe("inherited actions", () => {
             "customAction4 apply myParam4 myValue4",
             "customAction1 apply myParam1 myValue1",
             "customAction3 apply myParam3 myValue3",
+        ]);
+    });
+    test("inherit actions for another button (from the context)", async () => {
+        addActionOption({
+            customAction1: makeAction(1).action,
+            customAction2: makeAction(2).action,
+            customAction3: makeAction(3, { isApplied: falsy }).action,
+        });
+        addOption({
+            selector: ".test-options-target",
+            template: xml`
+                <BuilderButtonGroup>
+                    <BuilderButton action="'customAction1'" actionParam="'myParam1'" actionValue="'myValue1'"  classAction="'class1'" id="'c1'">MyAction1</BuilderButton>
+                    <BuilderButton action="'customAction2'" actionParam="'myParam2'" actionValue="'myValue2'">MyAction2</BuilderButton>
+                </BuilderButtonGroup>
+                <BuilderContext inheritedActions="['c1']">
+                    <BuilderButton action="'customAction3'" actionParam="'myParam3'" actionValue="'myValue3'">MyAction2</BuilderButton>
+                </BuilderContext>
+            `,
+        });
+        await setupWebsiteBuilder(`<div class="test-options-target class1">a</div>`);
+        await contains(":iframe .test-options-target").click();
+        await contains("[data-action-id='customAction3']").hover();
+        expect.verifySteps([
+            "customAction1 clean myParam1 myValue1",
+
+            "customAction3 apply myParam3 myValue3",
+            "customAction1 apply myParam1 myValue1",
         ]);
     });
 });
