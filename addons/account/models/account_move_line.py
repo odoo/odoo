@@ -897,7 +897,7 @@ class AccountMoveLine(models.Model):
             if line.display_type in ('line_section', 'line_note', 'payment_term'):
                 continue
             # /!\ Don't remove existing taxes if there is no explicit taxes set on the account.
-            if line.product_id or line.account_id.tax_ids or not line.tax_ids:
+            if line.product_id or (line.display_type != 'discount' and (line.account_id.tax_ids or not line.tax_ids)):
                 line.tax_ids = line._get_computed_taxes()
 
     def _get_computed_taxes(self):
@@ -2603,7 +2603,7 @@ class AccountMoveLine(models.Model):
                 # If we are fully reversing the entry, no need to fix anything since the journal entry
                 # is exactly the mirror of the source journal entry.
                 caba_lines_to_reconcile = None
-                if is_cash_basis_needed(involved_amls.account_id) and not self._context.get('move_reverse_cancel'):
+                if is_cash_basis_needed(involved_amls.account_id) and not self._context.get('move_reverse_cancel') and not self._context.get('no_cash_basis'):
                     caba_lines_to_reconcile = involved_amls._add_exchange_difference_cash_basis_vals(exchange_diff_values)
 
                 # Prepare the exchange difference.
