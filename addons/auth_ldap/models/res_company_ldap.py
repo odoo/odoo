@@ -192,12 +192,14 @@ class CompanyLDAP(models.Model):
         :return: parameters for a new resource of model res_users
         :rtype: dict
         """
-
-        return {
+        data = {
             'name': tools.ustr(ldap_entry[1]['cn'][0]),
             'login': login,
             'company_id': conf['company'][0]
         }
+        if tools.single_email_re.match(login):
+            data['email'] = login
+        return data
 
     def _get_or_create_user(self, conf, login, ldap_entry):
         """
