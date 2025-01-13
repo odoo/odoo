@@ -68,28 +68,57 @@ class MailThread(models.AbstractModel):
         methods (calling ``super``) to add model-specific behavior at
         creation and update of a thread when processing incoming emails.
 
-        Options:
-            - _mail_flat_thread: if set to True, all messages without parent_id
-                are automatically attached to the first message posted on the
-                resource. If set to False, the display of Chatter is done using
-                threads, and no parent_id is automatically set.
+    MailThread class options:
+
+     - _mail_flat_thread: if set to True, all messages without parent_id
+       are automatically attached to the first message posted on the
+       resource. If set to False, the display of Chatter is done using
+       threads, and no parent_id is automatically set.
+     - _mail_post_access: required document access when posting on the document.
+       Equivalent to: 'create' rights on mail.message depends notably on
+       document rights, which can be controller using this attribute. Defaults
+       to 'write' as writing is considered as editing. A common customization
+       is to set it to 'read', allowing people with read access to discuss.
+     - _mail_thread_customer: if set to True, consider this model has a strong
+       tie with the customer (found using '_mail_get_customer'). It currently
+       automatically subscribes customer if found in any post recipients.
 
     MailThread features can be somewhat controlled through context keys :
 
-     - ``mail_create_nosubscribe``: at create or message_post, do not subscribe
-       uid to the record thread
+    # Tracking and logging
+     - ``mail_create_nosubscribe``: at create, do not subscribe uid to the
+       record thread. False by default, as creating = following;
      - ``mail_create_nolog``: at create, do not log the automatic '<Document>
        created' message
      - ``mail_notrack``: at create and write, do not perform the value tracking
-       creating messages
+       creating messages;
      - ``tracking_disable``: at create and write, perform no MailThread features
-       (auto subscription, tracking, post, ...)
+       (auto subscription, tracking, post, ...);
+    # Posting process
      - ``mail_notify_force_send``: if less than 50 email notifications to send,
-       send them directly instead of using the queue; True by default
+       send them directly instead of using the queue i.e. controls 'force_send'
+       parameter of '_notify_thread_by_email'. True by default as it is
+       the desired behavior;
+     - ``mail_notify_author``: notify author if they are in potential notified
+       partners (e.g. following a document on which they post) i.e. controls
+       'notify_author' parameter of '_notify_get_recipients'. False by default
+       as people should not be notified of what they typed;
+     - ``mail_notify_author_mention``: notify author if they are in direct
+       recipients ('partner_ids') i.e. controls 'notify_author_mention'. Used
+       in flows involving auto replies where author could be used to contact
+       themselves. False by default;
+    # Post side effects
+     - ``mail_auto_subscribe_no_notify``: skip notifications linked to auto
+       subscription. False by default, notifications are intended;
+     - ``mail_post_autofollow``: subscribe specific recipients ('partner_ids') during
+        message_post. False by default;
+     - ``mail_post_autofollow_author_skip``: do not subscribe author of a message
+        post. False by default, as we consider authors should receive answers;
     '''
     _name = 'mail.thread'
     _description = 'Email Thread'
     _mail_flat_thread = True  # flatten the discussion history
+    _mail_thread_customer = False  # subscribe customer when being in post recipients
     _mail_post_access = 'write'  # access required on the document to post on it
     _primary_email = 'email'  # Must be set for the models that can be created by alias
     _Attachment = namedtuple('Attachment', ('fname', 'content', 'info'))
@@ -262,6 +291,11 @@ class MailThread(models.AbstractModel):
             - subscribe followers of parent
             - log a creation message
         """
+        # when being in 'nosubscribe' mode, also propagate to any message posted
+        # during the process, unless specifically asked
+        if self.env.context.get('mail_create_nosubscribe') and 'mail_post_autofollow_author_skip' not in self.env.context:
+            self = self.with_context(mail_post_autofollow_author_skip=True)
+
         if self._context.get('tracking_disable'):
             threads = super(MailThread, self).create(vals_list)
             threads._track_discard()
@@ -696,6 +730,8 @@ class MailThread(models.AbstractModel):
 
             composition_mode = post_kwargs.pop('composition_mode', default_composition_mode)
             post_kwargs.setdefault('message_type', 'auto_comment')
+            # by default, allow sending stage updates to author
+            post_kwargs.setdefault('notify_author_mention', True)
             if composition_mode == 'mass_mail':
                 cleaned_self.message_mail_with_source(template, **post_kwargs)
             else:
@@ -1363,7 +1399,7 @@ class MailThread(models.AbstractModel):
             else:
                 # if no author, skip any author subscribe check; otherwise message_post
                 # checks anyway for real author and filters inactive (like odoobot)
-                thread_root = thread_root.with_context(from_alias=True, mail_create_nosubscribe=not message_dict.get('author_id'))
+                thread_root = thread_root.with_context(from_alias=True, mail_post_autofollow_author_skip=not message_dict.get('author_id'))
                 new_msg = thread_root.message_post(**post_params)
 
             if new_msg and original_partner_ids:
@@ -2290,6 +2326,11 @@ class MailThread(models.AbstractModel):
         # automatically subscribe recipients if asked to
         if self._context.get('mail_post_autofollow') and partner_ids:
             self.message_subscribe(partner_ids=list(partner_ids))
+        # automatically subscribe customer recipient if model expects it
+        elif partner_ids and self.env.context.get('mail_post_autofollow') is not False and self._mail_thread_customer:
+            customer = self._mail_get_customer()
+            if customer.id in partner_ids:
+                self.message_subscribe(partner_ids=customer.ids)
 
         msg_values = dict(msg_kwargs)
         if 'email_add_signature' not in msg_values:
@@ -2337,22 +2378,13 @@ class MailThread(models.AbstractModel):
         # subscribe author(s) so that they receive answers; do it only when it is
         # a manual post by the author (aka not a system notification, not a message
         # posted 'in behalf of', and if still active).
-        author_subscribe = (not self._context.get('mail_create_nosubscribe') and
-                             msg_values['message_type'] != 'notification')
+        author_subscribe = (
+            not self._context.get('mail_post_autofollow_author_skip')
+            and msg_values['message_type'] not in ('notification', 'user_notification', 'auto_comment')
+        )
         if author_subscribe:
-            real_author_id = False
-            # if current user is active, they are the one doing the action and should
-            # be notified of answers. If they are inactive they are posting on behalf
-            # of someone else (a custom, mailgateway, ...) and the real author is the
-            # message author. In any case avoid odoobot.
-            if self.env.user.active:  # note that odoobot is always inactive, there is a python check
-                real_author_id = self.env.user.partner_id.id
-            elif msg_values['author_id']:
-                author = self.env['res.partner'].browse(msg_values['author_id'])
-                if author.active and author != self.env.ref('base.partner_root'):  # that happened :(
-                    real_author_id = author.id
-            if real_author_id:
-                self._message_subscribe(partner_ids=[real_author_id])
+            if real_author := self._message_compute_real_author(msg_values['author_id']):
+                self._message_subscribe(partner_ids=[real_author.id])
 
         self._message_post_after_hook(new_message, msg_values)
         self._notify_thread(new_message, msg_values, **notif_kwargs)
@@ -2772,6 +2804,8 @@ class MailThread(models.AbstractModel):
         # split message additional values from notify additional values
         msg_kwargs = {key: val for key, val in kwargs.items() if key in self.env['mail.message']._fields}
         notif_kwargs = {key: val for key, val in kwargs.items() if key not in msg_kwargs}
+        # consider users mentionning themselves should receive notifications
+        notif_kwargs['notify_author_mention'] = notif_kwargs.get('notify_author_mention', True)
 
         author_id, email_from = self._message_compute_author(author_id, email_from, raise_on_email=True)
 
@@ -2959,6 +2993,20 @@ class MailThread(models.AbstractModel):
 
         return author_id, email_from
 
+    def _message_compute_real_author(self, author_id):
+        real_author = self.env['res.partner']
+        # if current user is active, they are the one doing the action and should
+        # be notified of answers. If they are inactive they are posting on behalf
+        # of someone else (a customer, mailgateway, ...) and the real author is the
+        # message author. In any case avoid odoobot.
+        if self.env.user.active:  # note that odoobot is always inactive, there is a python check
+            real_author = self.env.user.partner_id
+        elif author_id:
+            author = self.env['res.partner'].browse(author_id)
+            if author.active and author != self.env.ref('base.partner_root'):  # that happened :(
+                real_author = author
+        return real_author
+
     def _message_compute_parent_id(self, parent_id):
         # parent management, depending on ``_mail_flat_thread``
         # ``_mail_flat_thread`` True: no free message. If no parent, find the first
@@ -3135,6 +3183,7 @@ class MailThread(models.AbstractModel):
             'mail_auto_delete',
             'model_description',
             'notify_author',
+            'notify_author_mention',
             'resend_existing',
             'scheduled_date',
             'send_after_commit',
@@ -3887,6 +3936,8 @@ class MailThread(models.AbstractModel):
             default as we don't want people to receive their own content. It is
             used notably when impersonating partners or having automated
             notifications send by current user, targeting current user;
+          * ``notify_author_mention``: allows to notify the author if in direct
+            recipients i.e. in 'partner_ids';
           * ``skip_existing``: check existing notifications and skip them in order
             to avoid having several notifications / partner as it would make
             constraints crash. This is disabled by default to optimize speed;
@@ -3929,18 +3980,18 @@ class MailThread(models.AbstractModel):
             return recipients_data
 
         # notify author of its own messages, False by default
+        skip_author_id = False
         notify_author = kwargs.get('notify_author') or self.env.context.get('mail_notify_author')
-        real_author_id = False
         if not notify_author:
-            if self.env.user.active:
-                real_author_id = self.env.user.partner_id.id
-            elif msg_vals.get('author_id'):
-                real_author_id = msg_vals['author_id']
-            else:
-                real_author_id = message.author_id.id
+            notify_author_mention = kwargs.get('notify_author_mention') or self.env.context.get('mail_notify_author_mention')
+            author_id = msg_vals.get('author_id') or message.author_id.id
+            skip_author_id = self._message_compute_real_author(author_id).id
+            # allow mention of author if in direct recipients
+            if notify_author_mention and skip_author_id in pids:
+                skip_author_id = False
 
         for pid, pdata in res.items():
-            if pid and pid == real_author_id:
+            if pid and pid == skip_author_id:
                 continue
             if pdata['active'] is False:
                 continue

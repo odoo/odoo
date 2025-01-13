@@ -6,12 +6,13 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
 from odoo import fields
-from odoo.tests import Form
+from odoo.tests import Form, tagged
 from odoo.tests.common import TransactionCase, new_test_user
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mail.tests.common import MailCase, MockEmail
 
 
+@tagged('post_install', '-at_install', 'mail_flow')
 class TestEventNotifications(TransactionCase, MailCase, MockEmail, CronMixinCase):
 
     @classmethod

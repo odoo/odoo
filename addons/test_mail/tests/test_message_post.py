@@ -398,13 +398,14 @@ class TestMessageNotify(TestMessagePostCommon):
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_notify_author(self):
-        """ Author is not added in notified people by default, unless asked to
+        """ Author is added in notified people by default, unless asked not to
         using the 'notify_author' parameter or context key. """
         test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
 
         with self.mock_mail_gateway():
             new_notification = test_record.message_notify(
                 body=Markup('<p>You have received a notification</p>'),
+                notify_author_mention=False,
                 partner_ids=(self.partner_1 + self.partner_employee).ids,
                 subject='This should be a subject',
             )
@@ -414,7 +415,6 @@ class TestMessageNotify(TestMessagePostCommon):
         with self.mock_mail_gateway():
             new_notification = test_record.message_notify(
                 body=Markup('<p>You have received a notification</p>'),
-                notify_author=True,
                 partner_ids=(self.partner_1 + self.partner_employee).ids,
                 subject='This should be a subject',
             )

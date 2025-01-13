@@ -740,6 +740,14 @@ class RepairOrder(models.Model):
 
         return self.env['product.product'].browse(product_id).list_price
 
+    # ------------------------------------------------------------
+    # MAIL.THREAD
+    # ------------------------------------------------------------
+
+    def message_post(self, **kwargs):
+        kwargs['notify_author_mention'] = kwargs.get('notify_author_mention', True)
+        return super().message_post(**kwargs)
+
 
 class RepairTags(models.Model):
     """ Tags of Repair's tasks """

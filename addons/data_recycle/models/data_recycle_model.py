@@ -187,7 +187,6 @@ class Data_RecycleModel(models.Model):
                     }
                 ),
                 model=self._name,
-                notify_author=True,
                 partner_ids=partner_ids,
                 res_id=self.id,
                 subject=_('Data to Recycle'),

@@ -202,7 +202,7 @@ class DiscussChannel(models.Model):
         :param string body: message HTML body """
         # sudo: mail.message - chat bot is allowed to post a message which
         # requires reading its partner among other things.
-        return self.with_context(mail_create_nosubscribe=True).sudo().message_post(
+        return self.with_context(mail_post_autofollow_author_skip=True).sudo().message_post(
             author_id=chatbot_script.sudo().operator_partner_id.id,
             body=body,
             message_type='comment',

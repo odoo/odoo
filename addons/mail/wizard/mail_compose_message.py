@@ -178,6 +178,8 @@ class MailComposeMessage(models.TransientModel):
     mail_server_id = fields.Many2one(
         'ir.mail_server', string='Outgoing mail server',
         compute='_compute_mail_server_id', readonly=False, store=True, compute_sudo=False)
+    notify_author = fields.Boolean(compute='_compute_notify_author', readonly=False, store=True)
+    notify_author_mention = fields.Boolean(compute='_compute_notify_author_mention', readonly=False, store=True)
     scheduled_date = fields.Char(
         'Scheduled Date',
         compute='_compute_scheduled_date', readonly=False, store=True, compute_sudo=False,
@@ -587,6 +589,16 @@ class MailComposeMessage(models.TransientModel):
             if not composer.template_id:
                 composer.mail_server_id = False
 
+    @api.depends('composition_mode')
+    def _compute_notify_author(self):
+        """ Used only in 'comment' mode """
+        self.filtered(lambda c: c.composition_mode != 'comment').notify_author = False
+
+    @api.depends('composition_mode')
+    def _compute_notify_author_mention(self):
+        """ Used only in 'comment' mode """
+        self.filtered(lambda c: c.composition_mode != 'comment').notify_author_mention = False
+
     @api.depends('composition_mode', 'model', 'res_ids', 'template_id')
     def _compute_scheduled_date(self):
         """ Computation is coming either from template, either reset. When
@@ -731,7 +743,7 @@ class MailComposeMessage(models.TransientModel):
         if self.composition_batch:
             # add context key to avoid subscribing the author
             ActiveModel = ActiveModel.with_context(
-                mail_create_nosubscribe=True,
+                mail_post_autofollow_author_skip=True,
             )
 
         messages = self.env['mail.message']
@@ -970,6 +982,10 @@ class MailComposeMessage(models.TransientModel):
                 record_alias_domain_id=self.record_alias_domain_id.id,
                 record_company_id=self.record_company_id.id,
             )
+            if self.notify_author:  # force only Truthy values, keeping context fallback
+                values['notify_author'] = self.notify_author
+            if self.notify_author_mention:  # force only Truthy values, keeping context fallback
+                values['notify_author_mention'] = self.notify_author_mention
         return values
 
     def _prepare_mail_values_dynamic(self, res_ids):

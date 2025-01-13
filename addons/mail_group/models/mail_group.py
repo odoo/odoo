@@ -518,7 +518,6 @@ class MailGroup(models.Model):
                     body=body,
                     email_from=email_from,
                     model='mail.group',
-                    notify_author=True,
                     res_id=group.id,
                 )
 

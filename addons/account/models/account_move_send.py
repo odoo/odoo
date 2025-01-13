@@ -434,13 +434,7 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _send_mail(self, move, mail_template, **kwargs):
         """ Send the journal entry passed as parameter by mail. """
-        partner_ids = kwargs.get('partner_ids', [])
-        author_id = kwargs.get('author_id')
-
-        new_message = move.with_context(
-                no_new_invoice=True,
-                mail_notify_author=author_id in partner_ids,
-        ).message_post(
+        new_message = move.with_context(no_new_invoice=True).message_post(
             message_type='comment',
             **kwargs,
             **{  # noqa: PIE804
@@ -555,7 +549,6 @@ class AccountMoveSend(models.AbstractModel):
             email_from = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'email_from')
             if email_from or not author_id:
                 author_id, email_from = move._message_compute_author(email_from=email_from)
-
             model_description = move.with_context(lang=mail_lang).type_name
 
             self._send_mail(
@@ -564,6 +557,7 @@ class AccountMoveSend(models.AbstractModel):
                 author_id=author_id,
                 subtype_id=subtype.id,
                 model_description=model_description,
+                notify_author_mention=True,
                 email_from=email_from,
                 **mail_params,
             )
