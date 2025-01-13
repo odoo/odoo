@@ -12,3 +12,4 @@ from . import test_orm_import
 from . import test_override_signatures
 from . import test_routes
 from . import test_i18n
+from . import test_test_holes
