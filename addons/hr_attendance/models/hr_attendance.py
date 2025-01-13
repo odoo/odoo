@@ -41,7 +41,7 @@ class HrAttendance(models.Model):
     attendance_manager_id = fields.Many2one('res.users', related="employee_id.attendance_manager_id",
         export_string_translation=False)
     is_manager = fields.Boolean(compute="_compute_is_manager")
-    check_in = fields.Datetime(string="Check In", default=fields.Datetime.now, required=True, tracking=True)
+    check_in = fields.Datetime(string="Check In", default=fields.Datetime.now, required=True, tracking=True, index=True)
     check_out = fields.Datetime(string="Check Out", tracking=True)
     worked_hours = fields.Float(string='Worked Hours', compute='_compute_worked_hours', store=True, readonly=True)
     color = fields.Integer(compute='_compute_color')
@@ -92,71 +92,43 @@ class HrAttendance(models.Model):
 
     @api.depends('worked_hours')
     def _compute_overtime_hours(self):
-        att_progress_values = dict()
-        negative_overtime_attendances = defaultdict(lambda: False)
-        if self.employee_id:
-            self.env['hr.attendance'].flush_model(['worked_hours'])
-            self.env['hr.attendance.overtime'].flush_model(['duration'])
-            self.env.cr.execute('''
-                WITH employee_time_zones AS (
-                    SELECT employee.id AS employee_id,
-                           calendar.tz AS timezone
-                      FROM hr_employee employee
-                INNER JOIN resource_calendar calendar
-                        ON calendar.id = employee.resource_calendar_id
-                )
-                SELECT att.id AS att_id,
-                       att.worked_hours AS att_wh,
-                       ot.id AS ot_id,
-                       ot.duration AS ot_d,
-                       ot.date AS od,
-                       att.check_in AS ad
-                  FROM hr_attendance att
-            INNER JOIN employee_time_zones etz
-                    ON att.employee_id = etz.employee_id
-            INNER JOIN hr_attendance_overtime ot
-                    ON date_trunc('day',
-                                  CAST(att.check_in
-                                           AT TIME ZONE 'utc'
-                                           AT TIME ZONE etz.timezone
-                                  as date)) = date_trunc('day', ot.date)
-                   AND att.employee_id = ot.employee_id
-                   AND att.employee_id IN %s
-                   AND ot.adjustment IS false
-              ORDER BY att.check_in DESC
-            ''', (tuple(self.employee_id.ids),))
-            a = self.env.cr.dictfetchall()
-            grouped_dict = dict()
-            for row in a:
-                if row['ot_id'] and row['att_wh']:
-                    if row['ot_id'] not in grouped_dict:
-                        grouped_dict[row['ot_id']] = {'attendances': [(row['att_id'], row['att_wh'])], 'overtime_duration': row['ot_d']}
-                    else:
-                        grouped_dict[row['ot_id']]['attendances'].append((row['att_id'], row['att_wh']))
+        day_starts = {att: self._get_day_start_and_day(att.employee_id, att.check_in) for att in self}
+        date_min, date_max = min(date for dummy, date in day_starts.values()), max(date for dummy, date in day_starts.values())
+        datetime_min, datetime_max = min(time for time, dummy in day_starts.values()), max(time for time, dummy in day_starts.values())
 
-            for overtime in grouped_dict:
-                overtime_reservoir = grouped_dict[overtime]['overtime_duration']
-                if overtime_reservoir > 0:
-                    for attendance in grouped_dict[overtime]['attendances']:
-                        if overtime_reservoir > 0:
-                            sub_time = attendance[1] - overtime_reservoir
-                            if sub_time < 0:
-                                att_progress_values[attendance[0]] = 0
-                                overtime_reservoir -= attendance[1]
-                            else:
-                                att_progress_values[attendance[0]] = float(((attendance[1] - overtime_reservoir) / attendance[1]) * 100)
-                                overtime_reservoir = 0
-                        else:
-                            att_progress_values[attendance[0]] = 100
-                elif overtime_reservoir < 0 and grouped_dict[overtime]['attendances']:
-                    att_id = grouped_dict[overtime]['attendances'][0][0]
-                    att_progress_values[att_id] = overtime_reservoir
-                    negative_overtime_attendances[att_id] = True
-        for attendance in self:
-            if negative_overtime_attendances[attendance.id]:
-                attendance.overtime_hours = att_progress_values.get(attendance.id, 0)
-            else:
-                attendance.overtime_hours = attendance.worked_hours * ((100 - att_progress_values.get(attendance.id, 100)) / 100)
+        # Find at least all attendances that happen on the same day and for the same employee
+        # as an attendance in self
+        all_attendances = self.env['hr.attendance'].search(
+            [
+                ('employee_id', 'in', self.employee_id.ids),
+                ('check_in', '>=', datetime_min),
+                ('check_in', '<=', datetime_max + timedelta(days=1)),
+            ],
+            order='check_in desc',
+        )
+        attendances_by_date_and_employee = defaultdict(list)
+        for att in all_attendances:
+            dummy, date = day_starts.get(att, att._get_day_start_and_day(att.employee_id, att.check_in))
+            if date_min <= date <= date_max:
+                att.overtime_hours = 0  # reset affected attendance
+                attendances_by_date_and_employee[date, att.employee_id.id].append(att)
+
+        overtimes = self.env['hr.attendance.overtime'].search([
+            ('employee_id', 'in', self.employee_id.ids),
+            ('date', '>=', date_min),
+            ('date', '<=', date_max),
+        ])
+
+        for ot in overtimes:
+            # Distribute overtime to attendances
+            overtime_reserve = ot.duration
+            attendances = attendances_by_date_and_employee[ot.date, ot.employee_id.id]
+            for att in attendances:
+                if overtime_reserve == 0:
+                    break
+                ot_hours = min(overtime_reserve, att.worked_hours)
+                overtime_reserve -= ot_hours
+                att.overtime_hours = ot_hours
 
     @api.depends('employee_id', 'overtime_status', 'overtime_hours')
     def _compute_validated_overtime_hours(self):
@@ -282,7 +254,8 @@ class HrAttendance(models.Model):
         #Returns a tuple containing the datetime in naive UTC of the employee's start of the day
         # and the date it was for that employee
         if not dt.tzinfo:
-            date_employee_tz = pytz.utc.localize(dt).astimezone(pytz.timezone(employee._get_tz()))
+            calendar_tz = employee._get_calendar_tz_batch(dt)[employee.id]
+            date_employee_tz = pytz.utc.localize(dt).astimezone(pytz.timezone(calendar_tz))
         else:
             date_employee_tz = dt
         start_day_employee_tz = date_employee_tz.replace(hour=0, minute=0, second=0)
@@ -331,7 +304,6 @@ class HrAttendance(models.Model):
             stop = pytz.utc.localize(max(attendance_dates, key=itemgetter(0))[0] + timedelta(hours=24))
 
             # Retrieve expected attendance intervals
-            calendar = emp.resource_calendar_id or emp.company_id.resource_calendar_id
             expected_attendances = emp._employee_attendance_intervals(start, stop)
 
             # working_times = {date: [(start, stop)]}
