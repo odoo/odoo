@@ -65,7 +65,7 @@ class SerialDriver(Driver):
         :type device: str
         """
 
-        super(SerialDriver, self).__init__(identifier, device)
+        super().__init__(identifier, device)
         self._actions.update({
             'get_status': self._push_status,
         })
