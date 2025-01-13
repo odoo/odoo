@@ -76,6 +76,11 @@ class SmsSms(models.Model):
         'UUID must be unique',
     )
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        self.env.ref('sms.ir_cron_sms_scheduler_action')._trigger()
+        return super().create(vals_list)
+
     @api.depends('uuid')
     def _compute_sms_tracker_id(self):
         self.sms_tracker_id = False
