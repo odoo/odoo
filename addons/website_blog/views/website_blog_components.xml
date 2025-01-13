@@ -140,7 +140,7 @@
         <div t-if="blog_post.author_avatar"
              t-field="blog_post.author_avatar"
              style="line-height:1"
-             t-options='{"widget": "image", "class": "rounded-circle " + "o_wblog_author_avatar me-1" if hide_date else  "o_wblog_author_avatar_date me-2"}' />
+             t-options='{"widget": "image", "class": "rounded-circle " + "o_wblog_author_avatar me-1" if hide_date else  "o_wblog_author_avatar_date me-2",}' />
         <div t-att-class="not hide_date and 'small fw-bold'" style="line-height:1">
             <span t-if="editable" t-field="blog_post.author_id" t-options='{ "widget": "contact", "fields": ["name"]}'/>
             <span t-else="" t-esc="blog_post.author_name"/>
@@ -152,12 +152,14 @@
 <!-- ======   Template: Post Breadcrumbs   =====================================
 ============================================================================ -->
 <template id="post_breadcrumbs">
-    <nav aria-label="breadcrumb" t-attf-class="breadcrumb flex-nowrap py-0 px-0 css_editable_mode_hidden #{additionnal_classes or ''}">
-        <li t-if="len(blogs) &gt; 1" class="breadcrumb-item"><a href="/blog">All Blogs</a></li>
-        <li class="breadcrumb-item">
-            <a t-attf-href="#{blog_url(tag=None, date_begin=None, date_end=None)}" t-esc="blog.name"/>
-        </li>
-        <li class="breadcrumb-item text-truncate active"><span t-esc="blog_post.name"/></li>
+    <nav aria-label="breadcrumb" t-attf-class="breadcrumb o_no_link_popover #{additionnal_classes or ''}">
+        <ol class="breadcrumb bg-transparent mb-0 ps-0 py-0">
+            <li t-if="len(blogs) &gt; 1" class="breadcrumb-item"><a href="/blog">All Blogs</a></li>
+            <li class="breadcrumb-item">
+                <a t-attf-href="#{blog_url(tag=None, date_begin=None, date_end=None)}" t-out="blog.name"/>
+            </li>
+            <li class="breadcrumb-item text-truncate active"><span t-esc="blog_post.name"/></li>
+        </ol>
     </nav>
 </template>
 

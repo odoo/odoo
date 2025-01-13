@@ -171,10 +171,12 @@ class BlogPost(models.Model):
                 blog_post.website_url = "/blog/%s/%s" % (self.env['ir.http']._slug(blog_post.blog_id), self.env['ir.http']._slug(blog_post))
 
     def _default_content(self):
-        text = html_escape(_("Start writing here..."))
-        return """
-            <p>%(text)s</p>
-        """ % {"text": text}
+        website = self.env['website'].get_current_website()
+        # TODO Remove with_context when is_view_active does it.
+        is_regular_cover = website.with_context(website_id=website.id).is_view_active('website_blog.opt_blog_post_regular_cover')
+        return self.env['ir.ui.view'].with_context(inherit_branding=False)._render_template('website_blog.s_text_block', {
+            'is_regular_cover': is_regular_cover,
+        })
     name = fields.Char('Title', required=True, translate=True, default='')
     subtitle = fields.Char('Sub Title', translate=True)
     author_id = fields.Many2one('res.partner', 'Author', default=lambda self: self.env.user.partner_id, index='btree_not_null')
