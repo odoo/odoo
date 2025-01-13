@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 from unittest.mock import patch, PropertyMock
 
 from odoo import Command, fields
+from odoo.tools.misc import limited_field_access_token
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tests.common import users, tagged, HttpCase, warmup
@@ -368,6 +369,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             "res.partner": self._filter_partners_fields(
                 {
                     "active": False,
+                    "avatar_128_access_token": limited_field_access_token(
+                        self.user_root.partner_id, "avatar_128"
+                    ),
                     "email": "odoobot@example.com",
                     "id": self.user_root.partner_id.id,
                     "im_status": "bot",
@@ -380,6 +384,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 },
                 {
                     "active": True,
+                    "avatar_128_access_token": limited_field_access_token(
+                        self.users[0].partner_id, "avatar_128"
+                    ),
                     "id": self.users[0].partner_id.id,
                     "isAdmin": False,
                     "isInternalUser": True,
@@ -1572,6 +1579,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[0]:
             res = {
                 "active": True,
+                "avatar_128_access_token": limited_field_access_token(
+                    user.partner_id, "avatar_128"
+                ),
                 "email": "e.e@example.com",
                 "id": user.partner_id.id,
                 "im_status": "online",
@@ -1596,6 +1606,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[1]:
             res = {
                 "active": True,
+                "avatar_128_access_token": limited_field_access_token(
+                    user.partner_id, "avatar_128"
+                ),
                 "country": {
                     "code": "IN",
                     "id": self.env.ref("base.in").id,
@@ -1621,6 +1634,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 }
             return {
                 "active": True,
+                "avatar_128_access_token": limited_field_access_token(
+                    user.partner_id, "avatar_128"
+                ),
                 "email": "test2@example.com",
                 "id": user.partner_id.id,
                 "im_status": "offline",
@@ -1634,6 +1650,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[3]:
             return {
                 "active": True,
+                "avatar_128_access_token": limited_field_access_token(
+                    user.partner_id, "avatar_128"
+                ),
                 "email": False,
                 "id": user.partner_id.id,
                 "im_status": "offline",
@@ -1647,6 +1666,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[12]:
             return {
                 "active": True,
+                "avatar_128_access_token": limited_field_access_token(
+                    user.partner_id, "avatar_128"
+                ),
                 "email": False,
                 "id": user.partner_id.id,
                 "im_status": "offline",
@@ -1660,6 +1682,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[14]:
             return {
                 "active": True,
+                "avatar_128_access_token": limited_field_access_token(
+                    user.partner_id, "avatar_128"
+                ),
                 "email": False,
                 "id": user.partner_id.id,
                 "im_status": "offline",
@@ -1673,6 +1698,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[15]:
             return {
                 "active": True,
+                "avatar_128_access_token": limited_field_access_token(
+                    user.partner_id, "avatar_128"
+                ),
                 "email": False,
                 "id": user.partner_id.id,
                 "im_status": "offline",
@@ -1685,6 +1713,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if guest:
             return {
+                "avatar_128_access_token": limited_field_access_token(self.guest, "avatar_128"),
                 "id": self.guest.id,
                 "im_status": "offline",
                 "name": "Visitor",

@@ -10,7 +10,7 @@ from odoo import _, api, fields, models
 from odoo.http import request
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
-from odoo.addons.bus.models.bus_presence import AWAY_TIMER, DISCONNECTION_TIMER
+from odoo.tools.misc import limited_field_access_token
 from odoo.addons.bus.websocket import wsrequest
 from odoo.addons.mail.tools.discuss import Store
 
@@ -98,7 +98,7 @@ class MailGuest(models.Model):
         if len(name) > 512:
             raise UserError(_("Guest's name is too long."))
         self.name = name
-        store = Store(self, fields=["name", "write_date"])
+        store = Store(self, fields=["avatar_128", "name"])
         self.channel_ids._bus_send_store(store)
         self._bus_send_store(store)
 
@@ -115,8 +115,16 @@ class MailGuest(models.Model):
 
     def _to_store(self, store: Store, /, *, fields=None):
         if fields is None:
-            fields = ["im_status", "name", "write_date"]
-        store.add("mail.guest", self._read_format(fields, load=False))
+            fields = ["avatar_128", "im_status", "name"]
+        for guest in self:
+            data = guest._read_format(
+                [field for field in fields if field not in ["avatar_128"]],
+                load=False,
+            )[0]
+            if "avatar_128" in fields:
+                data["avatar_128_access_token"] = limited_field_access_token(guest, "avatar_128")
+                data["write_date"] = guest.write_date
+            store.add(guest, data)
 
     def _set_auth_cookie(self):
         """Add a cookie to the response to identify the guest. Every route
