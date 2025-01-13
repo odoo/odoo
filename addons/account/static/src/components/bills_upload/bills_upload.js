@@ -209,6 +209,12 @@ export class AccountMoveUploadListRenderer extends ListRenderer {
         super.setup();
         this.dropzoneState = useState({ visible: false });
     }
+
+    onDragStart(ev) {
+        if (ev.dataTransfer.types.includes("Files")) {
+            this.dropzoneState.visible = true;
+        }
+    }
 }
 
 export class AccountMoveListController extends ListController {
@@ -250,6 +256,12 @@ export class AccountMoveUploadKanbanRenderer extends KanbanRenderer {
         this.dropzoneState = useState({
             visible: false,
         });
+    }
+
+    onDragStart(ev) {
+        if (ev.dataTransfer.types.includes("Files")) {
+            this.dropzoneState.visible = true;
+        }
     }
 }
 
@@ -312,6 +324,12 @@ export class DashboardKanbanRecord extends KanbanRecord {
             hideZone: () => { this.dropzoneState.visible = false; },
         }
     }
+
+    onDragStart(ev) {
+        if (ev.dataTransfer.types.includes("Files")) {
+            this.dropzoneState.visible = true;
+        }
+    }
 }
 
 export class DashboardKanbanRenderer extends KanbanRenderer {
@@ -328,12 +346,17 @@ export class DashboardKanbanRenderer extends KanbanRenderer {
         });
     }
     kanbanDragEnter(e) {
-        this.env.dashboardState.isDragging = true;
+        if (e.dataTransfer.types.includes("Files")) {
+            this.env.dashboardState.isDragging = true;
+        } else {
+            this.disableDragging();
+        }
     }
     kanbanDragLeave(e) {
         const mouseX = e.clientX, mouseY = e.clientY;
         const {x, y, width, height} = this.rootRef.el.getBoundingClientRect();
-        if (!(mouseX > x && mouseX <= x + width && mouseY > y && mouseY <= y + height)) {
+        const mouseInsideKanbanRenderer = mouseX > x && mouseX <= x + width && mouseY > y && mouseY <= y + height;
+        if (!mouseInsideKanbanRenderer || !e.dataTransfer.types.includes("Files")) {
             // if the mouse position is outside the kanban renderer, all cards should hide their dropzones.
             this.disableDragging();
         } else {
