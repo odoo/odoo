@@ -16,17 +16,23 @@ export const accountTaxHelpers = {
 
         let current_batch = null;
         let is_base_affected = null;
+        let index = 0;
         for (const tax_data of taxes_data.toReversed()) {
+            is_base_affected = tax_data.is_base_affected;
             if (current_batch !== null) {
                 const same_amount_type = tax_data.amount_type === current_batch.amount_type;
                 const same_price_include = tax_data.price_include === current_batch.price_include;
                 const same_incl_base_amount_not_affected =
                     tax_data.include_base_amount &&
                     tax_data.include_base_amount === current_batch.include_base_amount &&
-                    !is_base_affected;
+                    (
+                        !is_base_affected ||
+                        (!current_batch.is_base_affected && index === taxes_data.length - 1)
+                    );
                 const same_inc_base_amount =
                     tax_data.include_base_amount === current_batch.include_base_amount &&
-                    !tax_data.include_base_amount;
+                    !tax_data.include_base_amount &&
+                    is_base_affected === current_batch.is_base_affected;
                 const same_batch =
                     same_amount_type &&
                     same_price_include &&
@@ -48,11 +54,12 @@ export const accountTaxHelpers = {
                     _original_price_include: tax_data._original_price_include,
                     is_tax_computed: false,
                     is_base_computed: false,
+                    is_base_affected: is_base_affected,
                 };
             }
 
-            is_base_affected = tax_data.is_base_affected;
             current_batch.taxes.push(tax_data);
+            ++index;
         }
 
         if (current_batch !== null) {
@@ -157,7 +164,9 @@ export const accountTaxHelpers = {
                 if (!special_mode || special_mode === "total_excluded") {
                     if (batch.include_base_amount) {
                         for (const other_batch of batches_after) {
-                            add_extra_base(other_batch, tax_data, 1);
+                            if (other_batch.is_base_affected) {
+                                add_extra_base(other_batch, tax_data, 1);
+                            }
                         }
                     }
                 } else {  // special_mode === "total_included"
