@@ -306,8 +306,8 @@ class TestMailFlow(MailCommon, TestRecipients):
         self.assertEqual(len(lead.message_ids), 3, 'Incoming email + chatter reply + customer reply')
         self.assertEqual(
             lead.message_partner_ids,
-            partner_sylvie + internal_partners + self.partner_portal,
-            'Mail gateway: author (partner_sylvie) added in followers')
+            internal_partners + self.partner_portal,
+            'Mail gateway: author (partner_sylvie) should not added in followers if external')
 
         customer_reply = lead.message_ids[0]
         self.assertMailNotifications(

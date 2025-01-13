@@ -2420,13 +2420,15 @@ class MailThread(models.AbstractModel):
 
         # subscribe author(s) so that they receive answers; do it only when it is
         # a manual post by the author (aka not a system notification, not a message
-        # posted 'in behalf of', and if still active).
+        # posted 'in behalf of'). Limit to active and internal partners, as external
+        # customers should be proposed through suggested recipients.
         author_subscribe = (
             not self._context.get('mail_post_autofollow_author_skip')
             and msg_values['message_type'] not in ('notification', 'user_notification', 'auto_comment')
         )
         if author_subscribe:
-            if real_author := self._message_compute_real_author(msg_values['author_id']):
+            real_author = self._message_compute_real_author(msg_values['author_id'])
+            if real_author and not real_author.partner_share:
                 self._message_subscribe(partner_ids=[real_author.id])
 
         self._message_post_after_hook(new_message, msg_values)
