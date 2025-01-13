@@ -27,26 +27,26 @@
             <div class="d-flex justify-content-center py-4 px-2 text-muted" t-if="!hasPreviews">
                 No conversation yet...
             </div>
-            <t t-if="store.odoobot and installationRequest.isShown">
-                <NotificationItem
-                    body="installationRequest.body"
-                    displayName="installationRequest.displayName"
-                    iconSrc="installationRequest.iconSrc"
-                    onClick="installationRequest.onClick"
-                    onSwipeRight="hasTouch() ? { action: () => this.installPrompt.decline(), icon: 'fa-times-circle', bgColor: 'bg-warning' } : undefined"
-                >
-                    <t t-set-slot="icon">
-                        <ImStatus persona="installationRequest.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
-                    </t>
-                    <t t-set-slot="requestContent">
-                        <a t-if="ui.isSmall" class="btn fa fa-cloud-download" />
-                        <t t-else="">
-                            <a class="btn btn-primary">Install</a>
-                            <span t-if="!hasTouch()" t-on-click.stop="() => this.installPrompt.decline()" class="text-dark bg-transparent fa fa-close opacity-50 opacity-100-hover" title="Dismiss"></span>
-                        </t>
-                    </t>
-                </NotificationItem>
-            </t>
+<!--            <t t-if="store.odoobot and installationRequest.isShown">-->
+<!--                <NotificationItem-->
+<!--                    body="installationRequest.body"-->
+<!--                    displayName="installationRequest.displayName"-->
+<!--                    iconSrc="installationRequest.iconSrc"-->
+<!--                    onClick="installationRequest.onClick"-->
+<!--                    onSwipeRight="hasTouch() ? { action: () => this.installPrompt.decline(), icon: 'fa-times-circle', bgColor: 'bg-warning' } : undefined"-->
+<!--                >-->
+<!--                    <t t-set-slot="icon">-->
+<!--                        <ImStatus persona="installationRequest.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>-->
+<!--                    </t>-->
+<!--                    <t t-set-slot="requestContent">-->
+<!--                        <a t-if="ui.isSmall" class="btn fa fa-cloud-download" />-->
+<!--                        <t t-else="">-->
+<!--                            <a class="btn btn-primary">Install</a>-->
+<!--                            <span t-if="!hasTouch()" t-on-click.stop="() => this.installPrompt.decline()" class="text-dark bg-transparent fa fa-close opacity-50 opacity-100-hover" title="Dismiss"></span>-->
+<!--                        </t>-->
+<!--                    </t>-->
+<!--                </NotificationItem>-->
+<!--            </t>-->
             <t t-if="store.odoobot and notificationRequest.isShown">
                 <NotificationItem
                     body="notificationRequest.body"
