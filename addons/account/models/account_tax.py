@@ -1319,13 +1319,26 @@ class AccountTax(models.Model):
         :param rounding_method: The rounding method to be used. If not specified, it will be taken from the company.
         """
         price_unit_after_discount = base_line['price_unit'] * (1 - (base_line['discount'] / 100.0))
+        special_mode = base_line['special_mode']
+        if company.country_id.code == 'IT':
+            unit_details = base_line['tax_ids']._get_tax_details(
+                price_unit=price_unit_after_discount,
+                quantity=1,
+                precision_rounding=base_line['currency_id'].rounding,
+                rounding_method=rounding_method or company.tax_calculation_rounding_method,
+                product=base_line['product_id'],
+                special_mode=base_line['special_mode'],
+            )
+            price_unit_after_discount = company.currency_id.round(unit_details['total_included'])
+            special_mode = 'total_included'
+
         taxes_computation = base_line['tax_ids']._get_tax_details(
             price_unit=price_unit_after_discount,
             quantity=base_line['quantity'],
             precision_rounding=base_line['currency_id'].rounding,
             rounding_method=rounding_method or company.tax_calculation_rounding_method,
             product=base_line['product_id'],
-            special_mode=base_line['special_mode'],
+            special_mode=special_mode,
         )
         rate = base_line['rate']
         tax_details = base_line['tax_details'] = {
