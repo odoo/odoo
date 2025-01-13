@@ -2763,10 +2763,10 @@ class AccountMove(models.Model):
     def _get_protected_vals(self, vals, records):
         protected = set()
         for fname in vals:
-            field = records._fields.get(fname)
+            field = records._fields[fname]
             if field.inverse or (field.compute and not field.readonly):
                 protected.update(self.pool.field_computed.get(field, [field]))
-        return [(protected, rec) for rec in records]
+        return [(protected, rec) for rec in records] if protected else []
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -2774,11 +2774,12 @@ class AccountMove(models.Model):
             raise UserError(_('You cannot create a move already in the posted state. Please create a draft move and post it after.'))
         container = {'records': self}
         with self._check_balanced(container):
-            with self._sync_dynamic_lines(container):
+            with ExitStack() as exit_stack, self._sync_dynamic_lines(container):
                 for vals in vals_list:
                     self._sanitize_vals(vals)
                 stolen_moves = self.browse(set(move for vals in vals_list for move in self._stolen_move(vals)))
                 moves = super().create(vals_list)
+                exit_stack.enter_context(self.env.protecting([protected for vals, move in zip(vals_list, moves) for protected in self._get_protected_vals(vals, move)]))
                 container['records'] = moves | stolen_moves
             for move, vals in zip(moves, vals_list):
                 if 'tax_totals' in vals:
