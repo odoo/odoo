@@ -813,6 +813,28 @@ export class TicketScreen extends Component {
             await this.pos.data.read("pos.order", Array.from(new Set(idsNotInCacheOrOutdated)));
         }
     }
+    //#endregion
+    getPresetTimeColor(order) {
+        const slot = order.preset_id.currentSlot;
+        const presetTime = order.preset_time.ts;
+        if (!slot) {
+            if (presetTime < DateTime.now().ts) {
+                return "bg-danger text-white";
+            } else {
+                return "bg-light text-dark";
+            }
+        }
+        if (
+            slot.datetime.ts <= presetTime &&
+            presetTime < slot.datetime.ts + order.preset_id.interval_time * 60 * 1000
+        ) {
+            return "bg-warning text-dark";
+        } else if (presetTime < slot.datetime.ts) {
+            return "bg-danger text-white";
+        } else {
+            return "bg-light text-dark";
+        }
+    }
 }
 
 registry.category("pos_screens").add("TicketScreen", TicketScreen);

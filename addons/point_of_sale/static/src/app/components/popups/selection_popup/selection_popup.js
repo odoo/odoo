@@ -10,10 +10,12 @@ export class SelectionPopup extends Component {
         list: { type: Array, optional: true },
         getPayload: Function,
         close: Function,
+        size: { type: String, optional: true },
     };
     static defaultProps = {
         title: _t("Select"),
         list: [],
+        size: "lg",
     };
 
     /**
