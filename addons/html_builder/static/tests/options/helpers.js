@@ -7,9 +7,9 @@ export async function insertStructureSnippet(editor, snippetName) {
         installSnippetModule: () => {},
     });
     await snippetModel.load();
-    const snippet = snippetModel.snippetsByCategory.snippet_structure.filter(
+    const snippet = snippetModel.snippetsByCategory.snippet_structure.find(
         (snippet) => snippet.name === snippetName
-    )[0];
+    );
     editor.editable.append(snippet.content.cloneNode(true));
     editor.shared.history.addStep();
 }
