@@ -46,6 +46,10 @@ publicWidget.registry.WebsiteSaleCheckout.include({
      * @override method from `@website_sale/js/checkout`
      */
     _canEnableMainButton() {
+        if (this.dmRadios.length === 0) {  // If there are no delivery methods.
+            return this._super.apply(this, arguments);  // Skip override.
+        }
+        // TODO: move logic below to `_isDeliveryMethodReady` override on master
         const checkedRadio = this.el.querySelector('input[name="o_delivery_radio"]:checked');
         const deliveryContainer = this._getDeliveryMethodContainer(checkedRadio);
         const hasWarning = (
