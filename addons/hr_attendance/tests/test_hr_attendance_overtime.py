@@ -11,6 +11,12 @@ class TestHrAttendanceOvertime(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
+        def set_calendar_and_tz(employee, tz):
+            employee.resource_calendar_id = cls.env['resource.calendar'].create({
+                'name': f'Default Calendar ({tz})',
+                'tz': tz,
+            })
+
         super().setUpClass()
         cls.company = cls.env['res.company'].create({
             'name': 'SweatChipChop Inc.',
@@ -40,16 +46,22 @@ class TestHrAttendanceOvertime(TransactionCase):
             'company_id': cls.company.id,
             'tz': 'Asia/Tokyo',
         })
+        set_calendar_and_tz(cls.jpn_employee, 'Asia/Tokyo')
+
         cls.honolulu_employee = cls.env['hr.employee'].create({
             'name': 'Susan',
             'company_id': cls.company.id,
             'tz': 'Pacific/Honolulu',
         })
+        set_calendar_and_tz(cls.honolulu_employee, 'Pacific/Honolulu')
+
         cls.europe_employee = cls.env['hr.employee'].with_company(cls.company_1).create({
             'name': 'Schmitt',
             'company_id': cls.company_1.id,
             'tz': 'Europe/Brussels',
         })
+        set_calendar_and_tz(cls.europe_employee, 'Europe/Brussels')
+
         cls.calendar_flex_40h = cls.env['resource.calendar'].create({
             'name': 'Flexible 40 hours/week',
             'company_id': cls.company.id,
@@ -382,6 +394,23 @@ class TestHrAttendanceOvertime(TransactionCase):
         overtime_record = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.europe_employee.id),
                                                               ('date', '=', datetime(2024, 5, 28))])
         self.assertAlmostEqual(overtime_record.duration, 5)
+
+        # Check that the calendar's timezones take priority and that overtimes and attendances dates are consistent
+        self.europe_employee.resource_calendar_id.tz = 'America/New_York'
+        early_attendance2 = self.env['hr.attendance'].create({
+            'employee_id': self.europe_employee.id,
+            'check_in': datetime(2024, 5, 30, 3, 0),  # 23:00 NY prev day -- attendance should be for the 29th
+            'check_out': datetime(2024, 5, 30, 16, 0)  # 12:00 NY
+        })
+
+        # expected = 5 (13 - 8 work) -- since attendance is for the next day the lunch isn't accounted for
+        self.assertAlmostEqual(early_attendance2.overtime_hours, 5)
+
+        # Total overtime for the 29th (not the 30th): 5 hours
+        overtime_record2 = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.europe_employee.id),
+                                                              ('date', '=', datetime(2024, 5, 29))])
+        self.assertAlmostEqual(overtime_record2.duration, 5)
+
 
     @freeze_time("2024-02-1 23:00:00")
     def test_auto_check_out(self):

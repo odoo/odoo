@@ -18,7 +18,7 @@ class HrAttendanceOvertime(models.Model):
         required=True, ondelete='cascade', index=True)
     company_id = fields.Many2one(related='employee_id.company_id')
 
-    date = fields.Date(string='Day')
+    date = fields.Date(string='Day', index=True, required=True)
     duration = fields.Float(string='Extra Hours', default=0.0, required=True)
     duration_real = fields.Float(
         string='Extra Hours (Real)', default=0.0,
