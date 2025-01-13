@@ -49,13 +49,20 @@ class OdooBaseChecker(BaseChecker):
             'gettext-repr',
             'Don\'t use %r to automatically insert quotes in translation strings. Quotes can be different depending on the language: they must be part of the translated string.',
         ),
+        'E8507': (
+            'Better using self.env._',
+            'prefer-env-translation',
+            'More info at https://github.com/odoo/odoo/pull/174844',
+        ),
     }
 
-    @only_required_for_messages('gettext-variable', 'gettext-placeholders', 'gettext-repr')
+    @only_required_for_messages('gettext-variable', 'gettext-placeholders', 'gettext-repr', 'prefer-env-translation')
     def visit_call(self, node):
         if isinstance(node.func, astroid.Name):
             # direct function call to _
             node_name = node.func.name
+            if node_name == "_":
+                self.add_message("prefer-env-translation", node=node)
         elif isinstance(node.func, astroid.Attribute):
             # method call to env._
             node_name = node.func.attrname
