@@ -400,6 +400,8 @@ class StockMove(models.Model):
             # Since the move lines might have been created in a certain order to respect
             # a removal strategy, they need to be unreserved in the opposite order
             for ml in reversed(move.move_line_ids.sorted('id')):
+                if self.env.context.get('unreserve_unpicked_only') and ml.picked:
+                    continue
                 if float_is_zero(quantity, precision_rounding=move.product_uom.rounding):
                     break
                 qty_ml_dec = min(ml.quantity, ml.product_uom_id._compute_quantity(quantity, ml.product_uom_id, round=False))
