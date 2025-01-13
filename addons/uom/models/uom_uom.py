@@ -54,7 +54,7 @@ class UomUom(models.Model):
 
     name = fields.Char('Unit of Measure', required=True, translate=True)
     category_id = fields.Many2one(
-        'uom.category', 'Category', required=True, ondelete='restrict',
+        'uom.category', 'Category', ondelete='restrict',
         help="Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios.")
     factor = fields.Float(
         'Ratio', default=1.0, digits=0, required=True,  # force NUMERIC with unlimited precision
@@ -83,10 +83,6 @@ class UomUom(models.Model):
     _rounding_gt_zero = models.Constraint(
         'CHECK (rounding>0)',
         'The rounding precision must be strictly positive.',
-    )
-    _factor_reference_is_one = models.Constraint(
-        "CHECK((uom_type = 'reference' AND factor = 1.0) OR (uom_type != 'reference'))",
-        'The reference unit must have a conversion factor equal to 1.',
     )
 
     def _check_category_reference_uniqueness(self):
