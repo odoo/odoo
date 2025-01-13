@@ -651,6 +651,13 @@ export class Rtc extends Record {
                     if (!session) {
                         return;
                     }
+                    if (
+                        this.state.channel.activeRtcSession === session &&
+                        session.is_screen_sharing_on &&
+                        !info.isScreenSharingOn
+                    ) {
+                        this.state.channel.activeRtcSession = undefined;
+                    }
                     // `isRaisingHand` is turned into the Date `raisingHand`
                     this.setRemoteRaiseHand(session, info.isRaisingHand);
                     delete info.isRaisingHand;
@@ -1338,6 +1345,9 @@ export class Rtc extends Record {
                 closeStream(session.videoStreams.get(type));
             }
             session.videoStreams.delete(type);
+            if (this.state.channel.activeRtcSession === this.selfSession) {
+                this.state.channel.activeRtcSession = undefined;
+            }
         } else {
             if (cleanup) {
                 for (const stream of session.videoStreams.values()) {

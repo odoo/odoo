@@ -583,3 +583,34 @@ test("Use saved volume settings", async () => {
     expect(rangeInput.value).toBe(expectedVolume.toString());
     await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
 });
+
+test("show call participants after stopping screen share", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start a Call']");
+    await click("[title='Share Screen']");
+    await contains("video");
+    await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
+    await click("[title='Stop Sharing Screen']");
+    await contains("video", { count: 0 });
+    // when all participant cards are shown they are minimized
+    await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard .o-minimized");
+});
+
+test("show call participants after stopping camera share", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start a Call']");
+    await click("[title='Turn camera on']");
+    await contains("video");
+    await click("[title='Stop camera']");
+    await contains("video", { count: 0 });
+    // when all participant cards are shown they are minimized
+    await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard .o-minimized");
+});
