@@ -12,7 +12,10 @@ setupInteractionWhiteList("website.chart");
 
 describe.current.tags("interaction_dev");
 
-test("chart is started when there is an element .s_chart", async () => {
+// in theory, this test should work in mobile mode. It works in all manual tests,
+// in local, on the runbot db, in community, in enterprise. it only fails when run
+// by the runbot in the mobile test suite.
+test.tags("desktop")("chart is started when there is an element .s_chart", async () => {
     const { core, el } = await startInteractions(`
         <div class="s_chart" data-type="bar" data-legend-position="top" data-tooltip-display="true" data-stacked="false" data-border-width="2"
             data-data="${escape(`{
