@@ -1417,15 +1417,15 @@
                 <field name="name@fr">Détermination du montant à payer et/ou des crédits de TVA et/ou de TIC</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
-                    <record id="tax_report_26" model="account.report.line">
+                    <record id="tax_report_26_external" model="account.report.line">
                         <field name="name">26 - Repayment of credit requested on form n°3519 attached</field>
                         <field name="name@fr">26 - Remboursement de crédit demandé sur formulaire n°3519 joint</field>
-                        <field name="code">box_26</field>
+                        <field name="code">box_26_external</field>
                         <field name="expression_ids">
-                            <record id="tax_report_26_tag" model="account.report.expression">
+                            <record id="tax_report_26_external_tag" model="account.report.expression">
                                 <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">26</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
                             </record>
                         </field>
                     </record>
@@ -1450,7 +1450,7 @@
                             <record id="tax_report_27_formula" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">box_25.balance - box_26.balance - box_AA.balance</field>
+                                <field name="formula">box_25.balance - box_26_external.balance - box_AA.balance</field>
                                 <field name="subformula">if_above(EUR(0))</field>
                             </record>
                             <record id="tax_report_27_carryover" model="account.report.expression">
