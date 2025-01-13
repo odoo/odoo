@@ -968,7 +968,7 @@ class ProjectTask(models.Model):
         if project_id:
             project = self.env['project.project'].browse(project_id)
             if 'company_id' in default_fields and 'default_project_id' not in self.env.context:
-                vals['company_id'] = project.sudo().company_id
+                vals['company_id'] = project.sudo().company_id.id
         elif 'default_user_ids' not in self.env.context and 'user_ids' in default_fields:
             user_ids = vals.get('user_ids', [])
             user_ids.append(Command.link(self.env.user.id))
