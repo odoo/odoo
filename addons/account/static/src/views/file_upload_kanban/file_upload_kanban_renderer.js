@@ -23,4 +23,10 @@ export class FileUploadKanbanRenderer extends KanbanRenderer {
         ev.preventDefault();
         this.uploadFileFromData(ev.clipboardData);
     }
+
+    onDragStart(ev) {
+        if (ev.dataTransfer.types.includes("Files")) {
+            this.dropzoneState.visible = true;
+        }
+    }
 }
