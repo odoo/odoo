@@ -134,6 +134,40 @@ test("clean another action", async () => {
         "test-options-target my-custom-class2"
     );
 });
+test("clean should provide the next action value", async () => {
+    addActionOption({
+        customAction: {
+            clean({ nextAction }) {
+                expect.step(`customAction clean ${nextAction.param} ${nextAction.value}`);
+            },
+            apply() {
+                expect.step(`customAction apply`);
+            },
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`
+                    <BuilderButtonGroup>
+                        <BuilderButton classAction="'c1'" action="'customAction'"/>
+                        <BuilderButton classAction="'c2'" action="'customAction'" actionParam="'param2'" actionValue="'value2'"/>
+                    </BuilderButtonGroup>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    expect(".options-container").toBeDisplayed();
+
+    await click("[data-class-action='c1']");
+    await click("[data-class-action='c2']");
+    expect.verifySteps([
+        "customAction apply",
+        "customAction apply",
+        "customAction clean param2 value2",
+        "customAction apply",
+        "customAction clean param2 value2",
+        "customAction apply",
+    ]);
+});
 test("clean should only be called on the currently selected item", async () => {
     function makeAction(n) {
         const action = {

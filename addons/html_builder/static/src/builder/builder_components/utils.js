@@ -160,9 +160,9 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
         }
         refreshCurrentItem();
     });
-    function cleanSelectedItem() {
+    function cleanSelectedItem(...args) {
         if (currentSelectedItem) {
-            currentSelectedItem.clean();
+            currentSelectedItem.clean(...args);
         }
     }
 
@@ -255,14 +255,23 @@ export function useClickableBuilderComponent() {
         operation.preview = () => {};
     }
 
-    function clean() {
+    function clean(nextApplySpecs) {
         for (const { actionId, actionParam, actionValue } of getAllActions()) {
             for (const editingElement of comp.env.getEditingElements()) {
+                let nextAction;
                 getAction(actionId).clean?.({
                     editingElement,
                     param: actionParam,
                     value: actionValue,
                     dependencyManager: comp.env.dependencyManager,
+                    get nextAction() {
+                        nextAction =
+                            nextAction || nextApplySpecs.find((a) => a.actionId === actionId) || {};
+                        return {
+                            param: nextAction.actionParam,
+                            value: nextAction.actionValue,
+                        };
+                    },
                 });
             }
         }
@@ -312,12 +321,12 @@ export function useClickableBuilderComponent() {
         return specs;
     }
     function callApply(applySpecs) {
-        comp.env.selectableContext?.cleanSelectedItem();
+        comp.env.selectableContext?.cleanSelectedItem(applySpecs);
         const cleans = comp.props.inheritedActions
             .map((actionId) => comp.env.dependencyManager.get(actionId).cleanSelectedItem)
             .filter(Boolean);
         for (const clean of new Set(cleans)) {
-            clean();
+            clean(applySpecs);
         }
         let shouldClean = shouldToggle && isApplied();
         shouldClean = comp.props.inverseAction ? !shouldClean : shouldClean;
