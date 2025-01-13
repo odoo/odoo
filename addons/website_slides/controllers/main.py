@@ -364,7 +364,9 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/all', '/slides/all/tag/<string:slug_tags>'], type='http', auth="public", website=True, sitemap=True)
     def slides_channel_all(self, slide_category=None, slug_tags=None, my=False, **post):
-        if slug_tags and request.httprequest.method == 'GET':
+        # Checking request.env.user._is_internal() to see if the GET request is from
+        # the user opening the editor, in which case the extra tags should not be removed
+        if slug_tags and request.httprequest.method == 'GET' and  not request.env.user._is_internal():
             # Redirect `tag-1,tag-2` to `tag-1` to disallow multi tags
             # in GET request for proper bot indexation;
             # if the search term is available, do not remove any existing
