@@ -144,6 +144,7 @@ export class MediaPlugin extends Plugin {
         // Collapse selection after the inserted/replaced element.
         const [anchorNode, anchorOffset] = rightPos(element);
         this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
+        this.delegateTo("afer_save_media_dialog_handlers", element);
         this.dependencies.history.addStep();
     }
 
