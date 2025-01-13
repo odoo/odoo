@@ -20,6 +20,8 @@ MAXIMUM_NUMBER_OF_CODES = 3
 
 
 class ConnectionManager(Thread):
+    daemon = True
+
     def __init__(self):
         super(ConnectionManager, self).__init__()
         self.pairing_code = False
@@ -104,5 +106,4 @@ class ConnectionManager(Thread):
 
 
 connection_manager = ConnectionManager()
-connection_manager.daemon = True
 connection_manager.start()
