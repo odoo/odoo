@@ -1540,6 +1540,7 @@ export class PosStore extends Reactive {
      * @param {str} terminalName
      */
     getPendingPaymentLine(terminalName) {
+<<<<<<< 18.0
         for (const order of this.models["pos.order"].getAll()) {
             const paymentLine = order.payment_ids.find(
                 (paymentLine) =>
@@ -1550,6 +1551,19 @@ export class PosStore extends Reactive {
                 return paymentLine;
             }
         }
+||||||| d67f219d1d34c4bc72b7a4545a4c39ac0cc873e6
+        return this.get_order().payment_ids.find(
+            (paymentLine) =>
+                paymentLine.payment_method_id.use_payment_terminal === terminalName &&
+                !paymentLine.is_done()
+        );
+=======
+        return this.get_order()?.payment_ids.find(
+            (paymentLine) =>
+                paymentLine.payment_method_id.use_payment_terminal === terminalName &&
+                !paymentLine.is_done()
+        );
+>>>>>>> 8c1fef2ceff2a0b3bd4c73920dc7721181cbb026
     }
 
     get linesToRefund() {
