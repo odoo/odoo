@@ -1332,6 +1332,7 @@ class ProjectTask(models.Model):
                     body=body,
                     partner_ids=partner_ids,
                     email_layout_xmlid='mail.mail_notification_layout',
+                    notify_author_mention=False,
                     record_name=task.display_name,
                )
         return result
@@ -1474,6 +1475,7 @@ class ProjectTask(models.Model):
         return render_context
 
     def _send_email_notify_to_cc(self, partners_to_notify):
+        # TDE TODO: this should be removed with email-like recipients management
         self.ensure_one()
         template_id = self.env['ir.model.data']._xmlid_to_res_id('project.task_invitation_follower', raise_if_not_found=False)
         if not template_id:
@@ -1655,7 +1657,6 @@ class ProjectTask(models.Model):
         # found.
         create_context = dict(self.env.context or {})
         create_context['default_user_ids'] = False
-        create_context['mail_notify_author'] = True  # Allows sending stage updates to the author
         if custom_values is None:
             custom_values = {}
         # Auto create partner if not existent when the task is created from email

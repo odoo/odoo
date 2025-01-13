@@ -121,13 +121,6 @@ test("Only necessary requests are made when creating a new chat", async () => {
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
         `/mail/message/post - ${JSON.stringify({
-            context: {
-                lang: "en",
-                tz: "taht",
-                uid: serverState.userId,
-                allowed_company_ids: [1],
-                temporary_id: 0.81,
-            },
             post_data: {
                 body: "Hello!",
                 email_add_signature: true,
@@ -136,6 +129,13 @@ test("Only necessary requests are made when creating a new chat", async () => {
             },
             thread_id: threadId,
             thread_model: "discuss.channel",
+            context: {
+                lang: "en",
+                tz: "taht",
+                uid: serverState.userId,
+                allowed_company_ids: [1],
+                temporary_id: 0.81,
+            },
         })}`,
     ]);
 });

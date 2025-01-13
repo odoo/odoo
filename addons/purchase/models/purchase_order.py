@@ -19,6 +19,7 @@ class PurchaseOrder(models.Model):
     _name = 'purchase.order'
     _inherit = ['portal.mixin', 'product.catalog.mixin', 'mail.thread', 'mail.activity.mixin']
     _description = "Purchase Order"
+    _mail_thread_customer = True
     _rec_names_search = ['name', 'partner_ref']
     _order = 'priority desc, id desc'
 
@@ -382,10 +383,8 @@ class PurchaseOrder(models.Model):
     def message_post(self, **kwargs):
         if self.env.context.get('mark_rfq_as_sent'):
             self.filtered(lambda o: o.state == 'draft').write({'state': 'sent'})
-        po_ctx = {'mail_post_autofollow': self.env.context.get('mail_post_autofollow', True)}
-        if self.env.context.get('mark_rfq_as_sent') and 'notify_author' not in kwargs:
-            kwargs['notify_author'] = self.env.user.partner_id.id in (kwargs.get('partner_ids') or [])
-        return super(PurchaseOrder, self.with_context(**po_ctx)).message_post(**kwargs)
+            kwargs['notify_author_mention'] = kwargs.get('notify_author_mention', True)
+        return super().message_post(**kwargs)
 
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
         # Tweak 'view document' button for portal customers, calling directly routes for confirm specific to PO model.

@@ -537,23 +537,37 @@ class TestChatterTweaks(MailCommon, TestRecipients):
 
     def test_post_no_subscribe_author(self):
         original = self.test_record.message_follower_ids
-        self.test_record.with_user(self.user_employee).with_context({'mail_create_nosubscribe': True}).message_post(
+        self.test_record.with_user(self.user_employee).with_context({'mail_post_autofollow_author_skip': True}).message_post(
             body='Test Body', message_type='comment', subtype_xmlid='mail.mt_comment')
         self.assertEqual(self.test_record.message_follower_ids.mapped('partner_id'), original.mapped('partner_id'))
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_no_subscribe_recipients(self):
         original = self.test_record.message_follower_ids
-        self.test_record.with_user(self.user_employee).with_context({'mail_create_nosubscribe': True}).message_post(
+        self.test_record.with_user(self.user_employee).with_context({'mail_post_autofollow_author_skip': True}).message_post(
             body='Test Body', message_type='comment', subtype_xmlid='mail.mt_comment', partner_ids=[self.partner_1.id, self.partner_2.id])
         self.assertEqual(self.test_record.message_follower_ids.mapped('partner_id'), original.mapped('partner_id'))
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_subscribe_recipients(self):
         original = self.test_record.message_follower_ids
-        self.test_record.with_user(self.user_employee).with_context({'mail_create_nosubscribe': True, 'mail_post_autofollow': True}).message_post(
+        self.test_record.with_user(self.user_employee).with_context({'mail_post_autofollow_author_skip': True, 'mail_post_autofollow': True}).message_post(
             body='Test Body', message_type='comment', subtype_xmlid='mail.mt_comment', partner_ids=[self.partner_1.id, self.partner_2.id])
         self.assertEqual(self.test_record.message_follower_ids.mapped('partner_id'), original.mapped('partner_id') | self.partner_1 | self.partner_2)
+
+        # check _mail_thread_customer class attribute
+        new_record = self.env['mail.test.thread.customer'].create({
+            'customer_id': self.partner_1.id,
+        })
+        self.assertFalse(new_record.message_partner_ids)
+        msg = new_record.with_user(self.user_employee).with_context(mail_post_autofollow_author_skip=True).message_post(
+            body='Test Body', message_type='comment',
+            partner_ids=(self.partner_1 + self.partner_2).ids,
+            subtype_id=self.env.ref('mail.mt_comment').id,
+        )
+        self.assertEqual(msg.notified_partner_ids, self.partner_1 + self.partner_2)
+        self.assertEqual(new_record.message_partner_ids, self.partner_1,
+                         'Customer was found and added as follower automatically when pinged')
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_chatter_context_cleaning(self):
