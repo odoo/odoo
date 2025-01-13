@@ -69,6 +69,42 @@ export class PosPreset extends Base {
         return this.uiState.availabilities;
     }
 
+    get actualPreset() {
+        const now = DateTime.now();
+        const dayOfWeek = now.weekday - 1;
+        const attToday = this.attendance_ids.filter((a) => a.dayofweek == dayOfWeek);
+        if (attToday.length === 0) {
+            return false;
+        }
+        for (const attendance of attToday) {
+            const dateOpening = DateTime.fromObject({
+                year: now.year,
+                month: now.month,
+                day: now.day,
+                hour: Math.floor(attendance.hour_from),
+                minute: (attendance.hour_from % 1) * 60,
+            });
+            const dateClosing = DateTime.fromObject({
+                year: now.year,
+                month: now.month,
+                day: now.day,
+                hour: Math.floor(attendance.hour_to),
+                minute: (attendance.hour_to % 1) * 60,
+            });
+            if (dateOpening > now) {
+                return false;
+            }
+            let start = dateOpening;
+            while (start >= dateOpening && start <= dateClosing) {
+                if (now > start && now < start.plus({ minutes: this.interval_time })) {
+                    return { start: start, end: start.plus({ minutes: this.interval_time }) };
+                }
+                start = start.plus({ minutes: this.interval_time });
+            }
+        }
+        return false;
+    }
+
     generateSlots() {
         const usage = this.slotsUsage;
         const interval = this.interval_time;

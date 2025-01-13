@@ -1894,6 +1894,7 @@ export class PosStore extends WithLazyGetterTrap {
             preset = await makeAwaitable(this.dialog, SelectionPopup, {
                 title: _t("Select preset"),
                 list: selectionList,
+                size: "md",
             });
         }
 
@@ -1907,7 +1908,7 @@ export class PosStore extends WithLazyGetterTrap {
 
             order.setPreset(preset);
             if (preset.identification === "name" && !order.floating_order_name && !order.table_id) {
-                order.floating_order_name = order.getPartner().name;
+                order.floating_order_name = order.getPartner()?.name;
                 if (!order.floating_order_name) {
                     this.editFloatingOrderName(order);
                 }
