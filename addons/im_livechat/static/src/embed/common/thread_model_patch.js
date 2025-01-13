@@ -109,12 +109,12 @@ patch(Thread.prototype, {
 
     get composerDisabled() {
         const step = this.chatbot?.currentStep;
-        return (
+        const isComposerActuallyDisabled =
             super.composerDisabled ||
-            (step &&
-                !step.operatorFound &&
-                (step.completed || !step.expectAnswer || step.answers.length > 0))
-        );
+            (step && !step.operatorFound && step.answers.length > 0) ||
+            this.chatbot?.completed;
+
+        return isComposerActuallyDisabled;
     },
 
     get composerDisabledText() {
