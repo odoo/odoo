@@ -2,13 +2,14 @@
 
 # ruff: noqa: E201, E272, E301, E306
 
+import collections
 import contextlib
 import secrets
 import textwrap
 import time
 from contextlib import closing
 from datetime import timedelta
-from unittest.mock import patch
+from unittest.mock import patch, DEFAULT as MOCK_DEFAULT
 
 from freezegun import freeze_time
 
@@ -523,13 +524,24 @@ class TestIrCron(TransactionCase, CronMixinCase):
     def test_cron_process_jobs_status_partial(self):
         with self.patch_cron_process_jobs_loop() as process_jobs, self.patch_run_job(CompletionStatus.PARTIALLY_DONE) as run:
             self.cron._trigger()
-            process_jobs()
-            run.assert_called_once()
+            with patch.object(time, 'monotonic', side_effect=lambda: run.call_count):
+                process_jobs(end_time=5)
+            self.assertEqual(run.call_count, 5)
+
+            run.reset_mock()
+            cron = self.cron.create(self._get_cron_data(self.env))
+            cron._trigger()
+            with patch.object(time, 'monotonic', side_effect=lambda: run.call_count):
+                process_jobs(end_time=6, job_ids=[])
+            self.assertEqual(run.call_count, 6)
+            calls_per_cron_id = collections.Counter(call.args[0]['id'] for call in run.mock_calls)
+            self.assertEqual(calls_per_cron_id, {cron.id: 3, self.cron.id: 3})
 
     def test_cron_process_jobs_status_failed(self):
         with self.patch_cron_process_jobs_loop() as process_jobs, self.patch_run_job(CompletionStatus.FAILED) as run:
             self.cron._trigger()
-            process_jobs()
+            with patch.object(time, 'monotonic', side_effect=lambda: run.call_count):
+                process_jobs(end_time=10)
             run.assert_called_once()
 
     def test_cron_process_jobs_limit_reached(self):
@@ -579,6 +591,23 @@ class TestIrCron(TransactionCase, CronMixinCase):
             with patch.object(time, 'monotonic', side_effect=lambda: 42 + run.call_count * 10):
                 process_jobs(job_ids=crons.ids, end_time=50)
                 self.assertEqual([call.kwargs['end_time'] for call in run.mock_calls], [46])
+
+    def test_cron_process_jobs_retrigger(self):
+        with self.patch_cron_process_jobs_loop() as process_jobs, self.patch_run_job() as run:
+            run_ids = []
+            cron = self.cron.create(self._get_cron_data(self.env))
+
+            def run_and_trigger(job, **kw):
+                run_ids.append(job['id'])
+                if run.call_count <= 3:
+                    cron._trigger()
+                return MOCK_DEFAULT
+            run.side_effect = run_and_trigger
+
+            # just trigger self.cron which will trigger the new cron which triggers itself until run 3
+            self.cron._trigger()
+            process_jobs()
+            self.assertEqual(run_ids, [self.cron.id] + [cron.id] * 3)
 
     def test_cron_deactivate(self):
         default_progress_values = {'done': 0, 'remaining': 0, 'timed_out_counter': 0}

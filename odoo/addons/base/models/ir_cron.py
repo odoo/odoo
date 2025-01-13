@@ -182,22 +182,42 @@ class IrCron(models.Model):
         by committing after each job.
         """
         db_name = cron_cr.dbname
-        for index, job_id in enumerate(job_ids):
+        # queue jobs to execute, we pop from the right side
+        job_queue = list(reversed(job_ids))
+        # used to detect if at some point, all ready jobs are locked
+        locked_jobs = set()
+        while True:
+            if not job_queue:
+                # Did some jobs become ready while running?
+                # We want to execute triggered jobs in the same cron
+                # batch processing function, example: create and send
+                # e-mail using 2 cron jobs triggering one another.
+                job_queue.extend(job['id'] for job in reversed(IrCron._get_all_ready_jobs(cron_cr)))
+                if all(job_id in locked_jobs for job_id in job_queue):
+                    break
+                locked_jobs.clear()
+                # Reduce the time limit, we processed the queue at least
+                # once and we want to mitigate an endless trigger loop.
+                end_time = min(end_time, time.monotonic() + DEFAULT_JOB_TIME_LIMIT)
             if end_time <= time.monotonic():
                 _logger.info("Database %s soft-time limit reached", db_name)
                 break
+            # acquire the next job to run
+            job_id = job_queue.pop()
             try:
                 job = IrCron._acquire_one_job(cron_cr, job_id)
             except psycopg2.extensions.TransactionRollbackError:
                 cron_cr.rollback()
                 _logger.debug("job %s has been processed by another worker, skip", job_id)
+                locked_jobs.add(job_id)
                 continue
             if not job:
                 _logger.debug("job %s is being processed by another worker, skip", job_id)
+                locked_jobs.add(job_id)
                 continue
             _logger.debug("job %s acquired", job_id)
             # split remaining time between remaining jobs
-            jobs_remaining = len(job_ids) - index
+            jobs_remaining = len(job_queue) + 1
             start_job_time = time.monotonic()
             job_end_time = start_job_time + (end_time - start_job_time) / jobs_remaining
             # take into account overridings of _process_job() on that database
