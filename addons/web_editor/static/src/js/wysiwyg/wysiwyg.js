@@ -2054,8 +2054,11 @@ export class Wysiwyg extends Component {
             if (!this.lastMediaClicked) {
                 return;
             }
+            const anchorNode = this.lastMediaClicked.parentElement;
+            const anchorOffset = Array.from(anchorNode.childNodes).indexOf(this.lastMediaClicked);
             $(this.lastMediaClicked).remove();
             this.lastMediaClicked = undefined;
+            setSelection(anchorNode, anchorOffset, anchorNode, anchorOffset);
             this.odooEditor.toolbarHide();
         });
         $toolbar.find('#fa-resize div').click(e => {
