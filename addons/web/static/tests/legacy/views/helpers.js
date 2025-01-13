@@ -23,6 +23,8 @@ const serviceRegistry = registry.category("services");
 
 const rootDialogTemplate = xml`<Dialog><View t-props="props.viewProps"/></Dialog>`;
 
+const domParser = new DOMParser();
+
 /**
  * @typedef {{
  *  serverData: Object,
@@ -53,6 +55,19 @@ async function _makeView(params, inDialog = false) {
     delete props.config;
 
     if (props.arch) {
+        if (!inDialog) {
+            const doc = domParser.parseFromString(props.arch, "text/xml")
+            const viewType = doc.documentElement.nodeName.toLowerCase();
+            if (viewType === 'form') {
+                let element = doc.createElement('field');
+                element.setAttribute('name', 'display_name')
+                element.setAttribute('invisible', 'true')
+                element.setAttribute('readonly', 'true')
+                doc.documentElement.appendChild(element)
+                props.arch = doc.documentElement.outerHTML
+            }
+        }
+
         serverData.views = serverData.views || {};
         props.viewId = params.viewId || 100000001; // hopefully will not conflict with an id already in views
         serverData.views[`${props.resModel},${props.viewId},${props.type}`] = props.arch;

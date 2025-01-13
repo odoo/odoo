@@ -490,5 +490,17 @@
         </record>
         <menuitem id="menu_active" name="Active Test" action="action_tests_active" parent="menu_main" sequence="12"/>
 
+        <record id="view_form_onchange_partial" model="ir.ui.view">
+            <field name="name">Onchange Partial Missing company_id</field>
+            <field name="model">test_new_api.onchange.partial</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="name"/>
+                    <field name="currency_id"/>
+                </form>
+            </field>
+        </record>
+
     </data>
 </odoo>
