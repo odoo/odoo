@@ -6,8 +6,8 @@
 # Dylan Kiss, 2024
 # Manon Rondou, 2024
 # Jolien De Paepe, 2024
-# Wil Odoo, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +35,7 @@ msgid ""
 "track their order."
 msgstr ""
 "Met \"Optioneel\" kunnen gasten zich registreren vanuit de e-mail met de "
-"orderbevestiging om hun bestelling te volgen."
+"orderbevestiging om hun order te volgen."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
@@ -105,7 +105,7 @@ msgstr "66 procent"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "<b class=\"w-100\">Order summary</b>"
-msgstr "<b class=\"w-100\">Bestellingsoverzicht</b>"
+msgstr "<b class=\"w-100\">Orderoverzicht</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -452,7 +452,7 @@ msgstr "<span>Heb je al een account?</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<span>Order</span>"
-msgstr "<span>Bestelling</span>"
+msgstr "<span>Order</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_document_kanban
@@ -465,7 +465,7 @@ msgid ""
 "<span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.\n"
 "                        Please contact the responsible of the shop for more information.</span>"
 msgstr ""
-"<span>Helaas kan je bestelling niet worden bevestigd omdat het bedrag van je betaling niet overeenkomt met het bedrag van het winkelmandje.\n"
+"<span>Helaas kan je order niet worden bevestigd omdat het bedrag van je betaling niet overeenkomt met het bedrag van het winkelmandje.\n"
 "Neem voor meer informatie contact op met de verantwoordelijke van de winkel.</span>"
 
 #. module: website_sale
@@ -851,8 +851,8 @@ msgstr "Sta de eindgebruiker toe om deze prijslijst te kiezen"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow your customer to add products from previous order in their cart."
 msgstr ""
-"Sta je klant toe om producten van een eerdere bestelling toe te voegen aan "
-"hun winkelmandje."
+"Sta je klant toe om producten van een eerdere order toe te voegen aan hun "
+"winkelmandje."
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_alternative_products
@@ -1145,7 +1145,7 @@ msgstr "Winkelmandje"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__cart_quantity
 msgid "Cart Quantity"
-msgstr "Hoeveelheid winkelmandje"
+msgstr "Aantal winkelmandje"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__cart_recovery_mail_template
@@ -1293,6 +1293,7 @@ msgstr "Kies een ophaalpunt"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+#: code:addons/website_sale/static/src/js/location_selector/map_container/map_container.js:0
 msgid "Choose this location"
 msgstr "Deze locatie kiezen"
 
@@ -1315,7 +1316,7 @@ msgstr "Filters wissen"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_collect
 msgid "Click & Collect"
-msgstr "Klik & Verzamelen"
+msgstr "Klik & Ophalen"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -1499,12 +1500,12 @@ msgstr "Bevestigen"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
 msgid "Confirm Order"
-msgstr "Bevestig bestelling"
+msgstr "Bevestig order"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "Confirm order"
-msgstr "Bevestig bestelling"
+msgstr "Bevestig order"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -1514,7 +1515,7 @@ msgstr "Bevestigd"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Confirmed Orders"
-msgstr "Bevestigde bestellingen"
+msgstr "Bevestigde orders"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_partner
@@ -2109,7 +2110,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product_template_attribute_line/product_template_attribute_line.js:0
 msgid "Enter a customized value"
-msgstr "Geef een gepersonaliseerde waarde op"
+msgstr "Voer een vrije waarde in"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2398,8 +2399,8 @@ msgid ""
 "backend. If you wish to change your name or email address, please do so in "
 "the account settings or contact your administrator."
 msgstr ""
-"Als je bestelt voor een externe persoon, plaats je bestelling via de back-"
-"end. Indien je je naam of e-mailadres wilt wijzigen, kan je dit doen in de "
+"Als je bestelt voor een externe persoon, plaats je order via de back-end. "
+"Indien je je naam of e-mailadres wilt wijzigen, kan je dit doen in de "
 "accountinstellingen of contact opnemen met je administrator."
 
 #. module: website_sale
@@ -2556,7 +2557,7 @@ msgid ""
 "It seems that there is already a transaction for your order; you can't "
 "change the delivery method anymore."
 msgstr ""
-"Het lijkt erop dat er al een transactie voor je bestelling is, je kunt de "
+"Het lijkt erop dat er al een transactie voor je order is, je kunt de "
 "bezorgmethode niet meer wijzigen."
 
 #. module: website_sale
@@ -2722,6 +2723,18 @@ msgid "Little Icons"
 msgstr "Kleine iconen"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "List view"
+msgstr "Lijstweergave"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "Loading..."
+msgstr "Laden..."
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__ecommerce_access__logged_in
 msgid "Logged in users"
 msgstr "Aangemelde gebruikers"
@@ -2780,6 +2793,12 @@ msgstr "Verplicht (geen gast checkout)"
 #: model:product.public.category,name:website_sale.public_category_cabinets_medicine
 msgid "Medicine Cabinets"
 msgstr "Medicijnenkasten"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "Map view"
+msgstr "Kaartweergave"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__medium
@@ -2943,6 +2962,12 @@ msgid "No product views yet for this visitor"
 msgstr "Nog geen product weergaves voor deze bezoeker"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "No result"
+msgstr "Geen resultaat"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No results"
 msgstr "Geen resultaten"
@@ -3095,6 +3120,13 @@ msgid "Open Source eCommerce"
 msgstr "Open source e-commerce"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/location_selector/location/location.js:0
+#: code:addons/website_sale/static/src/js/location_selector/map_container/map_container.js:0
+msgid "Opening hours"
+msgstr "Openingsuren"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
 msgid ""
 "Optimization required! Reduce the image size or increase your compression "
@@ -3135,7 +3167,7 @@ msgstr "Orderregels tonen op website"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Order overview"
-msgstr "Bestellingsoverzicht"
+msgstr "Orderoverzicht"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
@@ -3152,7 +3184,7 @@ msgstr "Orders om te factureren"
 #. module: website_sale
 #: model:product.ribbon,name:website_sale.out_of_stock_ribbon
 msgid "Out of stock"
-msgstr "Uitverkocht"
+msgstr "Niet op voorraad"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_id
@@ -3479,7 +3511,7 @@ msgstr "Productenlint"
 #: model:ir.actions.act_window,name:website_sale.product_ribbon_action
 #: model:ir.ui.menu,name:website_sale.product_catalog_product_ribbons
 msgid "Product Ribbons"
-msgstr "Productenlinten"
+msgstr "Productlinten"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_tag
@@ -3638,7 +3670,7 @@ msgstr "Naar boven duwen"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 msgid "Quantity"
-msgstr "Hoeveelheid"
+msgstr "Aantal"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3798,13 +3830,13 @@ msgstr "Beperken tot een specifieke website."
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "Resume Order"
-msgstr "Bestelling hervatten"
+msgstr "Order hervatten"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 msgid "Review Order"
-msgstr "Controleer bestelling"
+msgstr "Controleer order"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_ribbon_id
@@ -3947,7 +3979,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Select Quantity"
-msgstr "Hoeveelheid selecteren"
+msgstr "Aantal selecteren"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_method
@@ -4172,7 +4204,7 @@ msgstr "Sommige verplichte velden zijn leeg."
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Sorry, we are unable to ship your order."
-msgstr "Sorry, het is niet mogelijk om je bestelling te verzenden."
+msgstr "Sorry, het is niet mogelijk om je order te verzenden."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4313,7 +4345,7 @@ msgstr "Tekst om te tonen in plaats van prijs"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Thank you for your order."
-msgstr "Bedankt voor je bestelling."
+msgstr "Bedankt voor je order."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
@@ -4391,7 +4423,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/controllers/payment.py:0
 msgid "The order has been cancelled."
-msgstr "De bestelling is geannuleerd."
+msgstr "De order is geannuleerd."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids
@@ -4438,6 +4470,12 @@ msgstr "Er is geen bevestigde order vanuit de website"
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "There is no unpaid order from the website yet"
 msgstr "Er is nog geen onbetaalde order vanuit de website"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/location_selector/map_container/map_container.js:0
+msgid "There was an error loading the map"
+msgstr "Er is een fout opgetreden bij het laden van de kaart"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -4888,13 +4926,12 @@ msgstr "Website opengraph afbeelding"
 #: model:ir.model.fields,help:website_sale.field_account_bank_statement_line__website_id
 #: model:ir.model.fields,help:website_sale.field_account_move__website_id
 msgid "Website through which this invoice was created for eCommerce orders."
-msgstr "Website waarmee deze factuur is gemaakt voor E-commerce-bestellingen."
+msgstr "Website waarmee deze factuur is gemaakt voor E-commerce-order."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_sale_order__website_id
 msgid "Website through which this order was placed for eCommerce orders."
-msgstr ""
-"Website via welke deze bestelling is geplaatst voor E-commerce-bestellingen."
+msgstr "Website via welke deze order is geplaatst voor E-commerce-orders."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__website_ids
@@ -5015,7 +5052,7 @@ msgstr "Je naam"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Your address"
-msgstr "Jouw adres"
+msgstr "Je adres"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -5039,7 +5076,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
 msgid "Your payment has been authorized."
-msgstr "Jouw betaling is toegestaan."
+msgstr "Je betaling is toegestaan."
 
 #. module: website_sale
 #. odoo-javascript
@@ -5168,4 +5205,4 @@ msgstr "algemene voorwaarden"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "to follow your order."
-msgstr "om je bestelling te volgen."
+msgstr "om je order te volgen."

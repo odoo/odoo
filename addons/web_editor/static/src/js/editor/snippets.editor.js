@@ -5167,7 +5167,7 @@ class SnippetsMenu extends Component {
                         });
                     },
                     deleteCustomSnippet: (snippetKey) => {
-                        this._deleteCustomSnippet(snippetKey, false);
+                        return this._deleteCustomSnippet(snippetKey, false);
                     },
                     renameCustomSnippet: (snippetKey, newName) => {
                         this._renameCustomSnippet(snippetKey, newName, false);
@@ -5274,20 +5274,26 @@ class SnippetsMenu extends Component {
     async _deleteCustomSnippet(snippetKey, withMutex = true) {
         const snippet = this.snippets.get(snippetKey);
         const message = _t("Are you sure you want to delete the block %s?", snippet.displayName);
-        this.dialog.add(ConfirmationDialog, {
-            body: message,
-            confirm: async () => {
-                await this.orm.call("ir.ui.view", "delete_snippet", [], {
-                    'view_id': snippet.id,
-                    'template_key': this.options.snippets,
-                });
-                this.invalidateSnippetCache = true;
-                this.snippets.delete(snippetKey);
-                await this._loadSnippetsTemplates(withMutex);
-            },
-            cancel: () => null,
-            confirmLabel: _t("Yes"),
-            cancelLabel: _t("No"),
+        return new Promise(resolve => {
+            this.dialog.add(ConfirmationDialog, {
+                body: message,
+                confirm: async () => {
+                    await this.orm.call("ir.ui.view", "delete_snippet", [], {
+                        'view_id': snippet.id,
+                        'template_key': this.options.snippets,
+                    });
+                    this.invalidateSnippetCache = true;
+                    this.snippets.delete(snippetKey);
+                    await this._loadSnippetsTemplates(withMutex);
+                    resolve();
+                },
+                cancel: () => {
+                    resolve();
+                    return null;
+                },
+                confirmLabel: _t("Yes"),
+                cancelLabel: _t("No"),
+            });
         });
     }
     /**

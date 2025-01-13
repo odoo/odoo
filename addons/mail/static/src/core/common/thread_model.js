@@ -72,6 +72,7 @@ export class Thread extends Record {
     });
     /** @type {boolean} */
     areAttachmentsLoaded = false;
+    group_public_id = Record.one("res.groups");
     attachments = Record.many("Attachment", {
         /**
          * @param {import("models").Attachment} a1

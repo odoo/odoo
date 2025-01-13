@@ -6,8 +6,8 @@
 # Tiffany Chang, 2024
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
-# Pilar Vargas, 2024
-# Larissa Manderfeld, 2024
+# Pilar Vargas, 2025
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,7 +86,7 @@ msgstr "%s (copia)"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
 msgid "'%(name)s' badge sent to printer '%(printer)s'"
-msgstr "La identificación de %(name)s se envió a la impresora %(printer)s"
+msgstr "La credencial de %(name)s se envió a la impresora %(printer)s"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_attendee_list
@@ -181,12 +181,12 @@ msgstr "5-10"
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x134
 msgid "96x134mm (Badge Printer)"
-msgstr "96 x 134 mm (impresora de identificaciones)"
+msgstr "96 x 134 mm (impresora de credenciales)"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x82
 msgid "96x82mm (Badge Printer)"
-msgstr "96 x 82 mm (impresora de identificaciones)"
+msgstr "96 x 82 mm (impresora de credenciales)"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -664,7 +664,7 @@ msgstr ""
 "                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
 "                    <div>\n"
 "                        Hola <t t-out=\"object.name or 'invitado'\"/>,<br/><br/>\n"
-"                        Aquí encontrará adjunto su credencial para la\n"
+"                        Aquí encontrará adjunto su credencial para \n"
 "                        <t t-if=\"is_online\">\n"
 "                            <a t-att-href=\"object.event_id.website_url\" style=\"font-weight:bold;color:#875A7B;text-decoration:none;\" t-out=\"object.event_id.name or ''\">Presentación en línea de la colección OpenWood</a>\n"
 "                        </t>\n"
@@ -690,7 +690,7 @@ msgstr ""
 "                            <t t-out=\"event_organizer.name or ''\">SuCompañía</t>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
-"                            El equipo de la <t t-out=\"object.event_id.name or ''\">Presentación en línea de la colección OpenWood</t>\n"
+"                            El equipo de <t t-out=\"object.event_id.name or ''\">Presentación en línea de la colección OpenWood</t>\n"
 "                        </t>\n"
 "                        </span>\n"
 "                    </div>\n"
@@ -2093,12 +2093,12 @@ msgstr "Credencial"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge_96x134
 msgid "Badge (96x134mm)"
-msgstr "Identificación (96 x 134 mm)"
+msgstr "Credencial (96 x 134 mm)"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge_96x82
 msgid "Badge (96x82mm)"
-msgstr "Identificación (96 x 82 mm)"
+msgstr "Credencial (96 x 82 mm)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image

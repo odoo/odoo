@@ -5,7 +5,7 @@
 # Translators:
 # Wil Odoo, 2024
 # Manon Rondou, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -150,13 +150,13 @@ msgstr ""
 "       <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference or ''\">SOOO49</span>\n"
 "        ten bedrage van\n"
 "       <span style=\"font-weight:bold;\" t-out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
-"        voor uw bestelling\n"
+"        voor uw order\n"
 "       <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span>\n"
 "       <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">\n"
 "            is in behandeling.\n"
 "           <br/>\n"
 "           <t t-if=\"object.currency_id.compare_amounts(object.amount_paid + transaction_sudo.amount, object.amount_total) &gt;= 0 and object.state in ('draft', 'sent')\">\n"
-"                Je bestelling wordt bevestigd zodra de betaling is bevestigd.\n"
+"                Je order wordt bevestigd zodra de betaling is bevestigd.\n"
 "           </t>\n"
 "           <t t-else=\"\">\n"
 "                Eenmaal bevestigd,\n"
@@ -413,7 +413,7 @@ msgstr ""
 "        Hallo,\n"
 "       <br/><br/>\n"
 "        <t t-set=\"tx_sudo\" t-value=\"object.get_portal_last_transaction()\"/>\n"
-"        Je bestelling <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span> voor een bedrag van <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10,00</span>\n"
+"        Je order <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span> voor een bedrag van <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10,00</span>\n"
 "       <t t-if=\"object.state == 'sale' or (tx_sudo and tx_sudo.state in ('done', 'authorized'))\">\n"
 "            is bevestigd.<br/>\n"
 "            Bedankt voor het vertrouwen!\n"
@@ -456,7 +456,7 @@ msgstr ""
 "            <tr style=\"border-bottom: 2px solid #dee2e6;\">\n"
 "                <td style=\"width: 150px;\"><span style=\"font-weight:bold;\">Producten</span></td>\n"
 "                <td/>\n"
-"                <td width=\"15%\" align=\"center\"><span style=\"font-weight:bold;\">Hoeveelheid</span></td>\n"
+"                <td width=\"15%\" align=\"center\"><span style=\"font-weight:bold;\">Aantal</span></td>\n"
 "                <td width=\"20%\" align=\"right\">\n"
 "                    <span style=\"font-weight:bold;\">\n"
 "                        <t t-if=\"object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
@@ -685,7 +685,7 @@ msgstr ""
 "       <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
 "        Hallo,\n"
 "       <br/><br/>\n"
-"        Jouw\n"
+"        Je\n"
 "       <t t-if=\"ctx.get('proforma')\">\n"
 "            Pro forma factuur voor <t t-out=\"doc_name or ''\">offerte</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
 "           <t t-if=\"object.origin\">\n"
@@ -824,7 +824,7 @@ msgid ""
 "                    Locked"
 msgstr ""
 "<i class=\"fa fa-lock\"/>\n"
-"                    Geblokkeerd"
+"                    vergrendeld"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -853,7 +853,7 @@ msgstr "<small class=\"text-muted\">Je contact</small>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
-msgstr "<small><b class=\"text-muted\">Jouw voordeel</b></small>"
+msgstr "<small><b class=\"text-muted\">Je voordeel</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -954,9 +954,9 @@ msgid ""
 "                            Draft invoices for this order will be cancelled. <br/>\n"
 "                        </span>"
 msgstr ""
-"<span>Weet je zeker dat je deze bestelling wilt annuleren? <br/></span>\n"
+"<span>Weet je zeker dat je deze order wilt annuleren? <br/></span>\n"
 "                        <span id=\"display_invoice_alert\" invisible=\"not display_invoice_alert\">\n"
-"                            De conceptfacturen voor deze bestelling worden geannuleerd. <br/>\n"
+"                            De conceptfacturen voor deze order worden geannuleerd. <br/>\n"
 "                        </span>"
 
 #. module: sale
@@ -1046,7 +1046,7 @@ msgstr "Een bevestigde verkooporder vereist een bevestigingsdatum."
 #: code:addons/sale/models/sale_order.py:0
 msgid "A line on these orders missing a product, you cannot confirm it."
 msgstr ""
-"Een regel op deze bestellingen waarin een product ontbreekt, kun je niet "
+"Een regel op deze orders waarin een product ontbreekt, kun je niet "
 "bevestigen."
 
 #. module: sale
@@ -1088,7 +1088,7 @@ msgid ""
 msgstr ""
 "Er wordt een standaardfactuur opgemaakt met alle orderregels die klaar zijn "
 "voor facturering, in overeenstemming met hun facturatiebeleid (op basis van "
-"bestelde of geleverde hoeveelheid)."
+"bestelde of geleverde aantal)."
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -1101,9 +1101,8 @@ msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
-"Mogelijkheid om een verpakkingsssoort in verkooporders te selecteren en een "
-"hoeveelheid te forceren die een veelvoud is van het aantal stuks per "
-"verpakking."
+"Mogelijkheid om een verpakkingssoort in verkooporders te selecteren en een "
+"aantal te forceren die een veelvoud is van het aantal stuks per verpakking."
 
 #. module: sale
 #. odoo-python
@@ -1141,7 +1140,7 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Afhankelijk van de productinstellingen, kan de geleverde hoeveelheid automatisch worden berekend met behulp van het mechanisme:\n"
+"Afhankelijk van de productinstellingen, kan het geleverde aantal automatisch worden berekend met behulp van het mechanisme:\n"
 "  - Handmatig: het aantal wordt handmatig op de regel ingesteld\n"
 "  - Analytisch van declaraties: het aantal is de som van de geboekte declaraties\n"
 "  - Urenstaat: het aantal is de som van de uren die zijn vastgelegd voor taken die aan deze verkoopregel zijn gekoppeld\n"
@@ -1206,7 +1205,7 @@ msgid ""
 "                (e.g. \"Delivery scheduling\", \"Order Payment Follow-up\", ...)"
 msgstr ""
 "Activiteitenplannen worden gebruikt om een lijst met activiteiten toe te wijzen in slechts een paar klikken\n"
-"                (bijv. 'Planning levering', 'Follow-up betaling bestelling', ...)"
+"                (bijv. 'Planning levering', 'Follow-up betaling order', ...)"
 
 #. module: sale
 #. odoo-javascript
@@ -1335,7 +1334,7 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "            ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
-"Een bestelling is bedoeld om te verkopen wanneer de geleverde hoeveelheden aanvankelijk hoger zijn\n"
+"Een order is bedoeld om te verkopen wanneer de geleverde hoeveelheden aanvankelijk hoger zijn\n"
 "            bestelde hoeveelheden, en het facturatiebeleid is gebaseerd op bestelde hoeveelheden."
 
 #. module: sale
@@ -2117,7 +2116,7 @@ msgstr "Geleverd"
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Delivered Quantity: %s"
-msgstr "Geleverde hoeveelheid: %s"
+msgstr "Geleverde aantal: %s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__delivery
@@ -2143,7 +2142,7 @@ msgstr "Verzendwijzes"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered
 msgid "Delivery Quantity"
-msgstr "Leveringshoeveelheid"
+msgstr "Leveringsaantal"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -2385,7 +2384,7 @@ msgstr "Gedupliceerde documenten"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__duplicated_order_ids
 msgid "Duplicated Order"
-msgstr "Dubbele bestelling"
+msgstr "Dubbele order"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
@@ -2417,7 +2416,7 @@ msgstr "E-mail verzonden naar de klant zodra de factuur beschikbaar is."
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_template_attribute_line/product_template_attribute_line.js:0
 msgid "Enter a customized value"
-msgstr "Geef een gepersonaliseerde waarde op"
+msgstr "Voer een vrije waarde in"
 
 #. module: sale
 #. odoo-python
@@ -2425,7 +2424,7 @@ msgstr "Geef een gepersonaliseerde waarde op"
 msgid ""
 "Error importing attachment '%(file_name)s' as order (decoder=%(decoder)s)"
 msgstr ""
-"Fout bij het importeren van bijlage '%(file_name)s' als bestelling "
+"Fout bij het importeren van bijlage '%(file_name)s' als order "
 "(decoder=%(decoder)s)"
 
 #. module: sale
@@ -2576,7 +2575,7 @@ msgstr "Maak de factuur automatisch aan als de online betaling is bevestigd"
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Generated Orders"
-msgstr "Gegenereerde bestellingen"
+msgstr "Gegenereerde orders"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2872,13 +2871,13 @@ msgstr "Aantal gefactureerd"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced_posted
 msgid "Invoiced Quantity (posted)"
-msgstr "Gefactureerde hoeveelheid (geplaatst)"
+msgstr "Gefactureerde aantal (geboekt)"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Invoiced Quantity: %s"
-msgstr "Gefactureerde hoeveelheid: %s"
+msgstr "Gefactureerde aantal: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced
@@ -2999,7 +2998,7 @@ msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
-"Het is niet toegestaan om de volgende velden aan te passen in een geblokkeerde order:\n"
+"Het is niet toegestaan om de volgende velden aan te passen in een vergrendelde order:\n"
 "%s"
 
 #. module: sale
@@ -3089,17 +3088,17 @@ msgstr "Vergrendelen"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_auto_done_setting
 #: model:res.groups,name:sale.group_auto_done_setting
 msgid "Lock Confirmed Sales"
-msgstr "Bevestigde orders blokkeren"
+msgstr "Bevestigde orders vergrendelen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__locked
 msgid "Locked"
-msgstr "Geblokkeerd"
+msgstr "Vergrendeld"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__locked
 msgid "Locked orders cannot be modified."
-msgstr "Geblokkeerde orders kunnen niet worden aangepast."
+msgstr "Vergrendelde orders kunnen niet worden aangepast."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__template_id
@@ -3149,7 +3148,7 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"Bepaal handmatig de hoeveelheden voor de order: Factuur op basis van de handmatig ingevoerde hoeveelheid, zonder het aanmaken van een analytische rekening.\n"
+"Bepaal handmatig de hoeveelheden voor de order: Factuur op basis van het handmatig ingevoerde aantal, zonder het aanmaken van een analytische rekening.\n"
 "Urenstaten op project: Factuur op basis van de geschreven uren op gerelateerde urenstaten.\n"
 "Maak een taak aan en volg de uren ervan op: Een taak maken bij e bevestiging van een verkooporder en de werkuren opvolgen."
 
@@ -3398,7 +3397,7 @@ msgid ""
 "                Set the quantity to 0 instead."
 msgstr ""
 "Zodra een verkooporder is bevestigd, kan je geen regels meer verwijderen (we moeten bijhouden of iets gefactureerd of geleverd is). \n"
-"Stel in plaats daarvan de hoeveelheid in op 0."
+"Stel in plaats daarvan het aantal in op 0."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -3602,7 +3601,7 @@ msgstr "Orders om te factureren"
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Ordered Quantity: %(old_qty)s -> %(new_qty)s"
-msgstr "Bestelde hoeveelheid: %(old_qty)s->%(new_qty)s"
+msgstr "Bestelde aantal: %(old_qty)s->%(new_qty)s"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__invoice_policy
@@ -3611,7 +3610,7 @@ msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
 msgstr ""
-"Bestelde hoeveelheid: Factureer hoeveelheden besteld door de klant.\n"
+"Bestelde aantal: Factureer hoeveelheden besteld door de klant.\n"
 "Geleverde hoeveelheden: Factureer hoeveelheden geleverd aan de klant."
 
 #. module: sale
@@ -3672,7 +3671,7 @@ msgstr "Verpakking"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_qty
 msgid "Packaging Quantity"
-msgstr "Verpakkingshoeveelheid"
+msgstr "Verpakkingsaantal"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
@@ -4012,17 +4011,17 @@ msgstr "Aantal te factureren vanuit verkooporders"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Quantity"
-msgstr "Hoeveelheid"
+msgstr "Aantal"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_to_invoice
 msgid "Quantity To Invoice"
-msgstr "Te factureren hoeveelheid"
+msgstr "Te factureren aantal"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Quantity:"
-msgstr "Hoeveelheid:"
+msgstr "Aantal:"
 
 #. module: sale
 #. odoo-python
@@ -4216,9 +4215,8 @@ msgid ""
 "Request a payment to confirm orders, in full (100%) or partial. The default "
 "can be changed per order or template."
 msgstr ""
-"Vraag een betaling om bestellingen te bevestigen, volledig (100%) of "
-"gedeeltelijk. De standaardwaarde kan per bestelling of sjabloon worden "
-"gewijzigd."
+"Vraag een betaling om orders te bevestigen, volledig (100%) of gedeeltelijk."
+" De standaardwaarde kan per order of sjabloon worden gewijzigd."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4226,8 +4224,8 @@ msgid ""
 "Request customers to sign quotations to validate orders. The default can be "
 "changed per order or template."
 msgstr ""
-"Vraag aan klanten om offertes te ondertekenen om bestellingen te bevestigen."
-" De standaardwaarde kan per order of sjabloon worden gewijzigd."
+"Vraag aan klanten om offertes te ondertekenen om orders te bevestigen. De "
+"standaardwaarde kan per order of sjabloon worden gewijzigd."
 
 #. module: sale
 #. odoo-python
@@ -4676,7 +4674,7 @@ msgstr ""
 #: model:mail.template,description:sale.mail_template_sale_cancellation
 msgid "Sent automatically to customers when you cancel an order"
 msgstr ""
-"Wordt automatisch naar klanten verzonden wanneer je een bestelling annuleert"
+"Wordt automatisch naar klanten verzonden wanneer je een order annuleert"
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_confirmation
@@ -4800,14 +4798,14 @@ msgid ""
 "Some confirmed orders are selected. Their related documents might be\n"
 "                        affected by the cancellation."
 msgstr ""
-"Sommige bevestigde bestellingen zijn geselecteerd. De bijbehorende documenten kunnen\n"
+"Sommige bevestigde orders zijn geselecteerd. De bijbehorende documenten kunnen\n"
 "                        worden beïnvloed door de annulering."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Some orders are not in a state requiring confirmation."
-msgstr "Sommige bestellingen hoeven niet te worden bevestigd."
+msgstr "Sommige orders hoeven niet te worden bevestigd."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__source_id
@@ -4871,7 +4869,7 @@ msgstr "Subtotaal"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Sum of Quantity"
-msgstr "Som van hoeveelheid"
+msgstr "Totaalaantal"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
@@ -4890,7 +4888,7 @@ msgid ""
 "state 'done' or 'authorized' and linked to this order."
 msgstr ""
 "Som van de transacties die via het online betalingsformulier zijn verricht, "
-"de status 'uitgevoerd' of ' goedgekeurd' hebben en aan deze bestelling zijn "
+"de status 'uitgevoerd' of ' goedgekeurd' hebben en aan deze order zijn "
 "gekoppeld."
 
 #. module: sale
@@ -5097,7 +5095,7 @@ msgid ""
 msgstr ""
 "De factuur wordt automatisch gegenereerd en is beschikbaar in het klantenportaal wanneer de transactie is bevestigd door de betaalprovider.\n"
 "De factuur wordt gemarkeerd als betaald en de betaling wordt geregistreerd in het betalingsdagboek dat is gedefinieerd in de configuratie van de betaalprovider.\n"
-"Deze modus wordt geadviseerd als je de eindfactuur opgeeft bij de bestelling en niet na de levering."
+"Deze modus wordt geadviseerd als je de eindfactuur opgeeft bij de order en niet na de levering."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5144,7 +5142,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "The ordered quantity has been updated."
-msgstr "De bestelde hoeveelheid is bijgewerkt."
+msgstr "Het bestelde aantal is bijgewerkt."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
@@ -5527,7 +5525,7 @@ msgstr "Maateenheidcategorieën"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Unlock"
-msgstr "Deblokkeren"
+msgstr "Ontgrendelen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_untaxed
@@ -5623,8 +5621,8 @@ msgid ""
 "Validity of the order, after that you will not able to sign & pay the "
 "quotation."
 msgstr ""
-"Geldigheid van de bestelling, hierna kun je de offerte niet meer "
-"ondertekenen & betalen."
+"Geldigheid van de order, hierna kun je de offerte niet meer ondertekenen & "
+"betalen."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5640,7 +5638,7 @@ msgstr "Bekijk details"
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "View Order"
-msgstr "Bestelling bekijken"
+msgstr "Order bekijken"
 
 #. module: sale
 #. odoo-python
@@ -5731,8 +5729,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
-"Je kunt alle bestellingen selecteren en deze in batch factureren,<br>\n"
-"            of controleer elke bestelling en factureer ze één voor één."
+"Je kunt alle orders selecteren en deze in batch factureren,<br>\n"
+"            of controleer elke order en factureer ze één voor één."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_provider__so_reference_type
@@ -5749,7 +5747,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "You cannot cancel a locked order. Please unlock it first."
-msgstr "Je kunt een geblokkeerde order niet annuleren. Deblokkeer het eerst."
+msgstr ""
+"Je kunt een vergrendelde order niet annuleren. Ontgrendelen deze eerst."
 
 #. module: sale
 #. odoo-python
@@ -5817,29 +5816,29 @@ msgstr "Je browser ondersteunt geen iframe."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your feedback..."
-msgstr "Jouw feedback..."
+msgstr "Je feedback..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been confirmed."
-msgstr "Je bestelling is bevestigd."
+msgstr "Je order is bevestigd."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been signed but still needs to be paid to be confirmed."
 msgstr ""
-"Je bestelling is ondertekend, maar dient nog betaald te worden om te worden "
+"Je order is ondertekend, maar dient nog betaald te worden om te worden "
 "bevestigd."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been signed."
-msgstr "Je bestelling is getekend."
+msgstr "Je order is getekend."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order is not in a state to be rejected."
-msgstr "Je bestelling is niet in een fase om af te wijzen."
+msgstr "Je order is niet in een fase om af te wijzen."
 
 #. module: sale
 #. odoo-python
@@ -5848,7 +5847,7 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
-"Jouw offerte bevat producten van het bedrijf %(product_company)s terwijl je "
+"Je offerte bevat producten van het bedrijf %(product_company)s terwijl je "
 "offerte bij het bedrijf %(quote_company)s behoort. Wijzig het bedrijf van je"
 " offerte of verwijder de producten van andere bedrijven (%(bad_products)s)."
 

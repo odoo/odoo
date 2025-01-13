@@ -7,7 +7,7 @@
 # Manon Rondou, 2024
 # Jolien De Paepe, 2024
 # Wil Odoo, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-19 11:52+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -252,7 +252,7 @@ msgstr "%s, of / indien niet van toepassing"
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
 msgid "(Un)Block Payment"
-msgstr "(On)Blokbetaling"
+msgstr "Ontgrendel/Vergrendel"
 
 #. module: account
 #. odoo-python
@@ -1377,7 +1377,7 @@ msgstr "<strong class=\"mr16\">Subtotaal</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Credit Note Date</strong>"
-msgstr "<strong>Datum kredietnota</strong>"
+msgstr "<strong>Datum creditfactuur</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1530,9 +1530,9 @@ msgid ""
 "                occurring over a given period of time on a credit account. You\n"
 "                should receive this periodically from your bank."
 msgstr ""
-"Een kredietoverzicht is een samenvatting van alle financiële transacties\n"
-"                die gedurende een bepaalde periode op een kredietrekening hebben plaatsgevonden. Je\n"
-"                zou dit periodiek van je bank moeten ontvangen."
+"Een kredietoverzicht is een samenvatting van alle financiële transacties die"
+" binnen een bepaalde periode op een kredietrekening plaatsvinden. Je "
+"ontvangt dit doorgaans periodiek van je bank."
 
 #. module: account
 #. odoo-python
@@ -3039,7 +3039,7 @@ msgid ""
 "does not allow any exception."
 msgstr ""
 "Elke invoer tot en met die datum wordt uitgesteld tot een later tijdstip, in"
-" overeenstemming met de volgorde van het dagboek. Deze blokeerdatum is "
+" overeenstemming met de volgorde van het dagboek. Deze vergrendeldatum is "
 "onomkeerbaar en staat geen uitzondering toe."
 
 #. module: account
@@ -3060,8 +3060,8 @@ msgid ""
 msgstr ""
 "Elke boeking met belastingen tot en met die datum wordt uitgesteld tot een "
 "later tijdstip, in overeenstemming met de volgorde van het dagboek. De btw-"
-"blokkeerdatum wordt automatisch ingesteld wanneer de btw-afsluitingsboeking "
-"wordt geboekt."
+"vergrendeldatum wordt automatisch ingesteld wanneer de btw-"
+"afsluitingsboeking wordt geboekt."
 
 #. module: account
 #. odoo-python
@@ -3872,7 +3872,7 @@ msgstr "Leeg indien nul"
 #: model:ir.model.fields.selection,name:account.selection__account_move__status_in_payment__blocked
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Blocked"
-msgstr "Geblokkeerd"
+msgstr "Vergrendeld"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
@@ -10081,23 +10081,23 @@ msgstr "Laad meer limiet"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Lock"
-msgstr "Blokkeren"
+msgstr "Vergrendelen"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "Lock Date Exception %s"
-msgstr "Datum blokkeren Uitzondering %s"
+msgstr "Vergrendeldatum uitzondering %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__lock_date_field
 msgid "Lock Date Field"
-msgstr "Datum veld blokkeren"
+msgstr "Datum veld vergrendelen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__lock_date_message
 msgid "Lock Date Message"
-msgstr "Bericht blokkeerdatum"
+msgstr "Bericht vergrendelendatum"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__lock_trust_fields
@@ -10991,7 +10991,7 @@ msgstr "Niet vervallen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__not_hashable_unlocked_move_ids
 msgid "Not Hashable Unlocked Move"
-msgstr "Niet Hashable Ontgrendelde beweging"
+msgstr "Niet Hashable Ontgrendelde boeking"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__not_paid
@@ -11551,8 +11551,8 @@ msgid ""
 "non-payment by the due date,"
 msgstr ""
 "Onze facturen zijn betaalbaar binnen 21 werkdagen, tenzij op de factuur of "
-"de bestelling een andere betalingstermijn is vermeld. Bij niet-betaling op "
-"de vervaldag,"
+"de order een andere betalingstermijn is vermeld. Bij niet-betaling op de "
+"vervaldag,"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_method__payment_type__outbound
@@ -12608,7 +12608,7 @@ msgstr "Productcategorie"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__quantity
 msgid "Product Quantity"
-msgstr "Producthoeveelheid"
+msgstr "Productaantal"
 
 #. module: account
 #: model:account.account,name:account.1_income
@@ -12748,12 +12748,12 @@ msgstr "QR codes"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__quantity
 msgid "Quantity"
-msgstr "Hoeveelheid"
+msgstr "Aantal"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Quantity:"
-msgstr "Hoeveelheid:"
+msgstr "Aantal:"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__quarterly
@@ -13498,7 +13498,7 @@ msgstr "Verkoopuitgaven"
 #: model:ir.model.fields,field_description:account.field_res_company__sale_lock_date
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__sale_lock_date
 msgid "Sales Lock Date"
-msgstr "Verkoopblokkeerdatum"
+msgstr "Verkoop vergrendelendatum"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_receipt
@@ -14770,7 +14770,7 @@ msgstr "Prijs inclusief btw"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_lock_date_message
 #: model:ir.model.fields,field_description:account.field_account_move__tax_lock_date_message
 msgid "Tax Lock Date Message"
-msgstr "Btw blokkeerdatum bericht"
+msgstr "Btw vergrendeldatum bericht"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_map
@@ -15489,7 +15489,7 @@ msgid ""
 "The date the Global Lock Date is set to by this exception. If the lock date "
 "is not changed it is set to the maximal date."
 msgstr ""
-"De datum waarop de Globale Blokkeerdatum wordt ingesteld door deze "
+"De datum waarop de globale vergrendelddatum wordt ingesteld door deze "
 "uitzondering. Als de vergrendelingsdatum niet wordt gewijzigd, wordt deze "
 "ingesteld op de maximale datum."
 
@@ -15788,7 +15788,7 @@ msgid ""
 msgstr ""
 "De bewerking wordt geweigerd omdat deze van invloed zou zijn op een al "
 "uitgegeven belastingoverzicht. Wijzig de datum van de boeking of de volgende"
-" blokkeerdatums om verder te gaan: %(lock_date_info)s."
+" vergrendeldatums om verder te gaan: %(lock_date_info)s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__foreign_currency_id
@@ -15801,9 +15801,9 @@ msgid ""
 "The optional quantity expressed by this line, eg: number of product sold. "
 "The quantity is not a legal requirement but is very useful for some reports."
 msgstr ""
-"De hoeveelheid verkochte producten met betrekking tot deze regel "
-"(optioneel). Deze hoeveelheid is geen wettelijke verplichting, maar kan erg "
-"nuttig zijn voor bepaalde rapportages."
+"Het optionele aantal die door deze regel wordt uitgedrukt, bijvoorbeeld: "
+"aantal verkochte producten. Het aantal is geen wettelijke vereiste, maar is "
+"voor sommige rapporten erg handig."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__sequence
@@ -16292,7 +16292,7 @@ msgid ""
 "lock.You should either reconcile or delete them."
 msgstr ""
 "Er zijn nog steeds niet-afgeletterde rekeningafschriftregels in de periode "
-"die je wilt blokkeren. Je moet ze afletteren of verwijderen."
+"die je wilt vergrendelen. Je moet ze afletteren of verwijderen."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -16618,7 +16618,7 @@ msgid ""
 "This move could not be locked either because some move with the same "
 "sequence prefix has a higher number. You may need to resequence it."
 msgstr ""
-"Deze boeking kon ook niet geblokkeerd worden, omdat een boeking met "
+"Deze boeking kon ook niet vergrendeld worden, omdat een boeking met "
 "hetzelfde volgnummer een hoger nummer heeft. Misschien moet je hem "
 "hernummeren."
 
@@ -18065,7 +18065,7 @@ msgid ""
 "You can not reorder sequence by date when the journal is locked with a hash."
 msgstr ""
 "Je kunt de volgorde niet opnieuw ordenen op datum wanneer het dagboek is "
-"geblokkeerd met een hash."
+"vergrendeld met een hash."
 
 #. module: account
 #. odoo-python
@@ -18143,7 +18143,7 @@ msgstr "Je kunt geen facturen afdrukken & verzenden die niet zijn geboekt."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You can't block a paid invoice."
-msgstr "Je kunt een betaalde factuur niet blokkeren."
+msgstr "Je kunt een betaalde factuur niet vergrendelen."
 
 #. module: account
 #. odoo-python
@@ -18389,7 +18389,7 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete journal items belonging to a locked journal entry."
 msgstr ""
-"Je kunt geen boekingen verwijderen die horen bij een geblokkeerde boeking."
+"Je kunt geen boekingen verwijderen die horen bij een vergrendeld boeking."
 
 #. module: account
 #. odoo-python
@@ -18635,7 +18635,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot reset to draft a locked journal entry."
-msgstr "Je kunt een geblokkeerde boeking niet resetten."
+msgstr "Je kunt een vergrendelde boeking niet resetten."
 
 #. module: account
 #. odoo-python
@@ -18853,7 +18853,7 @@ msgstr "Je moet dit document bijwerken om je T&C weer te geven."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
 msgid "Your Invoices"
-msgstr "Jouw facturen"
+msgstr "Je facturen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding

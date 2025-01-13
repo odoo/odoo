@@ -86,6 +86,12 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p>안녕하세요, <t t-out=\"object.partner_id.name or ''\"/>님.</p>\n"
+"                <p>하기 <t t-out=\"object.mail_group_id.name\"/>메일링 리스트</p>의 가이드라인을 참조해 주시기 바랍니다.\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"/></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
