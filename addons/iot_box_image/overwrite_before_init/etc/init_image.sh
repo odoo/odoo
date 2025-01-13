@@ -31,8 +31,8 @@ echo  "alias odoo_conf='cat /home/pi/odoo.conf'" | tee -a ~/.bashrc /home/pi/.ba
 echo  "alias read_mode='sudo mount -o remount,ro / && sudo mount -o remount,ro /root_bypass_ramdisks'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias install='sudo mount -o remount,rw / && sudo mount -o remount,rw /root_bypass_ramdisks; sudo chroot /root_bypass_ramdisks/; mount -t proc proc /proc'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias blackbox='ls /dev/serial/by-path/'" | tee -a ~/.bashrc /home/pi/.bashrc
-echo  "alias nano='write_mode; sudo nano -l'" | tee -a /home/pi/.bashrc
-echo  "alias vim='write_mode; sudo vim -u /home/pi/.vimrc'" | tee -a /home/pi/.bashrc
+echo  "alias nano='write_mode; sudo -u odoo nano -l'" | tee -a /home/pi/.bashrc
+echo  "alias vim='write_mode; sudo -u odoo vim -u /home/pi/.vimrc'" | tee -a /home/pi/.bashrc
 echo  "alias odoo_luxe='printf \" ______\n< Luxe >\n ------\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\ \n                ||----w |\n                ||     ||\n\"'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias odoo_start='sudo systemctl start odoo'" >> /home/pi/.bashrc
 echo  "alias odoo_stop='sudo systemctl stop odoo'" >> /home/pi/.bashrc
@@ -70,6 +70,7 @@ odoo_dev() {
   sudo git remote add dev https://github.com/odoo-dev/odoo.git
   sudo git fetch dev \$1 --depth=1 --prune
   sudo git reset --hard dev/\$1
+  sudo chown -R odoo:odoo /home/pi/odoo
   cd \$pwd
 }
 
