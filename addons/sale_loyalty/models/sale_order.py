@@ -433,7 +433,10 @@ class SaleOrder(models.Model):
             else:
                 non_common_lines = discounted_lines - lines_to_discount
                 # Fixed prices are per tax
-                discounted_amounts = {line.tax_id.filtered(lambda t: t.amount_type != 'fixed'): abs(line.price_total) for line in lines}
+                discounted_amounts = defaultdict(int, {
+                    line.tax_id.filtered(lambda t: t.amount_type != 'fixed'): abs(line.price_total)
+                    for line in lines
+                })
                 for line in itertools.chain(non_common_lines, common_lines):
                     # For gift card and eWallet programs we have no tax but we can consume the amount completely
                     if lines.reward_id.program_id.is_payment_program:
