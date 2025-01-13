@@ -190,14 +190,14 @@ class TestEdiJson(L10nInTestInvoicingCommon):
                 {
                     "SlNo": "2", "PrdDesc": "product_with_cess", "IsServc": "N", "HsnCd": "333333", "Qty": 1.0,
                     "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 1000.0, "Discount": 100.0, "AssAmt": 900.0,
-                    "GstRt": 12.0, "IgstAmt": 0.0, "CgstAmt": 56.8, "SgstAmt": 56.8, "CesRt": 5.0, "CesAmt": 45.0,
+                    "GstRt": 12.0, "IgstAmt": 0.0, "CgstAmt": 54.0, "SgstAmt": 54.0, "CesRt": 5.0, "CesAmt": 45.0,
                     "CesNonAdvlAmt": 1.59, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
-                    "OthChrg": 0.0, "TotItemVal": 1060.19
+                    "OthChrg": 0.0, "TotItemVal": 1054.59
                 }
             ],
             "ValDtls": {
-                "AssVal": 1800.0, "CgstVal": 79.3, "SgstVal": 79.3, "IgstVal": 0.0, "CesVal": 46.59,
-                "StCesVal": 0.0, "Discount": 0.0, "RndOffAmt": 0.0, "TotInvVal": 2005.19
+                "AssVal": 1800.0, "CgstVal": 76.5, "SgstVal": 76.5, "IgstVal": 0.0, "CesVal": 46.59,
+                "StCesVal": 0.0, "Discount": 0.0, "RndOffAmt": 0.0, "TotInvVal": 1999.59
             }
         }
         self.assertDictEqual(json_value, expected, "Indian EDI send json value is not matched")
@@ -254,14 +254,14 @@ class TestEdiJson(L10nInTestInvoicingCommon):
                 {
                     "SlNo": "3", "PrdDesc": "product_with_cess", "IsServc": "N", "HsnCd": "333333", "Qty": 1.0,
                     "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 1000.0, "Discount": 0.0, "AssAmt": 1000.0,
-                    "GstRt": 12.0, "IgstAmt": 0.0, "CgstAmt": 63.1, "SgstAmt": 63.1, "CesRt": 5.0, "CesAmt": 50.0,
+                    "GstRt": 12.0, "IgstAmt": 0.0, "CgstAmt": 60.0, "SgstAmt": 60.0, "CesRt": 5.0, "CesAmt": 50.0,
                     "CesNonAdvlAmt": 1.59, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
-                    "OthChrg": 0.0, "TotItemVal": 1177.79
+                    "OthChrg": 0.0, "TotItemVal": 1171.59
                 }
             ],
             "ValDtls": {
-                "AssVal": 1600.0, "CgstVal": 78.1, "SgstVal": 78.1, "IgstVal": 0.0, "CesVal": 51.59,
-                "StCesVal": 0.0, "Discount": 0.0, "RndOffAmt": 0.0, "TotInvVal": 1807.79
+                "AssVal": 1600.0, "CgstVal": 75.0, "SgstVal": 75.0, "IgstVal": 0.0, "CesVal": 51.59,
+                "StCesVal": 0.0, "Discount": 0.0, "RndOffAmt": 0.0, "TotInvVal": 1801.59
             },
         })
         self.assertDictEqual(json_value, expected, "Indian EDI with negative unit price sent json value is not matched")
@@ -319,8 +319,8 @@ class TestEdiJson(L10nInTestInvoicingCommon):
         expected_copy_rounding.update({
             "DocDtls": {"Typ": "INV", "No": "INV/18-19/0009", "Dt": "01/01/2019"},
             "ValDtls": {
-                "AssVal": 1800.0, "CgstVal": 79.3, "SgstVal": 79.3, "IgstVal": 0.0, "CesVal": 46.59,
-                "StCesVal": 0.0, "Discount": 0.0, "RndOffAmt": -0.19, "TotInvVal": 2005.00
+                "AssVal": 1800.0, "CgstVal": 76.5, "SgstVal": 76.5, "IgstVal": 0.0, "CesVal": 46.59,
+                "StCesVal": 0.0, "Discount": 0.0, "RndOffAmt": 0.41, "TotInvVal": 2000.00
             }})
         self.assertDictEqual(json_value, expected_copy_rounding, "Indian EDI with cash rounding sent json value is not matched")
 
