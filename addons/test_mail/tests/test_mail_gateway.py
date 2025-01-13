@@ -302,10 +302,8 @@ class TestMailgateway(MailGatewayCommon):
         self.assertEqual(record.message_ids[0].author_id, self.partner_1,
                          'message_process: recognized email -> author_id')
         self.assertEqual(record.message_ids[0].email_from, self.partner_1.email_formatted)
-        self.assertEqual(record.message_follower_ids.partner_id, self.partner_1,
-                         'message_process: recognized email -> added as follower')
-        self.assertEqual(record.message_partner_ids, self.partner_1,
-                         'message_process: recognized email -> added as follower')
+        self.assertFalse(record.message_partner_ids,
+                         'message_process: recognized email -> but not added as follower as external')
 
         # just an email -> no follower
         with self.mock_mail_gateway():
@@ -348,6 +346,18 @@ class TestMailgateway(MailGatewayCommon):
                          'message_process: odoobot -> no follower')
         self.assertEqual(record4.message_partner_ids, self.env['res.partner'],
                          'message_process: odoobot -> no follower')
+
+        # internal user -> ok
+        with self.mock_mail_gateway():
+            record = self.format_and_process(
+                MAIL_TEMPLATE, self.user_employee.email_formatted, f'groups@{self.alias_domain}',
+                subject='Internal Author')
+
+        self.assertEqual(record.message_ids[0].author_id, self.partner_employee,
+                         'message_process: recognized email -> author_id')
+        self.assertEqual(record.message_ids[0].email_from, self.user_employee.email_formatted)
+        self.assertEqual(record.message_partner_ids, self.partner_employee,
+                         'message_process: recognized email -> added as follower')
 
     # --------------------------------------------------
     # Author recognition
@@ -750,7 +760,7 @@ class TestMailgateway(MailGatewayCommon):
                 if passed:
                     self.assertEqual(len(record), 1)
                     self.assertEqual(record.email_from, email_from)
-                    self.assertEqual(record.message_partner_ids, self.partner_1)
+                    self.assertFalse(record.message_partner_ids, 'Non internal are not added as followers when being post authors')
                 # multi emails not recognized (no normalized email, recognition)
                 else:
                     self.assertEqual(len(record), 0,
@@ -2136,13 +2146,13 @@ class TestMailGatewayLoops(MailGatewayCommon):
                 target_model='mail.test.ticket',
             )
         self.assertTrue(record)
-        self.assertEqual(record.message_partner_ids, self.other_partner)
 
         for incoming_count in range(6):  # threshold + 1
             with self.mock_mail_gateway():
                 record.with_user(self.user_employee).message_post(
                     body='Automatic answer',
                     message_type='auto_comment',
+                    partner_ids=self.other_partner.ids,
                     subtype_xmlid='mail.mt_comment',
                 )
             capture_messages = self.gateway_mail_reply_last_email(MAIL_TEMPLATE)

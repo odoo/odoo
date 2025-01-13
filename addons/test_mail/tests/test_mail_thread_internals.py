@@ -495,9 +495,7 @@ class TestAPI(MailCommon, TestRecipients):
             }),
         ]:
             messages += test_record.with_user(user).message_post(**post_values)
-        self.assertEqual(test_record.message_partner_ids, self.user_employee.partner_id + self.user_portal.partner_id)
-        # to test author proposal, remove portal for some reason
-        test_record.message_unsubscribe(partner_ids=self.user_portal.partner_id.ids)
+        self.assertEqual(test_record.message_partner_ids, self.user_employee.partner_id)
 
         recipients = test_record._message_get_suggested_recipients(reply_message=messages[0], no_create=True)
         for recipient, expected in zip(recipients, [
