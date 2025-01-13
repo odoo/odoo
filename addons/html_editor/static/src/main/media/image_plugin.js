@@ -16,6 +16,7 @@ function hasShape(imagePlugin, shapeName) {
 export class ImagePlugin extends Plugin {
     static id = "image";
     static dependencies = ["history", "link", "powerbox", "dom", "selection"];
+    static shared = ["getSelectedImage"];
     resources = {
         user_commands: [
             {
@@ -245,7 +246,7 @@ export class ImagePlugin extends Plugin {
         const fileModel = {
             isImage: true,
             isViewable: true,
-            name: selectedImg.src,
+            name: selectedImg.getAttribute("data-caption") || selectedImg.src,
             defaultSource: selectedImg.src,
             downloadUrl: selectedImg.src,
         };
@@ -255,7 +256,7 @@ export class ImagePlugin extends Plugin {
 
     deleteImage() {
         const selectedImg = this.getSelectedImage();
-        if (selectedImg) {
+        if (selectedImg && !this.delegateTo("delete_image_handlers", selectedImg)) {
             const anchorNode = selectedImg.parentElement;
             let anchorOffset = childNodeIndex(selectedImg);
             selectedImg.remove();
