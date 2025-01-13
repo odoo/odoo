@@ -110,12 +110,6 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
                 this.props.record.model.root._isReadonly("order_line"))
         );
     }
-    get hasExternalButton() {
-        // Keep external button, even if field is specified as 'no_open' so that the user is not
-        // redirected to the product when clicking on the field content
-        const res = super.hasExternalButton;
-        return res || (!!this.props.record.data[this.props.name] && !this.state.isFloating);
-    }
     get hasConfigurationButton() {
         return this.isConfigurableLine || this.isConfigurableTemplate || this.isCombo;
     }
@@ -389,6 +383,12 @@ export const saleOrderLineProductField = {
         props.readonlyField = dynamicInfo.readonly;
         return props;
     },
+    fieldDependencies: [
+        { name: 'is_configurable_product', type: 'boolean' },
+        { name: 'product_type', type: 'selection' },
+        { name: 'service_tracking', type: 'selection' },
+        { name: 'product_template_attribute_value_ids', type: 'many2many' },
+    ],
 };
 
 registry.category("fields").add("sol_product_many2one", saleOrderLineProductField);
