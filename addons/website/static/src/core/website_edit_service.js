@@ -34,7 +34,7 @@ export function buildEditableInteractions(builders) {
         if (!EI.name) {
             // if we get here, this is most likely because we have an anonymous
             // class. To make it easier to work with, we can add the name property
-            // by doing a little hack    
+            // by doing a little hack
             const name = makeEditable.Interaction.name + "__mixin";
             EI = {[name]: class extends EI {}} [name];
         }
@@ -110,5 +110,13 @@ patch(Colibri.prototype, {
             };
         }
         return super.addListener(target, event, stealthFn, options);
+    },
+    applyAttr(el, attr, value) {
+        // TODO No jQuery ?
+        const wysiwyg = window.$?.("#wrapwrap").data("wysiwyg");
+        const name = `${this.interaction.constructor.name}/${attr}`;
+        wysiwyg?.odooEditor.observerUnactive(name);
+        super.applyAttr(...arguments);
+        wysiwyg?.odooEditor.observerActive(name);
     },
 });
