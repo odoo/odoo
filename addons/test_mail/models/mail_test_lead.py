@@ -40,18 +40,6 @@ class MailTestTLead(models.Model):
             values['phone'] = values.get('phone') or lead.phone
         return email_normalized_to_values
 
-    def _message_get_suggested_recipients(self):
-        recipients = super()._message_get_suggested_recipients()
-        # check if that language is correctly installed (and active) before using it
-        lang_code = self.env['res.lang']._get_data(code=self.lang_code).code or None
-        if self.partner_id:
-            self._message_add_suggested_recipient(
-                recipients, partner=self.partner_id, reason=_('Customer'))
-        elif self.email_from:
-            self._message_add_suggested_recipient(
-                recipients, email=self.email_from, reason=_('Customer Email'))
-        return recipients
-
     def _message_post_after_hook(self, message, msg_vals):
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)

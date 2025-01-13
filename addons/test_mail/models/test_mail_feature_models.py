@@ -8,7 +8,7 @@ from odoo import api, fields, models
 class MailTestRecipients(models.Model):
     _name = 'mail.test.recipients'
     _description = "Test Recipients Computation"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread.cc']
     _primary_email = 'customer_email'
 
     company_id = fields.Many2one('res.company')
@@ -16,7 +16,6 @@ class MailTestRecipients(models.Model):
     customer_id = fields.Many2one('res.partner')
     customer_email = fields.Char('Customer Email', compute='_compute_customer_email', readonly=False, store=True)
     customer_phone = fields.Char('Customer Phone', compute='_compute_customer_phone', readonly=False, store=True)
-    email_cc = fields.Char('Email CC')
     name = fields.Char()
 
     @api.depends('customer_id')
@@ -39,7 +38,6 @@ class MailTestThreadCustomer(models.Model):
     _inherit = ['mail.test.recipients']
     _mail_thread_customer = True
     _primary_email = 'customer_email'
-
 
 # ------------------------------------------------------------
 # PROPERTIES

@@ -12,7 +12,6 @@ import json
 import lxml
 import logging
 import pytz
-import re
 import time
 import threading
 
@@ -27,7 +26,7 @@ from markupsafe import Markup, escape
 from requests import Session
 from werkzeug import urls
 
-from odoo import _, api, exceptions, fields, models, Command
+from odoo import _, api, exceptions, fields, models, Command, tools
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import push_to_end_point, DeviceUnreachableError
 from odoo.exceptions import MissingError, AccessError
@@ -38,8 +37,8 @@ from odoo.tools import (
     ormcache, is_list_of,
 )
 from odoo.tools.mail import (
-    append_content_to_html, decode_message_header, email_normalize,
-    email_normalize_all, email_split,
+    append_content_to_html, decode_message_header,
+    email_normalize, email_split,
     email_split_and_format, formataddr, html_sanitize,
     generate_tracking_message_id,
     unfold_references,
@@ -2072,74 +2071,118 @@ class MailThread(models.AbstractModel):
                 found_results[res_id] |= partner
         return found_results
 
-    def _message_add_suggested_recipient(self, recipients, partner=None, email=None, reason=''):
-        """ Called by _message_get_suggested_recipients, to add a suggested
-        recipient as a dictionary in the result list """
+    def _message_add_suggested_recipients(self):
         self.ensure_one()
-        recipient_data = {'create_values': {}, 'partner_id': False, 'reason': reason}
-        if email and not partner:
-            partner = self._partner_find_from_emails_single([email], no_create=True)
-            if partner:
-                recipient_data['name'] = partner.name
-
-        # check if already suggested
-        parse_name, email_normalized = parse_contact_from_email(email)
-        if email_normalized and email_normalized in {val['email'] for val in recipients}:  # already existing email -> skip
-            return recipients
-        if partner and partner in self.message_partner_ids:  # recipient already in the followers -> skip
-            return recipients
-        if partner and partner.id in {val['partner_id'] for val in recipients}:  # already existing partner ID -> skip
-            return recipients
-
-        if partner:
-            recipient_data.update({
-                'partner_id': partner.id, 'name': partner.name,
-                'email': ','.join(email_normalize_all(partner.email)) or partner.email,
-            })
-        else:  # unknown partner, we are probably managing an email address
-            customer_values = self._get_customer_information().get(email_normalized) or {}
-            name = recipient_data.get('name') or customer_values.pop('name', False) or parse_name
-            recipient_data.update({
-                'name': name,
-                'email': email_normalized,
-                'create_values': customer_values,
-            })
-        recipients.append(recipient_data)
-        return recipients
-
-    def _message_get_suggested_recipients(self):
-        """ Get suggested recipients to be managed by Chatter
-
-        :returns: list of dictionaries (per suggested recipient) containing:
-            * partner_id:            int: recipient partner id
-            * name:                  str: name of the recipient
-            * email:                 str: email of recipient
-            * reason:                str
-            * new_partner_values:   dict: data for unknown partner
-        """
-        self.ensure_one()
-        recipients = []
+        email_to_lst, partners = [], self.env['res.partner']
 
         # add responsible
         user_field = self._fields.get('user_id')
         if user_field and user_field.type == 'many2one' and user_field.comodel_name == 'res.users':
-            thread = self.sudo()  # SUPERUSER because of a read on res.users that would crash otherwise
-            if thread.user_id and thread.user_id.partner_id:
-                thread._message_add_suggested_recipient(
-                    recipients, partner=thread.user_id.partner_id, reason=self._fields['user_id'].string,
-                )
+            # SUPERUSER because of a read on res.users that would crash otherwise
+            partners += self.sudo().user_id.partner_id
 
         # add customers
-        customers = self._mail_get_partners()[self.id]
-        for customer in customers.filtered(lambda p: not p.is_public):
-            self._message_add_suggested_recipient(recipients, partner=customer, reason=_('Customer'))
+        partners += self._mail_get_partners()[self.id].filtered(lambda p: not p.is_public)
 
         # add email
         email_fname = self._mail_get_primary_email_field()
-        email_normalized = email_fname and email_normalize(self[email_fname], strict=False)
-        if email_normalized and email_normalized not in customers.mapped('email_normalized'):
-            self._message_add_suggested_recipient(recipients, email=self[email_fname], reason=_('Customer Email'))
+        if email_fname and self[email_fname]:
+            email_to_lst.append(self[email_fname])
 
+        return email_to_lst, partners
+
+    def _message_get_suggested_recipients(self, reply_discussion=False, reply_message=None,
+                                          no_create=True):
+        """ Get suggested recipients, contextualized depending on discussion.
+
+        :param bool reply_discussion: consider user replies to the discussion.
+          Last relevant message is fetched and used to search for additional
+          'To' and 'Cc' to propose;
+        :param bool reply_message: specific message user is replying-to. Bypasses
+          'reply_discussion';
+        :param bool no_create: do not create partners when emails are not linked
+          to existing partners, see '_partner_find_from_emails';
+
+        :returns: list of dictionaries (per suggested recipient) containing:
+            * create_values:         dict: data to populate new partner, if not found
+            * email:                 str: email of recipient
+            * name:                  str: name of the recipient
+            * partner_id:            int: recipient partner id
+        """
+        def email_key(email):
+            return email_normalize(email, strict=False) or email.strip()
+
+        self.ensure_one()
+        email_to_lst, partners = self._message_add_suggested_recipients()
+
+        # find last relevant message
+        if reply_discussion:
+            messages = self.message_ids.sorted(
+                lambda msg: (
+                    msg.message_type == 'email',              # incoming email = probably customer
+                    msg.message_type == 'comment',            # user input > other input
+                    msg.date, msg.id,                         # newer first
+                ), reverse=True,
+            )
+            reply_message = next(
+                (msg for msg in messages if msg.message_type in ('comment', 'email')),
+                self.env['mail.message']
+            )
+        # fetch answer-based recipients as well as author
+        if reply_message:
+            # direct recipients, and author if not archived / root
+            partners += (reply_message.partner_ids | reply_message.author_id).filtered(lambda p: p.active)
+            # To and Cc emails (mainly for incoming email), and email_from if not linked to hereabove author
+            email_to_lst += [reply_message.incoming_email_to or '', reply_message.incoming_email_cc or '', reply_message.email_from or '']
+            from_normalized = email_normalize(reply_message.email_from)
+            if from_normalized and from_normalized != reply_message.author_id.email_normalized:
+                email_to_lst.append(reply_message.email_from)
+        # flatten emails, as some inputs are stringified list of emails (e.g. Cc, To)
+        email_to_lst = [
+            e for email_input in email_to_lst
+            for e in email_split_and_format(email_input)
+            if e and e.strip()
+        ]
+
+        # organize and deduplicate partners, exclude followers, keep ordering
+        followers = self.message_partner_ids
+        # sanitize email inputs, exclude followers and aliases, add some banned emails, keep ordering, then link to partners
+        skip_emails_normalized = (followers | partners).mapped('email_normalized') + (followers | partners).mapped('email')
+        skip_emails_normalized += [self.env.ref('base.partner_root').email_normalized]  # never propose odoobot
+        if email_to_lst:
+            skip_emails_normalized.extend(
+                self.env['mail.alias'].sudo().search(
+                    [('alias_full_name', 'in', [email_key(e) for e in email_to_lst])]
+                ).mapped('alias_full_name')
+            )
+        email_to_lst = [e for e in email_to_lst if email_key(e) not in skip_emails_normalized]
+        partners += self._partner_find_from_emails_single(email_to_lst, no_create=no_create)
+
+        # final filtering
+        partners = self.env['res.partner'].browse(tools.misc.unique(
+            p.id for p in partners if p not in followers
+        ))
+        email_to_lst = list(tools.misc.unique(
+            e for e in email_to_lst
+            if email_key(e) not in (partners.mapped('email_normalized') + partners.mapped('email'))
+        ))
+        # fetch model-related additional information
+        emails_normalized_info = self._get_customer_information() if email_to_lst else {}
+
+        recipients = [{
+            'email': partner.email_normalized,
+            'name': partner.name,
+            'partner_id': partner.id,
+            'create_values': {},
+        } for partner in partners]
+        for email_input in email_to_lst:
+            name, email_normalized = parse_contact_from_email(email_input)
+            recipients.append({
+                'email': email_normalized,
+                'name': emails_normalized_info.get(email_normalized, {}).pop('name', False) or name,
+                'partner_id': False,
+                'create_values': emails_normalized_info.get(email_normalized, {}),
+            })
         return recipients
 
     def _mail_find_user_for_gateway(self, email_value, alias=None):

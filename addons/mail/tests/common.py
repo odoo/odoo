@@ -901,7 +901,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
     # ------------------------------------------------------------
 
     def assertNoPushNotification(self):
-        """ Asserts a single push notification """
+        """ Asserts no push notification """
         self.push_to_end_point_mocked.assert_not_called()
         self.assertEqual(self.env['mail.push'].search_count([]), 0)
 
@@ -909,7 +909,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                                endpoint=None, keys=None,
                                title=None, title_content=None, body=None, body_content=None,
                                options=None):
-        """ Asserts a single push notification """
+        """ Asserts a single push notification (not really batch enabled currently) """
         self.push_to_end_point_mocked.assert_called_once()
         self.assertEqual(self.env['mail.push'].search_count([]), mail_push_count)
         if endpoint:
