@@ -18,8 +18,6 @@ export class EmbeddedExcalidrawComponent extends ReadonlyEmbeddedExcalidrawCompo
         super.setup();
         this.dialog = useService("dialog");
         this.embeddedState = useEmbeddedState(this.props.host);
-        this.embeddedState.width = this.embeddedState.width || "100%";
-        this.embeddedState.height = this.embeddedState.height || "400px";
     }
 
     get templateState() {
@@ -64,5 +62,17 @@ export const excalidrawEmbedding = {
     getProps: (host) => {
         return { host, ...getEmbeddedProps(host) };
     },
-    getStateChangeManager: (config) => new StateChangeManager(config),
+    getStateChangeManager: (config) =>
+        new StateChangeManager(
+            Object.assign(config, {
+                getEmbeddedState: (host) => {
+                    const props = getEmbeddedProps(host);
+                    return {
+                        ...props,
+                        height: props.height || "400px",
+                        width: props.width || "100%",
+                    };
+                },
+            })
+        ),
 };

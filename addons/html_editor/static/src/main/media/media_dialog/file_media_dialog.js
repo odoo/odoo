@@ -52,9 +52,14 @@ export class FileMediaDialog extends MediaDialog {
             url: selectedMedia.url || "",
         };
         const fileBlock = renderToElement("html_editor.EmbeddedFileBlueprint", {
-            embeddedProps: JSON.stringify({
-                fileData,
-            }),
+            embeddedProps: JSON.stringify(
+                {
+                    fileData,
+                },
+                {
+                    document: this.props.document,
+                }
+            ),
         });
         return [fileBlock];
     }
