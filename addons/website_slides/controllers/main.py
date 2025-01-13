@@ -396,6 +396,7 @@ class WebsiteSlides(WebsiteProfile):
             'slide_category': slide_category,
         }
 
+<<<<<<< 8e304ab52981aca6143d2cd28720303b259841de
     def _has_slide_channel_search(self, my=None, slug_tags=None, slide_category=None, **post):
         return my or post.get('search') or slug_tags or post.get('tag') or slide_category
 
@@ -422,6 +423,41 @@ class WebsiteSlides(WebsiteProfile):
                 return request.redirect(f"/slides/tag/{slug_tags}?{keep_query('*')}")
             return request.redirect(f"/slides?{keep_query('*')}")
         return request.render('website_slides.courses_home', render_values)
+||||||| dcbc1aa8cfea8deb9c7258928f10e51ed3e70859
+    @http.route(['/slides/all', '/slides/all/tag/<string:slug_tags>'], type='http', auth="public", website=True, sitemap=True, readonly=True)
+    def slides_channel_all(self, slide_category=None, slug_tags=None, my=False, **post):
+        if slug_tags and slug_tags.count(',') > 0 and request.httprequest.method == 'GET' and not post.get('prevent_redirect'):
+            # Previously, the tags were searched using GET, which caused issues with crawlers (too many hits)
+            # We replaced those with POST to avoid that, but it's not sufficient as bots "remember" crawled pages for a while
+            # This permanent redirect is placed to instruct the bots that this page is no longer valid
+            # TODO: remove in a few stable versions (v19?), including the "prevent_redirect" param in templates
+            # Note: We allow a single tag to be GET, to keep crawlers & indexes on those pages
+            # What we really want to avoid is combinatorial explosions
+            return request.redirect('/slides/all', code=301)
+
+        render_values = self.slides_channel_all_values(slide_category=slide_category, slug_tags=slug_tags, my=my, **post)
+        return request.render('website_slides.courses_all', render_values)
+=======
+    @http.route(['/slides/all', '/slides/all/tag/<string:slug_tags>'], type='http', auth="public", website=True, sitemap=True, readonly=True)
+    def slides_channel_all(self, slide_category=None, slug_tags=None, my=False, **post):
+        # Checking referrer and search to see if the GET request is from
+        # a SEO bot, in which case every tag but one should be removed to
+        # avoid combinatorial explosion
+        if slug_tags and request.httprequest.method == 'GET' and request.env['ir.http'].is_a_bot():
+            # Redirect `tag-1,tag-2` to `tag-1` to disallow multi tags
+            # in GET request for proper bot indexation;
+            tag_list = slug_tags.split(',')
+            if len(tag_list) > 1:
+                url = QueryURL('/slides/all', ['tag'], tag=tag_list[0], my=my, slide_category=slide_category)()
+                # The vast majority of bots will follow the links in the
+                # client side, which are protected by the nofollow
+                # attribute of the tags links
+                # This redirect is used to stop combinatorial explosions
+                # from bots that send direct requests
+                return request.redirect(url, code=302)
+        render_values = self.slides_channel_all_values(slide_category=slide_category, slug_tags=slug_tags, my=my, **post)
+        return request.render('website_slides.courses_all', render_values)
+>>>>>>> 4b1c3bfa83af2b1851db62df5aca4d5777a3d88c
 
     def slides_channel_values(self, slide_category=None, slug_tags=None, my=0, page=None, page_size=12, **post):
         """ Home page displaying a list of courses displayed according to some
