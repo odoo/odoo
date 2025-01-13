@@ -167,7 +167,7 @@ def check_git_branch():
                     subprocess.run(git + ['remote', 'set-branches', 'origin', db_branch], check=True)
                     _logger.info("Updating odoo folder to the branch %s", db_branch)
                     subprocess.run(
-                        ['/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh'], check=True
+                        ['/home/pi/odoo/addons/iot_box_image/configuration/checkout.sh'], check=True
                     )
             except subprocess.CalledProcessError:
                 _logger.exception("Failed to update the code with git.")
