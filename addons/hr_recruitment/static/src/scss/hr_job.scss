@@ -1,9 +1,10 @@
 .o_hr_recruitment_kanban {
     .o_kanban_renderer {
         &.o_kanban_ungrouped .o_kanban_record {
-            width: 450px;
+            width: 100%;
             &:not(.o_kanban_ghost) {
-                min-height: 220px;
+                min-height: 80px;
+                justify-content: center;
             }
         }
 
@@ -24,5 +25,11 @@
 .o_kanban_view {
     .o_view_sample_data .ribbon {
         display: none;
+    }
+
+    .o_kanban_card_bottom {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
     }
 }

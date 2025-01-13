@@ -70,39 +70,72 @@
                         </div>
                     </t>
                     <t t-name="card">
-                        <div class="d-flex align-items-baseline gap-1 ms-2">
-                            <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
-                            <div class="o_kanban_card_header_title d-flex flex-column">
-                                <field name="name" class="fw-bold fs-4"/>
-                                <field name="user_id" class="text-muted"/>
-                                <div class="small" groups="base.group_multi_company">
-                                    <i class="fa fa-building-o" role="img" aria-label="Company" title="Company"></i> <field name="company_id"/>
+                        <div class="row align-items-center mx-2">
+                            <div class="col-3">
+                                <div class="d-flex">
+                                    <field name="is_favorite" class="align-content-center" widget="boolean_favorite" nolabel="1"/>
+                                    <field name="name" class="fw-bold fs-5"/>
                                 </div>
                                 <div t-if="record.alias_email.value" class="small o_job_alias">
-                                    <i class="fa fa-envelope-o" role="img" aria-label="Alias" title="Alias"></i> <field name="alias_id"/>
+                                    <i class="fa fa-envelope-o" role="img" aria-label="alias" title="alias"></i> <field name="alias_id"/>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row g-0 mt-0 mt-sm-3 ms-2">
-                            <div class="col-7">
+                            <div class="col">
+                                <span>Recruiter</span>
+                                <field name="user_id" widget="many2one_avatar_user"
+                                    options="{'display_avatar_name': True}"/>
+                            </div>
+                            <div class="col">
+                                <a
+                                    name="edit_job"
+                                    type="open"
+                                    t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'text-primary fw-bolder' : 'text-secondary' }}"
+                                    groups="hr_recruitment.group_hr_recruitment_user"
+                                >
+                                    <div class="d-flex">
+                                        <field name="no_of_recruitment" class="align-content-center fs-2 mx-2"/>
+                                        <div class="d-flex flex-column">
+                                            <span>Open</span>
+                                            <span>
+                                                <t t-if="record.no_of_recruitment.raw_value == 1">Position</t>
+                                                <t t-else="">Positions</t>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                                <span
+                                    name="edit_job"
+                                    type="open"
+                                    t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'text-primary fw-bolder' : 'text-secondary' }}"
+                                    groups="!hr_recruitment.group_hr_recruitment_user"
+                                >
+                                    <div class="d-flex">
+                                        <field name="no_of_recruitment" class="align-content-center fs-2 mx-2"/>
+                                        <div class="d-flex flex-column">
+                                            <span>Open</span>
+                                            <span>
+                                                <t t-if="record.no_of_recruitment.raw_value == 1">Position</t>
+                                                <t t-else="">Positions</t>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </span>
+                            </div>
+                            <div class="col">
+                                <field name="application_count"/>
+                                <t t-if="record.application_count.raw_value == 1"> Applicant</t>
+                                <t t-else=""> Applicants</t>
+                            </div>
+                            <div class="col">
                                 <button class="btn btn-primary" name="%(action_hr_job_applications)d" type="action">
-                                    <field name="new_application_count"/> New Applications
+                                    Job Page
                                 </button>
                             </div>
-                            <div class="col-5">
-                                <a name="edit_job" type="open" t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'text-primary fw-bolder' : 'text-secondary' }}" groups="hr_recruitment.group_hr_recruitment_user">
-                                    <field name="no_of_recruitment"/> To Recruit
-                                </a>
-                                <span t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'text-primary fw-bolder' : 'text-secondary' }}" groups="!hr_recruitment.group_hr_recruitment_user">
-                                    <field name="no_of_recruitment"/> To Recruit
-                                </span>
-                                <div t-if="record.application_count.raw_value > 0">
-                                    <field name="application_count"/> Applications
-                                </div>
-                                <a t-if="record.activities_today.raw_value > 0" name="action_open_today_activities" type="object" class="text-warning"><field name="activities_today"/> Activities Today</a>
-                                <br t-if="record.activities_today.raw_value > 0 and record.activities_overdue.raw_value > 0"/>
-                                <a t-if="record.activities_overdue.raw_value > 0" name="action_open_late_activities" type="object" class="text-danger"><field name="activities_overdue"/> Late Activities</a>
-                            </div>
+                        </div>
+                        <div class="o_kanban_card_bottom">
+                            <a t-if="record.activities_today.raw_value > 0" name="action_open_today_activities" type="object" class="text-warning"><field name="activities_today"/> activities today</a>
+                            <br t-if="record.activities_today.raw_value > 0 and record.activities_overdue.raw_value > 0"/>
+                            <a t-if="record.activities_overdue.raw_value > 0" name="action_open_late_activities" type="object" class="text-danger"><field name="activities_overdue"/> late activities</a>
                         </div>
                         <div name="kanban_boxes" class="row g-0 flex-nowrap mt-auto" groups="hr_recruitment.group_hr_recruitment_user"></div>
                     </t>
