@@ -821,8 +821,8 @@ export class TicketScreen extends Component {
     }
     //#endregion
     getPresetTimeColor(order) {
-        const slot = order.preset_id.actualPreset;
-        const presetTime = DateTime.fromSQL(order.preset_time);
+        const slot = order.preset_id.currentSlot;
+        const presetTime = order.preset_time;
         if (!slot) {
             if (presetTime < DateTime.now()) {
                 return "bg-danger text-white";
@@ -830,9 +830,12 @@ export class TicketScreen extends Component {
                 return "bg-light text-dark";
             }
         }
-        if (slot.start <= presetTime && presetTime < slot.end) {
+        if (
+            slot.datetime <= presetTime &&
+            presetTime < slot.datetime.plus({ minutes: order.preset_id.interval_time })
+        ) {
             return "bg-warning text-dark";
-        } else if (presetTime < slot.start) {
+        } else if (presetTime < slot.datetime) {
             return "bg-danger text-white";
         } else {
             return "bg-light text-dark";
