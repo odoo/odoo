@@ -306,13 +306,13 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickAdd: async function (ev) {
+    async _onClickAdd(ev) {
         ev.preventDefault();
         var def = () => {
             this._updateRootProduct((ev.currentTarget).closest('form'));
             const isBuyNow = ev.currentTarget.classList.contains('o_we_buy_now');
             const isConfigured = ev.currentTarget.parentElement.id === 'add_to_cart_wrap';
-            return this.call('websiteSale', 'addToCart', this.rootProduct, {
+            return this.call('cart', 'add', this.rootProduct, {
                 isBuyNow: isBuyNow,
                 isConfigured: isConfigured,
             });

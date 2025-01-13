@@ -177,7 +177,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
             'input[type="hidden"][name="product_type"]'
         )?.value === 'combo';
 
-        const addToCart = this.call('websiteSale', 'addToCart', {
+        const addToCart = this.call('cart', 'add', {
             productTemplateId: productTemplateId,
             productId: parseInt(productId, 10),
             isCombo: isCombo,

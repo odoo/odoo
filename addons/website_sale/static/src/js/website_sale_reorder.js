@@ -51,7 +51,7 @@ export class ReorderDialog extends Component {
     setup() {
         this.orm = useService("orm");
         this.dialogService = useService("dialog");
-        this.websiteSale = useService("websiteSale");
+        this.cart = useService("cart");
         this.formatCurrency = formatCurrency;
 
         onWillStart(this.onWillStartHandler.bind(this));
@@ -155,7 +155,7 @@ export class ReorderDialog extends Component {
                 continue;
             }
 
-            promises.push(this.websiteSale.addToCart({
+            promises.push(this.cart.add({
                 productTemplateId: product.product_template_id,
                 productId: product.product_id,
                 quantity: product.qty,

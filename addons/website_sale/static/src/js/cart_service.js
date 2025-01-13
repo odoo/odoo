@@ -34,7 +34,7 @@ const { DateTime } = luxon;
  * Override this class to implement additional checks or
  * provide relevant information when adding a product to the cart.
  */
-export class WebsiteSaleService {
+export class CartService {
     static dependencies = ['cartNotificationService', 'dialog'];
 
     /**
@@ -65,14 +65,14 @@ export class WebsiteSaleService {
         this.dialog = services.dialog;
         this.rpc = rpc;  // To be overridable in tests.
 
-        // Only expose `addToCart` in the service registry.
+        // Only expose `add` in the service registry.
         return {
-            addToCart: (...args) => this.addToCart(...args)
+            add: (...args) => this.add(...args)
         };
     }
 
     //--------------------------------------------------------------------------
-    // Public methods
+    // Methods exposed by the service.
     //--------------------------------------------------------------------------
 
     /**
@@ -106,7 +106,7 @@ export class WebsiteSaleService {
      *
      * @returns {Number} - The product's quantity added to the cart.
      */
-    async addToCart({
+    async add({
             productTemplateId,
             productId = undefined,
             quantity = 1,
@@ -149,7 +149,7 @@ export class WebsiteSaleService {
             // (i.e. it has no `no_variant` attributes), then the combo product is already fully
             // configured and the user doesn't need to do anything else.
             if (preselectedComboItems.length === combos.length) {
-                return this._addToCart({
+                return this._makeRequest({
                     productTemplateId: productTemplateId,
                     productId: productId,
                     quantity: remainingData.quantity,
@@ -177,7 +177,7 @@ export class WebsiteSaleService {
         }
 
         if (isBuyNow) {
-            return this._addToCart({
+            return this._makeRequest({
                 productTemplateId,
                 productId,
                 quantity,
@@ -210,7 +210,7 @@ export class WebsiteSaleService {
             );
         }
 
-        return this._addToCart({
+        return this._makeRequest({
             productTemplateId,
             productId,
             quantity,
@@ -264,7 +264,7 @@ export class WebsiteSaleService {
                 options,
                 ...additionalData,
                 save: async (comboProductData, selectedComboItems, options) => {
-                    resolve(this._addToCart({
+                    resolve(this._makeRequest({
                         productTemplateId: productTemplateId,
                         productId: productId,
                         quantity: comboProductData.quantity,
@@ -326,7 +326,7 @@ export class WebsiteSaleService {
                 ...additionalData,
                 save: async (mainProduct, optionalProducts, options) => {
                     const product = this._serializeProduct(mainProduct);
-                    resolve(this._addToCart({
+                    resolve(this._makeRequest({
                         productTemplateId: product.product_template_id,
                         productId: product.product_id,
                         quantity: product.quantity,
@@ -410,27 +410,27 @@ export class WebsiteSaleService {
     //--------------------------------------------------------------------------
 
     /**
-     * Asynchronously adds a product to the shopping cart.
+     * Make a request to the server to add the product to the cart.
      *
      * @async
      * @private
-     * @param {Object} addToCartData - Data containing product(s) to add to the cart and options for
-     *      adding them.
-     * @param {Number} addToCartData.productTemplateId - The product template's id, as a
+     * @param {Object} data - Data containing product(s) to add to the cart and options for adding
+     *      them.
+     * @param {Number} data.productTemplateId - The product template's id, as a
      *      `product.template` id.
-     * @param {Number} addToCartData.productId - The product's id, as a `product.product` id.
-     * @param {Number} addToCartData.quantity - The quantity of the product to add to the cart.
-     * @param {CustomAttributeValues[]} [addToCartData.productCustomAttributeValues=[]] - An
+     * @param {Number} data.productId - The product's id, as a `product.product` id.
+     * @param {Number} data.quantity - The quantity of the product to add to the cart.
+     * @param {CustomAttributeValues[]} [data.productCustomAttributeValues=[]] - An
      *      array of objects representing custom attribute values for the product.
-     * @param {Number[]} [addToCartData.noVariantAttributeValues=[]] - The selected non-stored
+     * @param {Number[]} [data.noVariantAttributeValues=[]] - The selected non-stored
      *      attribute(s), as a list of `product.template.attribute.value` ids.
-     * @param {Boolean} [addToCartData.shouldRedirectToCart=false] - Whether to redirect the
+     * @param {Boolean} [data.shouldRedirectToCart=false] - Whether to redirect the
      *      customer to the cart. Defaults to false.
-     * @param {...*} [addToCartData.rest] - Locally unused data sent to the controllers.
+     * @param {...*} [data.rest] - Locally unused data sent to the controllers.
      *
-     * @returns {Number} - The product's quantity added to the cart.
+     * @returns {Number} - The product's quantity in the cart.
      */
-    async _addToCart({
+    async _makeRequest({
         productTemplateId,
         productId,
         quantity,
@@ -530,12 +530,12 @@ export class WebsiteSaleService {
     }
 }
 
-export const websiteSaleService = {
-    dependencies: WebsiteSaleService.dependencies,
-    async: ['addToCart'],
+export const cartService = {
+    dependencies: CartService.dependencies,
+    async: ['add'],
     start(env, dependencies) {
-        return new WebsiteSaleService(env, dependencies);
+        return new CartService(env, dependencies);
     },
 }
 
-registry.category('services').add('websiteSale', websiteSaleService);
+registry.category('services').add('cart', cartService);

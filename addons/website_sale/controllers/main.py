@@ -637,6 +637,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @route(['/shop/product/is_add_to_cart_allowed'], type='jsonrpc', auth="public", website=True, readonly=True)
     def is_add_to_cart_allowed(self, product_id, **kwargs):
         product = request.env['product.product'].browse(product_id)
+        # In sudo mode to check fields and conditions not accessible to the customer directly.
         return product.sudo()._is_add_to_cart_allowed()
 
     def _product_get_query_url_kwargs(self, category, search, **kwargs):
