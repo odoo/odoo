@@ -83,7 +83,6 @@ class NewLeadNotification(TestCrmCommon):
                     'name': 'New Customer',
                     'email': 'new.customer.format@test.example.com',
                     'partner_id': False,
-                    'reason': 'Customer Email',
                     'create_values': {
                         'company_name': 'Format Name',
                         'is_company': False,
@@ -97,12 +96,16 @@ class NewLeadNotification(TestCrmCommon):
                     'name': 'Multi Name',
                     'email': 'new.customer.multi.1@test.example.com',  # only first found normalized email is kept
                     'partner_id': False,
-                    'reason': 'Customer Email',
                     'create_values': {
                         'is_company': True,
                         'type': 'contact',
                         'user_id': self.user_sales_leads.id,
                     },
+                }, {
+                    'name': '',
+                    'email': 'new.customer.2@test.example.com',  # second found creates another contact
+                    'partner_id': False,
+                    'create_values': {},  # not targeted as primary lead customer hence no values
                 },
             ], [
                 # here contact name -> individual
@@ -110,7 +113,6 @@ class NewLeadNotification(TestCrmCommon):
                     'name': 'Std Name',
                     'email': 'new.customer.simple@test.example.com',
                     'partner_id': False,
-                    'reason': 'Customer Email',
                     'create_values': {
                         'is_company': False,
                         'type': 'contact',
@@ -123,7 +125,6 @@ class NewLeadNotification(TestCrmCommon):
                     'name': 'test.lang@test.example.com',
                     'email': 'test.lang@test.example.com',
                     'partner_id': False,
-                    'reason': 'Customer Email',
                     'create_values': {
                         'is_company': False,
                         'lang': 'en_US',
@@ -135,7 +136,6 @@ class NewLeadNotification(TestCrmCommon):
                     'partner_id': self.contact_1.id,
                     'name': 'Philip J Fry',
                     'email': 'philip.j.fry@test.example.com',
-                    'reason': 'Customer',
                     'create_values': {},
                 },
             ], [
@@ -143,7 +143,6 @@ class NewLeadNotification(TestCrmCommon):
                     'partner_id': partner_no_email.id,
                     'name': 'Test Partner',
                     'email': False,
-                    'reason': 'Customer',
                     'create_values': {},
                 },
             ], [
@@ -151,19 +150,17 @@ class NewLeadNotification(TestCrmCommon):
                     'partner_id': partner_no_email.id,
                     'email': False,
                     'name': 'Test Partner',
-                    'reason': 'Customer',
                     'create_values': {},
                 }, {
                     'name': '',
                     'email': 'test_cc@odoo.com',
                     'partner_id': False,
-                    'reason': 'CC Email',
                     'create_values': {},
                 },
             ],
         ]):
             with self.subTest(lead_name=lead.name, email_from=lead.email_from):
-                res = lead._message_get_suggested_recipients()
+                res = lead._message_get_suggested_recipients(no_create=True)
                 self.assertEqual(len(res), len(expected_suggested))
                 for received, expected in zip(res, expected_suggested):
                     self.assertDictEqual(received, expected)
@@ -215,11 +212,10 @@ class NewLeadNotification(TestCrmCommon):
                     'partner_name': partner_name,
                     **lead_details_for_contact,
                 })
-                suggestion = lead1._message_get_suggested_recipients()[0]
+                suggestion = lead1._message_get_suggested_recipients(no_create=True)[0]
                 self.assertFalse(suggestion.get('partner_id'))
                 self.assertEqual(suggestion['email'], suggested_email)
                 self.assertEqual(suggestion['name'], suggested_name)
-                self.assertEqual(suggestion['reason'], 'Customer Email')
 
                 create_values = suggestion['create_values']
                 customer_information = lead1._get_customer_information().get(email_normalize(email), {})
