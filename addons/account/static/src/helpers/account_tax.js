@@ -135,7 +135,9 @@ export const accountTaxHelpers = {
             if (!special_mode || special_mode === "total_excluded") {
                 if (tax.include_base_amount) {
                     for (const other_tax of get_tax_after()) {
-                        add_extra_base(other_tax, 1);
+                        if (other_tax.is_base_affected) {
+                            add_extra_base(other_tax, 1);
+                        }
                     }
                 }
 

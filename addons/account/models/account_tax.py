@@ -865,7 +865,8 @@ class AccountTax(models.Model):
             if special_mode in (False, 'total_excluded'):
                 if tax.include_base_amount:
                     for other_tax in get_tax_after():
-                        add_extra_base(other_tax, 1)
+                        if other_tax.is_base_affected:
+                            add_extra_base(other_tax, 1)
 
             # Suppose:
             # 1.
