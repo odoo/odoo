@@ -190,6 +190,7 @@ class TestRecruitment(TransactionCase):
             'applicant_ids': [dup1.id],
             'duplicates': True
         }])
+        applicant_get_refuse_reason._onchange_duplicates()
         applicant_get_refuse_reason.action_refuse_reason_apply()
         self.assertFalse(self.env['hr.applicant'].search([('email_from', 'ilike', 'laurie.poiret@aol.ru')]))
         self.assertEqual(

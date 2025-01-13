@@ -5,25 +5,30 @@
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
             <list string="Applicants" class="o_search_matching_applicant" multi_edit="1" sample="1" decoration-danger="application_status == 'refused'" default_order="stage_id">
+                <header>
+                    <button type="object" 
+                        name="archive_applicant" 
+                        string="Refuse" class="btn btn-secondary" 
+                    />
+                </header>
                 <field name="message_needaction" column_invisible="True"/>
                 <field name="last_stage_id" column_invisible="True"/>
                 <field name="date_last_stage_update" column_invisible="True"/>
-                <field name="partner_name" readonly="1" optional="show"/>
-                <field name="create_date" readonly="1" optional="show"/>
-                <field name="type_id" column_invisible="True"/>
+                <field name="partner_name" string="Name" readonly="1" optional="show"/>
+                <field name="priority" widget="priority" nolabel="1" optional="show"/>
+                <field name="create_date" widget="date" readonly="1" optional="show"/>
+                <field name="email_from" readonly="1" optional="hide"/>
+                <field name="partner_phone" widget="phone" readonly="1" optional="hide"/>
                 <field name="job_id" optional="show"/>
+                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                 <field name="stage_id" optional="show"/>
-                <field name="candidate_id" optional="show"/>
+                <field name="type_id" column_invisible="True"/>
                 <field name="application_status" optional="hide" invisible="application_status == 'ongoing'"/>
                 <field name="refuse_reason_id" optional='hide'/>
                 <field name="activity_ids" widget="list_activity" optional="hide"/>
                 <field name="activity_date_deadline" optional="hide"/>
-                <field name="priority" widget="priority" optional="show"/>
-                <field name="email_from" readonly="1" optional="hide"/>
-                <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
-                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
                 <field name="interviewer_ids" widget="many2many_avatar_user" optional="hide"/>
-                <field name="partner_phone" widget="phone" readonly="1" optional="hide"/>
                 <field name="medium_id" optional="hide"/>
                 <field name="source_id" readonly="1" optional="hide"/>
                 <field name="salary_expected" optional="hide"/>
@@ -107,12 +112,16 @@
                 <field name="legend_blocked" invisible="1"/>
                 <field name="legend_done" invisible="1"/>
                 <field name="kanban_state" widget="state_selection" invisible="application_status == 'refused' or application_status == 'archived'"/>
-                <field name="priority" widget="priority"/>
                 <div class="oe_title pe-0">
                     <label for="candidate_id" class="oe_edit_only"/>
-                    <h1 class="d-flex justify-content-between align-items-center">
-                        <field name="candidate_id" options="{'line_breaks': False}" context="{'default_company_id': company_id}"/>
-                    </h1>
+                    <div class="d-flex align-items-end">
+                        <h1 class="me-4">
+                            <field name="candidate_id" options="{'line_breaks': False}" context="{'default_company_id': company_id}"/>
+                        </h1>
+                        <h2>
+                            <field name="priority" widget="priority"/>
+                        </h2>
+                    </div>
                 </div>
                 <group>
                     <group>
@@ -128,13 +137,13 @@
                         <field name="user_id" widget="many2one_avatar_user" placeholder="Unassigned"/>
                         <field name="interviewer_ids" options="{'no_create': True, 'no_create_edit': True}" widget="many2many_avatar_user" placeholder="Who can access candidates" />
                         <field name="date_closed" invisible="not date_closed" />
-                        <field name="categ_ids" placeholder="Tags" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                        <field name="categ_ids" placeholder="e.g. Trainee" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                     </group>
                 </group>
                 <field name="applicant_properties" columns="2"/>
                 <notebook>
                     <page string="Note" name="application_note">
-                        <field name="applicant_notes" type="html" options="{'collaborative': true, 'resizable': false}" placeholder="Internal notes..."/>
+                        <field name="applicant_notes" type="html" options="{'collaborative': true, 'resizable': false}" placeholder="Add private notes about this applicant..."/>
                     </page>
                     <page string="Details" name="application_details">
                         <group>
@@ -597,18 +606,6 @@
         <field name="binding_view_types">list</field>
         <field name="state">code</field>
         <field name="code">action = records.action_send_email()</field>
-    </record>
-
-    <record id="ir_actions_server_refuse_applicant" model="ir.actions.server">
-        <field name="name">Refuse</field>
-        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
-        <field name="binding_model_id" ref="hr_recruitment.model_hr_applicant"/>
-        <field name="binding_view_types">list,form</field>
-        <field name="state">code</field>
-        <field name="code">
-if records:
-    action = records.archive_applicant()
-        </field>
     </record>
 
     <!-- Custom reports (aka filters) -->
