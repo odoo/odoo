@@ -41,7 +41,7 @@ export class ControlButtons extends Component {
                 item: "none",
             },
         ];
-        for (const fiscalPos of this.pos.models["account.fiscal.position"].getAll()) {
+        for (const fiscalPos of this.pos.models["pos.config"].getFirst().fiscal_position_ids) {
             fiscalPosList.push({
                 id: fiscalPos.id,
                 label: fiscalPos.name,

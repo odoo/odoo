@@ -8,7 +8,8 @@ class AccountFiscalPosition(models.Model):
     @api.model
     def _load_pos_data_domain(self, data):
         fp_ids = [preset['fiscal_position_id'] for preset in data['pos.preset']]
-        return [('id', 'in', data['pos.config'][0]['fiscal_position_ids'] + fp_ids)]
+        partner_fp_ids = list({partner['fiscal_position_id'] for partner in data['res.partner'] if partner['fiscal_position_id']}) if 'res.partner' in data.keys() else []
+        return [('id', 'in', data['pos.config'][0]['fiscal_position_ids'] + fp_ids + partner_fp_ids)]
 
     @api.model
     def _load_pos_data_fields(self, config_id):
