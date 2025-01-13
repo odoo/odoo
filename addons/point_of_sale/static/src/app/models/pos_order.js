@@ -839,9 +839,9 @@ export class PosOrder extends Base {
         );
 
         if (newPartner) {
-            newPartnerFiscalPosition = newPartner.property_account_position_id
+            newPartnerFiscalPosition = newPartner.fiscal_position_id
                 ? this.models["account.fiscal.position"].find(
-                      (position) => position.id === newPartner.property_account_position_id?.id
+                      (position) => position.id === newPartner.fiscal_position_id?.id
                   )
                 : defaultFiscalPosition;
             newPartnerPricelist =
