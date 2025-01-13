@@ -25,38 +25,40 @@
                     class="col-form-label"
                     t-out="props.attributes.sourceTypeLabel"
                 /><br/>
-                <div class="form-check ms-2">
-                    <input
-                        class="form-check-input"
-                        type="radio"
-                        name="source_type"
-                        id="source_type_local_file"
-                        data-value="local_file"
-                        checked="checked"
-                        t-on-click="() => props.onClickSourceType(true)"
-                    />
-                    <label
-                        class="form-check-label fw-normal"
-                        for="source_type_local_file"
-                    >
-                        Upload from Device
-                    </label>
-                </div>
-                <div class="form-check ms-2">
-                    <input
-                        class="form-check-input"
-                        type="radio"
-                        name="source_type"
-                        id="source_type_external"
-                        data-value="external"
-                        t-on-click="() => props.onClickSourceType(false)"
-                    />
-                    <label
-                        class="form-check-label fw-normal"
-                        for="source_type_external"
-                    >
-                        Retrieve from Google Drive
-                    </label>
+                <div class="d-flex flex-wrap">
+                    <div class="form-check ms-2">
+                        <input
+                            class="form-check-input"
+                            type="radio"
+                            name="source_type"
+                            id="source_type_local_file"
+                            data-value="local_file"
+                            checked="checked"
+                            t-on-click="() => props.onClickSourceType(true)"
+                        />
+                        <label
+                            class="form-check-label fw-normal"
+                            for="source_type_local_file"
+                        >
+                            Upload from Device
+                        </label>
+                    </div>
+                    <div class="form-check ms-2">
+                        <input
+                            class="form-check-input"
+                            type="radio"
+                            name="source_type"
+                            id="source_type_external"
+                            data-value="external"
+                            t-on-click="() => props.onClickSourceType(false)"
+                        />
+                        <label
+                            class="form-check-label fw-normal"
+                            for="source_type_external"
+                        >
+                            Retrieve from Google Drive
+                        </label>
+                    </div>
                 </div>
             </div>
             <div t-if="props.isLocalSource" class="mb-3">
