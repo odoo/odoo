@@ -364,14 +364,14 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/all', '/slides/all/tag/<string:slug_tags>'], type='http', auth="public", website=True, sitemap=True)
     def slides_channel_all(self, slide_category=None, slug_tags=None, my=False, **post):
-        if slug_tags and request.httprequest.method == 'GET':
+        # Checking referrer and search to see if the GET request is from
+        # a SEO bot, in which case every tag but one should be removed to
+        # avoid combinatorial explosion
+        if slug_tags and request.httprequest.method == 'GET' and not request.httprequest.referrer and not post.get('search'):
             # Redirect `tag-1,tag-2` to `tag-1` to disallow multi tags
             # in GET request for proper bot indexation;
-            # if the search term is available, do not remove any existing
-            # tags because it is user who provided search term with GET
-            # request and so clearly it's not SEO bot.
             tag_list = slug_tags.split(',')
-            if len(tag_list) > 1 and not post.get('search'):
+            if len(tag_list) > 1:
                 url = QueryURL('/slides/all', ['tag'], tag=tag_list[0], my=my, slide_category=slide_category)()
                 return request.redirect(url, code=302)
         render_values = self.slides_channel_all_values(slide_category=slide_category, slug_tags=slug_tags, my=my, **post)
