@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
 from odoo.fields import Datetime, Date
 from odoo.addons.hr_contract.tests.common import TestContractCommon
 
@@ -82,3 +83,22 @@ class TestContractCalendars(TestContractCommon):
         self.calendar_richard.transfer_leaves_to(self.calendar_35h, resources=None, from_date=Date.to_date('2015-11-21'))
 
         self.assertEqual(leave3.calendar_id, self.calendar_35h, "Global leave should be transfered")
+
+    def test_get_calendar_tz(self):
+        """ Test that for an employee whose schedule becomes out of sync with their contract's
+            ``_get_calendar_tz_batch`` prioritizes the contracts
+        """
+        self.contract_cdd.date_end = False
+        self.contract_cdd.state = 'open'
+        self.employee.resource_calendar_id = self.calendar_richard
+        self.calendar_richard.tz = 'America/New_York'
+        self.assertEqual(self.employee.resource_calendar_id, self.calendar_richard)
+        self.assertEqual(self.employee.contract_id.resource_calendar_id, self.calendar_35h)
+        self.assertEqual(
+            self.employee._get_calendar_tz_batch(datetime.now())[self.employee.id],
+            self.calendar_35h.tz
+        )
+        self.assertEqual(
+            self.employee._get_calendar_tz_batch()[self.employee.id],
+            'America/New_York'
+        )
