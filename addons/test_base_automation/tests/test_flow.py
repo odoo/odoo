@@ -34,6 +34,7 @@ def create_automation(self, **kwargs):
             for action in actions_data
         ]
     )
+    action_ids.flush_recordset()
     automation_id.write({'action_server_ids': [Command.set(action_ids.ids)]})
     self.addCleanup(automation_id.unlink)
     return automation_id
