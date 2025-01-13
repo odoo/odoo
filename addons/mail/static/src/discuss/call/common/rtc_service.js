@@ -469,9 +469,11 @@ export class Rtc extends Record {
      * @param {import("models").Thread} channel
      * @param {Object} [initialState={}]
      * @param {boolean} [initialState.audio]
+     * @param {{ exit: () => {} }} [initialState.fullscreen] if set, the call view is using fullscreen.
+     *   Providing fullscreen object allows to exit on call leave.
      * @param {boolean} [initialState.camera]
      */
-    async toggleCall(channel, { audio = true, camera } = {}) {
+    async toggleCall(channel, { audio = true, fullscreen, camera } = {}) {
         await Promise.resolve(() =>
             loadJS(url("/mail/static/lib/selfie_segmentation/selfie_segmentation.js")).catch(
                 () => {}
@@ -482,6 +484,7 @@ export class Rtc extends Record {
         }
         const isActiveCall = channel.eq(this.state.channel);
         if (this.state.channel) {
+            fullscreen?.exit();
             await this.leaveCall(this.state.channel);
         }
         if (!isActiveCall) {
