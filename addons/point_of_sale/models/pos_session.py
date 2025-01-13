@@ -1664,8 +1664,8 @@ class PosSession(models.Model):
         if cash_payment_method_ids:
             self.opening_notes = notes
             difference = cashbox_value - self.cash_register_balance_start
-            self.cash_register_balance_start = cashbox_value
             self._post_cash_details_message('Opening cash', self.cash_register_balance_start, difference, notes)
+            self.cash_register_balance_start = cashbox_value
         elif notes:
             message = _('Opening control message: ')
             message += notes
