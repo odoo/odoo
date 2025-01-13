@@ -4,7 +4,14 @@ import {App, whenReady, Component, useState} from "@odoo/owl";
 import { CardLayout } from "@hr_attendance/components/card_layout/card_layout";
 import { KioskManualSelection } from "@hr_attendance/components/manual_selection/manual_selection";
 import { makeEnv, startServices } from "@web/env";
+<<<<<<< saas-17.2
 import { getTemplate } from "@web/core/templates";
+||||||| 10659d6d9daec3ad1ad412e80c7dd0471061241e
+import { templates } from "@web/core/assets";
+=======
+import { templates } from "@web/core/assets";
+import { isIosApp } from "@web/core/browser/feature_detection";
+>>>>>>> 91835fc59d6f1bee1c4eb24bcd07059f2ec5ef28
 import { _t } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { rpc } from "@web/core/network/rpc";
@@ -88,8 +95,43 @@ class kioskAttendanceApp extends Component{
         this.notification.add(text, { type: "danger" });
     }
 
+<<<<<<< saas-17.2
     async onManualSelection(employeeId, enteredPin){
         const result = await rpc('manual_selection',
+||||||| 10659d6d9daec3ad1ad412e80c7dd0471061241e
+    async onManualSelection(employeeId, enteredPin){
+        const result = await this.rpc('manual_selection',
+=======
+    async makeRpcWithGeolocation(route, params) {
+        if (!isIosApp()) { // iOS app lacks permissions to call `getCurrentPosition`
+            return new Promise((resolve) => {
+                navigator.geolocation.getCurrentPosition(
+                    async ({ coords: { latitude, longitude } }) => {
+                        const result = await this.rpc(route, {
+                            ...params,
+                            latitude,
+                            longitude,
+                        });
+                        resolve(result);
+                    },
+                    async (err) => {
+                        const result = await this.rpc(route, {
+                            ...params
+                        });
+                        resolve(result);
+                    },
+                    { enableHighAccuracy: true }
+                );
+            });
+        }
+        else {
+            return this.rpc(route, {...params})
+        }
+    }
+
+    async onManualSelection(employeeId, enteredPin) {
+        const result = await this.makeRpcWithGeolocation('manual_selection',
+>>>>>>> 91835fc59d6f1bee1c4eb24bcd07059f2ec5ef28
             {
                 'token': this.props.token,
                 'employee_id': employeeId,
