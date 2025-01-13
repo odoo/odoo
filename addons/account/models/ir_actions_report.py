@@ -38,10 +38,12 @@ class IrActionsReport(models.Model):
                             "There was an error when trying to add the banner to the original PDF.\n"
                             "Please make sure the source file is valid."
                         ))
-                collected_streams[invoice.id] = {
-                    'stream': stream,
-                    'attachment': attachment,
-                }
+                    collected_streams[invoice.id] = {
+                        'stream': stream,
+                        'attachment': attachment,
+                    }
+        if not collected_streams:
+            raise UserError(_("No original purchase document can be converted to PDF."))
         return collected_streams
 
     def _is_invoice_report(self, report_ref):
