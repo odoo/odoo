@@ -247,30 +247,6 @@ test("can share user camera", async () => {
     await contains("video", { count: 0 });
 });
 
-test("Card should remain in focus after Share Screen is toggled", async () => {
-    mockGetMedia();
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    await start();
-    await openDiscuss(channelId);
-    await click("[title='Start a Call']");
-    await contains(".o-discuss-Call.o-minimized"); // minimized = no card focused
-    await click(".o-discuss-CallParticipantCard-avatar");
-    await contains(
-        ".o-discuss-Call:not(.o-minimized) .o-discuss-CallParticipantCard:not(.o-inset) img" // inset = aside, not inset = center
-    );
-    await click("[title='Share Screen']");
-    await contains(".o-discuss-CallParticipantCard.o-inset img");
-    await contains(
-        ".o-discuss-Call:not(.o-minimized) .o-discuss-CallParticipantCard:not(.o-inset) video[type='screen']"
-    );
-    await click("[title='Stop Sharing Screen']");
-    await contains(".o-discuss-CallParticipantCard.o-inset", { count: 0 });
-    await contains(
-        ".o-discuss-Call:not(.o-minimized) .o-discuss-CallParticipantCard:not(.o-inset) img"
-    );
-});
-
 test("Camera video stream stays in focus when on/off", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
@@ -581,4 +557,35 @@ test("Use saved volume settings", async () => {
     const rangeInput = queryFirst(".o-discuss-CallContextMenu input[type='range']");
     expect(rangeInput.value).toBe(expectedVolume.toString());
     await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
+});
+
+test("show call participants after stopping screen share", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start a Call']");
+    await click("[title='Share Screen']");
+    await contains("video");
+    await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
+    await click("[title='Stop Sharing Screen']");
+    await contains("video", { count: 0 });
+    // when all participant cards are shown they are minimized
+    await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard .o-minimized");
+});
+
+test("show call participants after stopping camera share", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start a Call']");
+    await click("[title='Turn camera on']");
+    await contains("video");
+    await click("[title='Stop camera']");
+    await contains("video", { count: 0 });
+    // when all participant cards are shown they are minimized
+    await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard .o-minimized");
 });
