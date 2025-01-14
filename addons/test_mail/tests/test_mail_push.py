@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import json
 import socket
 
@@ -41,6 +38,12 @@ class TestWebPushNotification(SMSCommon):
             cls.user_email.partner_id.id,
             cls.user_inbox.partner_id.id,
         ])
+        cls.alias_gateway = cls.env['mail.alias'].create({
+            'alias_contact': 'everyone',
+            'alias_domain': cls.mail_alias_domain.id,
+            'alias_model_id': cls.env['ir.model']._get_id('mail.test.gateway.company'),
+            'alias_name': 'alias.gateway',
+        })
 
         # generate keys and devices
         cls.vapid_public_key = cls.env['mail.push.device'].get_web_push_vapid_public_key()
@@ -278,75 +281,58 @@ class TestWebPushNotification(SMSCommon):
         )
         push_to_end_point.assert_not_called()
 
-    @patch.object(odoo.addons.mail.models.mail_thread, 'push_to_end_point')
     @mute_logger('odoo.addons.mail.models.mail_thread')
-    def test_notify_by_push_mail_gateway(self, push_to_end_point):
-        test_record = self.env['mail.test.gateway'].with_context(self._test_context).create({
-            'name': 'Test',
-            'email_from': 'ignasse@example.com',
-        })
+    def test_notify_by_push_mail_gateway(self):
+        """ Check mail gateway push notifications """
+        with self.mock_mail_gateway():
+            test_record = self.format_and_process(
+                MAIL_TEMPLATE, self.user_email.email_formatted,
+                f'{self.alias_gateway.display_name}, {self.user_inbox.email_formatted}',
+                subject='Test Record Creation',
+                target_model='mail.test.gateway.company',
+            )
+        self.assertEqual(len(test_record.message_ids), 1)
+        self.assertEqual(test_record.message_partner_ids, self.user_email.partner_id)
         test_record.message_subscribe(partner_ids=[self.user_inbox.partner_id.id])
 
-        fake_email = self.env['mail.message'].create({
-            'model': 'mail.test.gateway',
-            'res_id': test_record.id,
-            'subject': 'Public Discussion',
-            'message_type': 'email',
-            'subtype_id': self.env.ref('mail.mt_comment').id,
-            'author_id': self.user_email.partner_id.id,
-            'message_id': '<123456-openerp-%s-mail.test.gateway@%s>' % (test_record.id, socket.gethostname()),
-        })
-
-        self.format_and_process(
-            MAIL_TEMPLATE, self.user_email.email_formatted,
-            self.user_inbox.email_formatted,
-            subject='Test Subject Reply By mail',
-            extra='In-Reply-To:\r\n\t%s\n' % fake_email.message_id,
-        )
-        self._assert_notification_count_for_cron(0)
-        push_to_end_point.assert_called_once()
-        payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
-        self.assertIn(self.user_email.name, payload_value['title'])
-        self.assertIn(
-            'Please call me as soon as possible this afternoon!\n\n--\nSylvie',
-            payload_value['options']['body'],
-            'The body must contain the text send by mail'
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                MAIL_TEMPLATE, self.user_email.email_formatted,
+                f'{self.alias_gateway.display_name}, {self.user_inbox.email_formatted}',
+                subject='Repy By Email',
+                extra='In-Reply-To:\r\n\t%s\n' % test_record.message_ids.message_id,
+            )
+        self.assertPushNotification(
+            mail_push_count=0, title_content=self.user_email.name,
+            body_content='Please call me as soon as possible this afternoon!\n\n--\nSylvie',
         )
 
-    @patch.object(odoo.addons.mail.models.mail_thread, 'push_to_end_point')
     @mute_logger('odoo.tests')
-    def test_notify_by_push_message_notify(self, push_to_end_point):
+    def test_notify_by_push_message_notify(self):
         """ In case of notification, only inbox users are notified """
         for recipient, has_notification in [(self.user_email, False), (self.user_inbox, True)]:
             with self.subTest(recipient=recipient):
-                self.record_simple.with_user(self.user_admin).message_notify(
-                    body='Test Push Notif',
-                    partner_ids=recipient.partner_id.ids,
-                    record_name=self.record_simple.display_name,
-                    subject='Test Push Notification',
-                )
+                with self.mock_mail_gateway():
+                    self.record_simple.with_user(self.user_admin).message_notify(
+                        body='Test Push Body',
+                        partner_ids=recipient.partner_id.ids,
+                        record_name=self.record_simple.display_name,
+                        subject='Test Push Notification',
+                    )
                 # not using cron, as max 1 push notif -> direct send
                 self._assert_notification_count_for_cron(0)
                 if has_notification:
-                    push_to_end_point.assert_called_once()
-                    payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
-                    self.assertEqual(
-                        payload_value['title'],
-                        f'{self.user_admin.name}: {self.record_simple.display_name}'
+                    self.assertPushNotification(
+                        mail_push_count=0,
+                        endpoint='https://test.odoo.com/webpush/user2', keys=('vapid_private_key', 'vapid_public_key'),
+                        title=f'{self.user_admin.name}: {self.record_simple.display_name}',
+                        body_content='Test Push Body',
+                        options={
+                            'data': {'model': self.record_simple._name, 'res_id': self.record_simple.id,},
+                        },
                     )
-                    self.assertEqual(
-                        payload_value['options']['icon'],
-                        f'/web/image/res.partner/{self.user_admin.partner_id.id}/avatar_128'
-                    )
-                    self.assertEqual(payload_value['options']['body'], 'Test Push Notif')
-                    self.assertEqual(payload_value['options']['data']['res_id'], self.record_simple.id)
-                    self.assertEqual(payload_value['options']['data']['model'], self.record_simple._name)
-                    self.assertEqual(push_to_end_point.call_args.kwargs['device']['endpoint'], 'https://test.odoo.com/webpush/user2')
-                    self.assertIn('vapid_private_key', push_to_end_point.call_args.kwargs)
-                    self.assertIn('vapid_public_key', push_to_end_point.call_args.kwargs)
                 else:
-                    push_to_end_point.assert_not_called()
-                push_to_end_point.reset_mock()
+                    self.assertNoPushNotification()
 
     @patch.object(odoo.addons.mail.models.mail_thread, 'push_to_end_point')
     @mute_logger('odoo.tests')

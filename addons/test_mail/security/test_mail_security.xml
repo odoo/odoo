@@ -96,6 +96,18 @@
         <field name="domain_force">[('message_partner_ids', 'in', [user.partner_id.id])]</field>
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
     </record>
+    <record id="mail_test_ticket_partner_rule" model="ir.rule">
+        <field name="name">Mail Test Ticket Multi Company Partner</field>
+        <field name="model_id" ref="test_mail.model_mail_test_ticket_partner"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+    <record id="mail_test_ticket_partner_rule_portal" model="ir.rule">
+        <field name="name">Portal Mail Test Ticket Multi Company Partner</field>
+        <field name="model_id" ref="test_mail.model_mail_test_ticket_partner"/>
+        <field name="domain_force">[('message_partner_ids', 'in', [user.partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
 
     <!-- MAIL.TEST.CONTAINER(.*) (PROJECT-LIKE) -->
     <record id="mail_test_container_rule_portal" model="ir.rule">
