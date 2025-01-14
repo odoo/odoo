@@ -53,6 +53,7 @@ There are 2 main Payment Methods additions:
         'security/security.xml',
         'views/account_payment_view.xml',
         'views/l10n_latam_check_view.xml',
+        'views/report_payment_receipt_templates.xml',
         'wizards/account_payment_register_views.xml',
     ],
     'installable': True,
