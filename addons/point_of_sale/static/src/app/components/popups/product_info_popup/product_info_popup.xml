@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ProductInfoPopup">
-        <Dialog title="props.productTemplate.display_name">
+        <Dialog title="props.productTemplate.display_name + ' | ' + env.utils.formatCurrency(props.info.productInfo.all_prices.price_with_tax)">
             <div class="section-public-description mt-3 mb-4 pb-4 border-bottom text-start" t-if="props.productTemplate.productDescriptionMarkup">
                 <h3 class="section-title">
                     Description
