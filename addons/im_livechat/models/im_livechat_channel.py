@@ -247,6 +247,9 @@ class ImLivechatChannel(models.Model):
         """
         if not self.available_operator_ids:
             return False
+        # FIXME: remove inactive call sessions so operators no longer in call are available
+        # sudo: required to use garbage collecting function.
+        self.env["discuss.channel.rtc.session"].sudo()._gc_inactive_sessions()
         self.env.cr.execute("""
             WITH operator_rtc_session AS (
                 SELECT COUNT(DISTINCT s.id) as nbr, member.partner_id as partner_id
