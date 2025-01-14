@@ -59,17 +59,17 @@ class StockMove(models.Model):
         help='Quantity in the default UoM of the product')
     product_uom_qty = fields.Float(
         'Demand',
-        digits='Product Unit of Measure',
+        digits='Product Unit',
         default=0, required=True,
         help="This is the quantity of product that is planned to be moved."
              "Lowering this quantity does not generate a backorder."
              "Changing this quantity on assigned moves affects "
              "the product reservation, and should be done with care.")
+    allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     product_uom = fields.Many2one(
-        'uom.uom', "UoM", required=True, domain="[('category_id', '=', product_uom_category_id)]",
+        'uom.uom', "Unit", required=True, domain="[('id', 'in', allowed_uom_ids)]",
         compute="_compute_product_uom", store=True, readonly=False, precompute=True,
     )
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     # TDE FIXME: make it stored, otherwise group will not work
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template',
@@ -167,7 +167,7 @@ class StockMove(models.Model):
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help="the warehouse to consider for the route selection on the next procurement (if any).")
     has_tracking = fields.Selection(related='product_id.tracking', string='Product with Tracking')
     quantity = fields.Float(
-        'Quantity', compute='_compute_quantity', digits='Product Unit of Measure', inverse='_set_quantity', store=True)
+        'Quantity', compute='_compute_quantity', digits='Product Unit', inverse='_set_quantity', store=True)
     # TODO: delete this field `show_operations`
     show_operations = fields.Boolean(related='picking_id.picking_type_id.show_operations')
     picking_code = fields.Selection(related='picking_id.picking_type_id.code', readonly=True)
@@ -186,19 +186,22 @@ class StockMove(models.Model):
     next_serial = fields.Char('First SN/Lot')
     next_serial_count = fields.Integer('Number of SN/Lots')
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Original Reordering Rule', index=True)
-    forecast_availability = fields.Float('Forecast Availability', compute='_compute_forecast_information', digits='Product Unit of Measure', compute_sudo=True)
+    forecast_availability = fields.Float('Forecast Availability', compute='_compute_forecast_information', digits='Product Unit', compute_sudo=True)
     forecast_expected_date = fields.Datetime('Forecasted Expected date', compute='_compute_forecast_information', compute_sudo=True)
     lot_ids = fields.Many2many('stock.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', string='Serial Numbers', readonly=False)
     reservation_date = fields.Date('Date to Reserve', compute='_compute_reservation_date', store=True, help="Computes when a move should be reserved")
-    product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
-    product_packaging_qty = fields.Float(string="Reserved Packaging Quantity", compute='_compute_product_packaging_qty')
-    product_packaging_quantity = fields.Float(
-        string="Done Packaging Quantity", compute='_compute_product_packaging_quantity')
+    packaging_uom_id = fields.Many2one('uom.uom', 'Packaging', help="Packaging unit from sale or purchase orders", compute='_compute_packaging_uom_id', precompute=True, recursive=True, store=True)
+    packaging_uom_qty = fields.Float('Packaging Quantity', help="Quantity in the packaging unit", compute='_compute_packaging_uom_qty', store=True)
     show_quant = fields.Boolean("Show Quant", compute="_compute_show_info")
     show_lots_m2o = fields.Boolean("Show lot_id", compute="_compute_show_info")
     show_lots_text = fields.Boolean("Show lot_name", compute="_compute_show_info")
 
     _product_location_index = models.Index("(product_id, location_id, location_dest_id, company_id, state)")
+
+    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids')
+    def _compute_allowed_uom_ids(self):
+        for move in self:
+            move.allowed_uom_ids = move.product_id.uom_id | move.product_id.uom_ids
 
     @api.depends('product_id')
     def _compute_product_uom(self):
@@ -333,22 +336,6 @@ class StockMove(models.Model):
         for move in self.filtered(lambda m: m.picking_id):
             move.partner_id = move.picking_id.partner_id
 
-    @api.depends('product_packaging_id', 'product_uom', 'product_qty')
-    def _compute_product_packaging_qty(self):
-        self.product_packaging_qty = False
-        for move in self:
-            if not move.product_packaging_id:
-                continue
-            move.product_packaging_qty = move.product_packaging_id._compute_qty(move.product_qty)
-
-    @api.depends('product_packaging_id', 'product_uom', 'quantity')
-    def _compute_product_packaging_quantity(self):
-        self.product_packaging_quantity = False
-        for move in self:
-            if not move.product_packaging_id:
-                continue
-            move.product_packaging_quantity = move.product_packaging_id._compute_qty(move.quantity, move.product_uom)
-
     @api.depends('move_orig_ids.date', 'move_orig_ids.state', 'state', 'date')
     def _compute_delay_alert_date(self):
         for move in self:
@@ -424,15 +411,14 @@ class StockMove(models.Model):
             move._set_quantity_done(move.quantity)
 
         err = []
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit')
         for move in self:
-            uom_qty = float_round(move.quantity, precision_rounding=move.product_uom.rounding, rounding_method='HALF-UP')
-            precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            qty = float_round(move.quantity, precision_digits=precision_digits, rounding_method='HALF-UP')
-            if float_compare(uom_qty, qty, precision_digits=precision_digits) != 0:
+            rounded_qty = float_round(move.quantity, precision_digits=precision_digits, rounding_method='HALF-UP')
+            if float_compare(rounded_qty, move.quantity, precision_digits=precision_digits) != 0:
                 err.append(_("""
-The quantity done for the product %(product)s doesn't respect the rounding precision defined on the unit of measure %(unit)s.
-Please change the quantity done or the rounding precision of your unit of measure.""",
-                             product=move.product_id.display_name, unit=move.product_uom.display_name))
+The quantity done for the product %(product)s doesn't respect the rounding precision defined on the system.
+Please change the quantity done or the rounding precision in your settings.""",
+                             product=move.product_id.display_name))
                 continue
             delta_qty = move.quantity - move._quantity_sml()
             if float_compare(delta_qty, 0, precision_rounding=move.product_uom.rounding) > 0:
@@ -604,6 +590,22 @@ Please change the quantity done or the rounding precision of your unit of measur
                     days = move.picking_type_id.reservation_days_before_priority
                 move.reservation_date = fields.Date.to_date(move.date) - timedelta(days=days)
 
+    @api.depends('product_uom', 'move_orig_ids', 'move_dest_ids', 'move_orig_ids.packaging_uom_id', 'move_dest_ids.packaging_uom_id')
+    def _compute_packaging_uom_id(self):
+        for move in self:
+            if move.move_orig_ids.packaging_uom_id:
+                move.packaging_uom_id = move.move_orig_ids[0].packaging_uom_id
+            elif move.move_dest_ids.packaging_uom_id:
+                move.packaging_uom_id = move.move_dest_ids[0].packaging_uom_id
+            else:
+                move.packaging_uom_id = move.product_uom
+
+    @api.depends('product_uom_qty', 'packaging_uom_id')
+    def _compute_packaging_uom_qty(self):
+        for move in self:
+            if move.packaging_uom_id:
+                move.packaging_uom_qty = move.product_uom._compute_quantity(move.product_uom_qty, move.packaging_uom_id)
+
     @api.depends(
         'has_tracking',
         'picking_type_id.use_create_lots',
@@ -626,25 +628,6 @@ Please change the quantity done or the rounding precision of your unit of measur
                 and not move.show_lots_text\
                 and move.has_tracking != 'none'\
                 and (move.picking_type_id.use_existing_lots or move.state == 'done' or move.origin_returned_move_id.id)
-
-    @api.constrains('product_uom')
-    def _check_uom(self):
-        moves_error = self.filtered(lambda move: move.product_id.uom_id.category_id != move.product_uom.category_id)
-        if moves_error:
-            user_warnings = [
-                _('You cannot perform moves because their unit of measure has a different category from their product unit of measure.'),
-                *(
-                    _('%(product_name)s --> Product UoM is %(product_uom)s (%(product_uom_category)s) - Move UoM is %(move_uom)s (%(move_uom_category)s)',
-                      product_name=move.product_id.display_name,
-                      product_uom=move.product_id.uom_id.name,
-                      product_uom_category=move.product_id.uom_id.category_id.name,
-                      move_uom=move.product_uom.name,
-                      move_uom_category=move.product_uom.category_id.name)
-                    for move in moves_error
-                ),
-                _('Blocking: %s', ' ,'.join(moves_error.mapped('name')))
-            ]
-            raise UserError('\n\n'.join(user_warnings))
 
     @api.model
     def default_get(self, fields_list):
@@ -712,9 +695,6 @@ Please change the quantity done or the rounding precision of your unit of measur
                         m.state in ('partially_available', 'assigned')
                 )
                 move_to_recompute_state |= self - move_to_unreserve - receipt_moves_to_reassign
-        # propagate product_packaging_id changes in the stock move chain
-        if 'product_packaging_id' in vals:
-            self._propagate_product_packaging(vals['product_packaging_id'])
         if 'date_deadline' in vals:
             self._set_date_deadline(vals.get('date_deadline'))
         if 'move_orig_ids' in vals:
@@ -750,29 +730,6 @@ Please change the quantity done or the rounding precision of your unit of measur
         if receipt_moves_to_reassign:
             receipt_moves_to_reassign._action_assign()
         return res
-
-    def _propagate_product_packaging(self, product_package_id):
-        """
-        Propagate the product_packaging_id of a move to its destination and origin.
-        If there is a bifurcation in the chain we do not propagate the package.
-        """
-        already_propagated_ids = self.env.context.get('product_packaging_propagation_ids', set()) | set(self.ids)
-        self = self.with_context(product_packaging_propagation_ids=already_propagated_ids)
-        for move in self:
-            # propagate on destination move
-            for move_dest in move.move_dest_ids:
-                if move_dest.id not in already_propagated_ids and \
-                        move_dest.state not in ['cancel', 'done'] and \
-                        move_dest.product_packaging_id.id != product_package_id and \
-                        move_dest.move_orig_ids == move:  # checks that you are the only parent move of your destination
-                    move_dest.product_packaging_id = product_package_id
-            # propagate on origin move
-            for move_orig in move.move_orig_ids:
-                if move_orig.id not in already_propagated_ids and \
-                        move_orig.state not in ['cancel', 'done'] and \
-                        move_orig.product_packaging_id.id != product_package_id and \
-                        move_orig.move_dest_ids == move:  # checks that you are the only child move of your origin
-                    move_orig.product_packaging_id = product_package_id
 
     def _delay_alert_get_documents(self):
         """Returns a list of recordset of the documents linked to the stock.move in `self` in order
@@ -1046,14 +1003,14 @@ Please change the quantity done or the rounding precision of your unit of measur
                 warehouse_id = False
 
             rule = ProcurementGroup._get_push_rule(move.product_id, move.location_dest_id, {
-                'route_ids': move.route_ids, 'product_packaging_id': move.product_packaging_id, 'warehouse_id': warehouse_id,
+                'route_ids': move.route_ids | move.move_line_ids.result_package_id.package_type_id.route_ids, 'warehouse_id': warehouse_id, 'packaging_uom_id': move.packaging_uom_id,
             })
 
             excluded_rule_ids = []
             while (rule and rule.push_domain and not move.filtered_domain(literal_eval(rule.push_domain))):
                 excluded_rule_ids.append(rule.id)
                 rule = ProcurementGroup._get_push_rule(move.product_id, move.location_dest_id, {
-                    'route_ids': move.route_ids, 'product_packaging_id': move.product_packaging_id, 'warehouse_id': warehouse_id,
+                    'route_ids': move.route_ids | move.move_line_ids.result_package_id.package_type_id.route_ids, 'warehouse_id': warehouse_id, 'packaging_uom_id': move.packaging_uom_id,
                     'domain': [('id', 'not in', excluded_rule_ids)],
                 })
 
@@ -1099,7 +1056,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             'product_id', 'price_unit', 'procure_method', 'location_id', 'location_dest_id', 'location_final_id',
             'product_uom', 'restrict_partner_id', 'scrapped', 'origin_returned_move_id',
             'package_level_id', 'propagate_cancel', 'description_picking',
-            'product_packaging_id', 'never_product_template_attribute_value_ids',
+            'never_product_template_attribute_value_ids',
         ]
         if self.env['ir.config_parameter'].sudo().get_param('stock.merge_only_same_date'):
             fields.append('date')
@@ -1255,15 +1212,6 @@ Please change the quantity done or the rounding precision of your unit of measur
         if product:
             self.description_picking = product._get_description(self.picking_type_id)
 
-    @api.onchange('product_id', 'product_qty', 'product_uom')
-    def _onchange_suggest_packaging(self):
-        # remove packaging if not match the product
-        if self.product_packaging_id.product_id != self.product_id:
-            self.product_packaging_id = False
-        # suggest biggest suitable packaging
-        if self.product_id and self.product_qty and self.product_uom:
-            self.product_packaging_id = self.product_id.packaging_ids._find_suitable_product_packaging(self.product_qty, self.product_uom)
-
     @api.onchange('lot_ids')
     def _onchange_lot_ids(self):
         quantity = sum(ml.quantity_product_uom for ml in self.move_line_ids.filtered(lambda ml: not ml.lot_id and ml.lot_name))
@@ -1285,19 +1233,6 @@ Please change the quantity done or the rounding precision of your unit of measur
                 sn_to_location += _("\n(%(serial_number)s) exists in location %(location)s", serial_number=quant.lot_id.display_name, location=quant.location_id.display_name)
             return {
                 'warning': {'title': _('Warning'), 'message': _('Unavailable Serial numbers. Please correct the serial numbers encoded: %(serial_numbers_to_locations)s', serial_numbers_to_locations=sn_to_location)}
-            }
-
-    @api.onchange('product_uom')
-    def _onchange_product_uom(self):
-        if self.product_uom.factor > self.product_id.uom_id.factor:
-            return {
-                'warning': {
-                    'title': _("Unsafe unit of measure"),
-                    'message': _("You are using a unit of measure smaller than the one you are using in "
-                                 "order to stock your product. This can lead to rounding problem on reserved quantity. "
-                                 "You should use the smaller unit of measure possible in order to valuate your stock or "
-                                 "change its rounding precision to a smaller value (example: 0.00001)."),
-                }
             }
 
     def _key_assign_picking(self):
@@ -1412,7 +1347,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                 move_lines = move_lines[1:]
             # ... or create a new move line with the serial name.
             else:
-                loc = loc_dest or self.location_dest_id._get_putaway_strategy(self.product_id, quantity=quantity, packaging=self.product_packaging_id, additional_qty=qty_by_location)
+                loc = loc_dest or self.location_dest_id._get_putaway_strategy(self.product_id, quantity=quantity, additional_qty=qty_by_location)
                 new_move_line_vals = {
                     **move_line_vals,
                     **command_vals,
@@ -1624,11 +1559,11 @@ Please change the quantity done or the rounding precision of your unit of measur
             'date_deadline': self.date_deadline,
             'move_dest_ids': move_dest_ids,
             'group_id': group_id,
-            'route_ids': self.route_ids,
+            'route_ids': self.route_ids or self.move_line_ids.result_package_id.package_type_id.route_ids,
             'warehouse_id': warehouse,
             'priority': self.priority,
             'orderpoint_id': self.orderpoint_id,
-            'product_packaging_id': self.product_packaging_id,
+            'packaging_uom_id': self.packaging_uom_id,
         }
 
     def _get_mto_procurement_date(self):
@@ -1647,7 +1582,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         }
         if quantity:
             # TODO could be also move in create/write
-            rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            rounding = self.env['decimal.precision'].precision_get('Product Unit')
             uom_quantity = self.product_id.uom_id._compute_quantity(quantity, self.product_uom, rounding_method='HALF-UP')
             uom_quantity = float_round(uom_quantity, precision_digits=rounding)
             uom_quantity_back_to_product_uom = self.product_uom._compute_quantity(uom_quantity, self.product_id.uom_id, rounding_method='HALF-UP')
@@ -1682,11 +1617,11 @@ Please change the quantity done or the rounding precision of your unit of measur
             owner_id = self.env['res.partner']
 
         quants = self.env['stock.quant']._get_reserve_quantity(
-            self.product_id, location_id, need, product_packaging_id=self.product_packaging_id,
-            uom_id=self.product_uom, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+            self.product_id, location_id, need, uom_id=self.product_uom,
+            lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
 
         taken_quantity = 0
-        rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        rounding = self.env['decimal.precision'].precision_get('Product Unit')
         # Find a candidate move line to update or create a new one.
         candidate_lines = {}
         for line in self.move_line_ids:
@@ -2044,7 +1979,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         for move in self:
             # To know whether we need to create a backorder or not, round to the general product's
             # decimal precision and not the product's UOM.
-            rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            rounding = self.env['decimal.precision'].precision_get('Product Unit')
             if float_compare(move.quantity, move.product_uom_qty, precision_digits=rounding) < 0:
                 # Need to do some kind of conversion here
                 qty_split = move.product_uom._compute_quantity(move.product_uom_qty - move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
@@ -2097,7 +2032,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         if float_is_zero(qty, precision_rounding=self.product_id.uom_id.rounding):
             return []
 
-        decimal_precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        decimal_precision = self.env['decimal.precision'].precision_get('Product Unit')
 
         # `qty` passed as argument is the quantity to backorder and is always expressed in the
         # quants UOM. If we're able to convert back and forth this quantity in the move's and the
@@ -2121,7 +2056,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         # precision and not the move's UOM to handle case where the `quantity_done` is not
         # compatible with the move's UOM.
         new_product_qty = self.product_id.uom_id._compute_quantity(max(0, self.product_qty - qty), self.product_uom, round=False)
-        new_product_qty = float_round(new_product_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure'))
+        new_product_qty = float_round(new_product_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit'))
         self.with_context(do_not_unreserve=True).write({'product_uom_qty': new_product_qty})
         return new_move_vals
 
@@ -2249,7 +2184,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                 ]
                 if picking_type_code:
                     domain.append(('picking_type_id.code', '=', picking_type_code))
-                rule = self.env['procurement.group']._search_rule(False, move.product_packaging_id, product_id, move.warehouse_id, domain)
+                rule = self.env['procurement.group']._search_rule(False, move.packaging_uom_id, product_id, move.warehouse_id, domain)
                 if rule:
                     break
                 location = location.location_id

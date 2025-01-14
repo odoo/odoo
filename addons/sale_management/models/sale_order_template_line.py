@@ -41,17 +41,17 @@ class SaleOrderTemplateLine(models.Model):
         translate=True,
     )
 
+    allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     product_uom_id = fields.Many2one(
         comodel_name='uom.uom',
-        string="Unit of Measure",
+        string="Unit",
+        domain="[('id', 'in', allowed_uom_ids)]",
         compute='_compute_product_uom_id',
-        store=True, readonly=False, precompute=True,
-        domain="[('category_id', '=', product_uom_category_id)]")
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
+        store=True, readonly=False, precompute=True)
     product_uom_qty = fields.Float(
         string='Quantity',
         required=True,
-        digits='Product Unit of Measure',
+        digits='Product Unit',
         default=1)
 
     display_type = fields.Selection([
@@ -59,6 +59,11 @@ class SaleOrderTemplateLine(models.Model):
         ('line_note', "Note")], default=False)
 
     #=== COMPUTE METHODS ===#
+
+    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids')
+    def _compute_allowed_uom_ids(self):
+        for option in self:
+            option.allowed_uom_ids = option.product_id.uom_id | option.product_id.uom_ids
 
     @api.depends('product_id')
     def _compute_product_uom_id(self):

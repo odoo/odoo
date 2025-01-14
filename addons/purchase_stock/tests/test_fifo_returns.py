@@ -23,7 +23,6 @@ class TestFifoReturns(ValuationReconciliationTestCommon):
             'categ_id': self.stock_account_product_categ.id,
             'standard_price': 0.0,
             'uom_id': self.env.ref('uom.product_uom_kgm').id,
-            'uom_po_id': self.env.ref('uom.product_uom_kgm').id,
             'description': 'FIFO Ice Cream',
         })
 

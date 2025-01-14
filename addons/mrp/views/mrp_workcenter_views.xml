@@ -347,7 +347,7 @@
                                 <field name="capacity_ids" context="{'default_workcenter_id': id}">
                                     <list editable="bottom">
                                         <field name="product_id"/>
-                                        <field name="product_uom_id" groups="uom.group_uom"/>
+                                        <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                                         <field name="capacity"/>
                                         <field name="time_start" widget="float_time"/>
                                         <field name="time_stop" widget="float_time"/>

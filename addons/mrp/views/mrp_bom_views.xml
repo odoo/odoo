@@ -17,11 +17,10 @@
                         <field name="allowed_operation_ids" invisible="1"/>
                         <field name="company_id"/>
                         <field name="product_id"/>
-                        <field name="product_uom_category_id" invisible="1"/>
                         <label for="product_qty"/>
                         <div class="o_row">
                             <field name="product_qty"/>
-                            <field name="product_uom_id" groups="uom.group_uom"/>
+                            <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                         </div>
                         <field name="operation_id" groups="mrp.group_mrp_routings" options="{'no_quick_create':True,'no_create_edit':True}"/>
                         <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/>
@@ -57,14 +56,13 @@
                             <field name="active" invisible="1"/>
                             <field name="company_id" invisible="1"/>
                             <field name="product_tmpl_id" context="{'default_is_storable': True}"/>
-                            <field name="product_uom_category_id" invisible="1"/>
                             <field name="allow_operation_dependencies" invisible="1"/>
                             <field name="product_id" groups="product.group_product_variant" context="{'default_is_storable': True}"/>
                             <field name="product_id" groups="!product.group_product_variant" invisible="1"/>
                             <label for="product_qty" string="Quantity"/>
                             <div class="o_row">
                                 <field name="product_qty"/>
-                                <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom"/>
+                                <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" widget="many2one_uom"/>
                             </div>
                         </group>
                         <group>
@@ -100,9 +98,8 @@
                                     <button name="action_see_attachments" type="object" icon="fa-files-o" aria-label="Product Attachments" title="Product Attachments" class="float-end" column_invisible="context.get('parent_production_id')"/>
                                     <field name="attachments_count" class="text-start" string=" " column_invisible="context.get('parent_production_id')"/>
                                     <field name="product_qty"/>
-                                    <field name="product_uom_category_id" column_invisible="True"/>
                                     <field name="parent_product_tmpl_id" column_invisible="True" />
-                                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom"/>
+                                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" widget="many2one_uom"/>
                                     <field name="possible_bom_product_template_attribute_value_ids" column_invisible="True"/>
                                     <field name="bom_product_template_attribute_value_ids" optional="hide" widget="many2many_tags" options="{'no_create': True}" column_invisible="parent.product_id" groups="product.group_product_variant"/>
                                     <field name="allowed_operation_ids" column_invisible="True"/>
@@ -131,11 +128,10 @@
                                         <button name="action_add_from_catalog" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
                                     </control>
                                     <field name="company_id" column_invisible="True"/>
-                                    <field name="product_uom_category_id" column_invisible="True"/>
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" context="{'default_is_storable': True}"/>
                                     <field name="product_qty"/>
-                                    <field name="product_uom_id" groups="uom.group_uom"/>
+                                    <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                                     <field name="cost_share" optional="hide"/>
                                     <field name="allowed_operation_ids" column_invisible="True"/>
                                     <field name="operation_id" groups="mrp.group_mrp_routings" options="{'no_quick_create':True,'no_create_edit':True}"/>
@@ -189,8 +185,7 @@
                     <field name="product_id" groups="product.group_product_variant" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="product_qty" optional="hide"/>
-                    <field name="product_uom_category_id" column_invisible="True"/>
-                    <field name="product_uom_id" groups="uom.group_uom" optional="hide" string="Unit of Measure"/>
+                    <field name="product_uom_id" groups="uom.group_uom" optional="hide" widget="many2one_uom"/>
                 </list>
             </field>
         </record>
@@ -230,7 +225,7 @@
                     <group expand="0" string="Group By...">
                         <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
                         <filter string='BoM Type' name="group_by_type" domain="[]" context="{'group_by' : 'type'}"/>
-                        <filter string='Unit of Measure' name="default_unit_of_measure" domain="[]" context="{'group_by' : 'product_uom_id'}"/>
+                        <filter string='Unit' name="default_unit_of_measure" domain="[]" context="{'group_by' : 'product_uom_id'}"/>
                    </group>
                 </search>
             </field>
@@ -273,8 +268,7 @@
                                 <label for="product_qty" string="Quantity"/>
                                 <div class="o_row">
                                     <field name="product_qty"/>
-                                    <field name="product_uom_category_id" invisible="1"/>
-                                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom"/>
+                                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" widget="many2one_uom"/>
                                 </div>
                                 <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/>
                                 <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" options="{'no_create': True}" groups="product.group_product_variant"/>

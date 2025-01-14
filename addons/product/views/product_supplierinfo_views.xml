@@ -24,7 +24,7 @@
                             <label for="min_qty"/>
                             <div class="o_row">
                                 <field name="min_qty"/>
-                                <field name="product_uom_id" groups="uom.group_uom" options="{'no_open': True}"/>
+                                <field name="product_uom_id" groups="uom.group_uom" options="{'no_open': True}" widget="many2one_uom"/>
                             </div>
                             <label for="price" string="Unit Price"/>
                             <div class="o_row">
@@ -105,8 +105,8 @@
                 <field name="date_end" optional="hide"/>
                 <field name="company_id" readonly="1" groups="base.group_multi_company"/>
                 <field name="min_qty" optional="hide"/>
-                <field name="product_uom_id" groups="uom.group_uom" optional="hide"/>
-                <field name="price" string="Price"/>
+                <field name="product_uom_id" groups="uom.group_uom" optional="show" options="{'no_create': True}" context="{'product_id': product_id}" widget="many2one_uom"/>
+                <field name="price"/>
                 <field name="discount" optional="hide"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
                 <field name="delay" optional="show"/>

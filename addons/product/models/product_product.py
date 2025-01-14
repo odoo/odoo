@@ -44,6 +44,7 @@ class ProductProduct(models.Model):
     barcode = fields.Char(
         'Barcode', copy=False, index='btree_not_null',
         help="International Article Number used for product identification.")
+    product_uom_ids = fields.One2many('product.uom', 'product_id', 'Unit Barcode', store=True)
     product_template_attribute_value_ids = fields.Many2many('product.template.attribute.value', relation='product_variant_combination', string="Attribute Values", ondelete='restrict')
     product_template_variant_value_ids = fields.Many2many('product.template.attribute.value', relation='product_variant_combination',
                                                           domain=[('attribute_line_id.value_count', '>', 1)], string="Variant Values", ondelete='restrict')
@@ -69,10 +70,6 @@ class ProductProduct(models.Model):
         domain=lambda self: [('res_model', '=', self._name)])
     product_document_count = fields.Integer(
         string="Documents Count", compute='_compute_product_document_count')
-
-    packaging_ids = fields.One2many(
-        'product.packaging', 'product_id', 'Product Packages',
-        help="Gives the different ways to package the same product.")
 
     additional_product_tag_ids = fields.Many2many(
         string="Variant Tags",
@@ -231,7 +228,7 @@ class ProductProduct(models.Model):
 
     def _check_duplicated_packaging_barcodes(self, barcodes_within_company, company_id):
         packaging_domain = self._get_barcode_search_domain(barcodes_within_company, company_id)
-        if self.env['product.packaging'].sudo().search_count(packaging_domain, limit=1):
+        if self.env['product.uom'].sudo().search_count(packaging_domain, limit=1):
             raise ValidationError(_("A packaging already uses the barcode"))
 
     @api.constrains('barcode')
@@ -338,16 +335,6 @@ class ProductProduct(models.Model):
         if operator in expression.NEGATIVE_TERM_OPERATORS:
             return [('product_tag_ids', operator, operand), ('additional_product_tag_ids', operator, operand)]
         return ['|', ('product_tag_ids', operator, operand), ('additional_product_tag_ids', operator, operand)]
-
-    @api.onchange('uom_id')
-    def _onchange_uom_id(self):
-        if self.uom_id:
-            self.uom_po_id = self.uom_id.id
-
-    @api.onchange('uom_po_id')
-    def _onchange_uom(self):
-        if self.uom_id and self.uom_po_id and self.uom_id.category_id != self.uom_po_id.category_id:
-            self.uom_po_id = self.uom_id
 
     @api.onchange('default_code')
     def _onchange_default_code(self):
@@ -694,7 +681,7 @@ class ProductProduct(models.Model):
         self.ensure_one()
         if not date:
             date = fields.Date.context_today(self)
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
 
         sellers_filtered = self._prepare_sellers(params)
         sellers_filtered = sellers_filtered.filtered(lambda s: not s.company_id or s.company_id.id == self.env.company.id)

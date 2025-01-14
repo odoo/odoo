@@ -90,7 +90,7 @@ class SaleOrder(models.Model):
                 - service_policy="ordered_prepaid",
         """
         self.ensure_one()
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
         return self.order_line.filtered(lambda sol:
             sol.is_service
             and sol.invoice_status != "invoiced"
@@ -140,7 +140,7 @@ class SaleOrder(models.Model):
         return action
 
     def _reset_has_displayed_warning_upsell_order_lines(self):
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
         for line in self.order_line:
             if line.has_displayed_warning_upsell and line.product_uom_id and float_compare(line.qty_delivered, line.product_uom_qty, precision_digits=precision) == 0:
                 line.has_displayed_warning_upsell = False

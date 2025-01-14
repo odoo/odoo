@@ -52,7 +52,7 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         if self.sale_line_ids:
             return False
-        uom_precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        uom_precision_digits = self.env['decimal.precision'].precision_get('Product Unit')
         return float_compare(self.credit or 0.0, self.debit or 0.0, precision_digits=uom_precision_digits) != 1 and self.product_id.expense_policy not in [False, 'no']
 
     def _sale_create_reinvoice_sale_line(self):
@@ -187,7 +187,7 @@ class AccountMoveLine(models.Model):
                 date=order.date_order,
             )
 
-        uom_precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        uom_precision_digits = self.env['decimal.precision'].precision_get('Product Unit')
         if float_is_zero(unit_amount, precision_digits=uom_precision_digits):
             return 0.0
 

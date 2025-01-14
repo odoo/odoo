@@ -33,7 +33,6 @@ class TestMultistepManufacturing(TestMrpCommon):
         product_form = Form(cls.env['product.product'])
         product_form.name = 'Stick'
         product_form.uom_id = cls.uom_unit
-        product_form.uom_po_id = cls.uom_unit
         product_form.route_ids.clear()
         product_form.route_ids.add(cls.warehouse.manufacture_pull_id.route_id)
         product_form.route_ids.add(cls.warehouse.mto_pull_id.route_id)
@@ -43,7 +42,6 @@ class TestMultistepManufacturing(TestMrpCommon):
         product_form = Form(cls.env['product.product'])
         product_form.name = 'Raw Stick'
         product_form.uom_id = cls.uom_unit
-        product_form.uom_po_id = cls.uom_unit
         cls.product_raw = product_form.save()
 
         # Create bom for manufactured product

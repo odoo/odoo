@@ -17,7 +17,7 @@
                         <div class="responsive-price">
                             <t t-esc="line['product_name'].substr(0,20)" />
                             <span class="pos-receipt-right-align">
-                                <t t-esc="Math.round(line.quantity * Math.pow(10, pos.models['decimal.precision'].find((dp) => dp.name === 'Product Unit of Measure').digits)) / Math.pow(10, pos.models['decimal.precision'].find((dp) => dp.name === 'Product Unit of Measure').digits)" />
+                                <t t-esc="Math.round(line.quantity * Math.pow(10, pos.models['decimal.precision'].find((dp) => dp.name === 'Product Unit').digits)) / Math.pow(10, pos.models['decimal.precision'].find((dp) => dp.name === 'Product Unit').digits)" />
                                 <t t-if="line.uom !== 'Units'">
                                     <t t-esc="line.uom" />
                                 </t>
@@ -46,7 +46,7 @@
                         <div class="responsive-price">
                             <t t-esc="line['product_name'].substr(0,20)" />
                             <span class="pos-receipt-right-align">
-                                <t t-esc="Math.round(line.quantity * Math.pow(10, pos.models['decimal.precision'].find((dp) => dp.name === 'Product Unit of Measure')?.digits)) / Math.pow(10, pos.models['decimal.precision'].find((dp) => dp.name === 'Product Unit of Measure')?.digits)" />
+                                <t t-esc="Math.round(line.quantity * Math.pow(10, pos.models['decimal.precision'].find((dp) => dp.name === 'Product Unit')?.digits)) / Math.pow(10, pos.models['decimal.precision'].find((dp) => dp.name === 'Product Unit')?.digits)" />
                                 <t t-if="line.uom !== 'Units'">
                                     <t t-esc="line.uom" />
                                 </t>

@@ -406,7 +406,6 @@
                                     TODO: at some point we want to fix this in the framework so that an invisible field is not required.
                                 -->
                                 <field name="sequence" invisible="1"/>
-                                <field name="product_uom_category_id" invisible="1"/>
                                 <group>
                                     <group invisible="display_type">
                                         <field name="product_updatable" invisible="1"/>
@@ -468,8 +467,6 @@
                                         <div name="invoiced_qty" invisible="parent.state != 'sale'">
                                             <field name="qty_invoiced"/>
                                         </div>
-                                        <field name="product_packaging_qty" invisible="not product_id or not product_packaging_id" groups="product.group_stock_packaging"/>
-                                        <field name="product_packaging_id" invisible="not product_id" context="{'default_product_id': product_id, 'list_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" />
                                         <field name="price_unit"/>
                                         <field name="tax_ids" widget="many2many_tax_tags" options="{'no_create': True}" context="{'search_view_ref': 'account.account_tax_view_search'}" domain="[('type_tax_use', '=', 'sale'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]"
                                             readonly="qty_invoiced &gt; 0"/>
@@ -524,7 +521,6 @@
                                 <field name="sequence" widget="handle" />
                                 <!-- We do not display the type because we don't want the user to be bothered with that information if he has no section or note. -->
                                 <field name="display_type" column_invisible="True"/>
-                                <field name="product_uom_category_id" column_invisible="True"/>
                                 <field name="product_type" column_invisible="True"/>
                                 <field name="product_updatable" column_invisible="True"/>
                                 <field name="is_downpayment" column_invisible="True"/>
@@ -623,12 +619,11 @@
                                 <field
                                     name="product_uom_id"
                                     force_save="1"
-                                    string="UoM"
                                     readonly="product_uom_readonly"
                                     required="not display_type and not is_downpayment"
                                     context="{'company_id': parent.company_id}"
                                     groups="uom.group_uom"
-                                    options='{"no_open": True}'
+                                    options='{"no_open": True, "no_create": True}'
                                     width="60px"
                                     optional="show"/>
                                 <field
@@ -636,8 +631,6 @@
                                     optional="hide"
                                     width="80px"
                                     readonly="parent.state not in ['draft', 'sent', 'sale'] or is_downpayment"/>
-                                <field name="product_packaging_qty" invisible="not product_id or not product_packaging_id" groups="product.group_stock_packaging" optional="show"/>
-                                <field name="product_packaging_id" invisible="not product_id" context="{'default_product_id': product_id, 'list_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" optional="show"/>
                                 <field
                                     name="price_unit"
                                     readonly="qty_invoiced &gt; 0"/>

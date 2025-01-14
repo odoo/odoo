@@ -12,8 +12,8 @@ class StockReturnPickingLine(models.TransientModel):
 
     product_id = fields.Many2one('product.product', string="Product", required=True)
     move_quantity = fields.Float(related="move_id.quantity", string="Move Quantity")
-    quantity = fields.Float("Quantity", digits='Product Unit of Measure', default=1, required=True)
-    uom_id = fields.Many2one('uom.uom', string='Unit of Measure', related='product_id.uom_id')
+    quantity = fields.Float("Quantity", digits='Product Unit', default=1, required=True)
+    uom_id = fields.Many2one('uom.uom', string='Unit', related='product_id.uom_id')
     wizard_id = fields.Many2one('stock.return.picking', string="Wizard")
     move_id = fields.Many2one('stock.move', "Move")
 

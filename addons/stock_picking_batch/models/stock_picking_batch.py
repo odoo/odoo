@@ -63,9 +63,9 @@ class StockPickingBatch(models.Model):
     is_wave = fields.Boolean('This batch is a wave')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
     estimated_shipping_weight = fields.Float(
-        "shipping_weight", compute='_compute_estimated_shipping_capacity', digits='Product Unit of Measure')
+        "shipping_weight", compute='_compute_estimated_shipping_capacity', digits='Product Unit')
     estimated_shipping_volume = fields.Float(
-        "shipping_volume", compute='_compute_estimated_shipping_capacity', digits='Product Unit of Measure')
+        "shipping_volume", compute='_compute_estimated_shipping_capacity', digits='Product Unit')
     properties = fields.Properties('Properties', definition='picking_type_id.batch_properties_definition', copy=True)
 
     @api.depends('description')

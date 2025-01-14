@@ -22,7 +22,6 @@ class TestDropship(common.TransactionCase):
             'lst_price': 100.0,
             'standard_price': 0.0,
             'uom_id': cls.env.ref('uom.product_uom_unit').id,
-            'uom_po_id': cls.env.ref('uom.product_uom_unit').id,
             'seller_ids': [(0, 0, {
                 'delay': 1,
                 'partner_id': cls.supplier.id,
@@ -246,7 +245,6 @@ class TestDropship(common.TransactionCase):
             'lst_price': 100.0,
             'standard_price': 0.0,
             'uom_id': self.env.ref('uom.product_uom_unit').id,
-            'uom_po_id': self.env.ref('uom.product_uom_unit').id,
             'seller_ids': [
                 (0, 0, {
                     'delay': 10,

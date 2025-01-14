@@ -117,7 +117,7 @@
                                         >
                                             per
                                             <field
-                                                name="uom_id"
+                                                name="uom_id" widget="many2one_uom"
                                                 class="oe_inline" style="max-width:136px"
                                                 options="{'no_create': True}"
                                             />
@@ -151,7 +151,11 @@
                                         />
                                         <span groups="uom.group_uom">
                                             per
-                                            <field name="uom_name" class="oe_inline"/>
+                                            <field
+                                                name="uom_id" widget="many2one_uom"
+                                                class="oe_inline" style="max-width:136px"
+                                                options="{'no_create': True}"
+                                            />
                                         </span>
                                     </div>
                                     <field name="categ_id" string="Category"/>
@@ -170,7 +174,15 @@
                         </page>
                         <page string="Sales" name="sales" invisible="1 or not sale_ok">
                             <group name="sale">
-                                <group string="Upsell &amp; Cross-Sell" name="upsell" invisible="1"/>
+                                <group string="Upsell &amp; Cross-Sell" name="upsell" invisible="1">
+                                    <field
+                                        name="uom_ids"
+                                        widget="many2many_uom_tags"
+                                        options="{'no_quick_create': True, 'edit_tags': True}"
+                                        groups="uom.group_uom"
+                                        force_save="1"
+                                        context="{'product_id': product_variant_id if product_variant_count == 1 else False, 'product_ids': product_variant_ids, 'show_variant_name': product_variant_count > 1}"/>
+                                </group>
                                 <group name="extra_info" string="Extra Info">
                                     <field name="product_tag_ids" widget="many2many_tags" context="{'product_template_id': id}"/>
                                 </group>
@@ -189,14 +201,13 @@
                         >
                             <group name="purchase">
                                 <group string="Vendor Bills" name="bill">
-                                    <field name="uom_po_id" groups="uom.group_uom" options="{'no_create': True}"/>
                                 </group>
                             </group>
                         </page>
                         <page
                             string="Inventory"
                             name="inventory"
-                            groups="product.group_stock_packaging"
+                            groups="uom.group_uom"
                             invisible="type in ['service', 'combo']"
                         >
                             <group name="inventory">
@@ -212,12 +223,6 @@
                                         <field name="volume_uom_name"/>
                                     </div>
                                 </group>
-                            </group>
-                            <group name="packaging" string="Packaging"
-                                colspan="4"
-                                invisible="(type != 'consu' or product_variant_count &gt; 1) and not is_product_variant"
-                                groups="product.group_stock_packaging">
-                                <field colspan="2" name="packaging_ids" nolabel="1" context="{'list_view_ref':'product.product_packaging_tree_view2', 'default_company_id': company_id}"/>
                             </group>
                         </page>
                     </notebook>
@@ -384,14 +389,15 @@
                                 </div>
                             </group>
                             <group name="sales" string="Sales">
+                                <field
+                                    name="uom_ids"
+                                    widget="many2many_uom_tags"
+                                    options="{'no_quick_create': True, 'edit_tags': True}"
+                                    groups="uom.group_uom"
+                                    force_save="1"
+                                    context="{'product_id': id}"/>
                                 <field name="product_tag_ids" widget="many2many_tags" readonly="1"/>
                                 <field name="additional_product_tag_ids" widget="many2many_tags" context="{'product_variant_id': id}"/>
-                            </group>
-                        </group>
-                        <group>
-                            <group name="packaging" string="Packaging" groups="product.group_stock_packaging">
-                                <field colspan="2" name="packaging_ids" nolabel="1"
-                                    context="{'list_view_ref':'product.product_packaging_tree_view2', 'default_company_id': company_id}"/>
                             </group>
                         </group>
                     </sheet>
@@ -442,7 +448,7 @@
                     <field name="product_tag_ids" widget="many2many_tags" readonly="1" optional="hide"/>
                     <field name="additional_product_tag_ids" widget="many2many_tags" optional="hide"/>
                     <field name="type" optional="hide" readonly="1"/>
-                    <field name="uom_id" string="Unit" groups="uom.group_uom" optional="show" readonly="1"/>
+                    <field name="uom_id" widget="many2one_uom" groups="uom.group_uom" optional="show" readonly="1"/>
                     <field name="product_tmpl_id" readonly="1" column_invisible="True"/>
                     <field name="active" column_invisible="True"/>
                 </list>
@@ -506,9 +512,6 @@
                 <field name="list_price" position="after">
                    <field name="lst_price" class="oe_inline" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                 </field>
-                <group name="packaging" position="attributes">
-                    <attribute name="invisible">0</attribute>
-                </group>
                 <field name="name" position="after">
                     <field name="product_tmpl_id" class="oe_inline" readonly="1" invisible="1" required="id"/>
                 </field>
@@ -522,6 +525,9 @@
                 <field name="product_tag_ids" position="after">
                     <field name="additional_product_tag_ids" widget="many2many_tags"/>
                 </field>
+                <field name="uom_ids" position="attributes">
+                    <attribute name="context">{'product_id': id}</attribute>
+                </field> 
             </field>
         </record>
 

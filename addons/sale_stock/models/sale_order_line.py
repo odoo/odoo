@@ -16,13 +16,13 @@ class SaleOrderLine(models.Model):
     qty_delivered_method = fields.Selection(selection_add=[('stock_move', 'Stock Moves')])
     route_id = fields.Many2one('stock.route', string='Route', domain=[('sale_selectable', '=', True)], ondelete='restrict')
     move_ids = fields.One2many('stock.move', 'sale_line_id', string='Stock Moves')
-    virtual_available_at_date = fields.Float(compute='_compute_qty_at_date', digits='Product Unit of Measure')
+    virtual_available_at_date = fields.Float(compute='_compute_qty_at_date', digits='Product Unit')
     scheduled_date = fields.Datetime(compute='_compute_qty_at_date')
     forecast_expected_date = fields.Datetime(compute='_compute_qty_at_date')
-    free_qty_today = fields.Float(compute='_compute_qty_at_date', digits='Product Unit of Measure')
+    free_qty_today = fields.Float(compute='_compute_qty_at_date', digits='Product Unit')
     qty_available_today = fields.Float(compute='_compute_qty_at_date')
     warehouse_id = fields.Many2one('stock.warehouse', compute='_compute_warehouse_id', store=True)
-    qty_to_deliver = fields.Float(compute='_compute_qty_to_deliver', digits='Product Unit of Measure')
+    qty_to_deliver = fields.Float(compute='_compute_qty_to_deliver', digits='Product Unit')
     is_mto = fields.Boolean(compute='_compute_is_mto')
     display_qty_widget = fields.Boolean(compute='_compute_qty_to_deliver')
     is_storable = fields.Boolean(related='product_id.is_storable')
@@ -30,7 +30,7 @@ class SaleOrderLine(models.Model):
         compute='_compute_customer_lead', store=True, readonly=False, precompute=True,
         inverse='_inverse_customer_lead')
 
-    @api.depends('route_id', 'order_id.warehouse_id', 'product_packaging_id', 'product_id')
+    @api.depends('route_id', 'order_id.warehouse_id', 'product_id')
     def _compute_warehouse_id(self):
         for line in self:
             line.warehouse_id = line.order_id.warehouse_id
@@ -219,11 +219,6 @@ class SaleOrderLine(models.Model):
         if 'product_uom_qty' in values:
             lines = self.filtered(lambda r: r.state == 'sale' and not r.is_expense)
 
-        if 'product_packaging_id' in values:
-            self.move_ids.filtered(
-                lambda m: m.state not in ['cancel', 'done']
-            ).product_packaging_id = values['product_packaging_id']
-
         previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
         res = super(SaleOrderLine, self).write(values)
         if lines:
@@ -270,9 +265,9 @@ class SaleOrderLine(models.Model):
             'location_final_id': self._get_location_final(),
             'product_description_variants': self.with_context(lang=self.order_id.partner_id.lang)._get_sale_order_line_multiline_description_variants(),
             'company_id': self.order_id.company_id,
-            'product_packaging_id': self.product_packaging_id,
             'sequence': self.sequence,
             'never_product_template_attribute_value_ids': self.product_no_variant_attribute_value_ids,
+            'packaging_uom_id': self.product_uom_id,
         })
         return values
 
@@ -350,7 +345,7 @@ class SaleOrderLine(models.Model):
         """
         if self._context.get("skip_procurement"):
             return True
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
         procurements = []
         for line in self:
             line = line.with_company(line.company_id)
@@ -396,7 +391,7 @@ class SaleOrderLine(models.Model):
         return True
 
     def _update_line_quantity(self, values):
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
         line_products = self.filtered(lambda l: l.product_id.type == 'consu')
         if line_products.mapped('qty_delivered') and float_compare(values['product_uom_qty'], max(line_products.mapped('qty_delivered')), precision_digits=precision) == -1:
             raise UserError(_('The ordered quantity of a sale order line cannot be decreased below the amount already delivered. Instead, create a return in your inventory.'))

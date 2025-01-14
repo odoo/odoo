@@ -48,7 +48,6 @@
                         <button name="action_cancel" type="object" string="Cancel"/>
                     </header>
                     <field name="company_id" column_invisible="True"/>
-                    <field name="product_uom_category_id" column_invisible="True"/>
                     <field name="priority" optional="show" widget="priority" nolabel="1"/>
                     <field name="message_needaction" column_invisible="True"/>
                     <field name="name" decoration-bf="1"/>
@@ -72,7 +71,7 @@
                         decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late', 'unavailable')"/>
                     <field name="reservation_state" optional="hide" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
                     <field name="product_qty" sum="Total Qty" string="Quantity" readonly="1" optional="show"/>
-                    <field name="product_uom_id" string="UoM" readonly="1" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" optional="show"/>
+                    <field name="product_uom_id" readonly="1" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" widget="many2one_uom" optional="show"/>
                     <field name="duration_expected" invisible="duration_expected == 0" groups="mrp.group_mrp_routings" widget="float_time" sum="Total expected duration" optional="hide"/>
                     <field name="duration" invisible="duration == 0" groups="mrp.group_mrp_routings" widget="float_time" sum="Total real duration" optional="hide"/>
                     <field name="company_id" readonly="1" groups="base.group_multi_company" optional="show"/>
@@ -302,9 +301,8 @@
                                     <field name="product_qty" class="oe_inline" readonly="state != 'draft'"/>
                                 </button>
                                 <label for="product_uom_id" string="" class="oe_inline"/>
-                                <field name="product_uom_category_id" invisible="1"/>
                                 <field name="product_uom_id" groups="!uom.group_uom" invisible="1"/>
-                                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" readonly="state != 'draft'" class="flex-grow-0" style="width:auto!important"/>
+                                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom" readonly="state != 'draft'" class="flex-grow-0" style="width:auto!important"/>
                                 <span class='fw-bold text-nowrap'>To Produce</span>
                                 <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="forecasted_issue"/>
                                 <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="not forecasted_issue" class="text-danger"/>
@@ -373,7 +371,6 @@
                                     <field name="move_dest_ids"/>
                                     <field name="state"/>
                                     <!-- Useless as the editable in tree declaration -> For Form Test-->
-                                    <field name="product_uom_category_id"/>
                                     <field name="allowed_operation_ids"/>
                                     <!--
                                     Required for test_00_mrp_byproduct
@@ -418,7 +415,6 @@
                                     <field name="propagate_cancel" column_invisible="True"/>
                                     <field name="price_unit" column_invisible="True"/>
                                     <field name="company_id" column_invisible="True"/>
-                                    <field name="product_uom_category_id" column_invisible="True"/>
                                     <field name="name" column_invisible="True"/>
                                     <field name="allowed_operation_ids" column_invisible="True"/>
                                     <field name="unit_factor" column_invisible="True"/>
@@ -453,7 +449,7 @@
                                         decoration-bf="manual_consumption"
                                         readonly="has_tracking != 'none'"
                                         force_save="1"/>
-                                    <field name="product_uom" readonly="state != 'draft' and id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
+                                    <field name="product_uom" readonly="state != 'draft' and id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom"/>
                                     <field name="picked" string="Consumed" column_invisible="parent.state == 'draft'" optional="show"/>
                                     <field name="manual_consumption" column_invisible="True" force_save="1"/>
                                     <field name="show_details_visible" column_invisible="True"/>
@@ -491,7 +487,6 @@
                                     <field name="product_id" context="{'default_is_storable': True}" domain="[('id', '!=', parent.product_id)]" required="1" readonly="state == 'done'"/>
                                     <field name="location_dest_id" string="To" readonly="1" force_save="1" groups="stock.group_stock_multi_locations"/>
                                     <field name="company_id" column_invisible="True"/>
-                                    <field name="product_uom_category_id" column_invisible="True"/>
                                     <field name="name" column_invisible="True"/>
                                     <field name="allowed_operation_ids" column_invisible="True"/>
                                     <field name="unit_factor" column_invisible="True"/>
@@ -513,7 +508,7 @@
                                     <field name="product_uom_qty" string="To Produce" force_save="1" readonly="parent.state != 'draft' and ((parent.state not in ('confirmed', 'progress', 'to_close') and not parent.is_planned) or parent.is_locked)"/>
                                     <field name="quantity" column_invisible="parent.state == 'draft'" readonly="has_tracking != 'none'"/>
                                     <field name="picked" string="Produced" column_invisible="parent.state == 'draft'" optional="show"/>
-                                    <field name="product_uom" groups="uom.group_uom"/>
+                                    <field name="product_uom" groups="uom.group_uom" widget="many2one_uom"/>
                                     <field name="cost_share" optional="hide"/>
                                     <field name="show_details_visible" column_invisible="True"/>
                                     <field name="lot_ids" widget="many2many_tags"

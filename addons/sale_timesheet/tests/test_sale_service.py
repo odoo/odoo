@@ -62,7 +62,6 @@ class TestSaleService(TestCommonSaleTimesheet):
             'type': 'service',
             'invoice_policy': 'delivery',
             'uom_id': self.env.ref('uom.product_uom_hour').id,
-            'uom_po_id': self.env.ref('uom.product_uom_hour').id,
             'default_code': 'SERV-DELI',
             'service_type': 'timesheet',
             'service_tracking': 'task_global_project',
@@ -282,7 +281,6 @@ class TestSaleService(TestCommonSaleTimesheet):
             'type': 'service',
             'invoice_policy': 'delivery',
             'uom_id': self.env.ref('uom.product_uom_hour').id,
-            'uom_po_id': self.env.ref('uom.product_uom_hour').id,
             'default_code': 'SERV-DELI4',
             'service_type': 'timesheet',
             'service_tracking': 'project_only',
@@ -546,7 +544,6 @@ class TestSaleService(TestCommonSaleTimesheet):
             'day': 8.0,
             'hour': 1.0,
             'unit': 1.0,
-            'gram': 0.0,
         }
 
         project = self.project_global.copy({'tasks': False})
@@ -570,8 +567,6 @@ class TestSaleService(TestCommonSaleTimesheet):
 
             product_vals.update({
                 'name': uom_name,
-                'uom_id': uom_id.id,
-                'uom_po_id': uom_id.id,
             })
             product = Product.create(product_vals)
 
@@ -716,11 +711,6 @@ class TestSaleService(TestCommonSaleTimesheet):
         }, {
             'order_id': self.sale_order.id,
             'product_id': self.product_delivery_timesheet3.id,
-            'product_uom_qty': 1,
-            'product_uom_id': self.env.ref('uom.product_uom_dozen').id,  # 0 hours
-        }, {
-            'order_id': self.sale_order.id,
-            'product_id': self.product_delivery_timesheet3.id,
             'product_uom_qty': 6,
             'product_uom_id': self.env.ref('uom.product_uom_unit').id,  # 6 hours
         }])
@@ -828,7 +818,7 @@ class TestSaleService(TestCommonSaleTimesheet):
         """
         Ensure hours are rounded consistently on SO & invoice.
         """
-        self.env.company.project_time_mode_id.rounding = 1.0
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
         self.env['sale.order.line'].create({
             'name': self.product_delivery_timesheet3.name,
             'product_id': self.product_delivery_timesheet3.id,

@@ -45,12 +45,12 @@
                 <field name="group_id" optional="hide" groups="stock.group_adv_location"/>
                 <field name="product_min_qty" string="Min" optional="show"/>
                 <field name="product_max_qty" string="Max" optional="show"/>
-                <field name="qty_multiple" optional="hide"/>
+                <field name="replenishment_uom_id" optional="hide"/>
                 <field name="qty_to_order" readonly="trigger == 'auto'"/>
                 <field name="qty_to_order_manual" column_invisible="True"/>
                 <button name="action_remove_manual_qty_to_order" type="object" icon="fa-undo" title="Remove manually entered value and replace by the quantity to order based on the forecasted quantities" invisible="not qty_to_order_manual"/>
                 <button name="action_remove_manual_qty_to_order" type="object" icon="fa-undo" title="-" class="disabled opacity-0" invisible="qty_to_order_manual"/>
-                <field name="product_uom_name" string="UoM" groups="uom.group_uom"/>
+                <field name="product_uom_name" string="Unit" groups="uom.group_uom"/>
                 <field name="company_id" optional="hide" readonly="1" groups="base.group_multi_company"/>
                 <button name="action_replenish" string="Order" type="object" class="o_replenish_buttons" icon="fa-truck"
                     invisible="qty_to_order &lt;= 0.0"/>
@@ -145,7 +145,7 @@
                                 <field name="product_max_qty"/>
                                 <field name="product_uom_name"/>
                             </div>
-                            <field name="qty_multiple" string="Quantity Multiple"/>
+                            <field name="replenishment_uom_id"/>
                         </group>
                         <group>
                             <field name="allowed_location_ids" invisible="1"/>

@@ -29,7 +29,6 @@ class TestProjectDashboardCommon(Common):
             'invoice_policy': 'delivery',
             'service_type': 'manual',
             'uom_id': cls.uom_hour.id,
-            'uom_po_id': cls.uom_hour.id,
             'default_code': 'SERV-ORDERED2',
             'service_tracking': 'task_global_project',
             'project_id': cls.dashboard_project.id,
@@ -41,7 +40,6 @@ class TestProjectDashboardCommon(Common):
             'invoice_policy': 'delivery',
             'service_type': 'milestones',
             'uom_id': cls.uom_hour.id,
-            'uom_po_id': cls.uom_hour.id,
             'default_code': 'SERV-ORDERED2',
             'service_tracking': 'task_global_project',
             'project_id': cls.dashboard_project.id,
@@ -51,7 +49,6 @@ class TestProjectDashboardCommon(Common):
             'list_price': 90,
             'type': 'service',
             'uom_id': cls.uom_hour.id,
-            'uom_po_id': cls.uom_hour.id,
             'default_code': 'SERV-ORDERED2',
             'service_tracking': 'task_global_project',
             'project_id': cls.dashboard_project.id,
@@ -66,6 +63,8 @@ class TestDashboardProject(TestProjectDashboardCommon):
 
     def test_get_sale_item_data_various_sols(self):
         """This test ensures that the sols are computed and put into the correct profitability sections"""
+        hour_uom_id = self.env.ref('uom.product_uom_hour').id
+        unit_uom_id = self.env.ref('uom.product_uom_unit').id
         sol_service_1, sol_service_2, sol_service_3, sol_service_4 = self.dashboardSaleOrderLine.create([{
                 'product_id': self.product_milestone.id,
                 'product_uom_qty': 1,

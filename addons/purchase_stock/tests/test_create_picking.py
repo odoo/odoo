@@ -33,7 +33,7 @@ class TestCreatePicking(common.TestProductCommon):
                     'name': cls.product_id_1.name,
                     'product_id': cls.product_id_1.id,
                     'product_qty': 5.0,
-                    'product_uom_id': cls.product_id_1.uom_po_id.id,
+                    'product_uom_id': cls.product_id_1.uom_id.id,
                     'price_unit': 500.0,
                 })],
         }
@@ -65,7 +65,7 @@ class TestCreatePicking(common.TestProductCommon):
                 'name': self.product_id_2.name,
                 'product_id': self.product_id_2.id,
                 'product_qty': 5.0,
-                'product_uom_id': self.product_id_2.uom_po_id.id,
+                'product_uom_id': self.product_id_2.uom_id.id,
                 'price_unit': 250.0,
                 })]})
         self.assertEqual(self.po.incoming_picking_count, 2, 'New picking should be created')
@@ -156,7 +156,7 @@ class TestCreatePicking(common.TestProductCommon):
                     'name': product.name,
                     'product_id': product.id,
                     'product_qty': 100.0,
-                    'product_uom_id': product.uom_po_id.id,
+                    'product_uom_id': product.uom_id.id,
                     'price_unit': 11.0,
                 })],
         })
@@ -186,13 +186,16 @@ class TestCreatePicking(common.TestProductCommon):
         uom_unit = self.env.ref('uom.product_uom_unit')
         uom_dozen = self.env.ref('uom.product_uom_dozen')
 
-        self.assertEqual(self.product_id_1.uom_po_id.id, uom_unit.id)
+        self.assertEqual(self.product_id_1.uom_id.id, uom_unit.id)
 
         # buy a dozen
-        po = self.env['purchase.order'].create(self.po_vals)
-
-        po.order_line.product_qty = 1
-        po.order_line.product_uom_id = uom_dozen.id
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product_id_1
+            po_line.product_qty = 1
+            po_line.product_uom_id = uom_dozen
+        po = po_form.save()
         po.button_confirm()
 
         # the move should be 12 units
@@ -203,7 +206,7 @@ class TestCreatePicking(common.TestProductCommon):
         self.assertEqual(move1.product_uom.id, uom_unit.id)
         self.assertEqual(move1.product_qty, 12)
 
-        # edit the so line, sell 2 dozen, the move should now be 24 units
+        # edit the po line, buy 2 dozen, the move should now be 24 units
         po.order_line.product_qty = 2
         move1 = po.picking_ids.move_ids.sorted()[0]
         self.assertEqual(move1.product_uom_qty, 24)
@@ -212,7 +215,9 @@ class TestCreatePicking(common.TestProductCommon):
 
         # force the propagation of the uom, sell 3 dozen
         self.env['ir.config_parameter'].sudo().set_param('stock.propagate_uom', '1')
-        po.order_line.product_qty = 3
+        with po_form.order_line.edit(0) as po_line:
+            po_line.product_qty = 3
+        po_form.save()
         move2 = po.picking_ids.move_ids.filtered(lambda m: m.product_uom.id == uom_dozen.id)
         self.assertEqual(move2.product_uom_qty, 1)
         self.assertEqual(move2.product_uom.id, uom_dozen.id)
@@ -323,8 +328,9 @@ class TestCreatePicking(common.TestProductCommon):
         """ We set the Unit(s) rounding to 1.0 and ensure buying 1.2 units in a PO is rounded to 1.0
             at reception.
         """
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
         uom_unit = self.env.ref('uom.product_uom_unit')
-        uom_unit.rounding = 1.0
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
 
         # buy a dozen
         po = self.env['purchase.order'].create(self.po_vals)
@@ -338,8 +344,8 @@ class TestCreatePicking(common.TestProductCommon):
         self.assertEqual(move1.product_uom.id, uom_unit.id)
         self.assertEqual(move1.product_qty, 1.0)
 
-        # edit the so line, buy 2.4 units, the move should now be 2.0 units
-        po.order_line.product_qty = 2.0
+        # edit the po line, buy 2.4 units, the move should now be 2.0 units
+        po.order_line.product_qty = 2.4
         self.assertEqual(move1.product_uom_qty, 2.0)
         self.assertEqual(move1.product_uom.id, uom_unit.id)
         self.assertEqual(move1.product_qty, 2.0)
@@ -356,25 +362,26 @@ class TestCreatePicking(common.TestProductCommon):
         """ We set the Unit(s) and Dozen(s) rounding to 1.0 and ensure buying 1.3 dozens in a PO is
             rounded to 1.0 at reception.
         """
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
+
         uom_unit = self.env.ref('uom.product_uom_unit')
         uom_dozen = self.env.ref('uom.product_uom_dozen')
-        uom_unit.rounding = 1.0
-        uom_dozen.rounding = 1.0
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
 
         # buy 1.3 dozen
         po = self.env['purchase.order'].create(self.po_vals)
 
-        po.order_line.product_qty = 1.3
         po.order_line.product_uom_id = uom_dozen.id
+        po.order_line.product_qty = 1.3
         po.button_confirm()
 
-        # the move should be 16.0 units
+        # the move should be 12.0 units
         move1 = po.picking_ids.move_ids[0]
-        self.assertEqual(move1.product_uom_qty, 16.0)
+        self.assertEqual(move1.product_uom_qty, 12.0)
         self.assertEqual(move1.product_uom.id, uom_unit.id)
-        self.assertEqual(move1.product_qty, 16.0)
+        self.assertEqual(move1.product_qty, 12.0)
 
-        # force the propagation of the uom, buy 2.6 dozens, the move 2 should have 2 dozens
+        # force the propagation of the uom, buy 2.6 dozen, the move 2 should have 2 dozen
         self.env['ir.config_parameter'].sudo().set_param('stock.propagate_uom', '1')
         po.order_line.product_qty = 2.6
         move2 = po.picking_ids.move_ids.filtered(lambda m: m.product_uom.id == uom_dozen.id)
@@ -401,7 +408,6 @@ class TestCreatePicking(common.TestProductCommon):
             'name': 'Usb Keyboard',
             'is_storable': True,
             'uom_id': unit,
-            'uom_po_id': unit,
             'seller_ids': [(6, 0, [supplier_info1.id])],
             'route_ids': [(6, 0, [route_buy.id, route_mto.id])]
         })

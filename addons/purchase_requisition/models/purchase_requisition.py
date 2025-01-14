@@ -168,11 +168,9 @@ class PurchaseRequisitionLine(models.Model):
 
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], required=True)
     product_uom_id = fields.Many2one(
-        'uom.uom', 'Product Unit of Measure',
-        compute='_compute_product_uom_id', store=True, readonly=False, precompute=True,
-        domain="[('category_id', '=', product_uom_category_id)]")
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
-    product_qty = fields.Float(string='Quantity', digits='Product Unit of Measure')
+        'uom.uom', 'Unit',
+        compute='_compute_product_uom_id', store=True, readonly=False, precompute=True)
+    product_qty = fields.Float(string='Quantity', digits='Product Unit')
     product_description_variants = fields.Char('Description')
     price_unit = fields.Float(
         string='Unit Price', digits='Product Price', default=0.0,
@@ -270,7 +268,7 @@ class PurchaseRequisitionLine(models.Model):
         return {
             'name': name,
             'product_id': self.product_id.id,
-            'product_uom_id': self.product_id.uom_po_id.id,
+            'product_uom_id': self.product_id.uom_id.id,
             'product_qty': product_qty,
             'price_unit': price_unit,
             'taxes_id': [(6, 0, taxes_ids)],

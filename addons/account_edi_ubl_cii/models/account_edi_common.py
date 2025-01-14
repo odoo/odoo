@@ -14,6 +14,7 @@ from odoo.tools.xml_utils import find_xml_value
 UOM_TO_UNECE_CODE = {
     'uom.product_uom_unit': 'C62',
     'uom.product_uom_dozen': 'DZN',
+    'uom.product_uom_pack_6': 'HD',
     'uom.product_uom_kgm': 'KGM',
     'uom.product_uom_gram': 'GRM',
     'uom.product_uom_day': 'DAY',
@@ -617,7 +618,7 @@ class AccountEdiCommon(models.AbstractModel):
                 ]
                 if uom_infered_xmlid:
                     product_uom = self.env.ref(uom_infered_xmlid[0], raise_if_not_found=False) or self.env['uom.uom']
-        if product and product_uom and product_uom.category_id != product.product_tmpl_id.uom_id.category_id:
+        if product and product_uom and not product_uom._has_common_reference(product.product_tmpl_id.uom_id):
             # uom incompatibility
             product_uom = self.env['uom.uom']
 

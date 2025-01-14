@@ -58,7 +58,6 @@ class ProductCommon(UomCommon):
             'list_price': 100.0,
             'standard_price': 50.0,
             'uom_id': cls.uom_unit.id,
-            'uom_po_id': cls.uom_unit.id,
             'categ_id': cls.product_category.id,
             **create_vals,
         })
@@ -130,7 +129,6 @@ class ProductVariantsCommon(ProductAttributesCommon):
         cls.product_template_sofa = cls.env['product.template'].create({
             'name': 'Sofa',
             'uom_id': cls.uom_unit.id,
-            'uom_po_id': cls.uom_unit.id,
             'categ_id': cls.product_category.id,
             'attribute_line_ids': [Command.create({
                 'attribute_id': cls.color_attribute.id,
@@ -163,11 +161,8 @@ class TestProductCommon(ProductVariantsCommon):
         # Product environment related data
         cls.uom_dunit = cls.env['uom.uom'].create({
             'name': 'DeciUnit',
-            'category_id': cls.uom_unit.category_id.id,
-            'factor_inv': 0.1,
-            'factor': 10.0,
-            'uom_type': 'smaller',
-            'rounding': 0.001,
+            'relative_factor': 10.0,
+            'relative_uom_id': cls.uom_unit.id,
         })
 
         cls.product_1, cls.product_2 = cls.env['product.product'].create([{
@@ -175,7 +170,6 @@ class TestProductCommon(ProductVariantsCommon):
             'type': 'consu',
             'default_code': 'PROD-1',
             'uom_id': cls.uom_dunit.id,
-            'uom_po_id': cls.uom_dunit.id,
         }, {
             'name': 'Wood',  # product_2
         }])
