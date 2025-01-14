@@ -1647,6 +1647,17 @@ class HttpCase(TransactionCase):
         cls.xmlrpc_url = f'http://{HOST}:{odoo.tools.config["http_port"]:d}/xmlrpc/2/'
         cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
 
+        # speed up (by a factor of ~10e6) creating new test users and
+        # authenticating them by using a very weak but very fast hash
+        # algorithm for their passwords
+        slow_cc = cls.env['res.users']._crypt_context()
+        fast_cc = slow_cc.copy()
+        fast_cc.update(
+            schemes=['pbkdf2_sha1', *slow_cc.schemes()],
+            pbkdf2_sha1__rounds=1,
+            deprecated=[])
+        cls.classPatch(cls.registry['res.users'], '_crypt_context', lambda self: fast_cc)
+
     def setUp(self):
         super().setUp()
         if self.registry_test_mode:
