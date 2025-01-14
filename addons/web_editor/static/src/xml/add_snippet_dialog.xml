@@ -17,8 +17,8 @@
                             <i class="oi oi-search" aria-hidden="true"></i>
                         </span>
                     </div>
-                    <div class="list-group list-group-flush flex-column flex-nowrap overflow-y-auto" role="tablist">
-                        <t t-if="!state.search" t-foreach="snippetGroups" t-as="snippetGroup" t-key="snippetGroup.name">
+                    <div t-if="!state.search" class="list-group list-group-flush flex-column flex-nowrap overflow-y-auto" role="tablist">
+                        <t t-foreach="snippetGroups" t-as="snippetGroup" t-key="snippetGroup.name">
                             <button class="list-group-item list-group-item-light list-group-item-action p-3" role="tab"
                                 t-att-class="{ 'active': this.state.groupSelected === snippetGroup.name}"
                                 t-on-click="() => this.state.groupSelected = snippetGroup.name">
