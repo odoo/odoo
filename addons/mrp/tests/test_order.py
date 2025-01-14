@@ -4916,6 +4916,13 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.state, 'done')
         self.assertEqual(mo.workorder_ids[0].duration_expected, 1440.0)
 
+    def test_workcenter_with_resource_calendar_from_another_company(self):
+        """Test that only the resource calendars from the same
+        company as the work center can be set."""
+        resource_calendar = self.env['resource.calendar'].search([('company_id', 'not in', [self.workcenter_1.company_id.id, False])], limit=1)
+        with self.assertRaises(UserError):
+            self.workcenter_1.resource_calendar_id, = resource_calendar
+
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
     def test_mrp_order_product_catalog(self):
