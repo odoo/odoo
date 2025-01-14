@@ -26,6 +26,8 @@ class BaseModel(models.AbstractModel):
             return super().get_base_url()
         self.ensure_one()
 
+        if self._name == 'social.post' and len(self.account_ids) == 1:
+                return self.account_ids.website_id.domain or super().get_base_url()
         if self._name == 'website':
             # Note that website_1.company_id.website_id might not be website_1
             return self.domain or super().get_base_url()
