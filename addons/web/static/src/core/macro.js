@@ -100,11 +100,6 @@ export class Macro {
     }
 
     async advance() {
-        //Only one case, when browser refresh just after the last step.
-        if (!this.currentStep && this.currentIndex === 0) {
-            await delay(300);
-            this.stop();
-        }
         if (this.isComplete) {
             return;
         }
@@ -229,7 +224,7 @@ export class Macro {
     /**
      * @param {"next"|"mutation"} from
      */
-    debounceAdvance(from) {
+    async debounceAdvance(from) {
         this.resetDebounce();
         // Make sure to take the only possible path.
         // A step always starts with "next".
@@ -243,10 +238,18 @@ export class Macro {
         ) {
             return;
         }
-        this.debouncedAdvance = browser.setTimeout(
-            () => mutex.exec(() => this.advance()),
-            this.getDebounceDelay()
-        );
+        // When browser refresh just after the last step.
+        if (!this.currentStep && this.currentIndex === 0) {
+            await delay(300);
+            this.stop();
+        } else if (from === "next" && !this.currentStep.trigger) {
+            this.advance();
+        } else {
+            this.debouncedAdvance = browser.setTimeout(
+                () => mutex.exec(() => this.advance()),
+                this.getDebounceDelay()
+            );
+        }
     }
 
     stop(error) {
