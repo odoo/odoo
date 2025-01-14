@@ -368,7 +368,7 @@ class BaseAutomation(models.Model):
             if automation.trigger == "on_create_or_write":
                 automation.trigger_field_ids |= automation._get_filter_domain_fields()
                 continue
-            self._onchange_trigger()
+            automation._onchange_trigger()
 
     @api.depends('model_id')
     def _compute_trigger(self):
