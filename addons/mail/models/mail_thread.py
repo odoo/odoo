@@ -4790,7 +4790,9 @@ class MailThread(models.AbstractModel):
                     ['model', '=', self._name], ['res_id', '=', thread.id]
                 ]))
             if request_list and "suggestedRecipients" in request_list:
-                res["suggestedRecipients"] = thread._message_get_suggested_recipients()
+                res["suggestedRecipients"] = thread._message_get_suggested_recipients(
+                    reply_discussion=True, no_create=True,
+                )
             if res:
                 store.add(thread, res, as_thread=True)
 
