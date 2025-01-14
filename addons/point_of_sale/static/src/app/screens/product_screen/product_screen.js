@@ -52,6 +52,7 @@ export class ProductScreen extends Component {
             currentOffset: 0,
             quantityByProductTmplId: {},
         });
+        this._searchTriggered = false;
         onMounted(() => {
             this.pos.openOpeningControl();
             this.pos.addPendingOrder([this.currentOrder.id]);
@@ -306,6 +307,175 @@ export class ProductScreen extends Component {
         return this.pos.searchProductWord.trim();
     }
 
+<<<<<<< saas-18.1
+||||||| 2ab0b63b7042293f8229b29bcea478d37d4c3df5
+    get products() {
+        return this.pos.models["product.product"].getAll();
+    }
+
+    get productsToDisplay() {
+        let list = [];
+
+        if (this.searchWord !== "") {
+            list = this.addMainProductsToDisplay(this.getProductsBySearchWord(this.searchWord));
+        } else if (this.pos.selectedCategory?.id) {
+            list = this.getProductsByCategory(this.pos.selectedCategory);
+        } else {
+            list = this.products;
+        }
+
+        if (!list || list.length === 0) {
+            return [];
+        }
+
+        const excludedProductIds = [
+            this.pos.config.tip_product_id?.id,
+            ...this.pos.hiddenProductIds,
+            ...this.pos.session._pos_special_products_ids,
+        ];
+
+        const filteredList = [];
+        for (const product of list) {
+            if (filteredList.length >= 100) {
+                break;
+            }
+            if (!excludedProductIds.includes(product.id) && product.canBeDisplayed) {
+                filteredList.push(product);
+            }
+        }
+
+        return this.searchWord !== ""
+            ? filteredList
+            : filteredList.sort((a, b) => a.display_name.localeCompare(b.display_name));
+    }
+
+    getProductsBySearchWord(searchWord) {
+        const words = searchWord.toLowerCase();
+        const exactMatches = this.products.filter((product) => product.exactMatch(words));
+
+        if (exactMatches.length > 0 && words.length > 2) {
+            return exactMatches;
+        }
+
+        const matches = this.products.filter((p) =>
+            unaccent(p.searchString, false).toLowerCase().includes(words)
+        );
+
+        return Array.from(new Set([...exactMatches, ...matches]));
+    }
+
+    addMainProductsToDisplay(products) {
+        const uniqueProductsMap = new Map();
+        for (const product of products) {
+            if (product.id in this.pos.mainProductVariant) {
+                const mainProduct = this.pos.mainProductVariant[product.id];
+                uniqueProductsMap.set(mainProduct.id, mainProduct);
+            } else {
+                uniqueProductsMap.set(product.id, product);
+            }
+        }
+        return Array.from(uniqueProductsMap.values());
+    }
+
+    getProductsByCategory(category) {
+        const allCategoryIds = category.getAllChildren().map((cat) => cat.id);
+        const products = allCategoryIds.flatMap(
+            (catId) => this.pos.models["product.product"].getBy("pos_categ_ids", catId) || []
+        );
+        // Remove duplicates since owl doesn't like it.
+        return Array.from(new Set(products));
+    }
+
+=======
+    get products() {
+        return this.pos.models["product.product"].getAll();
+    }
+
+    get productsToDisplay() {
+        let list = [];
+
+        if (this.searchWord !== "") {
+            if (!this._searchTriggered) {
+                this.pos.setSelectedCategory(0);
+                this._searchTriggered = true;
+            }
+            list = this.addMainProductsToDisplay(this.getProductsBySearchWord(this.searchWord));
+        } else {
+            this._searchTriggered = false;
+            if (this.pos.selectedCategory?.id) {
+                list = this.getProductsByCategory(this.pos.selectedCategory);
+            } else {
+                list = this.products;
+            }
+        }
+
+        if (!list || list.length === 0) {
+            return [];
+        }
+
+        const excludedProductIds = [
+            this.pos.config.tip_product_id?.id,
+            ...this.pos.hiddenProductIds,
+            ...this.pos.session._pos_special_products_ids,
+        ];
+
+        const filteredList = [];
+        for (const product of list) {
+            if (filteredList.length >= 100) {
+                break;
+            }
+            if (!excludedProductIds.includes(product.id) && product.canBeDisplayed) {
+                filteredList.push(product);
+            }
+        }
+
+        return this.searchWord !== ""
+            ? filteredList
+            : filteredList.sort((a, b) => a.display_name.localeCompare(b.display_name));
+    }
+
+    getProductsBySearchWord(searchWord) {
+        const words = searchWord.toLowerCase();
+        const products = this.pos.selectedCategory?.id
+            ? this.getProductsByCategory(this.pos.selectedCategory)
+            : this.products;
+
+        const exactMatches = products.filter((product) => product.exactMatch(words));
+
+        if (exactMatches.length > 0 && words.length > 2) {
+            return exactMatches;
+        }
+
+        const matches = products.filter((p) =>
+            unaccent(p.searchString, false).toLowerCase().includes(words)
+        );
+
+        return Array.from(new Set([...exactMatches, ...matches]));
+    }
+
+    addMainProductsToDisplay(products) {
+        const uniqueProductsMap = new Map();
+        for (const product of products) {
+            if (product.id in this.pos.mainProductVariant) {
+                const mainProduct = this.pos.mainProductVariant[product.id];
+                uniqueProductsMap.set(mainProduct.id, mainProduct);
+            } else {
+                uniqueProductsMap.set(product.id, product);
+            }
+        }
+        return Array.from(uniqueProductsMap.values());
+    }
+
+    getProductsByCategory(category) {
+        const allCategoryIds = category.getAllChildren().map((cat) => cat.id);
+        const products = allCategoryIds.flatMap(
+            (catId) => this.pos.models["product.product"].getBy("pos_categ_ids", catId) || []
+        );
+        // Remove duplicates since owl doesn't like it.
+        return Array.from(new Set(products));
+    }
+
+>>>>>>> b6339a289f26f4ad925e473dbd307c14d84cc83e
     async onPressEnterKey() {
         const { searchProductWord } = this.pos;
         if (!searchProductWord) {
