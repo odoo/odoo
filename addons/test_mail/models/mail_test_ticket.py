@@ -163,6 +163,62 @@ class MailTestTicketMc(models.Model):
         return res
 
 
+class MailTestTicketPartner(models.Model):
+    """ Mail.test.ticket.mc, with complete partner support. More functional
+    and therefore done in a separate model to avoid breaking other tests. """
+    _description = 'MC ticket-like model with partner support'
+    _name = "mail.test.ticket.partner"
+    _inherit = [
+        'mail.test.ticket.mc',
+        'mail.thread.blacklist',
+    ]
+    _primary_email = 'email_from'
+
+    # fields to mimic stage-based tracing
+    state = fields.Selection(
+        [('new', 'New'), ('open', 'Open'), ('close', 'Close'),],
+        default='open', tracking=10)
+    state_template_id = fields.Many2one('mail.template')
+
+    def _message_post_after_hook(self, message, msg_vals):
+        if self.email_from and not self.customer_id:
+            # we consider that posting a message with a specified recipient (not a follower, a specific one)
+            # on a document without customer means that it was created through the chatter using
+            # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
+            new_partner = message.partner_ids.filtered(
+                lambda partner: partner.email == self.email_from or (self.email_normalized and partner.email_normalized == self.email_normalized)
+            )
+            if new_partner:
+                if new_partner[0].email_normalized:
+                    email_domain = ('email_normalized', '=', new_partner[0].email_normalized)
+                else:
+                    email_domain = ('email_from', '=', new_partner[0].email)
+                self.search([
+                    ('customer_id', '=', False), email_domain,
+                ]).write({'customer_id': new_partner[0].id})
+        return super()._message_post_after_hook(message, msg_vals)
+
+    def _creation_subtype(self):
+        if self.state == 'new':
+            return self.env.ref('test_mail.st_mail_test_ticket_partner_new')
+        return super(MailTestTicket, self)._creation_subtype()
+
+    def _track_template(self, changes):
+        res = super()._track_template(changes)
+        record = self[0]
+        # acknowledgement-like email, like in project/helpdesk
+        if 'state' in changes and record.state == 'new' and record.state_template_id:
+            res['state'] = (
+                record.state_template_id,
+                {
+                    'auto_delete_keep_log': False,
+                    'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+                    'email_layout_xmlid': 'mail.mail_notification_light'
+                },
+            )
+        return res
+
+
 class MailTestContainer(models.Model):
     """ This model can be used in tests when container records like projects
     or teams are required. """
