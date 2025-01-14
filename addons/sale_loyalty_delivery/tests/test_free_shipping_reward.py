@@ -248,7 +248,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
 
         self._apply_promo_code(order, 'free_shipping')
         self._auto_rewards(order, programs)
-        self.assertEqual(len(order.order_line.ids), 3, "We should get the delivery line and the free delivery since we are below 872.73$")
+        self.assertEqual(len(order.order_line.ids), 3, "We should get the delivery line and the free delivery since we are above 872$")
         self.assertEqual(order.reward_amount, -20)
         self.assertEqual(sum([line.price_total for line in order._get_no_effect_on_threshold_lines()]), 0)
         self.assertEqual(order.amount_untaxed, 872.73)
@@ -260,8 +260,9 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         self.assertEqual(sum([line.price_total for line in order._get_no_effect_on_threshold_lines()]), 0)
         self.assertEqual(order.amount_untaxed, 1163.64)
 
+        sol1.product_uom_qty = 5  # Increased to ensure the free product doesn't trigger cheapest.
         programs |= self.env['loyalty.program'].create({
-            'name': '20% reduction on large cabinet in cart',
+            'name': '20% reduction on every second large cabinet in cart',
             'trigger': 'auto',
             'rule_ids': [(0, 0, {})],
             'reward_ids': [(0, 0, {
@@ -269,11 +270,14 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
                 'discount': 20,
                 'discount_mode': 'percent',
                 'discount_applicability': 'cheapest',
+                'discount_product_domain': f'[("id", "=", {self.iPadMini.id})]'
             })]
         })
         self._auto_rewards(order, programs)
-        # 872.73 - (20% of 1 iPad) = 872.73 - 58.18 = 814.55
-        self.assertAlmostEqual(order.amount_untaxed, 1105.46, 2, "One large cabinet should be discounted by 20%")
+        # 1454.55 (5 iPad) + 20 (ship) - 20 (free ship) - (20% of 2 iPad) = 1338.19
+        self.assertAlmostEqual(
+            order.amount_untaxed, 1338.19, 2, "2 large cabinets should be discounted by 20%."
+        )
 
     def test_free_shipping_reward_last_line(self):
         """

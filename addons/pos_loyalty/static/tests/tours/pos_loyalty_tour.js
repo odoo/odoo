@@ -21,19 +21,19 @@ registry.category("web_tour.tours").add("PosLoyaltyTour1", {
             // basic order
             // just accept the automatically applied promo program
             // applied programs:
-            //   - on cheapest product
+            //   - on cheapest product (out of 2, so 5 products => 2 discounted, 6 ==> 3)
             ProductScreen.addOrderline("Whiteboard Pen", "5"),
-            PosLoyalty.hasRewardLine("90% on the cheapest product", "-2.88"),
-            PosLoyalty.selectRewardLine("on the cheapest product"),
-            PosLoyalty.orderTotalIs("13.12"),
+            PosLoyalty.hasRewardLine("Buy 2, get 90% on the cheapest", "-5.76"),
+            PosLoyalty.selectRewardLine("Buy 2, get 90% on the cheapest"),
+            PosLoyalty.orderTotalIs("10.24"),
             PosLoyalty.finalizeOrder("Cash", "20"),
 
             // remove the reward from auto promo program
             // no applied programs
             ProductScreen.addOrderline("Whiteboard Pen", "6"),
-            PosLoyalty.hasRewardLine("on the cheapest product", "-2.88"),
-            PosLoyalty.orderTotalIs("16.32"),
-            PosLoyalty.removeRewardLine("90% on the cheapest product"),
+            PosLoyalty.hasRewardLine("Buy 2, get 90% on the cheapest", "-8.64"),
+            PosLoyalty.orderTotalIs("10.56"),
+            PosLoyalty.removeRewardLine("Buy 2, get 90% on the cheapest"),
             PosLoyalty.orderTotalIs("19.2"),
             PosLoyalty.finalizeOrder("Cash", "20"),
 
@@ -41,8 +41,8 @@ registry.category("web_tour.tours").add("PosLoyaltyTour1", {
             // applied programs:
             //   - coupon program
             ProductScreen.addOrderline("Desk Organizer", "9"),
-            PosLoyalty.hasRewardLine("on the cheapest product", "-4.59"),
-            PosLoyalty.removeRewardLine("90% on the cheapest product"),
+            PosLoyalty.hasRewardLine("Buy 2, get 90% on the cheapest", "-18.36"),
+            PosLoyalty.removeRewardLine("Buy 2, get 90% on the cheapest"),
             PosLoyalty.orderTotalIs("45.90"),
             PosLoyalty.enterCode("invalid_code"),
             Notification.has("invalid_code"),
@@ -52,30 +52,32 @@ registry.category("web_tour.tours").add("PosLoyaltyTour1", {
 
             // Use coupon but eventually remove the reward
             // applied programs:
-            //   - on cheapest product
+            //   - on cheapest product (out of 2, so 4 products => 2 discounted, 9 ==> 4)
             ProductScreen.addOrderline("Letter Tray", "4"),
             ProductScreen.addOrderline("Desk Organizer", "9"),
-            PosLoyalty.hasRewardLine("90% on the cheapest product", "-4.59"),
-            PosLoyalty.orderTotalIs("62.43"),
+            PosLoyalty.hasRewardLine("Buy 2, get 90% on the cheapest", "-9.50"), // tax 10%
+            PosLoyalty.hasRewardLine("Buy 2, get 90% on the cheapest", "-18.36"), // no tax
+            PosLoyalty.orderTotalIs("39.16"),
             PosLoyalty.enterCode("5678"),
             PosLoyalty.hasRewardLine("Free Product - Desk Organizer", "-15.30"),
-            PosLoyalty.orderTotalIs("47.13"),
+            PosLoyalty.orderTotalIs("23.86"),
             PosLoyalty.removeRewardLine("Free Product"),
-            PosLoyalty.orderTotalIs("62.43"),
+            PosLoyalty.orderTotalIs("39.16"),
             PosLoyalty.finalizeOrder("Cash", "90"),
 
             // specific product discount
             // applied programs:
-            //   - on cheapest product
+            //   - on cheapest product (out of 2, so 10 products => 5 discounted, 9 ==> 4)
             //   - on specific products
-            ProductScreen.addOrderline("Magnetic Board", "10"), // 1.98
-            ProductScreen.addOrderline("Desk Organizer", "3"), // 5.1
-            ProductScreen.addOrderline("Letter Tray", "4"), // 4.8 tax 10%
-            PosLoyalty.hasRewardLine("90% on the cheapest product", "-1.78"),
-            PosLoyalty.orderTotalIs("54.44"),
+            ProductScreen.addOrderline("Magnetic Board", "10"), // 1.98 => subtotal 19.8
+            ProductScreen.addOrderline("Desk Organizer", "3"), // 5.1 => subtotal 15.3
+            ProductScreen.addOrderline("Letter Tray", "4"), // 4.8 tax 10% => subtotal 21.12
+            PosLoyalty.hasRewardLine("Buy 2, get 90% on the cheapest", "-9.50"), // tax 10%
+            PosLoyalty.hasRewardLine("Buy 2, get 90% on the cheapest", "-13.50"), // no tax
+            PosLoyalty.orderTotalIs("33.22"),
             PosLoyalty.enterCode("promocode"),
-            PosLoyalty.hasRewardLine("50% on specific products", "-16.66"), // 17.55 - 1.78*0.5
-            PosLoyalty.orderTotalIs("37.78"),
+            PosLoyalty.hasRewardLine("50% on specific products", "-10.80"), // (35.1 - 13.5) * .5
+            PosLoyalty.orderTotalIs("22.42"),
             PosLoyalty.finalizeOrder("Cash", "50"),
         ].flat(),
 });
@@ -92,13 +94,13 @@ registry.category("web_tour.tours").add("PosLoyaltyTour2", {
             //   - on cheapest discount
             Chrome.startPoS(),
             ProductScreen.addOrderline("Desk Organizer", "10"), // 5.1
-            PosLoyalty.hasRewardLine("on the cheapest product", "-4.59"),
+            PosLoyalty.hasRewardLine("Buy 2, get 90% on the cheapest", "-22.95"),
             ProductScreen.addOrderline("Letter Tray", "4"), // 4.8 tax 10%
-            PosLoyalty.hasRewardLine("on the cheapest product", "-4.59"),
+            PosLoyalty.hasRewardLine("Buy 2, get 90% on the cheapest", "-9.50"),
             PosLoyalty.enterCode("123456"),
-            PosLoyalty.hasRewardLine("10% on your order", "-4.64"),
-            PosLoyalty.hasRewardLine("10% on your order", "-2.11"),
-            PosLoyalty.orderTotalIs("60.78"), //SUBTOTAL
+            PosLoyalty.hasRewardLine("10% on your order", "-1.17"),
+            PosLoyalty.hasRewardLine("10% on your order", "-2.81"),
+            PosLoyalty.orderTotalIs("35.69"), //SUBTOTAL
             PosLoyalty.finalizeOrder("Cash", "70"),
 
             // Scanning coupon twice.
@@ -109,26 +111,28 @@ registry.category("web_tour.tours").add("PosLoyaltyTour2", {
             //  - global discount
             //  - on cheapest discount
             ProductScreen.addOrderline("Desk Organizer", "11"), // 5.1 per item
-            PosLoyalty.hasRewardLine("90% on the cheapest product", "-4.59"),
-            PosLoyalty.orderTotalIs("51.51"),
-            // add global discount and the discount will be replaced
+            PosLoyalty.hasRewardLine("Buy 2, get 90% on the cheapest", "-22.95"),
+            PosLoyalty.orderTotalIs("33.15"),
+            // add global discount and the discount will be added
             PosLoyalty.enterCode("345678"),
-            PosLoyalty.hasRewardLine("10% on your order", "-5.15"),
+            PosLoyalty.hasRewardLine("Buy 2, get 90% on the cheapest", "-22.95"),
+            PosLoyalty.hasRewardLine("10% on your order", "-3.32"),
             // add free product coupon (for qty=11, free=4)
             // the discount should change after having free products
-            // it should go back to cheapest discount as it is higher
             PosLoyalty.enterCode("5678"),
             PosLoyalty.hasRewardLine("Free Product - Desk Organizer", "-20.40"),
-            PosLoyalty.hasRewardLine("90% on the cheapest product", "-4.59"),
+            PosLoyalty.hasRewardLine("Buy 2, get 90% on the cheapest", "-22.95"),
+            PosLoyalty.hasRewardLine("10% on your order", "-1.28"),
             // set quantity to 18
             // free qty stays the same since the amount of points on the card only allows for 4 free products
             //TODO: The following step should works with ProductScreen.clickNumpad("⌫", "8"),
             ProductScreen.clickNumpad("⌫", "⌫", "1", "8"),
-            PosLoyalty.hasRewardLine("10% on your order", "-6.68"),
             PosLoyalty.hasRewardLine("Free Product - Desk Organizer", "-20.40"),
+            PosLoyalty.hasRewardLine("Buy 2, get 90% on the cheapest", "-41.31"),
+            PosLoyalty.hasRewardLine("10% on your order", "-3.01"),
             // scan the code again and check notification
             PosLoyalty.enterCode("5678"),
-            PosLoyalty.orderTotalIs("60.13"),
+            PosLoyalty.orderTotalIs("27.08"),
             PosLoyalty.finalizeOrder("Cash", "65"),
 
             // Specific products discount (with promocode) and free product (1357)
@@ -136,8 +140,8 @@ registry.category("web_tour.tours").add("PosLoyaltyTour2", {
             //   - discount on specific products
             //   - free product
             ProductScreen.addOrderline("Desk Organizer", "6"), // 5.1 per item
-            PosLoyalty.hasRewardLine("on the cheapest product", "-4.59"),
-            PosLoyalty.removeRewardLine("90% on the cheapest product"),
+            PosLoyalty.hasRewardLine("Buy 2, get 90% on the cheapest", "-13.77"),
+            PosLoyalty.removeRewardLine("Buy 2, get 90% on the cheapest"),
             PosLoyalty.enterCode("promocode"),
             PosLoyalty.hasRewardLine("50% on specific products", "-15.30"),
             PosLoyalty.enterCode("1357"),
@@ -153,15 +157,15 @@ registry.category("web_tour.tours").add("PosLoyaltyTour2", {
             //   - cheapest product
             ProductScreen.addOrderline("Monitor Stand", "6"), // 3.19 per item
             PosLoyalty.enterCode("098765"),
-            PosLoyalty.hasRewardLine("90% on the cheapest product", "-2.87"),
-            PosLoyalty.hasRewardLine("10% on your order", "-1.63"),
-            PosLoyalty.orderTotalIs("14.64"),
-            PosLoyalty.removeRewardLine("90% on the cheapest product"),
+            PosLoyalty.hasRewardLine("Buy 2, get 90% on the cheapest", "-8.61"),
+            PosLoyalty.hasRewardLine("10% on your order", "-1.05"),
+            PosLoyalty.orderTotalIs("9.48"),
+            PosLoyalty.removeRewardLine("Buy 2, get 90% on the cheapest"),
             PosLoyalty.hasRewardLine("10% on your order", "-1.91"),
             PosLoyalty.orderTotalIs("17.23"),
             ProductScreen.clickControlButton("Reset Programs"),
-            PosLoyalty.hasRewardLine("90% on the cheapest product", "-2.87"),
-            PosLoyalty.orderTotalIs("16.27"),
+            PosLoyalty.hasRewardLine("Buy 2, get 90% on the cheapest", "-8.61"),
+            PosLoyalty.orderTotalIs("10.53"),
             PosLoyalty.finalizeOrder("Cash", "20"),
         ].flat(),
 });

@@ -383,43 +383,48 @@ class SaleOrder(models.Model):
             )
         return discountable, discountable_per_tax
 
-    def _cheapest_line(self, reward):
+    def _cheapest_lines_info(self, reward):
         self.ensure_one()
-        cheapest_line = False
-        cheapest_line_price_unit = False
-        domain = reward._get_discount_product_domain()
-        for line in (self.order_line - self._get_no_effect_on_threshold_lines()):
-            line_price_unit = self._get_order_line_price(line, 'price_unit')
-            if (
-                line.reward_id
-                or line.combo_item_id
-                or not line.product_uom_qty
-                or not line_price_unit
-                or not line.product_id.filtered_domain(domain)
-            ):
-                continue
-            if not cheapest_line or cheapest_line_price_unit > line_price_unit:
-                cheapest_line = line._get_lines_with_price()
-                cheapest_line_price_unit = line_price_unit
-        return cheapest_line
+        product_domain = reward._get_discount_product_domain()
+        discountable_products = self.order_line.product_id.filtered_domain(product_domain)
+        valid_lines = (self.order_line - self._get_no_effect_on_threshold_lines()).filtered(
+            lambda l: not l.reward_id
+                      and l.product_uom_qty
+                      and l.product_id in discountable_products
+                      and not l.combo_item_id
+                      and l._get_lines_with_price()
+        )
+        lines_price_descending = valid_lines.sorted(
+            key=lambda l: self._get_order_line_price(l, 'price_unit'), reverse=True
+        )
+        lines_qty_price_descending = [(sol, sol.product_uom_qty) for sol in lines_price_descending]
+        rest_quantity = 0
+        lines_quantity_to_discount = {}
+        for line, line_quantity in lines_qty_price_descending:
+            discounted_quantity = (rest_quantity + line_quantity) // reward.repeater
+            rest_quantity = (rest_quantity + line_quantity) % reward.repeater
+            if discounted_quantity > 0 and not reward.clear_wallet:
+                lines_quantity_to_discount[line] = discounted_quantity
+            elif discounted_quantity > 0:  # Only discount 1 product as it clears the wallet
+                lines_quantity_to_discount[line] = 1
+                return lines_quantity_to_discount
+        return lines_quantity_to_discount
 
     def _discountable_cheapest(self, reward):
-        """
-        Returns the discountable and discountable_per_tax for a discount that applies to the cheapest line
-        """
+        """ Returns discountable and discountable_per_tax for a discount on the cheapest lines. """
         self.ensure_one()
         assert reward.discount_applicability == 'cheapest'
 
-        cheapest_line = self._cheapest_line(reward)
-        if not cheapest_line:
+        cheapest_lines_info = self._cheapest_lines_info(reward=reward)
+        if not cheapest_lines_info:
             return False, False
 
         discountable = 0
         discountable_per_tax = defaultdict(int)
-        for line in cheapest_line:
+        for line, qty in cheapest_lines_info.items():
             discountable += line.price_total
             taxes = line.tax_ids.filtered(lambda t: t.amount_type != 'fixed')
-            discountable_per_tax[taxes] += line.price_unit * (1 - (line.discount or 0) / 100)
+            discountable_per_tax[taxes] += line.price_unit * (1 - (line.discount or 0) / 100) * qty
 
         return discountable, discountable_per_tax
 
@@ -466,14 +471,14 @@ class SaleOrder(models.Model):
                 discount_lines[line.reward_identifier_code] |= line
 
         order_lines -= self.order_line.filtered('reward_id')
-        cheapest_line = False
+        cheapest_lines_info = False
         for lines in discount_lines.values():
             line_reward = lines.reward_id
             discounted_lines = order_lines
             if line_reward.discount_applicability == 'cheapest':
-                # get the discounted cheapest line applicable for given reward domain
-                cheapest_line = cheapest_line or self._cheapest_line(line_reward)
-                discounted_lines = cheapest_line
+                # get the discounted cheapest lines applicable for given reward domain
+                cheapest_lines_info = cheapest_lines_info or self._cheapest_lines_info(line_reward)
+                discounted_lines = cheapest_lines_info.keys()
             elif line_reward.discount_applicability == 'specific':
                 discounted_lines = self._get_specific_discountable_lines(line_reward)
             if not discounted_lines:
@@ -482,7 +487,11 @@ class SaleOrder(models.Model):
             if line_reward.discount_mode == 'percent':
                 for line in discounted_lines:
                     if line_reward.discount_applicability == 'cheapest':
-                        remaining_amount_per_line[line] *= (1 - line_reward.discount / 100 / line.product_uom_qty)
+                        item_discount = line_reward.discount / 100 / line.product_uom_qty
+                        items_qty_discounted = cheapest_lines_info[line]
+                        remaining_amount_per_line[line] *= (
+                            1 - item_discount * items_qty_discounted
+                        )
                     else:
                         remaining_amount_per_line[line] *= (1 - line_reward.discount / 100)
             else:

@@ -96,7 +96,7 @@ class LoyaltyReward(models.Model):
     all_discount_product_ids = fields.Many2many(
         comodel_name='product.product', compute='_compute_all_discount_product_ids'
     )
-    reward_product_domain = fields.Char(compute='_compute_reward_product_domain', store=False)
+    reward_product_domain = fields.Char(compute='_compute_reward_product_domain')
     discount_max_amount = fields.Monetary(
         string="Max Discount",
         help="This is the max amount this reward may discount, leave to 0 for no limit.",
@@ -128,10 +128,15 @@ class LoyaltyReward(models.Model):
         comodel_name='uom.uom', compute='_compute_reward_product_uom_id'
     )
 
+    repeater = fields.Integer(string="Repeater", default=2)
     required_points = fields.Float(string="Points needed", default=1)
     point_name = fields.Char(related='program_id.portal_point_name', readonly=True)
     clear_wallet = fields.Boolean(default=False)
 
+    _repeater_positive = models.Constraint(
+        'CHECK (repeater > 0)',
+        "The repeater for a reward must be strictly positive.",
+    )
     _required_points_positive = models.Constraint(
         'CHECK (required_points > 0)',
         "The required points for a reward must be strictly positive.",
@@ -225,8 +230,10 @@ class LoyaltyReward(models.Model):
             ('reward_product_tag_id.product_ids', operator, value)
         ]
 
-    @api.depends('reward_type', 'reward_product_id', 'discount_mode', 'reward_product_tag_id',
-                 'discount', 'currency_id', 'discount_applicability', 'all_discount_product_ids')
+    @api.depends(
+        'reward_type', 'reward_product_id', 'discount_mode', 'reward_product_tag_id', 'discount',
+        'currency_id', 'discount_applicability', 'all_discount_product_ids', 'repeater'
+    )
     def _compute_description(self):
         for reward in self:
             reward_string = ""
@@ -256,7 +263,11 @@ class LoyaltyReward(models.Model):
                 if reward.discount_applicability == 'order':
                     reward_string += _("your order")
                 elif reward.discount_applicability == 'cheapest':
-                    reward_string += _("the cheapest product")
+                    reward_string = _(
+                        "Buy %(number_of_product)s, get %(reward_string)s the cheapest",
+                        number_of_product=reward.repeater,
+                        reward_string=reward_string,
+                    )
                 elif reward.discount_applicability == 'specific':
                     product_available = self.env['product.product'].search(reward._get_discount_product_domain(), limit=2)
                     if len(product_available) == 1:

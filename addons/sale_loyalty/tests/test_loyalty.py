@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.tests import new_test_user, tagged
 from odoo.tools.float_utils import float_compare
@@ -578,6 +578,199 @@ class TestLoyalty(TestSaleCouponCommon):
         order.action_confirm()
         self.assertEqual(loyalty_card.points, 100)
 
+    def test_reward_cheapest_product_applied_multiple_times(self):
+        """ Check the application of a reward on the cheapest product. """
+
+        self.env['loyalty.program'].search([]).action_archive()
+
+        promotion = self.env['loyalty.program'].create({
+            'name': "Second cheapest at 50%",
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'rule_ids': [Command.create({'reward_point_amount': '1', 'reward_point_mode': 'unit'})],
+            'reward_ids': [Command.create({
+                'discount': 50,
+                'discount_applicability': 'cheapest',
+                'clear_wallet': False,
+            })],
+        })
+
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_A.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 100,  # price_total tax included: 115 (15% tax)
+                }),
+                Command.create({
+                    'product_id': self.product_B.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 15,  # price_total tax included: 17.25 (15% tax)
+                }),
+                Command.create({
+                    'product_id': self.product_C.id,
+                    'product_uom_qty': 3,
+                    'price_unit': 333,  # price_total tax included: 333 (No tax)
+                }),
+            ]
+        })
+
+        msg = (
+            f"Total amount should be 1131.25 (1*100*1.15 + 1*15*1.15 + 3*333) and not"
+            f" {order.amount_total}."
+        )
+        self.assertEqual(float_compare(order.amount_total, 1131.25, precision_rounding=3), 0, msg)
+
+        order._update_programs_and_rewards()
+        self._claim_reward(order, program=promotion)
+
+        self.assertEqual(len(order.order_line), 5, msg="2 discount lines should have been created.")
+        no_tax_disc_line = order.order_line.filtered(lambda l: l.is_reward_line and not l.tax_ids)
+        msg = (
+            f"One line shouldn't have any tax, it's amount should be -166.5 (333*0.5) and not"
+            f" {no_tax_disc_line.price_total}"
+        )
+        self.assertEqual(
+            float_compare(no_tax_disc_line.price_total, -166.5, precision_rounding=3), 0, msg=msg
+        )
+        with_tax_discount_line = order.order_line.filtered(lambda l: l.is_reward_line and l.tax_ids)
+        msg = (
+            f"One line should have a 15% tax, it's amount should be ≃ -57.50 (100*1.15*0.5) and not"
+            f" {with_tax_discount_line.price_total}."
+        )
+        self.assertEqual(float_compare(
+            with_tax_discount_line.price_total, -57.50, precision_rounding=3
+        ), 0, msg=msg)
+        msg = (
+            f"Total amount should be 907.25 (previous total - 100*1.15*0.5 - 333*0.5 discounted)"
+            f" and not {order.amount_total}."
+        )
+        self.assertEqual(float_compare(order.amount_total, 907.25, precision_rounding=3), 0, msg)
+
+    def test_reward_cheapest_product_applied_once_when_clear_wallet(self):
+        """ Check the application of a reward on the cheapest product when clear wallet is set. """
+
+        self.env['loyalty.program'].search([]).action_archive()
+
+        promotion = self.env['loyalty.program'].create({
+            'name': "Cheapest at 50%",
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'rule_ids': [Command.create({'reward_point_amount': '1', 'reward_point_mode': 'unit'})],
+            'reward_ids': [Command.create({
+                'discount': 50,
+                'discount_applicability': 'cheapest',
+                'clear_wallet': True,
+            })],
+        })
+
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_A.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 100,  # price_total tax included: 115 (15% tax)
+                }),
+                Command.create({
+                    'product_id': self.product_B.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 15,  # price_total tax included: 17.25 (15% tax)
+                }),
+                Command.create({
+                    'product_id': self.product_C.id,
+                    'product_uom_qty': 3,
+                    'price_unit': 333,  # price_total tax included: 333 (No tax)
+                }),
+            ]
+        })
+
+        msg = (
+            f"Total amount should be 1131.25 (1*100*1.15 + 1*15*1.15 + 3*333) and not"
+            f" {order.amount_total}."
+        )
+        self.assertEqual(float_compare(order.amount_total, 1131.25, precision_rounding=3), 0, msg)
+
+        order._update_programs_and_rewards()
+        self._claim_reward(order, program=promotion)
+
+        msg = (
+            f"Total amount should be 964.75 (previous total - 333*0.5 discounted) and not"
+            f" {order.amount_total}."
+        )
+        self.assertEqual(float_compare(order.amount_total, 964.75, precision_rounding=3), 0, msg)
+
+    def test_reward_specific_product_with_prorata_when_cheapest_already_applied(self):
+        """ Check the application of a specific reward is computed based on what isn't yet
+         discounted. """
+
+        self.env['loyalty.program'].search([]).action_archive()
+
+        # Using the same setup as test_reward_cheapest_product_applied_multiple_times
+        cheapest_promo = self.env['loyalty.program'].create({
+            'name': "Second cheapest at 50%",
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'rule_ids': [Command.create({'reward_point_amount': '1', 'reward_point_mode': 'unit'})],
+            'reward_ids': [Command.create({
+                'discount': 50,
+                'discount_applicability': 'cheapest',
+                'clear_wallet': False,
+            })],
+        })
+
+        specific_promo = self.env['loyalty.program'].create({
+            'name': "Reduction of 10%",
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'rule_ids': [Command.create({'reward_point_amount': '1', 'reward_point_mode': 'unit'})],
+            'reward_ids': [Command.create({
+                'discount': 10,
+                'discount_applicability': 'specific',
+                'discount_product_ids': self.product_C,
+                'clear_wallet': False,
+            })],
+        })
+
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_A.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 100,  # price_total tax included: 115 (15% tax)
+                }),
+                Command.create({
+                    'product_id': self.product_B.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 15,  # price_total tax included: 17.25 (15% tax)
+                }),
+                Command.create({
+                    'product_id': self.product_C.id,
+                    'product_uom_qty': 3,
+                    'price_unit': 333,  # price_total tax included: 333 (No tax)
+                }),
+            ]
+        })
+
+        order._update_programs_and_rewards()
+        self._claim_reward(order, program=cheapest_promo)
+
+        msg = (
+            f"Total amount should be 907.25 (previous total - 100*1.15*0.5 - 333*0.5 discounted)"
+            f" and not {order.amount_total}."
+        )
+        self.assertEqual(float_compare(order.amount_total, 907.25, precision_rounding=3), 0, msg)
+
+        self._claim_reward(order, program=specific_promo)
+
+        msg = (
+            f"Total amount should be 824 (previous total - 2*333*0.1 - 0.5*333*0.1)"
+            f" and not {order.amount_total}. One of the 3 products already has a 50% discount."
+        )
+        self.assertEqual(float_compare(order.amount_total, 824, precision_rounding=3), 0, msg)
+
     def test_multiple_discount_specific(self):
         """
         Check the discount calculation if it is based on the remaining amount
@@ -1085,6 +1278,12 @@ class TestLoyalty(TestSaleCouponCommon):
                 Command.create({'product_id': self.product_B.id}),
             ]
         })
+
+        with self.assertRaises(UserError, msg="There is nothing to discount"):
+            # Try to discount the second cheapest among product with the tag when only 1
+            self._apply_promo_code(order, '10discount')
+
+        order.order_line[0].product_uom_qty = 2
         self._apply_promo_code(order, '10discount')
         msg = "Discount should only be applied to the line with a correctly tagged product."
         self.assertEqual(order.order_line[2].price_total, -11.5, msg)
@@ -1094,6 +1293,7 @@ class TestLoyalty(TestSaleCouponCommon):
             'product_tag_ids': product_tag,
         })
         order.order_line[2:].unlink()
+        order.order_line[0].product_uom_qty = 1
         order.write({
             'order_line':[
                 # product_C: lst_price = Tax included price: 50
