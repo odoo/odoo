@@ -652,9 +652,341 @@ const GPSPicker = InputUserValueWidget.extend({
         }
     },
 });
+
+const GPSPicker2 = InputUserValueWidget.extend({
+    events: {
+        // Explicitly not consider all InputUserValueWidget events
+        input: "_OnInput",
+        keydown: "_OnKeyDown",
+        "blur input": "_onInputBlur",
+    },
+
+    /**
+     * @constructor
+     */
+    init() {
+        this._super(...arguments);
+        this._gmapCacheGPSToPlace = {};
+
+        // The google API will be loaded inside the website iframe. Let's try
+        // not having to load it in the backend too and just using the iframe
+        // google object instead.
+        this.contentWindow = this.$target[0].ownerDocument.defaultView;
+        this.notification = this.bindService("notification");
+    },
+    /**
+     * @override
+     */
+    async willStart() {
+        await this._super(...arguments);
+        this._gmapLoaded = await new Promise((resolve) => {
+            this.trigger_up("gmap_api_request_2", {
+                editableMode: true,
+                configureIfNecessary: true,
+                onSuccess: (key) => {
+                    if (!key) {
+                        resolve(false);
+                        return;
+                    }
+
+                    // TODO see _notifyGMapError, this tries to trigger an error
+                    // early but this is not consistent with new gmap keys.
+                    this._nearbySearch("(50.854975,4.3753899)", !!key).then((place) =>
+                        resolve(!!place)
+                    );
+                },
+            });
+        });
+        if (!this._gmapLoaded && !this._gmapErrorNotified) {
+            this.trigger_up("user_value_widget_critical");
+            return;
+        }
+    },
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        this.el.classList.add("o_we_large");
+        if (!this._gmapLoaded) {
+            return;
+        }
+        this._selectedIndex = -1;
+        this._suggestionItems = [];
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    getMethodsParams: function (methodName) {
+        return Object.assign({ gmapPlace: this._gmapPlace || {} }, this._super(...arguments));
+    },
+    /**
+     * @override
+     */
+    async setValue() {
+        await this._super(...arguments);
+        if (!this._gmapLoaded) {
+            return;
+        }
+
+        this._gmapPlace = await this._nearbySearch(this._value);
+
+        if (this._gmapPlace) {
+            this.inputEl.value = this._gmapPlace.formattedAddress;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {string} gps
+     * @param {boolean} [notify=true]
+     * @returns {Promise}
+     */
+    async _nearbySearch(gps, notify = true) {
+        if (this._gmapCacheGPSToPlace[gps]) {
+            return this._gmapCacheGPSToPlace[gps];
+        }
+
+        const { Place } = await this.contentWindow.google.maps.importLibrary("places");
+        const p = gps.substring(1).slice(0, -1).split(",");
+        const searchLocation = { lat: Number(p[0]) || 0, lng: Number(p[1]) || 0 };
+        try {
+            const { places } = await Place.searchNearby({
+                fields: ["formattedAddress"],
+                locationRestriction: {
+                    center: searchLocation,
+                    radius: 10,
+                },
+            });
+            if (places.length) {
+                this._gmapCacheGPSToPlace[gps] = places[0];
+                return places[0];
+            } else {
+                return { formattedAddress: "Unknown place" };
+            }
+        } catch {
+            if (notify) {
+                this._notifyGMapError();
+            }
+        }
+    },
+    /**
+     * Indicates to the user there is an error with the google map API and
+     * re-opens the configuration dialog. For good measures, this also notifies
+     * a critical error which normally removes the related snippet entirely.
+     *
+     * @private
+     */
+    _notifyGMapError() {
+        // TODO this should be better to detect all errors. This is random.
+        // When misconfigured (wrong APIs enabled), sometimes Google throw
+        // errors immediately (which then reaches this code), sometimes it
+        // throws them later (which then induces an error log in the console
+        // and random behaviors).
+        if (this._gmapErrorNotified) {
+            return;
+        }
+        this._gmapErrorNotified = true;
+
+        this.notification.add(
+            _t(
+                "A Google Map error occurred. Make sure to read the key configuration popup carefully."
+            ),
+            { type: "danger", sticky: true }
+        );
+        this.trigger_up("gmap_api_request", {
+            editableMode: true,
+            reconfigure: true,
+            onSuccess: () => {
+                this._gmapErrorNotified = false;
+            },
+        });
+
+        setTimeout(() => this.trigger_up("user_value_widget_critical"));
+    },
+    /**
+     * Creates or retrieves the suggestion box for Google Maps autocomplete.
+     * If it doesn't exist yet, it is appended to the DOM.
+     *
+     * @private
+     * @returns {HTMLElement} The suggestion box element.
+     */
+    _getOrCreateSuggestionBox() {
+        if (!this.suggestionBoxEl) {
+            this.suggestionBoxEl = document.createElement("div");
+            this.suggestionBoxEl.className = "s_google_map_suggestion_box";
+            this.inputEl.parentNode.appendChild(this.suggestionBoxEl);
+            this.inputEl.parentNode.style.position = "relative";
+        }
+        this.suggestionBoxEl.classList.remove("d-none");
+        return this.suggestionBoxEl;
+    },
+    /**
+     * Clears all suggestions and hides the suggestion box.
+     *
+     * @private
+     */
+    _clearSuggestions() {
+        this._suggestionItems = [];
+        this._selectedIndex = -1;
+        if (this.suggestionBoxEl) {
+            this.suggestionBoxEl.innerHTML = "";
+            this.suggestionBoxEl.classList.add("d-none");
+        }
+    },
+    /**
+     * Updates the visual highlight for the currently selected suggestion.
+     *
+     * @private
+     */
+    _updateHighlight() {
+        this._suggestionItems.forEach((itemEl, index) => {
+            itemEl.classList.toggle(
+                "s_google_map_suggestion_item_selected",
+                index === this._selectedIndex
+            );
+        });
+    },
+    /**
+     * Highlights a specific suggestion item in the list.
+     *
+     * @private
+     * @param {HTMLElement} itemEl - The DOM element to highlight.
+     */
+    _highlightItem(itemEl) {
+        const index = this._suggestionItems.indexOf(itemEl);
+        if (index >= 0) {
+            this._selectedIndex = index;
+            this._updateHighlight();
+        }
+    },
+    /**
+     * Creates a DOM element for a place suggestion.
+     *
+     * @private
+     * @param {Object} placePrediction - The prediction object for the place.
+     * @returns {HTMLElement} The suggestion item DOM element.
+     */
+    _createSuggestionItem(placePrediction) {
+        const itemEl = document.createElement("div");
+        itemEl.className = "s_google_map_suggestion_item";
+        itemEl.style.cursor = "pointer";
+        const iconSpanEl = document.createElement("span");
+        iconSpanEl.className = "s_google_map_suggestion_icon s_google_map_suggestion_icon_marker";
+        itemEl.appendChild(iconSpanEl);
+        const text = document.createTextNode(placePrediction.text.toString());
+        itemEl.appendChild(text);
+        itemEl.addEventListener("mouseenter", () => this._highlightItem(itemEl));
+        itemEl.addEventListener("mousedown", () => this._selectPlace(placePrediction));
+        return itemEl;
+    },
+    /**
+     * Selects a place from the suggestions and updates the input field accordingly.
+     * Fetches additional fields for the selected place.
+     *
+     * @private
+     * @param {Object} placePrediction - The selected place prediction object.
+     * @returns {Promise<void>}
+     */
+    async _selectPlace(placePrediction) {
+        const place = placePrediction.toPlace();
+        await place.fetchFields({
+            fields: ["displayName", "formattedAddress", "location"],
+        });
+        this.inputEl.value = place.formattedAddress || place.displayName || placePrediction.text;
+        this._gmapAutocompletePlace = place;
+        this._clearSuggestions();
+        this._onPlaceChanged();
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onPlaceChanged(ev) {
+        const gmapPlace = this._gmapAutocompletePlace;
+        if (gmapPlace && gmapPlace.location) {
+            this._gmapPlace = gmapPlace;
+            const placeLocation = this._gmapPlace.location;
+            const oldValue = this._value;
+            this._value = `(${placeLocation.lat()},${placeLocation.lng()})`;
+            this._gmapCacheGPSToPlace[this._value] = gmapPlace;
+            if (oldValue !== this._value) {
+                this._onUserValueChange(ev);
+            }
+        }
+    },
+    /**
+     * @override
+     */
+    _onInputBlur() {
+        this._clearSuggestions();
+        // As a stable fix: do not call the _super as we actually don't want
+        // input focusout messing with the google map API. Because of this,
+        // clicking on google map autocomplete suggestion on Firefox was not
+        // working properly. This is kept as an empty function because of stable
+        // policy (ensures custo can still extend this).
+        // TODO review in master.
+    },
+    async _OnInput(ev) {
+        const inputValue = ev.target.value.trim();
+        this._clearSuggestions();
+        if (inputValue.length < 1) {
+            return;
+        }
+        const { AutocompleteSuggestion } = await this.contentWindow.google.maps.importLibrary(
+            "places"
+        );
+        const result = await AutocompleteSuggestion.fetchAutocompleteSuggestions({
+            input: inputValue,
+        });
+        this._suggestions = result.suggestions || [];
+        const suggestionBoxEl = this._getOrCreateSuggestionBox();
+        this._suggestions.forEach((suggestion) => {
+            const item = this._createSuggestionItem(suggestion.placePrediction);
+            suggestionBoxEl.appendChild(item);
+            this._suggestionItems.push(item);
+        });
+    },
+    async _OnKeyDown(ev) {
+        if (!this._suggestionItems.length) {
+            return;
+        }
+        if (ev.key === "ArrowDown") {
+            ev.preventDefault();
+            this._selectedIndex = (this._selectedIndex + 1) % this._suggestionItems.length;
+            this._updateHighlight();
+        } else if (ev.key === "ArrowUp") {
+            ev.preventDefault();
+            this._selectedIndex =
+                (this._selectedIndex - 1 + this._suggestionItems.length) %
+                this._suggestionItems.length;
+            this._updateHighlight();
+        } else if (ev.key === "Enter") {
+            ev.preventDefault();
+            if (this._selectedIndex >= 0 && this._suggestions[this._selectedIndex]) {
+                const placePrediction = this._suggestions[this._selectedIndex].placePrediction;
+                await this._selectPlace(placePrediction);
+            }
+        }
+    },
+});
 options.userValueWidgetsRegistry['we-urlpicker'] = UrlPickerUserValueWidget;
 options.userValueWidgetsRegistry['we-fontfamilypicker'] = FontFamilyPickerUserValueWidget;
-options.userValueWidgetsRegistry['we-gpspicker'] = GPSPicker;
+options.userValueWidgetsRegistry["we-gpspicker"] = GPSPicker2;
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

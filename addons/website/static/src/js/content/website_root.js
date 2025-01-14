@@ -17,6 +17,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
     }),
     custom_events: Object.assign({}, publicRootData.PublicRoot.prototype.custom_events || {}, {
         'gmap_api_request': '_onGMapAPIRequest',
+        'gmap_api_request_2': '_onGMapAPIRequest2',
         'gmap_api_key_request': '_onGMapAPIKeyRequest',
         'ready_to_clean_for_save': '_onWidgetsStopRequest',
         'seo_object_request': '_onSeoObjectRequest',
@@ -133,6 +134,81 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
         }
         return this._gmapAPILoading;
     },
+    /**
+     * @private
+     * @param {boolean} [editableMode=false]
+     * @param {boolean} [refetch=false]
+     */
+    async _loadGMapAPI2(editableMode, refetch) {
+        // Note: only need refetch to reload a configured key and load the
+        // library. If the library was loaded with a correct key and that the
+        // key changes meanwhile... it will not work but we can agree the user
+        // can bother to reload the page at that moment.
+        if (refetch || !this._gmapAPILoading) {
+            this._gmapAPILoading = new Promise(async resolve => {
+                const key = await this._getGMapAPIKey(refetch);
+
+                if (!key) {
+                    if (!editableMode && session.is_admin) {
+                        const message = _t("Cannot load google map.");
+                        const urlTitle = _t("Check your configuration.");
+                        this.notification.add(
+                            markup(`<div>
+                                <span>${message}</span><br/>
+                                <a href="/web#action=website.action_website_configuration">${urlTitle}</a>
+                            </div>`),
+                            { type: 'warning', sticky: true }
+                        );
+                    }
+                    resolve(false);
+                    this._gmapAPILoading = false;
+                    return;
+                }
+                ((g) => {
+                    var h,
+                        a,
+                        k,
+                        p = "The Google Maps JavaScript API",
+                        c = "google",
+                        l = "importLibrary",
+                        q = "__ib__",
+                        m = document,
+                        b = window;
+                    b = b[c] || (b[c] = {});
+                    var d = b.maps || (b.maps = {}),
+                        r = new Set(),
+                        e = new URLSearchParams(),
+                        u = () =>
+                            h ||
+                            (h = new Promise(async (f, n) => {
+                                await (a = m.createElement("script"));
+                                e.set("libraries", [...r] + "");
+                                for (k in g) {
+                                    e.set(
+                                        k.replace(/[A-Z]/g, (t) => "_" + t[0].toLowerCase()),
+                                        g[k]
+                                    );
+                                }
+                                e.set("callback", c + ".maps." + q);
+                                a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+                                d[q] = f;
+                                a.onerror = () => (h = n(Error(p + " could not load.")));
+                                var script = m.querySelector("script[nonce]");
+                                a.nonce = script ? script.nonce : "";
+                                m.head.append(a);
+                            }));
+                    d[l]
+                        ? console.warn(p + " only loads once. Ignoring:", g)
+                        : (d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)));
+                })({
+                    key: key,
+                    v: "weekly",
+                });
+                resolve(key);
+            });
+        }
+        return this._gmapAPILoading;
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -173,6 +249,15 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
     async _onGMapAPIRequest(ev) {
         ev.stopPropagation();
         const apiKey = await this._loadGMapAPI(ev.data.editableMode, ev.data.refetch);
+        ev.data.onSuccess(apiKey);
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    async _onGMapAPIRequest2(ev) {
+        ev.stopPropagation();
+        const apiKey = await this._loadGMapAPI2(ev.data.editableMode, ev.data.refetch);
         ev.data.onSuccess(apiKey);
     },
     /**

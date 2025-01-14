@@ -25,6 +25,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
     }),
     custom_events: Object.assign({}, weSnippetEditor.SnippetsMenu.prototype.custom_events, {
         'gmap_api_request': '_onGMapAPIRequest',
+        'gmap_api_request_2': '_onGMapAPIRequest2',
         'gmap_api_key_request': '_onGMapAPIKeyRequest',
         'reload_bundles': '_onReloadBundles',
     }),
@@ -663,6 +664,13 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      */
     _onGMapAPIRequest(ev) {
         this._handleGMapRequest(ev, 'gmap_api_request');
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onGMapAPIRequest2(ev) {
+        this._handleGMapRequest(ev, 'gmap_api_request_2');
     },
     /**
      * @private

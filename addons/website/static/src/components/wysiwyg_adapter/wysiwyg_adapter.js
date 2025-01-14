@@ -923,6 +923,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             'ready_to_clean_for_save': this._onRootEventRequest.bind(this),
             'will_remove_snippet': this._onRootEventRequest.bind(this),
             'gmap_api_request': this._onRootEventRequest.bind(this),
+            'gmap_api_request_2': this._onRootEventRequest.bind(this),
             'gmap_api_key_request': this._onRootEventRequest.bind(this),
             'request_save': this._onSaveRequest.bind(this),
             'context_get': this._onContextGet.bind(this),
