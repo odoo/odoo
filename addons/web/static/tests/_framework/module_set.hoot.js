@@ -48,12 +48,12 @@ const defineModuleSet = async (entryPoints, additionalAddons) => {
             additionalAddons.add(getAddonName(entryPoint));
         }
         const addons = await fetchDependencies(additionalAddons);
-        if (addons.has("spreadsheet")) {
-            /**
-             * spreadsheet addons defines a module that does not starts with `@spreadsheet` but `@odoo` (`@odoo/o-spreadsheet)
-             * To ensure that this module is loaded, we have to include `odoo` in the dependencies
-             */
-            addons.add("odoo");
+        for (const addon in AUTO_INCLUDED_ADDONS) {
+            if (addons.has(addon)) {
+                for (const toInclude of AUTO_INCLUDED_ADDONS[addon]) {
+                    addons.add(toInclude);
+                }
+            }
         }
         const filter = (path) => addons.has(getAddonName(path));
 
@@ -490,6 +490,17 @@ const ALLOWED_GLOBAL_KEYS = [
     "odoo",
     "owl",
 ];
+const AUTO_INCLUDED_ADDONS = {
+    /**
+     * spreadsheet addons defines a module that does not starts with `@spreadsheet` but `@odoo` (`@odoo/o-spreadsheet)
+     * To ensure that this module is loaded, we have to include `odoo` in the dependencies
+     */
+    spreadsheet: ["odoo"],
+    /**
+     * Add all view types by default
+     */
+    web_enterprise: ["web_gantt", "web_grid", "web_map"],
+};
 const CSRF_TOKEN = odoo.csrf_token;
 const DEFAULT_ADDONS = ["base", "web"];
 const MODULE_MOCKS_BY_NAME = new Map([
