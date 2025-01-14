@@ -639,14 +639,17 @@ class AccountAccount(models.Model):
         '''
         if not self.ids:
             return None
-        partial_lines_count = self.env['account.move.line'].search_count([
+        partial_lines_credit_count = self.env['account.move.line'].search_count([
             ('account_id', 'in', self.ids),
             ('full_reconcile_id', '=', False),
-            ('|'),
-            ('matched_debit_ids', '!=', False),
             ('matched_credit_ids', '!=', False),
         ])
-        if partial_lines_count > 0:
+        partial_lines_debit_count = self.env['account.move.line'].search_count([
+            ('account_id', 'in', self.ids),
+            ('full_reconcile_id', '=', False),
+            ('matched_debit_ids', '!=', False),
+        ])
+        if partial_lines_credit_count > 0 or partial_lines_debit_count > 0:
             raise UserError(_('You cannot switch an account to prevent the reconciliation '
                               'if some partial reconciliations are still pending.'))
         query = """
