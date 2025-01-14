@@ -112,7 +112,6 @@ class TestChannelRTC(MailCommon):
                                     "id": channel_member.partner_id.id,
                                     "type": "partner"
                                 },
-                                "syncUnread": True,
                                 "thread": { "id": channel.id, "model": "discuss.channel" }
                             }
                         ]

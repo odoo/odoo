@@ -839,7 +839,7 @@ class DiscussChannel(models.Model):
             ("channel_id", "=", self.id), ("is_self", "=", True)
         ])) and message.is_current_user_or_guest_author:
             current_channel_member._set_last_seen_message(message, notify=False)
-            current_channel_member._set_new_message_separator(message.id + 1, sync=True)
+            current_channel_member._set_new_message_separator(message.id + 1)
         return super()._message_post_after_hook(message, msg_vals)
 
     def _check_can_update_message_content(self, message):

@@ -141,13 +141,6 @@ patch(Thread.prototype, {
         return message;
     },
 
-    get showUnreadBanner() {
-        if (this.chatbot && !this.chatbot.currentStep?.operatorFound) {
-            return false;
-        }
-        return super.showUnreadBanner;
-    },
-
     get composerDisabled() {
         const step = this.chatbot?.currentStep;
         if (this.chatbot?.forwarded && this.livechat_active) {
