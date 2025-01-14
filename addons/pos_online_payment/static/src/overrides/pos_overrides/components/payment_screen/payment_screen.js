@@ -231,14 +231,14 @@ patch(PaymentScreen.prototype, {
         }
 
         if (isInvoiceRequested) {
-            if (!this.currentOrder.account_move) {
+            if (!this.currentOrder.raw.account_move) {
                 this.dialog.add(AlertDialog, {
                     title: _t("Invoice could not be generated"),
                     body: _t("The invoice could not be generated."),
                 });
             } else {
                 await this.report.doAction("account.account_invoices", [
-                    this.currentOrder.account_move,
+                    this.currentOrder.raw.account_move,
                 ]);
             }
         }
