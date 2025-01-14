@@ -12,8 +12,7 @@ patch(ReceiptScreen.prototype, {
     },
     isContinueSplitting() {
         if (this.pos.config.module_pos_restaurant && !this.pos.selectedTable) {
-            const splittedUuid = this.currentOrder.uiState.splittedOrderUuid;
-            const splittedOrder = this.pos.models["pos.order"].getBy("uuid", splittedUuid);
+            const splittedOrder = this.currentOrder.originalSplittedOrder;
 
             if (!splittedOrder) {
                 return false;
