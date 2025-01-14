@@ -10,6 +10,7 @@ import {
     onMounted,
     onWillDestroy,
     onWillPatch,
+    onWillUnmount,
     onWillUpdateProps,
     reactive,
     toRaw,
@@ -69,9 +70,11 @@ export class Thread extends Component {
         this.escape = escape;
         this.applyScroll = this.applyScroll.bind(this);
         this.saveScroll = this.saveScroll.bind(this);
+        this.onScroll = this.onScroll.bind(this);
         this.registerMessageRef = this.registerMessageRef.bind(this);
         this.store = useService("mail.store");
         this.state = useState({
+            isFocused: false,
             isReplyingTo: false,
             mountedAndLoaded: false,
             showJumpPresent: false,
@@ -187,6 +190,11 @@ export class Thread extends Component {
                 this.fetchMessages();
             }
         });
+        onWillUnmount(() => {
+            if (this.state.isFocused) {
+                this.props.thread.isFocusedCounter--;
+            }
+        });
         useEffect(
             (isLoaded) => {
                 this.state.mountedAndLoaded = isLoaded;
@@ -204,7 +212,7 @@ export class Thread extends Component {
                     return;
                 }
                 const el = this.refByMessageId.get(
-                    this.props.thread.selfMember.localNewMessageSeparator - 1
+                    this.props.thread.selfMember.new_message_separator_ui - 1
                 )?.el;
                 if (el) {
                     el.scrollIntoView({ behavior: "instant", block: "center" });
@@ -355,11 +363,11 @@ export class Thread extends Component {
         useEffect(
             (el, mountedAndLoaded) => {
                 if (el && mountedAndLoaded) {
-                    el.addEventListener("scroll", this.saveScroll);
+                    el.addEventListener("scroll", this.onScroll);
                     observer.observe(el);
                     return () => {
                         observer.unobserve(el);
-                        el.removeEventListener("scroll", this.saveScroll);
+                        el.removeEventListener("scroll", this.onScroll);
                     };
                 }
             },
@@ -478,6 +486,20 @@ export class Thread extends Component {
         this.env.services.action.doAction(actionDescription);
     }
 
+    onFocusin() {
+        this.state.isFocused = true;
+        this.props.thread.isFocusedCounter++;
+        const thread = toRaw(this.props.thread);
+        if (thread?.scrollTop === "bottom" && !thread.scrollUnread && !thread.markedAsUnread) {
+            thread?.markAsRead();
+        }
+    }
+
+    onFocusout() {
+        this.state.isFocused = false;
+        this.props.thread.isFocusedCounter--;
+    }
+
     getMessageClassName(message) {
         return !message.isNotification && this.messageHighlight?.highlightedMessageId === message.id
             ? "o-highlighted bg-view shadow-lg pb-1"
@@ -532,15 +554,34 @@ export class Thread extends Component {
         return msg.datetime.ts - prevMsg.datetime.ts < 5 * 60 * 1000;
     }
 
+    get isAtBottom() {
+        if (this.loadNewer) {
+            return false;
+        }
+        return this.props.order === "asc"
+            ? this.scrollableRef.el.scrollHeight -
+                  this.scrollableRef.el.scrollTop -
+                  this.scrollableRef.el.clientHeight <
+                  30
+            : this.scrollableRef.el.scrollTop < 30;
+    }
+
+    onScroll() {
+        const thread = toRaw(this.props.thread);
+        if (
+            this.isAtBottom &&
+            !thread.markedAsUnread &&
+            thread.isFocused &&
+            !thread.markingAsRead
+        ) {
+            thread.markAsRead();
+        }
+        this.saveScroll();
+    }
+
     saveScroll() {
         const thread = toRaw(this.props.thread);
-        const isBottom =
-            this.props.order === "asc"
-                ? this.scrollableRef.el.scrollHeight -
-                      this.scrollableRef.el.scrollTop -
-                      this.scrollableRef.el.clientHeight <
-                  30
-                : this.scrollableRef.el.scrollTop < 30;
+        const isBottom = this.isAtBottom;
         if (isBottom) {
             thread.scrollTop = "bottom";
         } else {
