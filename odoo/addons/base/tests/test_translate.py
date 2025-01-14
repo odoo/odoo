@@ -1038,6 +1038,20 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_fr)
         self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
 
+    def test_sync_xml_attribute(self):
+        """ check translations with attribute can be cleaned up after write """
+        self.env['res.lang']._activate_lang('fr_FR')
+        archf = '<form><i title="%s"/></form>'
+        terms_en = ('Fork',)
+        terms_fr = ('Fourchetta',)
+        view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr)
+
+        terms_en = ('Cheese',)
+        view.write({'arch_db': archf % terms_en})
+
+        self.assertEqual(view.arch_db, archf % terms_en)
+        self.assertEqual(view.with_context(lang='fr_FR').arch_db, archf % terms_en)
+
     def test_sync_text_to_xml(self):
         """ Check translations of 'arch' after xml tags changes in source terms. """
         archf = '<form string="X">%s</form>'
