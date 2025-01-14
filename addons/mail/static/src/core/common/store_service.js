@@ -53,7 +53,7 @@ export class Store extends BaseStore {
     Failure;
     /** @type {typeof import("@mail/core/common/attachment_model").Attachment} */
     ["ir.attachment"];
-    /** @type {typeof import("@mail/core/web/activity_model").Activity} */
+    /** @type {typeof import("@mail/core/common/activity_model").Activity} */
     ["mail.activity"];
     /** @type {typeof import("@mail/core/common/canned_response_model").CannedResponse} */
     ["mail.canned.response"];
