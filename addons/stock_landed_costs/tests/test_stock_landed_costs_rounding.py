@@ -15,7 +15,6 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         product_uom_unit_round_1 = self.env.ref('uom.product_uom_unit')
         product_uom_unit_round_1.write({
             'name': 'Undivisible Units',
-            'rounding': 1.0,
         })
 
         # I create 2 products with different cost prices and configure them for real_time

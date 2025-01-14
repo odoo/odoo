@@ -86,9 +86,9 @@ class PurchaseReport(models.Model):
                     sum(p.weight * l.product_qty/line_uom.factor*product_uom.factor) as weight,
                     sum(p.volume * l.product_qty/line_uom.factor*product_uom.factor) as volume,
                     sum(l.price_subtotal / COALESCE(po.currency_rate, 1.0))::decimal(16,2) * account_currency_table.rate as untaxed_total,
-                    sum(l.product_qty / line_uom.factor * product_uom.factor) as qty_ordered,
-                    sum(l.qty_received / line_uom.factor * product_uom.factor) as qty_received,
-                    sum(l.qty_invoiced / line_uom.factor * product_uom.factor) as qty_billed,
+                    sum(l.product_qty * line_uom.factor / product_uom.factor) as qty_ordered,
+                    sum(l.qty_received * line_uom.factor / product_uom.factor) as qty_received,
+                    sum(l.qty_invoiced * line_uom.factor / product_uom.factor) as qty_billed,
                     case when t.purchase_method = 'purchase'
                          then sum(l.product_qty / line_uom.factor * product_uom.factor) - sum(l.qty_invoiced / line_uom.factor * product_uom.factor)
                          else sum(l.qty_received / line_uom.factor * product_uom.factor) - sum(l.qty_invoiced / line_uom.factor * product_uom.factor)
@@ -141,8 +141,6 @@ class PurchaseReport(models.Model):
                 t.categ_id,
                 po.date_order,
                 po.state,
-                line_uom.uom_type,
-                line_uom.category_id,
                 t.uom_id,
                 t.purchase_method,
                 line_uom.id,

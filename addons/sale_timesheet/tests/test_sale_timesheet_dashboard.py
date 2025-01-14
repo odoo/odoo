@@ -17,7 +17,6 @@ class TestSaleTimesheetDashboard(Common):
             'type': 'service',
             'invoice_policy': 'delivery',
             'uom_id': cls.uom_hour.id,
-            'uom_po_id': cls.uom_hour.id,
             'default_code': 'SERV-DELI1',
             'service_type': 'timesheet',
             'service_tracking': 'no',
@@ -27,6 +26,8 @@ class TestSaleTimesheetDashboard(Common):
 
     def test_get_sale_item_data_various_sol_with_timesheet_installed(self):
         """This test ensures that when the timesheet module is installed, the sols are computed and put into the new profitability sections."""
+        hour_uom_id = self.env.ref('uom.product_uom_hour').id
+        unit_uom_id = self.env.ref('uom.product_uom_unit').id
 
         sols = self.dashboardSaleOrderLine.create([{
             'product_id': self.product_milestone.id,

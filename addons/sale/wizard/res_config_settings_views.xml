@@ -21,19 +21,16 @@
                         <setting string="Variant Grid Entry" help="Add several variants to an order from a grid" id="product_matrix">
                             <field name="module_sale_product_matrix"/>
                         </setting>
-                        <setting id="uom_settings" help="Sell and purchase products in different units of measure">
+                        <setting id="uom_settings" help="Sell and purchase products in different units of measure or packagings">
                             <field name="group_uom"/>
                             <div class="content-group" invisible="not group_uom">
                                 <div class="mt8">
-                                    <button name="%(uom.product_uom_categ_form_action)d" icon="oi-arrow-right" type="action" string="Units of Measure" class="btn-link"/>
+                                    <button name="%(uom.product_uom_form_action)d" icon="oi-arrow-right" type="action" string="Units &amp; Packagings" class="btn-link"/>
                                 </div>
                             </div>
                         </setting>
                         <setting id="email_template" title="Sending an email is useful if you need to share specific information or content about a product (instructions, rules, links, media, etc.). Create and set the email template from the product detail form (in Accounting tab)." string="Deliver Content by Email" help="Send a product-specific email once the invoice is validated">
                             <field name="module_product_email_template"/>
-                        </setting>
-                        <setting id="stock_packaging" title="Ability to select a package type in sales orders and to force a quantity that is a multiple of the number of units per package." help="Sell products by multiple of unit # per package">
-                            <field name="group_stock_packaging"/>
                         </setting>
                     </block>
                     <block title="Pricing" id="pricing_setting_container">

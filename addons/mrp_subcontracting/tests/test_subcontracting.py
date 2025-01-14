@@ -1010,10 +1010,9 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.bom.consumption = 'flexible'
         supplier_location = self.env.ref('stock.stock_location_suppliers')
         uom_duo = self.env['uom.uom'].create({
-            'category_id': self.finished.uom_id.category_id.id,
             'name': 'Duos',
-            'uom_type': 'bigger',
-            'factor_inv': 2.0,
+            'relative_factor': 2.0,
+            'relative_uom_id': self.env.ref('uom.product_uom_unit').id,
         })
 
         receipt = self.env['stock.picking'].create({

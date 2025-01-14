@@ -59,7 +59,7 @@
                     <attribute name="groups">purchase.group_purchase_user</attribute>
                 </xpath>
                 <group name="purchase" position="before">
-                    <field name="seller_ids" context="{'default_product_tmpl_id': id, 'product_template_invisible_variant': True, 'list_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" invisible="product_variant_count &gt; 1" readonly="product_variant_count &gt; 1"/>
+                    <field name="seller_ids" context="{'default_product_tmpl_id': id, 'default_price': standard_price, 'product_template_invisible_variant': True, 'list_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" invisible="product_variant_count &gt; 1" readonly="product_variant_count &gt; 1"/>
                     <field name="variant_seller_ids" context="{'model': 'product.template', 'active_id': id, 'list_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" invisible="product_variant_count &lt;= 1" readonly="product_variant_count &lt;= 1"/>
                 </group>
                 <group name="bill" position="attributes">
@@ -92,10 +92,10 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <field name="seller_ids" position="attributes">
-                    <attribute name="context">{'default_product_tmpl_id': product_tmpl_id, 'product_template_invisible_variant': True, 'list_view_ref':'purchase.product_product_supplierinfo_tree_view2'}</attribute>
+                    <attribute name="context">{'default_product_tmpl_id': product_tmpl_id, 'product_template_invisible_variant': True, 'default_price': standard_price, 'list_view_ref':'purchase.product_product_supplierinfo_tree_view2'}</attribute>
                 </field>
                 <field name="variant_seller_ids" position="attributes">
-                    <attribute name="context">{'model': 'product.product', 'active_id': id, 'list_view_ref':'purchase.product_product_supplierinfo_tree_view2'}</attribute>
+                    <attribute name="context">{'model': 'product.product', 'active_id': id, 'default_price': standard_price, 'list_view_ref':'purchase.product_product_supplierinfo_tree_view2'}</attribute>
                 </field>
             </field>
         </record>
@@ -164,9 +164,6 @@
                     <attribute name="js_class">purchase_product_kanban_catalog</attribute>
                     <attribute name="sample">1</attribute> 
                 </xpath>
-                <field name="default_code" position="after">
-                    <field name="uom_po_id" invisible="1"/>
-                </field>
             </field>
         </record>
 

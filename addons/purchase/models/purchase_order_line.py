@@ -18,8 +18,7 @@ class PurchaseOrderLine(models.Model):
     name = fields.Text(
         string='Description', required=True, compute='_compute_price_unit_and_date_planned_and_name', store=True, readonly=False)
     sequence = fields.Integer(string='Sequence', default=10)
-    product_qty = fields.Float(string='Quantity', digits='Product Unit of Measure', required=True,
-                               compute='_compute_product_qty', store=True, readonly=False)
+    product_qty = fields.Float(string='Quantity', digits='Product Unit', required=True)
     product_uom_qty = fields.Float(string='Total Quantity', compute='_compute_product_uom_qty', store=True)
     date_planned = fields.Datetime(
         string='Expected Arrival', index=True,
@@ -31,8 +30,8 @@ class PurchaseOrderLine(models.Model):
         digits='Discount',
         store=True, readonly=False)
     taxes_id = fields.Many2many('account.tax', string='Taxes', context={'active_test': False})
-    product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
+    allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
+    product_uom_id = fields.Many2one('uom.uom', string='Unit', domain="[('id', 'in', allowed_uom_ids)]")
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, index='btree_not_null', ondelete='restrict')
     product_type = fields.Selection(related='product_id.type', readonly=True)
     price_unit = fields.Float(
@@ -52,24 +51,21 @@ class PurchaseOrderLine(models.Model):
     invoice_lines = fields.One2many('account.move.line', 'purchase_line_id', string="Bill Lines", readonly=True, copy=False)
 
     # Replace by invoiced Qty
-    qty_invoiced = fields.Float(compute='_compute_qty_invoiced', string="Billed Qty", digits='Product Unit of Measure', store=True)
+    qty_invoiced = fields.Float(compute='_compute_qty_invoiced', string="Billed Qty", digits='Product Unit', store=True)
 
     qty_received_method = fields.Selection([('manual', 'Manual')], string="Received Qty Method", compute='_compute_qty_received_method', store=True,
         help="According to product configuration, the received quantity can be automatically computed by mechanism:\n"
              "  - Manual: the quantity is set manually on the line\n"
              "  - Stock Moves: the quantity comes from confirmed pickings\n")
-    qty_received = fields.Float("Received Qty", compute='_compute_qty_received', inverse='_inverse_qty_received', compute_sudo=True, store=True, digits='Product Unit of Measure')
-    qty_received_manual = fields.Float("Manual Received Qty", digits='Product Unit of Measure', copy=False)
+    qty_received = fields.Float("Received Qty", compute='_compute_qty_received', inverse='_inverse_qty_received', compute_sudo=True, store=True, digits='Product Unit')
+    qty_received_manual = fields.Float("Manual Received Qty", digits='Product Unit', copy=False)
     qty_to_invoice = fields.Float(compute='_compute_qty_invoiced', string='To Invoice Quantity', store=True, readonly=True,
-                                  digits='Product Unit of Measure')
+                                  digits='Product Unit')
 
     partner_id = fields.Many2one('res.partner', related='order_id.partner_id', string='Partner', readonly=True, store=True, index='btree_not_null')
     currency_id = fields.Many2one(related='order_id.currency_id', string='Currency')
     date_order = fields.Datetime(related='order_id.date_order', string='Order Date', readonly=True)
     date_approve = fields.Datetime(related="order_id.date_approve", string='Confirmation Date', readonly=True)
-    product_packaging_id = fields.Many2one('product.packaging', string='Packaging', domain="[('purchase', '=', True), ('product_id', '=', product_id)]", check_company=True,
-                                           compute="_compute_product_packaging_id", store=True, readonly=False)
-    product_packaging_qty = fields.Float('Packaging Quantity', compute="_compute_product_packaging_qty", store=True, readonly=False)
     tax_calculation_rounding_method = fields.Selection(
         related='company_id.tax_calculation_rounding_method',
         string='Tax calculation rounding method', readonly=True)
@@ -206,7 +202,7 @@ class PurchaseOrderLine(models.Model):
             raise UserError(_("You cannot change the type of a purchase order line. Instead you should delete the current line and create a new line of the proper type."))
 
         if 'product_qty' in values:
-            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            precision = self.env['decimal.precision'].precision_get('Product Unit')
             for line in self:
                 if (
                     line.order_id.state == "purchase"
@@ -279,7 +275,7 @@ class PurchaseOrderLine(models.Model):
         if not self.product_id:
             return
 
-        self.product_uom_id = self.product_id.uom_po_id or self.product_id.uom_id
+        self.product_uom_id = self.product_id.uom_id
         product_lang = self.product_id.with_context(
             lang=get_lang(self.env, self.partner_id.lang).code,
             partner_id=None,
@@ -309,6 +305,11 @@ class PurchaseOrderLine(models.Model):
             return {'warning': warning}
         return {}
 
+    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.product_uom_id')
+    def _compute_allowed_uom_ids(self):
+        for line in self:
+            line.allowed_uom_ids = line.product_id.uom_id | line.product_id.uom_ids | line.product_id.seller_ids.product_uom_id
+
     @api.depends('product_qty', 'product_uom_id', 'company_id', 'order_id.partner_id')
     def _compute_price_unit_and_date_planned_and_name(self):
         for line in self:
@@ -334,7 +335,7 @@ class PurchaseOrderLine(models.Model):
                     # Avoid to modify the price unit if there is no price list for this partner and
                     # the line has already one to avoid to override unit price set manually.
                     continue
-                po_line_uom = line.product_uom_id or line.product_id.uom_po_id
+                po_line_uom = line.product_uom_id or line.product_id.uom_id
                 price_unit = line.env['account.tax']._fix_tax_included_price_company(
                     line.product_id.uom_id._compute_price(line.product_id.standard_price, po_line_uom),
                     line.product_id.supplier_taxes_id,
@@ -369,54 +370,10 @@ class PurchaseOrderLine(models.Model):
                 product_ctx = {'seller_id': seller.id, 'lang': get_lang(line.env, line.partner_id.lang).code}
                 line.name = line._get_product_purchase_description(line.product_id.with_context(product_ctx))
 
-    @api.depends('product_id', 'product_qty', 'product_uom_id')
-    def _compute_product_packaging_id(self):
+    @api.depends('product_id')
+    def _compute_product_uom_id(self):
         for line in self:
-            # remove packaging if not match the product
-            if line.product_packaging_id.product_id != line.product_id:
-                line.product_packaging_id = False
-            # suggest biggest suitable packaging matching the PO's company
-            if line.product_id and line.product_qty and line.product_uom_id:
-                suggested_packaging = line.product_id.packaging_ids\
-                        .filtered(lambda p: p.purchase and (p.product_id.company_id <= p.company_id <= line.company_id))\
-                        ._find_suitable_product_packaging(line.product_qty, line.product_uom_id)
-                line.product_packaging_id = suggested_packaging or line.product_packaging_id
-
-    @api.onchange('product_packaging_id')
-    def _onchange_product_packaging_id(self):
-        if self.product_packaging_id and self.product_qty:
-            newqty = self.product_packaging_id._check_qty(self.product_qty, self.product_uom_id, "UP")
-            if float_compare(newqty, self.product_qty, precision_rounding=self.product_uom_id.rounding) != 0:
-                return {
-                    'warning': {
-                        'title': _('Warning'),
-                        'message': _(
-                            "This product is packaged by %(pack_size).2f %(pack_name)s. You should purchase %(quantity).2f %(unit)s.",
-                            pack_size=self.product_packaging_id.qty,
-                            pack_name=self.product_id.uom_id.name,
-                            quantity=newqty,
-                            unit=self.product_uom_id.name
-                        ),
-                    },
-                }
-
-    @api.depends('product_packaging_id', 'product_uom_id', 'product_qty')
-    def _compute_product_packaging_qty(self):
-        self.product_packaging_qty = 0
-        for line in self:
-            if not line.product_packaging_id:
-                continue
-            line.product_packaging_qty = line.product_packaging_id._compute_qty(line.product_qty, line.product_uom_id)
-
-    @api.depends('product_packaging_qty')
-    def _compute_product_qty(self):
-        for line in self:
-            if line.product_packaging_id:
-                packaging_uom = line.product_packaging_id.product_uom_id
-                qty_per_packaging = line.product_packaging_id.qty
-                product_qty = packaging_uom._compute_quantity(line.product_packaging_qty * qty_per_packaging, line.product_uom_id)
-                if float_compare(product_qty, line.product_qty, precision_rounding=line.product_uom_id.rounding) != 0:
-                    line.product_qty = product_qty
+            line.product_uom_id = line.product_id.seller_ids.filtered(lambda s: s.partner_id == line.partner_id).product_uom_id or line.product_id.uom_id if line.product_id else False
 
     @api.depends('product_uom_id', 'product_qty', 'product_id.uom_id')
     def _compute_product_uom_qty(self):
@@ -441,7 +398,7 @@ class PurchaseOrderLine(models.Model):
             )['total_void']
             price_unit = price_unit / qty
         if self.product_uom_id.id != self.product_id.uom_id.id:
-            price_unit *= self.product_uom_id.factor / self.product_id.uom_id.factor
+            price_unit *= self.product_id.uom_id.factor / self.product_uom_id.factor
         return price_unit
 
     def action_add_from_catalog(self):
@@ -519,13 +476,6 @@ class PurchaseOrderLine(models.Model):
                 'display_name': self.product_uom_id.display_name,
                 'id': self.product_uom_id.id,
             }
-            if self.product_packaging_id:
-                packaging = self.product_packaging_id
-                catalog_info['packaging'] = {
-                    'id': packaging.id,
-                    'name': packaging.display_name,
-                    'qty': packaging.product_uom_id._compute_quantity(packaging.qty, self.product_uom_id),
-                }
             return catalog_info
         elif self:
             self.product_id.ensure_one()
@@ -585,7 +535,7 @@ class PurchaseOrderLine(models.Model):
     @api.model
     def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, company_id, supplier, po):
         partner = supplier.partner_id
-        uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id, rounding_method='HALF-UP')
+        uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_id, rounding_method='HALF-UP')
         # _select_seller is used if the supplier have different price depending
         # the quantities ordered.
         today = fields.Date.today()
@@ -593,7 +543,9 @@ class PurchaseOrderLine(models.Model):
             partner_id=partner,
             quantity=uom_po_qty,
             date=po.date_order and max(po.date_order.date(), today) or today,
-            uom_id=product_id.uom_po_id)
+            uom_id=product_id.uom_id)
+        if seller and seller.product_uom_id != product_uom:
+            uom_po_qty = product_id.uom_id._compute_quantity(uom_po_qty, seller.product_uom_id, rounding_method='HALF-UP')
 
         product_taxes = product_id.supplier_taxes_id.filtered(lambda x: x.company_id in company_id.parent_ids)
         taxes = po.fiscal_position_id.map_tax(product_taxes)
@@ -620,7 +572,7 @@ class PurchaseOrderLine(models.Model):
             'name': name,
             'product_qty': uom_po_qty,
             'product_id': product_id.id,
-            'product_uom_id': product_id.uom_po_id.id,
+            'product_uom_id': seller.product_uom_id.id or product_uom.id,
             'price_unit': price_unit,
             'date_planned': date_planned,
             'taxes_id': [(6, 0, taxes.ids)],

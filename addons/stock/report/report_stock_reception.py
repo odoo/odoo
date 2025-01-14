@@ -166,7 +166,7 @@ class ReportStockReport_Reception(models.AbstractModel):
             'doc_ids': docids,
             'doc_model': self._get_doc_model(),
             'sources_to_lines': sources_to_lines,
-            'precision': self.env['decimal.precision'].precision_get('Product Unit of Measure'),
+            'precision': self.env['decimal.precision'].precision_get('Product Unit'),
             'docs': docs,
             'sources_to_formatted_scheduled_date': sources_to_formatted_scheduled_date,
         }

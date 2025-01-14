@@ -87,12 +87,11 @@ class RepairOrder(models.Model):
         check_company=True)
     product_qty = fields.Float(
         'Product Quantity', compute='_compute_product_qty', readonly=False, store=True,
-        default=1.0, digits='Product Unit of Measure')
+        default=1.0, digits='Product Unit')
+    allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     product_uom = fields.Many2one(
-        'uom.uom', 'Product Unit of Measure',
-        compute='compute_product_uom', store=True, precompute=True,
-        domain="[('category_id', '=', product_uom_category_id)]")
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
+        'uom.uom', 'Unit', domain="[('id', 'in', allowed_uom_ids)]",
+        compute='compute_product_uom', store=True, precompute=True)
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial',
         default=False,
@@ -211,6 +210,11 @@ class RepairOrder(models.Model):
             else:
                 repair.product_qty = 1.0
 
+    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.product_uom_id')
+    def _compute_allowed_uom_ids(self):
+        for repair in self:
+            repair.allowed_uom_ids = repair.product_id.uom_id | repair.product_id.uom_ids | repair.product_id.seller_ids.product_uom_id
+
     @api.depends('picking_id')
     def _compute_partner_id(self):
         for repair in self:
@@ -229,12 +233,12 @@ class RepairOrder(models.Model):
                 domain = expression.AND([domain, [('id', 'in', repair.picking_id.move_ids.lot_ids.ids)]])
             repair.allowed_lot_ids = self.env['stock.lot'].search(domain)
 
-    @api.depends('product_id', 'product_id.uom_id.category_id', 'product_uom.category_id')
+    @api.depends('product_id', 'product_id.uom_id')
     def compute_product_uom(self):
         for repair in self:
             if not repair.product_id:
                 repair.product_uom = False
-            elif not repair.product_uom or repair.product_uom.category_id != repair.product_id.uom_id.category_id:
+            elif not repair.product_uom:
                 repair.product_uom = repair.product_id.uom_id
 
     @api.depends('product_id', 'lot_id', 'lot_id.product_id', 'picking_id')
@@ -344,8 +348,6 @@ class RepairOrder(models.Model):
         res = {}
         if not self.product_id or not self.product_uom:
             return res
-        if self.product_uom.category_id != self.product_id.uom_id.category_id:
-            res['warning'] = {'title': _('Warning'), 'message': _('The product unit of measure you chose has a different category than the product unit of measure.')}
         return res
 
     @api.onchange('location_id', 'picking_id')
@@ -479,7 +481,7 @@ class RepairOrder(models.Model):
         @return: True
         """
 
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
         product_move_vals = []
 
         # Cancel moves with 0 quantity
@@ -585,7 +587,7 @@ class RepairOrder(models.Model):
             raise UserError(_("You can not enter negative quantities."))
         if not self.product_id or not self.product_id.is_storable:
             return self._action_repair_confirm()
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
         available_qty_owner = sum(self.env['stock.quant'].search([
             ('product_id', '=', self.product_id.id),
             ('location_id', '=', self.product_location_src_id.id),

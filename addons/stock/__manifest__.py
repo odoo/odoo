@@ -41,7 +41,6 @@
         'report/package_templates.xml',
         'report/picking_templates.xml',
         'report/product_templates.xml',
-        'report/product_packaging.xml',
         'report/report_return_slip.xml',
         'data/mail_template_data.xml',
 
@@ -87,6 +86,7 @@
         'views/stock_package_level_views.xml',
         'views/stock_package_type_view.xml',
         'views/stock_forecasted.xml',
+        'views/uom_uom_views.xml',
     ],
     'installable': True,
     'application': True,

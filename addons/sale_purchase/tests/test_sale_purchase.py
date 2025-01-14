@@ -114,11 +114,12 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
 
     def test_uom_conversion(self):
         """ Test generated PO use the right UoM according to product configuration """
+        self.service_purchase_2.seller_ids.product_uom_id = self.env.ref('uom.product_uom_unit')
         self.sale_order_2.action_confirm()
         purchase_line = self.env['purchase.order.line'].search([('sale_line_id', '=', self.sol2_service_purchase_2.id)])  # only one line
 
         self.assertTrue(purchase_line, "The SO line should generate a PO line")
-        self.assertEqual(purchase_line.product_uom_id, self.service_purchase_2.uom_po_id, "The UoM on the purchase line should be the one from the product configuration")
+        self.assertEqual(purchase_line.product_uom_id, self.service_purchase_2.seller_ids.product_uom_id, "The UoM on the purchase line should be the one from the product configuration")
         self.assertNotEqual(purchase_line.product_uom_id, self.sol2_service_purchase_2.product_uom_id, "As the product configuration, the UoM on the SO line should still be different from the one on the PO line")
         self.assertEqual(purchase_line.product_qty, self.sol2_service_purchase_2.product_uom_qty * 12, "The quantity from the SO should be converted with th UoM factor on the PO line")
 

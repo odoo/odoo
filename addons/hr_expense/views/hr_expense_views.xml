@@ -178,7 +178,6 @@
                             <field name="total_amount" invisible="1"/>
                             <field name="duplicate_expense_ids" invisible="1"/>
                             <field name="currency_rate" invisible="1"/>
-                            <field name="product_uom_category_id" invisible="1"/>
 
                             <label for="product_id"/>
                             <div>
@@ -205,7 +204,7 @@
                                     <field name="quantity" class="oe_inline" readonly="not is_editable"/>
                                     <field name="product_uom_id" required="1" force_save="1"
                                            options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"
-                                           readonly="not is_editable"/>
+                                           readonly="not is_editable" widget="many2one_uom"/>
                                 </div>
                             </div>
 
@@ -587,10 +586,9 @@
                                             the company at fixed cost like allowances for mileage, per diem, accommodation
                                             or meal."/>
                                     <span class="d-flex w-50 ms-2" invisible="standard_price == 0">
-                                        per <field name="uom_id" class="ms-2" options="{'no_create': True}"/>
+                                        per <field name="uom_id" widget="many2one_uom" class="ms-2" options="{'no_create': True}"/>
                                     </span>
                                 </div>
-                                <field name="uom_po_id" invisible="1"/>
                                 <field name="default_code" string="Reference" class="w-50"/>
                                 <field name="categ_id" string="Category" class="w-50"/>
                                 <field name="company_id" class="w-50" groups="base.group_multi_company"/>
@@ -633,7 +631,7 @@
                     <field name="product_template_attribute_value_ids" widget="many2many_tags"
                            groups="product.group_product_variant"/>
                     <field name="standard_price"/>
-                    <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
+                    <field name="uom_id" widget="many2one_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                     <field name="barcode"/>
                 </list>
             </field>

@@ -103,7 +103,7 @@ class AccountMove(models.Model):
             invoiced_qties[lot.product_id] -= invoiced_lot_qty
             res.append({
                 'product_name': lot.product_id.display_name,
-                'quantity': formatLang(self.env, invoiced_lot_qty, dp='Product Unit of Measure'),
+                'quantity': formatLang(self.env, invoiced_lot_qty, dp='Product Unit'),
                 'uom_name': lot.product_uom_id.name,
                 'lot_name': lot.name,
                 # The lot id is needed by localizations to inherit the method and add custom fields on the invoice's report.

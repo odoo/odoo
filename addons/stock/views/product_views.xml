@@ -19,7 +19,7 @@
                             <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location"/>
                             <field name="parent_route_ids" widget="many2many_tags" groups="stock.group_adv_location" invisible="not parent_route_ids"/>
                             <field name="removal_strategy_id" options="{'no_create': True}"/>
-                            <field name="packaging_reserve_method" widget="radio" groups="product.group_stock_packaging"/>
+                            <field name="packaging_reserve_method" widget="radio" groups="uom.group_uom"/>
                         </group>
                     </group>
                 </group>
@@ -177,36 +177,8 @@
                 </xpath>
                 <xpath expr="//field[@name='product_properties']" position="before">
                     <div groups="stock.group_stock_user" t-if="record.show_on_hand_qty_status_button.raw_value">
-                        On hand: <field name="qty_available"/> <field name="uom_id"/>
+                        On hand: <field name="qty_available"/> <field name="uom_id" widget="many2one_uom"/>
                     </div>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="product_packaging_tree_view" model="ir.ui.view">
-            <field name="name">product.packaging.list.view.stock</field>
-            <field name="model">product.packaging</field>
-            <field name="inherit_id" ref="product.product_packaging_tree_view"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='name']" position="after">
-                    <field name="package_type_id" groups="stock.group_tracking_lot"/>
-                    <field name="route_ids" groups="stock.group_adv_location" optional="hide" widget="many2many_tags"/>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="product_packaging_form_view" model="ir.ui.view">
-            <field name="name">product.packaging.form.view.stock</field>
-            <field name="model">product.packaging</field>
-            <field name="inherit_id" ref="product.product_packaging_form_view"/>
-            <field name="arch" type="xml">
-                <xpath expr="//label[@for='qty']" position="before">
-                    <field name="package_type_id" groups="stock.group_tracking_lot"/>
-                </xpath>
-                <xpath expr="//group[@name='qty']" position="after">
-                    <group name="logistic">
-                        <field name="route_ids" groups="stock.group_adv_location" widget="many2many_tags"/>
-                    </group>
                 </xpath>
             </field>
         </record>
@@ -263,7 +235,7 @@
                          name="o_kanban_qty_available">
                         <span>On Hand: </span>
                         <field name="qty_available"/>
-                        <field name="uom_id" class="ms-1" groups="uom.group_uom"/>
+                        <field name="uom_id" widget="many2one_uom" class="ms-1" groups="uom.group_uom"/>
                     </div>
                 </div>
                 <a role="menuitem" type="open" position="after">
@@ -551,7 +523,7 @@
                     <field name="incoming_qty" optional="show" sum="Total Incoming"/>
                     <field name="outgoing_qty" optional="show" sum="Total Outgoing"/>
                     <field name="virtual_available" string="Forecasted" optional="hide" sum="Total Forecasted"/>
-                    <field name="uom_id" string="Unit" groups="uom.group_uom" options="{'no_create': True}"/>
+                    <field name="uom_id" widget="many2one_uom" groups="uom.group_uom" options="{'no_create': True}"/>
                     <button name="%(stock_move_line_action)d" string="History" type="action" class="btn-link"
                         icon="fa-history" context="{'search_default_product_id': id, 'default_product_id': id}"/>
                     <button name="action_view_orderpoints" string="Replenishment" type="object" class="btn-link"
@@ -630,7 +602,6 @@
             parent="stock.menu_stock_inventory_control" sequence="1"/>
         <menuitem id="product_product_menu" name="Product Variants" action="stock_product_normal_action"
             parent="menu_stock_inventory_control" sequence="2" groups="product.group_product_variant"/>
-        <menuitem id="menu_product_packagings" name="Product Packagings" parent="stock.menu_product_in_config_stock" action="product.action_packaging_view" groups="product.group_stock_packaging"/>
         <menuitem id="menu_product_stock" name="Stock" action="stock.action_product_stock_view"
         parent="stock.menu_warehouse_report" sequence="5"/>
 

@@ -21,7 +21,7 @@ class StockMove(models.Model):
                 date=order.date_order,
             )
 
-        uom_precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        uom_precision_digits = self.env['decimal.precision'].precision_get('Product Unit')
         if float_is_zero(self.quantity, precision_digits=uom_precision_digits):
             return 0.0
 

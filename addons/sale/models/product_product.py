@@ -10,7 +10,7 @@ from odoo.tools import float_round
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
-    sales_count = fields.Float(compute='_compute_sales_count', string='Sold', digits='Product Unit of Measure')
+    sales_count = fields.Float(compute='_compute_sales_count', string='Sold', digits='Product Unit')
 
     # Catalog related fields
     product_catalog_product_is_in_sale_order = fields.Boolean(
@@ -108,9 +108,3 @@ class ProductAttributeCustomValue(models.Model):
         'unique(custom_product_template_attribute_value_id, sale_order_line_id)',
         'Only one Custom Value is allowed per Attribute Value per Sales Order Line.',
     )
-
-
-class ProductPackaging(models.Model):
-    _inherit = 'product.packaging'
-
-    sales = fields.Boolean("Sales", default=True, help="If true, the packaging can be used for sales orders")

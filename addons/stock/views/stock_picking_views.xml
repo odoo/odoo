@@ -266,10 +266,11 @@
                                     <field name="additional" column_invisible="True"/>
                                     <field name="move_lines_count" column_invisible="True"/>
                                     <field name="is_locked" column_invisible="True"/>
-                                    <field name="product_uom_category_id" column_invisible="True"/>
                                     <field name="is_storable" column_invisible="True"/>
                                     <field name="has_tracking" column_invisible="True"/>
                                     <field name="product_id" context="{'default_is_storable': True}" required="1" readonly="(state != 'draft' and not additional) or move_lines_count &gt; 0" force_save="1"/>
+                                    <field name="packaging_uom_qty" optional="hide"/>
+                                    <field name="packaging_uom_id" optional="hide"/>
                                     <field name="location_final_id" optional="hide" groups="stock.group_stock_multi_locations"/>
                                     <field name="description_picking" string="Description" optional="hide"/>
                                     <field name="date" optional="hide"/>
@@ -281,9 +282,6 @@
                                     <field name="is_initial_demand_editable" column_invisible="True"/>
                                     <field name="display_import_lot" column_invisible="True"/>
                                     <field name="picking_type_entire_packs" column_invisible="True"/>
-                                    <field name="product_packaging_id" groups="product.group_stock_packaging"
-                                        context="{'default_product_id': product_id}"
-                                        readonly="not product_id"/>
                                     <field name="product_uom_qty" string="Demand" readonly="not is_initial_demand_editable"/>
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart"
                                         invisible="not product_id or product_uom_qty == 0 or quantity == 0 and forecast_availability &lt;= 0 or (parent.picking_type_code == 'outgoing' and state != 'draft')"/>
@@ -294,7 +292,7 @@
                                         column_invisible="parent.state in ('draft', 'done') or parent.picking_type_code != 'outgoing'" widget="forecast_widget"/>
                                     <field name="product_qty" readonly="1" column_invisible="True"/>
                                     <field name="quantity" string="Quantity" readonly="not is_quantity_done_editable" column_invisible="parent.state=='draft'" decoration-danger="product_uom_qty and quantity > product_uom_qty and parent.state not in ['done', 'cancel']"/>
-                                    <field name="product_uom" readonly="state != 'draft' and not additional" options="{'no_open': True, 'no_create': True}" string="Unit" groups="uom.group_uom"/>
+                                    <field name="product_uom" readonly="state != 'draft' and not additional" options="{'no_open': True, 'no_create': True}" widget="many2one_uom" groups="uom.group_uom"/>
                                     <field name="product_uom" groups="!uom.group_uom" column_invisible="True"/>
                                     <field name="picked" optional="hide" column_invisible="parent.state=='draft'"/>
                                     <field name="lot_ids" widget="many2many_tags"

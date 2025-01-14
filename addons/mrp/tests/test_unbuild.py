@@ -578,8 +578,7 @@ class TestUnbuild(TestMrpCommon):
         - decimal accuracy of Product UoM > decimal accuracy of Units
         - unbuild a product with a decimal quantity of component
         """
-        self.env['decimal.precision'].search([('name', '=', 'Product Unit of Measure')]).digits = 4
-        self.uom_unit.rounding = 0.001
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 4
 
         self.bom_1.product_qty = 3
         self.bom_1.bom_line_ids.product_qty = 5

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="uom.UomAutoComplete" t-inherit="web.AutoComplete">
+        <xpath expr="//t[@t-esc='option.label']" position="replace">
+            <t t-if="option.relative_info">
+                <div class="uom_autocomplete_grid">
+                    <div t-esc="option.label"/>
+                    <div t-esc="option.relative_info" class="text-muted"/>
+                </div>
+            </t>
+            <t t-else="">
+                <span t-esc="option.label"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

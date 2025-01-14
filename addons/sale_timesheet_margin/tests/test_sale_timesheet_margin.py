@@ -19,7 +19,6 @@ class TestSaleTimesheetMargin(TestCommonSaleTimesheet):
             'type': 'service',
             'invoice_policy': 'order',
             'uom_id': uom_day_id,
-            'uom_po_id': uom_day_id,
             'default_code': 'SERV-ORDERED-DAY',
             'service_type': 'timesheet',
             'service_tracking': 'task_in_project',

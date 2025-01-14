@@ -31,7 +31,15 @@
             <field name="taxes_id" eval="[(5,)]"/>
         </record>
 
-        <record id="uom.product_uom_categ_unit" model="uom.category">
+        <record id="uom.product_uom_unit" model="uom.uom">
+            <field name="is_pos_groupable">True</field>
+        </record>
+
+        <record id="uom.product_uom_pack_6" model="uom.uom">
+            <field name="is_pos_groupable">True</field>
+        </record>
+
+        <record id="uom.product_uom_dozen" model="uom.uom">
             <field name="is_pos_groupable">True</field>
         </record>
 

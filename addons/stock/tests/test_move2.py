@@ -2666,32 +2666,25 @@ class TestStockUOM(TestStockCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        dp = cls.env.ref('product.decimal_product_uom')
+        dp = cls.env.ref('uom.decimal_product_uom')
         dp.digits = 7
 
     def test_pickings_transfer_with_different_uom_and_back_orders(self):
         """ Picking transfer with diffrent unit of meassure. """
         # weight category
-        categ_test = self.env['uom.category'].create({'name': 'Bigger than tons'})
 
         T_LBS = self.env['uom.uom'].create({
             'name': 'T-LBS',
-            'category_id': categ_test.id,
-            'uom_type': 'reference',
-            'rounding': 0.01
         })
         T_GT = self.env['uom.uom'].create({
             'name': 'T-GT',
-            'category_id': categ_test.id,
-            'uom_type': 'bigger',
-            'rounding': 0.0000001,
-            'factor_inv': 2240.00,
+            'relative_factor': 2240.00,
+            'relative_uom_id': T_LBS.id,
         })
         T_TEST = self.env['product.product'].create({
             'name': 'T_TEST',
             'is_storable': True,
-            'uom_id': T_LBS.id,
-            'uom_po_id': T_LBS.id,
+            'uom_ids': [(4, T_LBS.id)],
             'tracking': 'lot',
         })
 
@@ -2731,7 +2724,9 @@ class TestStockUOM(TestStockCommon):
         back_order_in = self.env['stock.picking'].search([('backorder_id', '=', picking_in.id)])
 
         self.assertEqual(len(back_order_in), 1.00, 'There should be one back order created')
-        self.assertEqual(back_order_in.move_ids.product_qty, 91640.00, 'There should be one back order created')
+        # picking_in: 42760.00 / 2240 -> 19.0892857
+        # backorder: 60 - 19.0892857 -> 40.9107143 * 2240
+        self.assertEqual(back_order_in.move_ids.product_qty, 91640.000032, 'There should be one back order created')
 
     def test_move_product_with_different_uom(self):
         """ Product defined in g with 0.01 rounding
@@ -2743,17 +2738,13 @@ class TestStockUOM(TestStockCommon):
         (more than the quantity in stock), we check that
         we reserve less than the quantity in stock
         """
-        precision = self.env.ref('product.decimal_product_uom')
+        precision = self.env.ref('uom.decimal_product_uom')
         precision.digits = 3
-
-        self.uom_kg.rounding = 0.0001
-        self.uom_gm.rounding = 0.01
 
         product_G = self.env['product.product'].create({
             'name': 'Product G',
             'is_storable': True,
             'uom_id': self.uom_gm.id,
-            'uom_po_id': self.uom_gm.id,
         })
 
         stock_location = self.env['stock.location'].browse(self.stock_location)
@@ -2785,131 +2776,12 @@ class TestStockUOM(TestStockCommon):
         picking.action_confirm()
         picking.action_assign()
 
-        self.assertEqual(product_G.uom_id.rounding, 0.01)
-        self.assertEqual(move.product_uom.rounding, 0.0001)
-
         self.assertEqual(len(picking.move_line_ids), 1, 'One move line should exist for the picking.')
         move_line = picking.move_line_ids
         # check that we do not reserve more (in the same UOM) than the quantity in stock
         self.assertEqual(quant.quantity, 149.88)
         # check that we reserve the same quantity in the ml and the quant
         self.assertEqual(move_line.quantity_product_uom, quant.reserved_quantity)
-
-    def test_update_product_move_line_with_different_uom(self):
-        """ Check that when the move line and corresponding
-        product have different UOM with possibly conflicting
-        precisions, we do not reserve more than the quantity
-        in stock. Similar initial configuration as
-        test_move_product_with_different_uom.
-        """
-        precision = self.env.ref('product.decimal_product_uom')
-        precision.digits = 3
-        precision_digits = precision.digits
-
-        self.uom_kg.rounding = 0.0001
-        self.uom_gm.rounding = 0.01
-
-        product_LtDA = self.env['product.product'].create({
-            'name': 'Product Less than DA',
-            'is_storable': True,
-            'uom_id': self.uom_gm.id,
-            'uom_po_id': self.uom_gm.id,
-        })
-
-        product_GtDA = self.env['product.product'].create({
-            'name': 'Product Greater than DA',
-            'is_storable': True,
-            'uom_id': self.uom_gm.id,
-            'uom_po_id': self.uom_gm.id,
-        })
-
-        stock_location = self.env['stock.location'].browse(self.stock_location)
-
-        # quantity in hand converted to kg is not more precise than the DA
-        self.env['stock.quant']._update_available_quantity(product_LtDA, stock_location, 149)
-        # quantity in hand converted to kg is more precise than the DA
-        self.env['stock.quant']._update_available_quantity(product_GtDA, stock_location, 149.88)
-
-        self.assertEqual(len(product_LtDA.stock_quant_ids), 1, 'One quant should exist for the product.')
-        self.assertEqual(len(product_GtDA.stock_quant_ids), 1, 'One quant should exist for the product.')
-        quant_LtDA = product_LtDA.stock_quant_ids
-        quant_GtDA = product_GtDA.stock_quant_ids
-
-        # create 2 moves of 1kg
-        move_LtDA = self.env['stock.move'].create({
-            'name': 'test_reserve_product_LtDA',
-            'location_id': self.stock_location,
-            'location_dest_id': self.customer_location,
-            'product_id': product_LtDA.id,
-            'product_uom': self.uom_kg.id,
-            'product_uom_qty': 1,
-        })
-
-        move_GtDA = self.env['stock.move'].create({
-            'name': 'test_reserve_product_GtDA',
-            'location_id': self.stock_location,
-            'location_dest_id': self.customer_location,
-            'product_id': product_GtDA.id,
-            'product_uom': self.uom_kg.id,
-            'product_uom_qty': 1,
-        })
-
-        self.assertEqual(move_LtDA.state, 'draft')
-        self.assertEqual(move_GtDA.state, 'draft')
-        move_LtDA._action_confirm()
-        move_GtDA._action_confirm()
-        self.assertEqual(move_LtDA.state, 'confirmed')
-        self.assertEqual(move_GtDA.state, 'confirmed')
-        # check availability, less than initial demand
-        move_LtDA._action_assign()
-        move_GtDA._action_assign()
-        self.assertEqual(move_LtDA.state, 'partially_available')
-        self.assertEqual(move_GtDA.state, 'partially_available')
-        # the initial demand is 1kg
-        self.assertEqual(move_LtDA.product_uom.id, self.uom_kg.id)
-        self.assertEqual(move_GtDA.product_uom.id, self.uom_kg.id)
-        self.assertEqual(move_LtDA.product_uom_qty, 1.0)
-        self.assertEqual(move_GtDA.product_uom_qty, 1.0)
-        # one move line is created
-        self.assertEqual(len(move_LtDA.move_line_ids), 1)
-        self.assertEqual(len(move_GtDA.move_line_ids), 1)
-
-        # increase quantity by 0.14988 kg (more precise than DA)
-        self.env['stock.quant']._update_available_quantity(product_LtDA, stock_location, 149.88)
-        self.env['stock.quant']._update_available_quantity(product_GtDA, stock_location, 149.88)
-
-        # _update_reserved_quantity is called on a move only in _action_assign
-        move_LtDA._action_assign()
-        move_GtDA._action_assign()
-
-        # as the move line for LtDA and its corresponding quant can be
-        # in different UOMs, a new move line can be created
-        # from _update_reserved_quantity
-        move_lines_LtDA = self.env["stock.move.line"].search([
-            ('product_id', '=', quant_LtDA.product_id.id),
-            ('location_id', '=', quant_LtDA.location_id.id),
-            ('lot_id', '=', quant_LtDA.lot_id.id),
-            ('package_id', '=', quant_LtDA.package_id.id),
-            ('owner_id', '=', quant_LtDA.owner_id.id),
-            ('quantity_product_uom', '!=', 0)
-        ])
-        reserved_on_move_lines_LtDA = sum(move_lines_LtDA.mapped('quantity_product_uom'))
-
-        move_lines_GtDA = self.env["stock.move.line"].search([
-            ('product_id', '=', quant_GtDA.product_id.id),
-            ('location_id', '=', quant_GtDA.location_id.id),
-            ('lot_id', '=', quant_GtDA.lot_id.id),
-            ('package_id', '=', quant_GtDA.package_id.id),
-            ('owner_id', '=', quant_GtDA.owner_id.id),
-            ('quantity_product_uom', '!=', 0)
-        ])
-        reserved_on_move_lines_GtDA = sum(move_lines_GtDA.mapped('quantity_product_uom'))
-
-        # check that we reserve the same quantity in the ml and the quant
-        self.assertEqual(reserved_on_move_lines_LtDA, 298.8)
-        self.assertEqual(reserved_on_move_lines_LtDA, quant_LtDA.reserved_quantity)
-        self.assertEqual(reserved_on_move_lines_GtDA, 299.7)
-        self.assertEqual(reserved_on_move_lines_GtDA, quant_GtDA.reserved_quantity)
 
 
 class TestRoutes(TestStockCommon):
@@ -3154,80 +3026,6 @@ class TestRoutes(TestStockCommon):
         moves._adjust_procure_method()
         self.assertEqual(move_A.procure_method, 'make_to_stock', 'Move A should be "make_to_stock"')
         self.assertEqual(move_B.procure_method, 'make_to_stock', 'Move B should be "make_to_stock"')
-
-    def test_packaging_route(self):
-        """Create a route for product and another route for its packaging. Create
-        a move of this product with this packaging. Check packaging route has
-        priority over product route.
-        """
-        stock_location = self.env.ref('stock.stock_location_stock')
-
-        push_location_1 = self.env['stock.location'].create({
-            'location_id': stock_location.location_id.id,
-            'name': 'push location 1',
-        })
-
-        push_location_2 = self.env['stock.location'].create({
-            'location_id': stock_location.location_id.id,
-            'name': 'push location 2',
-        })
-
-        route_on_product = self.env['stock.route'].create({
-            'name': 'route on product',
-            'rule_ids': [(0, False, {
-                'name': 'create a move to push location 1',
-                'location_src_id': stock_location.id,
-                'location_dest_id': push_location_1.id,
-                'company_id': self.env.company.id,
-                'action': 'push',
-                'auto': 'manual',
-                'picking_type_id': self.env.ref('stock.picking_type_in').id,
-            })],
-        })
-
-        route_on_packaging = self.env['stock.route'].create({
-            'name': 'route on packaging',
-            'packaging_selectable': True,
-            'rule_ids': [(0, False, {
-                'name': 'create a move to push location 2',
-                'location_src_id': stock_location.id,
-                'location_dest_id': push_location_2.id,
-                'company_id': self.env.company.id,
-                'action': 'push',
-                'auto': 'manual',
-                'picking_type_id': self.env.ref('stock.picking_type_in').id,
-            })],
-        })
-
-        product = self.env['product.product'].create({
-            'name': 'Product with packaging',
-            'is_storable': True,
-            'route_ids': [(4, route_on_product.id, 0)]
-        })
-
-        packaging = self.env['product.packaging'].create({
-            'name': 'box',
-            'product_id': product.id,
-            'route_ids': [(4, route_on_packaging.id, 0)]
-        })
-
-
-        move1 = self.env['stock.move'].create({
-            'name': 'move with a route',
-            'location_id': stock_location.id,
-            'location_dest_id': stock_location.id,
-            'product_id': product.id,
-            'product_packaging_id': packaging.id,
-            'product_uom': self.uom_unit.id,
-            'product_uom_qty': 1.0,
-        })
-        move1._action_confirm()
-        # Need to complete to move to trigger the push rule
-        move1.write({'quantity': 1, 'picked': True})
-        move1._action_done()
-
-        pushed_move = move1.move_dest_ids
-        self.assertEqual(pushed_move.location_dest_id.id, push_location_2.id)
 
     def test_cross_dock(self):
         customer_loc = self.env['stock.location'].browse(self.customer_location)

@@ -37,7 +37,6 @@ class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
             'is_storable': True,
             'categ_id': cls.stock_account_product_categ.id,
             'uom_id': uom_unit.id,
-            'uom_po_id': uom_unit.id,
         })
         cls.test_product_delivery = cls.env['product.product'].create({
             'name': 'Test product template invoiced on delivery',
@@ -45,7 +44,6 @@ class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
             'is_storable': True,
             'categ_id': cls.stock_account_product_categ.id,
             'uom_id': uom_unit.id,
-            'uom_po_id': uom_unit.id,
         })
 
         cls.res_users_stock_user = cls.env['res.users'].create({

@@ -105,14 +105,12 @@ class TestAngloSaxonValuationPurchaseMRP(AccountTestInvoicingCommon):
             'is_storable': True,
             'categ_id': self.avco_category.id,
             'uom_id': uom_litre.id,
-            'uom_po_id': uom_litre.id,
         } for name in ['01', '02']])
 
         kit = self.env['product.product'].create({
             'name': 'Super Kit',
             'type': 'consu',
             'uom_id': uom_unit.id,
-            'uom_po_id': uom_unit.id,
         })
 
         bom_kit = self.env['mrp.bom'].create({

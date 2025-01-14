@@ -313,10 +313,8 @@ class TestSalePrices(SaleCommon):
             ).unlink()
         new_uom = self.env['uom.uom'].create({
             'name': '10 units',
-            'factor_inv': 10,
-            'uom_type': 'bigger',
-            'rounding': 1.0,
-            'category_id': self.uom_unit.category_id.id,
+            'relative_factor': 10,
+            'relative_uom_id': self.uom_unit.id,
         })
 
         # This pricelist doesn't show the discount
@@ -1022,7 +1020,7 @@ class TestSalePrices(SaleCommon):
         })]
         order.action_confirm()
         line = order.order_line
-        quantity_precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        quantity_precision = self.env['decimal.precision'].precision_get('Product Unit')
         self.assertEqual(
             line.product_uom_qty, float_round(product_uom_qty, precision_digits=quantity_precision))
         expected_price_subtotal = line.currency_id.round(

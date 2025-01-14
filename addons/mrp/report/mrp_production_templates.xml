@@ -139,12 +139,12 @@
     <t t-call="web.basic_layout">
         <t t-set='nRows' t-value='12'/>
         <t t-set='nCols' t-value='4'/>
-        <t t-set="uom_categ_unit" t-value="env.ref('uom.product_uom_categ_unit')"/>
+        <t t-set="uom_unit" t-value="env.ref('uom.product_uom_unit')"/>
         <div class="oe_structure"></div>
         <t t-set="move_lines" t-value="docs.move_finished_ids.move_line_ids.filtered(lambda ml: ml.move_id.production_id.state == 'done' and ml.state == 'done' and ml.quantity)"/>
         <t t-set="move_line_qtys" t-value="[]"/>
         <t t-foreach="move_lines" t-as="move_line">
-            <t t-if="move_line.product_uom_id.category_id == uom_categ_unit">
+            <t t-if="move_line.product_id.uom_id._has_common_reference(uom_unit)">
                 <!-- print 1 label per 1 uom when uom category = units -->
                 <t t-set="move_line_qtys" t-value="move_line_qtys + [int(move_line.quantity)]"/>
             </t>
@@ -178,7 +178,7 @@
                                     <div class="o_label_name o_label_4x12 fw-bold">
                                         <span t-out="move_line.product_id.display_name">Product</span>
                                         <div><span>Quantity: </span>
-                                            <span t-if="move_line.product_uom_id.category_id == uom_categ_unit">1.0</span>
+                                            <span t-if="move_line.product_id.uom_id._has_common_reference(uom_unit)">1.0</span>
                                             <span t-else="" t-out="move_line.quantity">5</span>
                                             <span t-field="move_line.product_uom_id" groups="uom.group_uom">UOM id</span>
                                         </div>

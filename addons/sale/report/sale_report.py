@@ -60,7 +60,7 @@ class SaleReport(models.Model):
         comodel_name='product.product', string="Product Variant", readonly=True)
     product_tmpl_id = fields.Many2one(
         comodel_name='product.template', string="Product", readonly=True)
-    product_uom_id = fields.Many2one(comodel_name='uom.uom', string="Unit of Measure", readonly=True)
+    product_uom_id = fields.Many2one(comodel_name='uom.uom', string="Unit", readonly=True)
     product_uom_qty = fields.Float(string="Qty Ordered", readonly=True)
     qty_to_deliver = fields.Float(string="Qty To Deliver", readonly=True)
     qty_delivered = fields.Float(string="Qty Delivered", readonly=True)

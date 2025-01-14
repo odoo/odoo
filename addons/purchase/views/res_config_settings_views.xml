@@ -58,16 +58,13 @@
                         <setting id="product_matrix" title="If installed, the product variants will be added to purchase orders through a grid entry." string="Variant Grid Entry" help="Add several variants to the purchase order from a grid">
                             <field name="module_purchase_product_matrix"/>
                         </setting>
-                        <setting id="stock_packaging_purchase" help="Purchase products by multiple of unit # per package" title="Ability to select a package type in purchase orders and to force a quantity that is a multiple of the number of units per package.">
-                            <field name="group_stock_packaging"/>
-                        </setting>
-                        <setting id="sell_purchase_uom" help="Sell and purchase products in different units of measure"
+                        <setting id="sell_purchase_uom" help="Sell and purchase products in different units of measure or packagings"
                                  documentation="/applications/inventory_and_mrp/inventory/management/products/uom.html">
                             <field name="group_uom"/>
                             <div class="content-group">
                                 <div class="mt8" invisible="not group_uom">
-                                    <button name="%(uom.product_uom_categ_form_action)d" icon="oi-arrow-right"
-                                            type="action" string="Units Of Measure" class="btn-link"/>
+                                    <button name="%(uom.product_uom_form_action)d" icon="oi-arrow-right"
+                                            type="action" string="Units &amp; Packagings" class="btn-link"/>
                                 </div>
                             </div>
                         </setting>

@@ -41,6 +41,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                         'product_id': self.product_a.id,
                         'product_qty': 10.0,
                         'price_unit': 15.0,
+                        'product_uom_id': self.product_a.uom_id.id,
                     })],
                     'picking_type_id': picking_type.id,
                 })

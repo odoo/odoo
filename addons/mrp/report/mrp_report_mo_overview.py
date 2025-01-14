@@ -254,7 +254,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         if float_compare(producible_qty, 0, precision_rounding=record.product_uom_id.rounding) <= 0:
             return _("Not Ready")
         elif float_compare(producible_qty, record.product_qty, precision_rounding=record.product_uom_id.rounding) == -1:
-            producible_qty = float_repr(producible_qty, self.env['decimal.precision'].precision_get('Product Unit of Measure'))
+            producible_qty = float_repr(producible_qty, self.env['decimal.precision'].precision_get('Product Unit'))
             return _("%(producible_qty)s Ready", producible_qty=producible_qty)
         return _("Ready")
 

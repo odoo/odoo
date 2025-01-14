@@ -59,20 +59,13 @@ class HrExpense(models.Model):
     product_description = fields.Html(compute='_compute_product_description')
     product_uom_id = fields.Many2one(
         comodel_name='uom.uom',
-        string="Unit of Measure",
+        string="Unit",
         compute='_compute_uom_id', precompute=True, store=True,
-        domain="[('category_id', '=', product_uom_category_id)]",
         copy=True,
-    )
-    product_uom_category_id = fields.Many2one(
-        comodel_name='uom.category',
-        string="UoM Category",
-        related='product_id.uom_id.category_id',
-        readonly=True,
     )
     product_has_cost = fields.Boolean(compute='_compute_from_product')  # Whether the product has a cost (standard_price) or not
     product_has_tax = fields.Boolean(string="Whether tax is defined on a selected product", compute='_compute_from_product')
-    quantity = fields.Float(required=True, digits='Product Unit of Measure', default=1)
+    quantity = fields.Float(required=True, digits='Product Unit', default=1)
     description = fields.Text(string="Internal Notes")
     message_main_attachment_checksum = fields.Char(related='message_main_attachment_id.checksum')
     nb_attachment = fields.Integer(string="Number of Attachments", compute='_compute_nb_attachment')

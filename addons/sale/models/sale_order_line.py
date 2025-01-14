@@ -98,7 +98,6 @@ class SaleOrderLine(models.Model):
         # not anymore since the field must be considered editable for product configurator logic
         # without modifying the related product_id when updated.
         domain=[('sale_ok', '=', True)])
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', depends=['product_id'])
 
     product_template_attribute_value_ids = fields.Many2many(
         related='product_id.product_template_attribute_value_ids',
@@ -125,14 +124,15 @@ class SaleOrderLine(models.Model):
     product_uom_qty = fields.Float(
         string="Quantity",
         compute='_compute_product_uom_qty',
-        digits='Product Unit of Measure', default=1.0,
+        digits='Product Unit', default=1.0,
         store=True, readonly=False, required=True, precompute=True)
     product_uom_id = fields.Many2one(
         comodel_name='uom.uom',
-        string="Unit of Measure",
+        string="Unit",
         compute='_compute_product_uom_id',
-        store=True, readonly=False, precompute=True, ondelete='restrict',
-        domain="[('category_id', '=', product_uom_category_id)]")
+        domain='[("id", "in", allowed_uom_ids)]',
+        store=True, readonly=False, precompute=True, ondelete='restrict')
+    allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     linked_line_id = fields.Many2one(
         string="Linked Order Line",
         comodel_name='sale.order.line',
@@ -202,19 +202,6 @@ class SaleOrderLine(models.Model):
         compute='_compute_price_reduce_taxinc',
         store=True, precompute=True)
 
-    # Logistics/Delivery fields
-    product_packaging_id = fields.Many2one(
-        comodel_name='product.packaging',
-        string="Packaging",
-        compute='_compute_product_packaging_id',
-        store=True, readonly=False, precompute=True,
-        domain="[('sales', '=', True), ('product_id','=',product_id)]",
-        check_company=True)
-    product_packaging_qty = fields.Float(
-        string="Packaging Quantity",
-        compute='_compute_product_packaging_qty',
-        store=True, readonly=False, precompute=True)
-
     customer_lead = fields.Float(
         string="Lead Time",
         compute='_compute_customer_lead',
@@ -238,23 +225,23 @@ class SaleOrderLine(models.Model):
         string="Delivery Quantity",
         compute='_compute_qty_delivered',
         default=0.0,
-        digits='Product Unit of Measure',
+        digits='Product Unit',
         store=True, readonly=False, copy=False)
 
     # Analytic & Invoicing fields
     qty_invoiced = fields.Float(
         string="Invoiced Quantity",
         compute='_compute_qty_invoiced',
-        digits='Product Unit of Measure',
+        digits='Product Unit',
         store=True)
     qty_invoiced_posted = fields.Float(
         string="Invoiced Quantity (posted)",
         compute='_compute_qty_invoiced_posted',
-        digits='Product Unit of Measure')
+        digits='Product Unit')
     qty_to_invoice = fields.Float(
         string="Quantity To Invoice",
         compute='_compute_qty_to_invoice',
-        digits='Product Unit of Measure',
+        digits='Product Unit',
         store=True)
 
     analytic_line_ids = fields.One2many(
@@ -467,27 +454,22 @@ class SaleOrderLine(models.Model):
 
         return name
 
-    @api.depends('display_type', 'product_id', 'product_packaging_qty')
+    @api.depends('display_type', 'product_id')
     def _compute_product_uom_qty(self):
         for line in self:
             if line.display_type:
                 line.product_uom_qty = 0.0
-                continue
-
-            if not line.product_packaging_id:
-                continue
-            packaging_uom = line.product_packaging_id.product_uom_id
-            qty_per_packaging = line.product_packaging_id.qty
-            product_uom_qty = packaging_uom._compute_quantity(
-                line.product_packaging_qty * qty_per_packaging, line.product_uom_id)
-            if float_compare(product_uom_qty, line.product_uom_qty, precision_rounding=line.product_uom_id.rounding) != 0:
-                line.product_uom_qty = product_uom_qty
 
     @api.depends('product_id')
     def _compute_product_uom_id(self):
         for line in self:
             if not line.product_uom_id or (line.product_id.uom_id.id != line.product_uom_id.id):
                 line.product_uom_id = line.product_id.uom_id
+
+    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids')
+    def _compute_allowed_uom_ids(self):
+        for line in self:
+            line.allowed_uom_ids = line.product_id.uom_id | line.product_id.uom_ids
 
     @api.depends('product_id', 'company_id')
     def _compute_tax_ids(self):
@@ -777,27 +759,6 @@ class SaleOrderLine(models.Model):
         for line in self:
             line.price_reduce_taxinc = line.price_total / line.product_uom_qty if line.product_uom_qty else 0.0
 
-    @api.depends('product_id', 'product_uom_qty', 'product_uom_id')
-    def _compute_product_packaging_id(self):
-        for line in self:
-            # remove packaging if not match the product
-            if line.product_packaging_id.product_id != line.product_id:
-                line.product_packaging_id = False
-            # suggest biggest suitable packaging matching the SO's company
-            if line.product_id and line.product_uom_qty and line.product_uom_id:
-                suggested_packaging = line.product_id.packaging_ids\
-                        .filtered(lambda p: p.sales and (p.product_id.company_id <= p.company_id <= line.company_id))\
-                        ._find_suitable_product_packaging(line.product_uom_qty, line.product_uom_id)
-                line.product_packaging_id = suggested_packaging or line.product_packaging_id
-
-    @api.depends('product_packaging_id', 'product_uom_id', 'product_uom_qty')
-    def _compute_product_packaging_qty(self):
-        self.product_packaging_qty = 0
-        for line in self:
-            if not line.product_packaging_id:
-                continue
-            line.product_packaging_qty = line.product_packaging_id._compute_qty(line.product_uom_qty, line.product_uom_id)
-
     # This computed default is necessary to have a clean computation inheritance
     # (cf sale_stock) instead of simply removing the default and specifying
     # the compute attribute & method in sale_stock.
@@ -880,8 +841,7 @@ class SaleOrderLine(models.Model):
                 qty = unit_amount_sum / count
             else:
                 qty = unit_amount_sum
-            if so_line.product_uom_id.category_id == uom.category_id:
-                qty = uom._compute_quantity(qty, so_line.product_uom_id, rounding_method='HALF-UP')
+            qty = uom._compute_quantity(qty, so_line.product_uom_id, rounding_method='HALF-UP')
             result[so_line.id] += qty
 
         return result
@@ -960,7 +920,7 @@ class SaleOrderLine(models.Model):
           occurs only in state 'sale', the upselling opportunity is removed from the list.
         - invoiced: the quantity invoiced is larger or equal to the quantity ordered.
         """
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
         for line in self:
             if line.state != 'sale':
                 line.invoice_status = 'no'
@@ -1152,24 +1112,6 @@ class SaleOrderLine(models.Model):
                 }
             }
 
-    @api.onchange('product_packaging_id')
-    def _onchange_product_packaging_id(self):
-        if self.product_packaging_id and self.product_uom_qty:
-            newqty = self.product_packaging_id._check_qty(self.product_uom_qty, self.product_uom_id, "UP")
-            if float_compare(newqty, self.product_uom_qty, precision_rounding=self.product_uom_id.rounding) != 0:
-                return {
-                    'warning': {
-                        'title': _('Warning'),
-                        'message': _(
-                            "This product is packaged by %(pack_size).2f %(pack_name)s. You should sell %(quantity).2f %(unit)s.",
-                            pack_size=self.product_packaging_id.qty,
-                            pack_name=self.product_id.uom_id.name,
-                            quantity=newqty,
-                            unit=self.product_uom_id.name
-                        ),
-                    },
-                }
-
     #=== CRUD METHODS ===#
 
     @api.model_create_multi
@@ -1210,7 +1152,7 @@ class SaleOrderLine(models.Model):
             raise UserError(_("You cannot change the type of a sale order line. Instead you should delete the current line and create a new line of the proper type."))
 
         if 'product_uom_qty' in values:
-            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            precision = self.env['decimal.precision'].precision_get('Product Unit')
             self.filtered(
                 lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) != 0)._update_line_quantity(values)
 
@@ -1241,13 +1183,7 @@ class SaleOrderLine(models.Model):
                       '\n'.join(fields.mapped('field_description')))
                 )
 
-        result = super().write(values)
-
-        # Don't recompute the package_id if we are setting the quantity of the items and the quantity of packages
-        if 'product_uom_qty' in values and 'product_packaging_qty' in values and 'product_packaging_id' not in values:
-            self.env.remove_to_compute(self._fields['product_packaging_id'], self)
-
-        return result
+        return super().write(values)
 
     def _get_protected_fields(self):
         """ Give the fields that should not be modified on a locked SO.
