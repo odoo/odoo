@@ -1232,6 +1232,28 @@ class TestCompute(common.TransactionCase):
         automation = automation_form.save()
         self.assertEqual(automation.filter_pre_domain, False)
 
+    def test_automation_form_view_with_default_values_in_context(self):
+        # Use case where default model, trigger and filter_domain in context
+        context = {
+            'default_name': 'Test Automation',
+            'default_model_id': self.env.ref('test_base_automation.model_base_automation_lead_test').id,
+            'default_trigger': 'on_create_or_write',
+            'default_filter_domain': repr([('state', '=', 'draft')]),
+        }
+        # Create form should be pre-filled with the default values
+        automation = self.env['base.automation'].with_context(context)
+        default_trigger_field_ids = [self.env.ref('test_base_automation.field_base_automation_lead_test__state').id]
+        automation_form = Form(automation, view='base_automation.view_base_automation_form')
+        self.assertEqual(automation_form.name, context.get('default_name'))
+        self.assertEqual(automation_form.model_id.id, context.get('default_model_id'))
+        self.assertEqual(automation_form.trigger, context.get('default_trigger'))
+        self.assertEqual(automation_form.trigger_field_ids.ids, default_trigger_field_ids,
+            'trigger_field_ids should match the fields in the default filter domain.')
+
+        automation_form.trigger = 'on_stage_set'
+        self.assertNotEqual(automation_form.trigger_field_ids.ids, default_trigger_field_ids,
+            'When user changes trigger, the trigger_field_ids field should be updated')
+
     def test_inversion(self):
         """ If a stored field B depends on A, an update to the trigger for A
         should trigger the recomputaton of A, then B.
