@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class AccountTax(models.Model):
@@ -32,7 +33,7 @@ class AccountTax(models.Model):
     l10n_ar_withholding_sequence_id = fields.Many2one(
         'ir.sequence',
         string='WTH Sequence',
-        copy=False, check_company=True,
+        check_company=True,
         help='If no sequence provided then it will be required for you to enter withholding number when registering one.')
     l10n_ar_code = fields.Char('AFIP Code')
     l10n_ar_non_taxable_amount = fields.Float(
@@ -43,8 +44,6 @@ class AccountTax(models.Model):
     l10n_ar_minimum_threshold = fields.Float(
         string="Minimum Treshold",
         help="If the calculated withholding tax amount is lower than minimum withholding threshold then it is 0.0.")
-    l10n_ar_state_id = fields.Many2one(
-        'res.country.state', string="Jurisdiction", ondelete='restrict', domain="[('country_id', '=?', country_id)]")
     l10n_ar_scale_id = fields.Many2one(
         comodel_name='l10n_ar.earnings.scale',
         string="Scale", help="Earnings table scale if tax type is 'Earnings Scale'."
@@ -52,6 +51,10 @@ class AccountTax(models.Model):
 
     @api.depends('type_tax_use', 'l10n_ar_withholding_payment_type')
     def _compute_l10n_ar_type_tax_use(self):
+        """
+        Compute the value of the `l10n_ar_type_tax_use` field based on the
+        `type_tax_use` and `l10n_ar_withholding_payment_type` fields.
+        """
         for tax in self:
             if tax.country_code == 'AR':
                 if tax.type_tax_use in ('sale', 'purchase'):
@@ -65,6 +68,7 @@ class AccountTax(models.Model):
 
     @api.onchange('l10n_ar_type_tax_use')
     def _inverse_l10n_ar_type_tax_use(self):
+        """Updates the tax fields based on the value of `l10n_ar_type_tax_use`."""
         for tax in self.filtered(lambda t: t.country_code == 'AR'):
             if tax.l10n_ar_type_tax_use in ('sale', 'purchase'):
                 tax.type_tax_use = tax.l10n_ar_type_tax_use
@@ -78,3 +82,14 @@ class AccountTax(models.Model):
                     tax.l10n_ar_withholding_payment_type = False
                     tax.l10n_ar_tax_type = False
                 tax.type_tax_use = 'none'
+
+    @api.ondelete(at_uninstall=False)
+    def _check_tax_used_on_company_tax_ws(self):
+        """
+        This method checks if any of the taxes being deleted are set as
+        the default tax in the `account.fiscal.position.l10n_ar_tax` model.
+        If such a tax is found, a `UserError` is raised to prevent deletion.
+        """
+        ws = self.env['account.fiscal.position.l10n_ar_tax'].search([('default_tax_id', 'in', self.ids)])
+        if ws:
+            raise UserError(_('You cannot delete these taxes because they are set as default perception/withholding taxes in the fiscal positions of the following companies: %(company_names)s', company_names=', '.join(ws.mapped('company_id.name'))))
