@@ -1815,7 +1815,9 @@ class _String(Field):
             translation_dictionary = self.get_translation_dictionary(from_lang_value, old_translations)
             text2terms = defaultdict(list)
             for term in new_terms:
-                text2terms[self.get_text_content(term)].append(term)
+                term_text = self.get_text_content(term)
+                if term_text:
+                    text2terms[term_text].append(term)
 
             for old_term in list(translation_dictionary.keys()):
                 if old_term not in new_terms:
