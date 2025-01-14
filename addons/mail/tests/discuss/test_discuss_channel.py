@@ -430,7 +430,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "message_unread_counter_bus_id": 0,
                                 "new_message_separator": msg_1.id + 1,
                                 "persona": {"id": self.user_admin.partner_id.id, "type": "partner"},
-                                "syncUnread": False,
                                 "thread": {
                                     "id": chat.id,
                                     "model": "discuss.channel",

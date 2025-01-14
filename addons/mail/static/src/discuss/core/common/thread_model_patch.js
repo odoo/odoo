@@ -1,5 +1,6 @@
 import { fields } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
+import { useSequential } from "@mail/utils/common/hooks";
 import { compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
 
 import { formatList } from "@web/core/l10n/utils";
@@ -92,7 +93,7 @@ const threadPatch = {
                     return null;
                 }
                 const messages = this.messages.filter((m) => !m.isNotification);
-                const separator = this.selfMember.localNewMessageSeparator;
+                const separator = this.selfMember.new_message_separator_ui;
                 if (separator === 0 && !this.loadOlder) {
                     return messages[0];
                 }
@@ -158,6 +159,9 @@ const threadPatch = {
                 return res;
             },
         });
+        this.markReadSequential = useSequential();
+        this.markedAsUnread = false;
+        this.markingAsRead = false;
         /** @type {number|undefined} */
         this.member_count = undefined;
         /** @type {string} name: only for channel. For generic thread, @see display_name */
@@ -302,28 +306,27 @@ const threadPatch = {
     },
     /** @override */
     get importantCounter() {
-        if (this.isChatChannel && this.selfMember?.message_unread_counter) {
-            return this.selfMember.totalUnreadMessageCounter;
+        if (this.isChatChannel && this.selfMember?.message_unread_counter_ui) {
+            return this.selfMember.message_unread_counter_ui;
         }
         return super.importantCounter;
     },
     /** @override */
     isDisplayedOnUpdate() {
         super.isDisplayedOnUpdate(...arguments);
-        if (this.selfMember && !this.isDisplayed) {
-            this.selfMember.syncUnread = true;
+        if (!this.selfMember) {
+            return;
+        }
+        if (!this.isDisplayed) {
+            this.selfMember.new_message_separator_ui = this.selfMember.new_message_separator;
+            this.markedAsUnread = false;
         }
     },
     get isUnread() {
         return this.selfMember?.message_unread_counter > 0 || super.isUnread;
     },
-    /**
-     * @override
-     * @param {Object} [options]
-     * @param {boolean} [options.sync] Whether to sync the unread message
-     * state with the server values.
-     */
-    markAsRead({ sync } = {}) {
+    /** @override */
+    markAsRead() {
         super.markAsRead(...arguments);
         if (!this.selfMember) {
             return;
@@ -336,19 +339,19 @@ const threadPatch = {
             this.selfMember.seen_message_id?.id >= newestPersistentMessage.id &&
             this.selfMember.new_message_separator > newestPersistentMessage.id;
         if (alreadyReadBySelf) {
-            // Server is up to date, but local state must be updated as well.
-            this.selfMember.syncUnread = sync ?? this.selfMember.syncUnread;
             return;
         }
-        rpc("/discuss/channel/mark_as_read", {
-            channel_id: this.id,
-            last_message_id: newestPersistentMessage.id,
-            sync,
-        }).catch((e) => {
-            if (e.code !== 404) {
-                throw e;
-            }
-        });
+        this.markReadSequential(async () => {
+            this.markingAsRead = true;
+            return rpc("/discuss/channel/mark_as_read", {
+                channel_id: this.id,
+                last_message_id: newestPersistentMessage.id,
+            }).catch((e) => {
+                if (e.code !== 404) {
+                    throw e;
+                }
+            });
+        }).then(() => (this.markingAsRead = false));
     },
     /**
      * To be overridden.
@@ -370,9 +373,10 @@ const threadPatch = {
         if (!this.selfMember || message.id < this.selfMember.seen_message_id?.id) {
             return;
         }
-        this.selfMember.syncUnread = true;
         this.selfMember.seen_message_id = message;
         this.selfMember.new_message_separator = message.id + 1;
+        this.selfMember.new_message_separator_ui = this.selfMember.new_message_separator;
+        this.markedAsUnread = false;
     },
     /** @param {string} body */
     async post(body) {
@@ -390,7 +394,7 @@ const threadPatch = {
         return super.post(...arguments);
     },
     get showUnreadBanner() {
-        return !this.selfMember?.hideUnreadBanner && this.selfMember?.localMessageUnreadCounter > 0;
+        return this.selfMember?.message_unread_counter_ui > 0;
     },
     get unknownMembersCount() {
         return (this.member_count ?? 0) - this.channel_member_ids.length;

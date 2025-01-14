@@ -32,7 +32,18 @@ export class Composer extends Record {
     };
     /** @type {boolean} */
     forceCursorMove;
-    isFocused = false;
+    isFocused = fields.Attr(false, {
+        /** @this {import("models").Composer} */
+        onUpdate() {
+            if (this.thread) {
+                if (this.isFocused) {
+                    this.thread.isFocusedCounter++;
+                } else {
+                    this.thread.isFocusedCounter--;
+                }
+            }
+        },
+    });
     autofocus = 0;
     replyToMessage = fields.One("mail.message");
 }

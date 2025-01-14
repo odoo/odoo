@@ -314,7 +314,8 @@ test("mark channel as fetched when a new message is loaded", async () => {
     );
     await contains(".o-mail-Message");
     await waitForSteps(["rpc:channel_fetch"]);
-    await contains(".o-mail-Thread-newMessage:contains('New')");
+    await contains(".o-mail-ChatWindow .badge:contains(1)");
+    await contains(".o-mail-Message:contains('Hello!')");
     await focus(".o-mail-Composer-input");
     await waitForSteps(["rpc:mark_as_read"]);
 });
