@@ -22,6 +22,7 @@ from odoo import tools
 from odoo.addons.base.models.ir_mail_server import IrMail_Server
 from odoo.addons.base.tests.common import MockSmtplibCase
 from odoo.addons.bus.models.bus import BusBus, json_dump
+from odoo.addons.mail.models import mail_thread
 from odoo.addons.mail.models.mail_mail import MailMail
 from odoo.addons.mail.models.mail_message import MailMessage
 from odoo.addons.mail.models.mail_notification import MailNotification
@@ -108,11 +109,13 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
              patch.object(IrMail_Server, 'send_email', autospec=True, wraps=IrMail_Server, side_effect=send_email_origin) as send_email_mocked, \
              patch.object(MailMail, 'create', autospec=True, wraps=MailMail, side_effect=_mail_mail_create) as mail_mail_create_mocked, \
              patch.object(MailMail, '_send', autospec=True, wraps=MailMail, side_effect=mail_private_send_origin) as mail_mail_private_send_mocked, \
-             patch.object(MailMail, 'unlink', autospec=True, wraps=MailMail, side_effect=_mail_mail_unlink):
+             patch.object(MailMail, 'unlink', autospec=True, wraps=MailMail, side_effect=_mail_mail_unlink), \
+             patch.object(mail_thread, 'push_to_end_point') as patched_push:
             self.build_email_mocked = build_email_mocked
             self.send_email_mocked = send_email_mocked
             self.mail_mail_create_mocked = mail_mail_create_mocked
             self.mail_mail_private_send_mocked = mail_mail_private_send_mocked
+            self.push_to_end_point_mocked = patched_push
             yield
 
     def _init_mail_mock(self):
@@ -892,6 +895,43 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 self.assertEqual(found, value,
                                  f'Header value for {key} invalid, found {found} instead of {value}')
         return sent_mail
+
+    # ------------------------------------------------------------
+    # PUSH ASSERTS
+    # ------------------------------------------------------------
+
+    def assertNoPushNotification(self):
+        """ Asserts a single push notification """
+        self.push_to_end_point_mocked.assert_not_called()
+        self.assertEqual(self.env['mail.push'].search_count([]), 0)
+
+    def assertPushNotification(self, mail_push_count=0,
+                               endpoint=None, keys=None,
+                               title=None, title_content=None, body=None, body_content=None,
+                               options=None):
+        """ Asserts a single push notification """
+        self.push_to_end_point_mocked.assert_called_once()
+        self.assertEqual(self.env['mail.push'].search_count([]), mail_push_count)
+        if endpoint:
+            self.assertEqual(self.push_to_end_point_mocked.call_args.kwargs['device']['endpoint'], endpoint)
+        if keys:
+            private, public = keys
+            self.assertIn(private, self.push_to_end_point_mocked.call_args.kwargs)
+            self.assertIn(public, self.push_to_end_point_mocked.call_args.kwargs)
+        payload_value = json.loads(self.push_to_end_point_mocked.call_args.kwargs['payload'])
+        if title_content:
+            self.assertIn(title_content, payload_value['title'])
+        elif title:
+            self.assertEqual(title, payload_value['title'])
+        if body_content:
+            self.assertIn(body_content, payload_value['options']['body'])
+        elif body:
+            self.assertEqual(body, payload_value['options']['body'])
+        if options:
+            payload_options = payload_value['options']
+            for key, val in options.items():
+                with self.subTest(key=key):
+                    self.assertEqual(payload_options[key], val)
 
 
 class MailCase(MockEmail):
