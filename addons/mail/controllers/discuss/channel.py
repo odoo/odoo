@@ -115,14 +115,14 @@ class ChannelController(http.Controller):
 
     @http.route("/discuss/channel/mark_as_read", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
-    def discuss_channel_mark_as_read(self, channel_id, last_message_id, sync=False):
+    def discuss_channel_mark_as_read(self, channel_id, last_message_id):
         member = request.env["discuss.channel.member"].search([
             ("channel_id", "=", channel_id),
             ("is_self", "=", True),
         ])
         if not member:
             return  # ignore if the member left in the meantime
-        member._mark_as_read(last_message_id, sync=sync)
+        member._mark_as_read(last_message_id)
 
     @http.route("/discuss/channel/set_new_message_separator", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
@@ -133,7 +133,7 @@ class ChannelController(http.Controller):
         ])
         if not member:
             raise NotFound()
-        return member._set_new_message_separator(message_id, sync=True)
+        return member._set_new_message_separator(message_id)
 
     @http.route("/discuss/channel/notify_typing", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context

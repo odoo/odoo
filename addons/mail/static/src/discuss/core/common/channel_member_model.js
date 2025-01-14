@@ -28,40 +28,32 @@ export class ChannelMember extends Record {
     });
     fetched_message_id = fields.One("mail.message");
     seen_message_id = fields.One("mail.message");
-    syncUnread = true;
-    _syncUnread = fields.Attr(false, {
-        compute() {
-            if (!this.syncUnread || !this.eq(this.thread?.selfMember)) {
-                return false;
-            }
-            return (
-                this.localNewMessageSeparator !== this.new_message_separator ||
-                this.localMessageUnreadCounter !== this.message_unread_counter
-            );
-        },
-        onUpdate() {
-            if (this._syncUnread) {
-                this.localNewMessageSeparator = this.new_message_separator;
-                this.localMessageUnreadCounter = this.message_unread_counter;
-            }
-        },
-    });
-    unreadSynced = fields.Attr(true, {
-        compute() {
-            return this.localNewMessageSeparator === this.new_message_separator;
-        },
-        onUpdate() {
-            if (this.unreadSynced) {
-                this.hideUnreadBanner = false;
-            }
-        },
-    });
     hideUnreadBanner = false;
-    localMessageUnreadCounter = 0;
-    localNewMessageSeparator = null;
-    message_unread_counter = 0;
+    message_unread_counter = fields.Attr(0, {
+        /** @this {import("models").ChannelMember} */
+        onUpdate() {
+            if (
+                this.message_unread_counter === 0 ||
+                !this.thread?.isDisplayed ||
+                this.thread?.scrollTop !== "bottom" ||
+                this.thread.markedAsUnread ||
+                !this.thread.isFocused
+            ) {
+                this.message_unread_counter_ui = this.message_unread_counter;
+            }
+        },
+    });
+    message_unread_counter_ui = 0;
     message_unread_counter_bus_id = 0;
-    new_message_separator = null;
+    new_message_separator = fields.Attr(null, {
+        /** @this {import("models").ChannelMember} */
+        onUpdate() {
+            if (!this.thread?.isDisplayed) {
+                this.new_message_separator_ui = this.new_message_separator;
+            }
+        },
+    });
+    new_message_separator_ui = null;
     threadAsTyping = fields.One("Thread", {
         compute() {
             return this.isTyping ? this.thread : undefined;
@@ -108,14 +100,6 @@ export class ChannelMember extends Record {
                   locale: user.lang,
               })
             : undefined;
-    }
-
-    get totalUnreadMessageCounter() {
-        let counter = this.message_unread_counter;
-        if (!this.unreadSynced) {
-            counter += this.localMessageUnreadCounter;
-        }
-        return counter;
     }
 }
 
