@@ -170,7 +170,46 @@
             }
 
             domReady(() => {
-                // Empty body
+                    const customJSUnloaded = unloaded.some((module) =>
+                    module.includes("user_custom_javascript")
+                );
+
+                if (customJSUnloaded && (document.querySelector(".o_frontend_to_backend_edit_btn") || window.location.href.includes("/web/login"))) {
+                    if (document.querySelector(".custom-js-unloaded-popup")) {
+                        return; // Popup already displayed, do nothing
+                    }
+
+                    const overlay = document.createElement("div");
+                    overlay.className = "custom-js-unloaded-overlay position-fixed top-0 start-0 w-100 h-100";
+                    overlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+                    overlay.style.zIndex = "10000";
+
+                    const popup = document.createElement("div");
+                    popup.className =
+                        "custom-js-unloaded-popup position-fixed start-50 translate-middle bg-danger text-white p-3 rounded shadow";
+                    popup.style.top = "40%";
+                    popup.style.zIndex = "10001";
+                    popup.style.border = "2px solid black";
+
+                    const message = document.createElement("div");
+                    message.textContent =
+                        "Custom JavaScript code has been disabled. You may proceed, but some features may not work as expected.";
+                    popup.appendChild(message);
+
+                    const closeButton = document.createElement("button");
+                    closeButton.className = "btn btn-light mt-2";
+                    closeButton.textContent = "Close";
+                    closeButton.onclick = () => {
+                        overlay.remove();
+                        popup.remove();
+                    };
+                    popup.appendChild(closeButton);
+
+                    document.body.appendChild(overlay);
+                    document.body.appendChild(popup);
+                    return;
+                }
+
                 while (document.body.childNodes.length) {
                     document.body.childNodes[0].remove();
                 }
