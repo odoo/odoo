@@ -1,15 +1,22 @@
 #!/usr/bin/env bash
 
 cd /home/pi/odoo
-localbranch=$(git symbolic-ref -q --short HEAD)
-localremote=$(git config branch.$localbranch.remote)
 
-if [[ "$(git remote get-url "$localremote")" != *odoo/odoo* ]]; then
-    git remote set-url "${localremote}" "https://github.com/odoo/odoo.git"
+db_branch="$1"
+if [ -n $db_branch ]; then
+    git branch -m $db_branch
+    git remote set-branches origin $db_branch
 fi
 
-git fetch "${localremote}" "${localbranch}" --depth=1
-git reset "${localremote}"/"${localbranch}" --hard
+local_branch=$(git symbolic-ref -q --short HEAD)
+local_remote=$(git config branch.$local_branch.remote)
+
+if [[ "$(git remote get-url "$local_remote")" != *odoo/odoo* ]]; then
+    git remote set-url "${local_remote}" "https://github.com/odoo/odoo.git"
+fi
+
+git fetch "${local_remote}" "${local_branch}" --depth=1
+git reset "${local_remote}"/"${local_branch}" --hard
 sudo git clean -dfx
 
 # Update requirements
