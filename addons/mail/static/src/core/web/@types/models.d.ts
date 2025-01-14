@@ -1,7 +1,6 @@
-declare module "models" {
-    import { Activity as ActivityClass } from "@mail/core/web/activity_model";
+import { DateTime } from "luxon";
 
-    export interface Activity extends ActivityClass {}
+declare module "models" {
     export interface Discuss  {
         inbox: Thread,
         stared: Thread,
@@ -14,9 +13,5 @@ declare module "models" {
     }
     export interface Thread {
         recipients: Follower[],
-    }
-
-    export interface Models {
-        "mail.activity": Activity,
     }
 }
