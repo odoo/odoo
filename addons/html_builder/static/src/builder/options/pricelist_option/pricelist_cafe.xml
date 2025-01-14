@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<!-- TODO Vertical Alignment
+<div data-js="vAlignment" id="row_valign_snippet_option" data-selector=".s_pricelist_cafe" data-target=".row:has(.s_pricelist_cafe_col)">
+    <t t-call="website.vertical_alignment_option"/>
+</div> -->
+
+
+
+<t t-name="html_builder.PriceListCafeDescriptionOption">
+    <BuilderRow label.translate="Descriptions">
+        <BuilderCheckbox
+            action="'togglePriceListDescription'"
+            actionParam="{ itemClass:'s_pricelist_cafe_item', descriptionClass: 's_pricelist_cafe_item_description' }"/>
+    </BuilderRow>
+    <!-- TODO convert snippet_options_border_line_widgets
+            <t t-call="website.snippet_options_border_line_widgets">
+        <t t-set="label">Separator</t>
+        <t t-set="direction" t-value="'top'"/>
+        <t t-set="apply_to" t-value="'.s_pricelist_cafe_item_line'"/>
+    </t> -->
+</t>
+
+</templates>

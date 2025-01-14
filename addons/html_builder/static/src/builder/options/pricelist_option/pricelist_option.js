@@ -1,25 +1,20 @@
 import { Plugin } from "@html_editor/plugin";
-import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { Component } from "@odoo/owl";
+import { defaultBuilderComponents } from "../../builder_components/default_builder_components";
 
-class PriceListBoxedOptionPlugin extends Plugin {
-    static id = "PriceListBoxedOption";
+export class AddProductButton extends Component {
+    static template = "html_builder.AddProductButton";
+    static components = { ...defaultBuilderComponents };
+    static props = {
+        applyTo: String,
+        productSelector: String,
+    };
+}
+class PriceListOptionPlugin extends Plugin {
+    static id = "PriceListOptionPlugin";
     resources = {
-        builder_options: [
-            withSequence(5, {
-                template: "html_builder.PriceListBoxedOption",
-                selector: ".s_pricelist_boxed",
-            }),
-            withSequence(5, {
-                template: "html_builder.PriceListBoxedSectionOption",
-                selector: ".s_pricelist_boxed_section",
-            }),
-            withSequence(10, {
-                template: "html_builder.PriceListBoxedDescriptionOption",
-                selector: ".s_pricelist_boxed",
-            }),
-        ],
         builder_actions: this.getActions(),
     };
 
@@ -63,4 +58,4 @@ class PriceListBoxedOptionPlugin extends Plugin {
     }
 }
 
-registry.category("website-plugins").add(PriceListBoxedOptionPlugin.id, PriceListBoxedOptionPlugin);
+registry.category("website-plugins").add(PriceListOptionPlugin.id, PriceListOptionPlugin);

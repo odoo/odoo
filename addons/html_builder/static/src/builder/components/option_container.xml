@@ -22,7 +22,7 @@
         </div>
         <div class="we-bg-options-container" t-ref="content">
             <t t-foreach="props.options" t-as="option" t-key="option.id">
-                <t t-if="option.OptionComponent" t-component="option.OptionComponent"></t>
+                <t t-if="option.OptionComponent" t-component="option.OptionComponent" t-props="option.props || {}"></t>
                 <t t-else="" t-call="{{option.template}}"/>
             </t>
         </div>
