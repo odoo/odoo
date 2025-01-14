@@ -165,6 +165,23 @@ export class PosStore extends Reactive {
         return !this.cashier ? "LoginScreen" : "ProductScreen";
     }
 
+    get idleTimeout() {
+        return [
+            {
+                timeout: 300000, // 5 minutes
+                action: () =>
+                    this.mainScreen.component.name !== "PaymentScreen" &&
+                    this.showScreen("SaverScreen"),
+            },
+            {
+                timeout: 120000, // 2 minutes
+                action: () =>
+                    this.mainScreen.component.name === "LoginScreen" &&
+                    this.showScreen("SaverScreen"),
+            },
+        ];
+    }
+
     async showLoginScreen() {
         this.reset_cashier();
         this.showScreen("LoginScreen");

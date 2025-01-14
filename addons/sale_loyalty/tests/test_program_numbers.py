@@ -1863,3 +1863,61 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self.assertEqual(order.order_line[0].tax_id, tax_15pc_excl)
         self.assertEqual(order.order_line[1].tax_id, tax_15pc_excl)
         self.assertEqual(order.amount_total, 156.0, '140$ + 15% - 5$ = 156$')
+
+    def test_apply_order_and_specific_discounts(self):
+        """Ensure you can apply a full-order discount, and then a product-specific discount."""
+        order_program, specific_program = self.env['loyalty.program'].create([
+            {
+                'name': "$50 discount",
+                'program_type': 'promotion',
+                'trigger': 'auto',
+                'applies_on': 'current',
+                'rule_ids': [Command.create({})],
+                'reward_ids': [Command.create({
+                    'reward_type': 'discount',
+                    'discount_mode': 'per_order',
+                    'discount': 50,
+                    'discount_applicability': 'order',
+                    'required_points': 1,
+                })],
+            },
+            {
+                'name': "$10 discount on Pedal Bin",
+                'program_type': 'promotion',
+                'trigger': 'auto',
+                'applies_on': 'current',
+                'rule_ids': [Command.create({})],
+                'reward_ids': [Command.create({
+                    'reward_type': 'discount',
+                    'discount_mode': 'per_order',
+                    'discount': 10,
+                    'discount_applicability': 'specific',
+                    'discount_product_ids': self.pedalBin.ids,
+                    'required_points': 1,
+                })],
+            },
+        ])
+        order = self.empty_order
+        order.order_line = [Command.create({
+            'product_id': self.pedalBin.id,
+            'tax_id': self.tax_20pc_excl.ids,
+        })]
+
+        self.assertAlmostEqual(
+            order.amount_total,
+            self.pedalBin.list_price * (1 + self.tax_20pc_excl.amount / 100),
+            msg="Order total should equal product list price plus taxes",
+        )
+
+        self._auto_rewards(order, order_program)
+        self.assertAlmostEqual(
+            order.amount_total,
+            self.pedalBin.list_price * self.tax_20pc_excl.amount / 100,
+            msg="Order total should equal just taxes after applying $50 no-tax discount",
+        )
+
+        self._auto_rewards(order, specific_program)
+        self.assertFalse(
+            order.amount_total,
+            "Order total should equal zero after applying specific $10 tax-included discount",
+        )

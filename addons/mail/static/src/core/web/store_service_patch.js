@@ -126,5 +126,28 @@ const StorePatch = {
         this.store.starred.messages = [];
         await this.env.services.orm.call("mail.message", "unstar_all");
     },
+    handleClickOnLink(ev, thread) {
+        const model = ev.target.dataset.oeModel;
+        const id = Number(ev.target.dataset.oeId);
+        const isLinkHandledBySuper = super.handleClickOnLink(...arguments);
+        if (!isLinkHandledBySuper && ev.target.tagName === "A" && id && model) {
+            ev.preventDefault();
+            Promise.resolve(
+                this.env.services.action.doAction({
+                    type: "ir.actions.act_window",
+                    res_model: model,
+                    views: [[false, "form"]],
+                    res_id: id,
+                })
+            ).then(() => this.onLinkFollowed(thread));
+            return true;
+        }
+        return false;
+    },
+    onLinkFollowed(fromThread) {
+        if (!this.env.isSmall && fromThread?.model === "discuss.channel") {
+            fromThread.open(true, { autofocus: false });
+        }
+    },
 };
 patch(Store.prototype, StorePatch);
