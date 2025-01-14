@@ -1,4 +1,6 @@
-import { Component, useSubEnv } from "@odoo/owl";
+import { Component, useSubEnv, markup } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
 import { defaultBuilderComponents } from "../builder_components/default_builder_components";
 import { globalBuilderOptions } from "../builder_components/global_builder_options";
 import { useVisibilityObserver, useApplyVisibility } from "../builder_components/utils";
@@ -9,12 +11,15 @@ export class OptionsContainer extends Component {
     static template = "html_builder.OptionsContainer";
     static components = { ...defaultBuilderComponents, ...globalBuilderOptions };
     static props = {
+        snippetModel: { type: Object },
         options: { type: Array },
         editingElement: true, // HTMLElement from iframe
         isRemovable: false,
     };
 
     setup() {
+        this.notification = useService("notification");
+
         useSubEnv({
             dependencyManager: new DependencyManager(),
             getEditingElement: () => this.props.editingElement,
@@ -26,6 +31,15 @@ export class OptionsContainer extends Component {
 
     get title() {
         return getSnippetName(this.env.getEditingElement());
+    }
+
+    // Checks if the element can be saved as a custom snippet.
+    get isSavable() {
+        const selector = "[data-snippet], a.btn";
+        // TODO `so_submit_button_selector` ?
+        const exclude = ".o_no_save, .s_donation_donate_btn, .s_website_form_send";
+        const el = this.props.editingElement;
+        return el.matches(selector) && !el.matches(exclude);
     }
 
     selectElement() {
@@ -57,5 +71,24 @@ export class OptionsContainer extends Component {
 
     cloneElement() {
         this.env.editor.shared.clone.cloneElement(this.props.editingElement);
+    }
+
+    async saveSnippet() {
+        const savedName = await this.props.snippetModel.saveSnippet(
+            this.props.editingElement,
+            this.env.editor.resources["clean_for_save_handlers"]
+        );
+        if (savedName) {
+            const message = markup(
+                _t(
+                    "Your custom snippet was successfully saved as <strong>%s</strong>. Find it in your snippets collection.",
+                    savedName
+                )
+            );
+            this.notification.add(message, {
+                type: "success",
+                autocloseDelay: 5000,
+            });
+        }
     }
 }

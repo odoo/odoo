@@ -12,6 +12,7 @@
             <div t-ref="content">
                 <t t-foreach="props.currentOptionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
                     <OptionsContainer
+                        snippetModel="props.snippetModel"
                         editingElement="optionsContainer.element"
                         options="optionsContainer.options"
                         isRemovable="optionsContainer.isRemovable"/>
