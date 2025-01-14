@@ -62,14 +62,23 @@ export class Interaction {
      * Its syntax looks like the following:
      * dynamicContent = {
      *      ".some-selector": { "t-on-click": (ev) => this.onClick(ev) },
-     *      ".some-other-selector": { "t-att-class": () => ({ "some-class": true}) },
+     *      ".some-other-selector": {
+     *          "t-att-class": () => ({ "some-class": true }),
+     *          "t-att-style": () => ({ property: value }),
+     *          "t-att-other-attribute": () => value,
+     *          "t-out": () => value,
+     *      },
      *      _root: { "t-component": () => [Component, { someProp: "value" }] },
      * }
      *
      * A selector is either a standard css selector, or a special keyword
      * (see dynamicSelectors: _body, _root, _document, _window)
      *
-     * Accepted directives includes: t-on-, t-att-, t-out and t-component
+     * Accepted directives include: t-on-, t-att-, t-out and t-component
+     *
+     * A falsy value on an attribute, class or style property will remove it.
+     * For boolean attributes, you should use the complete value
+     * (e.g.: { "t-att-checked": () => "checked" }).
      *
      * Note that this is not owl! It is similar, to make it easy to learn, but
      * it is different, the syntax and semantics are somewhat different.
@@ -286,12 +295,20 @@ export class Interaction {
         return () => nodes.forEach((node) => node.removeEventListener(ev, handler, opts));
     }
 
+    /**
+     * Recomputes eventListeners registered through `dynamicContent`.
+     * Interaction listeners are static. If the DOM is updated at some point,
+     * you should call `refreshListeners` so that events are:
+     * - removed on nodes that don't match the selector anymore
+     * - added on new nodes or on nodes that didn't match it before but do now.
+     */
     refreshListeners() {
         this.__colibri__.refreshListeners();
     }
 
     /**
-     * Insert and activate an element at a specific location.
+     * Insert and activate an element at a specific location (default position:
+     * "beforeend").
      * The inserted element will be removed when the interaction is destroyed.
      *
      * @param { HTMLElement } el
