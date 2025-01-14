@@ -7,7 +7,7 @@ patch(MessagingMenu.prototype, {
     markAsRead(thread) {
         super.markAsRead(...arguments);
         if (thread.model === "discuss.channel") {
-            thread.markAsRead({ sync: true });
+            thread.markAsRead();
         }
     },
 });

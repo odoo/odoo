@@ -801,7 +801,13 @@ export class Composer extends Component {
     onFocusin() {
         const composer = toRaw(this.props.composer);
         composer.isFocused = true;
-        composer.thread?.markAsRead({ sync: false });
+        if (
+            composer.thread?.scrollTop === "bottom" &&
+            !composer.thread.scrollUnread &&
+            !composer.thread.markedAsUnread
+        ) {
+            composer.thread?.markAsRead();
+        }
     }
 
     onFocusout(ev) {
