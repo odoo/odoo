@@ -52,6 +52,7 @@
                                 <td>
                                     <p t-if="line.repair_line_type == 'add'"><i>(Add)</i> <span t-field="line.product_id">Product A</span></p>
                                     <p t-if="line.repair_line_type == 'remove'">(<i>Remove</i>) <span t-field="line.product_id">Product B</span></p>
+                                    <p t-if="line.repair_line_type == 'recycle'">(<i>Recycle</i>) <span t-field="line.product_id">Product C</span></p>
                                 </td>
                                 <td class="text-end">
                                     <span t-field="line.product_uom_qty">5</span>
