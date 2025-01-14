@@ -39,8 +39,8 @@ class ReportMembership(models.Model):
 
     def init(self):
         '''Create the view'''
-        tools.drop_view_if_exists(self._cr, self._table)
-        self._cr.execute("""
+        tools.drop_view_if_exists(self.env.cr, self._table)
+        self.env.cr.execute("""
         CREATE OR REPLACE VIEW %s AS (
         SELECT
         MIN(id) AS id,

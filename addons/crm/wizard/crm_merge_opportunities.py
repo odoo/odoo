@@ -22,7 +22,7 @@ class CrmMergeOpportunity(models.TransientModel):
         """ Use active_ids from the context to fetch the leads/opps to merge.
         In order to get merged, these leads/opps cannot be already 'Won' (closed)
         """
-        record_ids = self._context.get('active_ids')
+        record_ids = self.env.context.get('active_ids')
         result = super().default_get(fields)
 
         if record_ids:

@@ -10,7 +10,7 @@ class WizardIrModelMenuCreate(models.TransientModel):
 
     def menu_create(self):
         for menu in self:
-            model = self.env['ir.model'].browse(self._context.get('model_id'))
+            model = self.env['ir.model'].browse(self.env.context.get('model_id'))
             vals = {
                 'name': menu.name,
                 'res_model': model.model,

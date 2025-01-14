@@ -318,8 +318,8 @@ class IrUiView(models.Model):
 
     @api.model
     def _view_get_inherited_children(self, view):
-        if self._context.get('no_primary_children', False):
-            original_hierarchy = self._context.get('__views_get_original_hierarchy', [])
+        if self.env.context.get('no_primary_children', False):
+            original_hierarchy = self.env.context.get('__views_get_original_hierarchy', [])
             return view.inherit_children_ids.filtered(lambda extension: extension.mode != 'primary' or extension.id in original_hierarchy)
         return view.inherit_children_ids
 
@@ -353,7 +353,7 @@ class IrUiView(models.Model):
 
         if visited is None:
             visited = []
-        original_hierarchy = self._context.get('__views_get_original_hierarchy', [])
+        original_hierarchy = self.env.context.get('__views_get_original_hierarchy', [])
         while root and view.inherit_id:
             original_hierarchy.append(view.id)
             view = view.inherit_id
@@ -394,7 +394,7 @@ class IrUiView(models.Model):
         """
         user_groups = set(self.env.user.group_ids)
         new_context = {
-            **self._context,
+            **self.env.context,
             'active_test': False,
         }
         new_context.pop('lang', None)
@@ -442,7 +442,7 @@ class IrUiView(models.Model):
         full_snippet_key = '%s.%s' % (app_name, snippet_key)
 
         # find available name
-        current_website = self.env['website'].browse(self._context.get('website_id'))
+        current_website = self.env['website'].browse(self.env.context.get('website_id'))
         website_domain = current_website.website_domain()
         used_names = self.search(expression.AND([
             [('name', '=like', '%s%%' % name)], website_domain
@@ -466,8 +466,8 @@ class IrUiView(models.Model):
         }
         new_snippet_view_values.update(self._snippet_save_view_values_hook())
         custom_snippet_view = self.create(new_snippet_view_values)
-        model = self._context.get('model')
-        field = self._context.get('field')
+        model = self.env.context.get('model')
+        field = self.env.context.get('field')
         if field == 'arch':
             # Special case for `arch` which is a kind of related (through a
             # compute) to `arch_db` but which is hosting XML/HTML content while
@@ -475,7 +475,7 @@ class IrUiView(models.Model):
             # `get_translation_dictionary` call, returning XML instead of
             # strings
             field = 'arch_db'
-        res_id = self._context.get('resId')
+        res_id = self.env.context.get('resId')
         if model and field and res_id:
             self._copy_field_terms_translations(
                 self.env[model].browse(int(res_id)),

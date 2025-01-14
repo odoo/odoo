@@ -491,7 +491,7 @@ class MicrosoftCalendarSync(models.AbstractModel):
         """ Extends the sync domain based on the full_sync_m context parameter.
         In case of full sync it shouldn't include already synced events.
         """
-        if self._context.get('full_sync_m', True):
+        if self.env.context.get('full_sync_m', True):
             domain = expression.AND([domain, [('ms_universal_event_id', '=', False)]])
         else:
             is_active_clause = (self._active_name, '=', True) if self._active_name else expression.TRUE_LEAF

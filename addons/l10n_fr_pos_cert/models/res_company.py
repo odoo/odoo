@@ -10,7 +10,7 @@ import pytz
 
 def ctx_tz(record, field):
     res_lang = None
-    ctx = record._context
+    ctx = record.env.context
     tz_name = pytz.timezone(ctx.get('tz') or record.env.user.tz or 'UTC')
     timestamp = Datetime.from_string(record[field])
     if ctx.get('lang'):

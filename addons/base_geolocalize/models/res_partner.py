@@ -32,8 +32,8 @@ class ResPartner(models.Model):
 
     def geo_localize(self):
         # We need country names in English below
-        if not self._context.get('force_geo_localize') and (
-            self._context.get('import_file')
+        if not self.env.context.get('force_geo_localize') and (
+            self.env.context.get('import_file')
             or modules.module.current_test
             or not self.env.registry.ready
         ):

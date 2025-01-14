@@ -351,7 +351,7 @@ class TestSqlLint(TestPylintChecks):
         node = _odoo_checker_sql_injection.astroid.extract_node("""
         def _init_column(self, column_name):
             query = f'UPDATE "{self._table}" SET "{column_name}" = %s WHERE "{column_name}" IS NULL'
-            self._cr.execute(query, (value,)) #@
+            self.env.cr.execute(query, (value,)) #@
         """) #Test private function arg should not flag
         with self.assertMessages():
             checker.visit_call(node)
@@ -359,7 +359,7 @@ class TestSqlLint(TestPylintChecks):
         node = _odoo_checker_sql_injection.astroid.extract_node("""
         def _init_column1(self, column_name):
             query = 'SELECT %(var1)s FROM %(var2)s WHERE %(var3)s' % {'var1': 'field_name','var2': 'table_name','var3': 'where_clause'}
-            self._cr.execute(query) #@
+            self.env.cr.execute(query) #@
         """)
         with self.assertMessages():
             checker.visit_call(node)
@@ -397,7 +397,7 @@ class TestSqlLint(TestPylintChecks):
                 'extra_conditions': extra_conditions 
             }
 
-            self._cr.execute(query, [self.id, start_date, end_date] + where_clause_params) #@
+            self.env.cr.execute(query, [self.id, start_date, end_date] + where_clause_params) #@
             return self.env.cr.dictfetchall()
         """)
         with self.assertMessages():

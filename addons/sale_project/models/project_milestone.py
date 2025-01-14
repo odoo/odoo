@@ -8,7 +8,7 @@ class ProjectMilestone(models.Model):
     _inherit = 'project.milestone'
 
     def _default_sale_line_id(self):
-        project_id = self._context.get('default_project_id')
+        project_id = self.env.context.get('default_project_id')
         if not project_id:
             return []
         project = self.env['project.project'].browse(project_id)

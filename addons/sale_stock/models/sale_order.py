@@ -66,7 +66,7 @@ class SaleOrder(models.Model):
             _logger.debug("Table '%s': setting default value of new column %s to %r",
                 self._table, column_name, value)
             query = f'UPDATE "{self._table}" SET "{column_name}" = %s WHERE "{column_name}" IS NULL'
-            self._cr.execute(query, (value,))
+            self.env.cr.execute(query, (value,))
 
     @api.depends('picking_ids.date_done')
     def _compute_effective_date(self):
@@ -128,7 +128,7 @@ class SaleOrder(models.Model):
             for order in self:
                 pre_order_line_qty = {order_line: order_line.product_uom_qty for order_line in order.mapped('order_line') if not order_line.is_expense}
 
-        if values.get('partner_shipping_id') and self._context.get('update_delivery_shipping_partner'):
+        if values.get('partner_shipping_id') and self.env.context.get('update_delivery_shipping_partner'):
             for order in self:
                 order.picking_ids.partner_id = values.get('partner_shipping_id')
         elif values.get('partner_shipping_id'):

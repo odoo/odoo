@@ -329,7 +329,7 @@ class CrmTeam(models.Model):
             extra_conditions=extra_conditions,
         )
 
-        self._cr.execute(sql)
+        self.env.cr.execute(sql)
         return self.env.cr.dictfetchall()
 
     def _get_dashboard_graph_data(self):
@@ -355,7 +355,7 @@ class CrmTeam(models.Model):
         y_field = 'value'
 
         # generate all required x_fields and update the y_values where we have data for them
-        locale = self._context.get('lang') or 'en_US'
+        locale = self.env.context.get('lang') or 'en_US'
 
         weeks_in_start_year = int(date(start_date.year, 12, 28).isocalendar()[1]) # This date is always in the last week of ISO years
         week_count = (end_date.isocalendar()[1] - start_date.isocalendar()[1]) % weeks_in_start_year + 1

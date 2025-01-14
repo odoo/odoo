@@ -698,7 +698,7 @@ class ProcurementGroup(models.Model):
 
         if use_new_cursor:
             self.env['ir.cron']._notify_progress(done=task_done, remaining=self._get_scheduler_tasks_to_do() - task_done)
-            self._cr.commit()
+            self.env.cr.commit()
 
         # Search all confirmed stock_moves and try to assign them
         domain = self._get_moves_to_assign_domain(company_id)
@@ -707,13 +707,13 @@ class ProcurementGroup(models.Model):
         for moves_chunk in split_every(1000, moves_to_assign.ids):
             self.env['stock.move'].browse(moves_chunk).sudo()._action_assign()
             if use_new_cursor:
-                self._cr.commit()
+                self.env.cr.commit()
                 _logger.info("A batch of %d moves are assigned and committed", len(moves_chunk))
         task_done += 1
 
         if use_new_cursor:
             self.env['ir.cron']._notify_progress(done=task_done, remaining=self._get_scheduler_tasks_to_do() - task_done)
-            self._cr.commit()
+            self.env.cr.commit()
 
         # Merge duplicated quants
         self.env['stock.quant']._quant_tasks()
@@ -721,8 +721,8 @@ class ProcurementGroup(models.Model):
         task_done += 1
         if use_new_cursor:
             self.env['ir.cron']._notify_progress(done=task_done, remaining=self._get_scheduler_tasks_to_do() - task_done)
-            self._cr.commit()
-        self._context.get('scheduler_task_done', {})['task_done'] = task_done
+            self.env.cr.commit()
+        self.env.context.get('scheduler_task_done', {})['task_done'] = task_done
 
     @api.model
     def _get_scheduler_tasks_to_do(self):

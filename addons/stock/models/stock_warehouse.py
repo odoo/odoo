@@ -1156,7 +1156,7 @@ class StockWarehouse(models.Model):
             'view_id': False,
             'view_mode': 'list,form',
             'limit': 20,
-            'context': dict(self._context, default_warehouse_selectable=True, default_warehouse_ids=self.ids)
+            'context': dict(self.env.context, default_warehouse_selectable=True, default_warehouse_ids=self.ids)
         }
 
     def get_current_warehouses(self):

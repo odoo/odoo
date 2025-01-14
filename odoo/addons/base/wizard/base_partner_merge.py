@@ -95,8 +95,8 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
                 AND att2.attrelid = cl2.oid
                 AND con.contype = 'f'
         """
-        self._cr.execute(query, (table,))
-        return self._cr.fetchall()
+        self.env.cr.execute(query, (table,))
+        return self.env.cr.fetchall()
 
     @api.model
     def _update_foreign_keys_generic(self, model, src_records, dst_record):
@@ -118,9 +118,9 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
 
             # get list of columns of current table (exept the current fk column)
             query = "SELECT column_name FROM information_schema.columns WHERE table_name LIKE '%s'" % (table)
-            self._cr.execute(query, ())
+            self.env.cr.execute(query, ())
             columns = []
-            for data in self._cr.fetchall():
+            for data in self.env.cr.fetchall():
                 if data[0] != column:
                     columns.append(data[0])
 
@@ -145,17 +145,17 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
                                 ___tu.%(value)s = ___tw.%(value)s
                         )""" % query_dic
                 for record in src_records:
-                    self._cr.execute(query, (dst_record.id, record.id, dst_record.id))
+                    self.env.cr.execute(query, (dst_record.id, record.id, dst_record.id))
             else:
                 try:
-                    with mute_logger('odoo.sql_db'), self._cr.savepoint():
+                    with mute_logger('odoo.sql_db'), self.env.cr.savepoint():
                         query = 'UPDATE "%(table)s" SET "%(column)s" = %%s WHERE "%(column)s" IN %%s' % query_dic
-                        self._cr.execute(query, (dst_record.id, tuple(src_records.ids)))
+                        self.env.cr.execute(query, (dst_record.id, tuple(src_records.ids)))
                 except psycopg2.Error:
                     # updating fails, most likely due to a violated unique constraint
                     # keeping record with nonexistent partner_id is useless, better delete it
                     query = 'DELETE FROM "%(table)s" WHERE "%(column)s" IN %%s' % query_dic
-                    self._cr.execute(query, (tuple(src_records.ids),))
+                    self.env.cr.execute(query, (tuple(src_records.ids),))
 
     @api.model
     def _update_reference_fields_generic(self, referenced_model, src_records, dst_record, additional_update_records=None):
@@ -173,7 +173,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
                 return
             records = Model.sudo().search([(field_model, '=', referenced_model), (field_id, '=', src.id)])
             try:
-                with mute_logger('odoo.sql_db'), self._cr.savepoint():
+                with mute_logger('odoo.sql_db'), self.env.cr.savepoint():
                     records.sudo().write({field_id: dst_record.id})
                     records.env.flush_all()
             except psycopg2.Error:
@@ -258,7 +258,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         self.env.flush_all()
 
         # company_dependent fields of merged records
-        with self._cr.savepoint():
+        with self.env.cr.savepoint():
             for fname, field in dst_record._fields.items():
                 if field.company_dependent:
                     self.env.execute_query(SQL(
@@ -443,7 +443,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         src_partners.unlink()
 
     def _log_merge_operation(self, src_partners, dst_partner):
-        _logger.info('(uid = %s) merged the partners %r with %s', self._uid, src_partners.ids, dst_partner.id)
+        _logger.info('(uid = %s) merged the partners %r with %s', self.env.uid, src_partners.ids, dst_partner.id)
 
     # ----------------------------------------
     # Helpers
@@ -593,10 +593,10 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         model_mapping = self._compute_models()
 
         # group partner query
-        self._cr.execute(query) # pylint: disable=sql-injection
+        self.env.cr.execute(query) # pylint: disable=sql-injection
 
         counter = 0
-        for min_id, aggr_ids in self._cr.fetchall():
+        for min_id, aggr_ids in self.env.cr.fetchall():
             # To ensure that the used partners are accessible by the user
             partners = self.env['res.partner'].search([('id', 'in', aggr_ids)])
             if len(partners) < 2:
@@ -646,7 +646,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             partner_ids = literal_eval(line.aggr_ids)
             self._merge(partner_ids)
             line.unlink()
-            self._cr.commit()  # TODO JEM : explain why
+            self.env.cr.commit()  # TODO JEM : explain why
 
         self.write({'state': 'finished'})
         return {
@@ -691,11 +691,11 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             partner_ids = literal_eval(line.aggr_ids)
             self._merge(partner_ids)
             line.unlink()
-            self._cr.commit()
+            self.env.cr.commit()
 
         self.write({'state': 'finished'})
 
-        self._cr.execute("""
+        self.env.cr.execute("""
             UPDATE
                 res_partner
             SET
@@ -723,7 +723,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         wizard.action_start_automatic_process()
 
         # NOTE JEM : no idea if this query is usefull
-        self._cr.execute("""
+        self.env.cr.execute("""
             UPDATE
                 res_partner
             SET
