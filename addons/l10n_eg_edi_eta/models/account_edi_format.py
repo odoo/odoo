@@ -227,7 +227,7 @@ class AccountEdiFormat(models.Model):
             tax = tax_data['tax']
             code_split = tax.l10n_eg_eta_code.split('_')
             return {
-                'rate': abs(tax.amount) if tax.amount_type != 'fixed' else None,
+                'rate': abs(tax.amount) if tax.amount_type != 'fixed' else 0,
                 'tax_type': code_split[0].upper(),
                 'sub_type': code_split[1].upper(),
             }
