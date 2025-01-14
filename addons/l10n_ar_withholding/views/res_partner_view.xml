@@ -6,18 +6,28 @@
         <field name="inherit_id" ref="account.view_partner_property_form"/>
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
-            <group id="invoice_send_settings" position="after">
-                <group string="Purchase Withholding" invisible="'AR' not in fiscal_country_codes or not is_company">
-                    <field name="l10n_ar_partner_tax_ids" nolabel="1" colspan="2" widget="auto_save_res_partner">
-                        <list editable="top">
-                            <field name="tax_id" options="{'no_create': True, 'no_open': True}" domain="[('l10n_ar_withholding_payment_type', '=', 'supplier')]"/>
-                            <field name="from_date" optional="hide"/>
-                            <field name="to_date" optional="hide"/>
+            <xpath expr="//page[@name='accounting']/group" position="after">
+                <group string="Sale Perceptions">
+                    <field name="l10n_ar_partner_perception_ids" nolabel="1" colspan="2">
+                        <list editable="top" limit="5">
+                            <field name="tax_id" options="{'no_create': True}" domain="[('type_tax_use', '=', 'sale')]" context="{'append_fields': ['company_id']}"/>
+                            <field name="from_date" optional="show"/>
+                            <field name="to_date" optional="show"/>
                             <field name="ref" optional="hide"/>
                         </list>
                     </field>
                 </group>
-            </group>
+                <group string="Purchase Withholding">
+                    <field name="l10n_ar_partner_tax_ids" nolabel="1" colspan="2">
+                        <list editable="top" limit="5">
+                            <field name="tax_id" options="{'no_create': True}" domain="[('l10n_ar_withholding_payment_type', '=', 'supplier')]" context="{'append_fields': ['company_id']}"/>
+                            <field name="from_date" optional="show"/>
+                            <field name="to_date" optional="show"/>
+                            <field name="ref" optional="hide"/>
+                        </list>
+                    </field>
+                </group>
+            </xpath>
         </field>
     </record>
 

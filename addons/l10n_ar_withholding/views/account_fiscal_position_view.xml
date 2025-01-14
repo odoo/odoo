@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_position_form" model="ir.ui.view">
+        <field name="name">account.fiscal.position.form</field>
+        <field name="model">account.fiscal.position</field>
+        <field name="inherit_id" ref="account.view_account_position_form"/>
+        <field name="arch" type="xml">
+            <notebook>
+                <page string="Perceptions and Withholdings" invisible="'AR' not in fiscal_country_codes">
+                    <field name="l10n_ar_tax_ids">
+                        <list editable="bottom">
+                            <field name="tax_type"/>
+                            <field name="default_tax_id" domain="tax_template_domain" options="{'no_create': True}"/>
+                            <field name="data_source"/>
+                        </list>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+</odoo>
+
