@@ -149,6 +149,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
         this.closeOtherTabs();
         this.syncAllOrdersDebounced = debounce(this.syncAllOrders, 100);
+        this._searchTriggered = false;
     }
 
     get firstScreen() {
@@ -2161,11 +2162,21 @@ export class PosStore extends WithLazyGetterTrap {
         let list = [];
 
         if (searchWord !== "") {
-            list = this.getProductsBySearchWord(searchWord, allProducts);
-        } else if (this.selectedCategory?.id) {
-            list = this.selectedCategory.associatedProducts;
+            if (!this._searchTriggered) {
+                this.setSelectedCategory(0);
+                this._searchTriggered = true;
+            }
+            list = this.getProductsBySearchWord(
+                searchWord,
+                this.selectedCategory?.id ? this.selectedCategory.associatedProducts : allProducts
+            );
         } else {
-            list = allProducts;
+            this._searchTriggered = false;
+            if (this.selectedCategory?.id) {
+                list = this.selectedCategory.associatedProducts;
+            } else {
+                list = allProducts;
+            }
         }
 
         if (!list || list.length === 0) {
