@@ -115,6 +115,34 @@ export class OrderSummary extends Component {
                 this._showDecreaseQuantityPopup();
             }
             return;
+        } else if (
+            selectedLine &&
+            this.pos.numpadMode === "discount" &&
+            this.pos.restrictLineDiscountChange()
+        ) {
+            this.numberBuffer.reset();
+            const inputNumber = await makeAwaitable(this.dialog, NumberPopup, {
+                startingValue: selectedLine.getDiscount() || 10,
+                title: _t("Set the new discount"),
+            });
+            if (inputNumber) {
+                await this.pos.setDiscountFromUI(selectedLine, inputNumber);
+            }
+            return;
+        } else if (
+            selectedLine &&
+            this.pos.numpadMode === "price" &&
+            this.pos.restrictLinePriceChange()
+        ) {
+            this.numberBuffer.reset();
+            const inputNumber = await makeAwaitable(this.dialog, NumberPopup, {
+                startingValue: selectedLine.getUnitPrice(),
+                title: _t("Set the new price"),
+            });
+            if (inputNumber) {
+                await this.setLinePrice(selectedLine, inputNumber);
+            }
+            return;
         }
         const val = buffer === null ? "remove" : buffer;
         this._setValue(val);
@@ -148,14 +176,14 @@ export class OrderSummary extends Component {
                     }
                 }
             } else if (numpadMode === "discount" && val !== "remove") {
-                selectedLine.setDiscount(val);
+                this.pos.setDiscountFromUI(selectedLine, val);
             } else if (numpadMode === "price" && val !== "remove") {
                 this.setLinePrice(selectedLine, val);
             }
         }
     }
 
-    setLinePrice(line, price) {
+    async setLinePrice(line, price) {
         line.price_type = "manual";
         line.setUnitPrice(price);
     }
@@ -165,30 +193,86 @@ export class OrderSummary extends Component {
         const inputNumber = await makeAwaitable(this.dialog, NumberPopup, {
             title: _t("Set the new quantity"),
         });
-        const newQuantity = inputNumber && inputNumber !== "" ? parseFloat(inputNumber) : null;
+        if (inputNumber) {
+            const newQuantity = inputNumber && inputNumber !== "" ? parseFloat(inputNumber) : null;
+            return await this.updateQuantityNumber(newQuantity);
+        }
+    }
+    async updateQuantityNumber(newQuantity) {
         if (newQuantity !== null) {
-            const order = this.pos.getOrder();
-            const selectedLine = order.getSelectedOrderline();
+            const selectedLine = this.currentOrder.getSelectedOrderline();
             const currentQuantity = selectedLine.getQuantity();
             if (newQuantity >= currentQuantity) {
                 selectedLine.setQuantity(newQuantity);
-                return true;
+            } else if (newQuantity >= selectedLine.saved_quantity) {
+                await this.handleDecreaseUnsavedLine(newQuantity);
+            } else {
+                await this.handleDecreaseLine(newQuantity);
             }
-            if (newQuantity >= selectedLine.saved_quantity) {
-                selectedLine.setQuantity(newQuantity);
-                if (newQuantity == 0) {
-                    selectedLine.delete();
-                }
-                return true;
-            }
-            const newLine = selectedLine.clone();
-            const decreasedQuantity = selectedLine.saved_quantity - newQuantity;
-            newLine.order = order;
-            newLine.setQuantity(-decreasedQuantity, true);
-            selectedLine.setQuantity(selectedLine.saved_quantity);
-            order.add_orderline(newLine);
             return true;
         }
         return false;
+    }
+    async handleDecreaseUnsavedLine(newQuantity) {
+        const selectedLine = this.currentOrder.getSelectedOrderline();
+        const decreaseQuantity = selectedLine.getQuantity() - newQuantity;
+        selectedLine.setQuantity(newQuantity);
+        if (newQuantity == 0) {
+            selectedLine.delete();
+            this.currentOrder._unlinkOrderline(selectedLine);
+        }
+        return decreaseQuantity;
+    }
+    async handleDecreaseLine(newQuantity) {
+        const selectedLine = this.currentOrder.getSelectedOrderline();
+        let current_saved_quantity = 0;
+        for (const line of this.currentOrder.lines) {
+            if (line === selectedLine) {
+                current_saved_quantity += line.saved_quantity;
+            } else if (
+                line.product_id.id === selectedLine.product_id.id &&
+                line.getUnitPrice() === selectedLine.getUnitPrice()
+            ) {
+                current_saved_quantity += line.qty;
+            }
+        }
+        const newLine = this.getNewLine();
+        const decreasedQuantity = current_saved_quantity - newQuantity;
+        if (decreasedQuantity != 0) {
+            newLine.setQuantity(-decreasedQuantity + newLine.getQuantity(), true);
+        }
+        if (newLine !== selectedLine && selectedLine.saved_quantity != 0) {
+            selectedLine.setQuantity(selectedLine.saved_quantity);
+        }
+        return decreasedQuantity;
+    }
+    getNewLine() {
+        const selectedLine = this.currentOrder.getSelectedOrderline();
+        const sign = selectedLine.getQuantity() > 0 ? 1 : -1;
+        let newLine = selectedLine;
+        if (selectedLine.saved_quantity != 0) {
+            for (const line of selectedLine.order_id.lines) {
+                if (
+                    line.product_id.id === selectedLine.product_id.id &&
+                    line.getUnitPrice() === selectedLine.getUnitPrice() &&
+                    line.getQuantity() * sign < 0 &&
+                    line !== selectedLine
+                ) {
+                    return line;
+                }
+            }
+            const data = selectedLine.serialize();
+            delete data.uuid;
+            newLine = this.pos.models["pos.order.line"].create(
+                {
+                    ...data,
+                    refunded_orderline_id: selectedLine.refunded_orderline_id,
+                },
+                false,
+                true
+            );
+            newLine.setQuantity(0);
+        }
+        return newLine;
     }
 }
