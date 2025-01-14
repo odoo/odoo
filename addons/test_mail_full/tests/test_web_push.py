@@ -373,3 +373,39 @@ class TestWebPushNotification(SMSCommon):
                 partner_id=self.user_email.partner_id.id,
                 vapid_public_key=self.vapid_public_key,
             )
+
+    @patch.object(odoo.addons.mail.models.mail_thread.Session, 'post', return_value=SimpleNamespace(status_code=201, text='Ok'))
+    def test_push_notifications_truncate_payload(self, post):
+        """
+        Ensure that when we send large bodies with various character types,
+        the final encrypted data (post-encryption) never exceeds 4096 bytes.
+
+        Test scenarios include:
+        - ASCII characters (X)
+        - UTF-8 multibyte characters (emojis, accented characters)
+        - Mixed character types
+        """
+        test_cases = [
+            # (description, body)
+            ('ASCII payload (4096 bytes)', 'X' * 4096),
+            ('ASCII payload (3900 bytes)', 'X' * 3900),
+            ('UTF-8 emojis (4096 bytes)', '😀' * 1024),
+            ('UTF-8 emojis (3900 bytes)', '😀' * 3900),
+            ('Mixed UTF-8 characters (4096 bytes)', 'こんにちは世界🌍' * 164),
+            ('Mixed UTF-8 characters (3900 bytes)', 'こんにちは世界🌍' * 780),
+            ('Accented characters (4096 bytes)', 'éèàç' * 512),
+            ('Accented characters (3900 bytes)', 'éèàç' * 488),
+        ]
+
+        for description, body in test_cases:
+            with self.subTest(description):
+                self.record_simple.with_user(self.user_email).message_notify(
+                    partner_ids=self.user_inbox.partner_id.ids,
+                    body=body,
+                    subject='Test Payload',
+                    record_name=self.record_simple._name,
+                )
+
+                data_sent = post.call_args.kwargs['data']
+                self.assertLess(len(data_sent), 4096,
+                    f"Final encrypted payload should not exceed 4096 bytes for {description}")
