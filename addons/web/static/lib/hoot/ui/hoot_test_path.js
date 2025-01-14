@@ -74,9 +74,9 @@ export class HootTestPath extends Component {
                 <t t-if="props.canCopy">
                     <HootCopyButton text="props.test.name" altText="props.test.id" />
                 </t>
-                <t t-if="props.test.runCount > 1">
+                <t t-if="results.length > 1">
                     <strong class="text-amber whitespace-nowrap mx-1">
-                        x<t t-esc="props.test.runCount" />
+                        x<t t-esc="results.length" />
                     </strong>
                 </t>
             </span>
@@ -93,6 +93,7 @@ export class HootTestPath extends Component {
     `;
 
     setup() {
+        this.results = useState(this.props.test.results);
         this.uiState = useState(this.env.ui);
     }
 

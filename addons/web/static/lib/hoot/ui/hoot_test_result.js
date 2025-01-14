@@ -199,8 +199,14 @@ export class HootTestResult extends Component {
             <t t-if="state.showDetails and !props.test.config.skip">
                 <t t-foreach="results" t-as="result" t-key="result_index">
                     <t t-if="results.length > 1">
-                        <div t-attf-class="text-{{ result.pass ? 'emerald' : 'rose' }} mx-2 mb-1" >
-                            <t t-esc="ordinal(result_index + 1)" /> run:
+                        <div class="flex justify-between mx-2 my-1">
+                            <span t-attf-class="text-{{ result.pass ? 'emerald' : 'rose' }}">
+                                <t t-esc="ordinal(result_index + 1)" /> run:
+                            </span>
+                            <t t-set="timestamp" t-value="formatTime(result.duration, 'ms')" />
+                            <small class="text-gray flex items-center" t-att-title="timestamp">
+                                <t t-esc="timestamp" />
+                            </small>
                         </div>
                     </t>
                     <div class="hoot-result-detail grid gap-1 rounded overflow-x-auto p-1 mx-2 animate-slide-down">

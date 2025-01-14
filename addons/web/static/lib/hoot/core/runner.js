@@ -906,14 +906,17 @@ export class Runner {
                             await this._callbacks.call("after-suite", suite, handleError);
                         });
 
-                        suite.runCount++;
-                        if (suite.config.multi && suite.runCount < suite.config.multi) {
-                            suite.resetIndex();
-                        }
-                        suite.parent?.reporting.add({ suites: +1 });
-                        suite.callbacks.clear();
-
                         logger.logSuite(suite);
+
+                        suite.runCount++;
+                        if (suite.willRunAgain()) {
+                            suite.reset();
+                        } else {
+                            suite.cleanup();
+                        }
+                        if (suite.runCount < (suite.config.multi || 0)) {
+                            continue;
+                        }
                     }
                 }
                 job = nextJob(job);
@@ -997,7 +1000,6 @@ export class Runner {
 
             // Log test errors and increment counters
             this.expectHooks.after(this);
-            test.runCount++;
             if (lastResults.pass) {
                 logger.logTest(test);
 
@@ -1044,19 +1046,25 @@ export class Runner {
 
             this._pushTest(test);
             this.totalTime = formatTime($now() - this._startTime);
+            test.runCount++;
 
+            if (this.debug) {
+                return new Promise(() => {});
+            }
             if (this.config.bail && this._failed >= this.config.bail) {
                 return this.stop();
             }
+
             if (test.willRunAgain()) {
-                test.run = test.run.bind(test);
+                test.reset();
             } else {
-                if (this.debug) {
-                    return new Promise(() => {});
-                }
-                test.setRunFn(null);
-                job = nextJob(job);
+                test.cleanup();
             }
+            if (test.runCount < (test.config.multi || 0)) {
+                continue;
+            }
+
+            job = nextJob(job);
         }
 
         if (this.state.status === "done") {
