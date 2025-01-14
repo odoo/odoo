@@ -122,7 +122,13 @@ export default class DevicesSynchronisation {
      * @param {Object} staticRecords - Records data that need to be synchronized.
      */
     processStaticRecords(staticRecords) {
+<<<<<<< master
         return this.models.loadData(staticRecords, [], false, true);
+||||||| 158815cc2e0bc1964696a57ce8f2b82356dd5477
+        return this.models.loadData(this.models, staticRecords, [], false, true);
+=======
+        return this.models.loadData(this.models, staticRecords, [], false);
+>>>>>>> df859d4093e0d9973d528a013d80bc939de19156
     }
 
     /**
@@ -131,7 +137,13 @@ export default class DevicesSynchronisation {
      * @param {Object} dynamicRecords - Record write dates by ids and models.
      */
     processDynamicRecords(dynamicRecords) {
+<<<<<<< master
         return this.models.loadData(dynamicRecords, [], false, true);
+||||||| 158815cc2e0bc1964696a57ce8f2b82356dd5477
+        return this.models.loadData(this.models, dynamicRecords, [], false, true);
+=======
+        return this.models.loadData(this.models, dynamicRecords, [], false);
+>>>>>>> df859d4093e0d9973d528a013d80bc939de19156
     }
 
     /**
