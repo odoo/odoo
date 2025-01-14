@@ -4424,16 +4424,20 @@ class MailThread(models.AbstractModel):
 
     def _truncate_payload(self, payload):
         """
-        Check the payload limit of 4096 bytes to avoid 413 error return code.
+        Check the payload limit of 3990 bytes to avoid 413 error return code.
         If the payload is too big, we trunc the body value.
+        This limit has been chosen based on the extra bytes added by the encryption
+        using AES128GCM. Taking into account what are the extra bytes added at the header:
+        salt(16) + record_size(4) + key_len(1) + public_key (sender_public_key.len)
         :param dict payload: Current payload to trunc
         :return: The truncate payload;
         """
         payload_length = len(str(payload).encode())
         body = payload['options']['body']
         body_length = len(body)
-        if payload_length > 4096:
-            body_max_length = 4096 - payload_length - body_length
+
+        if payload_length > 3990:
+            body_max_length = 3990 - payload_length + body_length
             payload['options']['body'] = body.encode()[:body_max_length].decode(errors="ignore")
         return payload
 
