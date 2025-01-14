@@ -25036,6 +25036,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
     function convertChartData(chartData) {
         var _a;
+        if (chartData.dataSets.length === 0) {
+            return undefined;
+        }
         const labelRange = (_a = chartData.dataSets[0].label) === null || _a === void 0 ? void 0 : _a.replace(/\$/g, "");
         let dataSets = chartData.dataSets.map((data) => data.range.replace(/\$/g, ""));
         // For doughnut charts, in chartJS first dataset = outer dataset, in excel first dataset = inner dataset
@@ -27507,10 +27510,34 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const elements = [...cmd.elements].sort((a, b) => b - a);
                     for (const group of groupConsecutive(elements)) {
                         if (cmd.dimension === "COL") {
-                            this.shiftBordersHorizontally(cmd.sheetId, group[group.length - 1] + 1, -group.length);
+                            if (group[0] >= this.getters.getNumberCols(cmd.sheetId)) {
+                                for (let row = 0; row < this.getters.getNumberRows(cmd.sheetId); row++) {
+                                    this.history.update("borders", cmd.sheetId, group[0] + 1, row, "vertical", undefined);
+                                }
+                            }
+                            if (group[group.length - 1] === 0) {
+                                for (let row = 0; row < this.getters.getNumberRows(cmd.sheetId); row++) {
+                                    this.history.update("borders", cmd.sheetId, 0, row, "vertical", undefined);
+                                }
+                            }
+                            const zone = this.getters.getColsZone(cmd.sheetId, group[group.length - 1] + 1, group[0]);
+                            this.clearInsideBorders(cmd.sheetId, [zone]);
+                            this.shiftBordersHorizontally(cmd.sheetId, group[0] + 1, -group.length);
                         }
                         else {
-                            this.shiftBordersVertically(cmd.sheetId, group[group.length - 1] + 1, -group.length);
+                            if (group[0] >= this.getters.getNumberRows(cmd.sheetId)) {
+                                for (let col = 0; col < this.getters.getNumberCols(cmd.sheetId); col++) {
+                                    this.history.update("borders", cmd.sheetId, col, group[0] + 1, "horizontal", undefined);
+                                }
+                            }
+                            if (group[group.length - 1] === 0) {
+                                for (let col = 0; col < this.getters.getNumberCols(cmd.sheetId); col++) {
+                                    this.history.update("borders", cmd.sheetId, col, 0, "horizontal", undefined);
+                                }
+                            }
+                            const zone = this.getters.getRowsZone(cmd.sheetId, group[group.length - 1] + 1, group[0]);
+                            this.clearInsideBorders(cmd.sheetId, [zone]);
+                            this.shiftBordersVertically(cmd.sheetId, group[0] + 1, -group.length);
                         }
                     }
                     break;
@@ -27802,6 +27829,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 }
                 for (let col = zone.left; col <= zone.right; col++) {
                     this.history.update("borders", sheetId, col, zone.bottom + 1, "horizontal", undefined);
+                }
+            }
+        }
+        /**
+         * Remove the borders inside of a zone
+         */
+        clearInsideBorders(sheetId, zones) {
+            for (let zone of zones) {
+                for (let row = zone.top; row <= zone.bottom; row++) {
+                    for (let col = zone.left; col <= zone.right; col++) {
+                        this.history.update("borders", sheetId, col, row, undefined);
+                    }
                 }
             }
         }
@@ -43483,9 +43522,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.56';
-    __info__.date = '2024-12-19T07:51:49.368Z';
-    __info__.hash = '9d0e335';
+    __info__.version = '16.0.57';
+    __info__.date = '2025-01-14T11:48:39.776Z';
+    __info__.hash = '5c7bf6e';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
