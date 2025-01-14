@@ -8,10 +8,9 @@ from odoo.tools.lru import LRU
 
 
 class Driver(Thread):
-    """
-    Hook to register the driver into the drivers list
-    """
+    """Hook to register the driver into the drivers list."""
     connection_type = ''
+    priority = -1
 
     def __init__(self, identifier, device):
         super(Driver, self).__init__()
@@ -30,10 +29,7 @@ class Driver(Thread):
 
     def __init_subclass__(cls):
         super().__init_subclass__()
-        if hasattr(cls, 'priority'):
-            cls.priority += 1
-        else:
-            cls.priority = 0
+        cls.priority += 1
         drivers.append(cls)
 
     @classmethod
