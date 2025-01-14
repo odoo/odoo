@@ -231,8 +231,10 @@ class LoyaltyReward(models.Model):
             ('reward_product_tag_id.product_ids', operator, value)
         ]
 
-    @api.depends('reward_type', 'reward_product_id', 'discount_mode', 'reward_product_tag_id',
-                 'discount', 'currency_id', 'discount_applicability', 'all_discount_product_ids')
+    @api.depends(
+        'reward_type', 'reward_product_id', 'discount_mode', 'reward_product_tag_id', 'discount',
+        'currency_id', 'discount_applicability', 'all_discount_product_ids', 'required_points'
+    )
     def _compute_description(self):
         for reward in self:
             reward_string = ""
@@ -262,7 +264,9 @@ class LoyaltyReward(models.Model):
                 if reward.discount_applicability == 'order':
                     reward_string += _("your order")
                 elif reward.discount_applicability == 'cheapest':
-                    reward_string += _("the cheapest product")
+                    reward_string += _(
+                        "the cheapest product out of %s", reward.required_points
+                    )
                 elif reward.discount_applicability == 'specific':
                     product_available = self.env['product.product'].search(reward._get_discount_product_domain(), limit=2)
                     if len(product_available) == 1:

@@ -911,33 +911,77 @@ patch(PosOrder.prototype, {
      * @param {loyalty.reward} reward
      * @returns the cheapest line from all the lines where the program is applicable
      */
-    _getCheapestLine(reward) {
-        const applicableProductIds = new Set(reward.all_discount_product_ids.map((p) => p.id));
-        const filtered_lines = this.getOrderlines().filter(
+    _getCheapestLinesInfo(reward) {
+        const applicableProductIds = new Set(
+            reward.all_discount_product_ids.map((p) => p.id)
+        );
+        let validLines = this.getOrderlines().filter(
             (line) =>
                 !line.combo_parent_id &&
                 !line.reward_id &&
                 line.getQuantity() &&
                 applicableProductIds.has(line.getProduct().id)
         );
-        return filtered_lines.toSorted(
-            (lineA, lineB) => lineA.getComboTotalPrice() - lineB.getComboTotalPrice()
-        )[0];
+        validLines.sort((lineA, lineB) => lineA.getComboTotalPrice() - lineB.getComboTotalPrice())
+        validLines.reverse()  // To have the lines in descending price.
+
+        let discountedQuantity = 0
+        let restQuantity = 0
+        let linesQuantityToDiscount = []
+        for (let line of validLines) {
+            discountedQuantity = Math.floor(
+                (restQuantity + line.getQuantity()) / reward.required_points
+            )
+            restQuantity = (restQuantity + line.getQuantity()) % reward.required_points
+            if (discountedQuantity > 0) {
+                linesQuantityToDiscount.push({'line': line, 'qty': discountedQuantity})
+            }
+                if (reward.clear_wallet) {
+                    console.log("qtt to discount", linesQuantityToDiscount)
+                    return linesQuantityToDiscount
+                }
+        }
+        console.log("qtt to discount", linesQuantityToDiscount)
+        return linesQuantityToDiscount
     },
     /**
      * @returns the discountable and discountable per tax for this discount on cheapest reward.
      */
     _getDiscountableOnCheapest(reward) {
-        const cheapestLine = this._getCheapestLine(reward);
-        if (!cheapestLine) {
+        const cheapestLinesInfo = this._getCheapestLinesInfo(reward);
+        if (!cheapestLinesInfo) {
             return { discountable: 0, discountablePerTax: {} };
         }
-        const taxKey = cheapestLine.tax_ids.map((t) => t.id);
+        console.log("cheapestLinesInfo", cheapestLinesInfo)
+        let discountable = 0
+        let discountablePerTax = {}
+        for (let { line, qty } of cheapestLinesInfo) {
+            console.log(line, qty);
+            discountable += line.getComboTotalPriceWithoutTax()
+            let taxKey = line.tax_ids.map((t) => t.id);
+            for (let key of taxKey) {
+                let amount = line.getComboTotalPriceWithoutTax() * qty
+                discountablePerTax[key] = (discountablePerTax[key] ?? 0) + amount;
+            }
+            // Before
+            let oldTaxKey = line.tax_ids.map((t) => t.id);
+            let test = {
+                discountable: line.getComboTotalPriceWithoutTax(),
+                discountablePerTax: Object.fromEntries([
+                    [oldTaxKey, line.getComboTotalPriceWithoutTax()],
+                ]),
+            }
+            console.log ("result before: ", test)
+        }
+
+        let truc = {
+            discountable: discountable,
+            discountablePerTax: discountablePerTax,
+        }
+        console.log ("result now: ", truc)
         return {
-            discountable: cheapestLine.getComboTotalPriceWithoutTax(),
-            discountablePerTax: Object.fromEntries([
-                [taxKey, cheapestLine.getComboTotalPriceWithoutTax()],
-            ]),
+            discountable: discountable,
+            discountablePerTax: discountablePerTax,
         };
     },
     /**
@@ -1008,7 +1052,7 @@ patch(PosOrder.prototype, {
             }
         }
 
-        let cheapestLine = false;
+        let cheapestLinesInfo = false;
         for (const lines of Object.values(discountLinesPerReward)) {
             const lineReward = lines[0].reward_id;
             if (lineReward.reward_type !== "discount") {
@@ -1016,8 +1060,8 @@ patch(PosOrder.prototype, {
             }
             let discountedLines = orderLines;
             if (lineReward.discount_applicability === "cheapest") {
-                cheapestLine = cheapestLine || this._getCheapestLine(lineReward);
-                discountedLines = [cheapestLine];
+                cheapestLinesInfo || this._getCheapestLinesInfo(lineReward);
+                discountedLines = [cheapestLinesInfo];
             } else if (lineReward.discount_applicability === "specific") {
                 discountedLines = this._getSpecificDiscountableLines(lineReward);
             }

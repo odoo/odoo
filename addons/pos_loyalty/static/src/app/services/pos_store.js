@@ -93,6 +93,7 @@ patch(PosStore.prototype, {
                         (reward.reward_type !== "product" ||
                             (reward.reward_type == "product" && !reward.multi_product))
                     ) {
+                        console.log("applying at first")
                         order._applyReward(reward, coupon_id);
                         changed = true;
                     }
@@ -100,6 +101,7 @@ patch(PosStore.prototype, {
                 // Rewards may impact the number of points gained
                 if (changed) {
                     await this.orderUpdateLoyaltyPrograms();
+                    console.log("updating again at first")
                 }
                 order._updateRewardLines();
             })
