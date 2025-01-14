@@ -373,7 +373,13 @@ class AccountEdiFormat(models.Model):
             invoice_lines.append({
                 'line': line,
                 'discount': discount * refund_sign,
+<<<<<<< 17.0
                 'unit_price': (line.balance + discount) / line.quantity * refund_sign if line.quantity > 0 else 0,
+||||||| 7390f159fd5ef22fda0a0643d03e77f25613f1aa
+                'unit_price': (line.balance + discount) / line.quantity * refund_sign,
+=======
+                'unit_price': (line.balance + discount) / line.quantity * refund_sign if line.quantity else 0.0,
+>>>>>>> ea44488abb5287e87feb0a0e9acf44897ffa2cc0
                 'total': total,
                 'description': regex_sub(r'[^0-9a-zA-Z ]', '', line.name or '')[:250]
             })
