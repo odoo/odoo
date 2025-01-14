@@ -966,7 +966,7 @@ class AccountMoveLine(models.Model):
             else:
                 line.epd_key = False
 
-    @api.depends('move_id.needed_terms', 'account_id', 'analytic_distribution', 'tax_ids', 'tax_tag_ids', 'company_id')
+    @api.depends('move_id.needed_terms', 'account_id', 'analytic_distribution', 'tax_ids', 'tax_tag_ids', 'company_id', 'price_subtotal')
     def _compute_epd_needed(self):
         # TODO: The computation of early payment is weird because based on the 'price_subtotal'
         # that already have it's own taxes computation (by design because the sync_dynamic lines only
