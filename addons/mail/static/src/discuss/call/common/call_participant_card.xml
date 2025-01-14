@@ -33,9 +33,9 @@
             </div>
             <t t-if="rtcSession">
                 <!-- overlay -->
-                <span class="o-discuss-CallParticipantCard-overlay o-discuss-CallParticipantCard-overlayBottom z-index-1 position-absolute bottom-0 start-0 d-flex overflow-hidden">
+                <span class="o-discuss-CallParticipantCard-overlay z-index-1 position-absolute bottom-0 start-0 d-flex overflow-hidden">
                     <span t-if="!props.minimized and !props.inset" class="p-1 rounded-1 text-truncate" t-esc="name"/>
-                    <small t-if="rtcSession.isScreenSharingOn and props.minimized and !isOfActiveCall" class="user-select-none o-minimized rounded-pill text-bg-danger d-flex align-items-center fw-bolder" title="live" aria-label="live">
+                    <small t-if="rtcSession.isScreenSharingOn and props.minimized and !isOfActiveCall" class="user-select-none o-minimized rounded-pill text-bg-danger d-flex align-items-center fw-bolder px-2 py-1" title="live" aria-label="live">
                         LIVE
                     </small>
                 </span>
@@ -59,7 +59,7 @@
                     <span t-if="showServerState" class="d-flex flex-column justify-content-center me-1 p-2 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-title="rtc.state.serverState">
                         <i class="fa fa-exclamation-triangle text-warning"/>
                     </span>
-                    <span t-if="rtcSession.isScreenSharingOn and !props.minimized and !isOfActiveCall" class="user-select-none rounded-pill text-bg-danger d-flex align-items-center me-1 fw-bolder" title="live" aria-label="live">
+                    <span t-if="rtcSession.isScreenSharingOn and !props.minimized and !isOfActiveCall" class="user-select-none rounded-pill text-bg-danger d-flex align-items-center me-1 fw-bolder px-2 py-1" title="live" aria-label="live">
                         LIVE
                     </span>
                 </div>
