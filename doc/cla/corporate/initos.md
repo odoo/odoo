@@ -25,3 +25,4 @@ Florian Kantelberg florian.kantelberg@initos.com https://github.com/fkantelberg
 Mathias Francke mathias.francke@initos.com https://github.com/mathiasfrancke
 Nico Winkelstraeter nico.winkelstraeter@initos.com https://github.com/nwinkelstraeter
 Ruben Ortlam ruben.ortlam@initos.com https://github.com/ortlam
+Imad Hajjar imad.hajjar@initos.com https://github.com/imadhajjar
