@@ -113,7 +113,7 @@ class ProductTemplate(models.Model):
     purchase_ok = fields.Boolean('Purchase', default=True, compute='_compute_purchase_ok', store=True, readonly=False)
     uom_id = fields.Many2one(
         'uom.uom', 'Unit',
-        default=_get_default_uom_id, required=True,
+        default=_get_default_uom_id, required=True, tracking=True,
         help="Default unit of measure used for all stock operations.")
     uom_ids = fields.Many2many('uom.uom', string='Packagings', help="Packagings which can be used for sales")
     uom_name = fields.Char(string='Unit Name', related='uom_id.name', readonly=True)
