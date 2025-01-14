@@ -325,7 +325,7 @@ const threadPatch = {
      * @param {boolean} [options.sync] Whether to sync the unread message
      * state with the server values.
      */
-    markAsRead({ sync } = {}) {
+    async markAsRead({ sync } = {}) {
         super.markAsRead(...arguments);
         if (!this.selfMember) {
             return;
@@ -351,6 +351,32 @@ const threadPatch = {
                 throw e;
             }
         });
+        if (
+            this.selfMember.localNewMessageSeparator === 0 &&
+            this.selfMember.seen_message_id === undefined
+        ) {
+            // All the messages are new
+            if (this.scrollUnread) {
+                // Wiat for thread to scroll
+                await new Promise((resolve) => {
+                    const handleScrollUnreadChange = function () {
+                        if (!this.scrollUnread) {
+                            this.store.env.bus.removeEventListener(
+                                "scrollUnreadChanged",
+                                handleScrollUnreadChange
+                            );
+                            resolve();
+                        }
+                    }.bind(this);
+                    this.store.env.bus.addEventListener(
+                        "scrollUnreadChanged",
+                        handleScrollUnreadChange
+                    );
+                });
+            }
+            this.selfMember.syncUnread = sync ?? this.selfMember.syncUnread;
+            this.selfMember.localNewMessageSeparator = newestPersistentMessage.id + 1;
+        }
     },
     /**
      * To be overridden.

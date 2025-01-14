@@ -54,6 +54,7 @@ const threadPatch = {
                 this.setScroll(scrollTop);
             }
             thread.scrollUnread = false;
+            this.env.bus.trigger("scrollUnreadChanged");
         } else {
             super.applyScrollContextually(...arguments);
         }
