@@ -26,23 +26,27 @@ class StatusPage extends Component {
         }
     }
 
+    get accessPointSsid() {
+        return this.state.data.network_interfaces.filter(i => i.is_wifi)[0]?.ssid;
+    }
+
     static template = xml`
     <div t-if="!state.loading" class="container-fluid">
         <div class="text-center pt-5">
             <img class="odoo-logo" src="/web/static/img/logo2.png" alt="Odoo logo"/>
         </div>
         <div class="status-display-boxes">
-            <div t-if="state.data.pairing_code" class="status-display-box">
+            <div t-if="state.data.pairing_code and !state.data.is_access_point_up" class="status-display-box">
                 <h4 class="text-center mb-3">Pairing Code</h4>
                 <hr/>
                 <h4 t-out="state.data.pairing_code" class="text-center mb-3"/>
             </div>
-            <div t-if="state.data.is_access_point_up" class="status-display-box">
+            <div t-if="state.data.is_access_point_up and accessPointSsid" class="status-display-box">
                 <h4 class="text-center mb-3">No Internet Connection</h4>
                 <hr/>
                 <p class="mb-3">
                     Please connect your IoT Box to internet via an ethernet cable or connect to Wi-FI network<br/>
-                    <a class="alert-link" t-out="'IoTBox-' + (state.data.network_interfaces[0].ssid or state.data.mac.replace(':', ''))" /><br/>
+                    <a class="alert-link" t-out="accessPointSsid" /><br/>
                     to configure a Wi-Fi connection on the IoT Box
                 </p>
             </div>
