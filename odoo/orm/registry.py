@@ -695,8 +695,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     method = 'btree'
                     where = f'{column_expression} IS NOT NULL' if index == 'btree_not_null' else ''
                 try:
-                    with cr.savepoint(flush=False):
-                        sql.create_index(cr, indexname, tablename, [expression], method, where)
+                    sql.create_index(cr, indexname, tablename, [expression], method, where)
                 except psycopg2.OperationalError:
                     _schema.error("Unable to add index for %s", self)
 
