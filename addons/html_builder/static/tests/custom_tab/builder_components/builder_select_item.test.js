@@ -180,3 +180,28 @@ test("hide/display BuilderSelect base on applyTo in BuilderSelectItem", async ()
     await contains("[data-class-action='my-custom-class']").click();
     expect(".options-container button.dropdown-toggle").toBeVisible();
 });
+
+test("use BuilderSelect with styleAction", async () => {
+    addOption({
+        selector: ".parent-target",
+        template: xml`
+                <BuilderSelect styleAction="'border-style'">
+                    <BuilderSelectItem styleActionValue="'dotted'">dotted</BuilderSelectItem>
+                    <BuilderSelectItem styleActionValue="'inset'">inset</BuilderSelectItem>
+                    <BuilderSelectItem styleActionValue="'none'">none</BuilderSelectItem>
+                </BuilderSelect>`,
+    });
+    const { getEditor } = await setupWebsiteBuilder(`<div class="parent-target">b</div>`);
+    const editor = getEditor();
+    await contains(":iframe .parent-target").click();
+    expect(".we-bg-options-container .dropdown").toHaveText("none");
+
+    await contains(".options-container button.dropdown-toggle").click();
+    expect(queryAllTexts(".o-dropdown--menu div")).toEqual(["dotted", "inset", "none"]);
+
+    await contains(".o-dropdown--menu div:contains(dotted)").click();
+    expect(editor.editable).toHaveInnerHTML(
+        `<div class="parent-target" style="border-style: dotted !important;">b</div>`
+    );
+    expect(".we-bg-options-container .dropdown").toHaveText("dotted");
+});

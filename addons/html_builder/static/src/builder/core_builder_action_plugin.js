@@ -78,12 +78,16 @@ export const coreBuilderActions = {
                 return getComputedStyle(editingElement).getPropertyValue(styleName);
             }
         },
+        isApplied: ({ editingElement, param, value }) => {
+            const currentValue = coreBuilderActions.styleAction.getValue({ editingElement, param });
+            return currentValue === value;
+        },
         apply: ({ editingElement, param: styleName, value }) => {
             const customStyle = styleMap[styleName];
             if (customStyle) {
                 customStyle?.apply(editingElement, value);
             } else {
-                editingElement.style.setProperty(styleName, value);
+                editingElement.style.setProperty(styleName, value, "important");
             }
         },
     },
