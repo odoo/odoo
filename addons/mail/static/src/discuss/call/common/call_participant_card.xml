@@ -28,9 +28,9 @@
             </div>
             <t t-if="rtcSession">
                 <!-- overlay -->
-                <span class="o-discuss-CallParticipantCard-overlay o-discuss-CallParticipantCard-overlayBottom z-1 position-absolute bottom-0 start-0 d-flex overflow-hidden rounded-1">
-                    <span t-if="!props.minimized and !props.inset" class="px-1 text-truncate smaller opacity-75" t-esc="name"/>
-                    <small t-if="rtcSession.isScreenSharingOn and props.minimized and !isOfActiveCall" class="user-select-none o-minimized rounded-pill text-bg-danger d-flex align-items-center fw-bolder" title="live" aria-label="live">
+                <span class="o-discuss-CallParticipantCard-overlay z-1 position-absolute bottom-0 start-0 d-flex overflow-hidden rounded-1">
+                    <span t-if="!props.minimized and !props.inset" class="px-1 text-truncate smaller opacity-75 o-discuss-CallParticipantCard-overlayBottomName" t-esc="name"/>
+                    <small t-if="rtcSession.isScreenSharingOn and props.minimized and !isOfActiveCall" class="user-select-none o-minimized rounded text-bg-danger d-flex align-items-center fw-bolder p-1" title="live" aria-label="live">
                         LIVE
                     </small>
                 </span>
@@ -54,7 +54,7 @@
                     <span t-if="showServerState" class="d-flex flex-column justify-content-center me-1 p-2 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-title="rtc.state.serverState">
                         <i class="fa fa-exclamation-triangle text-warning"/>
                     </span>
-                    <span t-if="rtcSession.isScreenSharingOn and !props.minimized and !isOfActiveCall" class="user-select-none rounded-pill text-bg-danger d-flex align-items-center me-1 fw-bolder" title="live" aria-label="live">
+                    <span t-if="rtcSession.isScreenSharingOn and !props.minimized and !isOfActiveCall" class="user-select-none rounded text-bg-danger d-flex align-items-center me-1 fw-bolder p-1" title="live" aria-label="live">
                         LIVE
                     </span>
                 </div>
