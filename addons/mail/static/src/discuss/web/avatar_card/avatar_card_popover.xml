@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.AvatarCardPopover">
-        <div class="o_avatar_card">
-            <div class="card-body">
-                <div class="d-flex align-items-start gap-2">
-                    <span class="o_avatar pt-1 position-relative o_card_avatar">
+        <div class="o_avatar_card rounded bg-inherit">
+            <div class="card-body rounded bg-inherit">
+                <div class="d-flex align-items-start gap-2 bg-inherit">
+                    <span class="o_avatar pt-1 position-relative o_card_avatar bg-inherit">
                         <img t-if="props.id"
                             t-attf-src="/web/image/res.users/{{props.id}}/avatar_128"
                             class="rounded"
                         />
-                        <span t-if="user.im_status" name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center">
+                        <span t-if="user.im_status" name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center bg-inherit">
                             <i t-if="user.im_status === 'online'" class="fa fa-fw fa-circle text-success" title="Online" role="img" aria-label="User is online"/>
                             <i t-elif="user.im_status === 'away'" class="fa fa-fw fa-circle text-warning" title="Idle" role="img" aria-label="User is idle"/>
                             <i t-elif="user.im_status === 'offline'" class="fa fa-fw fa-circle-o text-700" title="Offline" role="img" aria-label="User is offline"/>

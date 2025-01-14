@@ -5,7 +5,7 @@
             <attribute name="t-attf-src" t-if="displayAvatar">/web/image/{{ props.recordModel }}/{{ props.id }}/avatar_128</attribute>
         </xpath>
         <xpath expr="//span[hasclass('o_card_avatar_im_status')]" position="replace">
-            <span t-if="record.user_id" name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center o_user_im_status">
+            <span t-if="record.user_id" name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center o_user_im_status bg-inherit">
                 <i t-if="record.im_status === 'online'" class="fa fa-fw fa-circle text-success" title="Online" role="img" aria-label="User is online"/>
                 <i t-elif="record.im_status === 'away'" class="fa fa-fw fa-circle text-warning" title="Idle" role="img" aria-label="User is idle"/>
                 <i t-elif="record.im_status === 'offline'" class="fa fa-fw fa-circle-o text-700" title="Offline" role="img" aria-label="User is offline"/>
