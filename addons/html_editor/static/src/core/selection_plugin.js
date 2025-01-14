@@ -23,6 +23,7 @@ import {
     normalizeDeepCursorPosition,
     normalizeFakeBR,
 } from "../utils/selection";
+import { scrollTo } from "@web/core/utils/scrolling";
 
 /**
  * @typedef { Object } EditorSelection
@@ -161,7 +162,13 @@ export class SelectionPlugin extends Plugin {
 
     setup() {
         this.resetSelection();
-        this.addDomListener(this.document, "selectionchange", this.updateActiveSelection);
+        this.addDomListener(this.document, "selectionchange", () => {
+            this.updateActiveSelection();
+            const selection = this.document.getSelection();
+            if (selection.isCollapsed && this.isSelectionInEditable(selection)) {
+                scrollTo(closestElement(selection.focusNode));
+            }
+        });
         this.addDomListener(this.editable, "mousedown", (ev) => {
             if (ev.detail >= 3) {
                 this.correctTripleClick = true;
