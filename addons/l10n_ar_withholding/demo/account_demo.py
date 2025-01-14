@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models
+import re
 
 
 class AccountChartTemplate(models.AbstractModel):
@@ -21,6 +22,7 @@ class AccountChartTemplate(models.AbstractModel):
             wth_sequence_id = seq_profits_wth.id
 
             # Add to partner Adhoc: 1) wth tax 119 and it`s sequence, 2) arba wth
+            import pdb; pdb.set_trace()
             self.env['l10n_ar.partner.tax'].create({'tax_id': profits_wth_tax_119.id, 'partner_id': self.env.ref('l10n_ar.res_partner_adhoc').id, 'company_id': company.id})
             profits_wth_tax_119.l10n_ar_withholding_sequence_id = wth_sequence_id
             self.env['l10n_ar.partner.tax'].create({'tax_id': arba_wth_applied.id, 'partner_id': self.env.ref('l10n_ar.res_partner_adhoc').id, 'company_id': company.id})
