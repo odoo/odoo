@@ -348,7 +348,7 @@
                                         />
                                     </td>
                                     <td t-if="not update_dates and order.state in ['purchase', 'done']" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                        <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.taxes_id))"/>
+                                        <span t-out="', '.join(map(lambda x: (x.name), line.taxes_id))"/>
                                     </td>
                                     <td class="text-end" t-if="not update_dates and order.state in ['purchase', 'done']">
                                         <span class="oe_order_line_price_subtotal" t-field="line.price_subtotal"/>
