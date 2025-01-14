@@ -198,7 +198,7 @@ export class PosStore extends WithLazyGetterTrap {
         window.location.href = url.href;
     }
 
-    showLoginScreen() {
+    async showLoginScreen() {
         this.resetCashier();
         this.showScreen("LoginScreen");
         this.dialog.closeAll();
@@ -472,6 +472,8 @@ export class PosStore extends WithLazyGetterTrap {
                 } else if (typeof order.id === "number") {
                     ids.add(order.id);
                 }
+            } else {
+                return false;
             }
         }
 
@@ -486,6 +488,7 @@ export class PosStore extends WithLazyGetterTrap {
 
         if (ids.size > 0) {
             await this.data.callRelated("pos.order", "action_pos_order_cancel", [Array.from(ids)]);
+            return true;
         }
 
         return true;
@@ -622,6 +625,10 @@ export class PosStore extends WithLazyGetterTrap {
         };
     }
 
+    async setDiscountFromUI(line, val) {
+        line.setDiscount(val);
+    }
+
     async setTip(tip) {
         const currentOrder = this.getOrder();
         const tipProduct = this.config.tip_product_id;
@@ -653,13 +660,18 @@ export class PosStore extends WithLazyGetterTrap {
     // The configure parameter is available if the orderline already contains all
     // the information without having to be calculated. For example, importing a SO.
     async addLineToCurrentOrder(vals, opts = {}, configure = true) {
-        let merge = true;
         let order = this.getOrder();
         order.assertEditable();
 
         if (!order) {
-            order = await this.addNewOrder();
+            order = this.addNewOrder();
         }
+        return await this.addLineToOrder(vals, order, opts, configure);
+    }
+
+    async addLineToOrder(vals, order, opts = {}, configure = true) {
+        let merge = true;
+        order.assertEditable();
 
         const options = {
             ...opts,
@@ -669,6 +681,9 @@ export class PosStore extends WithLazyGetterTrap {
             merge = false;
         }
 
+        if (typeof vals.product_tmpl_id == "number") {
+            vals.product_tmpl_id = this.data.models["product.template"].get(vals.product_tmpl_id);
+        }
         const productTemplate = vals.product_tmpl_id;
         const values = {
             price_type: "price_unit" in vals ? "manual" : "original",
@@ -897,8 +912,9 @@ export class PosStore extends WithLazyGetterTrap {
         const line = this.data.models["pos.order.line"].create({ ...values, order_id: order });
         line.setOptions(options);
         this.selectOrderLine(order, line);
-        this.numberBuffer.reset();
-
+        if (configure) {
+            this.numberBuffer.reset();
+        }
         const selectedOrderline = order.getSelectedOrderline();
         if (options.draftPackLotLines && configure) {
             selectedOrderline.setPackLotLines({
@@ -924,12 +940,16 @@ export class PosStore extends WithLazyGetterTrap {
             this.selectOrderLine(order, order.getLastOrderline());
         }
 
-        this.numberBuffer.reset();
+        if (configure) {
+            this.numberBuffer.reset();
+        }
 
         // FIXME: Put this in an effect so that we don't have to call it manually.
         order.recomputeOrderData();
 
-        this.numberBuffer.reset();
+        if (configure) {
+            this.numberBuffer.reset();
+        }
 
         this.hasJustAddedProduct = true;
         clearTimeout(this.productReminderTimeout);
@@ -1177,7 +1197,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     // There for override
-    preSyncAllOrders(orders) {}
+    async preSyncAllOrders(orders) {}
     postSyncAllOrders(orders) {}
     async syncAllOrders(options = {}) {
         const { orderToCreate, orderToUpdate } = this.getPendingOrder();
@@ -1193,7 +1213,7 @@ export class PosStore extends WithLazyGetterTrap {
             }
 
             const context = this.getSyncAllOrdersContext(orders, options);
-            this.preSyncAllOrders(orders);
+            await this.preSyncAllOrders(orders);
 
             if (orders.length === 0) {
                 return;
@@ -1447,6 +1467,14 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     disallowLineQuantityChange() {
+        return false;
+    }
+
+    restrictLineDiscountChange() {
+        return false;
+    }
+
+    restrictLinePriceChange() {
         return false;
     }
 
