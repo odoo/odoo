@@ -113,7 +113,7 @@ export class HootReporting extends Component {
                                 <t t-if="result.test.status === Test.ABORTED">
                                     aborted after
                                 </t>
-                                <t t-esc="formatTime(result.test.lastResults.duration, 'ms')" />
+                                <t t-esc="formatTime(result.test.duration, 'ms')" />
                             </t>
                         </small>
                         <HootJobButtons job="result.test" />
