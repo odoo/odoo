@@ -27,6 +27,19 @@
                             </div>
                             <label for="discount_applicability" string="" invisible="reward_type != 'discount'"/>
                             <field name="discount_applicability" nolabel="1" widget="radio" invisible="reward_type != 'discount'"/>
+                            <label
+                                for="repeater"
+                                string=""
+                                invisible="reward_type != 'discount' or discount_applicability != 'cheapest'"
+                            />
+                            <div
+                                class="d-flex flex-row"
+                                invisible="reward_type != 'discount' or discount_applicability != 'cheapest'"
+                            >
+                                <span class="me-1" style="min-width: 4rem;">Every </span>
+                                <field name="repeater" nolabel="1" widget="integer" class="w-auto me-1" style="max-width: 4rem;"/>
+                                <span>products</span>
+                            </div>
                         </group>
 
                         <group string="Among" invisible="reward_type != 'product'">
@@ -91,6 +104,7 @@
                                     <field name="discount"/><field name="discount_mode"/> discount <t t-if="record.discount_max_amount.raw_value > 0">( Max <field name="discount_max_amount"/> )</t>
                                 </t>
 
+<<<<<<< HEAD
                                 <t t-if="record.discount_applicability.raw_value === 'specific'">
 
                                     <div class="fw-bold text-decoration-underline mt-3">Applied to:</div>
@@ -110,7 +124,7 @@
                                 </t>
 
                                 <t t-elif="record.discount_applicability.raw_value === 'cheapest'">
-                                    on the cheapest product
+                                    on the cheapest product out of <field name="repeater"/>
                                 </t>
 
                                 <t t-elif="record.discount_applicability.raw_value === 'order'">
