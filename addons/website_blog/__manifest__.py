@@ -60,9 +60,6 @@
             'website_blog/static/src/snippets/**/*.js',
             ('remove', 'website_blog/static/src/snippets/**/options.js'),
         ],
-        'website.assets_edit_frontend': [
-            'website_blog/static/src/**/*.edit.js',
-        ],
     },
     'license': 'LGPL-3',
 }
