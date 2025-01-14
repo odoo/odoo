@@ -102,10 +102,9 @@ def is_current(ssid):
     return ssid == get_current()
 
 
-def disconnect(forget_network=False):
+def disconnect():
     """Disconnects from the current network.
 
-    :param bool forget_network: Remove the network configuration file from the root filesystem
     :return: True if disconnected successfully
     """
     ssid = get_current()
@@ -115,9 +114,6 @@ def disconnect(forget_network=False):
 
     _logger.info('Disconnecting from network %s', ssid)
     _nmcli(['con', 'down', ssid], sudo=True)
-
-    if forget_network and not _validate_configuration(ssid, forget_network):
-        _logger.warning('Failed to remove network configuration from /root_bypass_ramdisks for %s', ssid)
 
     if not get_ip():
         toggle_access_point(START)
@@ -154,20 +150,21 @@ def reconnect(ssid=None, password=None, force_update=False):
     :param bool force_update: Force connection, even if internet is already available through ethernet
     :return: True if reconnected successfully
     """
-    should_start_access_point_on_failure = is_access_point() or not get_ip()
-
     if not force_update:
         timer = time.time() + 10  # Required on boot: wait 10 sec (see: https://github.com/odoo/odoo/pull/187862)
         while time.time() < timer:
             if get_ip():
+                toggle_access_point(STOP)  # ensure access point is off
                 return True
             time.sleep(.5)
 
     if not ssid:
         return toggle_access_point(START)
 
+    should_start_access_point_on_failure = is_access_point() or not get_ip()
+
     # Try to re-enable an existing connection, or set up a new persistent one
-    if not _nmcli(['con', 'up', ssid], sudo=True):
+    if toggle_access_point(STOP) and not _nmcli(['con', 'up', ssid], sudo=True):
         _connect(ssid, password)
 
     connected_successfully = is_current(ssid)
@@ -177,16 +174,15 @@ def reconnect(ssid=None, password=None, force_update=False):
     return connected_successfully
 
 
-def _validate_configuration(ssid, forget_network=False):
+def _validate_configuration(ssid):
     """For security reasons, everything that is saved in the root filesystem
-    on IoT Boxes is lost after reboot. This method saves (or removes) the network
+    on IoT Boxes is lost after reboot. This method saves the network
     configuration file in the right filesystem (``/root_bypass_ramdisks``).
 
     Although it is not mandatory to connect to the Wi-Fi, this method is required
     for the network to be reconnected automatically after a reboot.
 
     :param str ssid: SSID of the network to validate
-    :param bool forget_network: Remove the network configuration file from the root filesystem
     :return: True if the configuration file is saved successfully
     :rtype: bool
     """
@@ -196,18 +192,12 @@ def _validate_configuration(ssid, forget_network=False):
 
     destination_path = Path('/root_bypass_ramdisks') / source_path.relative_to('/')
 
-    # Copy the configuration file to the root filesystem
-    command = ['sudo', 'cp', source_path, destination_path]
-
-    if forget_network and destination_path.exists():
-        # Remove the configuration file from the root filesystem
-        command = ['sudo', 'rm', '-f', destination_path]
-
     with writable():
-        if subprocess.run(command, check=False).returncode == 0:
+        # Copy the configuration file to the root filesystem
+        if subprocess.run(['sudo', 'cp', source_path, destination_path], check=False).returncode == 0:
             return True
         else:
-            _logger.error('Failed to apply the network configuration to root_bypass_ramdisks.')
+            _logger.error('Failed to apply the network configuration to /root_bypass_ramdisks.')
             return False
 
 
@@ -239,13 +229,14 @@ def _configure_access_point(on=True):
     ssid = get_access_point_ssid()
 
     _logger.info("Configuring access point with SSID %s", ssid)
-    with writable():
-        if on:
-            with open('/etc/hostapd/hostapd.conf', 'w', encoding='utf-8') as f:
-                f.write(f"interface=wlan0\nssid={ssid}\nchannel=1\n")
+    if on:
+        with writable(), open('/etc/hostapd/hostapd.conf', 'w', encoding='utf-8') as f:
+            f.write(f"interface=wlan0\nssid={ssid}\nchannel=1\n")
     mode = 'add' if on else 'del'
     return (
-        subprocess.run(['sudo', 'ip', 'address', mode, '10.11.12.1/24', 'dev', 'wlan0'], check=False).returncode == 0
+        subprocess.run(
+            ['sudo', 'ip', 'address', mode, '10.11.12.1/24', 'dev', 'wlan0'], check=False, stderr=subprocess.DEVNULL
+        ).returncode == 0
         or not on  # Don't fail if stopping access point: IP address might not exist
     )
 
@@ -260,12 +251,12 @@ def toggle_access_point(state=START):
     if not _configure_access_point(state):
         return False
 
-    _logger.info("Starting access point.")
     mode = 'start' if state else 'stop'
+    _logger.info("%sing access point.", mode.capitalize())
     if subprocess.run(['sudo', 'systemctl', mode, 'hostapd'], check=False).returncode == 0:
         return True
     else:
-        _logger.error("Failed to start access point.")
+        _logger.error("Failed to %s access point.", mode)
         return False
 
 
