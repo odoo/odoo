@@ -1252,5 +1252,5 @@ stepUtils.toggleHomeMenu()[0],
 {
     isActive: ["auto", "desktop", "enterprise"],
     content: "check that we're back on the dashboard",
-    trigger: 'a:contains("Customer Invoices")',
+    trigger: 'a:contains("Sales")',
 }]});
