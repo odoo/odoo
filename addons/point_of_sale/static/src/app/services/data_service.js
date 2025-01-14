@@ -504,6 +504,10 @@ export class PosData extends Reactive {
                 this.synchronizeServerDataInIndexedDB({ [model]: [baseData] });
             }
 
+            if (result === null || result === undefined) {
+                // if request does not return something, we consider it went well
+                return true;
+            }
             return result;
         } catch (error) {
             let throwErr = true;
