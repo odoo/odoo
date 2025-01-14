@@ -998,7 +998,7 @@ export class PosStore extends WithLazyGetterTrap {
      * @returns {name: string, id: int, role: string}
      */
     getCashier() {
-        this.user.role = this.user._raw.role;
+        this.user.role = this.user.raw.role;
         return this.user;
     }
     getCashierUserId() {
@@ -1216,7 +1216,13 @@ export class PosStore extends WithLazyGetterTrap {
                 context,
             });
             const missingRecords = await this.data.missingRecursive(data);
+<<<<<<< saas-18.2
             const newData = this.models.loadData(missingRecords, [], false, true);
+||||||| 158815cc2e0bc1964696a57ce8f2b82356dd5477
+            const newData = this.models.loadData(this.models, missingRecords, [], false, true);
+=======
+            const newData = this.models.loadData(this.models, missingRecords, [], false);
+>>>>>>> df859d4093e0d9973d528a013d80bc939de19156
 
             for (const line of newData["pos.order.line"]) {
                 const refundedOrderLine = line.refunded_orderline_id;
