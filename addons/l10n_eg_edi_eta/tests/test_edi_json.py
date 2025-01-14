@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 from freezegun import freeze_time
 
+from odoo import Command
 from odoo.tests import tagged
 from odoo import Command
 
@@ -387,6 +388,19 @@ class TestEdiJson(TestEGEdiCommon):
                         'product_uom_id': self.env.ref('uom.product_uom_unit').id,
                         'tax_ids': [(6, 0, self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids)],
                     },
+                    {
+                        'product_id': self.product_a.id,
+                        'price_unit': 100,
+                        'quantity': 1.0,
+                        'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                        'discount': 10.0,
+                        'tax_ids': [Command.create({
+                            "amount_type": "fixed",
+                            "amount": 10.0,
+                            "name": "Fixed Tax",
+                            "l10n_eg_eta_code": "t3_tbl02",
+                        })],
+                    },
                 ],
             )
             invoice.action_post()
@@ -448,12 +462,29 @@ class TestEdiJson(TestEGEdiCommon):
                                 'netTotal': 899.6,
                                 'total': 1025.54,
                             },
+                            {
+                                'description': 'product_a',
+                                'itemType': 'GS1',
+                                'itemCode': '1KGS1TEST',
+                                'unitType': 'C62',
+                                'quantity': 1.0,
+                                'internalCode': '',
+                                'valueDifference': 0.0,
+                                'totalTaxableFees': 0.0,
+                                'itemsDiscount': 0.0,
+                                'unitValue': {'currencySold': 'EGP', 'amountEGP': 100.0},
+                                'discount': {'rate': 10.0, 'amount': 10.0},
+                                'taxableItems': [{'taxType': 'T3', 'amount': 10.0, 'subType': 'TBL02', 'rate': 0.0}],
+                                'salesTotal': 100.0,
+                                'netTotal': 90.0,
+                                'total': 100.0,
+                            },
                         ],
-                        'taxTotals': [{'taxType': 'T1', 'amount': 141.18}],
-                        'totalDiscountAmount': 112.05445,
-                        'totalSalesAmount': 1120.54445,
-                        'netAmount': 1008.49,
-                        'totalAmount': 1149.67,
+                        'taxTotals': [{'taxType': 'T1', 'amount': 141.18}, {'taxType': 'T3', 'amount': 10.0}],
+                        'totalDiscountAmount': 122.05445,
+                        'totalSalesAmount': 1220.54445,
+                        'netAmount': 1098.49,
+                        'totalAmount': 1249.67,
                     },
                     'response': ETA_TEST_RESPONSE,
                 },
