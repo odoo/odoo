@@ -3503,7 +3503,8 @@ class AccountMove(models.Model):
         last_month = int(self.company_id.fiscalyear_last_month)
         is_staggered_year = last_month != 12 or last_day != 31
         if is_staggered_year:
-            if self.date > date(self.date.year, last_month, last_day):
+            # relativedelta accounts for invalid dates, e.g. Feb 29th on a non-leap year.
+            if self.date > date(self.date.year, last_month, 1) + relativedelta(day=last_day):
                 year_part = "%s-%s" % (self.date.strftime('%y'), (self.date + relativedelta(years=1)).strftime('%y'))
             else:
                 year_part = "%s-%s" % ((self.date + relativedelta(years=-1)).strftime('%y'), self.date.strftime('%y'))
