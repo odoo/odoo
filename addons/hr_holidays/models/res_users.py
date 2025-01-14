@@ -54,7 +54,7 @@ class User(models.Model):
                             AND hr_leave.state = 'validate'
                             AND hr_leave.active = 't'
                             AND res_users.active = 't'
-                            AND date_from <= %%s AND date_to >= %%s''' % field, (now, now))
+                            AND hr_leave.date_from <= %%s AND hr_leave.date_to >= %%s''' % field, (now, now))
         return [r[0] for r in self.env.cr.fetchall()]
 
     def _clean_leave_responsible_users(self):
