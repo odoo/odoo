@@ -234,17 +234,17 @@ $i: 1;
 
 .pac-container { // google map autosuggestion (note: their CSS lib is not used)
     z-index: $zindex-modal-backdrop; // > $o-we-zindex
+    position: absolute;
+    top: 110%;
+    right: 0;
     width: ceil($o-we-sidebar-width * 0.9) !important;
     font-size: $o-we-sidebar-font-size;
-    margin-left: -$o-we-sidebar-width/2;
     border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-dropdown-border-color;
     border-top: none;
     border-radius: $o-we-item-border-radius;
     overflow: hidden;
     background-color: $o-we-sidebar-content-field-dropdown-bg;
     box-shadow: $o-we-sidebar-content-field-dropdown-shadow;
-    margin-top: $o-we-sidebar-content-field-dropdown-spacing;
-    transform: translate(41px);
 
     &:after {
         display: none;
