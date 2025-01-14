@@ -507,12 +507,13 @@ class TestHrAttendanceOvertime(TransactionCase):
         })
         self.assertEqual(attendance.overtime_hours, 0, 'There should be no overtime for the flexible resource.')
 
-        # 2) 12:00 - 18:00 should contain 0 hours of overtime
+        # 2) 12:00 - 18:00 should contain -2 hours of overtime
+        # as we expect the employee to work 8 hours per day
         attendance.write({
             'check_in': datetime(2023, 1, 3, 12, 0),
             'check_out': datetime(2023, 1, 3, 18, 0)
         })
-        self.assertEqual(attendance.overtime_hours, 0, 'There should be no overtime for the flexible resource.')
+        self.assertAlmostEqual(attendance.overtime_hours, -2, 2, 'There should be -2 hours of overtime for the flexible resource.')
 
         # 3) 10:00 - 22:00 should contain 4 hours of overtime
         attendance.write({
