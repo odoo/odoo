@@ -594,19 +594,22 @@ def add_index(cr, indexname, tablename, definition, *, unique: bool, comment='')
         definition = SQL(definition.replace('%', '%%'))
     else:
         definition = SQL(definition)
-    cr.execute(SQL(
+    query = SQL(
         "CREATE %sINDEX %s ON %s %s",
         SQL("UNIQUE ") if unique else SQL(),
         SQL.identifier(indexname),
         SQL.identifier(tablename),
         definition,
-    ))
-    if comment:
-        cr.execute(SQL(
-            "COMMENT ON INDEX %s IS %s",
-            SQL.identifier(indexname), comment,
-        ))
-    _schema.debug("Table %r: created index %r (%s)", tablename, indexname, definition.code)
+    )
+    query_comment = SQL(
+        "COMMENT ON INDEX %s IS %s",
+        SQL.identifier(indexname), comment,
+    ) if comment else None
+    with cr.savepoint(flush=False):
+        cr.execute(query, log_exceptions=False)
+        if query_comment:
+            cr.execute(query_comment, log_exceptions=False)
+        _schema.debug("Table %r: created index %r (%s)", tablename, indexname, definition.code)
 
 
 def create_unique_index(cr, indexname, tablename, expressions):
