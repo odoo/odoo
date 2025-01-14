@@ -592,3 +592,45 @@ class TestLotValuation(TestStockValuationCommon):
         self.product1.lot_valuated = True
         self.product1.product_tmpl_id.tracking = 'none'
         self.assertFalse(self.product1.product_tmpl_id.lot_valuated)
+
+    def test_lot_valuation_lot_product_price_diff(self):
+        """
+        This test ensure that when the product.standard_price and the lot.standard_price differ,
+        no discrepancy is created when setting lot_valuated to True.
+        When lot_valuated is set to True, the lot.standard_price is updated to match with the product.standard_price
+        """
+        self.product1.categ_id.property_cost_method = 'average'
+        self.product1.lot_valuated = False
+        self.product1.standard_price = 1
+
+        lot = self.env['stock.lot'].create({
+            'product_id': self.product1.id,
+            'name': 'LOT-WITH-COST',
+            'standard_price': 2,
+        })
+        lot2 = self.env['stock.lot'].create({
+            'product_id': self.product1.id,
+            'name': 'LOT-NO-COST',
+        })
+        quant = self.env['stock.quant'].create({
+            'product_id': self.product1.id,
+            'lot_id': lot.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': 10,
+        })
+        quant.action_apply_inventory()
+
+        self.assertEqual(self.product1.value_svl, 10)  # 10 units with product standard_price = $1
+        self.assertEqual(lot.standard_price, 2)
+        self.assertEqual(lot2.standard_price, 0)
+
+        self.product1.lot_valuated = True
+
+        self.assertEqual(lot2.standard_price, 1)
+        self.assertEqual(lot.standard_price, 1)  # lot.standard_price was updated
+        self.assertEqual(lot.value_svl, 10)
+
+        quant.inventory_quantity = 0
+        quant.action_apply_inventory()
+
+        self.assertEqual(lot.value_svl, 0)
