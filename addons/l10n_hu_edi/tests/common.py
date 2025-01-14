@@ -105,6 +105,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
             'tax_exigibility': 'on_invoice',
             'price_include_override': 'tax_included',
             'include_base_amount': True,
+            'l10n_hu_tax_type': 'VAT',
             'invoice_repartition_line_ids': [
                 Command.create({'repartition_type': 'base'}),
                 Command.create({
@@ -167,6 +168,55 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
     def create_refund_simple(self, currency=None):
         """ Create a really basic bill refund - just one line. """
         return self._create_simple_move(move_type='in_refund', currency=currency)
+
+    def create_invoice_simple_discount(self):
+        """ Create a really basic invoice with a discount - just one line. """
+        return self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'currency_id': self.env.ref('base.HUF').id,
+            'partner_id': self.partner_company.id,
+            'invoice_date': self.today,
+            'delivery_date': self.today,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 10000.0,
+                    'quantity': 1,
+                    'discount': 20,
+                    'tax_ids': [Command.set(self.tax_vat.ids)],
+                })
+            ]
+        })
+
+    def create_invoice_tax_price_include(self):
+        """ Create an invoice with :
+            * one line using a tax with price included
+            * one line using a tax with price included and a discount
+        """
+        return self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'currency_id': self.env.ref('base.HUF').id,
+            'partner_id': self.partner_company.id,
+            'invoice_date': self.today,
+            'delivery_date': self.today,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 1000.00,
+                    'quantity': 1,
+                    'tax_ids': [Command.set(self.tax_price_include.ids)],
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 1000.00,
+                    'quantity': 1,
+                    'discount': 20,
+                    'tax_ids': [Command.set(self.tax_price_include.ids)],
+                }),
+            ]
+        })
 
     def create_advance_invoice(self):
         """ Create a sale order and an advance invoice. """
@@ -235,7 +285,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
                     'price_unit': 10.00,
                     'quantity': 3,
                     'discount': 20,
-                    'tax_ids': [Command.set((self.tax_vat | self.tax_price_include).ids)],
+                    'tax_ids': [Command.set(self.tax_vat.ids)],
                 }),
                 Command.create({
                     'product_id': self.product_b.id,
@@ -274,7 +324,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
                     'price_unit': 10.00,
                     'quantity': 3,
                     'discount': 20,
-                    'tax_ids': [Command.set((self.tax_vat | self.tax_price_include).ids)],
+                    'tax_ids': [Command.set(self.tax_vat.ids)],
                 }),
                 Command.create({
                     'product_id': self.product_b.id,
