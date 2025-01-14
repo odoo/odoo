@@ -18,9 +18,9 @@ class TestFECExport(AccountTestInvoicingCommon):
             'JournalCode|JournalLib|EcritureNum|EcritureDate|CompteNum|CompteLib|CompAuxNum|CompAuxLib|PieceRef|PieceDate|EcritureLib|Debit|Credit|EcritureLet|DateLet|ValidDate|Montantdevise|Idevise\r\n'
             'OUV|Balance initiale|OUVERTURE/2020|20200101|999999|Undistributed Profits/Losses|||-|20200101|/|0,00| 000000000003000,00|||20200101||\r\n'
             f'OUV|Balance initiale|OUVERTURE/2020|20200101|121000|Account Receivable|{self.partner_a.id}|partner_a|-|20200101|/| 000000000003000,00|0,00|||20200101||\r\n'
-            'INV|Customer Invoices|INV/2020/00001|20200101|400000|Product Sales|||-|20200101|test line|0,00| 000000000001000,00|||20200101|-000000000001000,00|USD\r\n'
-            'INV|Customer Invoices|INV/2020/00001|20200101|400000|Product Sales|||-|20200101|test line|0,00| 000000000002000,00|||20200101|-000000000002000,00|USD\r\n'
-            f'INV|Customer Invoices|INV/2020/00001|20200101|121000|Account Receivable|{self.partner_a.id}|partner_a|-|20200101|INV/2020/00001| 000000000003000,00|0,00|||20200101| 000000000003000,00|USD'
+            'INV|Sales|INV/2020/00001|20200101|400000|Product Sales|||-|20200101|test line|0,00| 000000000001000,00|||20200101|-000000000001000,00|USD\r\n'
+            'INV|Sales|INV/2020/00001|20200101|400000|Product Sales|||-|20200101|test line|0,00| 000000000002000,00|||20200101|-000000000002000,00|USD\r\n'
+            f'INV|Sales|INV/2020/00001|20200101|121000|Account Receivable|{self.partner_a.id}|partner_a|-|20200101|INV/2020/00001| 000000000003000,00|0,00|||20200101| 000000000003000,00|USD'
         )
 
     def test_fec_sub_companies(self):
@@ -57,14 +57,14 @@ class TestFECExport(AccountTestInvoicingCommon):
         self.assertEqual(
             result['file_content'].decode(),
             "JournalCode|JournalLib|EcritureNum|EcritureDate|CompteNum|CompteLib|CompAuxNum|CompAuxLib|PieceRef|PieceDate|EcritureLib|Debit|Credit|EcritureLet|DateLet|ValidDate|Montantdevise|Idevise\r\n"
-            "INV|Customer Invoices|INV/2021/00001|20210101|400000|Product Sales|||-|20210101|test line|0,00| 000000000000100,00|||20210101|-000000000000100,00|USD\r\n"
-            f"INV|Customer Invoices|INV/2021/00001|20210101|121000|Account Receivable|{self.partner_a.id}|partner_a|-|20210101|INV/2021/00001| 000000000000100,00|0,00|||20210101| 000000000000100,00|USD\r\n"
-            "INV|Customer Invoices|INV/2021/00002|20210101|400000|Product Sales|||-|20210101|test line|0,00| 000000000000200,00|||20210101|-000000000000200,00|USD\r\n"
-            f"INV|Customer Invoices|INV/2021/00002|20210101|121000|Account Receivable|{self.partner_a.id}|partner_a|-|20210101|INV/2021/00002| 000000000000200,00|0,00|||20210101| 000000000000200,00|USD\r\n"
-            "INV|Customer Invoices|INV/2021/00003|20210101|400000|Product Sales|||-|20210101|test line|0,00| 000000000000300,00|||20210101|-000000000000300,00|USD\r\n"
-            f"INV|Customer Invoices|INV/2021/00003|20210101|121000|Account Receivable|{self.partner_a.id}|partner_a|-|20210101|INV/2021/00003| 000000000000300,00|0,00|||20210101| 000000000000300,00|USD\r\n"
-            "INV|Customer Invoices|INV/2021/00004|20210101|400000|Product Sales|||-|20210101|test line|0,00| 000000000000400,00|||20210101|-000000000000400,00|USD\r\n"
-            f"INV|Customer Invoices|INV/2021/00004|20210101|121000|Account Receivable|{self.partner_a.id}|partner_a|-|20210101|INV/2021/00004| 000000000000400,00|0,00|||20210101| 000000000000400,00|USD"
+            "INV|Sales|INV/2021/00001|20210101|400000|Product Sales|||-|20210101|test line|0,00| 000000000000100,00|||20210101|-000000000000100,00|USD\r\n"
+            f"INV|Sales|INV/2021/00001|20210101|121000|Account Receivable|{self.partner_a.id}|partner_a|-|20210101|INV/2021/00001| 000000000000100,00|0,00|||20210101| 000000000000100,00|USD\r\n"
+            "INV|Sales|INV/2021/00002|20210101|400000|Product Sales|||-|20210101|test line|0,00| 000000000000200,00|||20210101|-000000000000200,00|USD\r\n"
+            f"INV|Sales|INV/2021/00002|20210101|121000|Account Receivable|{self.partner_a.id}|partner_a|-|20210101|INV/2021/00002| 000000000000200,00|0,00|||20210101| 000000000000200,00|USD\r\n"
+            "INV|Sales|INV/2021/00003|20210101|400000|Product Sales|||-|20210101|test line|0,00| 000000000000300,00|||20210101|-000000000000300,00|USD\r\n"
+            f"INV|Sales|INV/2021/00003|20210101|121000|Account Receivable|{self.partner_a.id}|partner_a|-|20210101|INV/2021/00003| 000000000000300,00|0,00|||20210101| 000000000000300,00|USD\r\n"
+            "INV|Sales|INV/2021/00004|20210101|400000|Product Sales|||-|20210101|test line|0,00| 000000000000400,00|||20210101|-000000000000400,00|USD\r\n"
+            f"INV|Sales|INV/2021/00004|20210101|121000|Account Receivable|{self.partner_a.id}|partner_a|-|20210101|INV/2021/00004| 000000000000400,00|0,00|||20210101| 000000000000400,00|USD"
         )
 
         # Select only parent company
@@ -81,6 +81,6 @@ class TestFECExport(AccountTestInvoicingCommon):
         self.assertEqual(
             result['file_content'].decode(),
             "JournalCode|JournalLib|EcritureNum|EcritureDate|CompteNum|CompteLib|CompAuxNum|CompAuxLib|PieceRef|PieceDate|EcritureLib|Debit|Credit|EcritureLet|DateLet|ValidDate|Montantdevise|Idevise\r\n"
-            "INV|Customer Invoices|INV/2021/00001|20210101|400000|Product Sales|||-|20210101|test line|0,00| 000000000000100,00|||20210101|-000000000000100,00|USD\r\n"
-            f"INV|Customer Invoices|INV/2021/00001|20210101|121000|Account Receivable|{self.partner_a.id}|partner_a|-|20210101|INV/2021/00001| 000000000000100,00|0,00|||20210101| 000000000000100,00|USD"
+            "INV|Sales|INV/2021/00001|20210101|400000|Product Sales|||-|20210101|test line|0,00| 000000000000100,00|||20210101|-000000000000100,00|USD\r\n"
+            f"INV|Sales|INV/2021/00001|20210101|121000|Account Receivable|{self.partner_a.id}|partner_a|-|20210101|INV/2021/00001| 000000000000100,00|0,00|||20210101| 000000000000100,00|USD"
         )
