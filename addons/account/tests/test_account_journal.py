@@ -275,7 +275,7 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
         # assert base test data
         company_name = 'company_1_data'
         journal_code = 'BILL'
-        journal_name = 'Vendor Bills'
+        journal_name = 'Purchases'
         journal_alias = journal.alias_id
         self.assertEqual(journal.code, journal_code)
         self.assertEqual(journal.company_id.name, company_name)
@@ -295,7 +295,7 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
         self.assertFalse(journal_alias.alias_force_thread_id, 'Journal alias should create new moves')
         self.assertEqual(journal_alias.alias_model_id, self.env['ir.model']._get('account.move'),
                          'Journal alias targets moves')
-        self.assertEqual(journal_alias.alias_name, f'vendor-bills-{company_name}')
+        self.assertEqual(journal_alias.alias_name, f'purchases-{company_name}')
         self.assertEqual(journal_alias.alias_parent_model_id, self.env['ir.model']._get('account.journal'),
                          'Journal alias owned by journal itself')
         self.assertEqual(journal_alias.alias_parent_thread_id, journal.id,
@@ -305,10 +305,10 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
         for alias_name, expected in [
             (False, False),
             ('', False),
-            (' ', f'vendor-bills-{company_name}'),  # error recuperation
-            ('.', f'vendor-bills-{company_name}'),  # error recuperation
-            ('😊', f'vendor-bills-{company_name}'),  # resets, unicode not supported
-            ('ぁ', f'vendor-bills-{company_name}'),  # resets, non ascii not supported
+            (' ', f'purchases-{company_name}'),  # error recuperation
+            ('.', f'purchases-{company_name}'),  # error recuperation
+            ('😊', f'purchases-{company_name}'),  # resets, unicode not supported
+            ('ぁ', f'purchases-{company_name}'),  # resets, non ascii not supported
             ('Youpie Boum', 'youpie-boum'),
         ]:
             with self.subTest(alias_name=alias_name):

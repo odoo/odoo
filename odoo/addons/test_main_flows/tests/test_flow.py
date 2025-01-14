@@ -62,7 +62,7 @@ class BaseTestUi(AccountTestMockOnlineSyncCommon):
         IrDefault.set('res.partner', 'property_account_position_id', False, company_id=self.env.company.id)
 
         self.expenses_journal = self.env['account.journal'].create({
-            'name': 'Vendor Bills - Test',
+            'name': 'Purchases - Test',
             'code': 'TEXJ',
             'type': 'purchase',
             'refund_sequence': True,
@@ -78,7 +78,7 @@ class BaseTestUi(AccountTestMockOnlineSyncCommon):
         self.bank_journal.inbound_payment_method_line_ids.payment_account_id = a_sale
 
         self.sales_journal = self.env['account.journal'].create({
-            'name': 'Customer Invoices - Test',
+            'name': 'Sales - Test',
             'code': 'TINV',
             'type': 'sale',
             'default_account_id': a_sale.id,

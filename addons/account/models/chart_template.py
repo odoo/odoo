@@ -1033,7 +1033,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_account_journal(self, template_code):
         return {
             "sale": {
-                'name': _('Customer Invoices'),
+                'name': _('Sales'),
                 'type': 'sale',
                 'code': _('INV'),
                 'show_on_dashboard': True,
@@ -1041,7 +1041,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'sequence': 5,
             },
             "purchase": {
-                'name': _('Vendor Bills'),
+                'name': _('Purchases'),
                 'type': 'purchase',
                 'code': _('BILL'),
                 'show_on_dashboard': True,
