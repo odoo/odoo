@@ -112,7 +112,7 @@ export class Homepage extends Component {
     <div t-if="!this.state.loading" class="w-100 d-flex flex-column align-items-center justify-content-center background">
         <div class="bg-white p-4 rounded overflow-auto position-relative w-100 main-container">
             <div class="position-absolute end-0 top-0 mt-3 me-4 d-flex gap-1">
-                <IconButton onClick.bind="toggleAdvanced" icon="this.store.advanced ? 'fa-cog' : 'fa-cogs'" />
+                <IconButton t-if="!store.base.is_access_point_up" onClick.bind="toggleAdvanced" icon="this.store.advanced ? 'fa-cog' : 'fa-cogs'" />
                 <IconButton onClick.bind="restartOdooService" icon="'fa-power-off'" />
             </div>
             <div class="d-flex mb-4 flex-column align-items-center justify-content-center">
@@ -126,7 +126,7 @@ export class Homepage extends Component {
                     Please contact your account manager to take advantage of your IoT Box's full potential.
                 </small>
             </div>
-            <div t-if="store.advanced and !store.base.is_access_point_up" t-att-class="'alert ' + (state.data.is_certificate_ok === true ? 'alert-info' : 'alert-warning')" role="alert">
+            <div t-if="store.advanced" t-att-class="'alert ' + (state.data.is_certificate_ok === true ? 'alert-info' : 'alert-warning')" role="alert">
                 <p class="m-0 fw-bold">HTTPS Certificate</p>
                 <small>
                     <t t-if="state.data.is_certificate_ok === true">Status: </t>
@@ -145,7 +145,7 @@ export class Homepage extends Component {
 					<ServerDialog t-if="this.store.isLinux" />
 				</t>
 			</SingleData>
-            <SingleData t-if="store.advanced and !store.base.is_access_point_up" name="'Version'" value="state.data.version" icon="'fa-microchip'">
+            <SingleData t-if="store.advanced" name="'Version'" value="state.data.version" icon="'fa-microchip'">
                 <t t-set-slot="button">
                     <UpdateDialog t-if="this.store.isLinux" />
                 </t>
@@ -176,7 +176,7 @@ export class Homepage extends Component {
 
             <hr class="mt-5" />
             <FooterButtons />
-            <div class="d-flex justify-content-center gap-2 mt-2">
+            <div class="d-flex justify-content-center gap-2 mt-2" t-if="!store.base.is_access_point_up">
                 <a href="https://www.odoo.com/fr_FR/help" target="_blank" class="link-primary">Help</a>
                 <a href="https://www.odoo.com/documentation/master/applications/general/iot.html" target="_blank" class="link-primary">Documentation</a>
             </div>

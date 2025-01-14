@@ -127,6 +127,8 @@ class Manager(Thread):
                 if iot_devices != previous_iot_devices:
                     previous_iot_devices = iot_devices.copy()
                     self.send_all_devices()
+                if platform.system() == 'Linux' and helpers.get_ip() != '10.11.12.1':
+                    wifi.reconnect(helpers.get_conf('wifi_ssid'), helpers.get_conf('wifi_password'))
                 time.sleep(3)
                 schedule and schedule.run_pending()
             except Exception:
