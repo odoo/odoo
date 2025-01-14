@@ -4,7 +4,7 @@ const { DateTime } = luxon;
  * @param {luxon.DateTime} datetime
  */
 export function computeDelay(datetime) {
-    if (!datetime) {
+    if (!datetime.isValid) {
         return 0;
     }
     const today = DateTime.now().startOf("day");
