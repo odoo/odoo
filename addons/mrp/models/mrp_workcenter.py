@@ -80,6 +80,7 @@ class MrpWorkcenter(models.Model):
     capacity_ids = fields.One2many('mrp.workcenter.capacity', 'workcenter_id', string='Product Capacities',
         help="Specific number of pieces that can be produced in parallel per product.", copy=True)
     kanban_dashboard_graph = fields.Text(compute='_compute_kanban_dashboard_graph')
+    resource_calendar_id = fields.Many2one(check_company=True)
 
     @api.constrains('alternative_workcenter_ids')
     def _check_alternative_workcenter(self):
