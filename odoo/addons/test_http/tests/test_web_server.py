@@ -10,7 +10,7 @@ from . import test_static
 WEB_SERVER_URL = getenv('WEB_SERVER_URL', 'http://localhost:80')
 
 
-@tagged('webserver', '-standard', '-at_install')
+@tagged('webserver', '-standard', '-at_install', 'post_install')
 class TestHttpStaticWebServer(test_static.TestHttpStatic, test_static.TestHttpStaticCache):
     allow_inherited_tests_method = True
     @classmethod
