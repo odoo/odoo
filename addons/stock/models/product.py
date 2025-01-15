@@ -227,20 +227,19 @@ class ProductProduct(models.Model):
                     0.0,
                 )
                 continue
-            rounding = product.uom_id.rounding
             res[product_id] = {}
             if dates_in_the_past:
                 qty_available = quants_res.get(origin_product_id, [0.0])[0] - moves_in_res_past.get(origin_product_id, 0.0) + moves_out_res_past.get(origin_product_id, 0.0)
             else:
                 qty_available = quants_res.get(origin_product_id, [0.0])[0]
             reserved_quantity = quants_res.get(origin_product_id, [False, 0.0])[1]
-            res[product_id]['qty_available'] = float_round(qty_available, precision_rounding=rounding)
-            res[product_id]['free_qty'] = float_round(qty_available - reserved_quantity, precision_rounding=rounding)
-            res[product_id]['incoming_qty'] = float_round(moves_in_res.get(origin_product_id, 0.0), precision_rounding=rounding)
-            res[product_id]['outgoing_qty'] = float_round(moves_out_res.get(origin_product_id, 0.0), precision_rounding=rounding)
-            res[product_id]['virtual_available'] = float_round(
+            res[product_id]['qty_available'] = product.uom_id.round(qty_available)
+            res[product_id]['free_qty'] = product.uom_id.round(qty_available - reserved_quantity)
+            res[product_id]['incoming_qty'] = product.uom_id.round(moves_in_res.get(origin_product_id, 0.0))
+            res[product_id]['outgoing_qty'] = product.uom_id.round(moves_out_res.get(origin_product_id, 0.0))
+            res[product_id]['virtual_available'] = product.uom_id.round(
                 qty_available + res[product_id]['incoming_qty'] - res[product_id]['outgoing_qty'],
-                precision_rounding=rounding)
+            )
 
         return res
 
@@ -1070,7 +1069,7 @@ class ProductTemplate(models.Model):
             ], limit=1)
             if existing_reserved_move_lines:
                 raise UserError(_("You can not change the inventory tracking of a product that is currently reserved on a stock move. If you need to change the inventory tracking, you should first unreserve the stock move."))
-        if 'is_storable' in vals and not vals['is_storable'] and any(p.is_storable and not float_is_zero(p.qty_available, precision_rounding=p.uom_id.rounding) for p in self):
+        if 'is_storable' in vals and not vals['is_storable'] and any(p.is_storable and not p.uom_id.is_zero(p.qty_available) for p in self):
             raise UserError(_("Available quantity should be set to zero before changing inventory tracking"))
         return super().write(vals)
 

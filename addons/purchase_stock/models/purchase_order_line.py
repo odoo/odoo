@@ -107,7 +107,7 @@ class PurchaseOrderLine(models.Model):
                 moves = line.move_ids.filtered(lambda s: s.state not in ('cancel', 'done') and s.product_id == line.product_id)
                 moves.write({'price_unit': line._get_stock_move_price_unit()})
         if 'product_qty' in values:
-            lines = lines.filtered(lambda l: float_compare(previous_product_qty[l.id], l.product_qty, precision_rounding=l.product_uom_id.rounding) != 0)
+            lines = lines.filtered(lambda l: l.product_uom_id.compare(previous_product_qty[l.id], l.product_qty) != 0)
             lines.with_context(previous_product_qty=previous_product_uom_qty)._create_or_update_picking()
         return result
 
@@ -242,10 +242,10 @@ class PurchaseOrderLine(models.Model):
             qty_to_attach = move_dests_initial_demand - qty
             qty_to_push = self.product_qty - move_dests_initial_demand
 
-        if float_compare(qty_to_attach, 0.0, precision_rounding=self.product_uom_id.rounding) > 0:
+        if self.product_uom_id.compare(qty_to_attach, 0.0) > 0:
             product_uom_qty, product_uom = self.product_uom_id._adjust_uom_quantities(qty_to_attach, self.product_id.uom_id)
             res.append(self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom))
-        if not float_is_zero(qty_to_push, precision_rounding=self.product_uom_id.rounding):
+        if not self.product_uom_id.is_zero(qty_to_push):
             product_uom_qty, product_uom = self.product_uom_id._adjust_uom_quantities(qty_to_push, self.product_id.uom_id)
             extra_move_vals = self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom)
             extra_move_vals['move_dest_ids'] = False  # don't attach

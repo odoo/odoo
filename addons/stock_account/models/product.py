@@ -334,7 +334,7 @@ will update the cost of every lot/serial number in stock."),
         fifo_vals = self._run_fifo(abs(quantity), company, lot=lot)
         vals['remaining_qty'] = fifo_vals.get('remaining_qty')
         # In case of AVCO, fix rounding issue of standard price when needed.
-        if self.product_tmpl_id.cost_method == 'average' and not float_is_zero(self.quantity_svl, precision_rounding=self.uom_id.rounding):
+        if self.product_tmpl_id.cost_method == 'average' and not self.uom_id.is_zero(self.quantity_svl):
             rounding_error = currency.round(
                 (cost * self.quantity_svl - self.value_svl) * abs(quantity / self.quantity_svl)
             )
@@ -375,7 +375,7 @@ will update the cost of every lot/serial number in stock."),
                 self.env['stock.lot'].search([('product_id', '=', product.id)]).standard_price = new_price
                 continue
             quantity_svl = product.sudo().quantity_svl
-            if float_compare(quantity_svl, 0.0, precision_rounding=product.uom_id.rounding) <= 0:
+            if product.uom_id.compare(quantity_svl, 0.0) <= 0:
                 continue
             value_svl = product.sudo().value_svl
             value = company_id.currency_id.round((rounded_new_price * quantity_svl) - value_svl)
@@ -439,8 +439,8 @@ will update the cost of every lot/serial number in stock."),
             qty_to_take_on_candidates -= qty_taken_on_candidate
             tmp_value += value_taken_on_candidate
 
-            if float_is_zero(qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding):
-                if float_is_zero(candidate.remaining_qty, precision_rounding=self.uom_id.rounding):
+            if self.uom_id.is_zero(qty_to_take_on_candidates):
+                if self.uom_id.is_zero(candidate.remaining_qty):
                     next_candidates = candidates.filtered(lambda svl: svl.remaining_qty > 0)
                     new_standard_price = next_candidates and next_candidates[0].unit_cost or new_standard_price
                 break
@@ -451,16 +451,16 @@ will update the cost of every lot/serial number in stock."),
             quantity_svl = sum(candidates.mapped('remaining_qty'))
             value_svl = sum(candidates.mapped('remaining_value'))
             product = self.sudo().with_company(company.id).with_context(disable_auto_svl=True)
-            if float_compare(quantity_svl, 0.0, precision_rounding=self.uom_id.rounding) > 0:
+            if self.uom_id.compare(quantity_svl, 0.0) > 0:
                 product.standard_price = value_svl / quantity_svl
-            elif candidates and not float_is_zero(qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding):
+            elif candidates and not self.uom_id.is_zero(qty_to_take_on_candidates):
                 product.standard_price = new_standard_price
 
         # If there's still quantity to value but we're out of candidates, we fall in the
         # negative stock use case. We chose to value the out move at the price of the
         # last out and a correction entry will be made once `_fifo_vacuum` is called.
         vals = {}
-        if float_is_zero(qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding):
+        if self.uom_id.is_zero(qty_to_take_on_candidates):
             vals = {
                 'value': -tmp_value,
                 'unit_cost': tmp_value / quantity,
@@ -551,7 +551,7 @@ will update the cost of every lot/serial number in stock."),
 
                     qty_to_take_on_candidates -= qty_taken_on_candidate
                     tmp_value += value_taken_on_candidate
-                    if float_is_zero(qty_to_take_on_candidates, precision_rounding=product.uom_id.rounding):
+                    if product.uom_id.is_zero(qty_to_take_on_candidates):
                         break
 
                 # Get the estimated value we will correct.
@@ -594,12 +594,11 @@ will update the cost of every lot/serial number in stock."),
             product = product.with_company(company.id)
             if not svls_to_vacuum_by_product[product.id]:
                 continue
-            if product.cost_method not in ['average', 'fifo'] or float_is_zero(product.quantity_svl,
-                                                                      precision_rounding=product.uom_id.rounding):
+            if product.cost_method not in ['average', 'fifo'] or product.uom_id.is_zero(product.quantity_svl):
                 continue
             if product.lot_valuated:
                 for lot in lot_to_update:
-                    if float_is_zero(lot.quantity_svl, precision_rounding=product.uom_id.rounding):
+                    if product.uom_id.is_zero(lot.quantity_svl):
                         continue
                     lot.sudo().with_context(disable_auto_svl=True).write(
                         {'standard_price': lot.value_svl / lot.quantity_svl}
@@ -740,11 +739,11 @@ will update the cost of every lot/serial number in stock."),
         empty_stock_svl_list = []
         for product in impacted_products:
             # FIXME sle: why not use products_orig_quantity_svl here?
-            if float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
+            if product.uom_id.is_zero(product.quantity_svl):
                 # FIXME: create an empty layer to track the change?
                 continue
             if product.lot_valuated:
-                if float_compare(product.quantity_svl, 0, precision_rounding=product.uom_id.rounding) > 0:
+                if product.uom_id.compare(product.quantity_svl, 0) > 0:
                     for lot in product.stock_valuation_layer_ids.filtered(lambda l: l.remaining_qty).lot_id:
                         svsl_vals = product._prepare_out_svl_vals(lot.quantity_svl, self.env.company, lot=lot)
                         svsl_vals['description'] = description + svsl_vals.pop('rounding_adjustment', '')
@@ -757,7 +756,7 @@ will update the cost of every lot/serial number in stock."),
                         svsl_vals['company_id'] = self.env.company.id
                         empty_stock_svl_list.append(svsl_vals)
             else:
-                if float_compare(product.quantity_svl, 0, precision_rounding=product.uom_id.rounding) > 0:
+                if product.uom_id.compare(product.quantity_svl, 0) > 0:
                     svsl_vals = product._prepare_out_svl_vals(product.quantity_svl, self.env.company)
                 else:
                     svsl_vals = product._prepare_in_svl_vals(abs(product.quantity_svl), product.value_svl / product.quantity_svl)
@@ -974,7 +973,7 @@ will update the cost of every lot/serial number in stock."),
             if not sml._should_exclude_for_valuation():
                 continue
             missing -= sml.product_uom_id._compute_quantity(sml.quantity, self.uom_id, rounding_method='HALF-UP')
-        if float_compare(missing, 0, precision_rounding=self.uom_id.rounding) > 0:
+        if self.uom_id.compare(missing, 0) > 0:
             valuation += self.standard_price * missing
 
         return valuation / qty_to_invoice

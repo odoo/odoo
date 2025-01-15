@@ -208,8 +208,7 @@ class StockScrap(models.Model):
 
     def action_validate(self):
         self.ensure_one()
-        if float_is_zero(self.scrap_qty,
-                         precision_rounding=self.product_uom_id.rounding):
+        if self.product_uom_id.is_zero(self.scrap_qty):
             raise UserError(_('You can only enter positive quantities.'))
         if self.check_available_qty():
             return self.do_scrap()
