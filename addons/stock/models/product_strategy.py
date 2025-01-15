@@ -171,7 +171,7 @@ class StockPutawayRule(models.Model):
                             return location
                         else:
                             checked_locations.add(location)
-                elif float_compare(qty_by_location[location.id], 0, precision_rounding=product.uom_id.rounding) > 0:
+                elif product.uom_id.compare(qty_by_location[location.id], 0) > 0:
                     if location._check_can_be_used(product, quantity, location_qty=qty_by_location[location.id]):
                         return location
                     else:

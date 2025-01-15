@@ -64,7 +64,7 @@ class StockPackage_Level(models.Model):
                                 qty = min(to_dispatch, ml.move_id.product_qty) if len(corresponding_mls) > 1 else to_dispatch
                                 to_dispatch = to_dispatch - qty
                                 ml_update_dict[ml] += qty
-                                if float_is_zero(to_dispatch, precision_rounding=ml.product_id.uom_id.rounding):
+                                if ml.product_id.uom_id.is_zero(to_dispatch):
                                     break
                         else:
                             corresponding_move = package_level.move_ids.filtered(lambda m: m.product_id == quant.product_id)[:1]

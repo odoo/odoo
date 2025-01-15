@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
-from odoo.tools.float_utils import float_is_zero, float_repr
+from odoo.tools.float_utils import float_repr
 
 
 class StockForecasted_Product_Product(models.AbstractModel):
@@ -28,7 +28,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
         currency = svl.currency_id or self.env.company.currency_id
         total_quantity = sum(svl.mapped('quantity'))
         # Because we can have negative quantities, `total_quantity` may be equal to zero even if the warehouse's `quantity` is positive.
-        if svl and not float_is_zero(total_quantity, precision_rounding=svl.product_id.uom_id.rounding):
+        if svl and not svl.product_id.uom_id.is_zero(total_quantity):
             value = sum(svl.mapped('value')) * (sum(quants.mapped('quantity')) / total_quantity)
         else:
             value = 0

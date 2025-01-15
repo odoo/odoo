@@ -288,7 +288,7 @@ class StockMove(models.Model):
             if not mo or not move.product_uom:
                 move.should_consume_qty = 0
                 continue
-            move.should_consume_qty = float_round((mo.qty_producing - mo.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)
+            move.should_consume_qty = move.product_uom.round((mo.qty_producing - mo.qty_produced) * move.unit_factor)
 
     @api.depends('byproduct_id')
     def _compute_show_info(self):
@@ -311,20 +311,19 @@ class StockMove(models.Model):
     def _onchange_product_uom_qty(self):
         if self.product_uom and self.raw_material_production_id and self.has_tracking == 'none':
             mo = self.raw_material_production_id
-            new_qty = float_round((mo.qty_producing - mo.qty_produced) * self.unit_factor, precision_rounding=self.product_uom.rounding)
+            new_qty = self.product_uom.round((mo.qty_producing - mo.qty_produced) * self.unit_factor)
             self.quantity = new_qty
 
     @api.onchange('quantity', 'product_uom', 'picked')
     def _onchange_quantity(self):
-        if self.raw_material_production_id and self.product_uom and \
-           float_compare(self.product_uom_qty, self.quantity, precision_rounding=self.product_uom.rounding) != 0:
+        if self.raw_material_production_id and self.product_uom and self.product_uom.compare(self.product_uom_qty, self.quantity) != 0:
             self.manual_consumption = True
             self.picked = True
 
     @api.constrains('quantity', 'raw_material_production_id')
     def _check_negative_quantity(self):
         for move in self:
-            if move.raw_material_production_id and float_compare(move.quantity, 0, precision_rounding=move.product_uom.rounding) < 0:
+            if move.raw_material_production_id and move.product_uom.compare(move.quantity, 0) < 0:
                 raise ValidationError(_("Please enter a positive quantity."))
 
     @api.model
@@ -423,11 +422,11 @@ class StockMove(models.Model):
         to_assign = self.env['stock.move']
         self._adjust_procure_method()
         for move in self:
-            if float_compare(move.product_uom_qty - old_qties.get(move.id, 0), 0, precision_rounding=move.product_uom.rounding) < 0\
+            if move.product_uom.compare(move.product_uom_qty - old_qties.get(move.id, 0), 0) < 0\
                     and move.procure_method == 'make_to_order'\
                     and all(m.state == 'done' for m in move.move_orig_ids):
                 continue
-            if float_compare(move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding) > 0:
+            if move.product_uom.compare(move.product_uom_qty, 0) > 0:
                 if move._should_bypass_reservation() \
                         or move.picking_type_id.reservation_method == 'at_confirm' \
                         or (move.reservation_date and move.reservation_date <= fields.Date.today()):
@@ -487,13 +486,13 @@ class StockMove(models.Model):
             if not bom:
                 moves_ids_to_return.add(move.id)
                 continue
-            if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
+            if move.product_uom.is_zero(move.product_uom_qty):
                 factor = move.product_uom._compute_quantity(move.quantity, bom.product_uom_id) / bom.product_qty
             else:
                 factor = move.product_uom._compute_quantity(move.product_uom_qty, bom.product_uom_id) / bom.product_qty
             _dummy, lines = bom.sudo().explode(move.product_id, factor, picking_type=bom.picking_type_id, never_attribute_values=move.never_product_template_attribute_value_ids)
             for bom_line, line_data in lines:
-                if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding) or self.env.context.get('is_scrap'):
+                if move.product_uom.is_zero(move.product_uom_qty) or self.env.context.get('is_scrap'):
                     phantom_moves_vals_list += move._generate_move_phantom(bom_line, 0, line_data['qty'])
                 else:
                     phantom_moves_vals_list += move._generate_move_phantom(bom_line, line_data['qty'], 0)
@@ -612,7 +611,7 @@ class StockMove(models.Model):
         if self.state in ('done', 'cancel'):
             return True
         # Do not update extra product quantities
-        if float_is_zero(self.product_uom_qty, precision_rounding=self.product_uom.rounding):
+        if self.product_uom.is_zero(self.product_uom_qty):
             return True
         return False
 
@@ -664,7 +663,7 @@ class StockMove(models.Model):
             # skip service since we never deliver them
             if bom_line.product_id.type == 'service':
                 continue
-            if float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.product_uom_id.rounding):
+            if bom_line.product_uom_id.is_zero(bom_line_data['qty']):
                 # As BoMs allow components with 0 qty, a.k.a. optionnal components, we simply skip those
                 # to avoid a division by zero.
                 continue
@@ -681,7 +680,7 @@ class StockMove(models.Model):
                 outgoing_qty = sum(bom_line_moves.filtered(filters['outgoing_moves']).mapped(get_qty))
                 qty_processed = incoming_qty - outgoing_qty
                 # We compute a ratio to know how many kits we can produce with this quantity of that specific component
-                qty_ratios.append(float_round(qty_processed / qty_per_kit, precision_rounding=bom_line.product_id.uom_id.rounding))
+                qty_ratios.append(bom_line.product_id.uom_id.round(qty_processed / qty_per_kit))
             else:
                 return 0.0
         if qty_ratios:
@@ -731,8 +730,8 @@ class StockMove(models.Model):
         res = super()._get_relevant_state_among_moves()
         if res == 'partially_available'\
                 and self.raw_material_production_id\
-                and all(move.should_consume_qty and float_compare(move.quantity, move.should_consume_qty, precision_rounding=move.product_uom.rounding) >= 0
-                        or (float_compare(move.quantity, move.product_uom_qty, precision_rounding=move.product_uom.rounding) >= 0 or (move.manual_consumption and move.picked))
+                and all(move.should_consume_qty and move.product_uom.compare(move.quantity, move.should_consume_qty) >= 0
+                        or (move.product_uom.compare(move.quantity, move.product_uom_qty) >= 0 or (move.manual_consumption and move.picked))
                         for move in self):
             res = 'assigned'
         return res

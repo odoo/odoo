@@ -83,7 +83,7 @@ class ProductTemplate(models.Model):
 
     def _compute_mrp_product_qty(self):
         for template in self:
-            template.mrp_product_qty = float_round(sum(template.mapped('product_variant_ids').mapped('mrp_product_qty')), precision_rounding=template.uom_id.rounding)
+            template.mrp_product_qty = template.uom_id.round(sum(template.mapped('product_variant_ids').mapped('mrp_product_qty')))
 
     def action_view_mos(self):
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_production_action")
@@ -247,7 +247,7 @@ class ProductProduct(models.Model):
             if not product.id:
                 product.mrp_product_qty = 0.0
                 continue
-            product.mrp_product_qty = float_round(mapped_data.get(product.id, 0), precision_rounding=product.uom_id.rounding)
+            product.mrp_product_qty = product.uom_id.round(mapped_data.get(product.id, 0))
 
     def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
         """ When the product is a kit, this override computes the fields :
@@ -296,7 +296,7 @@ class ProductProduct(models.Model):
                 component = component.with_context(mrp_compute_quantities=qties).with_prefetch(prefetch_component_ids)
                 qty_per_kit = 0
                 for bom_line, bom_line_data in bom_sub_lines:
-                    if not component.is_storable or float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.product_uom_id.rounding):
+                    if not component.is_storable or bom_line.product_uom_id.is_zero(bom_line_data['qty']):
                         # As BoMs allow components with 0 qty, a.k.a. optionnal components, we simply skip those
                         # to avoid a division by zero. The same logic is applied to non-storable products as those
                         # products have 0 qty available.
@@ -305,30 +305,29 @@ class ProductProduct(models.Model):
                     qty_per_kit += bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, round=False, raise_if_failure=False)
                 if not qty_per_kit:
                     continue
-                rounding = component.uom_id.rounding
                 component_res = (
                     qties.get(component.id)
                     if component.id in qties
                     else {
-                        "virtual_available": float_round(component.virtual_available, precision_rounding=rounding),
-                        "qty_available": float_round(component.qty_available, precision_rounding=rounding),
-                        "incoming_qty": float_round(component.incoming_qty, precision_rounding=rounding),
-                        "outgoing_qty": float_round(component.outgoing_qty, precision_rounding=rounding),
-                        "free_qty": float_round(component.free_qty, precision_rounding=rounding),
+                        "virtual_available": component.uom_id.round(component.virtual_available),
+                        "qty_available": component.uom_id.round(component.qty_available),
+                        "incoming_qty": component.uom_id.round(component.incoming_qty),
+                        "outgoing_qty": component.uom_id.round(component.outgoing_qty),
+                        "free_qty": component.uom_id.round(component.free_qty),
                     }
                 )
-                ratios_virtual_available.append(float_round(component_res["virtual_available"] / qty_per_kit, precision_rounding=rounding))
-                ratios_qty_available.append(float_round(component_res["qty_available"] / qty_per_kit, precision_rounding=rounding))
-                ratios_incoming_qty.append(float_round(component_res["incoming_qty"] / qty_per_kit, precision_rounding=rounding))
-                ratios_outgoing_qty.append(float_round(component_res["outgoing_qty"] / qty_per_kit, precision_rounding=rounding))
-                ratios_free_qty.append(float_round(component_res["free_qty"] / qty_per_kit, precision_rounding=rounding))
+                ratios_virtual_available.append(component.uom_id.round(component_res["virtual_available"] / qty_per_kit))
+                ratios_qty_available.append(component.uom_id.round(component_res["qty_available"] / qty_per_kit))
+                ratios_incoming_qty.append(component.uom_id.round(component_res["incoming_qty"] / qty_per_kit))
+                ratios_outgoing_qty.append(component.uom_id.round(component_res["outgoing_qty"] / qty_per_kit))
+                ratios_free_qty.append(component.uom_id.round(component_res["free_qty"] / qty_per_kit))
             if bom_sub_lines and ratios_virtual_available:  # Guard against all cnsumable bom: at least one ratio should be present.
                 res[product.id] = {
-                    'virtual_available': float_round(min(ratios_virtual_available) * bom_kits[product].product_qty, precision_rounding=rounding) // 1,
-                    'qty_available': float_round(min(ratios_qty_available) * bom_kits[product].product_qty, precision_rounding=rounding) // 1,
-                    'incoming_qty': float_round(min(ratios_incoming_qty) * bom_kits[product].product_qty, precision_rounding=rounding) // 1,
-                    'outgoing_qty': float_round(min(ratios_outgoing_qty) * bom_kits[product].product_qty, precision_rounding=rounding) // 1,
-                    'free_qty': float_round(min(ratios_free_qty) * bom_kits[product].product_qty, precision_rounding=rounding) // 1,
+                    'virtual_available': component.uom_id.round(min(ratios_virtual_available) * bom_kits[product].product_qty) // 1,
+                    'qty_available': component.uom_id.round(min(ratios_qty_available) * bom_kits[product].product_qty) // 1,
+                    'incoming_qty': component.uom_id.round(min(ratios_incoming_qty) * bom_kits[product].product_qty) // 1,
+                    'outgoing_qty': component.uom_id.round(min(ratios_outgoing_qty) * bom_kits[product].product_qty) // 1,
+                    'free_qty': component.uom_id.round(min(ratios_free_qty) * bom_kits[product].product_qty) // 1,
                 }
             else:
                 res[product.id] = {

@@ -1520,7 +1520,7 @@ class PosOrderLine(models.Model):
             ('location_id', 'in', src_loc.child_internal_location_ids.ids),
         ])
         available_lots = src_loc_quants.\
-            filtered(lambda q: float_compare(q.quantity, 0, precision_rounding=q.product_id.uom_id.rounding) > 0).\
+            filtered(lambda q: q.product_id.uom_id.compare(q.quantity, 0) > 0).\
             mapped('lot_id')
 
         return available_lots.read(['id', 'name', 'product_qty'])

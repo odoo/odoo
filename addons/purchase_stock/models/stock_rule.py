@@ -108,7 +108,7 @@ class StockRule(models.Model):
             po = self.env['purchase.order'].sudo().search([dom for dom in domain], limit=1)
             company_id = rules[0].company_id or procurements[0].company_id
             if not po:
-                positive_values = [p.values for p in procurements if float_compare(p.product_qty, 0.0, precision_rounding=p.product_uom.rounding) >= 0]
+                positive_values = [p.values for p in procurements if p.product_uom.compare(p.product_qty, 0.0) >= 0]
                 if positive_values:
                     # We need a rule to generate the PO. However the rule generated
                     # the same domain for PO and the _prepare_purchase_order method
@@ -148,7 +148,7 @@ class StockRule(models.Model):
                         procurement.values, po_line)
                     po_line.sudo().write(vals)
                 else:
-                    if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) <= 0:
+                    if procurement.product_uom.compare(procurement.product_qty, 0) <= 0:
                         # If procurement contains negative quantity, don't create a new line that would contain negative qty
                         continue
                     # If it does not exist a PO line for current procurement.

@@ -5,7 +5,6 @@ from collections import defaultdict
 
 from odoo import _, Command, fields, models
 from odoo.osv import expression
-from odoo.tools.float_utils import float_is_zero
 from odoo.tools.misc import OrderedSet
 
 
@@ -61,7 +60,7 @@ class StockMoveLine(models.Model):
             if lines == picking.move_line_ids and lines.move_id == picking.move_ids:
                 add_all_moves = True
                 for move, qty in qty_by_move.items():
-                    if float_is_zero(qty, precision_rounding=move.product_uom.rounding):
+                    if move.product_uom.is_zero(qty):
                         add_all_moves = False
                         break
                 if add_all_moves:
@@ -97,7 +96,7 @@ class StockMoveLine(models.Model):
     def _is_auto_waveable(self):
         self.ensure_one()
         if not self.picking_id \
-           or (self.picking_id.state != 'assigned' or float_is_zero(self.quantity, precision_rounding=self.product_uom_id.rounding)) and not self.env.context.get('skip_auto_waveable')  \
+           or (self.picking_id.state != 'assigned' or self.product_uom_id.is_zero(self.quantity)) and not self.env.context.get('skip_auto_waveable')  \
            or self.batch_id.is_wave \
            or not self.picking_type_id._is_auto_wave_grouped() \
            or (self.picking_type_id.wave_group_by_category and self.product_id.categ_id not in self.picking_type_id.wave_category_ids):  # noqa: SIM103

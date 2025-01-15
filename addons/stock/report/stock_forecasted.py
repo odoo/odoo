@@ -147,7 +147,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
             },
             'replenishment_filled': replenishment_filled,
             'is_late': is_late,
-            'quantity': float_round(quantity, precision_rounding=product.uom_id.rounding),
+            'quantity': product.uom_id.round(quantity),
             'move_out': move_out,
             'move_in': move_in,
             'reservation': self._get_reservation_data(reserved_move) if reserved_move else False,
@@ -209,7 +209,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 if move.location_id.id in wh_stock_sub_location_ids:
                     currents[out.product_id.id, wh_stock_location.id] -= reserved
                 currents[(out.product_id.id, move.location_id.id)] -= reserved
-                if float_compare(reserved_out, out.product_qty, precision_rounding=move.product_id.uom_id.rounding) >= 0:
+                if move.product_id.uom_id.compare(reserved_out, out.product_qty) >= 0:
                     break
 
             return {
@@ -230,7 +230,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 demand = max(move.product_qty - reserved, 0)
                 # to make sure we don't demand more than the out (useful when same pick/pack goes to multiple out)
                 demand = min(demand, demand_out)
-                if float_is_zero(demand, precision_rounding=move.product_id.uom_id.rounding):
+                if move.product_id.uom_id.is_zero(demand):
                     continue
                 # check available qty for move if chained, move available is what was move by orig moves
                 if move.move_orig_ids:

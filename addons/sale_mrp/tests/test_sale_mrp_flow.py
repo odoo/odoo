@@ -1038,7 +1038,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(kit_parent_wh1.virtual_available, 1)
 
         # Check there arn't enough quantities available for the sale order
-        self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.product_uom_id.rounding) == -1)
+        self.assertTrue(line.product_uom_id.compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0) == -1)
 
         # We receive enoug of each component in Warehouse 2 to make 3 kit_parent
         qty_to_process = {
@@ -1061,7 +1061,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(kit_parent_wh1.virtual_available, 1)
 
         # Check there arn't enough quantities available for the sale order
-        self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.product_uom_id.rounding) == -1)
+        self.assertTrue(line.product_uom_id.compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0) == -1)
 
         # We receive enough of each component in Warehouse 2 to make 7 kit_parent
         qty_to_process = {
@@ -1273,7 +1273,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(virtual_available_wh_order, 1)
 
         # Check there arn't enough quantities available for the sale order
-        self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.product_uom_id.rounding) == -1)
+        self.assertTrue(line.product_uom_id.compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0) == -1)
 
         # We receive enough of each component in Warehouse 1 to make 3 kit_uom_in_kit.
         # Moves are created instead of only updating the quant quantities in order to trigger every compute fields.
@@ -1286,7 +1286,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self._create_move_quantities(qty_to_process, components, warehouse_1)
 
         # Check there arn't enough quantities available for the sale order
-        self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.product_uom_id.rounding) == -1)
+        self.assertTrue(line.product_uom_id.compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0) == -1)
         kit_uom_in_kit.with_context(warehouse_id=warehouse_1.id)._compute_quantities()
         virtual_available_wh_order = kit_uom_in_kit.virtual_available
         self.assertEqual(virtual_available_wh_order, 3)
