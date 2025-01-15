@@ -1184,6 +1184,7 @@ QUnit.module("Components", ({ beforeEach }) => {
 
         for (const [stepIndex, step] of scenarioSteps.entries()) {
             triggerHotkey(step.hotkey);
+            await delay();
             await nextTick();
             if (step.highlighted !== undefined) {
                 const activeElements = [...target.querySelectorAll(".focus")];
