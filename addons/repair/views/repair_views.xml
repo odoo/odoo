@@ -165,9 +165,6 @@
                                 <field name="date_deadline" optional="hide"/>
                                 <field name="product_uom_qty" string="Demand" readonly="state in ('done', 'cancel')"/>
                                 <field name="forecast_expected_date" column_invisible="True"/>
-                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" column_invisible="parent.state != 'draft'" invisible="forecast_availability &lt; 0 and repair_line_type == 'add'"/>
-                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart text-danger" column_invisible="parent.state != 'draft'" invisible="forecast_availability &gt;= 0 or repair_line_type != 'add'"/>
-                                <field name="forecast_availability" string="Forecasted" column_invisible="parent.state in ('draft', 'done')" widget="forecast_widget"/>
                                 <field name="product_qty" readonly="1" column_invisible="True"/>
                                 <field name="quantity" string="Done" readonly="not product_id"/>
                                 <field name="product_uom" readonly="state != 'draft' and not additional" options="{'no_open': True, 'no_create': True}" widget="many2one_uom" groups="uom.group_uom"/>
@@ -182,6 +179,8 @@
                                         invisible="not show_details_visible" options='{"warn": true}'
                                         context="{'default_location_dest_id': location_dest_id}"
                                     />
+                                <field name="forecast_availability" string=""
+                                        column_invisible="parent.state == 'done'" widget="forecast_widget"/>
                             </list>
                         </field>
                         <div class="clearfix"/>

@@ -434,7 +434,7 @@ class MrpProduction(models.Model):
     def _compute_date_deadline(self):
         for production in self:
             if not production.date_deadline:
-                production.date_deadline = min(production.move_finished_ids.filtered('date_deadline').mapped('date_deadline'), default=production.date_deadline or False)
+                production.date_deadline = min(production.move_finished_ids.filtered('date_deadline').mapped('date_deadline'), default=False)
 
     @api.depends('workorder_ids.duration_expected')
     def _compute_duration_expected(self):
