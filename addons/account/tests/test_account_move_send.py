@@ -511,8 +511,13 @@ class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
                 {k: v for k, v in expected_values.items() if not check_id_needed and k != 'id'},
             )
 
-    def create_send_and_print(self, invoices, **kwargs):
+    def create_send_and_print(self, invoices, default=False, **kwargs):
         wizard_model = 'account.move.send.wizard' if len(invoices) == 1 else 'account.move.send.batch.wizard'
+        if wizard_model == 'account.move.send.wizard' and not default and not kwargs.get('sending_methods'):
+            # In most cases, for testing purpose you only want to try to generate the document, no need to send it.
+            # Therefore by default we deactivate sending methods, unless default parameter is set to True,
+            # or they are explicitly given.
+            kwargs['sending_methods'] = []
         return self.env[wizard_model]\
             .with_context(active_model='account.move', active_ids=invoices.ids)\
             .create(kwargs)
@@ -604,17 +609,14 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         self.partner_a.invoice_sending_method = 'email'
         self.partner_a.email = None
-        wizard = self.create_send_and_print(invoice)
-        self.assertFalse(wizard.sending_methods)  # preferred method is overriden since it makes no sense
-        wizard.sending_methods = ['email']  # user selects email anyway
+        wizard = self.create_send_and_print(invoice, sending_methods=['email'])
         self.assertTrue('account_missing_email' in wizard.alerts and wizard.alerts['account_missing_email']['level'] == 'danger')
         with self.assertRaisesRegex(UserError, "email"):
             wizard.action_send_and_print()
 
         self.partner_a.email = "turlututu@tsointsoin"
-        wizard = self.create_send_and_print(invoice)
+        wizard = self.create_send_and_print(invoice, sending_methods=['email'])
         self.assertFalse(wizard.alerts)
-        self.assertTrue('email' in wizard.sending_methods)
         wizard.action_send_and_print()
         self.assertTrue(self._get_mail_message(invoice))
 
@@ -816,7 +818,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         ])
 
         # Resend.
-        wizard = self.create_send_and_print(invoice)
+        wizard = self.create_send_and_print(invoice, sending_methods=['email'])
         pdf_report_values['id'] = invoice.invoice_pdf_report_id.id
         self._assert_mail_attachments_widget(wizard, [
             pdf_report_values,
@@ -886,7 +888,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
     def test_proforma_pdf(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
-        wizard = self.create_send_and_print(invoice)
+        wizard = self.create_send_and_print(invoice, sending_methods=['email'])
 
         def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
             invoice_data['error'] = 'test_proforma_pdf'
@@ -907,7 +909,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
     def test_error_but_continue(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
-        wizard = self.create_send_and_print(invoice)
+        wizard = self.create_send_and_print(invoice, sending_methods=['email'])
 
         def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
             invoice_data['error'] = 'prout'
@@ -932,7 +934,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
 
         custom_subject = "turlututu"
-        wizard = self.create_send_and_print(invoice, template_id=None, subject=custom_subject)
+        wizard = self.create_send_and_print(invoice, sending_methods=['email'], template_id=None, subject=custom_subject)
 
         wizard.action_send_and_print(allow_fallback_pdf=True)
         message = self._get_mail_message(invoice)

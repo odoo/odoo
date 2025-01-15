@@ -94,7 +94,10 @@ def _mock_call_peppol_proxy(func, self, *args, **kwargs):
 def _mock_get_peppol_verification_state(func, self, *args, **kwargs):
     # in demo, we consider all partner valid if they encoded required fields
     (endpoint, eas, format) = args
-    return 'valid' if endpoint and eas and format else False
+    if endpoint and eas:
+        return 'valid' if format in self._get_peppol_formats() else 'not_valid_format'
+    else:
+        return 'not_valid'
 
 def _mock_check_peppol_participant_exists(func, self, *args, **kwargs):
     # in demo, no participant already exists
