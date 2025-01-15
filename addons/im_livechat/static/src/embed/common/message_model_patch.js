@@ -20,8 +20,7 @@ const messagePatch = {
     canReplyTo(thread) {
         return (
             super.canReplyTo(thread) &&
-            (thread?.channel_type !== "livechat" ||
-                this.store.env.services["im_livechat.chatbot"].inputEnabled)
+            (thread?.channel_type !== "livechat" || !thread.composerDisabled)
         );
     },
 };
