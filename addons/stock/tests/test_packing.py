@@ -1917,3 +1917,51 @@ class TestPackagePropagation(TestPackingCommon):
         self.assertEqual(len(pack_lines), 2, 'Should have only 2 stock move line')
         self.assertFalse(pack_lines[0].result_package_id, 'Should not have the reusable package')
         self.assertEqual(pack_lines[1].result_package_id, disposable_package, 'Should have only the disposable package')
+
+    def test_conditional_package_propagation(self):
+        """If a picking completely moves the products of a package, you want to pass it as result_package_id.
+        On the other hand, if the quantity of the same pack is split between several pickings, you want to leave the result_package_id empty.
+        """
+        # Storable product : 30 qty in a package.
+        package = self.env['stock.quant.package'].create({'name': 'packtest'})
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 30.0, package_id=package)
+
+        # 1 delivery picking, 30 product, action_assign => On move line, package_id == result_package_id
+        full_delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [Command.create({
+                'name': 'move full',
+                'product_id': self.productA.id,
+                'product_uom_qty': 30.0,
+                'product_uom': self.productA.uom_id.id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+            })]
+        })
+        full_delivery.action_confirm()
+        full_delivery.action_assign()
+        self.assertEqual(full_delivery.move_line_ids.package_id, package, "The package should be used as source.")
+        self.assertEqual(full_delivery.move_line_ids.result_package_id, package, "If all the products in a package are to be moved, we must move the entire package.")
+        full_delivery.action_cancel()  # Cancel delivery to unreserve the package/quantity.
+
+        # Create 2 delivery picking : 10 & 20 of product each.
+        partial_deliveries = self.env['stock.picking'].create([{
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [Command.create({
+                'name': 'move partial',
+                'product_id': self.productA.id,
+                'product_uom_qty': qty,
+                'product_uom': self.productA.uom_id.id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+            })]
+        } for qty in [10, 20]])
+        partial_deliveries.action_confirm()
+        partial_deliveries.action_assign()
+        # action_assign => On move lines, result_package_id is not set.
+        self.assertEqual(partial_deliveries.move_line_ids.package_id, package, "The package should be used as source.")
+        self.assertFalse(partial_deliveries.move_line_ids.result_package_id, "If the contents of a single pack are reserved by multiple picks, the entire pack can't reproduce on each pick.")
