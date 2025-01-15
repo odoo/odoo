@@ -81,19 +81,6 @@ class ResConfigSettings(models.TransientModel):
             }
         return True
 
-    def button_peppol_migrate_away(self):
-        """Migrates AWAY from Odoo's SMP.
-        If the user is a receiver, they need to request a migration key, generated on the IAP server.
-        The migration key is then displayed in Peppol settings.
-        Currently, reopening after migrating away is not supported.
-        """
-        self.ensure_one()
-        if self.account_peppol_proxy_state != 'receiver':
-            raise UserError(_("Can't migrate unless registered to receive documents."))
-
-        self.account_peppol_edi_user._peppol_migrate_registration()
-        return True
-
     def button_peppol_unregister(self):
         """Unregister the user from Peppol network."""
         self.ensure_one()
