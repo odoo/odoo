@@ -590,7 +590,22 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             with self.subTest(fname=fname, expected_fvalue=expected_fvalue):
                 if fname == 'headers':
                     fvalue = literal_eval(mail[fname])
-                    self.assertDictEqual(fvalue, expected_fvalue)
+                    # specific use case for X-Msg-To-Add: it is a comma-separated list of
+                    # email addresses, order is not important
+                    if 'X-Msg-To-Add' in fvalue and 'X-Msg-To-Add' in expected_fvalue:
+                        msg_to_add = fvalue['X-Msg-To-Add']
+                        exp_msg_to_add = expected_fvalue['X-Msg-To-Add']
+                        self.assertEqual(
+                            sorted(email_split_and_format_normalize(msg_to_add)),
+                            sorted(email_split_and_format_normalize(exp_msg_to_add))
+                        )
+                        fvalue = dict(fvalue)
+                        fvalue.pop('X-Msg-To-Add')
+                        expected_fvalue = dict(expected_fvalue)
+                        expected_fvalue.pop('X-Msg-To-Add')
+                        self.assertDictEqual(fvalue, expected_fvalue)
+                    else:
+                        self.assertDictEqual(fvalue, expected_fvalue)
                 elif fname == 'attachments_info':
                     for attachment_info in expected_fvalue:
                         attachment = next((attach for attach in mail.attachment_ids if attach.name == attachment_info['name']), False)
@@ -889,7 +904,18 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 )
 
         if 'headers' in expected:
+            # specific use case for X-Msg-To-Add: it is a comma-separated list of
+            # email addresses, order is not important
+            if 'X-Msg-To-Add' in sent_mail['headers'] and 'X-Msg-To-Add' in expected['headers']:
+                msg_to_add = sent_mail['headers']['X-Msg-To-Add']
+                exp_msg_to_add = expected['headers']['X-Msg-To-Add']
+                self.assertEqual(
+                    sorted(email_split_and_format_normalize(msg_to_add)),
+                    sorted(email_split_and_format_normalize(exp_msg_to_add))
+                )
             for key, value in expected['headers'].items():
+                if key == 'X-Msg-To-Add':
+                    continue
                 self.assertTrue(key in sent_mail['headers'], f'Missing key {key}')
                 found = sent_mail['headers'][key]
                 self.assertEqual(found, value,
@@ -901,7 +927,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
     # ------------------------------------------------------------
 
     def assertNoPushNotification(self):
-        """ Asserts a single push notification """
+        """ Asserts no push notification """
         self.push_to_end_point_mocked.assert_not_called()
         self.assertEqual(self.env['mail.push'].search_count([]), 0)
 
@@ -909,7 +935,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                                endpoint=None, keys=None,
                                title=None, title_content=None, body=None, body_content=None,
                                options=None):
-        """ Asserts a single push notification """
+        """ Asserts a single push notification (not really batch enabled currently) """
         self.push_to_end_point_mocked.assert_called_once()
         self.assertEqual(self.env['mail.push'].search_count([]), mail_push_count)
         if endpoint:
@@ -1224,6 +1250,7 @@ class MailCase(MockEmail):
               {
                 'check_send': whether outgoing stuff has to be checked;
                 'email': NOT SUPPORTED YET,
+                'email_to_recipients': propagated to 'assertMailMail';
                 'failure_reason': failure_reason on mail.notification;
                 'failure_type': 'failure_type' on mail.notification;
                 'is_read': 'is_read' on mail.notification;
@@ -1258,6 +1285,7 @@ class MailCase(MockEmail):
             # sanity check
             extra_keys = set(message_info.keys()) - {
                 'content',
+                'email_to_recipients',
                 'email_values',
                 'mail_mail_values',
                 'message_type',
