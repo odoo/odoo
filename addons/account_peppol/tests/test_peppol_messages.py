@@ -220,13 +220,10 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
     def test_send_peppol_alerts_not_valid_format_partner(self, mocked_check):
         move = self.create_move(self.valid_partner)
         move.action_post()
-        wizard = self.create_send_and_print(move)
+        wizard = self.create_send_and_print(move, sending_methods=['peppol'])  # partner can't receive BIS3 so Peppol not checked by default, force it
 
         self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
-        self.assertTrue('peppol' in wizard.sending_methods)  # peppol is checked
         self.assertEqual(self.valid_partner.peppol_verification_state, 'not_valid_format')  # on peppol but can't receive bis3
-
-        self.assertTrue('peppol' in wizard.sending_methods)
         self.assertTrue('account_peppol_warning_partner' in wizard.alerts)
         self.assertTrue('account_peppol_demo_test_mode' in wizard.alerts)
 
@@ -410,7 +407,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         # the cron is ran asynchronously and should be agnostic from the current self.env.company
         self.env.ref('account.ir_cron_account_move_send').with_company(company_2).method_direct_trigger()
         # only move 1 & 2 should be processed, move_3 is related to an invalid partner (with regard to company_2) thus should fail to send
-        self.assertEqual((move_1 + move_2 + move_3).mapped('peppol_move_state'), ['processing', 'processing', 'to_send'])
+        self.assertEqual((move_1 + move_2 + move_3).mapped('peppol_move_state'), ['processing', 'processing', 'skipped'])
 
     def test_available_peppol_sending_methods(self):
         company_us = self.setup_other_company()['company']  # not a valid Peppol country

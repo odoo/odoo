@@ -170,6 +170,10 @@ class AccountEdiProxyClientUser(models.Model):
             except AccountEdiProxyError as e:
                 raise UserError(e.message)
             if 'error' in response:
+                if response['error'] == 'A user already exists with this identification.':
+                    # Note: Peppol IAP errors weren't made properly with error code that are then translated on
+                    # Odoo side. We are for now forced to check the error message.
+                    raise UserError(_('A user already exists with theses credentials on our server. Please check your information.'))
                 raise UserError(response['error'])
 
         return self.create({
