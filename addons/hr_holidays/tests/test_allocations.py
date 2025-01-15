@@ -2,6 +2,7 @@ from datetime import date
 
 from freezegun import freeze_time
 
+from odoo import Command
 from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged, users
 
@@ -63,7 +64,7 @@ class TestAllocations(TestHrHolidaysCommon):
             'name': 'Bank Holiday',
             'holiday_type': 'employee',
             'employee_ids': [(4, self.employee.id), (4, self.employee_emp.id)],
-            'employee_id': self.employee.id,
+            'multi_employee': True,
             'holiday_status_id': self.leave_type.id,
             'number_of_days': 2,
             'allocation_type': 'regular',
@@ -145,6 +146,7 @@ class TestAllocations(TestHrHolidaysCommon):
         employee_allocation = self.env['hr.leave.allocation'].create({
             'holiday_type': 'employee',
             'employee_id': self.employee.id,
+            'employee_ids': [Command.link(self.employee.id)],
             'holiday_status_id': self.leave_type.id,
             'allocation_type': 'regular',
         })
@@ -164,6 +166,7 @@ class TestAllocations(TestHrHolidaysCommon):
         employee_allocation = self.env['hr.leave.allocation'].create({
             'holiday_type': 'employee',
             'employee_id': self.employee.id,
+            'employee_ids': [Command.link(self.employee.id)],
             'holiday_status_id': self.leave_type.id,
             'allocation_type': 'regular',
             'type_request_unit': 'half_day',
@@ -222,6 +225,7 @@ class TestAllocations(TestHrHolidaysCommon):
             'holiday_status_id': self.leave_type_paid.id,
             'number_of_days': 20,
             'employee_id': self.employee.id,
+            'employee_ids': [Command.link(self.employee.id)],
             'date_from': date(2024, 1, 1),
         })
         allocation.action_validate()
@@ -247,6 +251,7 @@ class TestAllocations(TestHrHolidaysCommon):
             'holiday_status_id': self.leave_type_paid.id,
             'number_of_days': 5,
             'employee_id': self.employee.id,
+            'employee_ids': [Command.link(self.employee.id)],
             'date_from': date(2024, 1, 1),
             'date_to': date(2024, 1, 30),
         })
