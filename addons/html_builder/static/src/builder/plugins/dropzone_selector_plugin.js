@@ -44,10 +44,6 @@ export class DropZoneSelectorPlugin extends Plugin {
                 dropNear: ".s_timeline_list_row",
             },
             {
-                selector: ".s_timeline_row",
-                dropNear: ".s_timeline_row",
-            },
-            {
                 selector: ".s_timeline_list_row",
                 exclude: ".s_website_form_dnone",
                 dropNear: ".s_website_form_field",
