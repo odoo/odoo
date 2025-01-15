@@ -526,7 +526,10 @@ GROUP BY fol.id%s%s""" % (
         for follower in self:
             data = follower._read_format(
                 [field for field in fields if field not in ["partner", "thread"]], load=False
-            )[0]
+            )
+            if not data:
+                continue
+            data = data[0]
             if "partner" in fields:
                 data["partner"] = Store.one(follower.partner_id, fields=fields["partner"])
             if "thread" in fields:
