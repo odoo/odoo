@@ -504,6 +504,15 @@ export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
         this._model = definition.model;
         /** @type {SortedColumn} */
         this._sortedColumn = definition.sortedColumn;
+
+        // Ensure that the sorted column is a measure
+        // and if not, drop it.
+        // This situation can happen because of a bug in a previous version
+        const measureNames = definition.measures.map((field) => field.fieldName);
+        if (definition.sortedColumn && !measureNames.includes(definition.sortedColumn.measure)) {
+            this._sortedColumn = undefined;
+        }
+
         for (const dimension of this.columns.concat(this.rows)) {
             if (
                 (dimension.type === "date" || dimension.type === "datetime") &&
