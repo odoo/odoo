@@ -4,6 +4,6 @@ import { patch } from "@web/core/utils/patch";
 patch(PosPayment.prototype, {
     updateRefundPaymentLine(refundedPaymentLine) {
         super.updateRefundPaymentLine(refundedPaymentLine);
-        this.vivaWalletParentSessionId = refundedPaymentLine?.viva_wallet_session_id;
+        this.vivaComParentSessionId = refundedPaymentLine?.viva_com_session_id;
     },
 });
