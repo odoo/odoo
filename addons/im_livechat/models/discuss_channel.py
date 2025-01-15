@@ -70,7 +70,7 @@ class DiscussChannel(models.Model):
             } if channel.country_id else False
             if channel.channel_type == "livechat":
                 channel_info["operator"] = Store.one(
-                    channel.livechat_operator_id, fields=["user_livechat_username", "write_date"]
+                    channel.livechat_operator_id, fields=["avatar_128", "user_livechat_username"]
                 )
             if channel.channel_type == "livechat" and self.env.user._is_internal():
                 channel_info["livechatChannel"] = Store.one(

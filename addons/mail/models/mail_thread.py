@@ -4598,7 +4598,7 @@ class MailThread(models.AbstractModel):
             "attachment_ids": Store.many(message.attachment_ids.sorted("id")),
             "body": message.body,
             "pinned_at": message.pinned_at,
-            "recipients": Store.many(message.partner_ids, fields=["name", "write_date"]),
+            "recipients": Store.many(message.partner_ids, fields=["avatar_128", "name"]),
             "write_date": message.write_date,
         }
         if body is not None:

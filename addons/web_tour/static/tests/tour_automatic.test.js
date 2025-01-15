@@ -1,11 +1,12 @@
 /** @odoo-module **/
 
 import { afterEach, beforeEach, describe, expect, test } from "@odoo/hoot";
-import { queryFirst } from "@odoo/hoot-dom";
+import { animationFrame, queryFirst } from "@odoo/hoot-dom";
 import { advanceTime, runAllTimers } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import {
     clearRegistry,
+    getService,
     makeMockEnv,
     mountWithCleanup,
     patchWithCleanup,
@@ -50,6 +51,55 @@ afterEach(async () => {
     //Necessary in this case because the tours do not do
     //synchronous setTimeouts one after the other.
     await runAllTimers();
+});
+
+test("Step Tour validity", async () => {
+    patchWithCleanup(console, {
+        error: (msg) => expect.step(msg),
+    });
+    const steps = [
+        {
+            Belgium: true,
+            wins: "of course",
+            EURO2024: true,
+            trigger: "button.foo",
+        },
+        {
+            my_title: "EURO2024",
+            trigger: "button.bar",
+            doku: "Lukaku 10",
+        },
+        {
+            trigger: "button.bar",
+            run: ["Enjoy euro 2024"],
+        },
+        {
+            trigger: "button.bar",
+            run() {},
+        },
+    ];
+    tourRegistry.add("tour1", {
+        steps: () => steps,
+    });
+    await makeMockEnv({});
+    const waited_error1 = `Error in schema for TourStep ${JSON.stringify(
+        steps[0],
+        null,
+        4
+    )}\nInvalid object: unknown key 'Belgium', unknown key 'wins', unknown key 'EURO2024'`;
+    const waited_error2 = `Error in schema for TourStep ${JSON.stringify(
+        steps[1],
+        null,
+        4
+    )}\nInvalid object: unknown key 'my_title', unknown key 'doku'`;
+    const waited_error3 = `Error in schema for TourStep ${JSON.stringify(
+        steps[2],
+        null,
+        4
+    )}\nInvalid object: 'run' is not a string or function or boolean`;
+    await getService("tour_service").startTour("tour1");
+    await animationFrame();
+    expect.verifySteps([waited_error1, waited_error2, waited_error3]);
 });
 
 test("a failing tour logs the step that failed in run", async () => {
@@ -630,7 +680,7 @@ test("check for undeterminisms", async () => {
     await advanceTime(10000);
     expect.verifySteps([
         `error: FAILED: [2/3] Tour tour_und → Step .button1.
-Element has been found.
+ERROR IN ACTION: Element has been found.
 UNDETERMINISM: two differents elements have been found in 3000ms for trigger .button1`,
     ]);
 });

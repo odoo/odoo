@@ -49,7 +49,7 @@ class PortalChatter(http.Controller):
                 thread, kwargs.get("hash"), kwargs.get("pid"), kwargs.get("token")
             ):
                 partner = portal_partner
-        store.add({"self": Store.one(partner, fields=["active", "name", "user", "write_date"])})
+        store.add({"self": Store.one(partner, fields=["active", "avatar_128", "name", "user"])})
         if request.env.user.has_group("website.group_website_restricted_editor"):
             store.add(partner, {"is_user_publisher": True})
         return store.get_result()

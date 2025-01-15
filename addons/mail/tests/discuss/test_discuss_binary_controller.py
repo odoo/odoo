@@ -49,8 +49,8 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
             self.guest_2,
             (
                 (self.user_public, False),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_demo, True),
                 (self.user_admin, True),
@@ -71,8 +71,8 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
             self.user_test,
             (
                 (self.user_public, False),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_demo, True),
                 (self.user_admin, True),
@@ -92,8 +92,8 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
             self.guest_2,
             (
                 (self.user_public, False),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_demo, True),
                 (self.user_admin, True),
@@ -115,8 +115,8 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
             self.user_test,
             (
                 (self.user_public, False),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_demo, True),
                 (self.user_admin, True),
@@ -193,8 +193,8 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
             self.guest_2,
             (
                 (self.user_public, False),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_demo, True),
                 (self.user_admin, True),
@@ -223,8 +223,8 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
             self.user_test,
             (
                 (self.user_public, False),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_demo, True),
                 (self.user_admin, True),
@@ -291,9 +291,9 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
         self._execute_subtests(
             self.guest_2,
             (
-                (self.user_public, True),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.user_public, False),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_demo, True),
                 (self.user_admin, True),
@@ -311,9 +311,9 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
         self._execute_subtests(
             self.user_test,
             (
-                (self.user_public, True),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.user_public, False),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_demo, True),
                 (self.user_admin, True),
@@ -378,9 +378,9 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
         self._execute_subtests(
             self.guest_2,
             (
-                (self.user_public, True),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.user_public, False),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_demo, True),
                 (self.user_admin, True),
@@ -401,9 +401,9 @@ class TestDiscussBinaryController(TestDiscussBinaryControllerCommon):
         self._execute_subtests(
             self.user_test,
             (
-                (self.user_public, True),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.user_public, False),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_demo, True),
                 (self.user_admin, True),

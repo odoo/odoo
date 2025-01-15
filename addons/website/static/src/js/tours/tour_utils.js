@@ -432,6 +432,7 @@ export function registerWebsitePreviewTour(name, options, steps) {
     if (typeof steps !== "function") {
         throw new Error(`tour.steps has to be a function that returns TourStep[]`);
     }
+    registry.category("web_tour.tours").remove(name);
     return registry.category("web_tour.tours").add(name, {
         ...omit(options, "edition"),
         url: getClientActionUrl(options.url, !!options.edition),
@@ -464,9 +465,10 @@ export function registerThemeHomepageTour(name, steps) {
     if (typeof steps !== "function") {
         throw new Error(`tour.steps has to be a function that returns TourStep[]`);
     }
-    return registerWebsitePreviewTour(name, {
-        url: '/',
-        saveAs: "homepage", // disable manual mode for theme homepage tours - FIXME
+    return registerWebsitePreviewTour(
+        "homepage",
+        {
+            url: "/",
         },
         () => [
             ...clickOnEditAndWaitEditMode(),
@@ -474,7 +476,8 @@ export function registerThemeHomepageTour(name, steps) {
                 steps().concat(clickOnSave()),
                 ".o_website_preview[data-view-xmlid='website.homepage'] "
             ),
-    ]);
+        ]
+    );
 }
 
 export function registerBackendAndFrontendTour(name, options, steps) {

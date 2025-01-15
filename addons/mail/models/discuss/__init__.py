@@ -14,7 +14,6 @@ from . import mail_guest
 # odoo models
 from . import bus_listener_mixin
 from . import ir_attachment
-from . import ir_binary
 from . import ir_websocket
 from . import res_groups
 from . import res_partner

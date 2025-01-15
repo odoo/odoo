@@ -27,7 +27,7 @@
                             </t>
                         </div>
                         <t t-if="line and line.payment_status">
-                            <div class="paymentline electronic_payment">
+                            <div t-attf-class="{{ this.ui.isSmall ? 'bg-100' : 'bg-200'}} paymentline electronic_payment">
                                 <t t-if="line.payment_status == 'pending'">
                                     <div class="electronic_status">
                                         Payment request pending
