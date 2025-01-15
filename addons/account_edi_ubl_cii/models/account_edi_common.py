@@ -582,7 +582,7 @@ class AccountEdiCommon(models.AbstractModel):
         # billed_qty (mandatory)
         billed_qty = 1
         product_vals = {k: self._find_value(v, tree) for k, v in xpath_dict['product'].items()}
-        product = self.env['product.product']._retrieve_product(**product_vals)
+        product = self.env['product.product']._retrieve_product(**product_vals, company=invoice_line.company_id)
         product_uom = self.env['uom.uom']
         quantity_node = tree.find(xpath_dict['billed_qty'])
         if quantity_node is not None:
