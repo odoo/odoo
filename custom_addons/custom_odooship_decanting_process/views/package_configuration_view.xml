@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Form view of Package Configuration -->
+    <record id="view_package_configuration_form" model="ir.ui.view">
+        <field name="name">package.box.configuration.form</field>
+        <field name="model">package.box.configuration</field>
+        <field name="arch" type="xml">
+            <form string="Package Configuration">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="box_barcode"/>
+                        </group>
+                    </group>
+                    <group string="Configure Measures" col="12">
+                        <group colspan="4">
+                            <field name="length"
+                                   required="1"
+                                   placeholder="Length should be in cm"/>
+                        </group>
+                        <group colspan="4">
+                            <field name="width"
+                                   required="1"
+                                   placeholder="Width should be in cm"/>
+                        </group>
+                        <group colspan="4">
+                            <field name="height"
+                                   required="1"
+                                   placeholder="Height should be in cm"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!--    Tree View of Package Configuration-->
+    <record id="tree_view_package_configuration" model="ir.ui.view">
+        <field name="name">package.box.configuration.tree</field>
+        <field name="model">package.box.configuration</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="length"/>
+                <field name="height"/>
+                <field name="width"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--    Action for Package configuration model-->
+    <record id="action_package_configuration" model="ir.actions.act_window">
+        <field name="name">Package</field>
+        <field name="res_model">package.box.configuration</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

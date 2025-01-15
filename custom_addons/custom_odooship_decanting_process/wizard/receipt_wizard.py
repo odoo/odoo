@@ -18,6 +18,16 @@ class DeliveryReceiptWizard(models.TransientModel):
                                           ('automation_bulk', 'Automation Bulk'),
                                           ('manual', 'Manual'),
                                           ('xdock','XDOCK')], string='Automation Manual')
+    partner_id = fields.Many2one(related='picking_id.partner_id', string='Customer', store=True)
+    tenant_code_id = fields.Many2one(
+        'tenant.code.configuration',
+        string='Tenant Code',
+        related='partner_id.tenant_code_id',
+        store=True
+    )
+    site_code_id = fields.Many2one('site.code.configuration',
+                                   related='picking_id.site_code_id', string='Site Code',
+                                   store=True)
     # available_location_ids = fields.Many2many(
     #     'stock.location', compute='_compute_available_locations', store=True
     # )
@@ -29,28 +39,33 @@ class DeliveryReceiptWizard(models.TransientModel):
         # domain="[('id', 'in', available_location_ids)]"
     )
 
-    @api.onchange('automation_manual', 'picking_id')
+    @api.onchange('automation_manual', 'picking_id', 'site_code_id')
     def _compute_available_locations(self):
         """
-        Computes available locations for location_dest_id based on the automation_manual selection.
+        Computes available locations for location_dest_id based on the automation_manual selection
+        and site_code_id.
         """
         for record in self:
+            if not record.site_code_id:
+                raise UserError("Site Code is not available for this order.")
 
             if record.automation_manual == 'automation' and record.picking_id:
                 # Automation: Use the destination location from picking's move records
                 record.location_dest_id = record.picking_id.location_dest_id
             elif record.automation_manual == 'manual':
-                # Manual: Use a specific location or search by system_type 'manual' and storage category 'Manual Bulk'
+                # Manual: Search for locations based on Site Code
                 manual_location = self.env['stock.location'].search([
                     ('system_type', '=', 'manual'),
-                    ('name', '=', 'Putaway/Manual')  # Adjust based on your naming convention
+                    ('name', '=', 'Putaway/Manual'),
+                    ('site_code_id', '=', record.site_code_id.id)  # Filter by Site Code
                 ], limit=1)
                 record.location_dest_id = manual_location
             elif record.automation_manual == 'automation_bulk':
-                # Automation Bulk: Use a specific location or search by system_type 'geek' and category 'Automation Bulk Putaway'
+                # Automation Bulk: Search for locations based on Site Code
                 automation_bulk_location = self.env['stock.location'].search([
                     ('system_type', '=', 'geek'),
-                    ('name', '=', 'Automation Bulk Putaway')  # Adjust based on your naming convention
+                    ('name', '=', 'Automation Bulk Putaway'),
+                    ('site_code_id', '=', record.site_code_id.id)  # Filter by Site Code
                 ], limit=1)
                 record.location_dest_id = automation_bulk_location
 

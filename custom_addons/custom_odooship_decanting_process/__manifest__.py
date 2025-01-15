@@ -27,6 +27,8 @@
         'views/stock_location_inherit_views.xml',
         'views/automation_bulk_manual_putaway_view.xml',
         'views/sales_order_inherit_view.xml',
+        'views/pack_bench_configuration_view.xml',
+        'views/package_configuration_view.xml',
         'views/menuitem_view.xml',
         # 'views/sales_order_inherit_view.xml',
         'wizard/receipt_wizard_view.xml',

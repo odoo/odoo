@@ -11,6 +11,14 @@ _logger = logging.getLogger(__name__)
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    tenant_code_id = fields.Many2one(
+        'tenant.code.configuration',
+        string='Tenant Code',
+        related='partner_id.tenant_code_id',
+        readonly=True,
+        store=True
+    )
+
     @api.model
     def create(self, vals):
         sale_order = super(SaleOrder, self).create(vals)

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pack_delivery_receipt_wizard_form" model="ir.ui.view">
+        <field name="name">pack.delivery.receipt.wizard.form</field>
+        <field name="model">pack.delivery.receipt.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Add Product Lines">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="pack_bench_id"
+                                   placeholder="Select Pack Bench"/>
+                            <field name="picking_id" options="{'no_open': True}"
+                                   invisible="1"
+                                   readonly="True"/>
+                        </group>
+                        <group>
+                            <field name="package_box_type_id"
+                                   placeholder="Select Packaging Box"/>
+                            <field name="pack_count"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="line_ids" delete="False">
+                            <tree editable="bottom">
+                                <field name="product_id"
+                                       options="{'no_create':True, 'no_open': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                                <field name="available_product_ids"/>
+                                <field name="quantity"/>
+<!--                                <field name="product_packaging_id"/>-->
+<!--                                <field name="product_packaging_qty"/>-->
+                                <field name="available_quantity"/>
+                                <field name="remaining_quantity"/>
+                                <field name="weight"/>
+                                <field name="picking_id" column_invisivle="1"/>
+                                <field name="location_dest_id" column_invisivle="1"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Pack" type="object" name="delivery_package_done" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
