@@ -2515,3 +2515,237 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2028-01-01"):
             allocation._update_accrual()
             self.assertAlmostEqual(allocation.number_of_days, 226, 1, 'Same as previous year + 100 days for 2028 (no specific level for this year, use last one)')
+<<<<<<< saas-17.4
+||||||| 4d24d9036091b1e83fbef80a6570bdb48e984aa8
+
+    def test_accrual_allocation_with_virtual_future_leaves(self):
+        """ This test considers a case where the employee has an accrual plan with no carryover and
+        also has a virtual leave (leave that isn't validated). When we call the CRON to update the
+        time off based on the accrual allocation and ensure that it goes through successfully without
+        errors due to the pending virtual leaves. Example:
+        Accrual plan with no carryover that grants 8 days on Jan 1 of each year
+        - 8 days allocated on 2024-12-01 (to simulate initial 15day allocation)
+        - Request an unvalidated leave from 2025-01-03 to 2025-01-04 (lies after the carryover date)
+        - Run the CRON on 2025-01-05 to update the accrual allocation: (note how the CRON is run after the leave date)
+           1. The CRON would first make the allocation's number_of_days = 0 because of the carryover policy
+           2. Then it would add 8 days to the allocation's number_of_days
+        - Ensure that the CRON runs successfully without errors during (1) due to the pending virtual leave
+        """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'leave_validation_type': 'hr',
+            'allocation_validation_type': 'officer',
+            'employee_requests': 'no',
+        })
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan with no carryover',
+            'accrued_gain_time': 'start',
+            'carryover_date': 'year_start',
+            'level_ids': [Command.create({
+                'added_value': 8,
+                'added_value_type': 'day',
+                'action_with_unused_accruals': 'lost',
+                'frequency': 'yearly',
+                'yearly_month': 'jan',
+                'yearly_day': 1,
+            })],
+        })
+
+        with freeze_time("2024-12-01"):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'date_from': '2024-12-01',
+                'number_of_days': 8,
+                'allocation_type': 'accrual',
+                'nextcall': '2025-01-01',
+            })
+            allocation.action_validate()
+            # A virtual leave that is pending approval and will be taken after the carryover date
+            leave = self.env['hr.leave'].create({
+                'name': 'Virtual Leave',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': '2024-12-23',
+                'request_date_to': '2024-12-24',
+            })
+            self.assertNotEqual(leave.state, 'validate', "The leave request should not be in the 'validate' state")
+
+        # This is a case where
+        # - the allocation had a next call day of Jan 1 to reset the leaves as per the accrual plan
+        # - the future leave is to scheduled for Jan 3rd to 4th (future because it comes after the carryover date of accrual)
+        # - the CRON to update the accrual allocation is run on Jan 5th (after the nextcall and requested leave date)
+        with freeze_time("2025-01-05"):
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, 8, "The number of days should be updated successfully")
+=======
+
+    def test_accrual_allocation_with_virtual_future_leaves(self):
+        """ This test considers a case where the employee has an accrual plan with no carryover and
+        also has a virtual leave (leave that isn't validated). When we call the CRON to update the
+        time off based on the accrual allocation and ensure that it goes through successfully without
+        errors due to the pending virtual leaves. Example:
+        Accrual plan with no carryover that grants 8 days on Jan 1 of each year
+        - 8 days allocated on 2024-12-01 (to simulate initial 15day allocation)
+        - Request an unvalidated leave from 2025-01-03 to 2025-01-04 (lies after the carryover date)
+        - Run the CRON on 2025-01-05 to update the accrual allocation: (note how the CRON is run after the leave date)
+           1. The CRON would first make the allocation's number_of_days = 0 because of the carryover policy
+           2. Then it would add 8 days to the allocation's number_of_days
+        - Ensure that the CRON runs successfully without errors during (1) due to the pending virtual leave
+        """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'leave_validation_type': 'hr',
+            'allocation_validation_type': 'officer',
+            'employee_requests': 'no',
+        })
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan with no carryover',
+            'accrued_gain_time': 'start',
+            'carryover_date': 'year_start',
+            'level_ids': [Command.create({
+                'added_value': 8,
+                'added_value_type': 'day',
+                'action_with_unused_accruals': 'lost',
+                'frequency': 'yearly',
+                'yearly_month': 'jan',
+                'yearly_day': 1,
+            })],
+        })
+
+        with freeze_time("2024-12-01"):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'date_from': '2024-12-01',
+                'number_of_days': 8,
+                'allocation_type': 'accrual',
+                'nextcall': '2025-01-01',
+            })
+            allocation.action_validate()
+            # A virtual leave that is pending approval and will be taken after the carryover date
+            leave = self.env['hr.leave'].create({
+                'name': 'Virtual Leave',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': '2024-12-23',
+                'request_date_to': '2024-12-24',
+            })
+            self.assertNotEqual(leave.state, 'validate', "The leave request should not be in the 'validate' state")
+
+        # This is a case where
+        # - the allocation had a next call day of Jan 1 to reset the leaves as per the accrual plan
+        # - the future leave is to scheduled for Jan 3rd to 4th (future because it comes after the carryover date of accrual)
+        # - the CRON to update the accrual allocation is run on Jan 5th (after the nextcall and requested leave date)
+        with freeze_time("2025-01-05"):
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, 8, "The number of days should be updated successfully")
+
+    def test_multi_employee_accrual_allocation_not_based_on_worked_time(self):
+        """
+            Create an accrual plan that is not based on worked time and
+            - Test that the number of accrued days is computed correctly in the case of an accrual allocation with multiple employees.
+            - Test that the number of accrued days is propagated correctly to single-employee allocations created from the multi-employee allocation.
+        """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'officer',
+            'employee_requests': 'no',
+        })
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Test Accrual Plan',
+            'accrued_gain_time': 'end',
+            'carryover_date': 'year_start',
+            'is_based_on_worked_time': False,
+            'level_ids': [Command.create({
+                'added_value': 10,
+                'added_value_type': 'day',
+                'action_with_unused_accruals': 'all',
+                'frequency': 'yearly',
+                'yearly_month': 'jan',
+                'yearly_day': 1,
+                'start_count': 0,
+                'start_type': 'day',
+            })],
+        })
+
+        with freeze_time("2025-01-01"):
+            with Form(self.env['hr.leave.allocation']) as multi_employee_allocation:
+                multi_employee_allocation.private_name = "Accrual allocation for employee"
+                multi_employee_allocation.allocation_type = "accrual"
+                multi_employee_allocation.accrual_plan_id = accrual_plan
+                multi_employee_allocation.employee_ids.add(self.employee_emp)
+                multi_employee_allocation.employee_ids.add(self.employee_hruser)
+                multi_employee_allocation.holiday_status_id = leave_type
+                multi_employee_allocation.date_from = '2024-01-01'
+
+            multi_employee_allocation = multi_employee_allocation.record
+            self.assertEqual(multi_employee_allocation.number_of_days, 10, "Employees are accrued 10 days yearly")
+            # Create single-employee allocations from the multi-employee allocation
+            multi_employee_allocation.action_validate()
+            for single_employee_allocation in multi_employee_allocation.linked_request_ids:
+                self.assertEqual(
+                    single_employee_allocation.number_of_days, 10,
+                    "Each single employee allocation must have the same number of days as the multi-employee allocation after validation"
+                )
+
+    def test_multi_employee_accrual_allocation_based_on_worked_time(self):
+        """
+            Create an accrual plan that is based on worked time and
+            - Test that the number of accrued days is 0 in the case of an accrual allocation with multiple employees.
+            - Test that the number of accrued days is propagated correctly to single-employee allocations created from the multi-employee allocation.
+        """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'officer',
+            'employee_requests': 'no',
+        })
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Test Accrual Plan',
+            'accrued_gain_time': 'end',
+            'carryover_date': 'year_start',
+            'is_based_on_worked_time': True,
+            'level_ids': [Command.create({
+                'added_value': 10,
+                'added_value_type': 'day',
+                'action_with_unused_accruals': 'all',
+                'frequency': 'yearly',
+                'yearly_month': 'jan',
+                'yearly_day': 1,
+                'start_count': 0,
+                'start_type': 'day',
+            })],
+        })
+
+        with freeze_time("2025-01-01"):
+            with Form(self.env['hr.leave.allocation']) as multi_employee_allocation:
+                multi_employee_allocation.private_name = "Accrual allocation for employee"
+                multi_employee_allocation.allocation_type = "accrual"
+                multi_employee_allocation.accrual_plan_id = accrual_plan
+                multi_employee_allocation.employee_ids.add(self.employee_emp)
+                multi_employee_allocation.employee_ids.add(self.employee_hruser)
+                multi_employee_allocation.holiday_status_id = leave_type
+                multi_employee_allocation.date_from = '2024-01-01'
+
+            multi_employee_allocation = multi_employee_allocation.record
+            self.assertEqual(multi_employee_allocation.number_of_days, 0, "Employees are accrued 10 days yearly")
+            # Create single-employee allocations from the multi-employee allocation
+            multi_employee_allocation.action_validate()
+            for single_employee_allocation in multi_employee_allocation.linked_request_ids:
+                self.assertEqual(
+                    single_employee_allocation.number_of_days, 0,
+                    "Each single employee allocation must have the same number of days as the multi-employee allocation after validation"
+                )
+>>>>>>> 324a766993dcc0eb3342d34b725d1a459a94a82a

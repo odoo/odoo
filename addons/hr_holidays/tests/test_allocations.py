@@ -80,6 +80,12 @@ class TestAllocations(TestHrHolidaysCommon):
             'name': 'Bank Holiday',
             'allocation_mode': 'employee',
             'employee_ids': [(4, self.employee.id), (4, self.employee_emp.id)],
+<<<<<<< saas-17.4
+||||||| 4d24d9036091b1e83fbef80a6570bdb48e984aa8
+            'employee_id': self.employee.id,
+=======
+            'multi_employee': True,
+>>>>>>> 324a766993dcc0eb3342d34b725d1a459a94a82a
             'holiday_status_id': self.leave_type.id,
             'duration': 2,
             'allocation_type': 'regular',
