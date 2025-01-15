@@ -198,9 +198,6 @@ export class ImageField extends Component {
     }
     onLoadFailed() {
         this.state.isValid = false;
-        this.notification.add(_t("Could not display the selected image"), {
-            type: "danger",
-        });
     }
 }
 
