@@ -11,10 +11,12 @@ const {
     console: {
         debug: $debug,
         dir: $dir,
+        error: $error,
         groupCollapsed: $groupCollapsed,
         groupEnd: $groupEnd,
         log: $log,
         trace: $trace,
+        warn: $warn,
     },
 } = globalThis;
 
@@ -197,5 +199,17 @@ export const logger = {
      */
     logGlobal(...args) {
         $dir(...unstyledArguments(args));
+    },
+    /**
+     * @param {...any} args
+     */
+    logGlobalError(...args) {
+        $error(...styledArguments(args));
+    },
+    /**
+     * @param {...any} args
+     */
+    logGlobalWarning(...args) {
+        $warn(...styledArguments(args));
     },
 };
