@@ -35,18 +35,6 @@ export class DropZoneSelectorPlugin extends Plugin {
                 dropNear: "p, h1, h2, h3, blockquote, .s_hr",
             },
             {
-                selector: ".s_pricelist_boxed_item",
-                dropNear: ".s_pricelist_boxed_item",
-            },
-            {
-                selector: ".s_pricelist_cafe_item",
-                dropNear: ".s_pricelist_cafe_item",
-            },
-            {
-                selector: ".s_product_catalog_dish",
-                dropNear: ".s_product_catalog_dish",
-            },
-            {
                 selector: ".s_popup",
                 exclude: "#website_cookies_bar",
                 dropIn: ":not(p).oe_structure:not(.oe_structure_solo):not([data-snippet] *), :not(.o_mega_menu):not(p)[data-oe-type=html]:not([data-snippet] *)",

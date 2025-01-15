@@ -29,6 +29,10 @@ class ProductCatalogOptionPlugin extends Plugin {
                 selector: ".s_product_catalog",
             }),
         ],
+        dropzone_selector: {
+            selector: ".s_product_catalog_dish",
+            dropNear: ".s_product_catalog_dish",
+        },
     };
 }
 

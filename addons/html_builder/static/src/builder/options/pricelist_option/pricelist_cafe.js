@@ -29,6 +29,10 @@ class PriceListCafeOptionPlugin extends Plugin {
                 selector: ".s_pricelist_cafe",
             }),
         ],
+        dropzone_selector: {
+            selector: ".s_pricelist_cafe_item",
+            dropNear: ".s_pricelist_cafe_item",
+        },
     };
 }
 

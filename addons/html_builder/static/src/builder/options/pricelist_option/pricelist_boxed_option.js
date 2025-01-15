@@ -29,6 +29,10 @@ class PriceListBoxedOptionPlugin extends Plugin {
                 selector: ".s_pricelist_boxed",
             }),
         ],
+        dropzone_selector: {
+            selector: ".s_pricelist_boxed_item",
+            dropNear: ".s_pricelist_boxed_item",
+        },
     };
 }
 
