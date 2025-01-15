@@ -84,8 +84,7 @@ class AccountMove(models.Model):
             # If we return more than currently delivered (i.e., quantity < 0), we remove the surplus
             # from the previously delivered (and quantity becomes zero). If it's a delivery, we first
             # try to reach the previous_qty_invoiced
-            if float_compare(quantity, 0, precision_rounding=product_uom.rounding) < 0 or \
-                    float_compare(previous_qty_delivered, previous_qty_invoiced, precision_rounding=product_uom.rounding) < 0:
+            if product_uom.compare(quantity, 0) < 0 or product_uom.compare(previous_qty_delivered, previous_qty_invoiced) < 0:
                 previously_done = quantity if is_stock_return else min(previous_qty_invoiced - previous_qty_delivered, quantity)
                 previous_qties_delivered[product] += previously_done
                 quantity -= previously_done
@@ -96,8 +95,7 @@ class AccountMove(models.Model):
             # access the lot as a superuser in order to avoid an error
             # when a user prints an invoice without having the stock access
             lot = lot.sudo()
-            if float_is_zero(invoiced_qties[lot.product_id], precision_rounding=lot.product_uom_id.rounding) \
-                    or float_compare(qty, 0, precision_rounding=lot.product_uom_id.rounding) <= 0:
+            if lot.product_uom_id.is_zero(invoiced_qties[lot.product_id]) or lot.product_uom_id.compare(qty, 0) <= 0:
                 continue
             invoiced_lot_qty = min(qty, invoiced_qties[lot.product_id])
             invoiced_qties[lot.product_id] -= invoiced_lot_qty
@@ -177,7 +175,7 @@ class AccountMoveLine(models.Model):
             qty_invoiced = 0
             product_uom = self.product_id.uom_id
             for line in posted_cogs:
-                if float_compare(line.quantity, 0, precision_rounding=product_uom.rounding) and line.move_id.move_type == 'out_refund' and any(line.move_id.invoice_line_ids.sale_line_ids.mapped('is_downpayment')):
+                if product_uom.compare(line.quantity, 0) and line.move_id.move_type == 'out_refund' and any(line.move_id.invoice_line_ids.sale_line_ids.mapped('is_downpayment')):
                     qty_invoiced += line.product_uom_id._compute_quantity(abs(line.quantity), line.product_id.uom_id)
                 else:
                     qty_invoiced += line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id)
@@ -190,7 +188,7 @@ class AccountMoveLine(models.Model):
                 ('balance', '>', 0)
             ])
             for line in reversal_cogs:
-                if float_compare(line.quantity, 0, precision_rounding=product_uom.rounding) and line.move_id.move_type == 'out_refund' and any(line.move_id.invoice_line_ids.sale_line_ids.mapped('is_downpayment')):
+                if product_uom.compare(line.quantity, 0) and line.move_id.move_type == 'out_refund' and any(line.move_id.invoice_line_ids.sale_line_ids.mapped('is_downpayment')):
                     qty_invoiced -= line.product_uom_id._compute_quantity(abs(line.quantity), line.product_id.uom_id)
                 else:
                     qty_invoiced -= line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id)

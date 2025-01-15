@@ -4,7 +4,7 @@ from ast import literal_eval
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_round, float_is_zero
+from odoo.tools import float_round
 
 
 class StockLot(models.Model):
@@ -94,7 +94,7 @@ class StockLot(models.Model):
             if lot.product_id.cost_method not in ('standard', 'average'):
                 continue
             quantity_svl = lot.sudo().quantity_svl
-            if float_compare(quantity_svl, 0.0, precision_rounding=lot.product_id.uom_id.rounding) <= 0:
+            if lot.product_id.uom_id.compare(quantity_svl, 0.0) <= 0:
                 continue
             value_svl = lot.sudo().value_svl
             value = company_id.currency_id.round((rounded_new_price * quantity_svl) - value_svl)
@@ -125,7 +125,7 @@ class StockLot(models.Model):
         # Cannot hide the button in list view for non required field in groupby
         if not self:
             raise UserError(_("Select an existing lot/serial number to be reevaluated"))
-        elif all(float_is_zero(layer.remaining_qty, precision_rounding=self.product_id.uom_id.rounding) for layer in self.stock_valuation_layer_ids):
+        elif all(self.product_id.uom_id.is_zero(layer.remaining_qty) for layer in self.stock_valuation_layer_ids):
             raise UserError(_("You cannot adjust the valuation of a layer with zero quantity"))
         self.ensure_one()
         ctx = dict(self._context, default_lot_ids=self.ids, default_company_id=self.env.company.id)

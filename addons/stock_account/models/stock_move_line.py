@@ -79,7 +79,7 @@ class StockMoveLine(models.Model):
             return
         product_uom = self.product_id.uom_id
         added_uom_qty = self.product_uom_id._compute_quantity(added_qty, product_uom, rounding_method='HALF-UP')
-        if float_is_zero(added_uom_qty, precision_rounding=product_uom.rounding):
+        if product_uom.is_zero(added_uom_qty):
             return
         self._create_correction_svl(self.move_id, added_uom_qty)
 

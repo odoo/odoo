@@ -200,14 +200,14 @@ class StockQuant(models.Model):
     def _compute_is_outdated(self):
         self.is_outdated = False
         for quant in self:
-            if quant.product_id and float_compare(quant.inventory_quantity - quant.inventory_diff_quantity, quant.quantity, precision_rounding=quant.product_uom_id.rounding) and quant.inventory_quantity_set:
+            if quant.product_id and quant.product_uom_id.compare(quant.inventory_quantity - quant.inventory_diff_quantity, quant.quantity) and quant.inventory_quantity_set:
                 quant.is_outdated = True
 
     def _search_is_outdated(self, operator, value):
         if operator != 'in':
             return NotImplemented
         quant_ids = self.search([('inventory_quantity_set', '=', True)])
-        quant_ids = quant_ids.filtered(lambda quant: float_compare(quant.inventory_quantity - quant.inventory_diff_quantity, quant.quantity, precision_rounding=quant.product_uom_id.rounding)).ids
+        quant_ids = quant_ids.filtered(lambda quant: quant.product_uom_id.compare(quant.inventory_quantity - quant.inventory_diff_quantity, quant.quantity)).ids
         return [('id', 'in', quant_ids)]
 
     @api.depends('quantity')
@@ -595,7 +595,7 @@ class StockQuant(models.Model):
             ['quantity:sum'],
         )
         for product, _location, lot, qty in groups:
-            if float_compare(abs(qty), 1, precision_rounding=product.uom_id.rounding) > 0:
+            if product.uom_id.compare(abs(qty), 1) > 0:
                 raise ValidationError(_('The serial number has already been assigned: \n Product: %(product)s, Serial Number: %(serial_number)s', product=product.display_name, serial_number=lot.name))
 
     @api.constrains('location_id')
@@ -804,13 +804,12 @@ class StockQuant(models.Model):
         """
         self = self.sudo()
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
-        rounding = product_id.uom_id.rounding
         if product_id.tracking == 'none':
             available_quantity = sum(quants.mapped('quantity')) - sum(quants.mapped('reserved_quantity'))
             if allow_negative:
                 return available_quantity
             else:
-                return available_quantity if float_compare(available_quantity, 0.0, precision_rounding=rounding) >= 0.0 else 0.0
+                return available_quantity if product_id.uom_id.compare(available_quantity, 0.0) >= 0.0 else 0.0
         else:
             availaible_quantities = {lot_id: 0.0 for lot_id in list(set(quants.mapped('lot_id'))) + ['untracked']}
             for quant in quants:
@@ -823,7 +822,7 @@ class StockQuant(models.Model):
             if allow_negative:
                 return sum(availaible_quantities.values())
             else:
-                return sum([available_quantity for available_quantity in availaible_quantities.values() if float_compare(available_quantity, 0, precision_rounding=rounding) > 0])
+                return sum(available_quantity for available_quantity in availaible_quantities.values() if product_id.uom_id.compare(available_quantity, 0) > 0)
 
     def _get_reserve_quantity(self, product_id, location_id, quantity, uom_id=None, lot_id=None, package_id=None, owner_id=None, strict=False):
         """ Get the quantity available to reserve for the set of quants
@@ -836,7 +835,6 @@ class StockQuant(models.Model):
             could be done and how much the system is able to reserve on it
         """
         self = self.sudo()
-        rounding = product_id.uom_id.rounding
 
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict, qty=quantity)
 
@@ -858,37 +856,37 @@ class StockQuant(models.Model):
             quantity = uom_id._compute_quantity(quantity_move_uom, product_id.uom_id, rounding_method='HALF-UP')
 
         if product_id.tracking == 'serial':
-            if float_compare(quantity, int(quantity), precision_rounding=rounding) != 0:
+            if product_id.uom_id.compare(quantity, int(quantity)) != 0:
                 quantity = 0
 
         reserved_quants = []
 
-        if float_compare(quantity, 0, precision_rounding=rounding) > 0:
+        if product_id.uom_id.compare(quantity, 0) > 0:
             # if we want to reserve
-            available_quantity = sum(quants.filtered(lambda q: float_compare(q.quantity, 0, precision_rounding=rounding) > 0).mapped('quantity')) - sum(quants.mapped('reserved_quantity'))
-        elif float_compare(quantity, 0, precision_rounding=rounding) < 0:
+            available_quantity = sum(quants.filtered(lambda q: product_id.uom_id.compare(q.quantity, 0) > 0).mapped('quantity')) - sum(quants.mapped('reserved_quantity'))
+        elif product_id.uom_id.compare(quantity, 0) < 0:
             # if we want to unreserve
             available_quantity = sum(quants.mapped('reserved_quantity'))
-            if float_compare(abs(quantity), available_quantity, precision_rounding=rounding) > 0:
+            if product_id.uom_id.compare(abs(quantity), available_quantity) > 0:
                 raise UserError(_('It is not possible to unreserve more products of %s than you have in stock.', product_id.display_name))
         else:
             return reserved_quants
 
         negative_reserved_quantity = defaultdict(float)
         for quant in quants:
-            if float_compare(quant.quantity - quant.reserved_quantity, 0, precision_rounding=rounding) < 0:
+            if product_id.uom_id.compare(quant.quantity - quant.reserved_quantity, 0) < 0:
                 negative_reserved_quantity[(quant.location_id, quant.lot_id, quant.package_id, quant.owner_id)] += quant.quantity - quant.reserved_quantity
         for quant in quants:
-            if float_compare(quantity, 0, precision_rounding=rounding) > 0:
+            if product_id.uom_id.compare(quantity, 0) > 0:
                 max_quantity_on_quant = quant.quantity - quant.reserved_quantity
-                if float_compare(max_quantity_on_quant, 0, precision_rounding=rounding) <= 0:
+                if product_id.uom_id.compare(max_quantity_on_quant, 0) <= 0:
                     continue
                 negative_quantity = negative_reserved_quantity[(quant.location_id, quant.lot_id, quant.package_id, quant.owner_id)]
                 if negative_quantity:
                     negative_qty_to_remove = min(abs(negative_quantity), max_quantity_on_quant)
                     negative_reserved_quantity[(quant.location_id, quant.lot_id, quant.package_id, quant.owner_id)] += negative_qty_to_remove
                     max_quantity_on_quant -= negative_qty_to_remove
-                if float_compare(max_quantity_on_quant, 0, precision_rounding=rounding) <= 0:
+                if product_id.uom_id.compare(max_quantity_on_quant, 0) <= 0:
                     continue
                 max_quantity_on_quant = min(max_quantity_on_quant, quantity)
                 reserved_quants.append((quant, max_quantity_on_quant))
@@ -900,7 +898,7 @@ class StockQuant(models.Model):
                 quantity += max_quantity_on_quant
                 available_quantity += max_quantity_on_quant
 
-            if float_is_zero(quantity, precision_rounding=rounding) or float_is_zero(available_quantity, precision_rounding=rounding):
+            if product_id.uom_id.is_zero(quantity) or product_id.uom_id.is_zero(available_quantity):
                 break
         return reserved_quants
 
@@ -990,7 +988,7 @@ class StockQuant(models.Model):
         move_vals = []
         for quant in self:
             # Create and validate a move so that the quant matches its `inventory_quantity`.
-            if float_compare(quant.inventory_diff_quantity, 0, precision_rounding=quant.product_uom_id.rounding) > 0:
+            if quant.product_uom_id.compare(quant.inventory_diff_quantity, 0) > 0:
                 move_vals.append(
                     quant._get_inventory_move_values(quant.inventory_diff_quantity,
                                                      quant.product_id.with_company(quant.company_id).property_stock_inventory,
@@ -1036,7 +1034,7 @@ class StockQuant(models.Model):
             incoming_dates = []
         else:
             incoming_dates = [quant.in_date for quant in quants if quant.in_date and
-                              float_compare(quant.quantity, 0, precision_rounding=quant.product_uom_id.rounding) > 0]
+                              quant.product_uom_id.compare(quant.quantity, 0) > 0]
         if in_date:
             incoming_dates += [in_date]
         # If multiple incoming dates are available for a given lot_id/package_id/owner_id, we
@@ -1133,7 +1131,7 @@ class StockQuant(models.Model):
             ml_reserved_qty = reserved_move_lines.get((product, location, lot, package, owner), 0)
             if location.should_bypass_reservation():
                 quants._update_reserved_quantity(product, location, -reserved_quantity, lot_id=lot, package_id=package, owner_id=owner)
-            elif float_compare(reserved_quantity, ml_reserved_qty, precision_rounding=product.uom_id.rounding) != 0:
+            elif product.uom_id.compare(reserved_quantity, ml_reserved_qty) != 0:
                 quants._update_reserved_quantity(product, location, ml_reserved_qty - reserved_quantity, lot_id=lot, package_id=package, owner_id=owner)
             if ml_reserved_qty:
                 del reserved_move_lines[(product, location, lot, package, owner)]
@@ -1560,7 +1558,7 @@ class StockQuantPackage(models.Model):
         for package in self:
             package.location_id = False
             package.company_id = False
-            quants = package.quant_ids.filtered(lambda q: float_compare(q.quantity, 0, precision_rounding=q.product_uom_id.rounding) > 0)
+            quants = package.quant_ids.filtered(lambda q: q.product_uom_id.compare(q.quantity, 0) > 0)
             if quants:
                 package.location_id = quants[0].location_id
                 if all(q.company_id == quants[0].company_id for q in package.quant_ids):

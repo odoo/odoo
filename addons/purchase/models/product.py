@@ -30,7 +30,7 @@ class ProductTemplate(models.Model):
 
     def _compute_purchased_product_qty(self):
         for template in self:
-            template.purchased_product_qty = float_round(sum([p.purchased_product_qty for p in template.product_variant_ids]), precision_rounding=template.uom_id.rounding)
+            template.purchased_product_qty = template.uom_id.round(sum(p.purchased_product_qty for p in template.product_variant_ids))
 
     def _get_backend_root_menu_ids(self):
         return super()._get_backend_root_menu_ids() + [self.env.ref('purchase.menu_purchase_root').id]
@@ -76,7 +76,7 @@ class ProductProduct(models.Model):
             if not product.id:
                 product.purchased_product_qty = 0.0
                 continue
-            product.purchased_product_qty = float_round(purchased_data.get(product.id, 0), precision_rounding=product.uom_id.rounding)
+            product.purchased_product_qty = product.uom_id.round(purchased_data.get(product.id, 0))
 
     @api.depends_context('order_id')
     def _compute_is_in_purchase_order(self):

@@ -157,7 +157,7 @@ class StockMoveLine(models.Model):
             move_quantity = record.move_id.product_uom._compute_quantity(move_visible_quantity, sml_uom, rounding_method='HALF-UP')
             quant_qty = product_uom._compute_quantity(record.quant_id.available_quantity, sml_uom, rounding_method='HALF-UP')
 
-            if float_compare(move_demand, move_quantity, precision_rounding=sml_uom.rounding) > 0:
+            if sml_uom.compare(move_demand, move_quantity) > 0:
                 record.quantity = max(0, min(quant_qty, move_demand - move_quantity))
             else:
                 record.quantity = max(0, quant_qty)
@@ -242,7 +242,7 @@ class StockMoveLine(models.Model):
         """
         res = {}
         if self.quantity and self.product_id.tracking == 'serial':
-            if float_compare(self.quantity_product_uom, 1.0, precision_rounding=self.product_id.uom_id.rounding) != 0 and not float_is_zero(self.quantity_product_uom, precision_rounding=self.product_id.uom_id.rounding):
+            if self.product_id.uom_id.compare(self.quantity_product_uom, 1.0) != 0 and not self.product_id.uom_id.is_zero(self.quantity_product_uom):
                 raise UserError(_('You can only process 1.0 %s of products with unique serial number.', self.product_id.uom_id.name))
         return res
 
@@ -473,13 +473,13 @@ class StockMoveLine(models.Model):
                     new_reserved_qty = new_ml_uom._compute_quantity(
                         vals.get('quantity', ml.quantity), ml.product_id.uom_id, rounding_method='HALF-UP')
                     # Make sure `reserved_uom_qty` is not negative.
-                    if float_compare(new_reserved_qty, 0, precision_rounding=ml.product_id.uom_id.rounding) < 0:
+                    if ml.product_id.uom_id.compare(new_reserved_qty, 0) < 0:
                         raise UserError(_('Reserving a negative quantity is not allowed.'))
                 else:
                     new_reserved_qty = ml.quantity_product_uom
 
                 # Unreserve the old charateristics of the move line.
-                if not float_is_zero(ml.quantity_product_uom, precision_rounding=ml.product_uom_id.rounding):
+                if not ml.product_uom_id.is_zero(ml.quantity_product_uom):
                     ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id, action="reserved")
 
                 # Reserve the maximum available of the new charateristics of the move line.
@@ -498,7 +498,7 @@ class StockMoveLine(models.Model):
             next_moves = self.env['stock.move']
             mls = self.filtered(lambda ml: ml.move_id.state == 'done' and ml.product_id.is_storable)
             if not updates:  # we can skip those where quantity is already good up to UoM rounding
-                mls = mls.filtered(lambda ml: not float_is_zero(ml.quantity - vals['quantity'], precision_rounding=ml.product_uom_id.rounding))
+                mls = mls.filtered(lambda ml: not ml.product_uom_id.is_zero(ml.quantity - vals['quantity']))
             for ml in mls:
                 # undo the original move line
                 in_date = ml._synchronize_quant(-ml.quantity_product_uom, ml.location_dest_id, package=ml.result_package_id)[1]
@@ -526,7 +526,7 @@ class StockMoveLine(models.Model):
                 if ('quantity' in vals or 'product_uom_id' in vals) and ml.picked:
                     new_qty = updates.get('product_uom_id', ml.product_uom_id)._compute_quantity(vals.get('quantity', ml.quantity), ml.product_id.uom_id, rounding_method='HALF-UP')
                     old_qty = ml.product_uom_id._compute_quantity(ml.quantity, ml.product_id.uom_id, rounding_method='HALF-UP')
-                    if float_compare(old_qty, new_qty, precision_rounding=ml.product_uom_id.rounding) < 0:
+                    if ml.product_uom_id.compare(old_qty, new_qty) < 0:
                         updated_ml_ids.add(ml.id)
             self.env['stock.move.line'].browse(updated_ml_ids).date = fields.Datetime.now()
 
@@ -603,7 +603,7 @@ class StockMoveLine(models.Model):
 
         for ml in self:
             # Check here if `ml.quantity` respects the rounding of `ml.product_uom_id`.
-            uom_qty = float_round(ml.quantity, precision_rounding=ml.product_uom_id.rounding, rounding_method='HALF-UP')
+            uom_qty = ml.product_uom_id.round(ml.quantity, rounding_method='HALF-UP')
             precision_digits = self.env['decimal.precision'].precision_get('Product Unit')
             quantity = float_round(ml.quantity, precision_digits=precision_digits, rounding_method='HALF-UP')
             if float_compare(uom_qty, quantity, precision_digits=precision_digits) != 0:
@@ -612,7 +612,7 @@ class StockMoveLine(models.Model):
                                   'rounding precision of your unit of measure.',
                                   product=ml.product_id.display_name, unit=ml.product_uom_id.name))
 
-            qty_done_float_compared = float_compare(ml.quantity, 0, precision_rounding=ml.product_uom_id.rounding)
+            qty_done_float_compared = ml.product_uom_id.compare(ml.quantity, 0)
             if qty_done_float_compared > 0:
                 if ml.product_id.tracking == 'none':
                     continue
@@ -698,7 +698,7 @@ class StockMoveLine(models.Model):
         package = quants_value.get('package', self.package_id)
         owner = quants_value.get('owner', self.owner_id)
         available_qty = 0
-        if not self.product_id.is_storable or float_is_zero(quantity, precision_rounding=self.product_uom_id.rounding):
+        if not self.product_id.is_storable or self.product_uom_id.is_zero(quantity):
             return 0, False
         if action == "available":
             available_qty, in_date = self.env['stock.quant']._update_available_quantity(self.product_id, location, quantity, lot_id=lot, package_id=package, owner_id=owner, in_date=in_date)
@@ -815,13 +815,12 @@ class StockMoveLine(models.Model):
         move_to_reassign = self.env['stock.move']
         to_unlink_candidate_ids = set()
 
-        rounding = self.product_uom_id.rounding
         for candidate in outdated_candidates:
             move_to_reassign |= candidate.move_id
-            if float_compare(candidate.quantity_product_uom, quantity, precision_rounding=rounding) <= 0:
+            if self.product_uom_id.compare(candidate.quantity_product_uom, quantity) <= 0:
                 quantity -= candidate.quantity_product_uom
                 to_unlink_candidate_ids.add(candidate.id)
-                if float_is_zero(quantity, precision_rounding=rounding):
+                if self.product_uom_id.is_zero(quantity):
                     break
             else:
                 candidate.quantity -= candidate.product_id.uom_id._compute_quantity(quantity, candidate.product_uom_id, rounding_method='HALF-UP')
@@ -912,7 +911,7 @@ class StockMoveLine(models.Model):
         pickings = (self.picking_id | backorders)
         for empty_move in pickings.move_ids:
             to_bypass = False
-            if not (empty_move.product_uom_qty and float_is_zero(empty_move.quantity, precision_rounding=empty_move.product_uom.rounding)):
+            if not (empty_move.product_uom_qty and empty_move.product_uom.is_zero(empty_move.quantity)):
                 continue
             if empty_move.state != "cancel":
                 if empty_move.state != "confirmed" or empty_move.move_line_ids:
@@ -1045,7 +1044,7 @@ class StockMoveLine(models.Model):
         if len(self.picking_type_id) > 1:
             raise UserError(_('You cannot pack products into the same package when they are from different transfers with different operation types'))
         quantity_move_line_ids = self.filtered(
-            lambda ml: float_compare(ml.quantity, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0 and not ml.result_package_id
+            lambda ml: ml.product_uom_id.compare(ml.quantity, 0.0) > 0 and not ml.result_package_id
             and ml.state not in ('done', 'cancel')
         )
         move_line_ids = quantity_move_line_ids.filtered(lambda ml: ml.picked)
@@ -1096,7 +1095,7 @@ class StockMoveLine(models.Model):
         self = self.with_context(inventory_mode=False)
         processed_move_line = self.env['stock.move.line']
         for move_line in self:
-            if move_line.is_inventory and not float_is_zero(move_line.quantity, precision_rounding=move_line.product_uom_id.rounding):
+            if move_line.is_inventory and not move_line.product_uom_id.is_zero(move_line.quantity):
                 processed_move_line += move_line
                 move_vals.append(move_line._get_revert_inventory_move_values())
         if not processed_move_line:

@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero, float_round, float_compare, OrderedSet
+from odoo.tools import float_is_zero, OrderedSet
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -52,7 +52,7 @@ class StockMove(models.Model):
             # dropshipping create additional positive svl to make sure there is no impact on the stock valuation
             # We need to remove them from the computation of the price unit.
             if self.origin_returned_move_id._is_dropshipped() or self.origin_returned_move_id._is_dropshipped_returned():
-                layers = layers.filtered(lambda l: float_compare(l.value, 0, precision_rounding=l.product_id.uom_id.rounding) <= 0)
+                layers = layers.filtered(lambda l: l.product_id.uom_id.compare(l.value, 0) <= 0)
             layers |= layers.stock_valuation_layer_ids
             if self.product_id.lot_valuated:
                 layers_by_lot = layers.grouped('lot_id')
@@ -60,10 +60,10 @@ class StockMove(models.Model):
                 for lot, stock_layers in layers_by_lot.items():
                     qty = sum(stock_layers.mapped("quantity"))
                     val = sum(stock_layers.mapped("value"))
-                    prices[lot] = val / qty if not float_is_zero(qty, precision_rounding=self.product_id.uom_id.rounding) else 0
+                    prices[lot] = val / qty if not self.product_id.uom_id.is_zero(qty) else 0
             else:
                 quantity = sum(layers.mapped("quantity"))
-                prices = {self.env['stock.lot']: sum(layers.mapped("value")) / quantity if not float_is_zero(quantity, precision_rounding=layers.uom_id.rounding) else 0}
+                prices = {self.env['stock.lot']: sum(layers.mapped("value")) / quantity if not layers.uom_id.is_zero(quantity) else 0}
             return prices
 
         if not float_is_zero(price_unit, precision) or self._should_force_price_unit():
@@ -243,7 +243,7 @@ class StockMove(models.Model):
             else:
                 for line in lines:
                     quantities[line.lot_id] += line.quantity_product_uom
-            if float_is_zero(sum(quantities.values()), precision_rounding=move.product_id.uom_id.rounding):
+            if move.product_id.uom_id.is_zero(sum(quantities.values())):
                 continue
 
             if move.product_id.lot_valuated:
@@ -339,7 +339,7 @@ class StockMove(models.Model):
         for move in self:
             if move.state == 'done':
                 continue
-            if float_is_zero(move.quantity, precision_rounding=move.product_uom.rounding):
+            if move.product_uom.is_zero(move.quantity):
                 continue
             if not any(move.move_line_ids.mapped('picked')):
                 continue
@@ -465,9 +465,8 @@ class StockMove(models.Model):
                 continue
             product_qty = product.sudo().with_company(layers.company_id).quantity_svl
             product_value = product.sudo().with_company(layers.company_id).value_svl
-            rounding = product.uom_id.rounding
 
-            if float_is_zero(product_qty, precision_rounding=rounding):
+            if product.uom_id.is_zero(product_qty):
                 return
 
             # get the standard price

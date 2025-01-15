@@ -57,7 +57,7 @@ class StockReplenishmentInfo(models.TransientModel):
                 'product_max_qty': self.env['ir.qweb.field.float'].value_to_html(orderpoint.product_max_qty, {'decimal_precision': 'Product Unit'}),
                 'product_uom_name': orderpoint.product_uom_name,
                 'virtual': orderpoint.trigger == 'manual' and orderpoint.create_uid.id == SUPERUSER_ID,
-                'visibility_days': orderpoint.visibility_days if float_compare(orderpoint.qty_forecast, orderpoint.product_min_qty, precision_rounding=orderpoint.product_uom.rounding) < 0 else 0,
+                'visibility_days': orderpoint.visibility_days if orderpoint.product_uom.compare(orderpoint.qty_forecast, orderpoint.product_min_qty) < 0 else 0,
                 'visibility_days_date': format_date(self.env, replenishment_report.orderpoint_id.lead_days_date + relativedelta(days=orderpoint.visibility_days))
             })
 

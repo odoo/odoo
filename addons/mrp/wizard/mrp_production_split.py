@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, Command
-from odoo.tools import float_round, float_compare
+from odoo.tools import float_round
 
 
 class MrpProductionSplitMulti(models.TransientModel):
@@ -57,8 +57,7 @@ class MrpProductionSplit(models.TransientModel):
                     'user_id': wizard.production_id.user_id.id,
                     'date': wizard.production_id.date_start,
                 }))
-                remaining_qty = float_round(remaining_qty - qty, precision_rounding=wizard.product_uom_id.rounding)
-
+                remaining_qty = wizard.product_uom_id.round(remaining_qty - qty)
             wizard.production_detailed_vals_ids = commands
 
     @api.depends('production_detailed_vals_ids')
@@ -66,7 +65,7 @@ class MrpProductionSplit(models.TransientModel):
         self.valid_details = False
         for wizard in self:
             if wizard.production_detailed_vals_ids:
-                wizard.valid_details = float_compare(wizard.product_qty, sum(wizard.production_detailed_vals_ids.mapped('quantity')), precision_rounding=wizard.product_uom_id.rounding) == 0
+                wizard.valid_details = wizard.product_uom_id.compare(wizard.product_qty, sum(wizard.production_detailed_vals_ids.mapped('quantity'))) == 0
 
     def action_split(self):
         productions = self.production_id._split_productions({self.production_id: [detail.quantity for detail in self.production_detailed_vals_ids]})
