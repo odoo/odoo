@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add('test_generate_serial_1', {  steps: () =
         run: "click",
     },
     {
-        trigger: ".fa-list",
+        trigger: "button:contains('Details')",
         run: "click",
     },
     {
@@ -117,7 +117,7 @@ registry.category("web_tour.tours").add('test_generate_serial_2', {  steps: () =
         run: "click",
     },
     {
-        trigger: ".fa-list",
+        trigger: "button:contains('Details')",
         run: "click",
     },
     {
