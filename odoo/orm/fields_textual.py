@@ -14,7 +14,7 @@ from psycopg2.extras import Json as PsycopgJson
 
 from odoo.exceptions import UserError
 from odoo.netsvc import COLOR_PATTERN, DEFAULT, GREEN, RED, ColoredFormatter
-from odoo.tools import SQL, html_normalize, html_sanitize, sql
+from odoo.tools import SQL, html_normalize, html_sanitize, html2plaintext, is_html_empty, plaintext2html, sql
 from odoo.tools.misc import SENTINEL, Sentinel
 from odoo.tools.sql import pattern_to_translated_trigram_pattern, pg_varchar, value_to_translated_trigram_pattern
 from odoo.tools.translate import html_translate
@@ -582,3 +582,8 @@ class Html(BaseString):
     def get_trans_terms(self, value):
         # ensure the translation terms are stringified, otherwise we can break the PO file
         return list(map(str, super().get_trans_terms(value)))
+
+    escape = staticmethod(markup_escape)
+    is_empty = staticmethod(is_html_empty)
+    to_plaintext = staticmethod(html2plaintext)
+    from_plaintext = staticmethod(plaintext2html)
