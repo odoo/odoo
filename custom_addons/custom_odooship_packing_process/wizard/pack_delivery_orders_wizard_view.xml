@@ -17,7 +17,7 @@
                         <group>
                             <field name="package_box_type_id"
                                    placeholder="Select Packaging Box"/>
-                            <field name="pack_count"/>
+                            <field name="pack_count" invisible="1"/>
                         </group>
                     </group>
                     <group>
@@ -25,15 +25,15 @@
                             <tree editable="bottom">
                                 <field name="product_id"
                                        options="{'no_create':True, 'no_open': True, 'no_quick_create': True, 'no_create_edit':True}"/>
-                                <field name="available_product_ids"/>
+                                <field name="available_product_ids" column_invisible="True"/>
                                 <field name="quantity"/>
 <!--                                <field name="product_packaging_id"/>-->
 <!--                                <field name="product_packaging_qty"/>-->
-                                <field name="available_quantity" column_invisible="True"/>
+                                <field name="available_quantity"/>
                                 <field name="remaining_quantity"/>
                                 <field name="weight"/>
                                 <field name="picking_id" column_invisible="True"/>
-                                <field name="location_dest_id" column_invisible="True"/>
+                                <field name="location_dest_id" column_invisible="1"/>
                             </tree>
                         </field>
                     </group>
