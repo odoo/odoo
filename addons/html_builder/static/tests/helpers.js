@@ -216,7 +216,7 @@ export async function modifyText(editor) {
     await insertText(editor, "1");
 }
 
-function getSnippetView(snippets) {
+export function getSnippetView(snippets) {
     const { snippet_groups, snippet_custom, snippet_structure, snippet_content } = snippets;
     return `
     <snippets id="snippet_groups" string="Categories">
@@ -242,4 +242,15 @@ export function getSnippetStructure({
 }) {
     keywords = keywords.join(", ");
     return `<div name="${name}" data-oe-snippet-id="123" data-o-image-preview="${imagePreview}" data-oe-keywords="${keywords}" data-o-group="${groupName}">${content}</div>`;
+}
+
+export function getInnerContent({
+    name,
+    content,
+    keywords = [],
+    imagePreview = "",
+    thumbnail = "",
+}) {
+    keywords = keywords.join(", ");
+    return `<div name="${name}" data-oe-type="snippet" data-oe-snippet-id="456" data-o-image-preview="${imagePreview}" data-oe-thumbnail="${thumbnail}" data-oe-keywords="${keywords}">${content}</div>`;
 }

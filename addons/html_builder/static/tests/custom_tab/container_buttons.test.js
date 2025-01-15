@@ -1,15 +1,26 @@
 import { expect, test } from "@odoo/hoot";
-import { defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
-import { contains } from "@web/../tests/web_test_helpers";
+import { xml } from "@odoo/owl";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+    addOption,
+    getEditable,
+    getSnippetStructure,
+    getInnerContent,
+    getSnippetView,
+} from "../helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { animationFrame } from "@odoo/hoot-mock";
 
 defineWebsiteModels();
 
 const dummySnippet = `
-    <section data-name="Dummy Section">
+    <section data-name="Dummy Section" data-snippet="s_dummy">
         <div class="container">
             <div class="row">
                 <div class="col-lg-7">
                     <p>TEST</p>
+                    <p><a class="btn">BUTTON</a></p>
                 </div>
                 <div class="col-lg-5">
                     <p>TEST</p>
@@ -55,6 +66,99 @@ test("Use the sidebar 'clone' buttons", async () => {
     expect(":iframe section").toHaveCount(2);
     expect(":iframe .col-lg-7").toHaveCount(4);
     expect(":iframe .col-lg-5").toHaveCount(2);
+});
+
+test("Use the sidebar 'save snippet' buttons", async () => {
+    addOption({
+        selector: "a.btn",
+        template: xml`<BuilderButton classAction="'dummy-class'"/>`,
+    });
+    const websiteContent = getEditable(dummySnippet);
+    const structureSnippetDesc = {
+        name: "Dummy Section",
+        groupName: "a",
+        content: `
+        <section data-snippet="s_dummy">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-7">
+                        <p>TEST</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        `,
+        keywords: ["dummy"],
+    };
+    const innerContentDesc = {
+        name: "Button",
+        content: `<a data-snippet="s_button" class="btn o_snippet_drop_in_only" href="#">Button</a></div>`,
+    };
+    const snippets = {
+        snippet_groups: [
+            '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
+            '<div name="Custom" data-oe-thumbnail="custom.svg" data-oe-snippet-id="123" data-o-snippet-group="custom"><section data-snippet="s_snippet_group"></section></div>',
+        ],
+        snippet_structure: [getSnippetStructure(structureSnippetDesc)],
+        snippet_content: [getInnerContent(innerContentDesc)],
+        snippet_custom: [],
+    };
+    await setupWebsiteBuilder(websiteContent, { snippets });
+
+    onRpc("ir.ui.view", "save_snippet", ({ kwargs }) => {
+        let { name, arch, snippet_key, thumbnail_url } = kwargs;
+        // Add `data-snippet` if it is missing.
+        if (!arch.includes("data-snippet")) {
+            const spaceIndex = arch.indexOf(" ") + 1;
+            arch =
+                arch.slice(0, spaceIndex) +
+                `data-snippet="${snippet_key}" ` +
+                arch.slice(spaceIndex);
+        }
+        const customSnippet = `<div name="${name}" data-oe-type="snippet" data-oe-snippet-id="789" data-o-image-preview="" data-oe-thumbnail="${thumbnail_url}" data-oe-keywords="">${arch}</div>`;
+        snippets.snippet_custom.push(customSnippet);
+        return name;
+    });
+    onRpc("ir.ui.view", "render_public_asset", (args) => getSnippetView(snippets));
+
+    const saveSectionSelector =
+        ".o_customize_tab .options-container > div:contains('Dummy Section') button.oe_snippet_save";
+    const saveColumnSelector =
+        ".o_customize_tab .options-container > div:contains('Column') button.oe_snippet_save";
+    const saveButtonSelector =
+        ".o_customize_tab .options-container > div:contains('Button') button.oe_snippet_save";
+
+    // Check that there is no custom section.
+    const customGroupSelector = "div[data-category='snippet_groups'] span:contains('Custom')";
+    expect(".o-snippets-menu div:contains('Custom Inner Content')").toHaveCount(0);
+    expect(customGroupSelector).toHaveCount(0);
+
+    await contains(":iframe .btn").click();
+    expect(saveSectionSelector).toHaveCount(1);
+    expect(saveColumnSelector).toHaveCount(0);
+    expect(saveButtonSelector).toHaveCount(1);
+
+    // Save the snippets.
+    await contains(saveButtonSelector).click();
+    await contains(".o_dialog .btn:contains('Save')").click();
+    expect(".o_notification_manager .o_notification_content").toHaveCount(1);
+    await contains(".o_notification_manager .o_notification_close").click();
+
+    await contains(saveSectionSelector).click();
+    await contains(".o_dialog .btn:contains('Save')").click();
+    expect(".o_notification_manager .o_notification_content").toHaveCount(1);
+
+    // Check that the custom sections appeared.
+    await contains(".o-website-builder_sidebar .o-snippets-tabs button:contains(BLOCKS)").click();
+    expect(
+        ".o-snippets-menu div:contains('Custom Inner Content') div[name='Custom Button']"
+    ).toHaveCount(1);
+    expect(customGroupSelector).toHaveCount(1);
+    await contains(customGroupSelector).click();
+    await animationFrame();
+    expect(
+        ".o_add_snippet_dialog .o_add_snippet_iframe:iframe span:contains('Custom Dummy Section')"
+    ).toHaveCount(1);
 });
 
 test("Clicking on the options container title selects the corresponding element", async () => {
