@@ -42,16 +42,16 @@ class AccountMoveSend(models.AbstractModel):
                 'action_text': _("View Partner(s)"),
                 'action': invalid_partners._get_records_action(name=_("Check Partner(s)")),
             }
-            edi_modes = set(
-                peppol_moves.company_id.account_edi_proxy_client_ids \
-                    .filtered(lambda usr: usr.proxy_type == 'peppol') \
-                    .mapped('edi_mode')
-            )
-            if edi_modes.intersection({'test', 'demo'}):
-                alerts['account_peppol_demo_test_mode'] = {
-                    'message': _("Peppol is in testing/demo mode."),
-                    'level': 'info',
-                }
+        edi_modes = set(
+            peppol_moves.company_id.account_edi_proxy_client_ids \
+                .filtered(lambda usr: usr.proxy_type == 'peppol') \
+                .mapped('edi_mode')
+        )
+        if edi_modes.intersection({'test', 'demo'}):
+            alerts['account_peppol_demo_test_mode'] = {
+                'message': _("Peppol is in testing/demo mode."),
+                'level': 'info',
+            }
 
         # Check for not peppol partners that are on the network.
         not_peppol_moves = moves.filtered(lambda m: 'peppol' not in moves_data[m]['sending_methods'])
