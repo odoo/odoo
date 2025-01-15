@@ -61,6 +61,7 @@ class AccountEdiProxyClientUser(models.Model):
                 # commit the above changes before raising below
                 if not modules.module.current_test:
                     self.env.cr.commit()
+                raise UserError(_('We could not find a user with this information on our server. Please check your information.'))
             raise UserError(e.message)
 
         if 'error' in response:
