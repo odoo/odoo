@@ -800,6 +800,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             default_code=self._find_value('./cac:Item/cac:SellersItemIdentification/cbc:ID', tree),
             name=self._find_value('./cac:Item/cbc:Name', tree),
             barcode=self._find_value("./cac:Item/cac:StandardItemIdentification/cbc:ID[@schemeID='0160']", tree),
+            company=invoice_line.company_id
         )
         # Description
         description_node = tree.find('./{*}Item/{*}Description')
