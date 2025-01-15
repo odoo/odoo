@@ -21,19 +21,24 @@ class AccountMoveSendWizard(models.TransientModel):
             if peppol_checkbox := wizard.sending_method_checkboxes.get('peppol'):
                 peppol_partner = wizard.move_id.partner_id.commercial_partner_id.with_company(wizard.company_id)
                 peppol_proxy_mode = wizard.company_id._get_peppol_edi_mode()
-                addendum_not_valid = _(' (customer not on Peppol)') if peppol_partner.peppol_verification_state == 'not_valid' else ''
-                vals_not_valid = {'readonly': True, 'checked': False} if addendum_not_valid else {}
+                if peppol_partner.peppol_verification_state == 'not_valid':
+                    addendum_disable_reason = _(' (Customer not on Peppol)')
+                elif peppol_partner.peppol_verification_state == 'not_verified':
+                    addendum_disable_reason = _(' (Consumer)')
+                else:
+                    addendum_disable_reason = ''
+                vals_not_valid = {'readonly': True, 'checked': False} if addendum_disable_reason else {}
                 addendum_mode = _(' (Demo/Test mode)') if peppol_proxy_mode != 'prod' else ''
-                if addendum_not_valid or addendum_mode:
+                if addendum_disable_reason or addendum_mode:
                     wizard.sending_method_checkboxes = {
                         **wizard.sending_method_checkboxes,
                         'peppol': {
                             **peppol_checkbox,
                             **vals_not_valid,
                             'label': _(
-                                '%(peppol_label)s%(not_valid)s%(peppol_proxy_mode)s',
+                                '%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s',
                                 peppol_label=peppol_checkbox['label'],
-                                not_valid=addendum_not_valid,
+                                disable_reason=addendum_disable_reason,
                                 peppol_proxy_mode=addendum_mode,
                             ),
                         }
