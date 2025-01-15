@@ -7,7 +7,7 @@ from urllib.parse import urlencode
 from unittest.mock import patch
 
 import odoo
-from odoo.tests.common import get_db_name
+from odoo.tests import get_db_name, tagged
 from odoo.tools import mute_logger
 from .test_common import TestHttpBase
 
@@ -23,6 +23,7 @@ GEOIP_ODOO_FARM_2 = {
 }
 
 
+@tagged('post_install', '-at_install')
 class TestHttpSession(TestHttpBase):
 
     @mute_logger('odoo.http')  # greeting_none called ignoring args {'debug'}
