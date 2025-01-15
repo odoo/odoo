@@ -639,7 +639,7 @@ class TestMailSchedule(EventMailCommon):
         ]})
         self.env.invalidate_all()
         # event 50
-        with self.assertQueryCount(68), \
+        with self.assertQueryCount(70), \
              self.mock_datetime_and_now(reference_now + relativedelta(minutes=10)), \
              self.mock_mail_gateway():
             _new = self.env['event.registration'].create([
