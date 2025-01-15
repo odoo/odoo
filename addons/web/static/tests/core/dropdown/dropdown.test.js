@@ -1171,6 +1171,7 @@ test.tags("desktop")("multi-level dropdown: keynav", async () => {
     for (const [stepIndex, step] of scenarioSteps.entries()) {
         await press(step.hotkey);
         await tick();
+        await tick();
         await animationFrame();
 
         if (step.highlighted !== undefined) {
