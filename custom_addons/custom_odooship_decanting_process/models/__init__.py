@@ -12,3 +12,5 @@ from . import res_partner_inherit
 from . import stock_location_inherit
 from . import automation_bulk_manual_putaway
 from . import sales_order_inherit
+from . import pack_bench_configuration
+from . import package_configuration
