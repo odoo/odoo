@@ -102,14 +102,7 @@ class ResConfigSettings(models.TransientModel):
         The migration key is then displayed in Peppol settings.
         Currently, reopening after migrating away is not supported.
         """
-        self.ensure_one()
-
-        if self.account_peppol_proxy_state != 'receiver':
-            raise UserError(_("Can't migrate unless registered to receive documents."))
-
-        response = self.account_peppol_edi_user._call_peppol_proxy(endpoint='/api/peppol/1/migrate_peppol_registration')
-        self.account_peppol_migration_key = response['migration_key']
-        return True
+        raise UserError(_("This feature is deprecated. Contact odoo support if you need a migration key."))
 
     @handle_demo
     def button_deregister_peppol_participant(self):
