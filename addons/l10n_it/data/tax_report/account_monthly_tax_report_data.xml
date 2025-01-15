@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tax_monthly_report_vat" model="account.report">
+        <field name="name">Monthly VAT Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.it"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="integer_rounding">HALF-UP</field>
+        <field name="column_ids">
+            <record id="tax_monthly_report_vat_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_monthly_report_line_operazione_imponibile" model="account.report.line">
+                <field name="name">Taxable transaction</field>
+                <field name="code">h1</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_monthly_report_line_vp2" model="account.report.line">
+                        <field name="name">VP2 - Total active transactions</field>
+                        <field name="code">VP2</field>
+                        <field name="tax_tags_formula">02</field>
+                    </record>
+                    <record id="tax_monthly_report_line_vp3" model="account.report.line">
+                        <field name="name">VP3 - Total passive transactions</field>
+                        <field name="code">VP3</field>
+                        <field name="tax_tags_formula">03</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_monthly_report_line_iva" model="account.report.line">
+                <field name="name">VAT</field>
+                <field name="code">h2</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_monthly_report_line_vp4" model="account.report.line">
+                        <field name="name">VP4 - VAT due</field>
+                        <field name="code">VP4</field>
+                        <field name="tax_tags_formula">4v</field>
+                    </record>
+                    <record id="tax_monthly_report_line_vp5" model="account.report.line">
+                        <field name="name">VP5 - VAT Deductible</field>
+                        <field name="code">VP5</field>
+                        <field name="tax_tags_formula">5v</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_monthly_report_line_saldi_riporti_e_interessi" model="account.report.line">
+                <field name="name">Balances, carryovers and interest</field>
+                <field name="code">h3</field>
+                <field name="children_ids">
+                    <record id="tax_monthly_report_line_vp6" model="account.report.line">
+                        <field name="name">VP6 - VAT due</field>
+                        <field name="code">VP6</field>
+                        <field name="children_ids">
+                            <record id="tax_monthly_report_line_vp6a" model="account.report.line">
+                                <field name="name">VP6a - VAT due (payable)</field>
+                                <field name="code">VP6a</field>
+                                <field name="expression_ids">
+                                    <record id="tax_monthly_report_line_vp6a_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">VP4.balance - VP5.balance</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_monthly_report_line_vp6b" model="account.report.line">
+                                <field name="name">VP6b - VAT due (credit)</field>
+                                <field name="code">VP6b</field>
+                                <field name="expression_ids">
+                                    <record id="tax_monthly_report_line_vp6b_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">VP4.balance - VP5.balance</field>
+                                        <field name="subformula">if_below(EUR(0))</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_monthly_report_line_vp7" model="account.report.line">
+                        <field name="name">VP7 - Previous period debt not to exceed 25,82</field>
+                        <field name="code">VP7</field>
+                        <field name="expression_ids">
+                            <record id="tax_monthly_report_line_vp7_tag" model="account.report.expression">
+                                <field name="label">tag</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vp7</field>
+                            </record>
+                            <record id="tax_monthly_report_line_vp7_applied_carryover" model="account.report.expression">
+                                <field name="label">_applied_carryover_balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="date_scope">previous_tax_period</field>
+                            </record>
+                            <record id="tax_monthly_report_line_vp7_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">VP7._applied_carryover_balance + VP7.tag</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_monthly_report_line_vp8" model="account.report.line">
+                        <field name="name">VP8 - Previous period credit</field>
+                        <field name="code">VP8</field>
+                        <field name="expression_ids">
+                            <record id="tax_monthly_report_line_vp8_tag" model="account.report.expression">
+                                <field name="label">tag</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vp8</field>
+                            </record>
+                            <record id="tax_monthly_report_line_vp8_applied_carryover" model="account.report.expression">
+                                <field name="label">_applied_carryover_balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="date_scope">previous_tax_period</field>
+                            </record>
+                            <record id="tax_monthly_report_line_vp8_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">VP8._applied_carryover_balance + VP8.tag</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_monthly_report_line_vp9" model="account.report.line">
+                        <field name="name">VP9 - Previous year credit</field>
+                        <field name="code">VP9</field>
+                        <field name="expression_ids">
+                            <record id="tax_monthly_report_line_vp9_tag" model="account.report.expression">
+                                <field name="label">tag</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vp9</field>
+                            </record>
+                            <record id="tax_monthly_report_line_vp9_applied_carryover" model="account.report.expression">
+                                <field name="label">_applied_carryover_balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="date_scope">previous_tax_period</field>
+                            </record>
+                            <record id="tax_monthly_report_line_vp9_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">VP9._applied_carryover_balance + VP9.tag</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_monthly_report_line_vp10" model="account.report.line">
+                        <field name="name">VP10 - EU car payments</field>
+                        <field name="code">VP10</field>
+                        <field name="tax_tags_formula">vp10</field>
+                    </record>
+                    <record id="tax_monthly_report_line_vp11" model="account.report.line">
+                        <field name="name">VP11 - Tax Credit</field>
+                        <field name="code">VP11</field>
+                        <field name="tax_tags_formula">vp11</field>
+                    </record>
+                    <record id="tax_monthly_report_line_vp12" model="account.report.line">
+                        <field name="name">VP12 - Interest due for quarterly settlements</field>
+                        <field name="code">VP12</field>
+                        <field name="tax_tags_formula">vp12</field>
+                    </record>
+                    <record id="tax_monthly_report_line_vp13" model="account.report.line">
+                        <field name="name">VP13 - Down payment due</field>
+                        <field name="code">VP13</field>
+                        <field name="tax_tags_formula">vp13</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_monthly_report_line_conto_corrente_iva" model="account.report.line">
+                <field name="name">VAT account</field>
+                <field name="code">h4</field>
+                <field name="children_ids">
+                    <record id="tax_monthly_report_line_vp14" model="account.report.line">
+                        <field name="name">VP14 - VAT payable</field>
+                        <field name="code">VP14</field>
+                        <field name="children_ids">
+                            <record id="tax_monthly_report_line_vp14a" model="account.report.line">
+                                <field name="name">VP14a - VAT payable (debit)</field>
+                                <field name="code">VP14a</field>
+                                <field name="expression_ids">
+                                    <record id="tax_monthly_report_line_vp14a_vp4_vp5_dif_pos" model="account.report.expression">
+                                        <field name="label">vp4_vp5_dif_pos</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">VP4.balance - VP5.balance</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_monthly_report_line_vp14a_vp4_vp5_dif_neg" model="account.report.expression">
+                                        <field name="label">vp4_vp5_dif_neg</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">VP4.balance - VP5.balance</field>
+                                        <field name="subformula">if_below(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_monthly_report_line_vp14a_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">(VP14a.vp4_vp5_dif_pos + VP7.balance + VP12.balance) - (-VP14a.vp4_vp5_dif_neg + VP8.balance + VP9.balance + VP10.balance + VP11.balance + VP13.balance)</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_monthly_report_line_vp14a_carryover" model="account.report.expression">
+                                        <field name="label">_carryover_balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">VP14a.balance</field>
+                                        <field name="subformula">if_between(EUR(0), EUR(25.82))</field>
+                                        <field name="carryover_target">VP7._applied_carryover_balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_monthly_report_line_vp14b" model="account.report.line">
+                                <field name="name">VP14b - VAT payable (credit)</field>
+                                <field name="code">VP14b</field>
+                                <field name="expression_ids">
+                                    <record id="tax_monthly_report_line_vp14b_vp4_vp5_dif_pos" model="account.report.expression">
+                                        <field name="label">vp4_vp5_dif_pos</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">VP4.balance - VP5.balance</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_monthly_report_line_vp14b_vp4_vp5_dif_neg" model="account.report.expression">
+                                        <field name="label">vp4_vp5_dif_neg</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">VP4.balance - VP5.balance</field>
+                                        <field name="subformula">if_below(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_monthly_report_line_vp14b_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">(-VP14b.vp4_vp5_dif_neg + VP8.balance + VP9.balance + VP10.balance + VP11.balance + VP13.balance) - (VP14b.vp4_vp5_dif_pos + VP7.balance + VP12.balance)</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_monthly_report_line_vp14b_carryover" model="account.report.expression">
+                                        <field name="label">_carryover_balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">VP14b.balance</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                        <field name="carryover_target">VP8._applied_carryover_balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>
