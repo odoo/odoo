@@ -165,13 +165,6 @@ msgid "Can send, pending registration to receive"
 msgstr ""
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
-msgid "Can't migrate unless registered to receive documents."
-msgstr ""
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_service_configuration
 msgid "Cancel"
 msgstr ""
@@ -474,11 +467,6 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__prod
 msgid "Live"
-msgstr ""
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid "Migrate registration to another service"
 msgstr ""
 
 #. module: account_peppol
@@ -913,11 +901,10 @@ msgid "This will delete your Peppol registration."
 msgstr ""
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#: code:addons/account_peppol/models/res_config_settings.py:0
 msgid ""
-"This will migrate your Peppol registration away from Odoo.  A migration key "
-"will be generated.                                         If the other "
-"service does not support migration, consider unregistering instead."
+"This feature is deprecated. Contact odoo support if you need a migration "
+"key."
 msgstr ""
 
 #. module: account_peppol
