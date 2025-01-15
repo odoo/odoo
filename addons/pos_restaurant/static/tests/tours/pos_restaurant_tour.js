@@ -370,3 +370,23 @@ registry.category("web_tour.tours").add("PoSPaymentSyncTour3", {
             ProductScreen.orderlinesHaveNoChange(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PreparationPrinterContent", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            Dialog.confirm("Add"),
+            ProductScreen.clickOrderButton(),
+            {
+                trigger:
+                    ".render-container .pos-receipt-body .product-name:contains('Product Test (Value 1)')",
+            },
+            {
+                trigger: ".render-container .pos-receipt-body .p-0:contains('Value 1')",
+            },
+        ].flat(),
+});
