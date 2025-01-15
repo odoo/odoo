@@ -11,7 +11,7 @@ registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_
             run: "click",
         },
         {
-            trigger: ".fa-list",
+            trigger: "button:contains('Details')",
             run: "click",
         },
         {
@@ -35,7 +35,7 @@ registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_
             run: 'edit 21',
         },
         {
-            trigger: ".fa-list",
+            trigger: "button:contains('Details')",
             run: "click",
         },
         {
@@ -64,7 +64,7 @@ registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_
             run: 'edit 7',
         },
         {
-            trigger: ".fa-list",
+            trigger: "button:contains('Details')",
             run: "click",
         },
         {
