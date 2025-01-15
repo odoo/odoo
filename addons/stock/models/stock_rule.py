@@ -239,7 +239,7 @@ class StockRule(models.Model):
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
         company_id = self.company_id.id
         copied_quantity = move_to_copy.quantity
-        if float_compare(move_to_copy.product_uom_qty, 0, precision_rounding=move_to_copy.product_uom.rounding) < 0:
+        if move_to_copy.product_uom.compare(move_to_copy.product_uom_qty, 0) < 0:
             copied_quantity = move_to_copy.product_uom_qty
         if not company_id:
             company_id = self.sudo().warehouse_id and self.sudo().warehouse_id.company_id.id or self.sudo().picking_type_id.warehouse_id.company_id.id
@@ -337,7 +337,7 @@ class StockRule(models.Model):
                 move_dest.partner_id = self.location_src_id.warehouse_id.partner_id or self.company_id.partner_id
 
         # If the quantity is negative the move should be considered as a refund
-        if float_compare(product_qty, 0.0, precision_rounding=product_uom.rounding) < 0:
+        if product_uom.compare(product_qty, 0.0) < 0:
             values['to_refund'] = True
 
         move_values = {

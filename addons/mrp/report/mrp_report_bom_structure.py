@@ -165,7 +165,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             product_info[product.id]['consumptions'][stock_loc] += line_quantities.get(line.id, 0.0)
             product_quantities_info[product.id][line.id] = product_info[product.id]['consumptions'][stock_loc]
             if (not product.is_storable or
-                    float_compare(product_info[product.id]['consumptions'][stock_loc], quantities_info['free_qty'], precision_rounding=product.uom_id.rounding) <= 0):
+                    product.uom_id.compare(product_info[product.id]['consumptions'][stock_loc], quantities_info['free_qty']) <= 0):
                 # Use date.min as a sentinel value for _get_stock_availability
                 closest_forecasted[product.id][line.id] = date.min
             elif stock_loc != 'in_stock':
@@ -714,7 +714,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         stock_loc = quantities_info['stock_loc']
         product_info[product.id]['consumptions'][stock_loc] += quantity
         # Check if product is already in stock with enough quantity
-        if product and float_compare(product_info[product.id]['consumptions'][stock_loc], quantities_info['free_qty'], precision_rounding=product.uom_id.rounding) <= 0:
+        if product and product.uom_id.compare(product_info[product.id]['consumptions'][stock_loc], quantities_info['free_qty']) <= 0:
             return ('available', 0)
 
         # No need to check forecast if the product isn't located in our stock
