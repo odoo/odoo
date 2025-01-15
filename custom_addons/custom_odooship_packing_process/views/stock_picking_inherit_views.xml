@@ -7,6 +7,14 @@
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//form/sheet/group/group" position="inside">
+                    <field name="duplicate_pack_count"/>
+                </xpath>
+                <xpath expr="//field[@name='move_ids_without_package']//tree//field[@name='product_uom_qty']" position="after">
+                    <field name="packed" optional="hide" column_invisible="parent.state=='draft'"/>
+                    <field name="released_manual" optional="hide" column_invisible="parent.state=='draft'"/>
+                    <field name="remaining_packed_qty" optional="hide" column_invisible="parent.state=='draft'"/>
+                </xpath>
                 <!-- Add the Pack button in the header -->
                 <xpath expr="//form/header" position="inside">
                     <button name="button_manual_pack"
