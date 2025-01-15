@@ -43,7 +43,6 @@ const StepSchema = {
 const TourSchema = {
     checkDelay: { type: Number, optional: true },
     name: { type: String, optional: true },
-    saveAs: { type: String, optional: true },
     steps: Function,
     url: { type: String, optional: true },
     wait_for: { type: [Function, Object], optional: true },
@@ -76,22 +75,10 @@ export const tourService = {
         }));
 
         function getTourFromRegistry(tourName) {
-            let tour = null;
-            if (tourRegistry.contains(tourName)) {
-                tour = tourRegistry.get(tourName);
-            }
-            const tourFromSaveAs = tourRegistry
-                .getEntries()
-                .findLast(([n, t]) => t.saveAs == tourName);
-            if (tourFromSaveAs) {
-                tourName = tourFromSaveAs[0];
-                tour = tourFromSaveAs[1];
-            }
-
-            if (!tour) {
+            if (!tourRegistry.contains(tourName)) {
                 return;
             }
-
+            const tour = tourRegistry.get(tourName);
             return {
                 ...tour,
                 steps: tour.steps(),
@@ -169,13 +156,10 @@ export const tourService = {
             const tourName = tourState.getCurrentTour();
             const tourConfig = tourState.getCurrentConfig();
 
-            let tour;
+            let tour = getTourFromRegistry(tourName);
             if (tourConfig.fromDB) {
                 tour = await getTourFromDB(tourName);
-            } else if (tourRegistry.contains(tourName)) {
-                tour = getTourFromRegistry(tourName);
             }
-
             if (!tour) {
                 return;
             }
