@@ -315,10 +315,10 @@ class StockMove(models.Model):
         for move in self:
             move.is_quantity_done_editable = move.product_id
 
-    @api.depends('picking_id', 'name', 'picking_id.name')
+    @api.depends('name', 'picking_id.name', 'scrap_id.name', 'scrapped')
     def _compute_reference(self):
         for move in self:
-            move.reference = move.picking_id.name if move.picking_id else move.name
+            move.reference = move.scrap_id.name if move.scrapped else move.picking_id.name or move.name
 
     @api.depends('move_line_ids')
     def _compute_move_lines_count(self):

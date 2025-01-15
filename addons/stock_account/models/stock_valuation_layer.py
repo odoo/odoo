@@ -124,7 +124,14 @@ class StockValuationLayer(models.Model):
 
     def action_open_reference(self):
         self.ensure_one()
-        if self.stock_move_id:
+        if self.stock_move_id.scrapped:
+            return {
+                'res_model': 'stock.scrap',
+                'type': 'ir.actions.act_window',
+                'views': [[False, 'form']],
+                'res_id': self.stock_move_id.scrap_id.id,
+            }
+        elif self.stock_move_id:
             action = self.stock_move_id.action_open_reference()
             if action['res_model'] != 'stock.move':
                 return action
