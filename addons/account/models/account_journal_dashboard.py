@@ -28,7 +28,7 @@ class account_journal(models.Model):
     kanban_dashboard_graph = fields.Text(compute='_kanban_dashboard_graph')
     json_activity_data = fields.Text(compute='_get_json_activity_data')
     show_on_dashboard = fields.Boolean(string='Show journal on dashboard', help="Whether this journal should be displayed on the dashboard or not", default=True)
-    color = fields.Integer("Color Index", default=0)
+    color = fields.Integer("Color Index", default=0, aggregator='avg')
     current_statement_balance = fields.Monetary(compute='_compute_current_statement_balance') # technical field used to avoid computing the value multiple times
     has_statement_lines = fields.Boolean(compute='_compute_current_statement_balance') # technical field used to avoid computing the value multiple times
     entries_count = fields.Integer(compute='_compute_entries_count')

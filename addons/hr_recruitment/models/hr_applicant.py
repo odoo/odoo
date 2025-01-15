@@ -78,7 +78,7 @@ class Applicant(models.Model):
     day_open = fields.Float(compute='_compute_day', string="Days to Open", compute_sudo=True)
     day_close = fields.Float(compute='_compute_day', string="Days to Close", compute_sudo=True)
     delay_close = fields.Float(compute="_compute_delay", string='Delay to Close', readonly=True, aggregator="avg", help="Number of days to close", store=True)
-    color = fields.Integer("Color Index", default=0)
+    color = fields.Integer("Color Index", default=0, aggregator='avg')
     emp_id = fields.Many2one('hr.employee', string="Employee", help="Employee linked to the applicant.", copy=False)
     emp_is_active = fields.Boolean(string="Employee Active", related='emp_id.active')
     user_email = fields.Char(related='user_id.email', string="User Email", readonly=True)

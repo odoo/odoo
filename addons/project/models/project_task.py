@@ -213,7 +213,7 @@ class Task(models.Model):
         domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]", )
     email_cc = fields.Char(help='Email addresses that were in the CC of the incoming emails from this task and that are not currently linked to an existing customer.')
     company_id = fields.Many2one('res.company', string='Company', compute='_compute_company_id', store=True, readonly=False, recursive=True, copy=True, default=_default_company_id)
-    color = fields.Integer(string='Color Index', export_string_translation=False)
+    color = fields.Integer(string='Color Index', export_string_translation=False, aggregator='avg')
     rating_active = fields.Boolean(string='Project Rating Status', related="project_id.rating_active")
     attachment_ids = fields.One2many(
         'ir.attachment',

@@ -119,7 +119,7 @@ class ProductTemplate(models.Model):
     variant_seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id')
 
     active = fields.Boolean('Active', default=True, help="If unchecked, it will allow you to hide the product without removing it.")
-    color = fields.Integer('Color Index')
+    color = fields.Integer('Color Index', aggregator='avg')
 
     is_product_variant = fields.Boolean(string='Is a product variant', compute='_compute_is_product_variant')
     attribute_line_ids = fields.One2many('product.template.attribute.line', 'product_tmpl_id', 'Product Attributes', copy=True)

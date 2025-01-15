@@ -38,7 +38,7 @@ class MaintenanceEquipmentCategory(models.Model):
     company_id = fields.Many2one('res.company', string='Company',
         default=lambda self: self.env.company)
     technician_user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.uid)
-    color = fields.Integer('Color Index')
+    color = fields.Integer('Color Index', aggregator='avg')
     note = fields.Html('Comments', translate=True)
     equipment_ids = fields.One2many('maintenance.equipment', 'category_id', string='Equipment', copy=False)
     equipment_count = fields.Integer(string="Equipment Count", compute='_compute_equipment_count')
@@ -160,7 +160,7 @@ class MaintenanceEquipment(models.Model):
     cost = fields.Float('Cost')
     note = fields.Html('Note')
     warranty_date = fields.Date('Warranty Expiration Date')
-    color = fields.Integer('Color Index')
+    color = fields.Integer('Color Index', aggregator='avg')
     scrap_date = fields.Date('Scrap Date')
     maintenance_ids = fields.One2many('maintenance.request', 'equipment_id')
 
@@ -237,7 +237,7 @@ class MaintenanceRequest(models.Model):
     stage_id = fields.Many2one('maintenance.stage', string='Stage', ondelete='restrict', tracking=True,
                                group_expand='_read_group_stage_ids', default=_default_stage, copy=False)
     priority = fields.Selection([('0', 'Very Low'), ('1', 'Low'), ('2', 'Normal'), ('3', 'High')], string='Priority')
-    color = fields.Integer('Color Index')
+    color = fields.Integer('Color Index', aggregator='avg')
     close_date = fields.Date('Close Date', help="Date the maintenance was finished. ")
     kanban_state = fields.Selection([('normal', 'In Progress'), ('blocked', 'Blocked'), ('done', 'Ready for next stage')],
                                     string='Kanban State', required=True, default='normal', tracking=True)
@@ -404,7 +404,7 @@ class MaintenanceTeam(models.Model):
     member_ids = fields.Many2many(
         'res.users', 'maintenance_team_users_rel', string="Team Members",
         domain="[('company_ids', 'in', company_id)]")
-    color = fields.Integer("Color Index", default=0)
+    color = fields.Integer("Color Index", default=0, aggregator='avg')
     request_ids = fields.One2many('maintenance.request', 'maintenance_team_id', copy=False)
     equipment_ids = fields.One2many('maintenance.equipment', 'maintenance_team_id', copy=False)
 

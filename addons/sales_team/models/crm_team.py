@@ -119,7 +119,7 @@ class CrmTeam(models.Model):
         'crm.team.member', 'crm_team_id', string='Sales Team Members (incl. inactive)',
         context={'active_test': False})
     # UX options
-    color = fields.Integer(string='Color Index', help="The color of the channel")
+    color = fields.Integer(string='Color Index', help="The color of the channel", aggregator='avg')
     favorite_user_ids = fields.Many2many(
         'res.users', 'team_favorite_user_rel', 'team_id', 'user_id',
         string='Favorite Members', default=_get_default_favorite_user_ids)

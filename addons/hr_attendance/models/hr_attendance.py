@@ -40,7 +40,7 @@ class HrAttendance(models.Model):
     check_in = fields.Datetime(string="Check In", default=fields.Datetime.now, required=True, tracking=True)
     check_out = fields.Datetime(string="Check Out", tracking=True)
     worked_hours = fields.Float(string='Worked Hours', compute='_compute_worked_hours', store=True, readonly=True)
-    color = fields.Integer(compute='_compute_color')
+    color = fields.Integer(compute='_compute_color', aggregator='avg')
     overtime_hours = fields.Float(string="Over Time", compute='_compute_overtime_hours', store=True)
     in_latitude = fields.Float(string="Latitude", digits=(10, 7), readonly=True)
     in_longitude = fields.Float(string="Longitude", digits=(10, 7), readonly=True)

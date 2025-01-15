@@ -109,7 +109,7 @@ class Project(models.Model):
     open_task_count = fields.Integer(compute='_compute_open_task_count', string="Open Task Count", export_string_translation=False)
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks', export_string_translation=False,
                                domain=lambda self: [('is_closed', '=', False)])
-    color = fields.Integer(string='Color Index', export_string_translation=False)
+    color = fields.Integer(string='Color Index', export_string_translation=False, aggregator=False)
     user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user, tracking=True)
     alias_id = fields.Many2one(help="Internal email associated with this project. Incoming emails are automatically synchronized "
                                     "with Tasks (or optionally Issues if the Issue Tracker module is installed).")

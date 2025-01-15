@@ -286,7 +286,7 @@ class Partner(models.Model):
         selection=[('person', 'Individual'), ('company', 'Company')],
         compute='_compute_company_type', inverse='_write_company_type')
     company_id = fields.Many2one('res.company', 'Company', index=True)
-    color = fields.Integer(string='Color Index', default=0)
+    color = fields.Integer(string='Color Index', default=0, aggregator='avg')
     user_ids = fields.One2many('res.users', 'partner_id', string='Users', auto_join=True)
     partner_share = fields.Boolean(
         'Share Partner', compute='_compute_partner_share', store=True,
