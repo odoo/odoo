@@ -1478,6 +1478,34 @@ test("field matching is removed when filter is deleted", async function () {
     expect(model.getters.getPivot(pivotId).getDomainWithGlobalFilters()).toEqual([]);
 });
 
+test("ignore sorted column if not part of measures", async () => {
+    const spreadsheetData = {
+        pivots: {
+            1: {
+                type: "ODOO",
+                columns: [],
+                domain: [],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
+                model: "partner",
+                rows: [{ fieldName: "bar" }],
+                sortedColumn: {
+                    measure: "foo",
+                    order: "asc",
+                    groupId: [[], [1]],
+                },
+                name: "A pivot",
+                context: {},
+                fieldMatching: {},
+                formulaId: "1",
+            },
+        },
+    };
+    const { model } = await createModelWithDataSource({ spreadsheetData });
+    setCellContent(model, "A1", "=PIVOT(1)");
+    await waitForDataLoaded(model);
+    expect(model.getters.getPivot(1).getTableStructure().isSorted).toBe(false);
+});
+
 test("Load pivot spreadsheet with models that cannot be accessed", async function () {
     let hasAccessRights = true;
     const { model } = await createSpreadsheetWithPivot({
