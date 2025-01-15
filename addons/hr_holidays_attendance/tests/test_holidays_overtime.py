@@ -2,6 +2,7 @@
 
 from datetime import datetime
 
+from odoo import Command
 from odoo.tests import new_test_user
 from odoo.tests.common import TransactionCase, tagged
 
@@ -210,6 +211,7 @@ class TestHolidaysOvertime(TransactionCase):
             'name': 'test allocation',
             'holiday_status_id': self.leave_type_employee_allocation.id,
             'employee_id': self.employee.id,
+            'employee_ids': [Command.link(self.employee.id)],
             'number_of_days': 1,
             'state': 'confirm',
             'date_from': time.strftime('%Y-1-1'),

@@ -254,10 +254,15 @@ class HolidaysAllocation(models.Model):
             else:
                 allocation.can_approve = True
 
-    @api.depends('employee_ids')
+    @api.depends('employee_ids', 'allocation_type', 'accrual_plan_id')
     def _compute_from_employee_ids(self):
         for allocation in self:
-            if len(allocation.employee_ids) == 1:
+            accrual_plan = allocation.accrual_plan_id
+            accrual_plan_first_level = accrual_plan.level_ids and accrual_plan.level_ids[0]
+            accrual_plan_not_based_on_worked_time = not accrual_plan.is_based_on_worked_time and \
+                not accrual_plan_first_level.frequency == 'hourly'
+
+            if len(allocation.employee_ids) == 1 or (allocation.employee_ids and accrual_plan_not_based_on_worked_time):
                 allocation.employee_id = allocation.employee_ids[0]._origin
             else:
                 allocation.employee_id = False
@@ -658,6 +663,8 @@ class HolidaysAllocation(models.Model):
         for values in vals_list:
             if 'state' in values and values['state'] not in ('draft', 'confirm'):
                 raise UserError(_('Incorrect state for new allocation'))
+            if len(values.get('employee_ids', [])) > 1 :
+                values.update({'employee_id': False})
             employee_id = values.get('employee_id', False)
             if not values.get('department_id'):
                 values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
@@ -866,6 +873,8 @@ class HolidaysAllocation(models.Model):
     # call of the cron job.
     @api.onchange('date_from', 'accrual_plan_id', 'date_to', 'employee_id')
     def _onchange_date_from(self):
+        if not self.employee_id:
+            self.number_of_days = 0
         if not self.date_from or self.allocation_type != 'accrual' or self.state == 'validate' or not self.accrual_plan_id\
            or not self.employee_id:
             return
