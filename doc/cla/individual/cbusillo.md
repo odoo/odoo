@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Chris Busillo cbusillo@gmail.com https://github.com/cbusillo
+Chris Busillo info@shinycomputers.com https://github.com/cbusillo
