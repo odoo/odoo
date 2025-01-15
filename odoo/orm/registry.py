@@ -187,7 +187,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self.db_name = db_name
         self._db: Connection = odoo.sql_db.db_connect(db_name, readonly=False)
         self._db_readonly: Connection | None = None
-        if config['db_replica_host'] is not False or config['test_enable']:  # by default, only use readonly pool if we have a db_replica_host defined. Allows to have an empty replica host for testing
+        if config['db_replica_host'] or config['test_enable']:  # by default, only use readonly pool if we have a db_replica_host defined. Allows to have an empty replica host for testing
             self._db_readonly = odoo.sql_db.db_connect(db_name, readonly=True)
 
         # cursor for test mode; None means "normal" mode
