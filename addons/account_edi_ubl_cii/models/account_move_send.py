@@ -30,9 +30,9 @@ class AccountMoveSend(models.AbstractModel):
             )
             if not_configured_company_partners:
                 alerts['account_edi_ubl_cii_configure_company'] = {
-                    'message': _("Please fill in Peppol EAS and Peppol Endpoint in your company form to generate a complete file."),
+                    'message': _("Please configure your company to generate a complete XML file."),
                     'level': 'info',
-                    'action_text': _("View Company"),
+                    'action_text': _("Configure"),
                     'action': not_configured_company_partners._get_records_action(),
                 }
             not_configured_partners = peppol_format_moves.partner_id.commercial_partner_id.filtered(
@@ -40,9 +40,7 @@ class AccountMoveSend(models.AbstractModel):
             )
             if not_configured_partners:
                 alerts['account_edi_ubl_cii_configure_partner'] = {
-                    'message': _("These partners are missing Peppol Address. "
-                                 "Please check those in their Accounting tab. "
-                                 "Otherwise, the generated files will be incomplete."),
+                    'message': _("Missing partner(s) VAT or Peppol Address"),
                     'level': 'info',
                     'action_text': _("View Partner(s)"),
                     'action': not_configured_partners._get_records_action(name=_("Check Partner(s)"))
