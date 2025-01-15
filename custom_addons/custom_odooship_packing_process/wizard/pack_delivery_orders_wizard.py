@@ -6,6 +6,7 @@ import logging
 import json
 import requests
 import xml.etree.ElementTree as ET
+import base64
 import urllib
 import pyodbc
 
@@ -43,7 +44,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         add4 = address_parts[3] if len(address_parts) > 3 else ""
         add5 = address_parts[4] if len(address_parts) > 4 else ""
         add6 = ""  # Empty by default
-        print("\n\n\n address===", add1,add2,add3,add4,add5)
         return add1, add2, add3, add4, add5, add6
 
     def _generate_xml(self):
@@ -239,31 +239,38 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         """
         xml_data = self._generate_xml()
         if self.picking_id.tenant_code_id.name == 'JB1':
-            # Save XML locally (optional)
-            file_name = f"C:\\Users\\newadmin\\Downloads\\JB XML{self.picking_id.id}.xml"
+            # Create the attachment
+            attachment_vals = {
+                'name': f"JB_XML_{self.picking_id.origin}.xml",  # The name of the file
+                'type': 'binary',  # File type
+                'datas': base64.b64encode(xml_data),  # Encode the XML data to base64
+                'res_model': 'stock.picking',  # The model to which the attachment will be linked
+                'res_id': self.picking_id.id,  # The ID of the picking record
+                'mimetype': 'application/xml',  # MIME type for XML file
+            }
+
             try:
-                with open(file_name, "wb") as file:
-                    file.write(xml_data)
-                _logger.info(f"XML data saved locally at: {file_name}")
-            except IOError as e:
-                _logger.error(f"Error saving XML data to file: {str(e)}")
-                raise UserError(f"Error saving XML data to file: {str(e)}")
+                attachment = self.env['ir.attachment'].create(attachment_vals)  # Create the attachment record
+                _logger.info(f"XML data saved as attachment with ID: {attachment.id}")
+            except Exception as e:
+                _logger.error(f"Error creating attachment: {str(e)}")
+                raise UserError(f"Error creating attachment: {str(e)}")
 
         # Send XML data to jb_xml_receiver API
         self.send_xml_to_jb_receiver(xml_data)
-
-        # Update state and pack count
-        self.state = 'closed'
+        #
+        # # Update state and pack count
+        # self.state = 'closed'
         self.pack_count += 1
         self.picking_id.duplicate_pack_count = self.pack_count
 
         # Feedback to the user
         return {
-            'type': 'ir.actions.client',
+            'type': 'ir.actions.act_window_close',
             'tag': 'display_notification',
             'params': {
                 'title': 'Success',
-                'message': f'Data processed and XML saved at {file_name}',
+                'message': 'XML data successfully saved as attachment!',
                 'type': 'success',
             },
         }
