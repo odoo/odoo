@@ -11,7 +11,7 @@ patch(PosStore.prototype, {
                 const pendingLine = this.getPendingPaymentLine("mercado_pago");
 
                 if (pendingLine) {
-                    pendingLine.payment_method.payment_terminal.handleMercadoPagoWebhook();
+                    pendingLine.payment_method_id.payment_terminal.handleMercadoPagoWebhook();
                 }
             }
         });
