@@ -383,6 +383,8 @@
                     <field name="rating_active" />
                     <field name="privacy_visibility"/>
                     <field name="last_update_color"/>
+                    <field name="is_milestone_deadline_exceeded"/>
+                    <field name="can_mark_milestone_as_done"/>
                     <progressbar field="last_update_status" colors='{"on_track": "success", "at_risk": "warning", "off_track": "danger", "on_hold": "info", "done": "purple"}'/>
                     <field name="sequence" widget="handle"/>
                     <templates>
@@ -475,7 +477,7 @@
                                             </div>
                                         </a>
                                         <a groups='project.group_project_milestone' t-if="record.allow_milestones and record.allow_milestones.raw_value and record.milestone_count.raw_value &gt; 0"
-                                            class="d-inline-block btn-link text-dark small me-1"
+                                            t-attf-class="d-inline-block small me-1 text-{{ record.is_milestone_deadline_exceeded.raw_value ? 'danger' : (record.can_mark_milestone_as_done.raw_value ? 'success' : 'muted') }}"
                                             role="button"
                                             name="action_get_list_view"
                                             type="object"
