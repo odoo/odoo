@@ -63,7 +63,12 @@ class TestQwebFieldContact(common.TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.env = cls.env(context=dict(cls.env.context, **DISABLED_MAIL_CONTEXT))
-        cls.partner = cls.env.ref("base.res_partner_1")
+        cls.partner = cls.env['res.partner'].create({
+            'name': 'Wood Corner',
+            'email': 'wood.corner26@example.com',
+            'phone': '(623)-853-7197',
+            'website': 'http://www.wood-corner.com',
+        })
 
     def test_value_to_html_with_website_and_phone(self):
         Contact = self.env["ir.qweb.field.contact"]
