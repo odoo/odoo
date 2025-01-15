@@ -1690,17 +1690,8 @@ class TestBoM(TestMrpCommon):
         with bom_form.bom_line_ids.edit(1) as bom_line:
             bom_line.product_qty = 2
         bom = bom_form.save()
-        self.assertEqual(mo_2.is_outdated_bom, True)
-
-        # Call "Update BoM" action, it should update the MO raw moves' quantity accordingly.
-        mo_2.action_update_bom()
         self.assertEqual(mo_2.is_outdated_bom, False)
-        # As there is a difference for the second component, the quantity should
-        # be updated (resets the UoM from the BoM line's one).
-        self.assertRecordValues(mo_2.move_raw_ids, [
-            {'product_id': component_1.id, 'product_uom_qty': 2, 'product_uom': uom_dozen.id},
-            {'product_id': component_2.id, 'product_uom_qty': 24, 'product_uom': uom_unit.id}
-        ])
+        # As the quantities were changed manually, the MO will be in progress and can no longer be updated from the BOM.
 
     def test_bom_updates_mo_after_updating_operations(self):
         """ Creates a Manufacturing Order using a BoM with operations and checks the raw moves are

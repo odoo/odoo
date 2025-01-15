@@ -327,7 +327,7 @@
                             <div class="o_row" invisible="state == 'draft' or product_tracking in ('none', False)">
                                 <field name="lot_producing_id"
                                     context="{'default_product_id': product_id}" invisible="product_tracking in ('none', False)"/>
-                                <button name="action_generate_serial" type="object" class="btn btn-primary fa fa-plus-square-o" aria-label="Creates a new serial/lot number" title="Creates a new serial/lot number" role="img" invisible="product_tracking in ('none', False) or lot_producing_id"/>
+                                <button name="action_generate_serial" type="object" class="btn btn-primary" string="New" aria-label="Creates a new serial/lot number" title="Creates a new serial/lot number" role="img" invisible="product_tracking in ('none', False) or lot_producing_id"/>
                             </div>
                         </group>
                         <group name="group_extra_info">
@@ -342,7 +342,7 @@
                                 <field name="delay_alert_date" invisible="1"/>
                                 <field nolabel="1" name="json_popover" widget="stock_rescheduling_popover" invisible="not json_popover"/>
                             </div>
-                            <field name="date_finished" string="Scheduled End" invisible="state == 'draft'"/>
+                            <field name="date_deadline"/>
                             <field name="components_availability_state" invisible="1"/>
                             <field name="components_availability" invisible="state not in ['confirmed', 'progress']"
                                 decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'"
@@ -403,13 +403,13 @@
                                 context="{'default_date': date_start, 'default_date_deadline': date_start, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_warehouse_id': warehouse_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id, 'form_view_ref': 'mrp.view_mrp_stock_move_operations', 'active_mo_id': id}"
 
                                 readonly="state == 'cancel' or (state == 'done' and is_locked)">
-                                <list default_order="is_done, manual_consumption desc, sequence" editable="bottom">
+                                <list default_order="sequence" editable="bottom">
                                     <control>
                                         <create string="Add a line"/>
                                         <button name="action_add_from_catalog_raw" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
                                     </control>
                                     <field name="product_id" force_save="1" context="{'default_is_storable': True}" required="1" readonly="move_lines_count &gt; 0 or state == 'cancel' or (state != 'draft' and not additional)" domain="['&amp;', ('type', '=', 'consu'), ('id', '!=', parent.product_id)]"/>
-                                    <field name="location_id" string="From" readonly="1" force_save="1" groups="stock.group_stock_multi_locations" optional="show"/>
+                                    <field name="location_id" string="From" readonly="1" force_save="1" groups="stock.group_stock_multi_locations" optional="hide"/>
                                     <!-- test_immediate_validate_uom_2, test_product_produce_different_uom -->
                                     <field name="product_uom" column_invisible="True"/>
                                     <field name="propagate_cancel" column_invisible="True"/>
@@ -438,21 +438,17 @@
                                     <field name="product_uom_qty" widget="mrp_should_consume" force_save="1" string="To Consume" column_invisible="parent.show_produce_all" readonly="parent.state != 'draft' and ((parent.state not in ('confirmed', 'progress', 'to_close') and not parent.is_planned) or (parent.is_locked and state != 'draft'))"/>
                                     <field name="product_qty" readonly="1" column_invisible="True"/>
                                     <field name="forecast_expected_date" column_invisible="True"/>
-                                    <!-- Button are used in state draft to doesn't have the name of the column "Reserved"-->
-                                    <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" column_invisible="parent.state != 'draft'" invisible="forecast_availability &lt; 0"/>
-                                    <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart text-danger" column_invisible="parent.state != 'draft'" invisible="forecast_availability &gt;= 0"/>
-                                    <!-- TODO put forecast back -->
-                                    <field name="forecast_availability" column_invisible="parent.state in ['done', 'cancel']" string="Forecast" widget="forecast_widget" optional="hide"/>
-                                    <field name="quantity" string="Quantity"
+                                    <field name="quantity" string="Consumed"
                                         decoration-success="not is_done and (quantity - (should_consume_qty if parent.qty_producing else product_uom_qty) == 0)"
                                         decoration-warning="not is_done and (quantity - (should_consume_qty if parent.qty_producing else product_uom_qty) &gt; 0.0001)"
                                         column_invisible="parent.state == 'draft'"
                                         decoration-info="manual_consumption"
+                                        decoration-muted="not manual_consumption"
                                         decoration-bf="manual_consumption"
                                         readonly="has_tracking != 'none'"
                                         force_save="1"/>
                                     <field name="product_uom" readonly="state != 'draft' and id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom"/>
-                                    <field name="picked" string="Consumed" column_invisible="parent.state == 'draft'" optional="show"/>
+                                    <field name="picked" column_invisible="True"/>
                                     <field name="manual_consumption" column_invisible="True" force_save="1"/>
                                     <field name="show_details_visible" column_invisible="True"/>
                                     <field name="lot_ids" widget="many2many_tags"
@@ -467,8 +463,9 @@
                                         context="{'default_product_id': product_id}"
                                         domain="[('product_id','=',product_id)]"/>
                                     <field name="group_id" column_invisible="True"/>
-                                    <button name="action_show_details" type="object" title="Show Details" icon="fa-list" context="{'default_product_uom_qty': 0}" invisible="not show_details_visible or has_tracking == 'none'"/>
-                                    <button class="o_optional_button btn btn-light" name="action_show_details" type="object" title="Show Details" icon="fa-list" context="{'default_product_uom_qty': 0}" invisible="has_tracking != 'none' or not show_details_visible"/>
+                                    <button name="action_show_details" type="object" title="Show Details" string="Details" context="{'default_product_uom_qty': 0}" invisible="not show_details_visible or has_tracking == 'none'"/>
+                                    <button class="o_optional_button btn" name="action_show_details" type="object" title="Show Details" string="Details" context="{'default_product_uom_qty': 0}" invisible="has_tracking != 'none' or not show_details_visible"/>
+                                    <field name="forecast_availability" column_invisible="parent.state in ['done', 'cancel']" string="" widget="forecast_widget"/>
                                 </list>
                             </field>
                         </page>
@@ -543,10 +540,6 @@
                                 <group>
                                     <field name="origin" readonly="state in ['cancel', 'done']"/>
                                     <field name="is_delayed" invisible="True"/>
-                                    <field name="date_deadline"
-                                        invisible="state in ('done', 'cancel') or not date_deadline"
-                                        decoration-danger="is_delayed"
-                                        decoration-bf="is_delayed"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="state != 'draft'" force_save="1"/>
 
                                 </group>

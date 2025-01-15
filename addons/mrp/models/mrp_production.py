@@ -115,7 +115,7 @@ class MrpProduction(models.Model):
         help="Location where the system will stock the finished products.")
     location_final_id = fields.Many2one('stock.location', 'Final Location from procurement')
     date_deadline = fields.Datetime(
-        'Deadline', copy=False, store=True, readonly=True, compute='_compute_date_deadline',
+        'Deadline', copy=False, store=True, readonly=False, compute='_compute_date_deadline',
         help="Informative date allowing to define when the manufacturing order should be processed at the latest to fulfill delivery on time.")
     date_start = fields.Datetime(
         'Start', copy=False, default=_get_default_date_start,
@@ -433,7 +433,8 @@ class MrpProduction(models.Model):
     @api.depends('move_finished_ids.date_deadline')
     def _compute_date_deadline(self):
         for production in self:
-            production.date_deadline = min(production.move_finished_ids.filtered('date_deadline').mapped('date_deadline'), default=production.date_deadline or False)
+            if not production.date_deadline:
+                production.date_deadline = min(production.move_finished_ids.filtered('date_deadline').mapped('date_deadline'), default=production.date_deadline or False)
 
     @api.depends('workorder_ids.duration_expected')
     def _compute_duration_expected(self):

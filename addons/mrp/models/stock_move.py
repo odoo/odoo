@@ -317,9 +317,10 @@ class StockMove(models.Model):
 
     @api.onchange('quantity', 'product_uom', 'picked')
     def _onchange_quantity(self):
-        if self.raw_material_production_id and not self.manual_consumption and self.picked and self.product_uom and \
+        if self.raw_material_production_id and self.product_uom and \
            float_compare(self.product_uom_qty, self.quantity, precision_rounding=self.product_uom.rounding) != 0:
             self.manual_consumption = True
+            self.picked = True
 
     @api.constrains('quantity', 'raw_material_production_id')
     def _check_negative_quantity(self):
@@ -354,6 +355,7 @@ class StockMove(models.Model):
         if self.env.context.get('force_manual_consumption'):
             for vals in vals_list:
                 vals['manual_consumption'] = True
+                vals['picked'] = True
         mo_id_to_mo = defaultdict(lambda: self.env['mrp.production'])
         product_id_to_product = defaultdict(lambda: self.env['product.product'])
         for values in vals_list:
@@ -401,6 +403,7 @@ class StockMove(models.Model):
                 self = other_move + updated_product_move
         if self.env.context.get('force_manual_consumption'):
             vals['manual_consumption'] = True
+            vals['picked'] = True
         if 'product_uom_qty' in vals and 'move_line_ids' in vals:
             # first update lines then product_uom_qty as the later will unreserve
             # so possibly unlink lines
