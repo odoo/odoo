@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import fields
 from odoo.tests import Form, tagged
+from dateutil.relativedelta import relativedelta
 
 from .test_project_base import TestProjectCommon
 
@@ -341,3 +343,28 @@ class TestProjectMilestone(TestProjectCommon):
         self.assertEqual(self.task_1.milestone_id, extra_milestone_pigs)
         self.assertEqual(task_2.milestone_id, self.milestone_pigs,
                          "The child milestone should not be updated if it is closed.")
+
+    def test_project_milestone_color(self):
+        """
+        Test Steps:
+        1. Assign `milestone_pigs` to `task_1` and mark it as 'done'.
+        2. Set `milestone_goats` deadline to yesterday.
+        3. Compute the next milestone for `project_pigs` and `project_goats`.
+        4. Validate that:
+           - `project_goats` has exceeded the milestone deadline.
+           - `project_pigs` has not exceeded the milestone deadline.
+           - `project_pigs` can mark the milestone as done.
+           - `project_goats` cannot mark the milestone as done.
+        """
+        self.task_1.write({
+            'milestone_id': self.milestone_pigs.id,
+            'state': '1_done',
+        })
+        self.milestone_goats.write({'deadline': fields.Date.today() + relativedelta(days=-1)})
+
+        (self.project_pigs | self.project_goats)._compute_next_milestone_id()
+
+        self.assertTrue(self.project_goats.is_milestone_deadline_exceeded, "Expected project_goats to have exceeded the milestone deadline.")
+        self.assertFalse(self.project_pigs.is_milestone_deadline_exceeded, "Expected project_pigs to not have exceeded the milestone deadline.")
+        self.assertTrue(self.project_pigs.can_mark_milestone_as_done, "Expected project_pigs to be able to mark the milestone as done.")
+        self.assertFalse(self.project_goats.can_mark_milestone_as_done, "Expected project_goats to not be able to mark the milestone as done.")
