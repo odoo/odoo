@@ -24,7 +24,7 @@ registry.category("web_tour.tours").add("test_stock_picking_batch_sm_to_sml_sync
             run: "edit 7",
         },
         {
-            trigger: ".modal:contains(open: transfers) .fa-list",
+            trigger: ".modal:contains(open: transfers) button:contains('Details')",
             run: "click",
         },
         {
@@ -58,7 +58,7 @@ registry.category("web_tour.tours").add("test_stock_picking_batch_sm_to_sml_sync
             run: "edit 21",
         },
         {
-            trigger: ".modal:contains(open: transfers) .fa-list",
+            trigger: ".modal:contains(open: transfers) button:contains('Details')",
             run: "click",
         },
         {
@@ -89,7 +89,7 @@ registry.category("web_tour.tours").add("test_stock_picking_batch_sm_to_sml_sync
             run: "edit 7",
         },
         {
-            trigger: ".modal:contains(open: transfers) .fa-list",
+            trigger: ".modal:contains(open: transfers) button:contains('Details')",
             run: "click",
         },
         {
