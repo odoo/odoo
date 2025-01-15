@@ -585,8 +585,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
-                "whatsapp_channel_valid_until": False,
-                "whatsapp_partner_id": False,
             }
         if channel == self.channel_channel_public_1:
             return {
@@ -620,8 +618,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
-                "whatsapp_channel_valid_until": False,
-                "whatsapp_partner_id": False,
             }
         if channel == self.channel_channel_public_2:
             return {
@@ -655,8 +651,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
-                "whatsapp_channel_valid_until": False,
-                "whatsapp_partner_id": False,
             }
         if channel == self.channel_channel_group_1:
             return {
@@ -693,8 +687,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", [member_2.sudo().rtc_session_ids.id]]],
                 "state": "closed",
                 "uuid": channel.uuid,
-                "whatsapp_channel_valid_until": False,
-                "whatsapp_partner_id": False,
             }
         if channel == self.channel_channel_group_2:
             return {
@@ -728,8 +720,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
-                "whatsapp_channel_valid_until": False,
-                "whatsapp_partner_id": False,
             }
         if channel == self.channel_group_1:
             return {
@@ -763,8 +753,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
-                "whatsapp_channel_valid_until": False,
-                "whatsapp_partner_id": False,
             }
         if channel == self.channel_chat_1:
             return {
@@ -798,8 +786,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", []]],
                 "state": "open",
                 "uuid": channel.uuid,
-                "whatsapp_channel_valid_until": False,
-                "whatsapp_partner_id": False,
             }
         if channel == self.channel_chat_2:
             return {
@@ -833,8 +819,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
-                "whatsapp_channel_valid_until": False,
-                "whatsapp_partner_id": False,
             }
         if channel == self.channel_chat_3:
             return {
@@ -868,8 +852,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
-                "whatsapp_channel_valid_until": False,
-                "whatsapp_partner_id": False,
             }
         if channel == self.channel_chat_4:
             return {
@@ -903,8 +885,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
-                "whatsapp_channel_valid_until": False,
-                "whatsapp_partner_id": False,
             }
         if channel == self.channel_livechat_1:
             return {
@@ -938,8 +918,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
-                "whatsapp_channel_valid_until": False,
-                "whatsapp_partner_id": False,
             }
         if channel == self.channel_livechat_2:
             return {
@@ -973,8 +951,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
-                "whatsapp_channel_valid_until": False,
-                "whatsapp_partner_id": False,
             }
         return {}
 
