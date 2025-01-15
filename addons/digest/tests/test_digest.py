@@ -322,7 +322,7 @@ class TestUnsubscribe(MailCommon, HttpCaseWithUserDemo):
 
         # find outgoing mail, click on unsubscribe link
         for user in self.user_employee + self.user_demo:
-            mail = self._find_mail_mail_wemail(user.email_formatted, "outgoing")
+            mail = self._find_mail_mail_wemails(user.email_formatted, "outgoing")
             headers = literal_eval(mail.headers)
             unsubscribe_url = headers.get("List-Unsubscribe", "").strip("<>")
             self.assertTrue(unsubscribe_url)

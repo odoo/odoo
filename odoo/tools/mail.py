@@ -727,7 +727,8 @@ def generate_tracking_message_id(res_id):
     rndstr = ("%.15f" % rnd)[2:]
     return "<%s.%.15f-openerp-%s@%s>" % (rndstr, time.time(), res_id, socket.gethostname())
 
-def email_split_tuples(text):
+
+def email_split_tuples(text, keep_invalid=False):
     """ Return a list of (name, email) address tuples found in ``text`` . Note
     that text should be an email header or a stringified email list as it may
     give broader results than expected on actual text. """
@@ -760,7 +761,7 @@ def email_split_tuples(text):
         # getaddresses() returns '' when email parsing fails, and
         # sometimes returns emails without at least '@'. The '@'
         # is strictly required in RFC2822's `addr-spec`.
-        if addr[1] and '@' in addr[1]
+        if addr[1] and (keep_invalid or '@' in addr[1])
     ]
     # corner case: returning '@gmail.com'-like email (see test_email_split)
     if any(pair[1].startswith('@') for pair in valid_pairs):
@@ -773,14 +774,16 @@ def email_split_tuples(text):
 
     return list(map(_parse_based_on_spaces, valid_pairs))
 
-def email_split(text):
-    """ Return a list of the email addresses found in ``text`` """
-    return [email for (name, email) in email_split_tuples(text)]
 
-def email_split_and_format(text):
+def email_split(text, keep_invalid=False):
+    """ Return a list of the email addresses found in ``text`` """
+    return [email for (name, email) in email_split_tuples(text, keep_invalid=keep_invalid)]
+
+
+def email_split_and_format(text, keep_invalid=False):
     """ Return a list of email addresses found in ``text``, formatted using
     formataddr. """
-    return [formataddr((name, email)) for (name, email) in email_split_tuples(text)]
+    return [formataddr((name, email)).lstrip('@') for (name, email) in email_split_tuples(text, keep_invalid=keep_invalid)]
 
 def email_split_and_format_normalize(text):
     """ Same as 'email_split_and_format' but normalizing email. """
@@ -826,7 +829,8 @@ def email_normalize(text, strict=True):
         return False
     return _normalize_email(emails[0])
 
-def email_normalize_all(text):
+
+def email_normalize_all(text, keep_invalid=False):
     """ Tool method allowing to extract email addresses from a text input and returning
     normalized version of all found emails. If no email is found, a void list
     is returned.
@@ -835,8 +839,8 @@ def email_normalize_all(text):
 
     :return list: list of normalized emails found in text
     """
-    emails = email_split(text)
-    return list(filter(None, [_normalize_email(email) for email in emails]))
+    emails = email_split(text, keep_invalid=keep_invalid)
+    return list(filter(None, (_normalize_email(email) for email in emails)))
 
 def _normalize_email(email):
     """ As of rfc5322 section 3.4.1 local-part is case-sensitive. However most
