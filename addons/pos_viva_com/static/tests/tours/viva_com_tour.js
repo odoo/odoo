@@ -1,12 +1,12 @@
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as PaymentScreenPos from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
-import * as PaymentScreenViva from "@pos_viva_wallet/../tests/tours/utils/payment_screen_viva_util";
+import * as PaymentScreenViva from "@pos_viva_com/../tests/tours/utils/payment_screen_viva_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 const PaymentScreen = { ...PaymentScreenPos, ...PaymentScreenViva };
 import { registry } from "@web/core/registry";
 
-registry.category("web_tour.tours").add("VivaWalletTour", {
+registry.category("web_tour.tours").add("VivaComTour", {
     steps: () =>
         [
             Chrome.startPoS(),
