@@ -17,7 +17,14 @@
         </div>
     </div>
 
-    <div>Inner content</div>
+    <t t-if="this.props.snippetModel.hasCustomInnerContents">
+        <div class="mt-1">Custom Inner Content</div>
+        <t t-foreach="this.props.snippetModel.snippetCustomInnerContents" t-as="snippet" t-key="snippet.id">
+            <CustomInnerSnippet snippet="snippet" snippetModel="this.props.snippetModel"/>
+        </t>
+    </t>
+
+    <div class="mt-1">Inner Content</div>
     <div class="container">
         <div class="row">
             <div t-foreach="this.props.snippetModel.snippetInnerContents" t-as="snippet" t-key="snippet.id" class="col-4 p-1 o_draggable" t-att-name="snippet.title" t-att-data-category="'snippet_content'" t-att-data-id="snippet.id">
@@ -32,5 +39,6 @@
         </div>
     </div>
 </t>
+
 
 </templates>

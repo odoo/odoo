@@ -2,6 +2,7 @@ import { Component } from "@odoo/owl";
 import { useDraggable } from "@web/core/utils/draggable";
 import { useService } from "@web/core/utils/hooks";
 import { AddSnippetDialog } from "./add_snippet_dialog/add_snippet_dialog";
+import { CustomInnerSnippet } from "./custom_inner_snippet";
 
 // TODO move it in web (copy from web_studio)
 function copyElementOnDrag() {
@@ -32,6 +33,7 @@ function copyElementOnDrag() {
 
 export class BlockTab extends Component {
     static template = "html_builder.BlockTab";
+    static components = { CustomInnerSnippet };
     static props = {
         snippetModel: { type: Object },
         installSnippetModule: { type: Function },

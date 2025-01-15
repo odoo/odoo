@@ -19,6 +19,7 @@ export class SnippetModel extends Reactive {
             snippet_custom: [],
             snippet_structure: [],
             snippet_content: [],
+            snippet_custom_content: [],
         };
     }
 
@@ -43,6 +44,26 @@ export class SnippetModel extends Reactive {
 
     get snippetInnerContents() {
         return this.snippetsByCategory.snippet_content;
+    }
+
+    get hasCustomInnerContents() {
+        return !!this.snippetsByCategory.snippet_custom_content.length;
+    }
+
+    get snippetCustomInnerContents() {
+        return this.snippetsByCategory.snippet_custom_content;
+    }
+
+    isCustomInnerContent(customSnippetName) {
+        return !!this.snippetsByCategory.snippet_content.find(
+            (snippet) => snippet.name === customSnippetName
+        );
+    }
+
+    isCustomStructure(customSnippetName) {
+        return !!this.snippetsByCategory.snippet_structure.find(
+            (snippet) => snippet.name === customSnippetName
+        );
     }
 
     getSnippet(category, id) {
@@ -108,6 +129,27 @@ export class SnippetModel extends Reactive {
             }
             this.snippetsByCategory[snippetCategory.id] = snippets;
         }
+
+        // Extract the custom inner content from the custom snippets and remove
+        // those whose module is not installed.
+        const customInnerContent = [];
+        const customSnippets = this.snippetsByCategory.snippet_custom;
+        for (let i = customSnippets.length - 1; i >= 0; i--) {
+            const snippet = customSnippets[i];
+            const customSnippetName = snippet.name.startsWith("s_button_")
+                ? "s_button"
+                : snippet.name;
+            if (this.isCustomInnerContent(customSnippetName)) {
+                customInnerContent.unshift(snippet);
+                customSnippets.splice(i, 1);
+            } else if (!this.isCustomStructure(customSnippetName)) {
+                // If no structure snippet could be found, it means that the
+                // module is not installed (i.e. the original snippet has no
+                // `data-snippet` attribute).
+                customSnippets.splice(i, 1);
+            }
+        }
+        this.snippetsByCategory["snippet_custom_content"] = customInnerContent;
     }
 
     async deleteCustomSnippet(snippet) {
@@ -118,7 +160,11 @@ export class SnippetModel extends Reactive {
                 {
                     body: message,
                     confirm: async () => {
-                        const snippetCustom = this.snippetsByCategory.snippet_custom;
+                        const isInnerContent =
+                            this.snippetsByCategory.snippet_custom_content.includes(snippet);
+                        const snippetCustom = isInnerContent
+                            ? this.snippetsByCategory.snippet_custom_content
+                            : this.snippetsByCategory.snippet_custom;
                         const index = snippetCustom.findIndex((s) => s.id === snippet.id);
                         if (index > -1) {
                             snippetCustom.splice(index, 1);
