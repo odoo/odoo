@@ -66,9 +66,26 @@
               groups="custom_odooship_decanting_process.group_shiperoo_admin,custom_odooship_decanting_process.group_shiperoo_supervisor"
               sequence="80"/>
 
+    <!--    Automation Manual Bulk Menuitem-->
     <menuitem id="menu_automation_bulk_manual"
               name="Automation Bulk and Manual"
               parent="menu_shiperoo_receipt_parent"
               action="action_automation_bulk_manual"
               sequence="40"/>
+
+    <!--    Pack Bench Configuration Menu-->
+    <menuitem id="menu_pack_bench_configuration"
+              name="Pack Bench"
+              action="action_pack_bench_configuration"
+              parent="stock.menu_stock_config_settings"
+              groups="custom_odooship_decanting_process.group_shiperoo_admin,custom_odooship_decanting_process.group_shiperoo_supervisor"
+              sequence="90"/>
+
+    <!--    Package Configuration Menu-->
+    <menuitem id="menu_package_configuration"
+              name="Package Configuration"
+              action="action_package_configuration"
+              parent="stock.menu_stock_config_settings"
+              groups="custom_odooship_decanting_process.group_shiperoo_admin,custom_odooship_decanting_process.group_shiperoo_supervisor"
+              sequence="100"/>
 </odoo>
