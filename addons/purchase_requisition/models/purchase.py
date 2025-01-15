@@ -76,6 +76,9 @@ class PurchaseOrder(models.Model):
             self.date_order = fields.Datetime.now()
 
         # Create PO lines if necessary
+        # Do not clobber existing lines if the PO is already confirmed
+        if self.state != 'draft':
+            return
         order_lines = []
         for line in requisition.line_ids:
             # Compute name
