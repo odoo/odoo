@@ -200,14 +200,14 @@ class StockQuant(models.Model):
     def _compute_is_outdated(self):
         self.is_outdated = False
         for quant in self:
-            if quant.product_id and float_compare(quant.inventory_quantity - quant.inventory_diff_quantity, quant.quantity, precision_rounding=quant.product_uom_id.rounding) and quant.inventory_quantity_set:
+            if quant.product_id and quant.product_uom_id.compare(quant.inventory_quantity - quant.inventory_diff_quantity, quant.quantity) and quant.inventory_quantity_set:
                 quant.is_outdated = True
 
     def _search_is_outdated(self, operator, value):
         if operator != 'in':
             return NotImplemented
         quant_ids = self.search([('inventory_quantity_set', '=', True)])
-        quant_ids = quant_ids.filtered(lambda quant: float_compare(quant.inventory_quantity - quant.inventory_diff_quantity, quant.quantity, precision_rounding=quant.product_uom_id.rounding)).ids
+        quant_ids = quant_ids.filtered(lambda quant: quant.product_uom_id.compare(quant.inventory_quantity - quant.inventory_diff_quantity, quant.quantity)).ids
         return [('id', 'in', quant_ids)]
 
     @api.depends('quantity')
@@ -595,7 +595,7 @@ class StockQuant(models.Model):
             ['quantity:sum'],
         )
         for product, _location, lot, qty in groups:
-            if float_compare(abs(qty), 1, precision_rounding=product.uom_id.rounding) > 0:
+            if product.uom_id.compare(abs(qty), 1) > 0:
                 raise ValidationError(_('The serial number has already been assigned: \n Product: %(product)s, Serial Number: %(serial_number)s', product=product.display_name, serial_number=lot.name))
 
     @api.constrains('location_id')
@@ -990,7 +990,7 @@ class StockQuant(models.Model):
         move_vals = []
         for quant in self:
             # Create and validate a move so that the quant matches its `inventory_quantity`.
-            if float_compare(quant.inventory_diff_quantity, 0, precision_rounding=quant.product_uom_id.rounding) > 0:
+            if quant.product_uom_id.compare(quant.inventory_diff_quantity, 0) > 0:
                 move_vals.append(
                     quant._get_inventory_move_values(quant.inventory_diff_quantity,
                                                      quant.product_id.with_company(quant.company_id).property_stock_inventory,
@@ -1037,7 +1037,7 @@ class StockQuant(models.Model):
             incoming_dates = []
         else:
             incoming_dates = [quant.in_date for quant in quants if quant.in_date and
-                              float_compare(quant.quantity, 0, precision_rounding=quant.product_uom_id.rounding) > 0]
+                              quant.product_uom_id.compare(quant.quantity, 0) > 0]
         if in_date:
             incoming_dates += [in_date]
         # If multiple incoming dates are available for a given lot_id/package_id/owner_id, we
@@ -1134,7 +1134,7 @@ class StockQuant(models.Model):
             ml_reserved_qty = reserved_move_lines.get((product, location, lot, package, owner), 0)
             if location.should_bypass_reservation():
                 quants._update_reserved_quantity(product, location, -reserved_quantity, lot_id=lot, package_id=package, owner_id=owner)
-            elif float_compare(reserved_quantity, ml_reserved_qty, precision_rounding=product.uom_id.rounding) != 0:
+            elif product.uom_id.compare(reserved_quantity, ml_reserved_qty) != 0:
                 quants._update_reserved_quantity(product, location, ml_reserved_qty - reserved_quantity, lot_id=lot, package_id=package, owner_id=owner)
             if ml_reserved_qty:
                 del reserved_move_lines[(product, location, lot, package, owner)]
@@ -1561,7 +1561,7 @@ class StockQuantPackage(models.Model):
         for package in self:
             package.location_id = False
             package.company_id = False
-            quants = package.quant_ids.filtered(lambda q: float_compare(q.quantity, 0, precision_rounding=q.product_uom_id.rounding) > 0)
+            quants = package.quant_ids.filtered(lambda q: q.product_uom_id.compare(q.quantity, 0) > 0)
             if quants:
                 package.location_id = quants[0].location_id
                 if all(q.company_id == quants[0].company_id for q in package.quant_ids):

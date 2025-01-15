@@ -205,11 +205,11 @@ class StockWarehouseOrderpoint(models.Model):
     @api.depends('product_id', 'qty_to_order', 'product_max_qty')
     def _compute_unwanted_replenish(self):
         for orderpoint in self:
-            if not orderpoint.product_id or float_is_zero(orderpoint.qty_to_order, precision_rounding=orderpoint.product_uom.rounding) or float_compare(orderpoint.product_max_qty, 0, precision_rounding=orderpoint.product_uom.rounding) == -1:
+            if not orderpoint.product_id or orderpoint.product_uom.is_zero(orderpoint.qty_to_order) or orderpoint.product_uom.compare(orderpoint.product_max_qty, 0) == -1:
                 orderpoint.unwanted_replenish = False
             else:
                 after_replenish_qty = orderpoint.product_id.with_context(company_id=orderpoint.company_id.id, location=orderpoint.location_id.id).virtual_available + orderpoint.qty_to_order
-                orderpoint.unwanted_replenish = float_compare(after_replenish_qty, orderpoint.product_max_qty, precision_rounding=orderpoint.product_uom.rounding) > 0
+                orderpoint.unwanted_replenish = orderpoint.product_uom.compare(after_replenish_qty, orderpoint.product_max_qty) > 0
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -272,7 +272,7 @@ class StockWarehouseOrderpoint(models.Model):
             for orderpoint in self:
                 orderpoint.qty_to_order = orderpoint.product_max_qty - orderpoint.qty_forecast
                 remainder = orderpoint.replenishment_uom_id and orderpoint.qty_to_order % orderpoint.replenishment_uom_id.factor or 0.0
-                if not float_is_zero(remainder, precision_rounding=orderpoint.product_uom.rounding):
+                if not orderpoint.product_uom.is_zero(remainder):
                     orderpoint.qty_to_order += orderpoint.replenishment_uom_id - remainder
         try:
             self._procure_orderpoint_confirm(company_id=self.env.company)
@@ -480,7 +480,7 @@ class StockWarehouseOrderpoint(models.Model):
                 to_date=today + relativedelta.relativedelta(days=days)
             ).read(['virtual_available'])
             for (product, qty) in zip(products, qties):
-                if float_compare(qty['virtual_available'], 0, precision_rounding=product.uom_id.rounding) < 0:
+                if product.uom_id.compare(qty['virtual_available'], 0) < 0:
                     to_refill[(qty['id'], loc.id)] = qty['virtual_available']
             products.invalidate_recordset()
         if not to_refill:
@@ -637,7 +637,7 @@ class StockWarehouseOrderpoint(models.Model):
                             origin = '%s - %s' % (orderpoint.display_name, ','.join(origins))
                         else:
                             origin = orderpoint.name
-                        if float_compare(orderpoint.qty_to_order, 0.0, precision_rounding=orderpoint.product_uom.rounding) == 1:
+                        if orderpoint.product_uom.compare(orderpoint.qty_to_order, 0.0) == 1:
                             date = orderpoint._get_orderpoint_procurement_date()
                             global_visibility_days = self.env.context.get('global_visibility_days', self.env['ir.config_parameter'].sudo().get_param('stock.visibility_days', 0))
                             if global_visibility_days:

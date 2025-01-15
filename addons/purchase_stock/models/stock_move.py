@@ -57,7 +57,7 @@ class StockMove(models.Model):
         received_qty = line.qty_received
         if self.state == 'done':
             received_qty -= self.product_uom._compute_quantity(self.quantity, line.product_uom_id, rounding_method='HALF-UP')
-        if line.product_id.purchase_method == 'purchase' and float_compare(line.qty_invoiced, received_qty, precision_rounding=line.product_uom_id.rounding) > 0:
+        if line.product_id.purchase_method == 'purchase' and line.product_uom_id.compare(line.qty_invoiced, received_qty) > 0:
             move_layer = line.move_ids.sudo().stock_valuation_layer_ids
             invoiced_layer = line.sudo().invoice_lines.stock_valuation_layer_ids
             # value on valuation layer is in company's currency, while value on invoice line is in order's currency
@@ -109,7 +109,7 @@ class StockMove(models.Model):
             # https://github.com/odoo/odoo/blob/2f789b6863407e63f90b3a2d4cc3be09815f7002/addons/stock/models/stock_move.py#L36
             convert_date = fields.Date.context_today(self)
             # use currency rate at bill date when invoice before receipt
-            if float_compare(line.qty_invoiced, received_qty, precision_rounding=line.product_uom_id.rounding) > 0:
+            if line.product_uom_id.compare(line.qty_invoiced, received_qty) > 0:
                 convert_date = max(line.sudo().invoice_lines.move_id.filtered(lambda m: m.state == 'posted').mapped('invoice_date'), default=convert_date)
             price_unit = order.currency_id._convert(
                 price_unit, order.company_id.currency_id, order.company_id, convert_date, round=False)
@@ -187,7 +187,7 @@ class StockMove(models.Model):
         move = (self | returned_move).with_prefetch(self._prefetch_ids)
         pdiff_exists = bool(move.stock_valuation_layer_ids.stock_valuation_layer_ids.account_move_line_id)
 
-        if not am_vals_list or not self.purchase_line_id or pdiff_exists or float_is_zero(qty, precision_rounding=self.product_id.uom_id.rounding):
+        if not am_vals_list or not self.purchase_line_id or pdiff_exists or self.product_id.uom_id.is_zero(qty):
             return am_vals_list
 
         layer = self.env['stock.valuation.layer'].browse(svl_id)
@@ -267,7 +267,7 @@ class StockMove(models.Model):
                 layers_values, to_curr, related_aml.company_id, valuation_date, round=False,
             )
             valuation_total_qty += layers_qty
-        if float_is_zero(valuation_total_qty, precision_rounding=related_aml.product_uom_id.rounding or related_aml.product_id.uom_id.rounding):
+        if related_aml.product_uom_id.rounding or related_aml.product_id.uom_id.is_zero(valuation_total_qty):
             raise UserError(
                 _('Odoo is not able to generate the anglo saxon entries. The total valuation of %s is zero.',
                   related_aml.product_id.display_name))

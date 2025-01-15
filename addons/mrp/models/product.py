@@ -83,7 +83,7 @@ class ProductTemplate(models.Model):
 
     def _compute_mrp_product_qty(self):
         for template in self:
-            template.mrp_product_qty = float_round(sum(template.mapped('product_variant_ids').mapped('mrp_product_qty')), precision_rounding=template.uom_id.rounding)
+            template.mrp_product_qty = template.uom_id.round(sum(template.mapped('product_variant_ids').mapped('mrp_product_qty')))
 
     def action_view_mos(self):
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_production_action")
@@ -247,7 +247,7 @@ class ProductProduct(models.Model):
             if not product.id:
                 product.mrp_product_qty = 0.0
                 continue
-            product.mrp_product_qty = float_round(mapped_data.get(product.id, 0), precision_rounding=product.uom_id.rounding)
+            product.mrp_product_qty = product.uom_id.round(mapped_data.get(product.id, 0))
 
     def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
         """ When the product is a kit, this override computes the fields :
@@ -296,7 +296,7 @@ class ProductProduct(models.Model):
                 component = component.with_context(mrp_compute_quantities=qties).with_prefetch(prefetch_component_ids)
                 qty_per_kit = 0
                 for bom_line, bom_line_data in bom_sub_lines:
-                    if not component.is_storable or float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.product_uom_id.rounding):
+                    if not component.is_storable or bom_line.product_uom_id.is_zero(bom_line_data['qty']):
                         # As BoMs allow components with 0 qty, a.k.a. optionnal components, we simply skip those
                         # to avoid a division by zero. The same logic is applied to non-storable products as those
                         # products have 0 qty available.

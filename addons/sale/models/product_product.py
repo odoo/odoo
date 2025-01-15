@@ -38,7 +38,7 @@ class ProductProduct(models.Model):
             if not product.id:
                 product.sales_count = 0.0
                 continue
-            product.sales_count = float_round(r.get(product.id, 0), precision_rounding=product.uom_id.rounding)
+            product.sales_count = product.uom_id.round(r.get(product.id, 0))
         return r
 
     @api.onchange('type')
