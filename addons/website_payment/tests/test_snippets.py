@@ -15,5 +15,11 @@ class TestSnippets(odoo.tests.HttpCase):
 
         demo_provider = self.env['payment.provider'].search([('code', '=', "demo")])
         demo_provider.write({'state': 'test'})
-        self.env.ref('base.user_admin').partner_id.country_id = self.env.ref('base.be')
+        self.env.ref('base.user_admin').write({
+            'country_id': self.env.ref('base.be').id,
+            'email': 'mitchell.admin@example.com',
+        })
+        self.env.company.write({
+            'email': 'no-reply@company.com',
+        })
         self.start_tour("/?enable_editor=1", "donation_snippet_edition", login='admin')
