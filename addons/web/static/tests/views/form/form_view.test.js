@@ -1626,6 +1626,33 @@ test(`notebook page is changing when an anchor is clicked from another page`, as
     expect(`#anchor2`).toBeVisible();
 });
 
+test(`have a link to an id in the DOM, and open a form view with a node with that id`, async () => {
+    await mountWithCleanup(`
+        <div>
+            <a class="my_link" href="#my_special_id">My link</a>
+        </div>
+    `);
+    expect(".my_link").toHaveAttribute("href", "#my_special_id");
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <notebook>
+                    <page string="A page">
+                        <div id="my_special_id">Something</div>
+                    </page>
+                </notebook>
+            </form>
+        `,
+        resId: 1,
+    });
+
+    expect(".o_form_view").toHaveCount(1);
+    expect("#my_special_id").toHaveCount(1);
+});
+
 test(`invisible attrs on group are re-evaluated on field change`, async () => {
     await mountView({
         resModel: "partner",
