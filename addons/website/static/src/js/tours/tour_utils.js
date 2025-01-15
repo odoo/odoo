@@ -13,15 +13,20 @@ export function addMedia(position = "right") {
         run: "click",
     };
 }
-export function assertCssVariable(variableName, variableValue, trigger = ':iframe body') {
+export function assertCssVariable(variableName, variableValue, trigger = ":iframe body") {
     return {
         isActive: ["auto"],
         content: `Check CSS variable ${variableName}=${variableValue}`,
         trigger: trigger,
         run() {
             const styleValue = getComputedStyle(this.anchor).getPropertyValue(variableName);
-            if ((styleValue && styleValue.trim().replace(/["']/g, '')) !== variableValue.trim().replace(/["']/g, '')) {
-                throw new Error(`Failed precondition: ${variableName}=${styleValue} (should be ${variableValue})`);
+            if (
+                (styleValue && styleValue.trim().replace(/["']/g, "")) !==
+                variableValue.trim().replace(/["']/g, "")
+            ) {
+                throw new Error(
+                    `Failed precondition: ${variableName}=${styleValue} (should be ${variableValue})`
+                );
             }
         },
     };
@@ -431,6 +436,7 @@ export function registerWebsitePreviewTour(name, options, steps) {
     if (typeof steps !== "function") {
         throw new Error(`tour.steps has to be a function that returns TourStep[]`);
     }
+    registry.category("web_tour.tours").remove(name);
     return registry.category("web_tour.tours").add(name, {
         ...omit(options, "edition"),
         url: getClientActionUrl(options.url, !!options.edition),
@@ -463,9 +469,10 @@ export function registerThemeHomepageTour(name, steps) {
     if (typeof steps !== "function") {
         throw new Error(`tour.steps has to be a function that returns TourStep[]`);
     }
-    return registerWebsitePreviewTour(name, {
-        url: '/',
-        saveAs: "homepage", // disable manual mode for theme homepage tours - FIXME
+    return registerWebsitePreviewTour(
+        "homepage",
+        {
+            url: "/",
         },
         () => [
             ...clickOnEditAndWaitEditMode(),
@@ -473,7 +480,8 @@ export function registerThemeHomepageTour(name, steps) {
                 steps().concat(clickOnSave()),
                 ".o_website_preview[data-view-xmlid='website.homepage'] "
             ),
-    ]);
+        ]
+    );
 }
 
 export function registerBackendAndFrontendTour(name, options, steps) {
