@@ -1,37 +1,50 @@
 /** @odoo-module **/
 
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
+import { addLoadingEffect } from "@web/core/utils/ui";
 
-publicWidget.registry.reCaptcha = publicWidget.Widget.extend({
-    selector: "form[data-captcha]",
-    events: {
-        submit: "_onSubmit",
-    },
+export class RecaptchaForm extends Interaction {
+    static selector = "form[data-captcha]";
+    dynamicContent = {
+        _root: { "t-on-submit": this.onSubmit },
+    };
 
-    init() {
-        this._super(...arguments);
-        this._recaptcha = new ReCaptcha();
-    },
+    setup() {
+        this.recaptcha = new ReCaptcha();
+    }
 
     async willStart() {
-        this._recaptcha.loadLibs();
-    },
+        await this.recaptcha.loadLibs();
+    }
 
-    async _onSubmit(event) {
-        const btn = this.$('button[type="submit"]');
-        if (!btn.prop("disabled")) {
-            btn.attr("disabled", "disabled");
-            btn.prepend('<i class="fa fa-circle-o-notch fa-spin"/> ');
+    /**
+     * @param {MouseEvent} ev
+     */
+    async onSubmit(ev) {
+        const submitEl = this.el.querySelector("button[type='submit']");
+        if (!submitEl.disabled) {
+            addLoadingEffect(submitEl);
         }
-        if (!this.$el.find("input[name='recaptcha_token_response']")[0]) {
-            event.preventDefault();
+        if (!this.el.querySelector("input[name='recaptcha_token_response']")) {
+            ev.preventDefault();
+            if (!submitEl.disabled) {
+                addLoadingEffect(submitEl);
+            }
             const action = this.el.dataset.captcha || "generic";
-            const tokenCaptcha = await this._recaptcha.getToken(action);
-            this.$el.append(
-                `<input name="recaptcha_token_response" type="hidden" value="${tokenCaptcha.token}"/>`,
-            );
-            this.$el.submit();
+            const tokenCaptcha = await this.waitFor(this.recaptcha.getToken(action));
+            const inputEl = document.createElement("input");
+            inputEl.name = "recaptcha_token_response";
+            inputEl.type = "hidden";
+            inputEl.value = tokenCaptcha.token;
+            this.insert(inputEl);
+            this.el.submit();
         }
-    },
-});
+    }
+}
+
+registry
+    .category("public.interactions")
+    .add("google_recaptcha.recaptcha_form", RecaptchaForm);
