@@ -12,10 +12,6 @@ export class ForecastWidgetField extends FloatField {
         this.orm = useService("orm");
         this.resId = resId;
 
-        this.reservedAvailability = formatFloat(data.quantity, {
-            ...fields.quantity,
-            ...this.nodeOptions,
-        });
         this.forecastExpectedDate = formatDate(
             data.forecast_expected_date,
             fields.forecast_expected_date
@@ -41,13 +37,24 @@ export class ForecastWidgetField extends FloatField {
     async _openReport(ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        if (!this.resId) {
+        if (!this.resId || !this.props.record.data.is_storable) {
             return;
         }
         const action = await this.orm.call("stock.move", "action_product_forecast_report", [
             this.resId,
         ]);
         this.actionService.doAction(action);
+    }
+
+    get decoration() {
+        if (!this.forecastExpectedDate && this.willBeFulfilled){
+            return "text-bg-success"
+        } else if (this.forecastExpectedDate && this.willBeFulfilled){
+            return this.forecastIsLate ? 'text-bg-danger' : 'text-bg-warning'
+        } else {
+            return 'text-bg-danger'
+        }
+
     }
 }
 
