@@ -73,8 +73,8 @@
                 <field name="incoterm_location"  readonly="state == 'done'"/>
             </xpath>
             <xpath expr="//div[@name='reminder']" position="after">
-                <field name="picking_type_id" domain="[('code','=','incoming'), '|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]" options="{'no_create': True}" groups="stock.group_stock_multi_locations" readonly="state in ['cancel', 'done', 'purchase']"/>
-                <field name="dest_address_id" groups="stock.group_stock_multi_locations" invisible="default_location_dest_id_usage != 'customer'" readonly="state in ['cancel', 'done', 'purchase']" required="default_location_dest_id_usage == 'customer'"/>
+                <field name="picking_type_id" domain="[('code','=','incoming'), '|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]" options="{'no_create': True}" readonly="state in ['cancel', 'done', 'purchase']"/>
+                <field name="dest_address_id" invisible="default_location_dest_id_usage != 'customer'" readonly="state in ['cancel', 'done', 'purchase']" required="default_location_dest_id_usage == 'customer'"/>
             </xpath>
         </field>
     </record>
