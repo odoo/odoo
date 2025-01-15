@@ -12,6 +12,7 @@ import time
 import email.utils
 from email.utils import getaddresses as orig_getaddresses
 from urllib.parse import urlparse
+from typing import Literal
 import html as htmllib
 
 import idna
@@ -474,13 +475,13 @@ def validate_url(url):
     return url
 
 
-def is_html_empty(html_content):
+def is_html_empty(html_content: str | markupsafe.Markup | Literal[False] | None) -> bool:
     """Check if a html content is empty. If there are only formatting tags with style
     attributes or a void content  return True. Famous use case if a
     '<p style="..."><br></p>' added by some web editor.
 
-    :param str html_content: html content, coming from example from an HTML field
-    :returns: bool, True if no content found or if containing only void formatting tags
+    :param html_content: html content, coming from example from an HTML field
+    :returns: True if no content found or if containing only void formatting tags
     """
     if not html_content:
         return True
@@ -522,7 +523,12 @@ def create_link(url, label):
     return f'<a href="{url}" target="_blank" rel="noreferrer noopener">{label}</a>'
 
 
-def html2plaintext(html, body_id=None, encoding='utf-8', include_references=True):
+def html2plaintext(
+    html: str | markupsafe.Markup | Literal[False] | None,
+    body_id: str | None = None,
+    encoding: str = 'utf-8',
+    include_references: bool = True
+) -> str:
     """ From an HTML text, convert the HTML to plain text.
     If @param body_id is provided then this is the tag where the
     body (not necessarily <body>) starts.
@@ -596,7 +602,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8', include_references=True
 
     return html.strip()
 
-def plaintext2html(text, container_tag=None):
+def plaintext2html(text: str, container_tag: str | None = None) -> markupsafe.Markup:
     r"""Convert plaintext into html. Content of the text is escaped to manage
     html entities, using :func:`~odoo.tools.misc.html_escape`.
 
@@ -605,10 +611,9 @@ def plaintext2html(text, container_tag=None):
     - convert url into clickable link
     - 2 or more consecutive ``<br/>`` are considered as paragraph breaks
 
-    :param str text: plaintext to convert
-    :param str container_tag: container of the html; by default the content is
+    :param text: plaintext to convert
+    :param container_tag: container of the html; by default the content is
         embedded into a ``<div>``
-    :rtype: markupsafe.Markup
     """
     assert isinstance(text, str)
     text = misc.html_escape(text)
