@@ -11,6 +11,11 @@
                                 invisible="redirect_type != '308'"/>
                     </header>
                     <sheet>
+                        <div class="alert alert-warning" role="alert"
+                             invisible="not (url_from_is_controller and redirect_type in ['301','302'])">
+                            This redirection is ineffective because the 'URL from' is currently in use.
+                            If you want to rename it, you should use action '308 Redirect / Rewrite' instead.
+                        </div>
                         <group>
                             <group>
                                 <field name="name"/>
@@ -34,7 +39,8 @@
             <field name="name">website.rewrite.list</field>
             <field name="model">website.rewrite</field>
             <field name="arch" type="xml">
-                <list string="Website rewrites">
+                <list string="Website rewrites"
+                      decoration-warning="url_from_is_controller and redirect_type in ['301','302']">
                     <field name="sequence" widget="handle" />
                     <field name="redirect_type"/>
                     <field name="name"/>
