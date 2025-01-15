@@ -45,7 +45,8 @@ class DiscussChannel(models.Model):
 
     def _field_store_repr(self, field_name):
         if field_name == "livechat_operator_id":
-            return Store.One("livechat_operator_id", ["user_livechat_username", "write_date"])
+            # sudo - res.partner: accessing livechat operator is allowed
+            return Store.One("livechat_operator_id", ["user_livechat_username", "write_date"], sudo=True)
         return super()._field_store_repr(field_name)
 
     def _to_store_defaults(self, for_current_user=True):
