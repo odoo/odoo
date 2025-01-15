@@ -488,6 +488,7 @@ class TestHttpStaticLogo(TestHttpStaticCommon):
         self.assertDownloadLogoDefault(company=self.company2, user=self.user_of_company_of_superuser)
 
 
+@tagged('post_install', '-at_install')
 class TestHttpStaticCache(TestHttpStaticCommon):
     @freeze_time(datetime.utcnow())
     def test_static_cache0_standard(self):
