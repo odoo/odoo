@@ -4,7 +4,6 @@ import { rpc } from "@web/core/network/rpc";
 import { EventBus, reactive } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
-import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 const STEP_DELAY = 500;
@@ -111,34 +110,6 @@ export class ChatBotService {
 
     get canRestart() {
         return this.chatbot?.completed && !this.chatbot.currentStep?.operatorFound;
-    }
-
-    get inputEnabled() {
-        if (!this.chatbot || this.chatbot.currentStep?.operatorFound) {
-            return true;
-        }
-        return (
-            !this.chatbot.currentStep?.completed &&
-            !this.isTyping &&
-            this.chatbot.currentStep?.expectAnswer &&
-            this.chatbot.currentStep?.answers.length === 0
-        );
-    }
-
-    get inputDisabledText() {
-        if (this.inputEnabled) {
-            return "";
-        }
-        if (this.chatbot.completed) {
-            return _t("Conversation ended...");
-        }
-        if (
-            this.chatbot.currentStep?.type === "question_selection" &&
-            !this.chatbot.currentStep.completed
-        ) {
-            return _t("Select an option above");
-        }
-        return _t("Say something");
     }
 
     get chatbot() {
