@@ -1027,7 +1027,7 @@ class ChromeBrowser:
             headless=True
     ):
         headless_switches = {
-            '--headless': '',
+            # '--headless': '',
             '--disable-extensions': '',
             '--disable-background-networking' : '',
             '--disable-background-timer-throttling' : '',
@@ -1052,6 +1052,8 @@ class ChromeBrowser:
             '--remote-debugging-port': str(self.remote_debugging_port),
             '--user-data-dir': user_data_dir,
             '--window-size': window_size,
+            '--use-mobile-user-agent': '',
+            '--user-agent': "\"Mozilla/5.0 (iPhone; CPU iPhone OS 10_3 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) CriOS/56.0.2924.75 Mobile Safari/535.19\"",
             '--no-first-run': '',
             # '--enable-precise-memory-info': '',  # uncomment to debug memory leaks in unit tests
             # FIXME: the next flag is temporarily uncommented to allow client
