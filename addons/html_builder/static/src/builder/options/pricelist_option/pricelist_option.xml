@@ -3,16 +3,14 @@
 
 <t t-name="html_builder.AddProductButton">
     <BuilderRow label.translate="Product">
-        <BuilderButtonGroup>
-            <BuilderButton
-                action="'addItem'"
-                actionParam="`${props.productSelector}:last-of-type`"
-                preview="false"
-                className="'o_we_bg_brand_primary'"
-                applyTo="props.applyTo">
-                Add Product
-            </BuilderButton>
-        </BuilderButtonGroup>
+        <BuilderButton
+            action="'addItem'"
+            actionParam="`${props.productSelector}:last-of-type`"
+            preview="false"
+            className="'o_we_bg_brand_primary'"
+            applyTo="props.applyTo">
+            Add Product
+        </BuilderButton>
     </BuilderRow>
 </t>
 

@@ -34,8 +34,6 @@ export class BuilderButton extends Component {
 
     get className() {
         let className = this.state.isActive ? "active" : "";
-        const widthClass = this.env.actionBus ? " w-auto" : " w-25";
-        className += widthClass;
         if (this.props.className) {
             className = `${className} ${this.props.className}`;
         }
