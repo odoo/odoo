@@ -44,7 +44,6 @@ class ResConfigSettings(models.TransientModel):
     language_count = fields.Integer('Number of Languages', compute="_compute_language_count")
     company_name = fields.Char(related="company_id.display_name", string="Company Name")
     company_informations = fields.Text(compute="_compute_company_informations")
-    company_country_code = fields.Char(related="company_id.country_id.code", string="Company Country Code", readonly=True)
     profiling_enabled_until = fields.Datetime("Profiling enabled until", config_parameter='base.profiling_enabled_until')
     module_product_images = fields.Boolean("Get product pictures using barcode")
 

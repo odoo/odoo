@@ -13,3 +13,10 @@ class ResCompany(models.Model):
     hr_presence_control_email = fields.Boolean(string="Based on number of emails sent")
     hr_presence_control_ip = fields.Boolean(string="Based on IP Address")
     hr_presence_control_attendance = fields.Boolean(string="Based on attendances")
+
+    def _get_session_info(self, allowed_company_ids):
+        res = super()._get_session_info(allowed_company_ids)
+        res.update({
+            'country_code': self.country_id.code
+        })
+        return res

@@ -7,8 +7,7 @@
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <block name="work_organization_setting_container" position="after">
-                <field name="company_country_code" invisible="1"/>
-                <block title="French Time Off Localization" invisible="company_country_code != 'FR'">
+                <block title="French Time Off Localization" invisible="not companies.has(companies.active_id,'country_code','FR')">
                     <setting company_dependent="1" help="Set the time off type used as the company Paid Time Off to compute part-timers leave duration">
                         <field name="l10n_fr_reference_leave_type"
                             class="o_light_label"
