@@ -218,10 +218,23 @@ class ProjectProject(models.Model):
             )
         }
         for project in self:
-            milestone = milestone_ids_per_project_id.get(project.id, self.env['project.milestone'])[:1]
-            project.next_milestone_id = milestone
-            project.can_mark_milestone_as_done = milestone.can_be_marked_as_done
-            project.is_milestone_deadline_exceeded = milestone.is_deadline_exceeded
+            milestones = milestone_ids_per_project_id.get(project.id, self.env['project.milestone'])
+            project.next_milestone_id = milestones[:1]
+            milestone_deadline_exceeded = False
+            milestone_marked_as_done = False
+            for m in milestones:
+                if (
+                    not milestone_deadline_exceeded
+                    and m.is_deadline_exceeded
+                    and (any(not task.is_closed for task in m.task_ids)
+                    or not m.task_ids)
+                ):
+                    milestone_deadline_exceeded = True
+                    break
+                if not milestone_marked_as_done and m.can_be_marked_as_done:
+                    milestone_marked_as_done = True
+            project.is_milestone_deadline_exceeded = milestone_deadline_exceeded
+            project.can_mark_milestone_as_done = milestone_marked_as_done
 
     def _compute_access_url(self):
         super()._compute_access_url()
