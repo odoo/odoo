@@ -340,7 +340,7 @@ class HrApplicant(models.Model):
             ('res_model', '=', "hr.candidate")
         ], groupby=['res_id'], aggregates=['id:recordset']))
         for applicant in applicants:
-            if applicant.company_id != applicant.candidate_id.company_id:
+            if applicant.candidate_id.company_id and applicant.company_id != applicant.candidate_id.company_id:
                 raise ValidationError(_("You cannot create an applicant in a different company than the candidate"))
             candidate_id = applicant.candidate_id.id
             if candidate_id not in attachments_by_candidate:
@@ -585,23 +585,21 @@ class HrApplicant(models.Model):
         self = self.with_context(default_user_id=False, mail_notify_author=True)  # Allows sending stage updates to the author
         stage = False
         candidate_defaults = {}
+        partner_name, email_from_normalized = tools.parse_contact_from_email(msg.get('from'))
+        candidate_domain = [
+            ("email_from", "=", email_from_normalized),
+        ]
         if custom_values and 'job_id' in custom_values:
             job = self.env['hr.job'].browse(custom_values['job_id'])
             stage = job._get_first_stage()
             candidate_defaults['company_id'] = job.company_id.id
+            candidate_domain = expression.AND([candidate_domain, [("company_id", "in", [job.company_id.id, False])]])
 
-        partner_name, email_from_normalized = tools.parse_contact_from_email(msg.get('from'))
-        candidate = self.env["hr.candidate"].search(
-            [
-                ("email_from", "=", email_from_normalized),
-            ],
-            limit=1,
-        ) or self.env["hr.candidate"].create(
-            {
+        candidate = self.env["hr.candidate"].search(candidate_domain, limit=1)\
+            or self.env["hr.candidate"].create({
                 "partner_name": partner_name or email_from_normalized,
                 **candidate_defaults,
-            }
-        )
+            })
 
         defaults = {
             'candidate_id': candidate.id,
