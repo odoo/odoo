@@ -4,6 +4,7 @@ import "@mail/discuss/core/common/thread_model_patch";
 
 import { patch } from "@web/core/utils/patch";
 import { SESSION_STATE } from "./livechat_service";
+import { _t } from "@web/core/l10n/translation";
 
 patch(Thread.prototype, {
     setup() {
@@ -93,5 +94,32 @@ patch(Thread.prototype, {
             return false;
         }
         return super.showUnreadBanner;
+    },
+
+    get composerDisabled() {
+        const step = this.chatbot?.currentStep;
+        return (
+            super.composerDisabled ||
+            (step &&
+                !step.operatorFound &&
+                (step.completed || !step.expectAnswer || step.answers.length > 0))
+        );
+    },
+
+    get composerDisabledText() {
+        const text = super.composerDisabledText;
+        if (text || !this.chatbot) {
+            return text;
+        }
+        if (this.chatbot.completed) {
+            return _t("This livechat conversation has ended");
+        }
+        if (
+            this.chatbot.currentStep?.type === "question_selection" &&
+            !this.chatbot.currentStep.completed
+        ) {
+            return _t("Select an option above");
+        }
+        return _t("Say something");
     },
 });
