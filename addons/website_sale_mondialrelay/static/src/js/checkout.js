@@ -45,7 +45,7 @@ WebsiteSaleCheckout.include({
         const checkedRadio = ev.currentTarget;
         await this._super(...arguments);
         if (checkedRadio.dataset.isMondialrelay) {
-            if (this.use_delivery_as_billing_toggle.checked) {
+            if (this.use_delivery_as_billing_toggle?.checked) {
                 // Uncheck use same as delivery and show the billing address row.
                 this.use_delivery_as_billing_toggle.dispatchEvent(new MouseEvent('click'));
             }
@@ -72,7 +72,7 @@ WebsiteSaleCheckout.include({
      */
     async _changeAddress(ev) {
         const newAddress = ev.currentTarget;
-        if (newAddress.dataset.isMondialrelay && this.use_delivery_as_billing_toggle.checked) {
+        if (newAddress.dataset.isMondialrelay && this.use_delivery_as_billing_toggle?.checked) {
             // Uncheck use same as delivery and show the billing address row.
             this.use_delivery_as_billing_toggle.dispatchEvent(new MouseEvent('click'));
         }

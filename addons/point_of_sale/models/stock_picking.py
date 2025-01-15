@@ -310,6 +310,7 @@ class StockMove(models.Model):
                                 else:
                                     ml_vals.update({
                                         'lot_name': existing_lot.name,
+                                        'lot_id': existing_lot.id,
                                     })
                         else:
                             ml_vals.update({'lot_name': lot.lot_name})

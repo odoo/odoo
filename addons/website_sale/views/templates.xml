@@ -2237,7 +2237,11 @@
             <t t-set="redirect" t-valuef="/shop/checkout"/>
             <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_invoice_id or only_services)" />
             <div id="shop_checkout">
-                <t t-if="order._has_deliverable_products()">
+                <!-- When delivery address is enabled. -->
+                <t
+                    t-if="order._has_deliverable_products()"
+                    groups="account.group_delivery_invoice_address"
+                >
                     <t t-call="website_sale.delivery_address_row">
                         <t t-set="addresses" t-value="delivery_addresses"/>
                     </t>
@@ -2248,6 +2252,13 @@
                 <t t-call="website_sale.billing_address_row">
                     <t t-set="addresses" t-value="billing_addresses"/>
                 </t>
+                <!-- When delivery address is disabled. -->
+                <t
+                    groups="!account.group_delivery_invoice_address"
+                    t-call="website_sale.delivery_form"
+                >
+                    <t t-set="selected_dm_id" t-value="order.carrier_id.id"/>
+                </t>
             </div>
         </t>
     </template>
@@ -2255,33 +2266,47 @@
     <template id="delivery_address_row">
         <div id="delivery_address_row" class="mb-4">
             <h4 class="text-uppercase small fs-6 fw-bold">Delivery address</h4>
-            <t groups="account.group_delivery_invoice_address">
-                <t t-call="website_sale.address_row">
-                    <t t-set="is_invoice" t-value="False"/>
-                    <t t-set="addresses" t-value="delivery_addresses"/>
-                    <t t-set="selected_address" t-value="order.partner_shipping_id"/>
-                </t>
+            <t t-call="website_sale.address_row">
+                <t t-set="is_invoice" t-value="False"/>
+                <t t-set="addresses" t-value="delivery_addresses"/>
+                <t t-set="selected_address" t-value="order.partner_shipping_id"/>
             </t>
         </div>
     </template>
 
     <template id="billing_address_row">
-        <div id="billing_address_row">
-            <h4 class="text-uppercase small fs-6 fw-bold mt-3">Billing address</h4>
-            <t t-set="has_delivery" t-value="order._has_deliverable_products()"/>
-            <div t-if="has_delivery" class="form-check form-switch mt-2 mb-3">
-                <label id="use_delivery_as_billing_label">
-                    <input
-                        type="checkbox"
-                        id="use_delivery_as_billing"
-                        class="form-check-input"
-                        t-att-checked="use_delivery_as_billing"
-                    /> Same as delivery address
-                </label>
-            </div>
+        <div id="billing_address_row" class="mb-3">
+            <h4 class="text-uppercase small fs-6 fw-bold mt-3">
+                <t groups="!account.group_delivery_invoice_address">Your address</t>
+                <t groups="account.group_delivery_invoice_address">Billing address</t>
+            </h4>
+            <t groups="account.group_delivery_invoice_address">
+                <t t-set="has_delivery" t-value="order._has_deliverable_products()"/>
+                <div t-if="has_delivery" class="form-check form-switch mt-2 mb-3">
+                    <label id="use_delivery_as_billing_label">
+                        <input
+                            type="checkbox"
+                            id="use_delivery_as_billing"
+                            class="form-check-input"
+                            t-att-checked="use_delivery_as_billing"
+                        /> Same as delivery address
+                    </label>
+                </div>
+            </t>
+            <t
+                t-set="delivery_address_disabled"
+                groups="!account.group_delivery_invoice_address"
+                t-value="True"
+            />
+            <t
+                t-set="delivery_address_disabled"
+                groups="account.group_delivery_invoice_address"
+                t-value="False"
+            />
             <div
                 id="billing_container"
                 t-attf-class="{{'d-none' if use_delivery_as_billing and has_delivery else ''}}"
+                t-att-data-delivery-address-disabled="delivery_address_disabled"
             >
                 <t t-call="website_sale.address_row">
                     <t t-set="is_invoice" t-value="True"/>
@@ -2376,7 +2401,10 @@
                                         <h3 class="mb-3">Delivery address</h3>
                                     </t>
                                     <t t-else="">
-                                        <h3 class="mb-3">Billing address</h3>
+                                        <h3 class="mb-3">
+                                            <t groups="!account.group_delivery_invoice_address">Your address</t>
+                                            <t groups="account.group_delivery_invoice_address">Billing address</t>
+                                        </h3>
                                     </t>
                                 </t>
                                 <div
