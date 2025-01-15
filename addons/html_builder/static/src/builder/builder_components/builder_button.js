@@ -2,7 +2,6 @@ import { Component } from "@odoo/owl";
 import {
     clickableBuilderComponentProps,
     BuilderComponent,
-    defaultBuilderComponentProps,
     useSelectableItemComponent,
 } from "./utils";
 
@@ -22,7 +21,6 @@ export class BuilderButton extends Component {
 
         slots: { type: Object, optional: true },
     };
-    static defaultProps = defaultBuilderComponentProps;
 
     setup() {
         const { state, operation } = useSelectableItemComponent(this.props.id);

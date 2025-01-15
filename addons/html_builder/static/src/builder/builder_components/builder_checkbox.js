@@ -5,7 +5,6 @@ import {
     useClickableBuilderComponent,
     BuilderComponent,
     useDependencyDefinition,
-    defaultBuilderComponentProps,
     useDomState,
 } from "./utils";
 
@@ -16,7 +15,6 @@ export class BuilderCheckbox extends Component {
         ...clickableBuilderComponentProps,
         id: { type: String, optional: true },
     };
-    static defaultProps = defaultBuilderComponentProps;
 
     setup() {
         const { operation, isApplied } = useClickableBuilderComponent();

@@ -227,6 +227,7 @@ export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
 export function useClickableBuilderComponent() {
     useBuilderComponent();
     const comp = useComponent();
+    const { getAllActions, callOperation } = getAllActionsAndOperations(comp);
     const getAction = comp.env.editor.shared.builderActions.getAction;
     const applyOperation = comp.env.editor.shared.history.makePreviewableOperation(callApply);
     const shouldToggle = !comp.env.actionBus;
@@ -237,8 +238,10 @@ export function useClickableBuilderComponent() {
         },
         preview: () => {
             callOperation(applyOperation.preview, {
-                cancellable: true,
-                cancelPrevious: () => applyOperation.revert(),
+                operationParams: {
+                    cancellable: true,
+                    cancelPrevious: () => applyOperation.revert(),
+                },
             });
         },
         revert: () => {
@@ -277,53 +280,10 @@ export function useClickableBuilderComponent() {
         }
     }
 
-    function callOperation(fn, operationParams) {
-        const actionsSpecs = getActionsSpecs(getAllActions());
-        comp.env.editor.shared.operation.next(
-            () => {
-                fn(actionsSpecs);
-            },
-            {
-                load: async () =>
-                    Promise.all(
-                        actionsSpecs.map(async (applySpec) => {
-                            if (!applySpec.load) {
-                                return;
-                            }
-                            const result = await applySpec.load({
-                                editingElement: applySpec.editingElement,
-                                param: applySpec.actionParam,
-                                value: applySpec.actionValue,
-                            });
-                            applySpec.loadResult = result;
-                        })
-                    ),
-                ...operationParams,
-            }
-        );
-    }
-    function getActionsSpecs(actions) {
-        const specs = [];
-        for (const { actionId, actionParam, actionValue } of actions) {
-            const action = getAction(actionId);
-            for (const editingElement of comp.env.getEditingElements()) {
-                specs.push({
-                    editingElement,
-                    actionId,
-                    actionParam,
-                    actionValue,
-                    apply: action.apply,
-                    clean: action.clean,
-                    load: action.load,
-                });
-            }
-        }
-        return specs;
-    }
     function callApply(applySpecs) {
         comp.env.selectableContext?.cleanSelectedItem(applySpecs);
         const cleans = comp.props.inheritedActions
-            .map((actionId) => comp.env.dependencyManager.get(actionId).cleanSelectedItem)
+            ?.map((actionId) => comp.env.dependencyManager.get(actionId).cleanSelectedItem)
             .filter(Boolean);
         for (const clean of new Set(cleans)) {
             clean(applySpecs);
@@ -348,52 +308,6 @@ export function useClickableBuilderComponent() {
                 });
             }
         }
-    }
-
-    function getShorthandActions() {
-        const actions = [];
-        const shorthands = [
-            ["classAction", "classActionValue"],
-            ["attributeAction", "attributeActionValue"],
-            ["dataAttributeAction", "dataAttributeActionValue"],
-            ["styleAction", "styleActionValue"],
-        ];
-        for (const [actionId, actionValue] of shorthands) {
-            const actionParam = comp.env.weContext[actionId] || comp.props[actionId];
-            if (actionParam !== undefined) {
-                actions.push({ actionId, actionParam, actionValue: comp.props[actionValue] });
-            }
-        }
-        return actions;
-    }
-    function getCustomAction() {
-        const action = {
-            actionId: comp.env.weContext.action || comp.props.action,
-            actionParam: comp.env.weContext.actionParam || comp.props.actionParam,
-            actionValue: comp.props.actionValue,
-        };
-        if (action.actionId) {
-            return action;
-        }
-    }
-    function getAllActions() {
-        const actions = getShorthandActions();
-
-        const { actionId, actionParam, actionValue } = getCustomAction() || {};
-        if (actionId) {
-            actions.push({ actionId, actionParam, actionValue });
-        }
-        const inheritedActions = comp.props.inheritedActions
-            .map(
-                (actionId) =>
-                    comp.env.dependencyManager
-                        // The dependency might not be loaded yet.
-                        .get(actionId)
-                        ?.getActions?.() || []
-            )
-            .flat();
-
-        return actions.concat(inheritedActions);
     }
     function isApplied() {
         const editingElements = comp.env.getEditingElements();
@@ -446,17 +360,18 @@ export function useClickableBuilderComponent() {
 }
 export function useInputBuilderComponent() {
     const comp = useComponent();
+    const { getAllActions, callOperation } = getAllActionsAndOperations(comp);
     const getAction = comp.env.editor.shared.builderActions.getAction;
     const state = useDomState(getState);
-    const applyValue = comp.env.editor.shared.history.makePreviewableOperation((value) => {
-        for (const [actionId, actionParam] of getActions()) {
-            for (const editingElement of comp.env.getEditingElements()) {
-                getAction(actionId).apply({
-                    editingElement,
-                    param: actionParam,
-                    value,
-                });
-            }
+    const applyOperation = comp.env.editor.shared.history.makePreviewableOperation((applySpecs) => {
+        for (const applySpec of applySpecs) {
+            applySpec.apply({
+                editingElement: applySpec.editingElement,
+                param: applySpec.actionParam,
+                value: applySpec.actionValue,
+                loadResult: applySpec.loadResult,
+                dependencyManager: comp.env.dependencyManager,
+            });
         }
     });
     function getState(editingElement) {
@@ -464,7 +379,10 @@ export function useInputBuilderComponent() {
             // TODO try to remove it. We need to move hook in BuilderComponent
             return {};
         }
-        const [actionId, actionParam] = getActions()[0];
+        const actionWithGetValue = getAllActions().find(
+            ({ actionId }) => getAction(actionId).getValue
+        );
+        const { actionId, actionParam } = actionWithGetValue;
         return {
             value: getAction(actionId).getValue({
                 editingElement,
@@ -472,36 +390,26 @@ export function useInputBuilderComponent() {
             }),
         };
     }
-    function getActions() {
-        const actions = [];
-        const actionNames = [
-            "classAction",
-            "attributeAction",
-            "dataAttributeAction",
-            "styleAction",
-        ];
-        for (const actionName of actionNames) {
-            if (comp.props[actionName]) {
-                actions.push([actionName, comp.props[actionName]]);
-            }
-        }
 
-        if (comp.props.action) {
-            actions.push([comp.props.action, comp.props.actionParam]);
-        }
-        return actions;
-    }
-    let lastCommitedValue;
     function onChange(e) {
-        const value = e.target.value;
-        if (value === lastCommitedValue) {
-            return;
-        }
-        lastCommitedValue = value;
-        applyValue.commit(value);
+        const userValueInput = e.target.value;
+        callOperation(applyOperation.commit, { userValueInput: userValueInput });
     }
-    function onInput(e) {
-        applyValue.preview(e.target.value);
+    let onInput = (e) => {
+        const userValueInput = e.target.value;
+        callOperation(applyOperation.preview, {
+            userValueInput: userValueInput,
+            operationParams: {
+                cancellable: true,
+                cancelPrevious: () => applyOperation.revert(),
+            },
+        });
+    };
+    if (
+        comp.props.preview === false ||
+        (comp.env.weContext.preview === false && comp.props.preview !== true)
+    ) {
+        onInput = () => {};
     }
     return {
         state,
@@ -582,6 +490,101 @@ export const clickableBuilderComponentProps = {
 
     inheritedActions: { type: Array, element: String, optional: true },
 };
-export const defaultBuilderComponentProps = {
-    inheritedActions: [],
-};
+
+function getAllActionsAndOperations(comp) {
+    function getActionsSpecs(actions, userValueInput) {
+        const getAction = comp.env.editor.shared.builderActions.getAction;
+        const specs = [];
+        for (let { actionId, actionParam, actionValue } of actions) {
+            const action = getAction(actionId);
+            // Take the action value defined by the clickable or the input given
+            // by the user.
+            actionValue = actionValue || userValueInput;
+            for (const editingElement of comp.env.getEditingElements()) {
+                specs.push({
+                    editingElement,
+                    actionId,
+                    actionParam,
+                    actionValue,
+                    apply: action.apply,
+                    clean: action.clean,
+                    load: action.load,
+                });
+            }
+        }
+        return specs;
+    }
+    function getShorthandActions() {
+        const actions = [];
+        const shorthands = [
+            ["classAction", "classActionValue"],
+            ["attributeAction", "attributeActionValue"],
+            ["dataAttributeAction", "dataAttributeActionValue"],
+            ["styleAction", "styleActionValue"],
+        ];
+        for (const [actionId, actionValue] of shorthands) {
+            const actionParam = comp.env.weContext[actionId] || comp.props[actionId];
+            if (actionParam !== undefined) {
+                actions.push({ actionId, actionParam, actionValue: comp.props[actionValue] });
+            }
+        }
+        return actions;
+    }
+    function getCustomAction() {
+        const action = {
+            actionId: comp.env.weContext.action || comp.props.action,
+            actionParam: comp.env.weContext.actionParam || comp.props.actionParam,
+            actionValue: comp.props.actionValue,
+        };
+        if (action.actionId) {
+            return action;
+        }
+    }
+    function getAllActions() {
+        const actions = getShorthandActions();
+
+        const { actionId, actionParam, actionValue } = getCustomAction() || {};
+        if (actionId) {
+            actions.push({ actionId, actionParam, actionValue });
+        }
+        const inheritedActions = comp.props.inheritedActions
+            ?.map(
+                (actionId) =>
+                    comp.env.dependencyManager
+                        // The dependency might not be loaded yet.
+                        .get(actionId)
+                        ?.getActions?.() || []
+            )
+            .flat();
+        return actions.concat(inheritedActions || []);
+    }
+    function callOperation(fn, params = {}) {
+        const actionsSpecs = getActionsSpecs(getAllActions(), params.userValueInput);
+        comp.env.editor.shared.operation.next(
+            () => {
+                fn(actionsSpecs);
+            },
+            {
+                load: async () =>
+                    Promise.all(
+                        actionsSpecs.map(async (applySpec) => {
+                            if (!applySpec.load) {
+                                return;
+                            }
+                            const result = await applySpec.load({
+                                editingElement: applySpec.editingElement,
+                                param: applySpec.actionParam,
+                                value: applySpec.actionValue,
+                            });
+                            applySpec.loadResult = result;
+                        })
+                    ),
+                ...params.operationParams,
+            }
+        );
+    }
+    return {
+        getAllActions: getAllActions,
+        callOperation: callOperation,
+    };
+}

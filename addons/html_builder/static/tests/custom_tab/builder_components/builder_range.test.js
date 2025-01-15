@@ -34,6 +34,7 @@ test("should commit changes", async () => {
     const input = await waitFor(".options-container input");
     input.value = 50;
     input.dispatchEvent(new Event("input"));
+    await delay();
     input.dispatchEvent(new Event("change"));
     await delay();
 

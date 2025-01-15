@@ -1,7 +1,6 @@
 import { Component, useRef } from "@odoo/owl";
 import {
     clickableBuilderComponentProps,
-    defaultBuilderComponentProps,
     BuilderComponent,
     useSelectableItemComponent,
 } from "./utils";
@@ -14,7 +13,6 @@ export class BuilderSelectItem extends Component {
         title: { type: String, optional: true },
         slots: { type: Object, optional: true },
     };
-    static defaultProps = defaultBuilderComponentProps;
     static components = { BuilderComponent };
 
     setup() {
