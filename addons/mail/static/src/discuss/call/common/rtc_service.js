@@ -12,6 +12,7 @@ import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { loadBundle, loadJS } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
+import { url } from "@web/core/utils/urls";
 import { callActionsRegistry } from "./call_actions";
 
 /**
@@ -459,7 +460,11 @@ export class Rtc extends Record {
      * @param {boolean} [initialState.camera]
      */
     async toggleCall(channel, { audio = true, camera } = {}) {
-        await loadJS("/mail/static/lib/selfie_segmentation/selfie_segmentation.js");
+        await Promise.resolve(() =>
+            loadJS(url("/mail/static/lib/selfie_segmentation/selfie_segmentation.js")).catch(
+                () => {}
+            )
+        );
         if (this.state.hasPendingRequest) {
             return;
         }

@@ -797,7 +797,7 @@ class TestPickShip(TestStockCommon):
         self.assertEqual(picking_client.state, 'waiting')
 
     def test_return_only_one_product(self):
-        """ test returning only one product in a picking"""
+        """ test returning only one product in a picking then return the leftovers"""
         picking_client = self.env['stock.picking'].create({
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
@@ -806,15 +806,16 @@ class TestPickShip(TestStockCommon):
             'move_ids': [Command.create({
                 'name': p.name,
                 'product_id': p.id,
-                'product_uom_qty': 10,
+                'product_uom_qty': 10 + i,
                 'product_uom': p.uom_id.id,
                 'location_id': self.stock_location,
                 'location_dest_id': self.customer_location,
                 'state': 'waiting',
                 'procure_method': 'make_to_order',
-            }) for p in (self.productA, self.productB, self.productC)]
+            }) for i, p in enumerate((self.productA, self.productB, self.productC))]
         })
-        picking_client.move_ids.quantity = 10
+        for move in picking_client.move_ids:
+            move.quantity = move.product_uom_qty 
         picking_client.move_ids.picked = True
         picking_client.button_validate()
         stock_return_picking_form = Form(self.env['stock.return.picking']
@@ -827,6 +828,17 @@ class TestPickShip(TestStockCommon):
         self.assertEqual(len(return_pick.move_ids), 1)
         self.assertEqual(return_pick.move_ids.product_id, self.productB)
         self.assertEqual(return_pick.move_ids.product_uom_qty, 5)
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking_client.ids, active_id=picking_client.ids[0],
+            active_model='stock.picking'))
+        return2 = stock_return_picking_form.save()
+        return_pick_leftorvers = return2.action_create_returns_all()
+        return_pick_leftorvers = self.env['stock.picking'].browse(return_pick_leftorvers['res_id'])
+        self.assertRecordValues(return_pick_leftorvers.move_ids.sorted('product_uom_qty'), [
+            {'product_id': self.productB.id, 'product_uom_qty': 6},
+            {'product_id': self.productA.id, 'product_uom_qty': 10},
+            {'product_id': self.productC.id, 'product_uom_qty': 12},
+        ])
 
     def test_return_location(self):
         """ In a pick ship scenario, send two items to the customer, then return one in the ship

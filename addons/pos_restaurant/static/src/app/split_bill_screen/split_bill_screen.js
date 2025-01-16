@@ -44,7 +44,10 @@ export class SplitBillScreen extends Component {
             } else {
                 this.qtyTracker[line.uuid] += 1;
             }
-
+            // We need this split for decimal quantities (e.g. 0.5 kg)
+            if (this.qtyTracker[line.uuid] > line.get_quantity()) {
+                this.qtyTracker[line.uuid] = line.get_quantity();
+            }
             this.priceTracker[line.uuid] =
                 (line.get_price_with_tax() / line.qty) * this.qtyTracker[line.uuid];
         }
@@ -107,7 +110,6 @@ export class SplitBillScreen extends Component {
         newOrder.uiState.splittedOrderUuid = curOrderUuid;
         await this.preSplitOrder(originalOrder, newOrder);
 
-        let sentQty = {};
         // Create lines for the new order
         const lineToDel = [];
         for (const line of originalOrder.lines) {
@@ -124,14 +126,36 @@ export class SplitBillScreen extends Component {
                     true
                 );
 
-                const orderedQty =
-                    originalOrder.last_order_preparation_change.lines[line.preparationKey]
-                        ?.quantity || 0;
-                sentQty = { ...sentQty, ...this._getSentQty(line, newLine, orderedQty) };
+                const ordered =
+                    originalOrder.last_order_preparation_change.lines[line.preparationKey];
                 if (line.get_quantity() === this.qtyTracker[line.uuid]) {
+                    delete originalOrder.last_order_preparation_change.lines[line.preparationKey];
                     lineToDel.push(line);
+
+                    if (ordered) {
+                        const newOrdered = { ...ordered };
+                        newOrdered.uuid = newLine.uuid;
+                        newOrder.last_order_preparation_change.lines[newLine.preparationKey] =
+                            newOrdered;
+                    }
                 } else {
-                    line.update({ qty: line.get_quantity() - this.qtyTracker[line.uuid] });
+                    const newQty = line.get_quantity() - this.qtyTracker[line.uuid];
+                    line.update({ qty: newQty });
+
+                    if (ordered) {
+                        const orderedQty = ordered["quantity"];
+                        const newOrderedQty = orderedQty > newQty ? newQty : orderedQty;
+                        ordered["quantity"] = newOrderedQty;
+
+                        if (orderedQty > newQty) {
+                            const newOrdered = { ...ordered };
+
+                            newOrdered.uuid = newLine.uuid;
+                            newOrdered.quantity = orderedQty - newQty;
+                            newOrder.last_order_preparation_change.lines[newLine.preparationKey] =
+                                newOrdered;
+                        }
+                    }
                 }
             }
         }
@@ -140,19 +164,7 @@ export class SplitBillScreen extends Component {
             line.delete();
         }
 
-        Object.keys(originalOrder.last_order_preparation_change.lines).forEach(
-            (linePreparationKey) => {
-                originalOrder.last_order_preparation_change.lines[linePreparationKey]["quantity"] =
-                    sentQty[linePreparationKey];
-            }
-        );
-        newOrder.updateLastOrderChange();
-        Object.keys(newOrder.last_order_preparation_change.lines).forEach((linePreparationKey) => {
-            newOrder.last_order_preparation_change.lines[linePreparationKey]["quantity"] =
-                sentQty[linePreparationKey];
-        });
-        this.pos.addPendingOrder([originalOrder.id, newOrder.id]);
-
+        await this.pos.syncAllOrders({ orders: [originalOrder, newOrder] });
         originalOrder.customer_count -= 1;
         await this.postSplitOrder(originalOrder, newOrder);
         originalOrder.set_screen_data({ name: "ProductScreen" });

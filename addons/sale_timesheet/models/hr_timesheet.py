@@ -213,7 +213,7 @@ class AccountAnalyticLine(models.Model):
 
     def _timesheet_preprocess_get_accounts(self, vals):
         so_line = self.env['sale.order.line'].browse(vals.get('so_line'))
-        if not (so_line and (distribution := so_line.analytic_distribution)):
+        if not (so_line and (distribution := so_line.sudo().analytic_distribution)):
             return super()._timesheet_preprocess_get_accounts(vals)
 
         company = self.env['res.company'].browse(vals.get('company_id'))

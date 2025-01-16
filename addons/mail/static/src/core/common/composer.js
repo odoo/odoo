@@ -538,7 +538,7 @@ export class Composer extends Component {
             ((this.props.composer.emailAddSignature && signature) ? ("<br>" + signature) : "");
         const context = {
             default_attachment_ids: attachmentIds,
-            default_body: "<div>" + default_body + "</div>", // as to not wrap in <p> by html_sanitize,
+            default_body,
             default_email_add_signature: false,
             default_model: this.thread.model,
             default_partner_ids:
