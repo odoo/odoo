@@ -10,7 +10,7 @@ class WebsiteSaleBr(WebsiteSale):
 
         if request.params.get('country_id'):
             country = request.env['res.country'].browse(int(request.params['country_id']))
-            if request.website.sudo().company_id.country_id.code == "BR" and country.code == "BR" and "vat" not in mandatory_fields:
+            if request.website.sudo().company_id.country_id.code == "BR" and country.code == "BR" and "vat" not in mandatory_fields and request.website._display_partner_b2b_fields():
                 mandatory_fields += ['vat']
             # Needed because the user could put brazil and then change to another country, we don't want the field to stay mandatory
             elif 'vat' in mandatory_fields and country.code != 'BR':
