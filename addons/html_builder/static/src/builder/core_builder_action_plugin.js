@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { CSS_SHORTHANDS, areCssValuesEqual } from "@html_builder/builder/utils/utils_css";
 
 class CoreBuilderActionPlugin extends Plugin {
     static id = "CoreBuilderAction";
@@ -83,11 +84,20 @@ export const coreBuilderActions = {
             return currentValue === value;
         },
         apply: ({ editingElement, param: styleName, value }) => {
+            // Always reset the inline style first to not put inline style on an
+            // element which already has this style through css stylesheets.
+            const cssProps = CSS_SHORTHANDS[styleName] || [styleName];
+            for (const cssProp of cssProps) {
+                editingElement.style.setProperty(cssProp, "");
+            }
             const customStyle = styleMap[styleName];
             if (customStyle) {
                 customStyle?.apply(editingElement, value);
             } else {
-                editingElement.style.setProperty(styleName, value, "important");
+                const styles = window.getComputedStyle(editingElement);
+                if (!areCssValuesEqual(styles.getPropertyValue(styleName), value, styleName)) {
+                    editingElement.style.setProperty(styleName, value, "important");
+                }
             }
         },
     },

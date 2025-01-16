@@ -59,3 +59,21 @@ test("hide/display base on applyTo", async () => {
     expect("[data-class-action='my-custom-class']").toHaveClass("active");
     expect(".options-container .o_we_color_preview").toHaveCount(1);
 });
+
+test("apply color to a different style than color or backgroundColor", async () => {
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderColorPicker styleAction="'borderTopColor'"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    expect(".options-container").toBeDisplayed();
+    await contains(".we-bg-options-container .dropdown").click();
+    await click(".o-overlay-item [data-color='#FF0000']");
+    expect(":iframe .test-options-target").toHaveStyle({
+        borderTopColor: "rgb(255, 0, 0)",
+    });
+    expect(".we-bg-options-container .dropdown").toHaveStyle({
+        "background-color": "rgb(255, 0, 0)",
+    });
+});

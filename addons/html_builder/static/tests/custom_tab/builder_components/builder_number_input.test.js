@@ -98,7 +98,7 @@ test("hide/display base on applyTo", async () => {
     });
     addActionOption({
         customAction: {
-            getValue: () => "customValue",
+            getValue: () => "10",
         },
     });
 
@@ -119,7 +119,7 @@ test("hide/display base on applyTo", async () => {
     );
     expect("[data-class-action='my-custom-class']").toHaveClass("active");
     expect("[data-action-id='customAction']").toHaveCount(1);
-    expect("[data-action-id='customAction'] input").toHaveValue("customValue");
+    expect("[data-action-id='customAction'] input").toHaveValue("10");
 });
 test("should commit changes after an undo", async () => {
     addActionOption({

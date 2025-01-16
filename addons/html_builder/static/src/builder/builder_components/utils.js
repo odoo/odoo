@@ -368,14 +368,14 @@ export function useInputBuilderComponent() {
             applySpec.apply({
                 editingElement: applySpec.editingElement,
                 param: applySpec.actionParam,
-                value: applySpec.actionValue,
+                value: `${applySpec.actionValue}${comp.props.unit || ""}`,
                 loadResult: applySpec.loadResult,
                 dependencyManager: comp.env.dependencyManager,
             });
         }
     });
     function getState(editingElement) {
-        if (!editingElement) {
+        if (!editingElement || !editingElement.isConnected) {
             // TODO try to remove it. We need to move hook in BuilderComponent
             return {};
         }
@@ -383,11 +383,13 @@ export function useInputBuilderComponent() {
             ({ actionId }) => getAction(actionId).getValue
         );
         const { actionId, actionParam } = actionWithGetValue;
+        let actionValue = getAction(actionId).getValue({ editingElement, param: actionParam });
+        if (comp.props.unit) {
+            // Remove the unit
+            actionValue = actionValue && actionValue.match(/\d+/g)[0];
+        }
         return {
-            value: getAction(actionId).getValue({
-                editingElement,
-                param: actionParam,
-            }),
+            value: actionValue,
         };
     }
 

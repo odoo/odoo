@@ -1,4 +1,4 @@
-import { Component, EventBus, onMounted, useEnv, useRef, useSubEnv } from "@odoo/owl";
+import { Component, onMounted, useRef, useSubEnv } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import {
     basicContainerBuilderComponentProps,
@@ -8,7 +8,6 @@ import {
     useSelectableComponent,
 } from "./utils";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { useBus } from "@web/core/utils/hooks";
 
 export class BuilderSelect extends Component {
     static template = "html_builder.BuilderSelect";

@@ -52,7 +52,9 @@ export class BuilderColorPicker extends Component {
             return;
         }
         const color =
-            this.env.editor.shared.color.getElementColors(editingElement)[this.props.styleAction];
+            this.env.editor.shared.color.getElementColors(editingElement)[this.props.styleAction] ||
+            editingElement.style[this.props.styleAction] ||
+            "";
         this.env.editor.shared.color.colorElement(this.colorButton.el, color, "backgroundColor");
     }
 }
