@@ -391,6 +391,57 @@ class TestActivityMixin(TestActivityCommon):
             self.assertFalse(act2.exists())
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_activity_mixin_not_only_automated(self):
+
+        # Schedule activity and create manual activity
+        act_type_todo = self.env.ref('test_mail.mail_act_test_todo')
+        auto_act = self.test_record.activity_schedule(
+            'test_mail.mail_act_test_todo',
+            date_deadline=date.today() + relativedelta(days=1)
+        )
+        man_act = self.env['mail.activity'].create({
+            'activity_type_id': act_type_todo.id,
+            'res_id': self.test_record.id,
+            'res_model_id': self.env['ir.model']._get_id(self.test_record._name),
+            'date_deadline': date.today() + relativedelta(days=1)
+        })
+        self.assertEqual(auto_act.automated, True)
+        self.assertEqual(man_act.automated, False)
+
+        # Test activity reschedule on not only automated activities
+        self.test_record.activity_reschedule(
+            ['test_mail.mail_act_test_todo'],
+            date_deadline=date.today() + relativedelta(days=2),
+            only_automated=False
+        )
+        self.assertEqual(auto_act.date_deadline, date.today() + relativedelta(days=2))
+        self.assertEqual(man_act.date_deadline, date.today() + relativedelta(days=2))
+
+        # Test activity feedback on not only automated activities
+        self.test_record.activity_feedback(
+            ['test_mail.mail_act_test_todo'],
+            feedback='Test feedback',
+            only_automated=False
+        )
+        self.assertEqual(self.test_record.activity_ids, self.env['mail.activity'])
+        self.assertFalse(auto_act.exists())
+        self.assertFalse(man_act.exists())
+
+        # Test activity unlink on not only automated activities
+        auto_act = self.test_record.activity_schedule(
+            'test_mail.mail_act_test_todo'
+        )
+        man_act = self.env['mail.activity'].create({
+            'activity_type_id': act_type_todo.id,
+            'res_id': self.test_record.id,
+            'res_model_id': self.env['ir.model']._get_id(self.test_record._name)
+        })
+        self.test_record.activity_unlink(['test_mail.mail_act_test_todo'], only_automated=False)
+        self.assertEqual(self.test_record.activity_ids, self.env['mail.activity'])
+        self.assertFalse(auto_act.exists())
+        self.assertFalse(man_act.exists())
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin_archive(self):
         rec = self.test_record.with_user(self.user_employee)
         new_act = rec.activity_schedule(
