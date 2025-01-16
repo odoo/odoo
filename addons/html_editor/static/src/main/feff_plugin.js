@@ -11,6 +11,8 @@ import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 /**
  * @typedef { Object } FeffShared
  * @property { FeffPlugin['addFeff'] } addFeff
+ * @property { FeffPlugin['removeFeffs'] } removeFeffs
+ * @property { FeffPlugin['updateFeffs'] } updateFeffs
  */
 
 /**
@@ -23,7 +25,7 @@ import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 export class FeffPlugin extends Plugin {
     static id = "feff";
     static dependencies = ["selection"];
-    static shared = ["addFeff"];
+    static shared = ["addFeff", "removeFeffs", "updateFeffs"];
 
     resources = {
         normalize_handlers: this.updateFeffs.bind(this),

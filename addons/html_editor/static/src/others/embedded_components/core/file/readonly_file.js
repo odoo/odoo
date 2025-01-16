@@ -32,6 +32,18 @@ export class ReadonlyEmbeddedFileComponent extends Component {
     }
 
     /**
+     * Method no longer used, kept for compatibility (stable policy).
+     * To be removed in master.
+     *
+     * @param {Event} ev
+     */
+    async onClickDownload(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        await this.download();
+    }
+
+    /**
      * This function will simply open a link that will trigger the download of
      * the associated file. If the url is not valid, the function will display
      * an error message.

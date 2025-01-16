@@ -132,4 +132,47 @@ export class LinkSelectionPlugin extends Plugin {
             removeClass(link, "o_link_in_selection");
         }
     }
+
+    /**
+     * ============================================================= *
+     * The methods below are kept for compatibility (stable policy). *
+     * To be removed in master.                                      *
+     * ============================================================= *
+     */
+
+    /**
+     * @param {Element} root
+     */
+    normalize(root) {
+        this.updateFEFFs(root);
+        this.resetLinkInSelection();
+    }
+
+    /**
+     * @param {Element} root
+     */
+    cleanForSave({ root, preserveSelection = false }) {
+        this.removeFEFFs(root, { preserveSelection });
+        this.clearLinkInSelectionClass(root);
+    }
+
+    /**
+     * @param {Element} root
+     */
+    updateFEFFs(root) {
+        this.dependencies.feff.updateFeffs(root);
+    }
+
+    /**
+     * Removes ZWNBSP characters from text nodes within the given root.
+     *
+     * @param {Element} root
+     * @param {Object} [options]
+     * @param {Function} [options.exclude]
+     */
+    removeFEFFs(root, { exclude = () => false, preserveSelection = true } = {}) {
+        const cursors = preserveSelection ? this.dependencies.selection.preserveSelection() : null;
+        this.dependencies.feff.removeFeffs(root, cursors, { exclude });
+        cursors?.restore();
+    }
 }
