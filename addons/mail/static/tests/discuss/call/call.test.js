@@ -577,7 +577,8 @@ test("Use saved volume settings", async () => {
     await openDiscuss(channelId);
     await click("[title='Start a Call']");
     await contains(".o-discuss-Call");
-    await triggerEvents(`.o-discuss-CallParticipantCard[title='${partnerName}']`, ["contextmenu"]);
+    await triggerEvents(`.o-discuss-CallParticipantCard[title='${partnerName}']`, ["mouseenter"]);
+    await click("button[title='Participant options']");
     await contains(".o-discuss-CallContextMenu");
     const rangeInput = queryFirst(".o-discuss-CallContextMenu input[type='range']");
     expect(rangeInput.value).toBe(expectedVolume.toString());
