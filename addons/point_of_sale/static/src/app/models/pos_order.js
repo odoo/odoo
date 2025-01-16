@@ -109,6 +109,10 @@ export class PosOrder extends Base {
         return this.finalized && typeof this.id === "string";
     }
 
+    get originalSplittedOrder() {
+        return this.models["pos.order"].getBy("uuid", this.uiState.splittedOrderUuid);
+    }
+
     get presetTime() {
         return this.preset_time && this.preset_time.isValid
             ? this.preset_time.toFormat("HH:mm")
@@ -141,6 +145,14 @@ export class PosOrder extends Base {
         this.setPricelist(preset.pricelist_id);
         this.fiscal_position_id = preset.fiscal_position_id;
         this.preset_id = preset;
+        for (const line of this.lines) {
+            if (
+                (preset.is_return && line.getQuantity() > 0) ||
+                (!preset.is_return && line.getQuantity() < 0)
+            ) {
+                line.setQuantity(-line.getQuantity());
+            }
+        }
     }
 
     /**
@@ -148,20 +160,22 @@ export class PosOrder extends Base {
      * @returns See '_get_tax_totals_summary' in account_tax.py for the full details.
      */
     get taxTotals() {
+        return this.getTaxTotalsOfLines(this.lines);
+    }
+
+    getTaxTotalsOfLines(lines) {
         const currency = this.currency;
         const company = this.company;
-        const orderLines = this.lines;
 
         // If each line is negative, we assume it's a refund order.
         // It's a normal order if it doesn't contain a line (useful for pos_settle_due).
         // TODO: Properly differentiate refund orders from normal ones.
         const documentSign =
-            this.lines.length === 0 ||
-            !this.lines.every((l) => l.product_id.uom_id.isNegative(l.qty))
+            lines.length === 0 || !lines.every((l) => l.product_id.uom_id.isNegative(l.qty))
                 ? 1
                 : -1;
 
-        const baseLines = orderLines.map((line) =>
+        const baseLines = lines.map((line) =>
             accountTaxHelpers.prepare_base_line_for_taxes_computation(
                 line,
                 line.prepareBaseLineForTaxesComputationExtraValues({
@@ -303,6 +317,7 @@ export class PosOrder extends Base {
                 };
             }
             line.setHasChange(false);
+            line.uiState.savedQuantity = line.getQuantity();
         });
         // Checks whether an orderline has been deleted from the order since it
         // was last sent to the preparation tools or updated. If so we delete older changes.
@@ -452,16 +467,8 @@ export class PosOrder extends Base {
         return false;
     }
 
-    doNotAllowRefundAndSales() {
-        return true;
-    }
-
     _isRefundAndSalesNotAllowed(values, options) {
-        return (
-            this._isRefundOrder() &&
-            this.doNotAllowRefundAndSales() &&
-            (!values.qty || values.qty > 0)
-        );
+        return this._isRefundOrder() && (!values.qty || values.qty > 0);
     }
 
     getSelectedOrderline() {
@@ -581,11 +588,21 @@ export class PosOrder extends Base {
         return this.taxTotals.order_sign * this.taxTotals.order_total;
     }
 
+    getTotalWithTaxOfLines(lines) {
+        const taxTotals = this.getTaxTotalsOfLines(lines);
+        return taxTotals.order_sign * taxTotals.total_amount_currency;
+    }
+
     getTotalWithoutTax() {
         const base_amount =
             this.taxTotals.base_amount_currency +
             (this.taxTotals.cash_rounding_base_amount_currency || 0.0);
         return this.taxTotals.order_sign * base_amount;
+    }
+
+    getTotalWithoutTaxOfLines(lines) {
+        const taxTotals = this.getTaxTotalsOfLines(lines);
+        return taxTotals.order_sign * taxTotals.base_amount_currency;
     }
 
     _getIgnoredProductIdsTotalDiscount() {
@@ -608,9 +625,8 @@ export class PosOrder extends Base {
             this.lines.reduce((sum, orderLine) => {
                 if (!ignored_product_ids.includes(orderLine.product_id.id)) {
                     sum +=
-                        orderLine.getUnitDisplayPriceBeforeDiscount() *
-                        (orderLine.getDiscount() / 100) *
-                        orderLine.getQuantity();
+                        orderLine.getAllPrices().priceWithTaxBeforeDiscount -
+                        orderLine.getAllPrices().priceWithTax;
                     if (
                         orderLine.displayDiscountPolicy() === "without_discount" &&
                         !(orderLine.price_type === "manual")
@@ -630,6 +646,11 @@ export class PosOrder extends Base {
         return this.taxTotals.order_sign * this.taxTotals.tax_amount_currency;
     }
 
+    getTotalTaxOfLines(lines) {
+        const taxTotals = this.getTaxTotalsOfLines(lines);
+        return taxTotals.order_sign * taxTotals.tax_amount_currency;
+    }
+
     getTotalPaid() {
         return this.currency.round(
             this.payment_ids.reduce(function (sum, paymentLine) {
@@ -646,10 +667,14 @@ export class PosOrder extends Base {
     }
 
     getTaxDetails() {
+        return this.getTaxDetailsOfLines(this.lines);
+    }
+
+    getTaxDetailsOfLines(lines) {
         const taxDetails = {};
-        for (const line of this.lines) {
+        for (const line of lines) {
             for (const taxData of line.allPrices.taxesData) {
-                const taxId = taxData.id;
+                const taxId = taxData.tax.id;
                 if (!taxDetails[taxId]) {
                     taxDetails[taxId] = Object.assign({}, taxData, {
                         amount: 0.0,

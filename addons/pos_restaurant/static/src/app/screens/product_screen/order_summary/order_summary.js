@@ -49,7 +49,7 @@ patch(OrderSummary.prototype, {
             this.pos.config.module_pos_restaurant &&
             !currentOrder.finalized &&
             currentOrder.isBooked &&
-            currentOrder.lines.length === 0 &&
+            currentOrder.isEmpty() &&
             !currentOrder.hasCourses()
         );
     },

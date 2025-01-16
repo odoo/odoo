@@ -31,7 +31,7 @@
                             </t>
                             <span>
                                 <span t-esc="tax_group.group_name"/>
-                                <t t-if="!taxTotals.same_tax_base">
+                                <t id="tax_base" t-if="!taxTotals.same_tax_base">
                                     on
                                     <span t-esc="formatCurrency(tax_group.base_amount_currency)"/>
                                 </t>
