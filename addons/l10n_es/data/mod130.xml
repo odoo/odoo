@@ -38,7 +38,7 @@
                                     <field name="label">balance</field>
                                     <field name="engine">domain</field>
                                     <field name="formula" eval="[('account_id.internal_group', '=', 'income'), '|', ('partner_id.industry_id', '=', False), ('partner_id.industry_id.name', '!=', 'Agriculture')]"/>
-                                    <field name="subformula">-sum</field>
+                                    <field name="subformula">-sum(balance)</field>
                                     <field name="date_scope">from_fiscalyear</field>
                                 </record>
                             </field>
@@ -54,7 +54,7 @@
                                     <field name="label">balance</field>
                                     <field name="engine">domain</field>
                                     <field name="formula" eval="[('account_id.internal_group', '=', 'expense'), '|', ('partner_id.industry_id', '=', False), ('partner_id.industry_id.name', '!=', 'Agriculture')]"/>
-                                    <field name="subformula">sum</field>
+                                    <field name="subformula">sum(balance)</field>
                                     <field name="date_scope">from_fiscalyear</field>
                                 </record>
                             </field>
@@ -120,7 +120,7 @@
                                     <field name="label">balance</field>
                                     <field name="engine">domain</field>
                                     <field name="formula" eval="[('tax_tag_ids', '=', '-mod130[06]'), '|', ('partner_id.industry_id', '=', False), ('partner_id.industry_id.name', '!=', 'Agriculture')]"/>
-                                    <field name="subformula">sum</field>
+                                    <field name="subformula">sum(balance)</field>
                                     <field name="date_scope">from_fiscalyear</field>
                                 </record>
                             </field>
@@ -156,7 +156,7 @@
                                     <field name="label">balance</field>
                                     <field name="engine">domain</field>
                                     <field name="formula" eval="[('account_id.internal_group', '=', 'income'), ('partner_id.industry_id.name', '=', 'Agriculture')]"/>
-                                    <field name="subformula">-sum</field>
+                                    <field name="subformula">-sum(balance)</field>
                                     <field name="date_scope">from_fiscalyear</field>
                                 </record>
                             </field>
@@ -197,7 +197,7 @@
                                     <field name="label">balance</field>
                                     <field name="engine">domain</field>
                                     <field name="formula" eval="[('tax_tag_ids', '=', '-mod130[06]'), ('partner_id.industry_id.name', '=', 'Agriculture')]"/>
-                                    <field name="subformula">sum</field>
+                                    <field name="subformula">sum(balance)</field>
                                     <field name="date_scope">from_fiscalyear</field>
                                 </record>
                             </field>

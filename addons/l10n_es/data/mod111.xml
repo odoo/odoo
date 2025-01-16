@@ -43,7 +43,7 @@
                                         <field name="label">balance</field>
                                         <field name="engine">domain</field>
                                         <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', '+mod111[02]'), ('tax_tag_ids', '=', '+mod111[03]'), ('tax_tag_ids', '=', '-mod111[02]'), ('tax_tag_ids', '=', '-mod111[03]')]"/>
-                                        <field name="subformula">count_rows</field>
+                                        <field name="subformula">count_rows(id)</field>
                                         <field name="figure_type">integer</field>
                                     </record>
                                 </field>
@@ -94,7 +94,7 @@
                                         <field name="label">balance</field>
                                         <field name="engine">domain</field>
                                         <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', '+mod111[05]'), ('tax_tag_ids', '=', '+mod111[06]'), ('tax_tag_ids', '=', '-mod111[05]'), ('tax_tag_ids', '=', '-mod111[06]')]"/>
-                                        <field name="subformula">count_rows</field>
+                                        <field name="subformula">count_rows(id)</field>
                                         <field name="figure_type">integer</field>
                                     </record>
                                 </field>
@@ -153,7 +153,7 @@
                                         <field name="label">balance</field>
                                         <field name="engine">domain</field>
                                         <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', '+mod111[08]'), ('tax_tag_ids', '=', '+mod111[09]'), ('tax_tag_ids', '=', '-mod111[08]'), ('tax_tag_ids', '=', '-mod111[09]')]"/>
-                                        <field name="subformula">count_rows</field>
+                                        <field name="subformula">count_rows(id)</field>
                                         <field name="figure_type">integer</field>
                                     </record>
                                 </field>
@@ -204,7 +204,7 @@
                                         <field name="label">balance</field>
                                         <field name="engine">domain</field>
                                         <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', '+mod111[11]'), ('tax_tag_ids', '=', '+mod111[12]'), ('tax_tag_ids', '=', '-mod111[11]'), ('tax_tag_ids', '=', '-mod111[12]')]"/>
-                                        <field name="subformula">count_rows</field>
+                                        <field name="subformula">count_rows(id)</field>
                                         <field name="figure_type">integer</field>
                                     </record>
                                 </field>

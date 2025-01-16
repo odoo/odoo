@@ -20,6 +20,7 @@ FIGURE_TYPE_SELECTION_VALUES = [
 ]
 
 DOMAIN_REGEX = re.compile(r'(-?sum)\((.*)\)')
+SUBFORMULA_REGEX = re.compile(r'^([-+]?)(\w*)\(?(\w*)\)?$')
 
 
 class AccountReport(models.Model):
@@ -467,6 +468,10 @@ class AccountReportLine(models.Model):
         for report_line in self:
             if engine == 'domain' and report_line.domain_formula:
                 subformula, formula = DOMAIN_REGEX.match(report_line.domain_formula or '').groups()
+                if subformula == 'sum':
+                    subformula = 'sum(balance)'
+                elif subformula == '-sum':
+                    subformula = '-sum(balance)'
                 # Resolve the calls to ref(), to mimic the fact those formulas are normally given with an eval="..." in XML
                 formula = re.sub(r'''\bref\((?P<quote>['"])(?P<xmlid>.+?)(?P=quote)\)''', lambda m: str(self.env.ref(m['xmlid']).id), formula)
             elif engine == 'account_codes' and report_line.account_codes_formula:
@@ -493,7 +498,7 @@ class AccountReportLine(models.Model):
                 'label': 'balance',
                 'engine': engine,
                 'formula': formula.lstrip(' \t\n'),  # Avoid IndentationError in evals
-                'subformula': subformula
+                'subformula': subformula if engine != 'external' else subformula
             }
             if engine == 'external' and report_line.external_formula:
                 vals['figure_type'] = report_line.external_formula
@@ -577,10 +582,6 @@ class AccountReportExpression(models.Model):
              "(on a _carryover_*-labeled expression), in case it is different from the parent line."
     )
 
-    _domain_engine_subformula_required = models.Constraint(
-        "CHECK(engine != 'domain' OR subformula IS NOT NULL)",
-        "Expressions using 'domain' engine should all have a subformula.",
-    )
     _line_label_uniq = models.Constraint(
         'UNIQUE(report_line_id,label)',
         'The expression label must be unique per report line.',
@@ -849,6 +850,25 @@ class AccountReportExpression(models.Model):
             raise UserError(_("Could not determine carryover target automatically for expression %s.", self.label))
 
         return auto_chosen_target
+
+    def _parse_subformula(self):
+        """
+        :return:    isNegate, aggregation_function, aml_field
+        """
+        self.ensure_one()
+        if self.subformula and (match := SUBFORMULA_REGEX.match(self.subformula)):
+            sign, aggregation_function, field = match.groups()
+            isNegate = sign == '-'
+            if field:
+                return isNegate, aggregation_function, field
+            else:
+                # aggregation_function become the field name as there is no aggregation_function in the subformula
+                return isNegate, '', aggregation_function
+        elif not self.subformula:
+            return False, '', 'balance'
+        else:
+            raise ValueError("Invalid subformula %s", self.subformula)
+        return False, None, None
 
 
 class AccountReportColumn(models.Model):
