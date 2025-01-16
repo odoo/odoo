@@ -21,7 +21,7 @@
                             </span>
 
                         </div>
-                        <div class="input-group">
+                        <div class="input-group" t-on-change="onChangeClasses">
                             <select name="link_type" class="form-select form-select-sm" t-att-class="{'mb-1': state.type !==  ''}" t-on-change="(ev)=>this.state.type = ev.target.value">
                                 <t t-foreach="this.colorsData" t-as="colorData" t-key="colorData.type">
                                     <t t-if="colorData.type !== 'custom'">
@@ -55,7 +55,7 @@
                         <div class="text-center p-2">
                             <label>Preview</label>
                             <div style="max-width: 100px; max-height: 200px;" class="text-truncate">
-                                <a href="#" t-if="state.url" id="link-preview" aria-label="Preview" title="Preview" t-attf-class="{{classes}} text-truncate" style="max-width: 90px;">
+                                <a href="#" t-if="state.url" id="link-preview" aria-label="Preview" title="Preview" t-attf-class="{{state.classes}} text-truncate" style="max-width: 90px;">
                                     <t t-esc="state.label or state.url"/>
                                 </a>
                             </div>
