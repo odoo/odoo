@@ -58,6 +58,7 @@
                             <field name="date_begin" string="Date" widget="daterange" options="{'end_date_field': 'date_end'}" />
                             <field name="date_end" invisible="1" />
                             <field name="date_tz"/>
+                            <field name="is_multi_slots" string="Multiple Slots" invisible="not date_begin or not date_end or is_one_day"/>
                             <field name="lang"/>
                             <field name="event_type_id" string="Template"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}"/>
@@ -96,6 +97,18 @@
                                     <field name="mail_count_done"/>
                                     <field name="mail_state" widget="event_icon_selection" string=" " nolabel="1"
                                         options="{'error': 'fa fa-exclamation-triangle', 'sent': 'fa fa-check', 'scheduled': 'fa fa-hourglass-half', 'running': 'fa fa-cogs'}"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Dates &amp; Slots" name="event_slots" invisible="not is_multi_slots">
+                            <field name="slot_ids" string="Slots">
+                                <list string="Slots" editable="bottom">
+                                    <field name="weekdays" string="Every" required="not date"
+                                        widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    <field name="date" required="not weekdays"/>
+                                    <field name="start_hour" string="From" widget="float_time"/>
+                                    <button name="duration_arrow" class="fa fa-long-arrow-right text-center pe-none" width="20px" title="Until"/>
+                                    <field name="end_hour" string="To" widget="float_time"/>
                                 </list>
                             </field>
                         </page>

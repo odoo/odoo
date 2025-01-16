@@ -5,11 +5,12 @@ import logging
 import pytz
 import textwrap
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, Command, fields, models, tools
 from odoo.addons.base.models.res_partner import _tz_get
+from odoo.addons.event.models.event_slot import EventSlot
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import format_date, format_datetime, format_time, frozendict
@@ -218,6 +219,9 @@ class EventEvent(models.Model):
     is_ongoing = fields.Boolean('Is Ongoing', compute='_compute_is_ongoing', search='_search_is_ongoing')
     is_one_day = fields.Boolean(compute='_compute_field_is_one_day')
     is_finished = fields.Boolean(compute='_compute_is_finished', search='_search_is_finished')
+    # Slots
+    is_multi_slots = fields.Boolean("Is Multi Slots", default=False, help="Allow multiple time slots.")
+    slot_ids = fields.One2many("event.slot", "event_id", "Slots", copy=True)
     # Location and communication
     address_id = fields.Many2one(
         'res.partner', string='Venue', default=lambda self: self.env.company.partner_id.id,
@@ -434,6 +438,9 @@ class EventEvent(models.Model):
             # Need to localize because it could begin late and finish early in
             # another timezone
             event = event._set_tz_context()
+            if not event.date_begin or not event.date_end:
+                event.is_one_day = False
+                continue
             begin_tz = fields.Datetime.context_timestamp(event, event.date_begin)
             end_tz = fields.Datetime.context_timestamp(event, event.date_end)
             event.is_one_day = (begin_tz.date() == end_tz.date())
@@ -627,6 +634,33 @@ class EventEvent(models.Model):
             raise ValidationError(_('There are not enough seats available for:')
                                   + '\n%s\n' % '\n'.join(sold_out_events))
 
+    @api.constrains("date_tz", "date_begin", "date_end")
+    def _check_slots_dates(self):
+        for event in self:
+            slots_outside_event_bounds = self.slot_ids.filtered(lambda slot:
+                not slot.is_recurrent and
+                (
+                    not (event.date_begin <= slot.start_datetime <= event.date_end) or
+                    not (event.date_begin <= slot.end_datetime <= event.date_end)
+                )
+            )
+            if slots_outside_event_bounds:
+                raise ValidationError(_(
+                    "The event slots cannot be scheduled outside of the event time range.\n\n"
+                    "Event (%(tz)s):\n"
+                    "%(event_start)s - %(event_end)s\n\n"
+                    "Slots (%(tz)s):\n"
+                    "%(slots)s",
+                    tz=event.date_tz, event_start=event.date_begin_located, event_end=event.date_end_located,
+                    slots="\n".join(f"- {slot.name}" for slot in slots_outside_event_bounds)
+                ))
+
+    @api.constrains("is_multi_slots", "slot_ids")
+    def _check_slots_number(self):
+        for event in self:
+            if event.is_multi_slots and len(event.slot_ids) == 0:
+                raise ValidationError(_("A multi-slots event should have at least one slot (Dates & Slots tab)."))
+
     @api.constrains('date_begin', 'date_end')
     def _check_closing_date(self):
         for event in self:
@@ -650,6 +684,34 @@ class EventEvent(models.Model):
         if vals.get('organizer_id'):
             self.message_subscribe([vals['organizer_id']])
         return res
+
+    def generate_slots(self):
+        """ Generates all the event slots. """
+        slots = []
+        if not self.is_multi_slots:
+            return slots
+        event = self._set_tz_context()
+        event_start = fields.Datetime.context_timestamp(event, event.date_begin).replace(tzinfo=None)
+        event_end = fields.Datetime.context_timestamp(event, event.date_end).replace(tzinfo=None)
+        for slot in self.slot_ids:
+            if not slot.is_recurrent:
+                slots.append({
+                    'start': fields.Datetime.context_timestamp(event, slot.start_datetime).replace(tzinfo=None),
+                    'end': fields.Datetime.context_timestamp(event, slot.end_datetime).replace(tzinfo=None),
+                })
+                continue
+            start_time = EventSlot._float_to_time(slot.start_hour)
+            end_time = EventSlot._float_to_time(slot.end_hour)
+            for i in range((event_end.date() - event_start.date()).days + 1):
+                date = (event_start + timedelta(days=i)).date()
+                dt_start = datetime.combine(date, start_time)
+                dt_end = datetime.combine(date, end_time)
+                if (date.weekday() in slot.weekdays.mapped('sequence') and event_start <= dt_start and dt_end <= event_end):
+                    slots.append({
+                        'start': dt_start,
+                        'end': dt_end,
+                    })
+        return slots
 
     @api.depends('event_registrations_sold_out', 'seats_limited', 'seats_max', 'seats_available')
     @api.depends_context('name_with_seats_availability')

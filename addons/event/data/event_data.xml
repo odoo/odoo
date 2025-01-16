@@ -31,5 +31,41 @@
             <field name="pipe_end" eval="True"/>
             <field name="fold" eval="True"/>
         </record>
+        <!-- Event Slot Weekday -->
+        <record id="event_slot_monday" model="event.slot.weekday">
+            <field name="name">Monday</field>
+            <field name="sequence">0</field>
+            <field name="color">1</field>
+        </record>
+        <record id="event_slot_tuesday" model="event.slot.weekday">
+            <field name="name">Tuesday</field>
+            <field name="sequence">1</field>
+            <field name="color">2</field>
+        </record>
+        <record id="event_slot_wednesday" model="event.slot.weekday">
+            <field name="name">Wednesday</field>
+            <field name="sequence">2</field>
+            <field name="color">3</field>
+        </record>
+        <record id="event_slot_thursday" model="event.slot.weekday">
+            <field name="name">Thursday</field>
+            <field name="sequence">3</field>
+            <field name="color">4</field>
+        </record>
+        <record id="event_slot_friday" model="event.slot.weekday">
+            <field name="name">Friday</field>
+            <field name="sequence">4</field>
+            <field name="color">5</field>
+        </record>
+        <record id="event_slot_saturday" model="event.slot.weekday">
+            <field name="name">Saturday</field>
+            <field name="sequence">5</field>
+            <field name="color">6</field>
+        </record>
+        <record id="event_slot_sunday" model="event.slot.weekday">
+            <field name="name">Sunday</field>
+            <field name="sequence">6</field>
+            <field name="color">7</field>
+        </record>
     </data>
 </odoo>
