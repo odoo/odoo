@@ -88,6 +88,14 @@ export class ChatWindow extends Component {
         return this.props.chatWindow.thread;
     }
 
+    get headerClass() {
+        return {
+            "o-mail-notification text-white": this.thread && this.thread.importantCounter > 0,
+            "bg-100": !this.thread || this.thread.importantCounter === 0,
+            "cursor-pointer": !this.ui.isSmall && !this.props.chatWindow.actionsDisabled,
+        };
+    }
+
     get style() {
         const maxHeight = !this.ui.isSmall ? "max-height: 95vh;" : "";
         const textDirection = localization.direction;
