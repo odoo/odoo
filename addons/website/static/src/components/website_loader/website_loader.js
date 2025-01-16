@@ -1,8 +1,7 @@
-import { rpc } from "@web/core/network/rpc";
+import { Component, EventBus, useEffect, useState } from "@odoo/owl";
+import { delay } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
-import { _t } from "@web/core/l10n/translation";
-import { EventBus, Component, markup, useEffect, useState } from "@odoo/owl";
+import { clamp } from "@web/core/utils/numbers";
 
 export class WebsiteLoader extends Component {
     static props = {
@@ -15,111 +14,42 @@ export class WebsiteLoader extends Component {
 
         const initialState = {
             isVisible: false,
-            title: "",
-            flag: false,
-            showTips: false,
-            selectedFeatures: [],
-            showWaitingMessages: false,
+            title: "Enhance your site in seconds.",
+            flag: "generic",
+            loadingSteps: [],
+            currentLoadingStep: undefined,
             progressPercentage: 0,
             bottomMessageTemplate: undefined,
-            showLoader: true,
+            showProgressBar: true,
             showCloseButton: false,
         };
-
-        const defaultMessages = [
-            {
-                title: _t("Building your website."),
-                description: _t("Applying your colors and design..."),
-                flag: "colors",
-            },
-            {
-                title: _t("Building your website."),
-                description: _t("Searching your images...."),
-                flag: "images",
-            },
-            {
-                title: _t("Building your website."),
-                description: _t("Generating inspiring text..."),
-                flag: "text",
-            },
-        ];
-
-        let messagesInterval;
+        const initialInstanceState = {
+            getProgress: null,
+            currentLoadingStepIndex: null,
+            loaderInterval: null,
+        };
 
         this.state = useState({
             ...initialState,
         });
-        this.waitingMessages = useState(defaultMessages);
-        this.currentWaitingMessage = useState({ ...defaultMessages[0] });
-        this.featuresInstallInfo = { nbInstalled: 0, total: undefined };
+        Object.assign(this, initialInstanceState);
+        this.stopProgressStepDelay = 300;
+        this.stopProgressFinalPause = 1500;
 
-        useEffect(
-            (selectedFeatures) => {
-                if (this.state.showWaitingMessages) {
-                    const messagesToDisplay = [...defaultMessages]; // Start with defaultMessages
-                    if (selectedFeatures.length > 0) {
-                        // Merge defaultMessages with the relevant waitingMessages
-                        messagesToDisplay.push(...this.getWaitingMessages(selectedFeatures));
-                    }
-
-                    this.waitingMessages.splice(
-                        0,
-                        this.waitingMessages.length,
-                        ...messagesToDisplay
-                    );
-
-                    // Request the number of modules/dependencies to install
-                    // and already installed
-                    this.trackModules(selectedFeatures).catch(console.error);
-
-                    return () => {
-                        clearTimeout(this.trackModulesTimeout);
-                        clearInterval(this.updateProgressInterval);
-                    };
-                }
-            },
-            () => [this.state.selectedFeatures]
-        );
-
-        // Cycle through the waitingMessages every 6s
-        useEffect(
-            () => {
-                if (this.state.showWaitingMessages) {
-                    let msgIndex = 0;
-                    messagesInterval = setInterval(() => {
-                        msgIndex++;
-                        const nextMessage = this.waitingMessages[msgIndex];
-                        Object.assign(this.currentWaitingMessage, nextMessage);
-                        if (this.waitingMessages.length - 1 === msgIndex) {
-                            clearInterval(messagesInterval);
-                        }
-                    }, 6000);
-
-                    return () => clearInterval(messagesInterval);
-                }
-            },
-            () => [this.waitingMessages.length]
-        );
-
-        // Prevent user from closing/refreshing the window
         useEffect(
             (isVisible) => {
                 if (isVisible) {
+                    // Prevent user from closing/refreshing the window while the
+                    // loader is visible.
                     window.addEventListener("beforeunload", this.showRefreshConfirmation);
-                    if (!this.state.selectedFeatures || this.state.selectedFeatures.length === 0) {
-                        // If there is no feature selected, we fake the progress
-                        // for theme installation and configurator_apply. If
-                        // there is at least 1 feature selected, the progress
-                        // bar will be initialized in trackModules().
-                        this.initProgressBar();
-                    }
+                    this.startLoader();
                 } else {
                     window.removeEventListener("beforeunload", this.showRefreshConfirmation);
                 }
 
                 return () => {
                     window.removeEventListener("beforeunload", this.showRefreshConfirmation);
-                    clearInterval(this.updateProgressInterval);
+                    this.clearLoaderInterval();
                 };
             },
             () => [this.state.isVisible]
@@ -130,178 +60,231 @@ export class WebsiteLoader extends Component {
             this.state.isVisible = true;
             for (const prop of [
                 "title",
-                // FIXME: website user/interactive tours are not properly
-                // working at the moment. This disables the "follow the tips"
-                // message in the website loader while waiting for a fix.
-                // "showTips",
-                "selectedFeatures",
-                "showWaitingMessages",
                 "bottomMessageTemplate",
+                "loadingSteps",
                 "showCloseButton",
+                "showProgressBar",
                 "flag",
             ]) {
-                this.state[prop] = props && props[prop];
+                if (props && props[prop] !== undefined) {
+                    this.state[prop] = props[prop];
+                }
             }
-            this.state.showLoader = props && props.showLoader !== false;
+
+            if (props?.getProgress) {
+                this.getProgress = props.getProgress;
+            }
+
+            if (props?.loadingSteps?.length) {
+                this.currentLoadingStepIndex = 0;
+                this.state.currentLoadingStep = { ...props.loadingSteps[0] };
+            } else {
+                this.currentLoadingStepIndex = undefined;
+                this.state.currentLoadingStep = undefined;
+            }
         });
-        useBus(this.props.bus, "HIDE-WEBSITE-LOADER", () => {
+        useBus(this.props.bus, "HIDE-WEBSITE-LOADER", async (ev) => {
             if (!this.state.isVisible) {
                 return;
             }
+
+            const completeRemainingProgress = ev.detail?.completeRemainingProgress;
+            await this.stopProgress(completeRemainingProgress);
+
             for (const key of Object.keys(initialState)) {
                 this.state[key] = initialState[key];
             }
-            clearInterval(messagesInterval);
-            clearTimeout(this.trackModulesTimeout);
-            clearInterval(this.updateProgressInterval);
+            Object.assign(this, initialInstanceState);
         });
         // Action needed if the app automatically refreshes or redirects the
         // page without hiding/removing the WebsiteLoader. This should be
-        // called prior to any refresh/redirect if the loader is still visible.
-        useBus(this.props.bus, "PREPARE-OUT-WEBSITE-LOADER", () => {
+        // called to refresh/redirect if the loader is still visible.
+        useBus(this.props.bus, "REDIRECT-OUT-FROM-WEBSITE-LOADER", async (ev) => {
+            const completeRemainingProgress = ev.detail?.completeRemainingProgress;
+            const redirectAction = ev.detail?.redirectAction;
+
+            await this.stopProgress(completeRemainingProgress);
             window.removeEventListener("beforeunload", this.showRefreshConfirmation);
+
+            await redirectAction?.();
         });
     }
 
     /**
-     * Initializes the progress bar.
-     */
-    initProgressBar() {
-        // The progress speed decreases as it approaches its limit. This way,
-        // users have the feeling that the website creation progressing is fast
-        // and we prevent them from leaving the page too early (because they
-        // already did XX% of the process).
-        // If there is no module to install, we fake the progress from 0 to 100.
-        // If there is at least 1 module to install, we take 70% of the progress
-        // bar that we divide by the number of modules to install. We fake the
-        // progress of each module individually and when all modules are
-        // installed, we fake the progress of the remaining 30%.
-        const nbModulesToInstall = this.featuresInstallInfo.total || 0;
-        const isSomethingToInstall = nbModulesToInstall > 0;
-        let currentProgress = 0;
-        // This controls the speed of the progress bar.
-        const progressStep = isSomethingToInstall ? 0.04 : 0.02;
-        const progressForAfterModules = isSomethingToInstall ? 30 : 100;
-        const progressForAllModules = 100 - progressForAfterModules;
-        let lastTotalInstalled = 0;
-        const progressPerModule = isSomethingToInstall
-            ? progressForAllModules / nbModulesToInstall
-            : 0;
-
-        this.updateProgressInterval = setInterval(() => {
-            if (this.featuresInstallInfo.nbInstalled !== lastTotalInstalled) {
-                // A module just finished its install.
-                currentProgress = 0;
-                lastTotalInstalled = this.featuresInstallInfo.nbInstalled;
-            }
-            currentProgress += progressStep;
-            const limit =
-                this.featuresInstallInfo.nbInstalled === nbModulesToInstall
-                    ? progressForAfterModules
-                    : progressPerModule;
-            this.state.progressPercentage =
-                lastTotalInstalled * progressPerModule +
-                (Math.atan(currentProgress) / (Math.PI / 2)) * limit;
-        }, 100);
-    }
-    /**
-     * Makes a RPC call to track the features and dependencies being installed
-     * and, as long as the number of features installed is different from the
-     * total expected, recursively calls itself again after 1s.
+     * Starts the loader and begins periodically updating progress.
+     * Chooses between internally simulated progress or externally driven
+     * progress depending on whether a `getProgress` function is provided.
      *
-     * @param {integer[]} selectedFeatures
+     * @param {number} [progressUpdateInterval=500] - Interval in milliseconds
+     *   between progress updates. Smaller values result in smoother progress
+     *   animations but cause the progress update logic to run more often.
      */
-    async trackModules(selectedFeatures) {
-        const installInfo = await rpc(
-            "/website/track_installing_modules",
-            {
-                selected_features: selectedFeatures,
-                total_features: this.featuresInstallInfo.total,
-            },
-            { silent: true }
+    startLoader(progressUpdateInterval = 500) {
+        if (this.loaderInterval) {
+            return;
+        }
+
+        const isInternalProgress = typeof this.getProgress !== "function";
+        const totalSteps = this.state.loadingSteps.length;
+        const progressPerStep = totalSteps ? 100 / totalSteps : 0;
+
+        let isUpdating = false;
+        let internalCounter = 0;
+
+        this.loaderInterval = setInterval(async () => {
+            if (isUpdating) {
+                return;
+            }
+
+            isUpdating = true;
+            internalCounter += 0.05; // higher increment = internal progress completes faster
+
+            let newProgress;
+            if (isInternalProgress) {
+                newProgress = this.calculateInternalProgress(internalCounter);
+            } else {
+                newProgress = await this.calculateExternalProgress(
+                    this.state.progressPercentage,
+                    internalCounter
+                );
+            }
+
+            this.state.progressPercentage = newProgress;
+            this.updateLoadingSteps(newProgress, totalSteps, progressPerStep);
+
+            isUpdating = false;
+        }, progressUpdateInterval);
+    }
+
+    /**
+     * Calculates the next progress value using a curved progression
+     * (arctangent) to make the progress start fast and slow down as it
+     * approaches completion.
+     *
+     * @param {number} counter - A steadily increasing counter used to compute
+     *                           the internal progress percentage.
+     * @returns {number} The next progress value.
+     */
+    calculateInternalProgress(counter) {
+        const normalized = Math.atan(counter) / (Math.PI / 2);
+        return Math.min(normalized * 100, 100);
+    }
+
+    /**
+     * Calculates the next progress value using the `getProgress` function.
+     * Falls back to `calculateInternalProgress` if `getProgress` fails or
+     * returns an invalid value.
+     *
+     * @param {number} currentProgress - Current progress value.
+     * @param {number} fallbackInternalCounter - A steadily increasing counter
+     *   used to compute the progress as a fallback if getting real progress
+     *   fails.
+     * @returns {Promise<number>} The next progress value.
+     */
+    async calculateExternalProgress(currentProgress, fallbackInternalCounter) {
+        try {
+            const result = await this.getProgress(currentProgress);
+            if (typeof result !== "number" || isNaN(result)) {
+                throw new Error(`Invalid progress value: ${result}`);
+            }
+            return clamp(result, 0, 100);
+        } catch (err) {
+            console.warn("getProgress failed, falling back to internal progress:", err);
+            return Math.max(
+                this.calculateInternalProgress(fallbackInternalCounter),
+                currentProgress
+            );
+        }
+    }
+
+    /**
+     * Updates the current loading step based on `progressPercentage`.
+     *
+     * @param {number} currentProgress - The current progress value (0-100).
+     * @param {number} totalSteps - Total number of loading steps.
+     * @param {number} progressPerStep - Progress percentage allocated per step.
+     */
+    updateLoadingSteps(currentProgress, totalSteps, progressPerStep) {
+        if (!totalSteps) {
+            return;
+        }
+
+        const targetActiveStepIndex = Math.min(
+            Math.floor(currentProgress / progressPerStep),
+            totalSteps - 1
         );
-        if (
-            !this.featuresInstallInfo.total ||
-            this.featuresInstallInfo.nbInstalled !== installInfo.nbInstalled
-        ) {
-            this.featuresInstallInfo = installInfo;
-        }
-        this.initProgressBar();
-        if (this.featuresInstallInfo.nbInstalled !== this.featuresInstallInfo.total) {
-            this.trackModulesTimeout = setTimeout(() => this.trackModules(selectedFeatures), 1000);
+
+        if (this.currentLoadingStepIndex !== targetActiveStepIndex) {
+            // Mark all previous loading steps as completed (again).
+            // This ensures that if the progress jumps significantly, no
+            // intermediate loading steps remain incomplete.
+            for (let index = 0; index < targetActiveStepIndex; index++) {
+                this.state.loadingSteps[index].completed = true;
+            }
+
+            const targetStep = this.state.loadingSteps[targetActiveStepIndex];
+            if (targetStep) {
+                this.currentLoadingStepIndex = targetActiveStepIndex;
+                this.state.currentLoadingStep = targetStep;
+            }
         }
     }
 
     /**
-     * Depending on the features selected, returns the right waiting messages.
-     *
-     * @param {integer[]} selectedFeatures
-     * @returns {Object[]} - the messages filtered by the selected features
+     * Cleans up the loader interval.
      */
-    getWaitingMessages(selectedFeatures) {
-        const websiteFeaturesMessages = [
-            {
-                id: 5,
-                title: _t("Adding features."),
-                name: _t("blog"),
-                description: _t("Enabling your %s."),
-                flag: "generic",
-            },
-            {
-                id: 7,
-                title: _t("Adding features."),
-                name: _t("recruitment platform"),
-                description: _t("Integrating your %s."),
-                flag: "generic",
-            },
-            {
-                id: 8,
-                title: _t("Adding features."),
-                name: _t("online store"),
-                description: _t("Activating your %s."),
-                flag: "generic",
-            },
-            {
-                id: 9,
-                title: _t("Adding features."),
-                name: _t("online appointment system"),
-                description: _t("Configuring your %s."),
-                flag: "generic",
-            },
-            {
-                id: 10,
-                title: _t("Adding features."),
-                name: _t("forum"),
-                description: _t("Setting up your %s."),
-                flag: "generic",
-            },
-            {
-                id: 12,
-                title: _t("Adding features."),
-                name: _t("e-learning platform"),
-                description: _t("Installing your %s."),
-                flag: "generic",
-            },
-            {
-                // Always the last message if there is at least 1 feature selected.
-                id: "last",
-                title: _t("Finalizing."),
-                description: _t("Activating the last features."),
-                flag: "generic",
-            },
-        ];
+    clearLoaderInterval() {
+        if (this.loaderInterval) {
+            clearInterval(this.loaderInterval);
+            this.loaderInterval = null;
+        }
+    }
 
-        const filteredIds = [...selectedFeatures, "last"];
-        const messagesList = websiteFeaturesMessages.filter((msg) => {
-            if (filteredIds.includes(msg.id)) {
-                if (msg.name) {
-                    const highlight = markup`<span class="o_website_loader_text_highlight">${msg.name}</span>`;
-                    msg.description = markup(sprintf(msg.description, highlight));
-                }
-                return true;
+    /**
+     * Stops the loader progress and optionally completes any remaining steps
+     * gracefully, updating the progress bar to 100%.
+     *
+     * @param {boolean} [completeRemainingProgress=true] - If true, completes
+     *   any remaining steps before stopping. If false, stops immediately.
+     */
+    async stopProgress(completeRemainingProgress = true) {
+        this.clearLoaderInterval();
+
+        if (!completeRemainingProgress) {
+            return;
+        }
+
+        const startIndex = this.currentLoadingStepIndex ?? 0;
+        const remainingStepsLength = this.state.loadingSteps.length - startIndex;
+
+        if (remainingStepsLength <= 0) {
+            this.state.progressPercentage = 100;
+        } else {
+            const remainingProgress = 100 - this.state.progressPercentage;
+            const progressIncrement = remainingProgress / remainingStepsLength;
+
+            for (let index = startIndex; index < this.state.loadingSteps.length; index++) {
+                const step = this.state.loadingSteps[index];
+                this.state.currentLoadingStep = { ...step };
+
+                // Small delay to complete steps sequentially and not all at
+                // once.
+                await delay(this.stopProgressStepDelay);
+
+                this.state.loadingSteps[index].completed = true;
+                this.state.progressPercentage = Math.min(
+                    this.state.progressPercentage + progressIncrement,
+                    100
+                );
             }
-        });
-        return messagesList;
+        }
+
+        this.currentLoadingStepIndex = undefined;
+        this.state.currentLoadingStep = undefined;
+
+        // Pause for a moment to ensure the user sees that all the steps are
+        // completed.
+        await delay(this.stopProgressFinalPause);
     }
 
     /**

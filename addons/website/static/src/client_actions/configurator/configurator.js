@@ -7,8 +7,9 @@ import { getDataURLFromFile, redirect } from "@web/core/utils/urls";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
 import { _t } from "@web/core/l10n/translation";
 import { svgToPNG, webpToPNG } from "@website/js/utils";
-import { escapeRegExp } from "@web/core/utils/strings";
+import { escapeRegExp, sprintf } from "@web/core/utils/strings";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { clamp } from "@web/core/utils/numbers";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 import { mixCssColors } from "@web/core/utils/colors";
@@ -24,6 +25,7 @@ import {
     useSubEnv,
     onWillStart,
     useExternalListener,
+    markup,
 } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { fuzzyLevenshteinLookup } from "@web/core/utils/search";
@@ -508,6 +510,7 @@ export class ApplyConfiguratorScreen extends Component {
     static props = ["*"];
     setup() {
         this.websiteService = useService("website");
+        this.configuratorProgress = 0;
     }
 
     async applyConfigurator(themeName) {
@@ -536,10 +539,38 @@ export class ApplyConfiguratorScreen extends Component {
             const selectedFeatures = Object.values(this.state.features)
                 .filter((feature) => feature.selected)
                 .map((feature) => feature.id);
+            const loadingSteps = [
+                {
+                    description: _t("Applying your colors and design..."),
+                    flag: "colors",
+                },
+                {
+                    description: _t("Searching your images..."),
+                    flag: "images",
+                },
+                {
+                    description: _t("Generating inspiring text..."),
+                    flag: "text",
+                },
+                ...this.getSelectedFeaturesLoadingSteps(selectedFeatures),
+                {
+                    title: _t("Finalizing."),
+                    description: _t("Activating the last features."),
+                    flag: "generic",
+                },
+            ];
+
+            // Server requests are locked during module installation,
+            // uninstallation, or upgrade (when running without `workers`), so
+            // real-time progress can't be fetched. We simulate it instead.
+            const stopProgressSimulation = this.startConfiguratorProgressSimulation({
+                selectedFeaturesCount: selectedFeatures.length,
+            });
             this.websiteService.showLoader({
-                showTips: true,
-                selectedFeatures: selectedFeatures,
-                showWaitingMessages: true,
+                title: _t("Building your website."),
+                loadingSteps: loadingSteps,
+                getProgress: () => this.configuratorProgress,
+                bottomMessageTemplate: "website.website_loader.tour_tip",
             });
             let selectedPalette = this.state.selectedPalette.name;
             if (!selectedPalette) {
@@ -556,16 +587,20 @@ export class ApplyConfiguratorScreen extends Component {
             );
 
             this.props.clearStorage();
+            stopProgressSimulation();
 
-            this.websiteService.prepareOutLoader();
-            // Here the website service goToWebsite method is not used because
-            // the web client needs to be reloaded after the new modules have
-            // been installed.
-            redirect(
-                `/odoo/action-website.website_preview?website_id=${encodeURIComponent(
-                    resp.website_id
-                )}`
-            );
+            this.websiteService.redirectOutFromLoader({
+                redirectAction: () => {
+                    // Here the website service goToWebsite method is not used
+                    // because the web client needs to be reloaded after the new
+                    // modules have been installed.
+                    redirect(
+                        `/odoo/action-website.website_preview?website_id=${encodeURIComponent(
+                            resp.website_id
+                        )}`
+                    );
+                },
+            });
         }
     }
 
@@ -582,6 +617,165 @@ export class ApplyConfiguratorScreen extends Component {
             website_type: WEBSITE_TYPES[this.state.selectedType].name,
             logo_attachment_id: this.state.logoAttachmentId,
         };
+    }
+
+    /**
+     * Simulates the progress for website creation, divided into three phases:
+     * 1. Initial Phase (0-30%): Fast progress to give the impression of quick
+     *    processing.
+     * 2. Modules Phase (30-90%): Distributes progress evenly across the
+     *    selected features (module).
+     * 3. Final Phase (90-100%): Slow progress to allow any pending operations
+     *    to complete before reaching 100%.
+     *
+     * @param {Object} options
+     * @param {number} [options.initialProgress=0] Starting progress value
+     *                                             (should be between 0-100).
+     * @param {number} [options.selectedFeaturesCount=0] Number of features to
+     *                                                   simulate progress for.
+     * @param {number} [options.timeoutInterval=500] Interval between progress
+     *                                               updates, in milliseconds.
+     * @returns {Function} A cleanup function that stops the simulation.
+     */
+    startConfiguratorProgressSimulation({
+        initialProgress = 0,
+        selectedFeaturesCount = 0,
+        timeoutInterval = 500,
+    }) {
+        const totalProgress = 100;
+        const initialPhaseMax = 30; // 0-30%: fast impression
+        const modulesPhaseMax = 60; // 30-90%: module simulation
+        // finalPhaseMax               90-100%: slow wrap-up
+
+        const modulesPhaseStart = initialPhaseMax;
+        const modulesPhaseEnd = modulesPhaseStart + modulesPhaseMax;
+
+        const moduleCount = Math.max(1, selectedFeaturesCount);
+        const progressPerModule = modulesPhaseMax / moduleCount;
+
+        let currentProgress = initialProgress;
+        let currentPhase = "initial";
+
+        const intervalId = setInterval(() => {
+            switch (currentPhase) {
+                case "initial":
+                    currentProgress += 2;
+                    if (currentProgress >= modulesPhaseStart) {
+                        currentPhase = "modules";
+                    }
+                    break;
+
+                case "modules": {
+                    const totalModulesPhaseProgress = currentProgress - modulesPhaseStart;
+                    const currentModuleProgress = totalModulesPhaseProgress % progressPerModule;
+
+                    // Apply decaying speed within each module to simulate
+                    // natural progression and to ensure the modules phase takes
+                    // adequate time.
+                    const speed = this.getDecayingSpeed({
+                        startSpeed: 1.5,
+                        endSpeed: 0.2,
+                        currentProgress: currentModuleProgress,
+                        totalProgress: progressPerModule,
+                    });
+
+                    currentProgress = Math.min(currentProgress + speed, modulesPhaseEnd);
+
+                    if (currentProgress === modulesPhaseEnd) {
+                        currentPhase = "final";
+                    }
+                    break;
+                }
+
+                case "final":
+                    currentProgress = Math.min(currentProgress + 0.05, totalProgress);
+                    break;
+            }
+
+            this.configuratorProgress = currentProgress;
+        }, timeoutInterval);
+
+        return () => clearInterval(intervalId);
+    }
+
+    /**
+     * Computes a progressively decreasing speed from a given start speed to an
+     * end speed as progress increases.
+     * This creates a decaying effect where movement starts fast and gradually
+     * slows down towards completion.
+     *
+     * @param {Object} options
+     * @param {number} options.startSpeed - The initial speed at the start of
+     *                                      the progress.
+     * @param {number} options.endSpeed - The final speed when progress reaches
+     *                                    completion.
+     * @param {number} options.currentProgress - The current progress value.
+     * @param {number} options.totalProgress - The total progress required to
+     *                                         complete the process.
+     * @returns {number} The calculated speed based on the current progress.
+     */
+    getDecayingSpeed({ startSpeed, endSpeed, currentProgress, totalProgress }) {
+        const ratio = clamp(currentProgress / totalProgress, 0, 1);
+        return startSpeed + (endSpeed - startSpeed) * ratio;
+    }
+
+    /**
+     * Depending on the features selected, returns the right loading steps.
+     *
+     * @param {number[]} [selectedFeatures=[]]
+     * @returns {Object[]} The loading steps filtered by the selected features.
+     */
+    getSelectedFeaturesLoadingSteps(selectedFeatures = []) {
+        const allFeatureSteps = [
+            {
+                id: 5,
+                title: _t("Adding features."),
+                name: _t("blog"),
+                description: _t("Enabling your %s."),
+                flag: "generic",
+            },
+            {
+                id: 7,
+                title: _t("Adding features."),
+                name: _t("recruitment platform"),
+                description: _t("Integrating your %s."),
+                flag: "generic",
+            },
+            {
+                id: 8,
+                title: _t("Adding features."),
+                name: _t("online store"),
+                description: _t("Activating your %s."),
+                flag: "generic",
+            },
+            {
+                id: 9,
+                title: _t("Adding features."),
+                name: _t("online appointment system"),
+                description: _t("Configuring your %s."),
+                flag: "generic",
+            },
+            {
+                id: 10,
+                title: _t("Adding features."),
+                name: _t("forum"),
+                description: _t("Setting up your %s."),
+                flag: "generic",
+            },
+            {
+                id: 12,
+                title: _t("Adding features."),
+                name: _t("e-learning platform"),
+                description: _t("Installing your %s."),
+                flag: "generic",
+            },
+        ];
+        return allFeatureSteps
+            .filter((step) => selectedFeatures.includes(step.id))
+            .map((step) => {
+                const highlight = markup`<span class="o_website_loader_text_highlight">${step.name}</span>`;
+                return { ...step, description: markup(sprintf(step.description, highlight)) };
+            });
     }
 }
 
@@ -1097,7 +1291,10 @@ export class Configurator extends Component {
     }
 
     async skipConfigurator() {
-        this.website.showLoader({ showTips: true });
+        this.website.showLoader({
+            title: _t("Building your website."),
+            bottomMessageTemplate: "website.website_loader.tour_tip",
+        });
         const redirectUrl = await this.orm.call("website", "configurator_skip");
         this.clearStorage();
         // Here the website service goToWebsite method is not used because
