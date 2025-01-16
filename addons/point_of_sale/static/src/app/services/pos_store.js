@@ -404,14 +404,14 @@ export class PosStore extends WithLazyGetterTrap {
         this.setOrder(this.getOpenOrders().at(-1) || this.addNewOrder());
     }
 
-    async deleteOrders(orders, serverIds = []) {
+    async deleteOrders(orders, serverIds = [], ignoreChange = false) {
         const ids = new Set();
         for (const order of orders) {
             if (order && (await this._onBeforeDeleteOrder(order))) {
                 if (
+                    !ignoreChange &&
                     typeof order.id === "number" &&
-                    Object.keys(order.last_order_preparation_change).length > 0 &&
-                    !order.isTransferedOrder
+                    Object.keys(order.last_order_preparation_change).length > 0
                 ) {
                     await this.sendOrderInPreparation(order, true, true);
                 }
@@ -1126,7 +1126,7 @@ export class PosStore extends WithLazyGetterTrap {
     postSyncAllOrders(orders) {}
     async syncAllOrders(options = {}) {
         const { orderToCreate, orderToUpdate } = this.getPendingOrder();
-        let orders = [...orderToCreate, ...orderToUpdate];
+        let orders = options.orders || [...orderToCreate, ...orderToUpdate];
 
         // Filter out orders that are already being synced
         orders = orders.filter((order) => !this.syncingOrders.has(order.id));
@@ -1495,8 +1495,8 @@ export class PosStore extends WithLazyGetterTrap {
     async sendOrderInPreparationUpdateLastChange(o, cancelled = false) {
         this.addPendingOrder([o.id]);
         const uuid = o.uuid;
-        const orders = await this.syncAllOrders();
-        const order = orders.find((order) => order.uuid === uuid);
+        const orders = await this.syncAllOrders({ orders: [o] });
+        const order = orders?.find((order) => order.uuid === uuid);
 
         if (order) {
             await this.sendOrderInPreparation(order, cancelled);
