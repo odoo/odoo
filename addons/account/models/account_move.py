@@ -5172,11 +5172,11 @@ class AccountMove(models.Model):
 
         return report_action
 
-    def action_invoice_download_pdf(self):
+    def action_invoice_download_pdf(self, target = "download"):
         return {
             'type': 'ir.actions.act_url',
             'url': f'/account/download_invoice_documents/{",".join(map(str, self.ids))}/pdf',
-            'target': 'download',
+            'target': target,
         }
 
     def preview_invoice(self):
