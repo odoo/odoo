@@ -360,14 +360,14 @@
                         <group>
                             <group name="weight" string="Logistics" invisible="type != 'consu'">
                                 <label for="volume"/>
-                                <div class="o_row">
+                                <div class="d-flex">
                                     <field name="volume" class="oe_inline"/>
-                                    <span><field name="volume_uom_name"/></span>
+                                    <field name="volume_uom_name"/>
                                 </div>
                                 <label for="weight"/>
-                                <div class="o_row">
+                                <div class="d-flex">
                                     <field name="weight" class="oe_inline"/>
-                                    <span><field name="weight_uom_name"/></span>
+                                    <field name="weight_uom_name"/>
                                 </div>
                             </group>
                             <group name="sales" string="Sales">
