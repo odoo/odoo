@@ -20,8 +20,10 @@ patch(OrderSummary.prototype, {
             )
         );
     },
-    unbookTable() {
-        this.pos.removeOrder(this.pos.getOrder(), true);
+    async unbookTable() {
+        const order = this.pos.getOrder();
+        await this.pos._onBeforeDeleteOrder(order);
+        order.state = "cancel";
         this.pos.showScreen("FloorScreen");
     },
     showUnbookButton() {

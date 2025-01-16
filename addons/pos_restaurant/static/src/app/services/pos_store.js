@@ -48,6 +48,129 @@ patch(PosStore.prototype, {
         }
         return super.defaultScreen;
     },
+    handlePreparationHistory(srcPrep, destPrep, srcLine, destLine, qty) {
+        const srcKey = srcLine.preparationKey;
+        const destKey = destLine.preparationKey;
+        const srcQty = srcPrep[srcKey]?.quantity;
+
+        if (srcQty) {
+            if (srcQty <= qty) {
+                const newPrep = { ...srcPrep[srcKey], uuid: destLine.uuid };
+                destPrep[destKey] = newPrep;
+                delete srcPrep[srcKey];
+            } else {
+                srcPrep[srcKey].quantity = srcQty - qty;
+                destPrep[destKey] = { ...srcPrep[srcKey], uuid: destLine.uuid, quantity: qty };
+            }
+        }
+    },
+    async mergeOrders(sourceOrder, destOrder) {
+        let whileGuard = 0;
+        while (sourceOrder.lines.length) {
+            const orphanLine = sourceOrder.lines[0];
+            const destinationLine = destOrder?.lines.find((l) => l.canBeMergedWith(orphanLine));
+            let uuid = "";
+
+            if (destinationLine) {
+                destinationLine.merge(orphanLine);
+                uuid = destinationLine.uuid;
+
+                this.handlePreparationHistory(
+                    sourceOrder.last_order_preparation_change.lines,
+                    destOrder.last_order_preparation_change.lines,
+                    orphanLine,
+                    destinationLine,
+                    orphanLine.qty
+                );
+            } else {
+                const serializedLine = orphanLine.serialize({ orm: true });
+                serializedLine.order_id = destOrder.id;
+                delete serializedLine.uuid;
+                delete serializedLine.id;
+                const newLine = this.models["pos.order.line"].create(serializedLine, false, true);
+                uuid = newLine.uuid;
+
+                this.handlePreparationHistory(
+                    sourceOrder.last_order_preparation_change.lines,
+                    destOrder.last_order_preparation_change.lines,
+                    orphanLine,
+                    newLine,
+                    orphanLine.qty
+                );
+            }
+
+            destOrder.uiState.unmerge[uuid] = {
+                table_id: sourceOrder.table_id.id,
+                quantity: orphanLine.qty,
+            };
+
+            orphanLine.delete();
+            whileGuard++;
+            if (whileGuard > 1000) {
+                break;
+            }
+        }
+
+        await this.deleteOrders([sourceOrder], [], true);
+        await this.syncAllOrders({ orders: [destOrder] });
+        return destOrder;
+    },
+    async restoreOrdersToOriginalTable(order, unmergeTable) {
+        if (!order?.uiState?.unmerge) {
+            return false;
+        }
+
+        const beforeMergeDetails = Object.entries(order.uiState.unmerge).reduce(
+            (acc, [uuid, details]) => {
+                if (details.table_id === unmergeTable.id) {
+                    acc.push({
+                        quantity: details.quantity,
+                        uuid: uuid,
+                    });
+                }
+                return acc;
+            },
+            []
+        );
+
+        if (beforeMergeDetails.length) {
+            const newOrder = this.addNewOrder({ table_id: unmergeTable });
+            for (const detail of beforeMergeDetails) {
+                const line = order.lines.find((l) => l.uuid === detail.uuid);
+                const serializedLine = line.serialize({ orm: true });
+
+                delete serializedLine.uuid;
+                delete serializedLine.id;
+
+                Object.assign(serializedLine, {
+                    order_id: newOrder.id,
+                    qty: detail.quantity,
+                });
+
+                const newLine = this.models["pos.order.line"].create(serializedLine, false, true);
+                if (parseFloat(line.qty - detail.quantity) === 0) {
+                    line.delete();
+                } else {
+                    line.setQuantity(line.qty - newLine.qty);
+                }
+
+                this.handlePreparationHistory(
+                    order.last_order_preparation_change.lines,
+                    newOrder.last_order_preparation_change.lines,
+                    line,
+                    newLine,
+                    detail.quantity
+                );
+
+                delete order.uiState.unmerge[line.uuid];
+            }
+
+            await this.syncAllOrders({ orders: [order, newOrder] });
+            return newOrder;
+        }
+
+        return false;
+    },
     async onDeleteOrder(order) {
         const orderIsDeleted = await super.onDeleteOrder(...arguments);
         if (
@@ -509,73 +632,6 @@ patch(PosStore.prototype, {
         }
         return true;
     },
-    async updateOrderLinesForTableChange(orderDetails, canBeMergedWithLine = false) {
-        const { sourceOrder, destinationOrder } = orderDetails;
-        const linesToUpdate = [];
-
-        for (const orphanLine of sourceOrder.lines) {
-            const adoptingLine = destinationOrder?.lines.find((l) => l.canBeMergedWith(orphanLine));
-            if (adoptingLine && canBeMergedWithLine) {
-                if (sourceOrder.last_order_preparation_change.lines[orphanLine.preparationKey]) {
-                    if (
-                        destinationOrder.last_order_preparation_change.lines[
-                            adoptingLine.preparationKey
-                        ]
-                    ) {
-                        destinationOrder.last_order_preparation_change.lines[
-                            adoptingLine.preparationKey
-                        ]["quantity"] +=
-                            sourceOrder.last_order_preparation_change.lines[
-                                orphanLine.preparationKey
-                            ]["quantity"];
-                        destinationOrder.last_order_preparation_change.lines[
-                            adoptingLine.preparationKey
-                        ]["transferredQty"] =
-                            sourceOrder.last_order_preparation_change.lines[
-                                orphanLine.preparationKey
-                            ]["quantity"];
-                    } else {
-                        destinationOrder.last_order_preparation_change.lines[
-                            adoptingLine.preparationKey
-                        ] = {
-                            ...sourceOrder.last_order_preparation_change.lines[
-                                orphanLine.preparationKey
-                            ],
-                            uuid: adoptingLine.uuid,
-                            transferredQty:
-                                sourceOrder.last_order_preparation_change.lines[
-                                    orphanLine.preparationKey
-                                ]["quantity"],
-                        };
-                    }
-                }
-                adoptingLine.merge(orphanLine);
-            } else {
-                if (
-                    sourceOrder.last_order_preparation_change.lines[orphanLine.preparationKey] &&
-                    !destinationOrder.last_order_preparation_change.lines[orphanLine.preparationKey]
-                ) {
-                    destinationOrder.last_order_preparation_change.lines[
-                        orphanLine.preparationKey
-                    ] = sourceOrder.last_order_preparation_change.lines[orphanLine.preparationKey];
-                    orphanLine.skip_change = true;
-                }
-                linesToUpdate.push(orphanLine);
-            }
-        }
-
-        linesToUpdate.forEach((orderline) => {
-            if (!orderline.origin_order_id) {
-                orderline.origin_order_id = orderline.order_id.id;
-            }
-            orderline.order_id = destinationOrder;
-        });
-
-        this.setOrder(destinationOrder);
-        if (destinationOrder?.id) {
-            this.addPendingOrder([destinationOrder.id]);
-        }
-    },
     async transferOrder(orderUuid, destinationTable = null, destinationOrder = null) {
         if (!destinationTable && !destinationOrder) {
             return;
@@ -588,10 +644,7 @@ patch(PosStore.prototype, {
             }
             destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
         }
-        await this.updateOrderLinesForTableChange({ sourceOrder, destinationOrder }, true);
-
-        sourceOrder.isTransferedOrder = true;
-        await this.deleteOrders([sourceOrder]);
+        await this.mergeOrders(sourceOrder, destinationOrder);
         if (destinationTable) {
             await this.setTable(destinationTable);
         }
@@ -604,39 +657,8 @@ patch(PosStore.prototype, {
         }
 
         const destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
-        await this.updateOrderLinesForTableChange({ sourceOrder, destinationOrder }, false);
+        await this.mergeOrders(sourceOrder, destinationOrder);
         await this.setTable(destinationTable);
-    },
-    async restoreOrdersToOriginalTable(orderToExtract, mergedOrder) {
-        const orderlines = mergedOrder.lines.filter((line) => line.origin_order_id);
-        for (const orderline of orderlines) {
-            if (
-                orderline?.origin_order_id.id === orderToExtract.id ||
-                orderToExtract.table_id.children.length
-            ) {
-                orderline.order_id = orderToExtract;
-                if (orderline?.origin_order_id.id === orderToExtract.id) {
-                    if (orderline.skip_change) {
-                        orderline.toggleSkipChange();
-                    }
-                    orderline.origin_order_id = null;
-                }
-                if (
-                    mergedOrder.last_order_preparation_change.lines[orderline.preparationKey] &&
-                    !orderToExtract.last_order_preparation_change.lines[orderline.preparationKey]
-                ) {
-                    orderToExtract.last_order_preparation_change.lines[orderline.preparationKey] =
-                        mergedOrder.last_order_preparation_change.lines[orderline.preparationKey];
-                    orderline.setHasChange(true);
-                    orderline.toggleSkipChange();
-                    orderline.uiState.hideSkipChangeClass = true;
-                }
-                delete mergedOrder.last_order_preparation_change.lines[orderline.preparationKey];
-            }
-        }
-
-        this.addPendingOrder([orderToExtract.id, mergedOrder.id]);
-        await this.setTable(orderToExtract.table_id);
     },
     updateTables(...tables) {
         this.data.call("restaurant.table", "update_tables", [

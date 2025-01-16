@@ -45,6 +45,7 @@ export class PosOrder extends Base {
         // !!Keep all uiState in one object!!
         if (!this.uiState) {
             this.uiState = {
+                unmerge: {},
                 lastPrint: false,
                 lineToRefund: {},
                 displayed: true,

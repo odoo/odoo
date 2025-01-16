@@ -32,7 +32,10 @@ export class ReceiptScreen extends Component {
         onMounted(() => {
             const order = this.pos.getOrder();
             this.currentOrder.uiState.locked = true;
-            this.pos.sendOrderInPreparation(order, false, true);
+
+            if (!this.pos.config.module_pos_restaurant) {
+                this.pos.sendOrderInPreparation(order, false, true);
+            }
         });
     }
     actionSendReceiptOnEmail() {
