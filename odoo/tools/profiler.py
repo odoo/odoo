@@ -9,6 +9,7 @@ import time
 import threading
 import re
 import functools
+import tracemalloc
 
 from psycopg2 import OperationalError
 
@@ -92,6 +93,7 @@ class Collector:
     It defines default behaviors for creating an entry in the collector.
     """
     name = None                 # symbolic name of the collector
+    store = name
     _registry = {}              # map collector names to their class
 
     @classmethod
@@ -192,7 +194,7 @@ class PeriodicCollector(Collector):
 
     :param interval (float): time to wait in seconds between two samples.
     """
-    name = 'traces_async'
+    name = None
 
     def __init__(self, interval=0.01):  # check duration. dynamic?
         super().__init__()
@@ -221,10 +223,6 @@ class PeriodicCollector(Collector):
         self._entries.append({'stack': [], 'start': real_time()})  # add final end frame
 
     def start(self):
-        interval = self.profiler.params.get('traces_async_interval')
-        if interval:
-            self.frame_interval = min(max(float(interval), 0.001), 1)
-
         init_thread = self.profiler.init_thread
         if not hasattr(init_thread, 'profile_hooks'):
             init_thread.profile_hooks = []
@@ -237,6 +235,20 @@ class PeriodicCollector(Collector):
         self.__thread.join()
         self.profiler.init_thread.profile_hooks.remove(self.progress)
 
+
+class stackCollector(PeriodicCollector):
+
+    name = 'traces_async'
+
+    def __init__(self):  # check duration. dynamic?
+        super().__init__(interval=0.001)
+
+    def start(self):
+        interval = self.profiler.params.get('traces_async_interval')
+        if interval:
+            self.frame_interval = min(max(float(interval), 0.001), 1)
+        super().start()
+
     def add(self, entry=None, frame=None):
         """ Add an entry (dict) to this collector. """
         frame = frame or get_current_frame(self.profiler.init_thread)
@@ -246,6 +258,42 @@ class PeriodicCollector(Collector):
             return
         self.last_frame = frame
         super().add(entry=entry, frame=frame)
+
+
+class memoryCollector(PeriodicCollector):
+
+    name = 'memory'
+    store = 'others'
+
+    def __init__(self):  # check duration. dynamic?
+        super().__init__(interval=1)
+
+    def start(self):
+        interval = self.profiler.params.get('memory_interval')
+        if interval:
+            self.frame_interval = min(max(float(interval), 0.01), 5)
+        tracemalloc.start()
+        super().start()
+
+    def add(self, entry=None, frame=None):
+        """ Add an entry (dict) to this collector. """
+        entry = tracemalloc.take_snapshot()
+
+        super().add(entry={'memory': entry}, frame=frame)
+
+    def post_process(self):
+        for i, entry in enumerate(self._entries):
+            if entry.get("memory", False):
+                memory_entry = entry["memory"].filter_traces((
+                            tracemalloc.Filter(False, "<frozen importlib._bootstrap>"),
+                            tracemalloc.Filter(False, "<unknown>"),
+                            tracemalloc.Filter(False, "*/.*"),
+                            tracemalloc.Filter(False, "*/profiler.py*"),
+                        ))
+                entry_statistics = memory_entry.statistics('lineno')
+                modified_entry_statistics = [{'file': list(statistic.traceback._frames[0]),
+                                              'size': statistic.size} for statistic in entry_statistics]
+                self._entries[i] = modified_entry_statistics
 
 
 class SyncCollector(Collector):
@@ -590,9 +638,15 @@ class Profiler:
                         "entry_count": self.entry_count(),
                         "sql_count": sum(len(collector.entries) for collector in self.collectors if collector.name == 'sql')
                     }
+                    others = {}
                     for collector in self.collectors:
                         if collector.entries:
-                            values[collector.name] = json.dumps(collector.entries)
+                            if collector.store == "others":
+                                others[collector.name] = json.dumps(collector.entries)
+                            else:
+                                values[collector.name] = json.dumps(collector.entries)
+                    if others:
+                        values['others'] = json.dumps(others)
                     query = SQL(
                         "INSERT INTO ir_profile(%s) VALUES %s RETURNING id",
                         SQL(",").join(map(SQL.identifier, values)),
