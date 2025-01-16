@@ -457,6 +457,7 @@ function classToStyle($editable, cssRules) {
                 style = `${key}:${value};${style}`;
             }
         };
+        style = correctBorderAttributes(style);
         if (Object.keys(style || {}).length === 0) {
             writes.push(() => { node.removeAttribute('style'); });
         } else {
@@ -1787,6 +1788,56 @@ function _normalizeStyle(style) {
     element.parentElement.insertBefore(wrapper, element);
     wrapper.append(element);
     return wrapper;
+}
+
+/**
+ * Corrects the `border-style` attribute in the provided inline style string.
+ * This is specifically for Outlook, which displays borders even when their widths are set to 0px.
+ * If all border widths are 0, the function updates `border-style` to `none`.
+ *
+ * @param {string} style - The inline style string to correct.
+ * @returns {string} - The corrected inline style string.
+ */
+function correctBorderAttributes(style) {
+    const stylesObject = style
+        .replace(/\s+/g, "")
+        .split(";")
+        .reduce((styles, styleString) => {
+            const [attribute, value] = styleString.split(":").map((str) => str.trim());
+            if (attribute) {
+                styles[attribute] = value;
+            }
+            return styles;
+        }, {});
+
+    const BORDER_WIDTHS_ATTRIBUTES = [
+        "border-bottom-width",
+        "border-left-width",
+        "border-right-width",
+        "border-top-width",
+    ];
+
+    const isBorderStyleApplied = BORDER_WIDTHS_ATTRIBUTES.some(
+        (attribute) => attribute in stylesObject
+    );
+
+    if (!isBorderStyleApplied) {
+        return style;
+    }
+
+    const totalBorderWidth = BORDER_WIDTHS_ATTRIBUTES.reduce((totalWidth, attribute) => {
+        const widthValue = stylesObject[attribute] || "0px";
+        const numericWidth = parseFloat(widthValue.replace("px", "")) || 0;
+        return totalWidth + numericWidth;
+    }, 0);
+
+    if (totalBorderWidth === 0) {
+        stylesObject["border-style"] = "none";
+    }
+
+    return Object.entries(stylesObject)
+        .map(([attribute, value]) => `${attribute}:${value}`)
+        .join(";");
 }
 
 export default {
