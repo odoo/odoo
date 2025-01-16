@@ -271,11 +271,11 @@ export const websiteService = {
             showLoader(props) {
                 bus.trigger('SHOW-WEBSITE-LOADER', props);
             },
-            hideLoader() {
-                bus.trigger('HIDE-WEBSITE-LOADER');
+            hideLoader(props) {
+                bus.trigger("HIDE-WEBSITE-LOADER", props);
             },
-            prepareOutLoader() {
-                bus.trigger("PREPARE-OUT-WEBSITE-LOADER");
+            redirectOutFromLoader(props) {
+                bus.trigger("REDIRECT-OUT-FROM-WEBSITE-LOADER", props);
             },
             /**
              * Returns the (translated) "functional" name of a model
