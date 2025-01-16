@@ -27,6 +27,7 @@
                 <field name="entry_count"/>
                 <field name="sql_count" optional="hide"/>
                 <field name="speedscope_url" widget="url"/>
+                <field name="config_url" widget="url"/>
                 <field name="duration"/>
                 <field name="cpu_duration" optional="hide"/>
             </list>
@@ -46,6 +47,7 @@
                     <!-- Do not rely on sql field for the invisible attrs to avoid fetching whole trace from server. -->
                     <field name="sql_count" invisible="sql_count == 0"/>
                     <field name="speedscope_url" widget="url"/>
+                    <field name="config_url" widget="url"/>
                 </group>
                 <group invisible="not qweb">
                     <field name="qweb" widget="profiling_qweb_view" nolabel="1"/>
