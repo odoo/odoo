@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { constructFullProductName, uuidv4 } from "@point_of_sale/utils";
+import { constructFullProductName, uuidv4, constructAttributeString } from "@point_of_sale/utils";
 import { Base } from "./related_models";
 import { parseFloat } from "@web/views/fields/parsers";
 import { formatFloat, roundDecimals, roundPrecision, floatIsZero } from "@web/core/utils/numbers";
@@ -721,6 +721,12 @@ export class PosOrderline extends Base {
     }
     getFullProductName() {
         return this.full_product_name || this.product_id.display_name;
+    }
+    get orderDisplayProductName() {
+        return {
+            name: this.product_id?.name,
+            attributeString: constructAttributeString(this),
+        };
     }
     isSelected() {
         return this.order_id?.uiState?.selected_orderline_uuid === this.uuid;

@@ -29,6 +29,7 @@ export function hasLine({
     discount,
     oldPrice,
     priceNoDiscount,
+    attributeLine,
 } = {}) {
     let trigger = `.order-container .orderline${withClass}`;
     if (withoutClass) {
@@ -58,6 +59,9 @@ export function hasLine({
     }
     if (priceNoDiscount) {
         trigger += `:has(.info-list:contains("${priceNoDiscount}"))`;
+    }
+    if (attributeLine) {
+        trigger += `:has(.attribute-line:contains("${attributeLine}"))`;
     }
     const args = JSON.stringify(arguments[0]);
     return [
