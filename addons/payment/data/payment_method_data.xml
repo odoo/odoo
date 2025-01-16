@@ -1052,6 +1052,17 @@
         />
     </record>
 
+    <record id="payment_method_dpo" model="payment.method">
+        <field name="name">Card / Mobile</field>
+        <field name="code">dpo</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/card.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_refund">none</field>
+    </record>
+
     <record id="payment_method_duitnow" model="payment.method">
         <field name="name">DuitNow</field>
         <field name="code">duitnow</field>
@@ -1936,17 +1947,6 @@
                          ref('base.EUR'),
                      ])]"
         />
-    </record>
-    <!--TODO-PDA add right logo-->
-    <record id="payment_method_mobile" model="payment.method">
-        <field name="name">Mobile</field>
-        <field name="code">mobile</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/mobile_payment.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">False</field>
-        <field name="support_refund">none</field>
     </record>
 
     <record id="payment_method_mobile_money" model="payment.method">
@@ -3664,17 +3664,6 @@
                      ])]"
         />
     </record>
-    <!--TODO-PDA add right logo-->
-    <record id="payment_method_xpay" model="payment.method">
-        <field name="name">xPay</field>
-        <field name="code">xpay</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/mtn-mobile-money.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">False</field>
-        <field name="support_refund">none</field>
-    </record>
 
     <record id="payment_method_zalopay" model="payment.method">
         <field name="name">Zalopay</field>
@@ -3760,33 +3749,6 @@
         <field name="sequence">1000</field>
         <field name="active">False</field>
         <field name="image" type="base64" file="payment/static/img/bancolombia.png"/>
-    </record>
-
-    <record id="payment_method_bank_transfer_ke_eur" model="payment.method">
-        <field name="name">Bank Transfer Kenya EUR</field>
-        <field name="code">bank_transfer_ke_eur</field>
-        <field name="primary_payment_method_id" eval="ref('payment.payment_method_bank_transfer')"/>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
-    </record>
-
-    <record id="payment_method_bank_transfer_ke_zar" model="payment.method">
-        <field name="name">Bank Transfer Kenya ZAR</field>
-        <field name="code">bank_transfer_ke_zar</field>
-        <field name="primary_payment_method_id" eval="ref('payment.payment_method_bank_transfer')"/>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
-    </record>
-
-    <record id="payment_method_bank_transfer_tz_tzs" model="payment.method">
-        <field name="name">Bank Transfer Tanzania TZS</field>
-        <field name="code">bank_transfer_tz_tzs</field>
-        <field name="primary_payment_method_id" eval="ref('payment.payment_method_bank_transfer')"/>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
     </record>
 
     <record id="payment_method_cabal" model="payment.method">

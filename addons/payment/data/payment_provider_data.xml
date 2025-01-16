@@ -220,11 +220,7 @@
         <!-- https://dpogroup.com/Payment-methods/ -->
         <field name="payment_method_ids"
                eval="[Command.set([
-                         ref('payment.payment_method_card'),
-                         ref('payment.payment_method_mobile'),
-                         ref('payment.payment_method_bank_transfer'),
-                         ref('payment.payment_method_xpay'),
-                         ref('payment.payment_method_paypal'),
+                         ref('payment.payment_method_dpo'),
                      ])]"
         />
     </record>

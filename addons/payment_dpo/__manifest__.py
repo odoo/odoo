@@ -18,5 +18,4 @@
     'license': 'LGPL-3',
 }
 
-# TODO-PDA: add tests
 # TODO-PDA: add .pot

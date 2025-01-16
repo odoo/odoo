@@ -47,7 +47,6 @@ class PaymentTransaction(models.Model):
         return_url = urls.url_join(self.provider_id.get_base_url(), DPOController._return_url)
         first_name = ' '.join(self.partner_name.split()[:1])
         last_name = ' '.join(self.partner_name.split()[1:])
-        default_payment = const.PAYMENT_METHODS_MAPPING.get(self.payment_method_code, 'CC')
         create_date = self.create_date.strftime('%Y/%m/%d %H:%M')
         payload = f"""
             <?xml version="1.0" encoding="utf-8"?>
@@ -66,7 +65,6 @@ class PaymentTransaction(models.Model):
                     <customerCity>{self.partner_city}</customerCity>
                     <customerCountry>{self.partner_country_id.code}</customerCountry>
                     <customerZip>{self.partner_zip}</customerZip>
-                    <DefaultPayment>{default_payment}</DefaultPayment>
                 </Transaction>
                 <Services>
                     <Service>
@@ -131,17 +129,13 @@ class PaymentTransaction(models.Model):
         self.provider_reference = notification_data.get('TransID')
 
         # Update the payment method.
-        payment_method_code = notification_data.get('CustomerCreditType')
-        payment_method = self.env['payment.method']._get_from_code(
-            payment_method_code, mapping=const.PAYMENT_METHODS_MAPPING
-        )
-        self.payment_method_id = payment_method or self.payment_method_id
+        self.payment_method_id = self.env.ref('payment.payment_method_dpo')
 
         # Update the payment state.
         status_code = notification_data.get('Result')
         if status_code in const.PAYMENT_STATUS_MAPPING['pending']:
+            # No redirection to /shop/confirmation as no available webhook
             self._set_pending(state_message=notification_data.get('ResultExplanation'))
-            # TODO-PDA: how to redirect to payment/confirmation without webhook? Staying forever in payment/status
         elif status_code in const.PAYMENT_STATUS_MAPPING['authorized']:
             self._set_authorized(state_message=notification_data.get('ResultExplanation'))
         elif status_code in const.PAYMENT_STATUS_MAPPING['done']:
