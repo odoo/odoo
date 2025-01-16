@@ -31,7 +31,7 @@ export function deduceUrl(url) {
     return url;
 }
 
-export function constructFullProductName(line) {
+export function constructAttributeString(line) {
     let attributeString = "";
 
     if (line.attribute_value_ids && line.attribute_value_ids.length > 0) {
@@ -50,10 +50,16 @@ export function constructFullProductName(line) {
         }
 
         attributeString = attributeString.slice(0, -2);
-        attributeString = ` (${attributeString})`;
     }
 
-    return `${line?.product_id?.name}${attributeString}`;
+    return attributeString;
+}
+
+export function constructFullProductName(line) {
+    const attributeString = constructAttributeString(line);
+    return attributeString
+        ? `${line?.product_id?.name} (${attributeString})`
+        : `${line?.product_id?.name}`;
 }
 /**
  * Returns a random 5 digits alphanumeric code
