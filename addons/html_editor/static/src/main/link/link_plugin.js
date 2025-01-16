@@ -682,7 +682,7 @@ export class LinkPlugin extends Plugin {
     handleEnterAtEdgeOfLink(params, splitOrLineBreakCallback) {
         // @todo: handle target Node being a descendent of a link (iterate over
         // leaves inside the link, rather than childNodes)
-        let { targetNode, targetOffset } = params;
+        let { targetNode, targetOffset, blockToSplit } = params;
         if (targetNode.tagName !== "A") {
             return;
         }
@@ -691,7 +691,8 @@ export class LinkPlugin extends Plugin {
             return;
         }
         [targetNode, targetOffset] = edge === "start" ? leftPos(targetNode) : rightPos(targetNode);
-        splitOrLineBreakCallback({ ...params, targetNode, targetOffset });
+        blockToSplit = targetNode;
+        splitOrLineBreakCallback({ ...params, targetNode, targetOffset, blockToSplit });
         return true;
     }
 }

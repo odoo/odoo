@@ -1,6 +1,6 @@
 import { splitTextNode } from "@html_editor/utils/dom";
 import { Plugin } from "../plugin";
-import { CTYPES } from "../utils/content_types";
+import { CTGROUPS, CTYPES } from "../utils/content_types";
 import { getState, isFakeLineBreak, prepareUpdate } from "../utils/dom_state";
 import { DIRECTIONS, leftPos, rightPos } from "../utils/position";
 
@@ -71,7 +71,7 @@ export class LineBreakPlugin extends Plugin {
         }
         if (
             isFakeLineBreak(brEl) &&
-            getState(...leftPos(brEl), DIRECTIONS.LEFT).cType !== CTYPES.BR
+            !(getState(...leftPos(brEl), DIRECTIONS.LEFT).cType & (CTGROUPS.BLOCK | CTYPES.BR))
         ) {
             const brEl2 = this.document.createElement("br");
             brEl.before(brEl2);
