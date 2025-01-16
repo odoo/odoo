@@ -38,7 +38,7 @@ class TableObject:
         # and this avoid having them in the middle of the fields when listing members
         assert name.startswith('_'), "Names of SQL objects in a model must start with '_'"
         self.name = name[1:]
-        if getattr(owner, 'pool', None) is None:  # models.is_definition_class(owner)
+        if getattr(owner, 'pool', None) is None:  # models.is_model_definition(owner)
             # only for fields on definition classes, not registry classes
             self._module = owner._module
             owner._table_object_definitions.append(self)

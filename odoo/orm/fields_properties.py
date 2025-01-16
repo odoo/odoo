@@ -77,8 +77,8 @@ class Properties(Field):
          'separator',
     )
 
-    def _setup_attrs(self, model_class, name):
-        super()._setup_attrs(model_class, name)
+    def _setup_attrs__(self, model_class, name):
+        super()._setup_attrs__(model_class, name)
         self._setup_definition_attrs()
 
     def _setup_definition_attrs(self):

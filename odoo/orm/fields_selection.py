@@ -81,8 +81,8 @@ class Selection(Field[str | typing.Literal[False]]):
             attrs['group_expand'] = self._default_group_expand
         return attrs
 
-    def _setup_attrs(self, model_class, name):
-        super()._setup_attrs(model_class, name)
+    def _setup_attrs__(self, model_class, name):
+        super()._setup_attrs__(model_class, name)
         if not self._base_fields:
             return
 
@@ -91,7 +91,7 @@ class Selection(Field[str | typing.Literal[False]]):
 
         for field in self._base_fields:
             # We cannot use field.selection or field.selection_add here
-            # because those attributes are overridden by ``_setup_attrs``.
+            # because those attributes are overridden by ``_setup_attrs__``.
             if 'selection' in field.args:
                 if self.related:
                     _logger.warning("%s: selection attribute will be ignored as the field is related", self)

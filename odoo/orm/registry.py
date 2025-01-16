@@ -35,6 +35,7 @@ from odoo.tools.lru import LRU
 from odoo.tools.misc import Collector, format_frame
 
 from .utils import SUPERUSER_ID
+from . import model_classes
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection, Iterable, Iterator, MutableMapping
@@ -307,15 +308,15 @@ class Registry(Mapping[str, type["BaseModel"]]):
         # Instantiate registered classes (via the MetaModel automatic discovery
         # or via explicit constructor call), and add them to the pool.
         model_names = []
-        for cls in models.MetaModel.module_to_models.get(module.name, []):
+        for model_def in models.MetaModel.module_to_models.get(module.name, []):
             # models register themselves in self.models
-            model = cls._build_model(self, cr)
-            model_names.append(model._name)
+            model_cls = model_classes.add_to_registry(self, model_def)
+            model_names.append(model_cls._name)
 
         return self.descendants(model_names, '_inherit', '_inherits')
 
     @locked
-    def setup_models(self, cr: BaseCursor) -> None:
+    def _setup_models__(self, cr: BaseCursor) -> None:
         """ Complete the setup of models.
             This must be called after loading modules and before using the ORM.
         """
@@ -338,39 +339,15 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self._is_modifying_relations.clear()
         self.registry_invalidated = True
 
-        # we must setup ir.model before adding manual fields because _add_manual_models may
-        # depend on behavior that is implemented through overrides, such as is_mail_thread which
-        # is implemented through an override to env['ir.model']._instanciate
-        env['ir.model']._prepare_setup()
-
-        # add manual models
-        if self._init_modules:
-            env['ir.model']._add_manual_models()
-
-        # prepare the setup on all models
-        models = list(env.values())
-        for model in models:
-            model._prepare_setup()
-
         self.field_depends.clear()
         self.field_depends_context.clear()
         self.field_inverses.clear()
         self.many2one_company_dependents.clear()
 
-        # do the actual setup
-        for model in models:
-            model._setup_base()
-
-        self._m2m: defaultdict[tuple[str, str, str], list[Field]] = defaultdict(list)
-        for model in models:
-            model._setup_fields()
-        del self._m2m
-
-        for model in models:
-            model._setup_complete()
+        model_classes.setup_model_classes(env)
 
         # determine field_depends and field_depends_context
-        for model in models:
+        for model in env.values():
             for field in model._fields.values():
                 depends, depends_context = field.get_depends(model)
                 self.field_depends[field] = tuple(depends)
@@ -962,7 +939,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         """ Reset the registry and cancel all invalidations. """
         if self.registry_invalidated:
             with closing(self.cursor()) as cr:
-                self.setup_models(cr)
+                self._setup_models__(cr)
                 self.registry_invalidated = False
         if self.cache_invalidated:
             for cache_name in self.cache_invalidated:
