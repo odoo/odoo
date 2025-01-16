@@ -1,4 +1,4 @@
-import { Component, useState } from "@odoo/owl";
+import { Component, onWillStart, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -16,6 +16,7 @@ export class ActivityMenu extends Component {
 
     setup() {
         this.ui = useService("ui");
+        this.lazySession = useService("lazy_session");
         this.employee = false;
         this.state = useState({
             checkedIn: false,
@@ -23,14 +24,23 @@ export class ActivityMenu extends Component {
         });
         this.date_formatter = registry.category("formatters").get("float_time")
         this.dropdown = useDropdownState();
-        // load data but do not wait for it to render to prevent from delaying
-        // the whole webclient
-        this.searchReadEmployee();
+        onWillStart(()=> {
+            // access lazy session but do no wait for it, to prevent from delaying the whole webclient
+            this.lazySession.getValue("attendance_user_data", (employee) => {
+                if (employee) {
+                    this.employee = employee;
+                    this._searchReadEmployeeFill();
+                }
+            });
+        });
     }
 
     async searchReadEmployee(){
-        const result = await rpc("/hr_attendance/attendance_user_data");
-        this.employee = result;
+        this.employee = await rpc("/hr_attendance/attendance_user_data");
+        this._searchReadEmployeeFill();
+    }
+
+    _searchReadEmployeeFill() {
         if (this.employee.id) {
             this.hoursToday = this.date_formatter(
                 this.employee.hours_today
