@@ -28,7 +28,8 @@ __base="$(basename ${__file} .sh)"
 MOUNT_POINT="${__dir}/root_mount"
 OVERWRITE_FILES_BEFORE_INIT_DIR="${__dir}/overwrite_before_init"
 OVERWRITE_FILES_AFTER_INIT_DIR="${__dir}/overwrite_after_init"
-VERSION_IOTBOX="$(date '+%y.%m')"
+VERSION=17.0
+VERSION_IOTBOX=24.10
 
 if [[ "${1:-}" == "-c" || "${1:-}" == "--cleanup" ]]; then
     echo "Cleaning up..."
@@ -171,14 +172,6 @@ rm -rf "${CLONE_DIR}"
 # and the ngrok usr/bin
 rm -rf "${OVERWRITE_FILES_BEFORE_INIT_DIR}/usr"
 cp -a "${OVERWRITE_FILES_AFTER_INIT_DIR}"/* "${MOUNT_POINT}"
-
-find "${MOUNT_POINT}"/ -type f -name "*.iotpatch"|while read iotpatch; do
-    DIR=$(dirname "${iotpatch}")
-    BASE=$(basename "${iotpatch%.iotpatch}")
-    find "${DIR}" -type f -name "${BASE}" ! -name "*.iotpatch"|while read file; do
-        patch -f --verbose "${file}" < "${iotpatch}"
-    done
-done
 
 echo "Running zerofree..."
 zerofree -v "${LOOP_IOT_ROOT}" || true
