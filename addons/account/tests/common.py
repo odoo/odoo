@@ -285,21 +285,25 @@ class AccountTestInvoicingCommon(TransactionCase):
             'currency_subunit_label': 'Silver',
             **default_values,
         })
-        rate1 = cls.env['res.currency.rate'].create({
+        rates = cls.env['res.currency.rate'].create([{
+            'name': '1900-01-01',
+            'rate': 1,
+            'currency_id': foreign_currency.id,
+            'company_id': cls.env.company.id,
+        }, {
             'name': '2016-01-01',
             'rate': rate2016,
             'currency_id': foreign_currency.id,
             'company_id': cls.env.company.id,
-        })
-        rate2 = cls.env['res.currency.rate'].create({
+        }, {
             'name': '2017-01-01',
             'rate': rate2017,
             'currency_id': foreign_currency.id,
             'company_id': cls.env.company.id,
-        })
+        }])
         return {
             'currency': foreign_currency,
-            'rates': rate1 + rate2,
+            'rates': rates,
         }
 
     @classmethod
