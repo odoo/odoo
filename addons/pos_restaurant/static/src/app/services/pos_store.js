@@ -4,8 +4,6 @@ import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { EditOrderNamePopup } from "@pos_restaurant/app/popup/edit_order_name_popup/edit_order_name_popup";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
-import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt_screen";
-import { TipScreen } from "../screens/tip_screen/tip_screen";
 
 patch(PosStore.prototype, {
     /**
@@ -215,9 +213,9 @@ patch(PosStore.prototype, {
             this.computeTableCount();
         }
     },
-    async closingSessionNotification(data) {
+    async closingSessionNotification() {
         await super.closingSessionNotification(...arguments);
-        this.computeTableCount(data);
+        this.computeTableCount();
     },
     async onDeleteOrder(order) {
         const orderIsDeleted = await super.onDeleteOrder(...arguments);
@@ -229,111 +227,8 @@ patch(PosStore.prototype, {
             this.showScreen("FloorScreen");
         }
     },
-    async wsSyncTableCount(data) {
-        if (data.login_number === this.session.login_number) {
-            this.computeTableCount(data);
-            return;
-        }
-
-        const missingTable = data["table_ids"].find(
-            (tableId) => !(tableId in this.models["restaurant.table"].getAllBy("id"))
-        );
-        if (missingTable) {
-            const response = await this.data.searchRead("restaurant.floor", [
-                ["pos_config_ids", "in", this.config.id],
-            ]);
-
-            const table_ids = response.map((floor) => floor.raw.table_ids).flat();
-            await this.data.read("restaurant.table", table_ids);
-        }
-        const tableLocalOrders = this.models["pos.order"].filter(
-            (o) => data["table_ids"].includes(o.table_id?.id) && !o.finalized
-        );
-        const localOrderlines = tableLocalOrders
-            .filter((o) => typeof o.id === "number")
-            .flatMap((o) => o.lines)
-            .filter((l) => typeof l.id !== "number");
-        const lineIdByOrderId = localOrderlines.reduce((acc, curr) => {
-            if (!acc[curr.order_id.id]) {
-                acc[curr.order_id.id] = [];
-            }
-            acc[curr.order_id.id].push(curr.id);
-            return acc;
-        }, {});
-
-        const orders = await this.data.searchRead("pos.order", [
-            ["session_id", "=", this.session.id],
-            ["table_id", "in", data["table_ids"]],
-        ]);
-        await this.data.read(
-            "pos.order.line",
-            orders.flatMap((o) => o.lines).map((l) => l.id),
-            ["qty"]
-        );
-        for (const [orderId, lineIds] of Object.entries(lineIdByOrderId)) {
-            const lines = this.models["pos.order.line"].readMany(lineIds);
-            for (const line of lines) {
-                line.update({ order_id: orderId });
-            }
-        }
-
-        let isDraftOrder = false;
-        for (const order of orders) {
-            if (order.state !== "draft") {
-                this.removePendingOrder(order);
-                continue;
-            } else {
-                this.addPendingOrder([order.id]);
-            }
-
-            const tableId = order.table_id?.id;
-            if (!tableId) {
-                continue;
-            }
-
-            const draftOrder = this.models["pos.order"].find(
-                (o) => o.table_id?.id === tableId && o.id !== order.id && o.state === "draft"
-            );
-
-            if (!draftOrder) {
-                continue;
-            }
-
-            for (const orphanLine of draftOrder.lines) {
-                const adoptingLine = order.lines.find((l) => l.canBeMergedWith(orphanLine));
-                if (adoptingLine && adoptingLine.id !== orphanLine.id) {
-                    adoptingLine.merge(orphanLine);
-                } else if (!adoptingLine) {
-                    orphanLine.update({ order_id: order });
-                }
-            }
-
-            if (this.selectedOrderUuid === draftOrder.uuid) {
-                this.selectedOrderUuid = order.uuid;
-            }
-
-            await this.removeOrder(draftOrder, true);
-            isDraftOrder = true;
-        }
-
-        if (
-            this.getOrder()?.finalized &&
-            ![ReceiptScreen, TipScreen].includes([this.mainScreen.component])
-        ) {
-            this.addNewOrder();
-        }
-
-        if (isDraftOrder) {
-            await this.syncAllOrders();
-        }
-
-        this.computeTableCount(data);
-    },
-    computeTableCount(data) {
-        const tableIds = data?.table_ids;
-        const tables = tableIds
-            ? this.models["restaurant.table"].readMany(tableIds)
-            : this.models["restaurant.table"].getAll();
+    computeTableCount() {
+        const tables = this.models["restaurant.table"].getAll();
         const orders = this.getOpenOrders();
         for (const table of tables) {
             const tableOrders = orders.filter(
@@ -435,7 +330,6 @@ patch(PosStore.prototype, {
             localStorage.getItem("floorPlanStyle") || (this.ui.isSmall ? "kanban" : "default");
         if (this.config.module_pos_restaurant) {
             this.currentFloor = this.config.floor_ids?.length > 0 ? this.config.floor_ids[0] : null;
-            this.bus.subscribe("SYNC_ORDERS", this.wsSyncTableCount.bind(this));
         }
 
         return await super.afterProcessServerData(...arguments);
