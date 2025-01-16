@@ -3229,6 +3229,7 @@ class MailThread(models.AbstractModel):
             'model_description',
             'notify_author',
             'notify_author_mention',
+            'notify_skip_followers',
             'resend_existing',
             'scheduled_date',
             'send_after_commit',
@@ -3993,6 +3994,8 @@ class MailThread(models.AbstractModel):
             notifications send by current user, targeting current user;
           * ``notify_author_mention``: allows to notify the author if in direct
             recipients i.e. in 'partner_ids';
+          * ``notify_skip_followers``: skip followers fetch. Notification relies
+            on message 'partner_ids' explicit recipients only;
           * ``skip_existing``: check existing notifications and skip them in order
             to avoid having several notifications / partner as it would make
             constraints crash. This is disabled by default to optimize speed;
@@ -4025,7 +4028,12 @@ class MailThread(models.AbstractModel):
 
         # get values from msg_vals or from message if msg_vals doen't exists
         pids = msg_vals['partner_ids'] if 'partner_ids' in msg_vals else msg_sudo.partner_ids.ids
-        message_type = msg_vals['message_type'] if 'message_type' in msg_vals else msg_sudo.message_type
+        if kwargs.get('notify_skip_followers'):
+            # when skipping followers, message acts like user notification, which means
+            # relying on required recipients (pids) only
+            message_type = 'user_notification'
+        else:
+            message_type = msg_vals['message_type'] if 'message_type' in msg_vals else msg_sudo.message_type
         subtype_id = msg_vals['subtype_id'] if 'subtype_id' in msg_vals else msg_sudo.subtype_id.id
         # is it possible to have record but no subtype_id ?
         recipients_data = []
