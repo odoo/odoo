@@ -4469,6 +4469,11 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ]
         )
 
+        self.assertEqual(
+            invoice.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable').full_reconcile_id.exchange_move_id.journal_id.id,
+            self.env.company.tax_cash_basis_journal_id.id,
+        )
+
         self.assertTrue(
             invoice.line_ids.filtered(lambda x: x.account_id == self.cash_basis_transfer_account).full_reconcile_id,
             "The cash basis transition account line of the invoice should be fully reconciled with the CABA moves and the adjustment."
