@@ -1715,7 +1715,7 @@ class PosOrderLine(models.Model):
         for line in self:
             if line.order_id.config_id.order_edit_tracking:
                 line.order_id.has_deleted_line = True
-                body = _("%s: Deleted line", line.full_product_name)
+                body = _("%(product_name)s: Deleted line (quantity: %(qty)s)", product_name=line.full_product_name, qty=line.qty)
                 line.order_id.message_post(body=line.order_id._prepare_pos_log(body))
         res = super().unlink()
         return res
