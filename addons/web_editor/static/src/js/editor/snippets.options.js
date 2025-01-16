@@ -4445,7 +4445,7 @@ registry.sizing = SnippetOptionWidget.extend({
                 _.each(resize[0], function (val, key) {
                     if (self.$target.hasClass(val)) {
                         current = key;
-                    } else if (resize[1][key] === cssPropertyValue) {
+                    } else if (parseInt(resize[1][key]) === cssPropertyValue) {
                         current = key;
                     }
                 });
