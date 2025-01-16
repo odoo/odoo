@@ -576,7 +576,7 @@ export class Composer extends Component {
                     );
                     const editorIsEmpty = !editor || !editor.innerText.replace(/^\s*$/gm, "");
                     if (!editorIsEmpty) {
-                        this.saveContent();
+                        this.saveContent({ editor });
                         this.restoreContent();
                     }
                 } else {
@@ -739,14 +739,14 @@ export class Composer extends Component {
         this.props.composer.isFocused = false;
     }
 
-    saveContent() {
+    /** @param {HTMLElement} [editor] if set, this is a save from full composer editor. */
+    saveContent({ editor = false } = {}) {
         const composer = toRaw(this.props.composer);
-        const editable = document.querySelector(".o_mail_composer_form_view .note-editable");
         const config = {};
-        if (editable) {
+        if (editor) {
             Object.assign(config, {
                 emailAddSignature: false,
-                text: editable.innerText.replace(/(\t|\n)+/g, "\n")
+                text: editor.innerText.replace(/(\t|\n)+/g, "\n"),
             });
         } else {
             Object.assign(config, {
