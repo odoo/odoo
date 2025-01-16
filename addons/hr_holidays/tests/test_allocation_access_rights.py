@@ -16,16 +16,16 @@ class TestAllocationRights(TestHrHolidaysCommon):
         cls.employee_emp.parent_id = False
         cls.employee_emp.leave_manager_id = False
 
-        cls.lt_no_allocation = cls.env['hr.leave.type'].create({
+        cls.lt_validation_hr = cls.env['hr.leave.type'].create({
             'name': 'Validation = HR',
             'allocation_validation_type': 'hr',
-            'requires_allocation': 'no',
+            'requires_allocation': 'yes',
             'employee_requests': 'yes',
         })
 
         cls.lt_validation_manager = cls.env['hr.leave.type'].create({
             'name': 'Validation = manager',
-            'allocation_validation_type': 'hr',
+            'allocation_validation_type': 'manager',
             'requires_allocation': 'yes',
             'employee_requests': 'yes',
         })
@@ -142,7 +142,7 @@ class TestAccessRightsHolidayUser(TestAllocationRights):
         """ A holiday user can request and approve an allocation for any employee """
         values = {
             'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.lt_validation_manager.id,
+            'holiday_status_id': self.lt_validation_hr.id,
         }
         allocation = self.request_allocation(self.user_hruser.id, values)
         allocation.action_validate()
