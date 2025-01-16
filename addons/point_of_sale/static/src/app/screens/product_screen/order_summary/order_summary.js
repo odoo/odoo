@@ -95,24 +95,10 @@ export class OrderSummary extends Component {
             this.pos.numpadMode === "quantity" &&
             this.pos.disallowLineQuantityChange()
         ) {
-            const orderlines = order.lines;
-            const lastId = orderlines.length !== 0 && orderlines.at(orderlines.length - 1).uuid;
-            const currentQuantity = this.pos.getOrder().getSelectedOrderline().getQuantity();
-
-            if (selectedLine.noDecrease) {
-                this.dialog.add(AlertDialog, {
-                    title: _t("Invalid action"),
-                    body: _t("You are not allowed to change this quantity"),
-                });
-                return;
-            }
-            const parsedInput = (buffer && parseFloat(buffer)) || 0;
-            if (lastId != selectedLine.uuid) {
-                this._showDecreaseQuantityPopup();
-            } else if (currentQuantity < parsedInput) {
-                this._setValue(buffer);
-            } else if (parsedInput < currentQuantity) {
-                this._showDecreaseQuantityPopup();
+            await this._showDecreaseQuantityPopup();
+            if (selectedLine.getQuantity() === 0) {
+                const val = buffer === null ? "remove" : buffer;
+                this._setValue(val);
             }
             return;
         } else if (
@@ -204,7 +190,7 @@ export class OrderSummary extends Component {
             const currentQuantity = selectedLine.getQuantity();
             if (newQuantity >= currentQuantity) {
                 selectedLine.setQuantity(newQuantity);
-            } else if (newQuantity >= selectedLine.saved_quantity) {
+            } else if (newQuantity >= selectedLine.uiState.savedQuantity) {
                 await this.handleDecreaseUnsavedLine(newQuantity);
             } else {
                 await this.handleDecreaseLine(newQuantity);
@@ -228,7 +214,7 @@ export class OrderSummary extends Component {
         let current_saved_quantity = 0;
         for (const line of this.currentOrder.lines) {
             if (line === selectedLine) {
-                current_saved_quantity += line.saved_quantity;
+                current_saved_quantity += line.uiState.savedQuantity;
             } else if (
                 line.product_id.id === selectedLine.product_id.id &&
                 line.getUnitPrice() === selectedLine.getUnitPrice()
@@ -241,8 +227,8 @@ export class OrderSummary extends Component {
         if (decreasedQuantity != 0) {
             newLine.setQuantity(-decreasedQuantity + newLine.getQuantity(), true);
         }
-        if (newLine !== selectedLine && selectedLine.saved_quantity != 0) {
-            selectedLine.setQuantity(selectedLine.saved_quantity);
+        if (newLine !== selectedLine && selectedLine.uiState.savedQuantity != 0) {
+            selectedLine.setQuantity(selectedLine.uiState.savedQuantity);
         }
         return decreasedQuantity;
     }
@@ -250,7 +236,7 @@ export class OrderSummary extends Component {
         const selectedLine = this.currentOrder.getSelectedOrderline();
         const sign = selectedLine.getQuantity() > 0 ? 1 : -1;
         let newLine = selectedLine;
-        if (selectedLine.saved_quantity != 0) {
+        if (selectedLine.uiState.savedQuantity != 0) {
             for (const line of selectedLine.order_id.lines) {
                 if (
                     line.product_id.id === selectedLine.product_id.id &&

@@ -363,15 +363,6 @@ class PosSession(models.Model):
             if not config_id:
                 raise UserError(_("You should assign a Point of Sale to your session."))
 
-            name_counter = 0
-            if not vals.get('rescue'):
-                config_name = self.env['pos.config'].browse(config_id).name
-                vals['name'] = config_name + '/'
-                sessions = self.sudo().search_read([('name', 'ilike', vals['name'])], ['name'], order='name desc', limit=1)
-                if len(sessions):
-                    name_counter = int(sessions[0]['name'].split('/')[-1]) + 1
-
-                vals['name'] += str(name_counter).zfill(5)
             # journal_id is not required on the pos_config because it does not
             # exists at the installation. If nothing is configured at the
             # installation we do the minimal configuration. Impossible to do in
@@ -1713,8 +1704,6 @@ class PosSession(models.Model):
         if self.state != 'opening_control':
             return
         self.state = 'opened'
-        if not self.rescue:
-            self.name = self.env['ir.sequence'].with_context(company_id=self.config_id.company_id.id).next_by_code('pos.session')
         self.start_at = fields.Datetime.now()
         self.name = self.config_id.name + self.env['ir.sequence'].with_context(
             company_id=self.config_id.company_id.id

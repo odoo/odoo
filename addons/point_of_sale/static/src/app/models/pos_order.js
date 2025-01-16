@@ -142,6 +142,14 @@ export class PosOrder extends Base {
         this.setPricelist(preset.pricelist_id);
         this.fiscal_position_id = preset.fiscal_position_id;
         this.preset_id = preset;
+        for (const line of this.lines) {
+            if (
+                (preset.is_return && line.getQuantity() > 0) ||
+                (!preset.is_return && line.getQuantity() < 0)
+            ) {
+                line.setQuantity(-line.getQuantity());
+            }
+        }
     }
 
     /**
@@ -322,7 +330,7 @@ export class PosOrder extends Base {
                 };
             }
             line.setHasChange(false);
-            line.saved_quantity = line.getQuantity();
+            line.uiState.savedQuantity = line.getQuantity();
         });
         // Checks whether an orderline has been deleted from the order since it
         // was last sent to the preparation tools or updated. If so we delete older changes.
@@ -730,7 +738,7 @@ export class PosOrder extends Base {
         const taxDetails = {};
         for (const line of lines) {
             for (const taxData of line.allPrices.taxesData) {
-                const taxId = taxData.id;
+                const taxId = taxData.tax.id;
                 if (!taxDetails[taxId]) {
                     taxDetails[taxId] = Object.assign({}, taxData, {
                         amount: 0.0,

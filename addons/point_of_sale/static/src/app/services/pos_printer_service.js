@@ -33,7 +33,7 @@ export class PosPrinterService extends PrinterService {
         }
     }
     async printHtml() {
-        this.setPrinter(this.device);
+        this.setPrinter(this.hardware_proxy.printer);
         try {
             return await super.printHtml(...arguments);
         } catch (error) {

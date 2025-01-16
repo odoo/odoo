@@ -833,19 +833,22 @@ patch(PosOrder.prototype, {
             return _t("The reward could not be applied.");
         }
         for (const rewardLine of rewardLines) {
-            const prepareRewards = {
-                ...rewardLine,
-                reward_id: rewardLine.reward_id,
-                coupon_id: this.models["loyalty.card"].get(rewardLine.coupon_id),
-                tax_ids: rewardLine.tax_ids.map((tax) => ["link", tax]),
-            };
-            this.models["pos.order.line"].create({
-                ...prepareRewards,
-                order_id: this,
-                price_type: "manual",
-            });
+            this.applyRewardLine(rewardLine);
         }
         return true;
+    },
+    applyRewardLine(rewardLine) {
+        const prepareRewards = {
+            ...rewardLine,
+            reward_id: rewardLine.reward_id,
+            coupon_id: this.models["loyalty.card"].get(rewardLine.coupon_id),
+            tax_ids: rewardLine.tax_ids.map((tax) => ["link", tax]),
+        };
+        this.models["pos.order.line"].create({
+            ...prepareRewards,
+            order_id: this,
+            price_type: "manual",
+        });
     },
     /**
      * Checks if there are any existing manual changes or new coupon additions for the given coupon code
