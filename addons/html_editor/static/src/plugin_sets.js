@@ -63,6 +63,7 @@ import { TableOfContentPlugin } from "@html_editor/others/embedded_components/pl
 import { ToggleBlockPlugin } from "@html_editor/others/embedded_components/plugins/toggle_block_plugin/toggle_block_plugin";
 import { VideoPlugin } from "@html_editor/others/embedded_components/plugins/video_plugin/video_plugin";
 import { QWebPlugin } from "./others/qweb_plugin";
+import { EditorVersionPlugin } from "./core/editor_version_plugin";
 
 /**
  * @typedef { Object } SharedMethods
@@ -108,6 +109,7 @@ export const CORE_PLUGINS = [
     DeletePlugin,
     DialogPlugin,
     DomPlugin,
+    EditorVersionPlugin,
     FormatPlugin,
     HistoryPlugin,
     InputPlugin,
