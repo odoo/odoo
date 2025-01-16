@@ -418,9 +418,12 @@ var SnippetEditor = Widget.extend({
     /**
      * DOMElements have a default name which appears in the overlay when they
      * are being edited. This method retrieves this name; it can be defined
-     * directly in the DOM thanks to the `data-name` attribute.
+     * directly in the DOM thanks to the `data-translated-name` or `data-name` attribute.
      */
     getName: function () {
+        if (this.$target.data('translated-name') !== undefined) {
+            return this.$target.data('translated-name');
+        }
         if (this.$target.data('name') !== undefined) {
             return this.$target.data('name');
         }
