@@ -85,10 +85,11 @@ class ResDeviceLog(models.Model):
             Passage through this method must leave a "trace" in the session.
 
             :param request: Request or WebsocketRequest object
+            :return: whether a device log was created
         """
         trace = request.session.update_trace(request)
         if not trace:
-            return
+            return False
 
         geoip = GeoIP(trace['ip_address'])
         user_id = request.session.uid
@@ -117,6 +118,7 @@ class ResDeviceLog(models.Model):
                 revoked=False,
             ))
         _logger.info("User %d inserts device log (%s)", user_id, session_identifier)
+        return True
 
     @api.autovacuum
     def _gc_device_log(self):
