@@ -575,3 +575,20 @@ registry.category("web_tour.tours").add("test_multiple_preparation_printer_diffe
             Dialog.confirm(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("RestaurantPresetTakeoutTour", {
+    steps: () =>
+        [
+            Chrome.freezeDateTime(1739370000000),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola", true),
+            ProductScreen.selectPreset("Takeout"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Deco Addict"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});
