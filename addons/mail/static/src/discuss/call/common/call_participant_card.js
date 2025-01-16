@@ -4,6 +4,7 @@ import { CONNECTION_TYPES } from "@mail/discuss/call/common/rtc_service";
 import { useHover } from "@mail/utils/common/hooks";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { browser } from "@web/core/browser/browser";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 import {
     Component,
@@ -28,11 +29,15 @@ export class CallParticipantCard extends Component {
         super.setup();
         this.contextMenuAnchorRef = useRef("contextMenuAnchor");
         this.root = useRef("root");
-        this.popover = usePopover(CallContextMenu);
+        this.popover = usePopover(CallContextMenu, {
+            arrow: false,
+            popoverClass: "border-secondary",
+        });
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.rootHover = useHover("root");
+        this.isMobileOS = isMobileOS();
         this.state = useState({ drag: false, dragPos: undefined });
         onMounted(() => {
             if (!this.rtcSession) {
@@ -163,7 +168,6 @@ export class CallParticipantCard extends Component {
      * @param {Event} ev
      */
     onContextMenu(ev) {
-        ev.preventDefault();
         markEventHandled(ev, "CallParticipantCard.clickVolumeAnchor");
         if (this.popover.isOpen) {
             this.popover.close();
