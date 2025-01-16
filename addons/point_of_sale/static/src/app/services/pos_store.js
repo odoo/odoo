@@ -1877,9 +1877,9 @@ export class PosStore extends WithLazyGetterTrap {
 
             if (preset.use_timing && !order.preset_time) {
                 await this.syncPresetSlotAvaibility(preset);
-                order.preset_time = preset.nextSlot?.sql_datetime || false;
+                order.setPresetDateTime(preset.nextSlot?.sql_datetime || false);
             } else if (!preset.use_timing) {
-                order.preset_time = false;
+                order.setPresetDateTime(false);
             }
         }
     }

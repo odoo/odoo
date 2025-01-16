@@ -7,6 +7,8 @@ from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo import Command
 
+from datetime import datetime
+
 @odoo.tests.tagged('post_install', '-at_install')
 class TestFrontendCommon(TestPointOfSaleHttpCommon):
 
@@ -498,3 +500,21 @@ class TestFrontend(TestFrontendCommon):
     def test_15_pos_refund_qty(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('RefundQtyTour')
+
+    def test_restaurant_preset_takeout_tour(self):
+        self.pos_config.write({
+            'printer_ids': False,
+            'is_order_printer': False,
+            'use_presets': True,
+            'default_preset_id': self.env.ref('pos_restaurant.pos_takein_preset', False).id,
+            'available_preset_ids': [(6, 0, [
+                self.env.ref('pos_restaurant.pos_takeout_preset').id,
+                self.env.ref('pos_restaurant.pos_delivery_preset').id,
+            ])]
+        })
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour('RestaurantPresetTakeoutTour', login="pos_admin")
+        order = self.pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.preset_id, self.env.ref('pos_restaurant.pos_takeout_preset'), "The preset should be 'Takeout'")
+        expected_time = datetime(2025, 2, 12, 14, 40)
+        self.assertEqual(order.preset_time, expected_time, f"The preset time should be {expected_time}, but got {order.preset_time}")

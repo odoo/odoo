@@ -2,6 +2,7 @@ import { Component, onWillStart, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
+import { serializeDateTime } from "@web/core/l10n/dates";
 
 const { DateTime } = luxon;
 
@@ -51,7 +52,10 @@ export class PresetSlotsPopup extends Component {
 
     isSelected(time, preset) {
         const order = this.pos.getOrder();
-        return order.preset_time === time && order.preset_id?.id === preset.id;
+        return (
+            order.preset_time === serializeDateTime(DateTime.fromSQL(time)) &&
+            order.preset_id?.id === preset.id
+        );
     }
 
     getSlotsForDate(preset, date) {
