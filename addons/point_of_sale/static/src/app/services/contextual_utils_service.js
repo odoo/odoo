@@ -33,7 +33,20 @@ export const contextualUtilsService = {
             floatRegex = new RegExp(`^-?(?:\\d+)?(?:${escapedDecimalPoint}\\d*)?$`);
         }
 
+<<<<<<< saas-18.1:addons/point_of_sale/static/src/app/services/contextual_utils_service.js
         const formatProductQty = (qty) => formatFloat(qty, { digits: [true, productUoMDecimals] });
+||||||| 4209d441afa058a87e142b44d6e33a546741dd2b:addons/point_of_sale/static/src/app/utils/contextual_utils_service.js
+        const formatProductQty = (qty) => {
+            return formatFloat(qty, { digits: [true, productUoMDecimals] });
+        };
+=======
+        const formatProductQty = (qty, trailingZeros = true) => {
+            return formatFloat(qty, {
+                digits: [true, productUoMDecimals],
+                trailingZeros: trailingZeros,
+            });
+        };
+>>>>>>> f8acdaf3e3b338d8cd0d76ba94e8d6b810a28091:addons/point_of_sale/static/src/app/utils/contextual_utils_service.js
 
         const formatCurrency = (value, hasSymbol = true) =>
             webFormatCurrency(value, res_currency.id, {
