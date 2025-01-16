@@ -51,6 +51,7 @@ export class Call extends Component {
             tileHeight: 0,
             columnCount: 0,
             overlay: false,
+            insetKey: undefined, // key identifying the inset card to prevent unnecessary re-rendering
             /** @type {CardData|undefined} */
             insetCard: undefined,
         });
@@ -141,13 +142,17 @@ export class Call extends Component {
     /** @returns {CardData[]} */
     get visibleMainCards() {
         const activeSession = this.props.thread.activeRtcSession;
-        this.state.insetCard = undefined;
         if (!activeSession) {
+            this.state.insetCard = undefined;
+            this.state.insetKey = undefined;
             return this.visibleCards;
         }
         const type = activeSession.mainVideoStreamType;
         if (type === "screen" || activeSession.isScreenSharingOn) {
             this.setInset(activeSession, type === "camera" ? "screen" : "camera");
+        } else {
+            this.state.insetCard = undefined;
+            this.state.insetKey = undefined;
         }
         return [
             {
@@ -164,11 +169,17 @@ export class Call extends Component {
      * @param {String} [videoType]
      */
     setInset(session, videoType) {
+        const videoStream = session.getStream(videoType);
+        const key = "s_" + session.id + videoStream?.id;
+        if (this.state.insetKey === key) {
+            return;
+        }
+        this.state.insetKey = key;
         this.state.insetCard = {
-            key: "session_" + session.id,
+            key,
             session,
             type: videoType,
-            videoStream: session.getStream(videoType),
+            videoStream,
         };
     }
 
