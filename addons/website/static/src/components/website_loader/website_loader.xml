@@ -3,7 +3,7 @@
 <t t-name="website.website_loader">
     <div t-if="this.state.isVisible"
          class="o_website_loader_container position-fixed fixed-top fixed-left h-100 w-100 d-flex"
-         t-att-class="this.currentWaitingMessage.flag ? ('o_website_loader_container_' + this.currentWaitingMessage.flag) : ''">
+         t-attf-class="o_website_loader_container_{{ this.state.currentLoadingStep?.flag || this.state.flag }}">
         <div class="o_website_loader_container_content position-relative d-flex flex-column p-3 p-lg-5">
             <a t-if="this.state.showCloseButton"
                href="#" class="btn" style="position: absolute; right: 0; top: 0; margin: 15px;"
@@ -13,45 +13,28 @@
 
             <div class="o_website_loader_odoo_logo mb-5" style="height: 31px; width: 78px;"/>
 
-            <div t-if="this.state.showWaitingMessages" t-out="this.currentWaitingMessage.title" class="h4-fs text-muted mb-3"/>
-            <div t-elif="this.state.title" t-out="this.state.title"/>
-            <div t-else="">Building your website...</div>
+            <div t-out="this.state.currentLoadingStep?.title || this.state.title" class="h4-fs text-muted mb-3"/>
             <div class="mt-3"/>
-            <div t-if="['text', 'images', 'generic'].includes(this.currentWaitingMessage.flag)" class="o_website_loader_tip d-flex gap-2 h3-fs mb-2">
-                <div><i class="o_website_loader_check fa fa-check fa-fw text-success" role="presentation"/></div>
-                <span class="o_website_loader_done">Applying your colors and design.</span>
-            </div>
-            <div t-if="['text', 'generic'].includes(this.currentWaitingMessage.flag)" class="o_website_loader_tip d-flex gap-2 h3-fs mb-2">
-                <div><i class="o_website_loader_check fa fa-check fa-fw text-success" role="presentation"/></div>
-                <span class="o_website_loader_done">Searching your images.</span>
-            </div>
-            <div t-if="['text', 'generic'].includes(this.currentWaitingMessage.flag)" class="o_website_loader_tip d-flex gap-2 h3-fs mb-2">
-                <div><i class="o_website_loader_check fa fa-check fa-fw text-success" role="presentation"/></div>
-                <span class="o_website_loader_done">Adapting Building Blocks.</span>
-            </div>
-            <div t-if="['generic'].includes(this.currentWaitingMessage.flag)" class="o_website_loader_tip d-flex gap-2 h3-fs mb-2">
-                <div><i class="o_website_loader_check fa fa-check fa-fw text-success" role="presentation"/></div>
-                <span class="o_website_loader_done">Generating inspiring text.</span>
-            </div>
-            <div t-if="this.state.showWaitingMessages" class="o_website_loader_tip d-flex gap-2 h3-fs">
-                <div><i class="fa fa-circle-o-notch fa-spin fa-fw"/></div><div><t t-out="this.currentWaitingMessage.description"/></div>
+
+            <t t-foreach="this.state.loadingSteps" t-as="step" t-key="step_index">
+                <div t-if="step.completed" class="o_website_loader_tip d-flex gap-2 h3-fs mb-2">
+                    <div><i class="o_website_loader_check fa fa-check fa-fw text-success" role="presentation"/></div>
+                    <span class="o_website_loader_done" t-out="step.description"/>
+                </div>
+            </t>
+
+            <div t-if="this.state.currentLoadingStep" class="o_website_loader_tip d-flex gap-2 h3-fs">
+                <div><i class="fa fa-circle-o-notch fa-spin fa-fw" role="presentation"/></div>
+                <span t-out="this.state.currentLoadingStep.description"/>
             </div>
 
             <p class="o_website_loader_tip mt-auto mb-3">
-                <t t-if="this.state.bottomMessageTemplate !== undefined">
-                    <t t-if="this.state.bottomMessageTemplate" t-call="{{this.state.bottomMessageTemplate}}"/>
-                </t>
-                <t t-elif="this.state.showTips">
-                    <b>TIP</b>: Once loaded, follow the
-                    <span class="o_tour_pointer o_bottom me-3">
-                        <span class="o_tour_pointer_tip position-absolute mt-n1"></span>
-                    </span>
-                    pointer to discover features.
-                </t>
+                <t t-if="this.state.bottomMessageTemplate" t-call="{{this.state.bottomMessageTemplate}}"/>
             </p>
-            <div t-if="this.state.showLoader" class="o_website_loader_progress progress position-relative rounded-pill mb-3">
+
+            <div t-if="this.state.showProgressBar" class="o_website_loader_progress progress position-relative rounded-pill mb-3">
                 <div role="progressbar"
-                     aria-label="Installing your features"
+                     aria-label="Loading in progress"
                      class="progress-bar rounded-0"
                      t-att-aria-valuemax="100"
                      t-att-aria-valuenow="this.state.progressPercentage"
@@ -139,5 +122,17 @@
             </div>
         </div>
     </div>
+</t>
+<t t-name="website.website_loader.tour_tip">
+    <!-- FIXME: website user/interactive tours are not properly working at the
+         moment. This message is temporarily disabled to avoid confusion while
+         waiting for a fix. -->
+    <t t-if="false">
+        <b>TIP</b>: Once loaded, follow the
+        <span class="o_tour_pointer o_bottom me-3">
+            <span class="o_tour_pointer_tip o_bottom position-absolute mt-n1"></span>
+        </span>
+        pointer to discover features.
+    </t>
 </t>
 </templates>

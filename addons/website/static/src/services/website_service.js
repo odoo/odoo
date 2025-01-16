@@ -321,14 +321,37 @@ export const websiteService = {
                     }
                 }
             },
+            /**
+             * @param {Object} [props]
+             * @param {string} [props.title]
+             * @param {"colors"|"generic"|"images"|"text"} [props.flag]
+             * @param {boolean} [props.showCloseButton=false]
+             * @param {string} [props.bottomMessageTemplate]
+             * @param {boolean} [props.showProgressBar=true]
+             * @param {() => number} [props.getProgress]
+             * @param {Array<Object>} [props.loadingSteps]
+             * @param {string} [props.loadingSteps[].title]
+             * @param {"colors"|"generic"|"images"|"text"} [props.loadingSteps[].flag]
+             * @param {string} [props.loadingSteps[].description]
+             * @param {boolean} [props.loadingSteps[].completed]
+             */
             showLoader(props) {
                 bus.trigger("SHOW-WEBSITE-LOADER", props);
             },
-            hideLoader() {
-                bus.trigger("HIDE-WEBSITE-LOADER");
+            /**
+             * @param {Object} [props]
+             * @param {boolean} [props.completeRemainingProgress=true]
+             */
+            hideLoader(props) {
+                bus.trigger("HIDE-WEBSITE-LOADER", props);
             },
-            prepareOutLoader() {
-                bus.trigger("PREPARE-OUT-WEBSITE-LOADER");
+            /**
+             * @param {Object} [props]
+             * @param {boolean} [props.completeRemainingProgress=true]
+             * @param {Function} [props.redirectAction]
+             */
+            redirectOutFromLoader(props) {
+                bus.trigger("REDIRECT-OUT-FROM-WEBSITE-LOADER", props);
             },
             /**
              * Returns the (translated) "functional" name of a model

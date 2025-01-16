@@ -223,8 +223,11 @@ export class NewContentSystrayItem extends Component {
         const { redirectUrl, moduleXmlId } = element;
         await this.orm.silent.call("ir.module.module", "button_immediate_install", [id]);
         if (redirectUrl) {
-            this.website.prepareOutLoader();
-            redirect(redirectUrl);
+            this.website.redirectOutFromLoader({
+                redirectAction: () => {
+                    redirect(redirectUrl);
+                },
+            });
         } else {
             const {
                 id,
@@ -236,13 +239,16 @@ export class NewContentSystrayItem extends Component {
             }
             // A reload is needed after installing a new module, to instantiate
             // the feature with patches from the installed module.
-            this.website.prepareOutLoader();
             const encodedPath = encodeURIComponent(url.toString());
             const data = { moduleXmlId: moduleXmlId };
             const encodedData = encodeURIComponent(JSON.stringify(data));
-            redirect(
-                `/odoo/action-website.website_preview?website_id=${id}&path=${encodedPath}&module_installed=${encodedData}`
-            );
+            this.website.redirectOutFromLoader({
+                redirectAction: () => {
+                    redirect(
+                        `/odoo/action-website.website_preview?website_id=${id}&path=${encodedPath}&module_installed=${encodedData}`
+                    );
+                },
+            });
         }
     }
 
@@ -265,11 +271,13 @@ export class NewContentSystrayItem extends Component {
                     }
                     return el;
                 });
-                this.website.showLoader({ title: _t("Building your %s", name) });
+                this.website.showLoader({
+                    title: _t("Install modules, unlock the potential of your website."),
+                });
                 try {
                     await this.installModule(id, element);
                 } catch (error) {
-                    this.website.hideLoader();
+                    this.website.hideLoader({ completeRemainingProgress: false });
                     // Update the NewContentElement with failure icon and text.
                     this.state.newContentElements = this.state.newContentElements.map((el) => {
                         if (el.moduleXmlId === element.moduleXmlId) {
