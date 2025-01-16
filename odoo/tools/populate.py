@@ -339,7 +339,7 @@ def populate_model(model: Model, populated: dict[Model, int], factors: dict[Mode
 class Many2oneFieldWrapper(Many2one):
     def __init__(self, model, field_name, comodel_name):
         super().__init__(comodel_name)
-        self._setup_attrs(model, field_name)  # setup most of the default attrs
+        self._setup_attrs__(model, field_name)  # setup most of the default attrs
 
 
 class Many2manyModelWrapper:

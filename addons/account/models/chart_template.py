@@ -78,8 +78,8 @@ class AccountChartTemplate(models.AbstractModel):
         cls._template_register = template_register
         return template_register
 
-    def _setup_complete(self):
-        super()._setup_complete()
+    def _post_model_setup__(self):
+        super()._post_model_setup__()
         self.env.registry[self._name]._template_register = AccountChartTemplate._template_register
 
 

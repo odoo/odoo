@@ -861,7 +861,7 @@ class TransactionCase(BaseCase):
         def reset_changes():
             if (cls.registry_start_sequence != cls.registry.registry_sequence) or cls.registry.registry_invalidated:
                 with cls.registry.cursor() as cr:
-                    cls.registry.setup_models(cr)
+                    cls.registry._setup_models__(cr)
             cls.registry.registry_invalidated = cls.registry_start_invalidated
             cls.registry.registry_sequence = cls.registry_start_sequence
             with cls.muted_registry_logger:
