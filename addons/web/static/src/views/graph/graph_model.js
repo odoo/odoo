@@ -9,6 +9,7 @@ import { computeReportMeasures, processMeasure } from "@web/views/utils";
 import { Domain } from "@web/core/domain";
 
 export const SEP = " / ";
+const DATA_LIMIT = 80;
 
 export const SEQUENTIAL_TYPES = ["date", "datetime"];
 
@@ -57,6 +58,12 @@ export class GraphModel extends Model {
             metaData.groupBy.map((gb) => gb.fieldName)
         );
         await this._fetchDataPoints(metaData);
+    }
+
+    async forceLoadAll() {
+        const metaData = this._buildMetaData();
+        await this._fetchDataPoints(metaData, true);
+        this.notify();
     }
 
     /**
@@ -127,11 +134,12 @@ export class GraphModel extends Model {
      * several side effects. It can alter this.metaData and set this.dataPoints.
      * @protected
      * @param {Object} metaData
+     * @param {boolean} [forceUseAllDataPoints=false]
      */
-    async _fetchDataPoints(metaData) {
+    async _fetchDataPoints(metaData, forceUseAllDataPoints = false) {
         this.dataPoints = await this.keepLast.add(this._loadDataPoints(metaData));
         this.metaData = metaData;
-        this._prepareData();
+        this._prepareData(forceUseAllDataPoints);
     }
 
     /**
@@ -139,16 +147,34 @@ export class GraphModel extends Model {
      * datasets. This function returns the parameters data and labels used
      * to produce the charts.
      * @protected
-     * @param {Object[]}
+     * @param {Object[]} dataPoints
+     * @param {boolean} forceUseAllDataPoints
      * @returns {Object}
      */
-    _getData(dataPoints) {
+    _getData(dataPoints, forceUseAllDataPoints) {
         const { mode } = this.metaData;
+
+        const dataPtMapping = new WeakMap();
+        const datasetsTmp = {};
+        let exceeds = false;
 
         // dataPoints --> labels
         let labels = [];
         const labelMap = {};
         for (const dataPt of dataPoints) {
+            const datasetLabel = this._getDatasetLabel(dataPt);
+            if (!(datasetLabel in datasetsTmp)) {
+                if (!forceUseAllDataPoints && Object.keys(datasetsTmp).length >= DATA_LIMIT) {
+                    exceeds = true;
+                    continue;
+                }
+                datasetsTmp[datasetLabel] = {
+                    label: datasetLabel,
+                    originIndex: dataPt.originIndex,
+                }; // add the entry but don't initialize it entirely
+            }
+            dataPtMapping.set(dataPt, datasetsTmp[datasetLabel]);
+
             const x = dataPt.labels.slice(0, mode === "pie" ? undefined : 1);
             const trueLabel = x.length ? x.join(SEP) : _t("Total");
             const key = JSON.stringify(x);
@@ -162,34 +188,27 @@ export class GraphModel extends Model {
         }
 
         // dataPoints + labels --> datasetsTmp --> datasets
-        const datasetsTmp = {};
         for (const dataPt of dataPoints) {
-            const {
-                domain,
-                labelIndex,
-                originIndex,
-                trueLabel,
-                value,
-                identifier,
-                cumulatedStart,
-            } = dataPt;
-            const datasetLabel = this._getDatasetLabel(dataPt);
-            if (!(datasetLabel in datasetsTmp)) {
+            if (!dataPtMapping.has(dataPt)) {
+                continue;
+            }
+
+            const { domain, labelIndex, trueLabel, value, identifier, cumulatedStart } = dataPt;
+            const dataset = dataPtMapping.get(dataPt);
+            if (!dataset.data) {
                 const dataLength = labels.length;
-                datasetsTmp[datasetLabel] = {
+                Object.assign(dataset, {
                     data: new Array(dataLength).fill(0),
                     cumulatedStart,
                     trueLabels: labels.slice(0, dataLength),
                     domains: new Array(dataLength).fill([]),
-                    label: datasetLabel,
-                    originIndex: originIndex,
                     identifiers: new Set(),
-                };
+                });
             }
-            datasetsTmp[datasetLabel].data[labelIndex] = value;
-            datasetsTmp[datasetLabel].domains[labelIndex] = domain;
-            datasetsTmp[datasetLabel].trueLabels[labelIndex] = trueLabel;
-            datasetsTmp[datasetLabel].identifiers.add(identifier);
+            dataset.data[labelIndex] = value;
+            dataset.domains[labelIndex] = domain;
+            dataset.trueLabels[labelIndex] = trueLabel;
+            dataset.identifiers.add(identifier);
         }
         // sort by origin
         let datasets = sortBy(Object.values(datasetsTmp), "originIndex");
@@ -214,7 +233,11 @@ export class GraphModel extends Model {
             }
         }
 
-        return { datasets, labels };
+        return {
+            datasets,
+            labels,
+            exceeds,
+        };
     }
 
     _getLabel(description) {
@@ -513,10 +536,11 @@ export class GraphModel extends Model {
 
     /**
      * @protected
+     * @param {boolean} [forceUseAllDataPoints=false]
      */
-    _prepareData() {
+    _prepareData(forceUseAllDataPoints = false) {
         const processedDataPoints = this._getProcessedDataPoints();
-        this.data = this._getData(processedDataPoints);
+        this.data = this._getData(processedDataPoints, forceUseAllDataPoints);
         this.lineOverlayDataset = null;
         if (this.metaData.mode === "bar") {
             this.lineOverlayDataset = this._getLineOverlayDataset();
