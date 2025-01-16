@@ -22,7 +22,16 @@
                 <div class="history-container">
                     <Notebook defaultPage="'history'">
                         <t t-set-slot="history" name="'history'" isVisible="true" title="notebookTabs[0]">
-                            <t t-if="state.revisionContent?.length">
+                            <t t-if="state.revisionLoading">
+                                <div class="d-flex flex-column justify-content-center align-items-center">
+                                    <img src="/web/static/img/spin.svg" alt="Loading..." class="me-2"
+                                        style="filter: invert(1); opacity: 0.5; width: 30px; height: 30px;"/>
+                                    <p class="m-0 text-muted">
+                                        <em>Loading...</em>
+                                    </p>
+                                </div>
+                            </t>
+                            <t t-elif="state.revisionContent?.length">
                                 <div class="pe-none">
                                     <HtmlViewer config="getConfig('revisionContent')"/>
                                 </div>
@@ -30,15 +39,26 @@
                             <t t-else="" t-out="props.noContentHelper" />
                         </t>
                         <t t-set-slot="comparison" name="'comparison'" isVisible="true" title="notebookTabs[1]">
-                            <div class="pe-none">
-                                <HtmlViewer config="getConfig('revisionComparison')"/>
-                            </div>
+                            <t t-if="state.revisionLoading">
+                                <div class="d-flex flex-column justify-content-center align-items-center">
+                                    <img src="/web/static/img/spin.svg" alt="Loading..." class="me-2"
+                                        style="filter: invert(1); opacity: 0.5; width: 30px; height: 30px;"/>
+                                    <p class="m-0 text-muted">
+                                        <em>Loading...</em>
+                                    </p>
+                                </div>
+                            </t>
+                            <t t-elif="state.revisionComparison?.length">
+                                <div class="pe-none">
+                                    <HtmlViewer config="getConfig('revisionComparison')"/>
+                                </div>
+                            </t>
                         </t>
                     </Notebook>
                 </div>
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="_onRestoreRevisionClick">Restore history</button>
+                <button class="btn btn-primary" t-on-click="_onRestoreRevisionClick" t-att-disabled="state.revisionLoading">Restore history</button>
                 <button class="btn btn-secondary" t-on-click="props.close">Discard</button>
             </t>
         </Dialog>
