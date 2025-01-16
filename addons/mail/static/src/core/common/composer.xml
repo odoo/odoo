@@ -205,7 +205,7 @@
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
             <t t-esc="partner.name"/>
         </strong>
-        <em t-if="partner.email" class="text-600 text-truncate align-self-center">(<t t-esc="partner.email"/>)</em>
+        <span t-if="partner.email" class="text-600 text-truncate align-self-center">(<t t-esc="partner.email"/>)</span>
     </t>
 
     <t t-name="mail.Composer.suggestionThread">
@@ -223,18 +223,18 @@
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
             <t t-esc="option.label"/>
         </strong>
-        <em class="text-600 text-truncate align-self-center">
+        <span class="text-600 text-truncate align-self-center">
             <t t-esc="option.help"/>
-        </em>
+        </span>
     </t>
 
     <t t-name="mail.Composer.suggestionCannedResponse">
         <strong class="px-2 py-1 align-self-center flex-shrink-1 text-truncate">
             <t t-esc="option.source"/>
         </strong>
-        <em class="text-600 text-truncate align-self-center" style="flex-basis: 20%;">
+        <span class="text-600 text-truncate align-self-center" style="flex-basis: 20%;">
             <t t-esc="option.label"/>
-        </em>
+        </span>
     </t>
     <t t-name="mail.Composer.suggestionEmoji">
         <strong class="px-2 align-self-center flex-shrink-1 fs-3">
