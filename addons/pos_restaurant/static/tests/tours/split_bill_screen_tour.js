@@ -43,6 +43,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
 
             // click pay to split, go back to check the lines
             SplitBillScreen.clickButton("Split"),
+            ProductScreen.totalAmountIs("8.0"),
             ProductScreen.clickOrderline("Water", "3"),
             ProductScreen.clickOrderline("Coca-Cola", "1"),
 
@@ -67,6 +68,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
             SplitBillScreen.subtotalIs("4.0"),
 
             SplitBillScreen.clickButton("Split"),
+            ProductScreen.totalAmountIs("4.0"),
 
             // go back to the original order and see if the order is changed
             Chrome.clickOrders(),
@@ -96,8 +98,9 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
             SplitBillScreen.clickOrderline("Coca-Cola"),
             SplitBillScreen.orderlineHas("Coca-Cola", "1", "1"),
             SplitBillScreen.clickButton("Split"),
+            ProductScreen.totalAmountIs("4.0"),
             Chrome.clickOrders(),
-            TicketScreen.selectOrder("002"),
+            TicketScreen.selectOrder("102B"),
             TicketScreen.loadSelectedOrder(),
             Order.hasLine({ productName: "Coca-Cola", quantity: "1" }),
             Order.hasLine({ productName: "Water", quantity: "1" }),
@@ -129,6 +132,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
 
             // click pay to split, and pay
             SplitBillScreen.clickButton("Split"),
+            ProductScreen.totalAmountIs("2.0"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
@@ -185,6 +189,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour4ProductCombo", {
 
             ...SplitBillScreen.subtotalIs("53.80"),
             ...SplitBillScreen.clickButton("Split"),
+            ProductScreen.totalAmountIs("53.80"),
             ProductScreen.clickPayButton(),
             ...PaymentScreen.clickPaymentMethod("Bank"),
             ...PaymentScreen.clickValidate(),
@@ -228,11 +233,6 @@ registry.category("web_tour.tours").add("SplitBillScreenTour5Actions", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            {
-                ...Dialog.confirm(),
-                content:
-                    "acknowledge printing error ( because we don't have printer in the test. )",
-            },
             ReceiptScreen.clickNextOrder(),
 
             // Add products in order
@@ -250,11 +250,6 @@ registry.category("web_tour.tours").add("SplitBillScreenTour5Actions", {
             PaymentScreen.isShown(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            {
-                ...Dialog.confirm(),
-                content:
-                    "acknowledge printing error ( because we don't have printer in the test. )",
-            },
             ReceiptScreen.clickContinueOrder(),
 
             // Check if redirect to split bill screen of original order
@@ -263,11 +258,6 @@ registry.category("web_tour.tours").add("SplitBillScreenTour5Actions", {
             PaymentScreen.isShown(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            {
-                ...Dialog.confirm(),
-                content:
-                    "acknowledge printing error ( because we don't have printer in the test. )",
-            },
             ReceiptScreen.clickNextOrder(),
         ].flat(),
 });
