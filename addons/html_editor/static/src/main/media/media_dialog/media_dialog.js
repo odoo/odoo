@@ -119,6 +119,14 @@ export class MediaDialog extends Component {
         });
     }
 
+    /**
+     * Method no longer used, kept for compatibility (stable policy).
+     * To be removed in master.
+     */
+    addTabs() {
+        this.addDefaultTabs();
+    }
+
     addDefaultTabs() {
         const onlyImages =
             this.props.onlyImages ||
