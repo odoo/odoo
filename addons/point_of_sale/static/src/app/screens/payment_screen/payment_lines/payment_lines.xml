@@ -54,7 +54,12 @@
                                 </t>
                                 <t t-elif="line.payment_status == 'waitingCard'">
                                     <div class="electronic_status">
-                                        Waiting for card
+                                        <t t-if="this.props.isRefundOrder">
+                                            Refund in process
+                                        </t>
+                                        <t t-else="">
+                                            Waiting for card
+                                        </t>
                                     </div>
                                     <div t-if="!this.props.isRefundOrder" class="button send_payment_cancel" title="Cancel Payment Request" t-on-click="() => this.props.sendPaymentCancel(line)">
                                         Cancel

@@ -27,15 +27,19 @@ patch(PaymentScreen.prototype, {
     async addNewPaymentLine(paymentMethod) {
         if (paymentMethod.use_payment_terminal === "razorpay" && this.isRefundOrder) {
             const refundedOrder = this.currentOrder.lines[0]?.refunded_orderline_id?.order_id;
-            const razorpayPaymentlines = refundedOrder.payment_ids.filter(
-                (pi) => pi.payment_method_id.use_payment_terminal === "razorpay"
+            if (!refundedOrder) {
+                return false;
+            }
+            const transactionsIds = this.currentOrder.payment_ids.map(
+                (pi) => pi.uiState.transaction_id
             );
-            const current_due = this.currentOrder.getDue();
-            if (
-                razorpayPaymentlines.length !== 1 ||
-                Math.abs(current_due) < razorpayPaymentlines[0].amount ||
-                current_due === 0
-            ) {
+            const razorpayPaymentline = refundedOrder.payment_ids.find(
+                (pi) =>
+                    pi.payment_method_id.use_payment_terminal === "razorpay" &&
+                    !transactionsIds.find((x) => x === pi.transaction_id)
+            );
+            const currentDue = this.currentOrder.getDue();
+            if (!razorpayPaymentline || currentDue === 0) {
                 this.pos.notification.add(
                     _t(
                         "Adding a new Razorpay payment line is not allowed under the current conditions."
@@ -46,9 +50,13 @@ patch(PaymentScreen.prototype, {
             }
             const res = await super.addNewPaymentLine(paymentMethod);
             const newPaymentLine = this.paymentLines.at(-1);
+            const amountToSet = Math.min(
+                Math.abs(newPaymentLine.amount),
+                razorpayPaymentline.amount
+            );
             if (res) {
-                newPaymentLine.setAmount(-razorpayPaymentlines[0].amount);
-                newPaymentLine.updateRefundPaymentLine(razorpayPaymentlines[0]);
+                newPaymentLine.setAmount(-amountToSet);
+                newPaymentLine.updateRefundPaymentLine(razorpayPaymentline);
             }
             return res;
         } else {

@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
-import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { register_payment_method } from "@point_of_sale/app/services/pos_store";
 
@@ -146,32 +146,47 @@ export class PaymentRazorpay extends PaymentInterface {
             const data = {
                 amount: Math.abs(line.amount),
                 externalRefNumber: localStorage.getItem("referenceId"),
-                transaction_id: line?.transaction_id,
+                transaction_id: line?.uiState.transaction_id,
             };
             const response = await this._checkPaymentStatus(line);
-            if (response?.settlementStatus === "SETTLED") {
+            const paymentSettlementStatus = response?.settlementStatus;
+            const paymentStatus = response?.status;
+            if (paymentSettlementStatus === "SETTLED" && paymentStatus === "AUTHORIZED") {
                 data.refund_type = "refund";
-            } else {
-                const refundedOrder = order.lines[0].refunded_orderline_id.order_id;
-                const refundedPaymentLine = refundedOrder.payment_ids.find(
-                    (pi) => pi.transaction_id === line.transaction_id
-                );
+            } else if (paymentSettlementStatus === "PENDING" && paymentStatus === "AUTHORIZED") {
+                const refundedPaymentLine =
+                    order.lines[0].refunded_orderline_id.order_id.payment_ids.find(
+                        (pi) => pi.transaction_id === line.uiState.transaction_id
+                    );
                 if (Math.abs(line.amount) < refundedPaymentLine.amount) {
-                    try {
-                        const userConfirmed = await this._confirmVoidPayment();
-                        if (!userConfirmed) {
-                            return false;
-                        }
-                    } catch (error) {
-                        console.error(error);
-                        return false;
-                    }
+                    this._showError(
+                        _t(
+                            "A partial refund is not allowed because the transaction has not yet been settled."
+                        )
+                    );
+                    return false;
                 }
                 data.refund_type = "void";
+            } else if (paymentSettlementStatus === "SETTLED" && paymentStatus === "VOIDED") {
+                this._showError(
+                    _t(
+                        "Related transaction has already been voided. Please try using another payment method."
+                    )
+                );
+                return false;
+            } else if (
+                paymentSettlementStatus === "SETTLED" &&
+                paymentStatus === "AUTHORIZED_REFUNDED"
+            ) {
+                this._showError(
+                    _t(
+                        "Related transaction has already been Refunded. Please try using another payment method."
+                    )
+                );
+                return false;
+            } else {
+                return false;
             }
-            response?.settlementStatus === "SETTLED"
-                ? (data.refund_type = "refund")
-                : (data.refund_type = "void");
             return this._callRazorpay(data, "razorpay_make_refund_request").then((data) =>
                 this._razorpayHandleRefundResponse(data)
             );
@@ -191,7 +206,7 @@ export class PaymentRazorpay extends PaymentInterface {
      * If the payment is settled, we will proceed with the refund; otherwise, we will void it.
      */
     async _checkPaymentStatus(line) {
-        const data = { p2pRequestId: line?.razorpay_p2p_request_id };
+        const data = { p2pRequestId: line?.uiState.razorpay_p2p_request_id };
         const response = await this._callRazorpay(data, "razorpay_fetch_payment_status");
         return response;
     }
@@ -291,22 +306,6 @@ export class PaymentRazorpay extends PaymentInterface {
         this.env.services.dialog.add(AlertDialog, {
             title: title || _t("Razorpay Error"),
             body: error_msg,
-        });
-    }
-
-    async _confirmVoidPayment() {
-        return new Promise((resolve, reject) => {
-            this.env.services.dialog.add(ConfirmationDialog, {
-                title: _t("Void Payment Confirmation"),
-                body: _t(
-                    "Your transaction isn't settled yet, and the refund is less than the amount paid.\n" +
-                        "The full amount will be cancelled, do you want to proceed?"
-                ),
-                confirmLabel: _t("Void Transaction"),
-                cancelLabel: _t("Cancel"),
-                confirm: () => resolve(true),
-                cancel: () => reject(false),
-            });
         });
     }
 }
