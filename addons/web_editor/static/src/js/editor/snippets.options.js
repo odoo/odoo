@@ -4781,7 +4781,7 @@ registry['sizing_x'] = registry.sizing.extend({
 
             if (compass === 'w') {
                 // don't change the right border position when we change the offset (replace col size)
-                var beginCol = Number(beginClass.match(/col-lg-([0-9]+)|$/)[1] || 0);
+                var beginCol = Number(beginClass.match(/col-lg-([0-9]+)|$/)[1] || 12);
                 var offset = Number(this.grid.w[0][current].match(/offset-lg-([0-9-]+)|$/)[1] || 0);
                 if (offset < 0) {
                     offset = 0;
