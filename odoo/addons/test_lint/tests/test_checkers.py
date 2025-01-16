@@ -380,8 +380,7 @@ class TestSqlLint(TestPylintChecks):
             GraphModel = self.env[dashboard_graph_model] 
             graph_table = self._graph_get_table(GraphModel)
             extra_conditions = self._extra_sql_conditions() 
-            where_query = GraphModel._where_calc([])  
-            GraphModel._apply_ir_rules(where_query, 'read')
+            where_query = GraphModel._search([])  
             from_clause, where_clause, where_clause_params = where_query.get_sql()
             if where_clause:
                 extra_conditions += " AND " + where_clause

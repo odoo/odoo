@@ -29,11 +29,10 @@ class CrmTeam(models.Model):
     sale_order_count = fields.Integer(compute='_compute_sale_order_count', string='# Sale Orders')
 
     def _compute_quotations_to_invoice(self):
-        query = self.env['sale.order']._where_calc([
+        query = self.env['sale.order']._search([
             ('team_id', 'in', self.ids),
             ('state', 'in', ['draft', 'sent']),
         ])
-        self.env['sale.order']._apply_ir_rules(query, 'read')
         select_sql = SQL("""
             SELECT team_id, count(*), sum(amount_total /
                 CASE COALESCE(currency_rate, 0)
