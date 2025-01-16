@@ -2550,6 +2550,34 @@ describe("Selection not collapsed", () => {
                     stepFunction: deleteBackward,
                     contentAfter: "<ol><li>ab[]gh</li></ol>",
                 });
+                // Forward selection
+                await testEditor({
+                    contentBefore:
+                        "<ol><li>ab</li><li>[cd</li></ol><ul><li>ef]</li><li>gh</li></ul>",
+                    stepFunction: deleteBackward,
+                    contentAfter: "<ol><li>ab</li></ol><ul><li>[]<br></li><li>gh</li></ul>",
+                });
+                // Backward selection
+                await testEditor({
+                    contentBefore:
+                        "<ol><li>ab</li><li>]cd</li></ol><ul><li>ef[</li><li>gh</li></ul>",
+                    stepFunction: deleteBackward,
+                    contentAfter: "<ol><li>ab</li></ol><ul><li>[]<br></li><li>gh</li></ul>",
+                });
+                // Forward selection
+                await testEditor({
+                    contentBefore:
+                        "<ol><li>ab</li><li>[cd</li></ol><ul><li>e]f</li><li>gh</li></ul>",
+                    stepFunction: deleteBackward,
+                    contentAfter: "<ol><li>ab</li></ol><ul><li>[]f</li><li>gh</li></ul>",
+                });
+                // Backward selection
+                await testEditor({
+                    contentBefore:
+                        "<ol><li>ab</li><li>]cd</li></ol><ul><li>e[f</li><li>gh</li></ul>",
+                    stepFunction: deleteBackward,
+                    contentAfter: "<ol><li>ab</li></ol><ul><li>[]f</li><li>gh</li></ul>",
+                });
             });
 
             test("should delete across an ordered list item and an unordered list item within an ordered list", async () => {
@@ -2597,6 +2625,34 @@ describe("Selection not collapsed", () => {
                     contentBefore: "<ul><li>ab]cd</li></ul><ol><li>ef[gh</li></ol>",
                     stepFunction: deleteBackward,
                     contentAfter: "<ul><li>ab[]gh</li></ul>",
+                });
+                // Forward selection
+                await testEditor({
+                    contentBefore:
+                        "<ul><li>ab</li><li>[cd</li></ul><ol><li>ef]</li><li>gh</li></ol>",
+                    stepFunction: deleteBackward,
+                    contentAfter: "<ul><li>ab</li></ul><ol><li>[]<br></li><li>gh</li></ol>",
+                });
+                // Backward selection
+                await testEditor({
+                    contentBefore:
+                        "<ul><li>ab</li><li>]cd</li></ul><ol><li>ef[</li><li>gh</li></ol>",
+                    stepFunction: deleteBackward,
+                    contentAfter: "<ul><li>ab</li></ul><ol><li>[]<br></li><li>gh</li></ol>",
+                });
+                // Forward selection
+                await testEditor({
+                    contentBefore:
+                        "<ul><li>ab</li><li>[cd</li></ul><ol><li>e]f</li><li>gh</li></ol>",
+                    stepFunction: deleteBackward,
+                    contentAfter: "<ul><li>ab</li></ul><ol><li>[]f</li><li>gh</li></ol>",
+                });
+                // Backward selection
+                await testEditor({
+                    contentBefore:
+                        "<ul><li>ab</li><li>]cd</li></ul><ol><li>e[f</li><li>gh</li></ol>",
+                    stepFunction: deleteBackward,
+                    contentAfter: "<ul><li>ab</li></ul><ol><li>[]f</li><li>gh</li></ol>",
                 });
             });
 
@@ -2647,6 +2703,38 @@ describe("Selection not collapsed", () => {
                         '<ul class="o_checklist"><li class="o_checked">ab]cd</li></ul><ul><li>ef[gh</li></ul>',
                     stepFunction: deleteBackward,
                     contentAfter: '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
+                });
+                // Forward selection
+                await testEditor({
+                    contentBefore:
+                        '<ul class="o_checklist"><li>ab</li><li>[cd</li></ul><ul><li>ef]</li><li>gh</li></ul>',
+                    stepFunction: deleteBackward,
+                    contentAfter:
+                        '<ul class="o_checklist"><li>ab</li></ul><ul><li>[]<br></li><li>gh</li></ul>',
+                });
+                // Backward selection
+                await testEditor({
+                    contentBefore:
+                        '<ul class="o_checklist"><li>ab</li><li>]cd</li></ul><ul><li>ef[</li><li>gh</li></ul>',
+                    stepFunction: deleteBackward,
+                    contentAfter:
+                        '<ul class="o_checklist"><li>ab</li></ul><ul><li>[]<br></li><li>gh</li></ul>',
+                });
+                // Forward selection
+                await testEditor({
+                    contentBefore:
+                        '<ul class="o_checklist"><li>ab</li><li>[cd</li></ul><ul><li>e]f</li><li>gh</li></ul>',
+                    stepFunction: deleteBackward,
+                    contentAfter:
+                        '<ul class="o_checklist"><li>ab</li></ul><ul><li>[]f</li><li>gh</li></ul>',
+                });
+                // Backward selection
+                await testEditor({
+                    contentBefore:
+                        '<ul class="o_checklist"><li>ab</li><li>]cd</li></ul><ul><li>e[f</li><li>gh</li></ul>',
+                    stepFunction: deleteBackward,
+                    contentAfter:
+                        '<ul class="o_checklist"><li>ab</li></ul><ul><li>[]f</li><li>gh</li></ul>',
                 });
             });
 
@@ -2699,6 +2787,38 @@ describe("Selection not collapsed", () => {
                         '<ul><li>ab]cd</li></ul><ul class="o_checklist"><li class="o_checked">ef[gh</li></ul>',
                     stepFunction: deleteBackward,
                     contentAfter: "<ul><li>ab[]gh</li></ul>",
+                });
+                // Forward selection
+                await testEditor({
+                    contentBefore:
+                        '<ul><li>ab</li><li>[cd</li></ul><ul class="o_checklist"><li>ef]</li><li>gh</li></ul>',
+                    stepFunction: deleteBackward,
+                    contentAfter:
+                        '<ul><li>ab</li></ul><ul class="o_checklist"><li>[]<br></li><li>gh</li></ul>',
+                });
+                // Backward selection
+                await testEditor({
+                    contentBefore:
+                        '<ul><li>ab</li><li>]cd</li></ul><ul class="o_checklist"><li>ef[</li><li>gh</li></ul>',
+                    stepFunction: deleteBackward,
+                    contentAfter:
+                        '<ul><li>ab</li></ul><ul class="o_checklist"><li>[]<br></li><li>gh</li></ul>',
+                });
+                // Forward selection
+                await testEditor({
+                    contentBefore:
+                        '<ul><li>ab</li><li>[cd</li></ul><ul class="o_checklist"><li>e]f</li><li>gh</li></ul>',
+                    stepFunction: deleteBackward,
+                    contentAfter:
+                        '<ul><li>ab</li></ul><ul class="o_checklist"><li>[]f</li><li>gh</li></ul>',
+                });
+                // Backward selection
+                await testEditor({
+                    contentBefore:
+                        '<ul><li>ab</li><li>]cd</li></ul><ul class="o_checklist"><li>e[f</li><li>gh</li></ul>',
+                    stepFunction: deleteBackward,
+                    contentAfter:
+                        '<ul><li>ab</li></ul><ul class="o_checklist"><li>[]f</li><li>gh</li></ul>',
                 });
             });
 
