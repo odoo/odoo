@@ -165,7 +165,7 @@
                                     <t t-set="data" t-value="getChangeCount(table)"/>
                                     <div
                                         t-if="data.changes > 0 || data.skip > 0"
-                                        t-esc="data.changes > 0 ? data.changes : data.skip"
+                                        t-esc="this.env.utils.formatProductQty(data.changes > 0 ? data.changes : data.skip, false)"
                                         t-att-class="{
                                             'text-bg-danger': data.changes,
                                             'text-bg-info'  : !data.changes and data.skip,
