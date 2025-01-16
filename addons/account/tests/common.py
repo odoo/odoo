@@ -225,7 +225,11 @@ class AccountTestInvoicingCommon(ProductCommon):
     @classmethod
     def setup_other_currency(cls, code, **kwargs):
         if 'rates' not in kwargs:
-            return super().setup_other_currency(code, rates=[('2016-01-01', 3.0), ('2017-01-01', 2.0)], **kwargs)
+            return super().setup_other_currency(code, rates=[
+                ('1900-01-01', 1.0),
+                ('2016-01-01', 3.0),
+                ('2017-01-01', 2.0),
+            ], **kwargs)
         return super().setup_other_currency(code, **kwargs)
 
     @classmethod

@@ -8,7 +8,7 @@ from lxml import etree
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import parse_date
+from odoo.tools import parse_date, SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -121,18 +121,28 @@ class Currency(models.Model):
     def _get_rates(self, company, date):
         if not self.ids:
             return {}
-        self.env['res.currency.rate'].flush_model(['rate', 'currency_id', 'company_id', 'name'])
-        query = """SELECT c.id,
-                          COALESCE((SELECT r.rate FROM res_currency_rate r
-                                  WHERE r.currency_id = c.id AND r.name <= %s
-                                    AND (r.company_id IS NULL OR r.company_id = %s)
-                               ORDER BY r.company_id, r.name DESC
-                                  LIMIT 1), 1.0) AS rate
-                   FROM res_currency c
-                   WHERE c.id IN %s"""
-        self._cr.execute(query, (date, company.root_id.id, tuple(self.ids)))
-        currency_rates = dict(self._cr.fetchall())
-        return currency_rates
+        currency_query = self.env['res.currency']._where_calc([
+            ('id', 'in', self.ids),
+        ], active_test=False)
+        currency_id = self.env['res.currency']._field_to_sql(currency_query.table, 'id')
+        rate_query = self.env['res.currency.rate']._where_calc([
+            ('name', '<=', date),
+            ('company_id', 'in', (False, company.root_id.id)),
+            ('currency_id', '=', currency_id),
+        ])
+        rate_query.order = SQL('company_id, name DESC')
+        rate_query.limit = 1
+        rate_fallback = self.env['res.currency.rate']._where_calc([
+            ('company_id', 'in', (False, company.root_id.id)),
+            ('currency_id', '=', currency_id),
+        ])
+        rate_fallback.order = SQL('company_id, name ASC')
+        rate_fallback.limit = 1
+        rate = self.env['res.currency.rate']._field_to_sql(rate_query.table, 'rate')
+        return dict(self.env.execute_query(currency_query.select(
+            'id',
+            SQL("COALESCE((%s), (%s), 1.0)", rate_query.select(rate), rate_fallback.select(rate))
+        )))
 
     @api.depends_context('company')
     def _compute_is_current_company_currency(self):
