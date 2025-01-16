@@ -40,11 +40,14 @@ class IrProfile(models.Model):
     sql_count = fields.Integer('Queries Count')
     traces_async = fields.Text('Traces Async', prefetch=False)
     traces_sync = fields.Text('Traces Sync', prefetch=False)
+    others = fields.Text('others', prefetch=False)
     qweb = fields.Text('Qweb', prefetch=False)
     entry_count = fields.Integer('Entry count')
 
     speedscope = fields.Binary('Speedscope', compute='_compute_speedscope')
     speedscope_url = fields.Text('Open', compute='_compute_speedscope_url')
+
+    config_url = fields.Text('Open profiles config', compute='_compute_config_url')
 
     @api.autovacuum
     def _gc_profile(self):
@@ -54,6 +57,32 @@ class IrProfile(models.Model):
         records.unlink()
         return len(records), len(records) == GC_UNLINK_LIMIT  # done, remaining
 
+    def _compute_has_memory(self):
+        for profile in self:
+            if not bool(profile.others and json.loads(profile.others).get("memory")):
+                return False
+        return True
+
+    def _generate_memory_profile(self, params):
+        memory_graph = []
+        memory_limit = params.get('memory_limit', 0)
+        for profile in self:
+            if profile.others:
+                memory = json.loads(profile.others).get("memory", "[{}]")
+                memory_tracebacks = json.loads(memory)[:-1]
+                for entry in memory_tracebacks:
+                    memory_graph.append({
+                        "samples": [
+                            sample for sample in entry["memory_tracebacks"]
+                            if sample.get("size", False) >= memory_limit
+                        ]
+                    , "start": entry["start"]})
+        return memory_graph
+
+    def _compute_config_url(self):
+        for profile in self:
+            profile.config_url = f'/web/profile_config/{profile.id}'
+
     @api.depends('init_stack_trace')
     def _compute_speedscope(self):
         # The params variable is done to control input from the user
@@ -62,16 +91,27 @@ class IrProfile(models.Model):
         for execution in self:
             execution.speedscope = base64.b64encode(execution._generate_speedscope(params))
 
+    def _default_profile_params(self):
+        has_sql = any(profile.sql for profile in self)
+        has_traces = any(profile.traces_async for profile in self)
+        return {
+            'combined_profile': has_sql and has_traces,
+            'sql_no_gap_profile': has_sql and not has_traces,
+            'sql_density_profile': False,
+            'frames_profile': has_traces and not has_sql,
+        }
+
     def _parse_params(self, params):
         return {
-            'constant_time' : str2bool(params.get('constant_time', False)),
-            'aggregate_sql' : str2bool(params.get('aggregate_sql', False)),
-            'use_context' : str2bool(params.get('use_execution_context', False)),
-            'combined_profile' : str2bool(params.get('combined_profile', False)),
-            'sql_no_gap_profile' : str2bool(params.get('sql_no_gap_profile', False)),
-            'sql_density_profile' : str2bool(params.get('sql_density_profile', False)),
-            'frames_profile' : str2bool(params.get('frames_profile', False)),
+            'constant_time': str2bool(params.get('constant_time', False)),
+            'aggregate_sql': str2bool(params.get('aggregate_sql', False)),
+            'use_context': str2bool(params.get('use_execution_context', True)),
+            'combined_profile': str2bool(params.get('combined_profile', False)),
+            'sql_no_gap_profile': str2bool(params.get('sql_no_gap_profile', False)),
+            'sql_density_profile': str2bool(params.get('sql_density_profile', False)),
+            'frames_profile': str2bool(params.get('frames_profile', False)),
             'profile_aggregation_mode': params.get('profile_aggregation_mode', 'tabs'),
+            'memory_limit': int(params.get('memory_limit', 0)),
         }
 
     def _generate_speedscope(self, params):
@@ -86,14 +126,14 @@ class IrProfile(models.Model):
             if (params['frames_profile'] or params['combined_profile']) and profile.traces_async:
                 sp.add(f'frames {profile.id}', json.loads(profile.traces_async))
             if params['profile_aggregation_mode'] == 'tabs':
-                profile._add_outputs(sp, profile.id if len(self) > 1 else '', params)
+                profile._add_outputs(sp, f'{profile.id} {profile.name}' if len(self) > 1 else '', params)
 
         if params['profile_aggregation_mode'] == 'temporal':
             self._add_outputs(sp, 'all', params)
 
         result = json.dumps(sp.make(**params))
         return result.encode('utf-8')
-    
+
     def _add_outputs(self, sp, suffix, params):
         sql = [f'sql {profile.id}' for profile in self]
         frames = [f'frames {profile.id}' for profile in self]
@@ -172,7 +212,7 @@ class IrProfile(models.Model):
         ids = ",".join(str(p.id) for p in self)
         return {
             'type': 'ir.actions.act_url',
-            'url': f'/web/speedscope/{ids}',
+            'url': f'/web/profile_config/{ids}',
             'target': 'new',
         }
 

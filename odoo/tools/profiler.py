@@ -8,7 +8,7 @@ import sys
 import time
 import threading
 import re
-import functools
+import tracemalloc
 
 from psycopg2 import OperationalError
 
@@ -92,6 +92,7 @@ class Collector:
     It defines default behaviors for creating an entry in the collector.
     """
     name = None                 # symbolic name of the collector
+    _store = name
     _registry = {}              # map collector names to their class
 
     @classmethod
@@ -186,26 +187,56 @@ class SQLCollector(Collector):
         return super().summary() + sql_entries
 
 
-class PeriodicCollector(Collector):
+class _BasePeriodicCollector(Collector):
     """
     Record execution frames asynchronously at most every `interval` seconds.
 
     :param interval (float): time to wait in seconds between two samples.
     """
-    name = 'traces_async'
+    _min_interval = 0.001  # minimum interval allowed
+    _max_interval = 5    # maximum interval allowed
+    _default_interval = 0.001
 
-    def __init__(self, interval=0.01):  # check duration. dynamic?
+    def __init__(self, interval=None):  # check duration. dynamic?
         super().__init__()
         self.active = False
-        self.frame_interval = interval
+        self.frame_interval = interval or self._default_interval
         self.__thread = threading.Thread(target=self.run)
         self.last_frame = None
 
+    def start(self):
+        interval = self.profiler.params.get(f'{self.name}_interval')
+        if interval:
+            self.frame_interval = min(max(float(interval), self._min_interval), self._max_interval)
+        init_thread = self.profiler.init_thread
+        if not hasattr(init_thread, 'profile_hooks'):
+            init_thread.profile_hooks = []
+        init_thread.profile_hooks.append(self.progress)
+        self.__thread.start()
+
     def run(self):
         self.active = True
-        last_time = real_time()
+        self.last_time = real_time()
         while self.active:  # maybe add a check on parent_thread state?
-            duration = real_time() - last_time
+            self.progress()
+            time.sleep(self.frame_interval)
+
+        self._entries.append({'stack': [], 'start': real_time()})  # add final end frame
+
+    def stop(self):
+        self.active = False
+        self.__thread.join()
+        self.profiler.init_thread.profile_hooks.remove(self.progress)
+
+
+class PeriodicCollector(_BasePeriodicCollector):
+
+    name = 'traces_async'
+
+    def add(self, entry=None, frame=None):
+        """ Add an entry (dict) to this collector. """
+        if self.last_frame:
+            duration = real_time() - self._last_time
             if duration > self.frame_interval * 10 and self.last_frame:
                 # The profiler has unexpectedly slept for more than 10 frame intervals. This may
                 # happen when calling a C library without releasing the GIL. In that case, the
@@ -213,32 +244,9 @@ class PeriodicCollector(Collector):
                 # the call itself does not appear in any of those frames: the duration of the call
                 # is incorrectly attributed to the last frame.
                 self._entries[-1]['stack'].append(('profiling', 0, '⚠ Profiler freezed for %s s' % duration, ''))
-                self.last_frame = None  # skip duplicate detection for the next frame.
-            self.progress()
-            last_time = real_time()
-            time.sleep(self.frame_interval)
+            self.last_frame = None  # skip duplicate detection for the next frame.
+        self._last_time = real_time()
 
-        self._entries.append({'stack': [], 'start': real_time()})  # add final end frame
-
-    def start(self):
-        interval = self.profiler.params.get('traces_async_interval')
-        if interval:
-            self.frame_interval = min(max(float(interval), 0.001), 1)
-
-        init_thread = self.profiler.init_thread
-        if not hasattr(init_thread, 'profile_hooks'):
-            init_thread.profile_hooks = []
-        init_thread.profile_hooks.append(self.progress)
-
-        self.__thread.start()
-
-    def stop(self):
-        self.active = False
-        self.__thread.join()
-        self.profiler.init_thread.profile_hooks.remove(self.progress)
-
-    def add(self, entry=None, frame=None):
-        """ Add an entry (dict) to this collector. """
         frame = frame or get_current_frame(self.profiler.init_thread)
         if frame == self.last_frame:
             # don't save if the frame is exactly the same as the previous one.
@@ -246,6 +254,42 @@ class PeriodicCollector(Collector):
             return
         self.last_frame = frame
         super().add(entry=entry, frame=frame)
+
+
+_lock = threading.Lock()
+
+
+class MemoryCollector(_BasePeriodicCollector):
+
+    name = 'memory'
+    _store = 'others'
+    _min_interval = 0.01  # minimum interval allowed
+    _default_interval = 1
+
+    def start(self):
+        _lock.acquire()
+        tracemalloc.start()
+        super().start()
+
+    def add(self, entry=None, frame=None):
+        """ Add an entry (dict) to this collector. """
+        self._entries.append({
+            'start': real_time(),
+            'memory': tracemalloc.take_snapshot(),
+        })
+
+    def stop(self):
+        _lock.release()
+        tracemalloc.stop()
+        super().stop()
+
+    def post_process(self):
+        for i, entry in enumerate(self._entries):
+            if entry.get("memory", False):
+                entry_statistics = entry["memory"].statistics('traceback')
+                modified_entry_statistics = [{'traceback': list(statistic.traceback._frames),
+                                            'size': statistic.size} for statistic in entry_statistics]
+                self._entries[i] = {"memory_tracebacks": modified_entry_statistics, "start": entry['start']}
 
 
 class SyncCollector(Collector):
@@ -590,9 +634,15 @@ class Profiler:
                         "entry_count": self.entry_count(),
                         "sql_count": sum(len(collector.entries) for collector in self.collectors if collector.name == 'sql')
                     }
+                    others = {}
                     for collector in self.collectors:
                         if collector.entries:
-                            values[collector.name] = json.dumps(collector.entries)
+                            if collector._store == "others":
+                                others[collector.name] = json.dumps(collector.entries)
+                            else:
+                                values[collector.name] = json.dumps(collector.entries)
+                    if others:
+                        values['others'] = json.dumps(others)
                     query = SQL(
                         "INSERT INTO ir_profile(%s) VALUES %s RETURNING id",
                         SQL(",").join(map(SQL.identifier, values)),
