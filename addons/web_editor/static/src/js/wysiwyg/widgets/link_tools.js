@@ -166,6 +166,31 @@ export class LinkTools extends Link {
         super.focusUrl(...arguments);
     }
 
+    /**
+     * Method no longer used, kept for compatibility (stable policy).
+     * To be removed in master.
+     */
+    openDocumentDialog() {
+        this.props.wysiwyg.openMediaDialog({
+            resModel: "ir.ui.view",
+            useMediaLibrary: true,
+            noImages: true,
+            noIcons: true,
+            noVideos: true,
+            save: async (link) => {
+                this.initialNewWindow = this.initialIsNewWindowFromProps;
+                this._updateInitialNewWindowUI();
+                let relativeUrl = link.href.substr(window.location.origin.length);
+                await this._determineAttachmentType(relativeUrl.split("?")[0]);
+                if (this.isLastAttachmentUrl) {
+                    relativeUrl = relativeUrl.replace("&download=true", "");
+                }
+                this.$el[0].querySelector("#o_link_dialog_url_input").value = relativeUrl;
+                this.__onURLInput();
+            },
+        });
+    }
+
     async uploadFile() {
         const { upload, getURL } = this.uploadService;
         const [attachment] = await upload({ resModel: "ir.ui.view" });

@@ -63,6 +63,7 @@ export class LinkPopover extends Component {
             urlDescription: "",
             linkPreviewName: "",
             imgSrc: "",
+            classes: this.props.linkEl.className || "",
             type:
                 this.props.linkEl.className.match(/btn(-[a-z0-9_-]*)(primary|secondary)/)?.pop() ||
                 "",
@@ -101,7 +102,7 @@ export class LinkPopover extends Component {
             ? this.correctLink(deducedUrl)
             : this.correctLink(this.state.url);
         this.loadAsyncLinkPreview();
-        this.props.onApply(this.state.url, this.state.label, this.classes);
+        this.props.onApply(this.state.url, this.state.label, this.state.classes);
     }
     onClickEdit() {
         this.state.editing = true;
@@ -273,21 +274,17 @@ export class LinkPopover extends Component {
         }
     }
 
-    get classes() {
+    /**
+     * link style preview in editing mode
+     */
+    onChangeClasses() {
         const shapes = this.state.buttonStyle ? this.state.buttonStyle.split(",") : [];
         const style = ["outline", "fill"].includes(shapes[0]) ? `${shapes[0]}-` : "fill-";
         const shapeClasses = shapes.slice(style ? 1 : 0).join(" ");
-        if (!this.state.type) {
-            return "";
-        }
-        let className = `btn btn-${style}${this.state.type}`;
-        if (shapeClasses) {
-            className += ` ${shapeClasses}`;
-        }
-        if (this.state.buttonSize) {
-            className += ` btn-${this.state.buttonSize}`;
-        }
-        return className;
+        this.state.classes =
+            (this.state.type ? `btn btn-${style}${this.state.type}` : "") +
+            (this.state.type && shapeClasses ? ` ${shapeClasses}` : "") +
+            (this.state.type && this.state.buttonSize ? " btn-" + this.state.buttonSize : "");
     }
 
     async uploadFile() {
