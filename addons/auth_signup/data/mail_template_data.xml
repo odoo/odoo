@@ -152,7 +152,7 @@
 
         <!-- Email template for new users that used a signup token -->
         <record id="mail_template_user_signup_account_created" model="mail.template">
-            <field name="name">Settings: New User Invite</field>
+            <field name="name">Settings: New Portal Sign Up</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="subject">Welcome to {{ object.company_id.name }}!</field>
             <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
