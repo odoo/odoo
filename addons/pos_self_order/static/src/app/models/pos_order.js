@@ -9,6 +9,7 @@ patch(PosOrder.prototype, {
             this.uiState = {
                 ...this.uiState,
                 lineChanges: {},
+                receiptReady: false,
             };
         }
     },

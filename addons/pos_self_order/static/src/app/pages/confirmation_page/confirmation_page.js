@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillStart, onWillUnmount, useState } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, useState, useEffect } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { cookie } from "@web/core/browser/cookie";
 import { useService } from "@web/core/utils/hooks";
@@ -15,7 +15,6 @@ export class ConfirmationPage extends Component {
         this.router = useService("router");
         this.printer = useService("printer");
         this.dialog = useService("dialog");
-        this.confirmedOrder = {};
         this.changeToDisplay = [];
         this.state = useState({
             onReload: true,
@@ -28,12 +27,18 @@ export class ConfirmationPage extends Component {
                     this.setDefautLanguage();
                 }, 5000);
 
-                setTimeout(() => this.printOrderAfterTime(), 500);
+                //TODO check this, I'm not sure this is a good idea to set a timeout to print instead of just printing at the end of the initOrder method when we are sure we have an order
                 this.defaultTimeout = setTimeout(() => {
                     this.router.navigate("default");
                 }, 30000);
             }
         });
+        useEffect(
+            () => {
+                this.printOrder();
+            },
+            () => [this.confirmedOrder.uiState.receiptReady]
+        );
         onWillUnmount(() => {
             clearTimeout(this.defaultTimeout);
         });
@@ -43,31 +48,11 @@ export class ConfirmationPage extends Component {
         });
     }
 
-    async printOrderAfterTime() {
-        try {
-            if (this.confirmedOrder && Object.keys(this.confirmedOrder).length > 0) {
-                await this.printer.print(OrderReceipt, {
-                    order: this.confirmedOrder,
-                });
-                if (!this.selfOrder.has_paper) {
-                    this.updateHasPaper(true);
-                }
-            } else {
-                setTimeout(() => this.printOrderAfterTime(), 500);
-            }
-        } catch (e) {
-            if (e.errorCode === "EPTR_REC_EMPTY") {
-                this.dialog.add(OutOfPaperPopup, {
-                    title: `No more paper in the printer, please remember your order number: '${this.confirmedOrder.trackingNumber}'.`,
-                    close: () => {
-                        this.router.navigate("default");
-                    },
-                });
-                this.updateHasPaper(false);
-            } else {
-                console.error(e);
-            }
+    get confirmedOrder() {
+        if (this.selfOrder.selectedOrderUuid) {
+            return this.selfOrder.currentOrder;
         }
+        return false;
     }
 
     async initOrder() {
@@ -79,7 +64,7 @@ export class ConfirmationPage extends Component {
         const order = this.selfOrder.models["pos.order"].find(
             (o) => o.access_token === this.props.orderAccessToken
         );
-        this.confirmedOrder = order;
+        this.selfOrder.selectedOrderUuid = order.uuid;
 
         const paymentMethods = this.selfOrder.filterPaymentMethods(
             this.selfOrder.models["pos.payment.method"].getAll()
@@ -97,6 +82,59 @@ export class ConfirmationPage extends Component {
         }
 
         this.state.onReload = false;
+        this.confirmedOrder.uiState.receiptReady = await this.beforePrintOrder();
+        await this.printOrder();
+    }
+
+    canPrintReceipt() {
+        return (
+            !this.isPrinting &&
+            this.confirmedOrder.uiState.receiptReady &&
+            (!this.confirmedOrder.nb_print || this.confirmedOrder.nb_print < 1)
+        );
+    }
+
+    async beforePrintOrder() {
+        // meant to be overriden.
+        return true;
+    }
+
+    async printOrder() {
+        if (this.selfOrder.config.self_ordering_mode === "kiosk" && this.canPrintReceipt()) {
+            try {
+                this.isPrinting = true;
+                const order = this.confirmedOrder;
+                await this.printer.print(
+                    OrderReceipt,
+                    {
+                        order: order,
+                    },
+                    this.printOptions
+                );
+                if (!this.selfOrder.has_paper) {
+                    this.updateHasPaper(true);
+                }
+                order.nb_print = 1;
+            } catch (e) {
+                if (e.errorCode === "EPTR_REC_EMPTY") {
+                    this.dialog.add(OutOfPaperPopup, {
+                        title: `No more paper in the printer, please remember your order number: '${this.confirmedOrder.trackingNumber}'.`,
+                        close: () => {
+                            this.router.navigate("default");
+                        },
+                    });
+                    this.updateHasPaper(false);
+                } else {
+                    console.error(e);
+                }
+            } finally {
+                this.isPrinting = false;
+            }
+        }
+    }
+
+    get printOptions() {
+        return {};
     }
 
     backToHome() {
