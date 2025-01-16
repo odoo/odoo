@@ -1,5 +1,5 @@
 import { Reactive } from "@web/core/utils/reactive";
-import { createRelatedModels } from "@point_of_sale/app/models/related_models";
+import { Base, createRelatedModels } from "@point_of_sale/app/models/related_models";
 import { registry } from "@web/core/registry";
 import { Mutex } from "@web/core/utils/concurrency";
 import { markRaw } from "@odoo/owl";
@@ -364,6 +364,15 @@ export class PosData extends Reactive {
 
             this.models[model].addEventListener("update", (params) => {
                 const record = this.models[model].get(params.id).raw;
+
+                for (const [key, value] of Object.entries(record)) {
+                    if (value instanceof Base) {
+                        record[key] = value.id;
+                    } else if (Array.isArray(value) && value[0] instanceof Base) {
+                        record[key] = value.map((v) => v.id);
+                    }
+                }
+
                 this.synchronizeServerDataInIndexedDB({ [model]: [record] });
             });
         }
