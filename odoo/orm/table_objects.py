@@ -114,7 +114,7 @@ class Constraint(TableObject):
             # constraint exists but its definition may have changed
             sql.drop_constraint(cr, model._table, conname)
 
-        model.pool.post_constraint(sql.add_constraint, cr, model._table, conname, definition)
+        model.pool.post_constraint(f"constraint:{conname}", (sql.add_constraint, cr, model._table, conname, definition))
 
 
 class Index(TableObject):
@@ -155,13 +155,8 @@ class Index(TableObject):
 
         definition_clause = self._index_definition
         model.pool.post_constraint(
-            sql.add_index,
-            cr,
-            conname,
-            model._table,
-            comment=definition,
-            definition=definition_clause,
-            unique=self.unique,
+            f"index:{conname}",
+            (sql.add_index, cr, conname, model._table, definition_clause, self.unique, definition),
         )
 
 
