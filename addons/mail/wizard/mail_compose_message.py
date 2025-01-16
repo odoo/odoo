@@ -116,6 +116,9 @@ class MailComposeMessage(models.TransientModel):
         string='Composition mode', default='comment')
     composition_batch = fields.Boolean(
         'Batch composition', compute='_compute_composition_batch')  # more than 1 record (raw source)
+    composition_comment_option = fields.Selection(
+        [('reply_all', 'Reply-All'), ('forward', 'Forward')],
+        string='Comment Options')  # mainly used for view in specific comment modes
     model = fields.Char('Related Document Model', compute='_compute_model', readonly=False, store=True)
     model_is_thread = fields.Boolean('Thread-Enabled', compute='_compute_model_is_thread')
     res_ids = fields.Text('Related Document IDs', compute='_compute_res_ids', readonly=False, store=True)
@@ -180,6 +183,7 @@ class MailComposeMessage(models.TransientModel):
         compute='_compute_mail_server_id', readonly=False, store=True, compute_sudo=False)
     notify_author = fields.Boolean(compute='_compute_notify_author', readonly=False, store=True)
     notify_author_mention = fields.Boolean(compute='_compute_notify_author_mention', readonly=False, store=True)
+    notify_skip_followers = fields.Boolean(compute='_compute_notify_skip_followers', readonly=False, store=True)
     scheduled_date = fields.Char(
         'Scheduled Date',
         compute='_compute_scheduled_date', readonly=False, store=True, compute_sudo=False,
@@ -591,13 +595,24 @@ class MailComposeMessage(models.TransientModel):
 
     @api.depends('composition_mode')
     def _compute_notify_author(self):
-        """ Used only in 'comment' mode """
+        """ Used only in 'comment' mode, controls 'notify_author' notification
+        parameter """
         self.filtered(lambda c: c.composition_mode != 'comment').notify_author = False
 
     @api.depends('composition_mode')
     def _compute_notify_author_mention(self):
-        """ Used only in 'comment' mode """
+        """ Used only in 'comment' mode, controls 'notify_author_mention'
+        notification parameter. """
         self.filtered(lambda c: c.composition_mode != 'comment').notify_author_mention = False
+
+    @api.depends('composition_mode', 'composition_comment_option')
+    def _compute_notify_skip_followers(self):
+        """ Used only in 'comment' mode, controls 'notify_skip_followers' notification
+        parameter. 'Reply-All' behavior triggers skipping followers. """
+        self.filtered(lambda c: c.composition_mode != 'comment').notify_skip_followers = False
+        self.filtered(
+            lambda c: c.composition_mode == 'comment' and c.composition_comment_option == 'reply_all'
+        ).notify_skip_followers = True
 
     @api.depends('composition_mode', 'model', 'res_ids', 'template_id')
     def _compute_scheduled_date(self):
@@ -669,6 +684,11 @@ class MailComposeMessage(models.TransientModel):
     # ------------------------------------------------------------
 
     def action_schedule_message(self):
+        self._action_schedule_message()
+        return {'type': 'ir.actions.act_window_close'}
+
+    def _action_schedule_message(self):
+        """ Create a 'scheduled message' to be posted automatically later. """
         # currently only allowed in mono-comment mode
         if any(wizard.composition_mode != 'comment' or wizard.composition_batch for wizard in self):
             raise UserError(_("A message can only be scheduled in monocomment mode"))
@@ -684,6 +704,7 @@ class MailComposeMessage(models.TransientModel):
                 'attachment_ids': post_values.pop('attachment_ids'),
                 'author_id': post_values.pop('author_id'),
                 'body': post_values.pop('body'),
+                'composition_comment_option': wizard.composition_comment_option,
                 'is_note': wizard.subtype_is_log,
                 'model': wizard.model,
                 'partner_ids': post_values.pop('partner_ids'),
@@ -693,10 +714,7 @@ class MailComposeMessage(models.TransientModel):
                 'subject': post_values.pop('subject'),
                 'notification_parameters': json.dumps(post_values),  # last to not include popped post_values
             })
-
-        self.env['mail.scheduled.message'].create(create_values)
-
-        return {'type': 'ir.actions.act_window_close'}
+        return self.env['mail.scheduled.message'].create(create_values)
 
     def action_send_mail(self):
         """ Used for action button that do not accept arguments. """
@@ -745,7 +763,6 @@ class MailComposeMessage(models.TransientModel):
             ActiveModel = ActiveModel.with_context(
                 mail_post_autofollow_author_skip=True,
             )
-
         messages = self.env['mail.message']
         for res_id, post_values in post_values_all.items():
             if ActiveModel._name == 'mail.thread':
@@ -986,6 +1003,8 @@ class MailComposeMessage(models.TransientModel):
                 values['notify_author'] = self.notify_author
             if self.notify_author_mention:  # force only Truthy values, keeping context fallback
                 values['notify_author_mention'] = self.notify_author_mention
+            if self.notify_skip_followers:  # force only Truthy values, no need to bloat with default Falsy
+                values['notify_skip_followers'] = self.notify_skip_followers
         return values
 
     def _prepare_mail_values_dynamic(self, res_ids):

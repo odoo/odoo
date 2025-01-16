@@ -874,12 +874,29 @@ Andrew</p>]]></field>
                     et prévoyons d'emménager dans nos nouveaux locaux dans 15 jours.</p>
                 <p>Je vous remercie par avance pour votre réactivité et vous souhaite une agréable fin de journée.</p>
                 <p>Cordialement,</p></field>
+            <field name="incoming_email_cc">openwood.cc@example.com</field>
+            <field name="incoming_email_to">openwood.to@exampel.com</field>
+            <field name="partner_ids" eval="[(4, ref('base.res_partner_4'))]"/>
             <field name="message_type">email</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_31"/>
             <field name="subtype_id" ref="mail.mt_comment"/>
         </record>
 
+        <record id="msg_case31_2" model="mail.message">
+            <field name="author_id" eval="False"/>
+            <field name="body" type="html"><p>Bonjour,</p>
+                <p>Petite précision par rapport au précédent message: il s'agit bien des tapis Jama.</p>
+                <p>Cordialement,</p></field>
+            <field name="email_from">openwood.josianne@example.com</field>
+            <field name="incoming_email_cc">openwood.cc@example.com</field>
+            <field name="incoming_email_to">openwood.to@exampel.com</field>
+            <field name="partner_ids" eval="[(4, ref('base.res_partner_4'))]"/>
+            <field name="message_type">email</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_31"/>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+        </record>
 
         <record id="crm_case_32" model="crm.lead">
             <field name="create_date" eval="datetime.now() - relativedelta(months=2)"/>
