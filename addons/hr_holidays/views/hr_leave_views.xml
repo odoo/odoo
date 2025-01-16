@@ -454,7 +454,14 @@
         <field name="name">hr.holidays.view.list</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
-            <list string="Time Off Requests" sample="1">
+            <list string="Time Off Requests" sample="1">    
+                <header>
+                    <button type="action" 
+                        name="%(hr_holidays.action_hr_leave_generate_multi_wizard)d" 
+                        string="Multiple Requests" class="btn btn-secondary" 
+                        groups="hr_holidays.group_hr_holidays_user" display="always"
+                    />
+                </header>
                 <field name="employee_id" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" />
                 <field name="department_id" optional="hidden" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                 <field name="holiday_status_id" class="fw-bold" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
@@ -507,6 +514,9 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//button[@name='action_refuse']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='%(hr_holidays.action_hr_leave_generate_multi_wizard)d']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
         </field>
