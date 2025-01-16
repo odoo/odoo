@@ -3311,6 +3311,10 @@ class TestComposerResultsMass(TestMailComposer):
             self._new_mails.notification_ids.mapped('notification_status'), ['exception', 'exception'],
         )
         self.assertEqual(
+            self._new_mails.notification_ids.mapped('email'), ['InvalidEmail', ''],
+            'Email should be retained on the notification even when invalid'
+        )
+        self.assertEqual(
             self._new_mails.notification_ids.mapped('failure_type'), ['mail_email_invalid', 'mail_email_missing'],
             'One email should fail because missing, the other because invalid'
         )

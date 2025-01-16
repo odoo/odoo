@@ -277,7 +277,7 @@ class MailMail(models.Model):
                     failed = notifications.filtered(lambda notif: (
                         notif.res_partner_id and notif.res_partner_id not in success_pids
                     ) or (
-                        notif.email and notif.email not in success_email_addrs
+                        not notif.res_partner_id and notif.email and notif.email not in success_email_addrs
                     ))
                 # empty email cannot be sent
                 missing_email_notifs = notifications.filtered(lambda notif: not notif.email and not notif.res_partner_id)

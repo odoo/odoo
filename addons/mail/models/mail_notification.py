@@ -24,7 +24,7 @@ class MailNotification(models.Model):
     res_partner_id = fields.Many2one('res.partner', 'Recipient', index=True, ondelete='cascade')
     # set if no matching partner exists (mass mail)
     # must be normalized except if notification is cancel/failure from invalid email
-    email = fields.Char(help='Recipient email address')
+    email = fields.Char(help='Recipient email address', compute="_compute_email", store=True)
     # status
     notification_type = fields.Selection([
         ('inbox', 'Inbox'), ('email', 'Email')
@@ -71,6 +71,12 @@ class MailNotification(models.Model):
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
+
+    @api.depends('res_partner_id', 'notification_type')
+    def _compute_email(self):
+        """Keep track of what the email was when the notification was created."""
+        for notif in self.filtered(lambda notif: notif.res_partner_id and notif.notification_type == 'email'):
+            notif.email = notif.res_partner_id.email_normalized or notif.res_partner_id.email
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -122,7 +128,7 @@ class MailNotification(models.Model):
         """Returns only the notifications to show on the web client."""
         def _filter_unimportant_notifications(notif):
             if notif.notification_status in ['bounce', 'exception', 'canceled'] \
-                    or notif.res_partner_id.partner_share or notif.email:
+                    or notif.res_partner_id.partner_share or (not notif.res_partner_id and notif.email):
                 return True
             subtype = notif.mail_message_id.subtype_id
             return not subtype or subtype.track_recipients

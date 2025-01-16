@@ -3398,6 +3398,7 @@ class MailThread(models.AbstractModel):
             notif_create_values = [
                 {
                     "author_id": message.author_id.id,
+                    "email": False,  # avoid pointless fetch for the compute
                     "mail_message_id": message.id,
                     "notification_status": "sent",
                     "notification_type": "inbox",

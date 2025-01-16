@@ -311,6 +311,7 @@ class MailThread(models.AbstractModel):
 
             notif_create_values = [{
                 'author_id': message.author_id.id,
+                'email': False,  # avoid pointless compute / fetch
                 'mail_message_id': message.id,
                 'res_partner_id': sms.partner_id.id,
                 'sms_number': sms.number,
