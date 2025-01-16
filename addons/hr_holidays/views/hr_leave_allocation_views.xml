@@ -274,6 +274,13 @@
         <field name="priority">16</field>
         <field name="arch" type="xml">
             <list string="Allocation Requests" sample="1">
+                <header>
+                    <button type="action" 
+                        name="%(hr_holidays.action_hr_leave_allocation_generate_multi_wizard)d" 
+                        string="Multiple Requests" class="btn btn-secondary" 
+                        groups="hr_holidays.group_hr_holidays_user" display="always"
+                    />
+                </header>
                 <field name="employee_id" decoration-muted="not active_employee" widget="many2one_avatar_user" readonly="state in ['refuse', 'validate']"/>
                 <field name="department_id" optional="hide" readonly="state not in ['confirm']"/>
                 <field name="holiday_status_id" class="fw-bold" readonly="state in ['refuse', 'validate', 'validate1']"/>
@@ -320,6 +327,9 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//button[@name='action_refuse']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='%(hr_holidays.action_hr_leave_allocation_generate_multi_wizard)d']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
         </field>
