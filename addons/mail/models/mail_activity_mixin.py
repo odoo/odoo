@@ -311,7 +311,7 @@ class MailActivityMixin(models.AbstractModel):
         )
         return True
 
-    def activity_search(self, act_type_xmlids='', user_id=None, additional_domain=None):
+    def activity_search(self, act_type_xmlids='', user_id=None, additional_domain=None, only_automated=True):
         """ Search automated activities on current record set, given a list of activity
         types xml IDs. It is useful when dealing with specific types involved in automatic
         activities management.
@@ -319,6 +319,7 @@ class MailActivityMixin(models.AbstractModel):
         :param act_type_xmlids: list of activity types xml IDs
         :param user_id: if set, restrict to activities of that user_id;
         :param additional_domain: if set, filter on that domain;
+        :param only_automated: if unset, search for all activities, not only automated ones;
         """
         if self.env.context.get('mail_activity_automation_skip'):
             return self.env['mail.activity']
@@ -329,13 +330,13 @@ class MailActivityMixin(models.AbstractModel):
             return self.env['mail.activity']
 
         domain = [
-            '&', '&', '&',
             ('res_model', '=', self._name),
             ('res_id', 'in', self.ids),
-            ('automated', '=', True),
             ('activity_type_id', 'in', activity_types_ids)
         ]
 
+        if only_automated:
+            domain = expression.AND([domain, [('automated', '=', True)]])
         if user_id:
             domain = expression.AND([domain, [('user_id', '=', user_id)]])
         if additional_domain:
@@ -413,7 +414,7 @@ class MailActivityMixin(models.AbstractModel):
             activities += record.activity_schedule(act_type_xmlid=act_type_xmlid, date_deadline=date_deadline, summary=summary, note=note, **act_values)
         return activities
 
-    def activity_reschedule(self, act_type_xmlids, user_id=None, date_deadline=None, new_user_id=None):
+    def activity_reschedule(self, act_type_xmlids, user_id=None, date_deadline=None, new_user_id=None, only_automated=True):
         """ Reschedule some automated activities. Activities to reschedule are
         selected based on type xml ids and optionally by user. Purpose is to be
         able to
@@ -429,7 +430,7 @@ class MailActivityMixin(models.AbstractModel):
         activity_types_ids = [act_type_id for act_type_id in activity_types_ids if act_type_id]
         if not any(activity_types_ids):
             return False
-        activities = self.activity_search(act_type_xmlids, user_id=user_id)
+        activities = self.activity_search(act_type_xmlids, user_id=user_id, only_automated=only_automated)
         if activities:
             write_vals = {}
             if date_deadline:
@@ -439,7 +440,7 @@ class MailActivityMixin(models.AbstractModel):
             activities.write(write_vals)
         return activities
 
-    def activity_feedback(self, act_type_xmlids, user_id=None, feedback=None, attachment_ids=None):
+    def activity_feedback(self, act_type_xmlids, user_id=None, feedback=None, attachment_ids=None, only_automated=True):
         """ Set activities as done, limiting to some activity types and
         optionally to a given user. """
         if self.env.context.get('mail_activity_automation_skip'):
@@ -450,12 +451,12 @@ class MailActivityMixin(models.AbstractModel):
         activity_types_ids = [act_type_id for act_type_id in activity_types_ids if act_type_id]
         if not any(activity_types_ids):
             return False
-        activities = self.activity_search(act_type_xmlids, user_id=user_id)
+        activities = self.activity_search(act_type_xmlids, user_id=user_id, only_automated=only_automated)
         if activities:
             activities.action_feedback(feedback=feedback, attachment_ids=attachment_ids)
         return True
 
-    def activity_unlink(self, act_type_xmlids, user_id=None):
+    def activity_unlink(self, act_type_xmlids, user_id=None, only_automated=True):
         """ Unlink activities, limiting to some activity types and optionally
         to a given user. """
         if self.env.context.get('mail_activity_automation_skip'):
@@ -466,5 +467,5 @@ class MailActivityMixin(models.AbstractModel):
         activity_types_ids = [act_type_id for act_type_id in activity_types_ids if act_type_id]
         if not any(activity_types_ids):
             return False
-        self.activity_search(act_type_xmlids, user_id=user_id).unlink()
+        self.activity_search(act_type_xmlids, user_id=user_id, only_automated=only_automated).unlink()
         return True
