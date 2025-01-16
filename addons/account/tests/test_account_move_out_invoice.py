@@ -4275,6 +4275,36 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(invoice_1.journal_id.id, invoices_duplicate[0]['journal_id'])
         self.assertEqual(invoice_2.journal_id.id, invoices_duplicate[1]['journal_id'])
 
+    def test_before_initial_rate(self):
+        def invoice(date):
+            return self.init_invoice(
+                move_type='out_invoice',
+                invoice_date=date,
+                partner=self.partner_a,
+                amounts=[1000.0],
+                taxes=[],
+                currency=currency,
+            )
+
+        currency = self.setup_other_currency('EUR', rates=[
+            ('2016-01-01', 3.0),
+            ('2017-01-01', 2.0),
+        ])
+        self.assertRecordValues(invoice('2015-01-01'), [{
+            'amount_total': 1000.0,
+            'amount_total_signed': 333.33,
+        }])
+        self.assertRecordValues(invoice('2016-01-01'), [{
+            'amount_total': 1000.0,
+            'amount_total_signed': 333.33,
+        }])
+        self.assertRecordValues(invoice('2017-01-01'), [{
+            'amount_total': 1000.0,
+            'amount_total_signed': 500.00,
+        }])
+
+
+
     def test_on_quick_encoding_non_accounting_lines(self):
         """ Ensure that quick encoding values are only applied to accounting lines) """
 
