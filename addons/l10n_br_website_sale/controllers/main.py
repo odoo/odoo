@@ -17,6 +17,9 @@ class L10nBRWebsiteSale(WebsiteSale):
         ):
             mandatory_fields.add('vat')
 
+        if 'vat' in mandatory_fields and not request.website._display_partner_b2b_fields():
+            mandatory_fields.remove('vat')
+
         return mandatory_fields
 
     def _prepare_address_form_values(self, *args, address_type, **kwargs):
