@@ -24,7 +24,7 @@ class DisplayDriver(Driver):
     connection_type = 'display'
 
     def __init__(self, identifier, device):
-        super(DisplayDriver, self).__init__(identifier, device)
+        super().__init__(identifier, device)
         self.device_type = 'display'
         self.device_connection = 'hdmi'
         self.device_name = device['name']

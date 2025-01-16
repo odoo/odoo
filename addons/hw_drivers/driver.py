@@ -10,13 +10,12 @@ from odoo.tools.lru import LRU
 
 
 class Driver(Thread):
-    """
-    Hook to register the driver into the drivers list
-    """
+    """Hook to register the driver into the drivers list"""
     connection_type = ''
+    daemon = True
 
     def __init__(self, identifier, device):
-        super(Driver, self).__init__()
+        super().__init__()
         self.dev = device
         self.device_identifier = identifier
         self.device_name = ''

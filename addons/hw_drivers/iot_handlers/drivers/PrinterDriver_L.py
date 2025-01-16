@@ -68,7 +68,7 @@ class PrinterDriver(Driver):
     connection_type = 'printer'
 
     def __init__(self, identifier, device):
-        super(PrinterDriver, self).__init__(identifier, device)
+        super().__init__(identifier, device)
         self.device_type = 'printer'
         self.device_connection = device['device-class'].lower()
         self.device_name = device['device-make-and-model']

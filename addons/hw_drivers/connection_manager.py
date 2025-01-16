@@ -15,8 +15,10 @@ _logger = logging.getLogger(__name__)
 
 
 class ConnectionManager(Thread):
+    daemon = True
+
     def __init__(self):
-        super(ConnectionManager, self).__init__()
+        super().__init__()
         self.pairing_code = False
         self.pairing_uuid = False
 
@@ -68,5 +70,4 @@ class ConnectionManager(Thread):
 
 
 connection_manager = ConnectionManager()
-connection_manager.daemon = True
 connection_manager.start()

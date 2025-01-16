@@ -19,6 +19,7 @@ iot_devices = {}
 
 
 class Manager(Thread):
+    daemon = True
     server_url = None
 
     def send_alldevices(self, iot_client=None):
@@ -95,14 +96,8 @@ class Manager(Thread):
         helpers.download_iot_handlers()
         helpers.load_iot_handlers()
 
-        # Start the interfaces
         for interface in interfaces.values():
-            try:
-                i = interface()
-                i.daemon = True
-                i.start()
-            except Exception:
-                _logger.exception("Interface %s could not be started", str(interface))
+            interface().start()
 
         # Set scheduled actions
         schedule.every().day.at("00:00").do(helpers.get_certificate_status)
@@ -111,6 +106,7 @@ class Manager(Thread):
         # Set up the websocket connection
         if self.server_url and iot_client.iot_channel:
             iot_client.start()
+
         # Check every 3 seconds if the list of connected devices has changed and send the updated
         # list to the connected DB.
         self.previous_iot_devices = []
@@ -129,5 +125,4 @@ class Manager(Thread):
 DBusGMainLoop(set_as_default=True)
 
 manager = Manager()
-manager.daemon = True
 manager.start()
