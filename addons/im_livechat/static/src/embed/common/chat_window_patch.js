@@ -30,6 +30,7 @@ patch(ChatWindow.prototype, {
     },
 
     onCloseConfirmationDialog() {
+        this.contentRef.el.querySelector(".o-mail-Composer-input").focus();
         this.state.actionsDisabled = false;
         this.livechatState.showCloseConfirmation = false;
     },

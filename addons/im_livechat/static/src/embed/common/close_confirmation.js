@@ -1,12 +1,12 @@
-import { Component } from "@odoo/owl";
-import { useAutofocus } from "@web/core/utils/hooks";
+import { Component, onMounted, useRef } from "@odoo/owl";
 
 export class CloseConfirmation extends Component {
     static template = "im_livechat.CloseConfirmation";
     static props = ["onCloseConfirmationDialog", "onClickLeaveConversation"];
 
     setup() {
-        useAutofocus({ refName: "root" });
+        this.root = useRef("root");
+        onMounted(() => this.root.el.focus());
     }
 
     onKeydown(ev) {

@@ -114,3 +114,32 @@ test("avatar url contains access token for non-internal users", async () => {
         }/avatar_128?access_token=${guest.id}&unique=${deserializeDateTime(guest.write_date).ts}"]`
     );
 });
+
+test("can close confirm livechat with keyboard", async () => {
+    await startServer();
+    await loadDefaultEmbedConfig();
+    onRpcBefore((route, args) => {
+        if (route === "/im_livechat/visitor_leave_session") {
+            step(route);
+        }
+    });
+    await mountWithCleanup(LivechatButton);
+    await click(".o-livechat-LivechatButton");
+    await contains(".o-mail-ChatWindow");
+    await insertText(".o-mail-Composer-input", "Hello");
+    await triggerHotkey("Enter");
+    await contains(".o-mail-Message", { text: "Hello" });
+    await triggerHotkey("Escape");
+    await contains(".o-livechat-CloseConfirmation", {
+        text: "You're about to leave the conversation, proceed?",
+    });
+    await triggerHotkey("Escape");
+    await contains(".o-livechat-CloseConfirmation", { count: 0 });
+    await triggerHotkey("Escape");
+    await contains(".o-livechat-CloseConfirmation", {
+        text: "You're about to leave the conversation, proceed?",
+    });
+    await triggerHotkey("Enter");
+    await assertSteps(["/im_livechat/visitor_leave_session"]);
+    await contains(".o-mail-ChatWindow", { text: "Did we correctly answer your question?" });
+});
