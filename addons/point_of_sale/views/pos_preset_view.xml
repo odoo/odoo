@@ -23,14 +23,14 @@
                         </button>
                     </div>
                     <field name="image_128" widget="image" class="oe_avatar"/>
-                    <div class="oe_title mb-2">
+                    <div class="oe_title">
                         <label for="name"/>
                         <h1><field name="name" placeholder="e.g. Cash" class="oe_inline"/></h1>
                     </div>
-                    <group name="Presets">
+                    <group class="w-100" name="Presets">
                         <group>
-                            <field name="pricelist_id"/>
-                            <field name="fiscal_position_id"/>
+                            <field name="pricelist_id" placeholder="Default"/>
+                            <field name="fiscal_position_id" placeholder="Default"/>
                             <field name="use_timing" />
                             <field name="resource_calendar_id" invisible="not use_timing" />
                             <label for="slot_params" string="Capacity" invisible="not use_timing" />
@@ -42,7 +42,11 @@
                         </group>
                         <group>
                             <field name="identification"/>
-                            <field name="is_return" />
+                            <label for="return" string="Return mode"/>
+                            <div>
+                                <field id="return" name="is_return" class="oe_inline"/>
+                                <span invisible="not is_return or pricelist_id" class="oe_inline ps-2 text-info">Tip: add a return pricelist (i.e. 0€)</span>
+                            </div>
                             <field name="color" widget="color_picker"/>
                         </group>
                     </group>

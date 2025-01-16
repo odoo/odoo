@@ -20,7 +20,7 @@ class PosPreset(models.Model):
     count_linked_config = fields.Integer(compute='_compute_count_linked_config')
 
     # Timing options
-    use_timing = fields.Boolean(string='Timing', default=False)
+    use_timing = fields.Boolean(string='Time Slots', default=False)
     resource_calendar_id = fields.Many2one('resource.calendar', 'Resource')
     attendance_ids = fields.One2many(related="resource_calendar_id.attendance_ids", string="Attendances", readonly=False)
     slots_per_interval = fields.Integer(string='Capacity', default=5)

@@ -435,7 +435,11 @@ export class SelfOrder extends Reactive {
             const isZeroAmount = o.amount_total === 0;
             const isKiosk = this.config.self_ordering_mode === "kiosk";
 
-            return isDraft || (isPaid && isZeroAmount && isKiosk);
+            return (
+                isDraft ||
+                (isPaid && isZeroAmount && isKiosk) ||
+                (isPaid && this.router.activeSlot === "confirmation")
+            );
         };
 
         const order = this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);

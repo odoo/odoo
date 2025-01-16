@@ -342,16 +342,7 @@ export class PaymentScreen extends Component {
                 }
             }
         } catch (error) {
-            if (error instanceof ConnectionLostError) {
-                this.pos.showScreen(this.nextScreen);
-                Promise.reject(error);
-            } else if (error instanceof RPCError) {
-                this.currentOrder.state = "draft";
-                handleRPCError(error, this.dialog);
-            } else {
-                throw error;
-            }
-            return error;
+            return this.handleValidationError(error);
         } finally {
             this.env.services.ui.unblock();
         }
@@ -363,6 +354,18 @@ export class PaymentScreen extends Component {
         }
 
         await this.afterOrderValidation(!!syncOrderResult && syncOrderResult.length > 0);
+    }
+    handleValidationError(error) {
+        if (error instanceof ConnectionLostError) {
+            this.pos.showScreen(this.nextScreen);
+            Promise.reject(error);
+        } else if (error instanceof RPCError) {
+            this.currentOrder.state = "draft";
+            handleRPCError(error, this.dialog);
+        } else {
+            throw error;
+        }
+        return error;
     }
     async postPushOrderResolve(ordersServerId) {
         const postPushResult = await this._postPushOrderResolve(this.currentOrder, ordersServerId);
@@ -389,13 +392,13 @@ export class PaymentScreen extends Component {
                 : true;
 
             if (invoiced_finalized) {
-                this.pos.printReceipt(this.currentOrder);
+                this.pos.printReceipt({ order: this.currentOrder });
 
                 if (this.pos.config.iface_print_skip_screen) {
                     this.currentOrder.setScreenData({ name: "" });
                     this.currentOrder.uiState.locked = true;
                     switchScreen = this.currentOrder.uuid === this.pos.selectedOrderUuid;
-                    nextScreen = "ProductScreen";
+                    nextScreen = this.pos.defaultScreen;
                     if (switchScreen) {
                         this.selectNextOrder();
                     }
@@ -425,7 +428,7 @@ export class PaymentScreen extends Component {
         return true;
     }
     get nextScreen() {
-        return !this.error ? "ReceiptScreen" : "ProductScreen";
+        return !this.error ? "ReceiptScreen" : this.pos.defaultScreen;
     }
     paymentMethodImage(id) {
         if (this.paymentMethod.image) {

@@ -66,7 +66,7 @@ patch(PosStore.prototype, {
         let whileGuard = 0;
         while (sourceOrder.lines.length) {
             const orphanLine = sourceOrder.lines[0];
-            const destinationLine = destOrder?.lines.find((l) => l.canBeMergedWith(orphanLine));
+            const destinationLine = destOrder?.lines?.find((l) => l.canBeMergedWith(orphanLine));
             let uuid = "";
 
             if (destinationLine) {
@@ -404,7 +404,7 @@ patch(PosStore.prototype, {
     async setTableFromUi(table, orderUuid = null) {
         try {
             if (!orderUuid && this.getOrder()?.isFilledDirectSale) {
-                this.transferOrder(this.getOrder().uuid, table);
+                await this.transferOrder(this.getOrder().uuid, table);
                 return;
             }
             this.tableSyncing = true;
@@ -486,7 +486,7 @@ patch(PosStore.prototype, {
         const originalTable = order.table_id;
         this.alert.dismiss();
 
-        if (destinationTable.id === originalTable?.id) {
+        if (destinationTable.rootTable.id === originalTable?.id) {
             this.setOrder(order);
             this.setTable(destinationTable);
             return false;
@@ -501,6 +501,7 @@ patch(PosStore.prototype, {
         }
         return true;
     },
+
     async transferOrder(orderUuid, destinationTable = null, destinationOrder = null) {
         if (!destinationTable && !destinationOrder) {
             return;

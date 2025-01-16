@@ -22,12 +22,13 @@
                 <t t-else="" t-esc="confirmedOrder.table_stand_number" />
             </h3>
             <h3 t-else="">Order to pick-up at the counter</h3>
-            <span role="button" t-if="selfOrder.showDownloadButton(confirmedOrder)" t-on-click="() => this.selfOrder.downloadReceipt(this.confirmedOrder)">
+            <span role="button" t-if="selfOrder.showDownloadButton(confirmedOrder) and confirmedOrder.uiState.receiptReady" t-on-click="() => this.selfOrder.downloadReceipt(this.confirmedOrder)">
                 Download your receipt here
             </span>
             <div class="px-3 py-4 text-center">
                 <button class="btn btn-primary btn-lg" t-attf-style="{{selfOrder.config.self_ordering_mode === 'kiosk' ? 'height: 10vh; width: 40vw;' : ''}}" t-on-click="backToHome">
-                    <t t-if="this.selfOrder.config.self_ordering_mode === 'kiosk'">Close</t>
+                    <span t-if="!confirmedOrder.uiState.receiptReady" class="spinner-border"></span>
+                    <t t-elif="this.selfOrder.config.self_ordering_mode === 'kiosk'">Close</t>
                     <t t-else="">Ok</t>
                 </button>
             </div>

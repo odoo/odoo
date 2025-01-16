@@ -10,6 +10,7 @@ export class SelectionPopup extends Component {
         list: { type: Array, optional: true },
         getPayload: Function,
         close: Function,
+        size: { type: String, optional: true },
     };
     static defaultProps = {
         title: _t("Select"),
@@ -44,5 +45,8 @@ export class SelectionPopup extends Component {
     confirm() {
         this.props.getPayload(this.computePayload());
         this.props.close();
+    }
+    get size() {
+        return this.props.size || "lg";
     }
 }

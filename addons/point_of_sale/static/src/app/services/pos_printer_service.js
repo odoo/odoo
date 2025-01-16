@@ -2,7 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { PrinterService } from "@point_of_sale/app/services/printer_service";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 
 export const posPrinterService = {
     dependencies: ["hardware_proxy", "dialog", "renderer"],
@@ -34,7 +34,7 @@ export class PosPrinterService extends PrinterService {
         }
     }
     async printHtml() {
-        this.setPrinter(this.device);
+        this.setPrinter(this.hardware_proxy.printer);
         try {
             return await super.printHtml(...arguments);
         } catch (error) {

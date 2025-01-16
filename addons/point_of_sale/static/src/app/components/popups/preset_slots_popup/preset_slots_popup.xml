@@ -38,7 +38,7 @@
                                     <button t-foreach="entries[1]"
                                         t-as="slot"
                                         t-key="slot_index"
-                                        class="btn"
+                                        class="btn preset-slot-button"
                                         t-attf-class="{{getSlotColor(slot, preset)}}"
                                         t-on-click="() => this.confirm(slot, preset)">
                                             <span t-esc="slot.humain_readable" />

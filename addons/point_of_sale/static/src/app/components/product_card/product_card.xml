@@ -21,7 +21,8 @@
                     t-esc="props.name" />
                 <h1 t-if="props.productCartQty"
                     t-out="props.productCartQty"
-                    class="product-cart-qty position-absolute bottom-0 end-0 fw-bolder mb-0 px-1 text-muted" />
+                    class="product-cart-qty position-absolute bottom-0 end-0 fw-bolder mb-0 px-1 text-muted bg-white bg-opacity-50"
+                    t-att-class="{'text-danger': props.productCartQty &lt; 0}"/>
             </div>
         </article>
     </t>

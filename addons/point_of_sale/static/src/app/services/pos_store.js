@@ -125,7 +125,6 @@ export class PosStore extends WithLazyGetterTrap {
         };
 
         this.hardwareProxy = hardware_proxy;
-        this.hiddenProductIds = new Set();
         this.selectedOrderUuid = null;
         this.selectedPartner = null;
         this.selectedCategory = null;
@@ -275,7 +274,7 @@ export class PosStore extends WithLazyGetterTrap {
 
         try {
             const paidOrderNotSynced = this.models["pos.order"].filter(
-                (order) => order.state === "paid" && order.id !== "number"
+                (order) => order.state === "paid" && typeof order.id !== "number"
             );
             this.addPendingOrder(paidOrderNotSynced.map((o) => o.id));
             await this.syncAllOrders({ throw: true });
@@ -298,6 +297,7 @@ export class PosStore extends WithLazyGetterTrap {
                     order.state = "cancel";
                 }
             }
+            this.session.state = "closed";
         }
 
         setTimeout(() => {
@@ -1245,7 +1245,7 @@ export class PosStore extends WithLazyGetterTrap {
                 if (refundedOrderLine && ["paid", "done"].includes(line.order_id.state)) {
                     const order = refundedOrderLine.order_id;
                     if (order) {
-                        delete order.uiState.lineToRefund[refundedOrderLine.uuid];
+                        delete order.uiState?.lineToRefund[refundedOrderLine.uuid];
                     }
                     refundedOrderLine.refunded_qty += Math.abs(line.qty);
                 }
@@ -1528,15 +1528,20 @@ export class PosStore extends WithLazyGetterTrap {
                 order,
                 basic_receipt: basic,
             },
-            { webPrintFallback: true }
+            this.printOptions
         );
         if (!printBillActionTriggered) {
-            order.nb_print += 1;
+            order.nb_print = order.nb_print ? order.nb_print + 1 : 1;
             if (typeof order.id === "number" && result) {
                 await this.data.write("pos.order", [order.id], { nb_print: order.nb_print });
             }
+        } else if (!order.nb_print) {
+            order.nb_print = 0;
         }
-        return true;
+        return res;
+    }
+    get printOptions() {
+        return { webPrintFallback: true };
     }
     getOrderChanges(skipped = false, order = this.getOrder()) {
         return getOrderChanges(order, skipped, this.config.preparationCategories);
@@ -1850,6 +1855,7 @@ export class PosStore extends WithLazyGetterTrap {
             preset = await makeAwaitable(this.dialog, SelectionPopup, {
                 title: _t("Select preset"),
                 list: selectionList,
+                size: "md",
             });
         }
 
@@ -2180,11 +2186,12 @@ export class PosStore extends WithLazyGetterTrap {
             return [];
         }
 
-        const excludedProductIds = [
-            this.config.tip_product_id?.id,
-            ...this.hiddenProductIds,
-            ...this.session._pos_special_products_ids,
-        ];
+        // _pos_special_products_ids are product.product so we need to get their product template
+        const specialProductsTemplates = this.models["product.product"]
+            .readMany(this.session._pos_special_products_ids)
+            .map((product) => product.product_tmpl_id.id);
+
+        const excludedProductIds = [this.config.tip_product_id?.id, ...specialProductsTemplates];
 
         list = list
             .filter(
