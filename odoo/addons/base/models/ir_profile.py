@@ -5,6 +5,7 @@ import base64
 import datetime
 import json
 import logging
+import pickle
 
 from dateutil.relativedelta import relativedelta
 
@@ -36,17 +37,38 @@ class IrProfile(models.Model):
     sql_count = fields.Integer('Queries Count')
     traces_async = fields.Text('Traces Async', prefetch=False)
     traces_sync = fields.Text('Traces Sync', prefetch=False)
+    others = fields.Text('others', prefetch=False)
     qweb = fields.Text('Qweb', prefetch=False)
     entry_count = fields.Integer('Entry count')
 
     speedscope = fields.Binary('Speedscope', compute='_compute_speedscope')
     speedscope_url = fields.Text('Open', compute='_compute_speedscope_url')
 
+    memory_graph = fields.Binary('Memory', compute='_compute_memory')  #this would be changed when the other pr gets merged
+    memory_url = fields.Text('Open Memory', compute='_compute_memory_url')
+
     @api.autovacuum
     def _gc_profile(self):
         # remove profiles older than 30 days
         domain = [('create_date', '<', fields.Datetime.now() - datetime.timedelta(days=30))]
         return self.sudo().search(domain).unlink()
+
+
+    def _compute_memory(self):
+        for execution in self:
+            result = []
+            if execution.others:
+                memory = json.loads(execution.others).get("memory",[])
+                for entry in memory:
+                    if type(entry) == dict:
+                        continue
+                    result.append(entry)
+                
+            execution.memory_graph = result
+
+    def _compute_memory_url(self):
+        for profile in self:
+            profile.memory_url = f'/web/memory_graph/{profile.id}'    
 
     def _compute_speedscope(self):
         for execution in self:

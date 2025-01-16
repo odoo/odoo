@@ -23,4 +23,100 @@
             </body>
         </html>
     </template>
+
+    <template id="view_memory">
+        &lt;!DOCTYPE html&gt;
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                <title>Memory Usage Visualization</title>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            </head>
+            <body>
+                <h2>Memory Usage Over Time by File and Line</h2>
+                <canvas id="memoryChart" width="800" height="400"></canvas>
+                <input type="hidden" id="memoryGraph" t-att-value="profile.memory_graph"/>
+                <script>
+                    // Example data input: list of lists of dicts
+                    const test = document.getElementById('memoryGraph').value;
+                    const rawData = eval(test);
+                    
+                    // Prepare data for the chart
+                    const barLabels = rawData.map((_, index) => `List ${index + 1}`); // Labels for each group
+                    const memoryStacks = rawData.map(memoryList => {
+                        return memoryList.map(entry => ({
+                            label: `${entry.file[0]}:${entry.file[1]}`,
+                            size: entry.size
+                        }));
+                    });
+
+                    // Combine memory stacks for grouped bars
+                    const datasets = [];
+                    const uniqueLabels = new Set();
+
+                    memoryStacks.flat().forEach(entry => uniqueLabels.add(entry.label));
+
+                    uniqueLabels.forEach(label => {
+                        const data = rawData.map(memoryList => {
+                            const entry = memoryList.find(item => `${item.file[0]}:${item.file[1]}` === label);
+                            return entry ? entry.size : 0;
+                        });
+
+                        datasets.push({
+                            label,
+                            data,
+                            backgroundColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.6)`,
+                            borderColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`,
+                            borderWidth: 1
+                        });
+                    });
+
+                    // Chart.js configuration
+                    const config = {
+                        type: 'bar',
+                        data: {
+                            labels: barLabels,
+                            datasets: datasets
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    display: false,
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Memory Usage by List with File and Line Details'
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Lists'
+                                    },
+                                    stacked: true
+                                },
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: 'Memory Usage (bytes)'
+                                    },
+                                    beginAtZero: true,
+                                    stacked: true
+                                }
+                            }
+                        }
+                    };
+
+                    // Render the chart
+                    const ctx = document.getElementById('memoryChart').getContext('2d');
+                    new Chart(ctx, config);
+                </script>
+            </body>
+            </html>
+
+
+    </template>
 </odoo>

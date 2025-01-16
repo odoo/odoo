@@ -25,9 +25,6 @@ class Profiling(Controller):
         '/web/speedscope/<model("ir.profile"):profile>',
     ], type='http', sitemap=False, auth='user', readonly=True)
     def speedscope(self, profile=None):
-        # don't server speedscope index if profiling is not enabled
-        if not request.env['ir.profile']._enabled_until():
-            return request.not_found()
         icp = request.env['ir.config_parameter']
         context = {
             'profile': profile,
@@ -35,3 +32,13 @@ class Profiling(Controller):
             'cdn': icp.sudo().get_param('speedscope_cdn', "https://cdn.jsdelivr.net/npm/speedscope@1.13.0/dist/release/")
         }
         return request.render('web.view_speedscope_index', context)
+
+    @route([
+        '/web/memory_graph',
+        '/web/memory_graph/<model("ir.profile"):profile>',
+    ], type='http', sitemap=False, auth='user', readonly=True)
+    def memory_graph(self, profile=None):
+        context = {
+            'profile': profile,
+            }
+        return request.render('web.view_memory', context)
