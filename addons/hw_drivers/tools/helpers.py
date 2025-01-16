@@ -401,17 +401,17 @@ def load_certificate():
 
 
 def delete_iot_handlers():
-    """
-    Delete all the drivers and interfaces
-    This is needed to avoid conflicts
-    with the newly downloaded drivers
+    """Delete all drivers, interfaces and libs if any.
+    This is needed to avoid conflicts with the newly downloaded drivers.
     """
     try:
-        for directory in ['drivers', 'interfaces', 'lib']:
-            iot_handlers = file_path(f'hw_drivers/iot_handlers/{directory}')
-            for file in Path(iot_handlers).iterdir():
-                if file.is_file():
-                    unlink_file(f"odoo/addons/hw_drivers/iot_handlers/{directory}/{file.name}")
+        iot_handlers = Path(file_path(f'hw_drivers/iot_handlers'))
+        filenames = [
+            f"odoo/addons/hw_drivers/iot_handlers/{file.relative_to(iot_handlers)}"
+            for file in iot_handlers.glob('**/*')
+            if file.is_file()
+        ]
+        unlink_file(*filenames)
         _logger.info("Deleted old IoT handlers")
     except OSError:
         _logger.exception('Failed to delete old IoT handlers')
@@ -495,11 +495,12 @@ def read_file_first_line(filename):
             return f.readline().strip('\n')
 
 
-def unlink_file(filename):
+def unlink_file(*filenames):
     with writable():
-        path = path_file(filename)
-        if path.exists():
-            path.unlink()
+        for filename in filenames:
+            path = path_file(filename)
+            if path.exists():
+                path.unlink()
 
 
 def write_file(filename, text, mode='w'):
