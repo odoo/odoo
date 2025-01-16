@@ -782,8 +782,26 @@ will update the cost of every lot/serial number in stock."),
                 lot_by_product[product][lot] += qty
         for _product, location, lot, _qty in neg_lots:
             if location._should_be_valued():
-                raise UserError(_("Lot %(lot)s has a negative quantity in stock. Correct this \
-                        quantity before enabling lot valuation", lot=lot))
+                raise UserError(_(
+                    "Lot %(lot)s has a negative quantity in stock.\n"
+                    "Correct this quantity before enabling/disabling lot valuation.",
+                    lot=lot.display_name
+                ))
+        lot_valuated_products = self.filtered("lot_valuated")
+        if lot_valuated_products:
+            no_lot_quants = self.env['stock.quant']._read_group([
+                ('product_id', 'in', lot_valuated_products.ids),
+                ('lot_id', '=', False),
+                ('quantity', '!=', 0),
+            ], ['product_id', 'location_id'])
+            for product, location in no_lot_quants:
+                if location._should_be_valued():
+                    raise UserError(_(
+                        "Product %(product)s has quantity in valued location %(location)s without any lot.\n"
+                        "Please assign lots to all your quantities before enabling lot valuation.",
+                        product=product.display_name,
+                        location=location.display_name
+                    ))
 
         for product in self:
             quantity_svl = products_orig_quantity_svl[product.id]
