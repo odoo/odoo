@@ -37,6 +37,7 @@ export class HistoryDialog extends Component {
         revisionContent: null,
         revisionComparison: null,
         revisionId: null,
+        revisionLoading: false,
     });
 
     setup() {
@@ -64,11 +65,11 @@ export class HistoryDialog extends Component {
         if (this.state.revisionId === revisionId) {
             return;
         }
-        this.env.services.ui.block();
+        this.state.revisionLoading = true;
         this.state.revisionId = revisionId;
         this.state.revisionContent = await this.getRevisionContent(revisionId);
         this.state.revisionComparison = await this.getRevisionComparison(revisionId);
-        this.env.services.ui.unblock();
+        this.state.revisionLoading = false;
     }
 
     getRevisionComparison = memoize(
