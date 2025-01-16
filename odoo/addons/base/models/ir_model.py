@@ -366,7 +366,7 @@ class IrModel(models.Model):
         if not self._context.get(MODULE_UNINSTALL_FLAG):
             # setup models; this automatically removes model from registry
             self.env.flush_all()
-            self.pool.setup_models(self._cr)
+            self.pool._setup_models__(self._cr)
 
         return res
 
@@ -381,8 +381,8 @@ class IrModel(models.Model):
         res = super().write(vals)
         # ordering has been changed, reload registry to reflect update + signaling
         if 'order' in vals:
-            self.env.flush_all()  # setup_models need to fetch the updated values from the db
-            self.pool.setup_models(self._cr)
+            self.env.flush_all()  # _setup_models__ need to fetch the updated values from the db
+            self.pool._setup_models__(self._cr)
         return res
 
     @api.model_create_multi
@@ -394,7 +394,7 @@ class IrModel(models.Model):
         if manual_models:
             # setup models; this automatically adds model in registry
             self.env.flush_all()
-            self.pool.setup_models(self._cr)
+            self.pool._setup_models__(self._cr)
             # update database schema
             self.pool.init_models(self._cr, manual_models, dict(self._context, update_custom_fields=True))
         return res
@@ -460,21 +460,20 @@ class IrModel(models.Model):
         self.env['ir.model.data']._update_xmlids(data_list)
 
     @api.model
-    def _instanciate(self, model_data):
-        """ Return a class for the custom model given by parameters ``model_data``. """
-        models.check_pg_name(model_data["model"].replace(".", "_"))
-
-        class CustomModel(models.Model):
-            _name = model_data['model']
-            _description = model_data['name']
-            _module = False
-            _custom = True
-            _abstract = bool(model_data['abstract'])
-            _transient = bool(model_data['transient'])
-            _order = model_data['order']
-            __doc__ = model_data['info']
-
-        return CustomModel
+    def _instanciate_attrs(self, model_data):
+        """ Return the attributes to instanciate a custom model definition class
+            corresponding to ``model_data``.
+        """
+        return {
+            '_name': model_data['model'],
+            '_description': model_data['name'],
+            '_module': False,
+            '_custom': True,
+            '_abstract': bool(model_data['abstract']),
+            '_transient': bool(model_data['transient']),
+            '_order': model_data['order'],
+            '__doc__': model_data['info'],
+        }
 
     @api.model
     def _is_manual_name(self, name):
@@ -484,44 +483,6 @@ class IrModel(models.Model):
     def _check_manual_name(self, name):
         if not self._is_manual_name(name):
             raise ValidationError(_("The model name must start with 'x_'."))
-
-    def _add_manual_models(self):
-        """ Add extra models to the registry. """
-        # clean up registry first
-        for name, Model in list(self.pool.items()):
-            if Model._custom:
-                del self.pool.models[name]
-                # remove the model's name from its parents' _inherit_children
-                for Parent in Model.__bases__:
-                    if hasattr(Parent, 'pool'):
-                        Parent._inherit_children.discard(name)
-        # add manual models
-        cr = self.env.cr
-        # we cannot use self._fields to determine translated fields, as it has not been set up yet
-        cr.execute("SELECT *, name->>'en_US' AS name FROM ir_model WHERE state = 'manual'")
-        for model_data in cr.dictfetchall():
-            model_class = self._instanciate(model_data)
-            Model = model_class._build_model(self.pool, cr)
-            kind = sql.table_kind(cr, Model._table)
-            if kind not in (sql.TableKind.Regular, None):
-                _logger.info(
-                    "Model %r is backed by table %r which is not a regular table (%r), disabling automatic schema management",
-                    Model._name, Model._table, kind,
-                )
-                Model._auto = False
-                cr.execute(
-                    '''
-                    SELECT a.attname
-                      FROM pg_attribute a
-                      JOIN pg_class t
-                        ON a.attrelid = t.oid
-                       AND t.relname = %s
-                     WHERE a.attnum > 0 -- skip system columns
-                    ''',
-                    [Model._table]
-                )
-                columns = {colinfo[0] for colinfo in cr.fetchall()}
-                Model._log_access = set(models.LOG_ACCESS_COLUMNS) <= columns
 
 
 # retrieve field types defined by the framework only (not extensions)
@@ -856,6 +817,8 @@ class IrModelFields(models.Model):
         return dict(cr.fetchall())
 
     def _drop_column(self):
+        from odoo.orm.model_classes import pop_field
+
         tables_to_drop = set()
 
         for field in self:
@@ -874,7 +837,7 @@ class IrModelFields(models.Model):
                     rel_name = field.relation_table or (is_model and model._fields[field.name].relation)
                     tables_to_drop.add(rel_name)
             if field.state == 'manual' and is_model:
-                model._pop_field(field.name)
+                pop_field(model, field.name)
 
         if tables_to_drop:
             # drop the relation tables that are not used by other fields
@@ -892,6 +855,8 @@ class IrModelFields(models.Model):
             This method prevents the modification/deletion of many2one fields
             that have an inverse one2many, for instance.
         """
+        from odoo.orm.model_classes import pop_field
+
         uninstalling = self._context.get(MODULE_UNINSTALL_FLAG)
         if not uninstalling and any(record.state != 'manual' for record in self):
             raise UserError(_("This column contains module data and cannot be removed!"))
@@ -948,7 +913,7 @@ class IrModelFields(models.Model):
             if field:
                 self.env.cache.clear_dirty_field(field)
         # remove fields from registry, and check that views are not broken
-        fields = [self.env[record.model]._pop_field(record.name) for record in records]
+        fields = [pop_field(self.env[record.model], record.name) for record in records]
         domain = expression.OR([('arch_db', 'like', record.name)] for record in records)
         views = self.env['ir.ui.view'].search(domain)
         try:
@@ -970,7 +935,7 @@ class IrModelFields(models.Model):
         finally:
             if not uninstalling:
                 # the registry has been modified, restore it
-                self.pool.setup_models(self._cr)
+                self.pool._setup_models__(self._cr)
 
         return self
 
@@ -1006,7 +971,7 @@ class IrModelFields(models.Model):
         if not self._context.get(MODULE_UNINSTALL_FLAG):
             # setup models; this re-initializes models in registry
             self.env.flush_all()
-            self.pool.setup_models(self._cr)
+            self.pool._setup_models__(self._cr)
             # update database schema of model and its descendant models
             models = self.pool.descendants(model_names, '_inherits')
             self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
@@ -1043,7 +1008,7 @@ class IrModelFields(models.Model):
         if any(model in self.pool for model in models):
             # setup models; this re-initializes model in registry
             self.env.flush_all()
-            self.pool.setup_models(self._cr)
+            self.pool._setup_models__(self._cr)
             # update database schema of models and their descendants
             models = self.pool.descendants(models, '_inherits')
             self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
@@ -1122,7 +1087,7 @@ class IrModelFields(models.Model):
         if column_rename or patched_models or translate_only:
             # setup models, this will reload all manual fields in registry
             self.env.flush_all()
-            self.pool.setup_models(self._cr)
+            self.pool._setup_models__(self._cr)
 
         if patched_models:
             # update the database schema of the models to patch
@@ -1328,27 +1293,9 @@ class IrModelFields(models.Model):
             attrs['compute'] = make_compute(field_data['compute'], field_data['depends'])
         return attrs
 
-    def _instanciate(self, field_data):
-        """ Return a field instance corresponding to parameters ``field_data``. """
-        attrs = self._instanciate_attrs(field_data)
-        if attrs:
-            return fields.Field.by_type[field_data['ttype']](**attrs)
-
     @api.model
     def _is_manual_name(self, name):
         return name.startswith('x_')
-
-    def _add_manual_fields(self, model):
-        """ Add extra fields on model. """
-        fields_data = self._get_manual_field_data(model._name)
-        for name, field_data in fields_data.items():
-            if name not in model._fields and field_data['state'] == 'manual':
-                try:
-                    field = self._instanciate(field_data)
-                    if field:
-                        model._add_field(name, field)
-                except Exception:
-                    _logger.exception("Failed to load field %s.%s: skipped", model._name, field_data['name'])
 
     @api.model
     @tools.ormcache_context('model_name', keys=('lang',))
@@ -1411,7 +1358,7 @@ class IrModelInherit(models.Model):
             model = self.env[model_name]
 
             for cls in reversed(type(model).mro()):
-                if not models.is_definition_class(cls):
+                if not models.is_model_definition(cls):
                     continue
 
                 items = [
@@ -1649,7 +1596,7 @@ class IrModelFieldsSelection(models.Model):
         ):
             # setup models; this re-initializes model in registry
             self.env.flush_all()
-            self.pool.setup_models(self._cr)
+            self.pool._setup_models__(self._cr)
 
         return recs
 
@@ -1683,7 +1630,7 @@ class IrModelFieldsSelection(models.Model):
 
         # setup models; this re-initializes model in registry
         self.env.flush_all()
-        self.pool.setup_models(self._cr)
+        self.pool._setup_models__(self._cr)
 
         return result
 
@@ -1707,7 +1654,7 @@ class IrModelFieldsSelection(models.Model):
         if not self._context.get(MODULE_UNINSTALL_FLAG):
             # setup models; this re-initializes model in registry
             self.env.flush_all()
-            self.pool.setup_models(self._cr)
+            self.pool._setup_models__(self._cr)
 
         return result
 
@@ -2402,6 +2349,8 @@ class IrModelData(models.Model):
         the chance of gracefully deleting all records.
         This step is performed as part of the full uninstallation of a module.
         """
+        from odoo.orm.model_classes import add_field
+
         if not self.env.is_system():
             raise AccessError(_('Administrator access is required to uninstall a module'))
 
@@ -2448,7 +2397,7 @@ class IrModelData(models.Model):
                         # the field is shared across registries; don't modify it
                         Field = type(field)
                         field_ = Field(_base_fields=[field, Field(prefetch=False)])
-                        self.env[ir_field.model]._add_field(ir_field.name, field_)
+                        add_field(self.env[ir_field.model], ir_field.name, field_)
                         field_.setup(model)
                         has_shared_field = True
         if has_shared_field:
