@@ -14,37 +14,6 @@
         return;
     }
 
-    /**
-     * @param {() => void} callback
-     */
-    function domReady(callback) {
-        if (document.readyState === "complete") {
-            callback();
-        } else {
-            document.addEventListener("DOMContentLoaded", callback);
-        }
-    }
-
-    /**
-     * @param {string} heading
-     * @param {string[]} names
-     */
-    function list(heading, names) {
-        const frag = document.createDocumentFragment();
-        if (!names || !names.length) {
-            return frag;
-        }
-        frag.textContent = heading;
-        const ul = document.createElement("ul");
-        for (const el of names) {
-            const li = document.createElement("li");
-            li.textContent = el;
-            ul.append(li);
-        }
-        frag.appendChild(ul);
-        return frag;
-    }
-
     class ModuleLoader {
         /**
          * Mapping name => { deps, fn }
@@ -201,43 +170,33 @@
                 return;
             }
 
-            domReady(() => {
-                // Empty body
-                document.body.innerHTML = "";
+            const style = document.createElement("style");
+            style.textContent = `
+                body::before {
+                    font-weight: bold;
+                    content: "An error occurred while loading javascript modules, you may find more information in the devtools console";
+                    position: fixed;
+                    left: 0;
+                    bottom: 0;
+                    z-index: 100000000000;
+                    background-color: #C00;
+                    color: #DDD;
+                }
+            `;
 
-                const container = document.createElement("div");
-                container.className =
-                    "o_module_error position-fixed w-100 h-100 d-flex align-items-center flex-column bg-white overflow-auto modal";
-                container.style.zIndex = "10000";
-                const alert = document.createElement("div");
-                alert.className = "alert alert-danger o_error_detail fw-bold m-auto";
-                container.appendChild(alert);
-                alert.appendChild(
-                    list(
-                        "The following modules failed to load because of an error, you may find more information in the devtools console:",
-                        failed
-                    )
-                );
-                alert.appendChild(
-                    list(
-                        "The following modules could not be loaded because they form a dependency cycle:",
-                        cycle && [cycle]
-                    )
-                );
-                alert.appendChild(
-                    list(
-                        "The following modules are needed by other modules but have not been defined, they may not be present in the correct asset bundle:",
-                        missing
-                    )
-                );
-                alert.appendChild(
-                    list(
-                        "The following modules could not be loaded because they have unmet dependencies, this is a secondary error which is likely caused by one of the above problems:",
-                        unloaded
-                    )
-                );
-                document.body.appendChild(container);
-            });
+            document.head.appendChild(style);
+            if (failed.length) {
+                console.error("The following modules failed to load because of an error:", failed)
+            }
+            if (missing) {
+                console.error("The following modules are needed by other modules but have not been defined, they may not be present in the correct asset bundle:", missing);
+            }
+            if (cycle) {
+                console.error("The following modules could not be loaded because they form a dependency cycle:", cycle);
+            }
+            if (unloaded) {
+                console.error("The following modules could not be loaded because they have unmet dependencies, this is a secondary error which is likely caused by one of the above problems:", unloaded);
+            }
         }
     }
 
