@@ -5,12 +5,12 @@ import { BuilderOverlay } from "./builder_overlay";
 
 export class BuilderOverlayPlugin extends Plugin {
     static id = "builderOverlay";
-    static dependencies = ["selection", "localOverlay", "history"];
+    static dependencies = ["localOverlay", "history"];
     static shared = ["showOverlayPreview", "hideOverlayPreview"];
     resources = {
-        step_added_handlers: this._update.bind(this),
-        change_current_options_containers_listeners: this.openBuilderOverlay.bind(this),
-        on_mobile_preview_clicked: this._update.bind(this),
+        step_added_handlers: this.refreshOverlays.bind(this),
+        change_current_options_containers_listeners: this.openBuilderOverlays.bind(this),
+        on_mobile_preview_clicked: this.refreshOverlays.bind(this),
     };
 
     setup() {
@@ -21,17 +21,19 @@ export class BuilderOverlayPlugin extends Plugin {
         );
         /** @type {[BuilderOverlay]} */
         this.overlays = [];
+        // Refresh the overlays position everytime their target size changes.
+        this.resizeObserver = new ResizeObserver(() => this.refreshPositions());
 
-        this.update = throttleForAnimation(this._update.bind(this));
+        this._refreshOverlays = throttleForAnimation(this.refreshOverlays.bind(this));
 
         // Recompute the overlay when the window is resized.
-        this.addDomListener(window, "resize", this.update);
+        this.addDomListener(window, "resize", this._refreshOverlays);
 
         // On keydown, hide the overlay and then show it again when the mouse
         // moves.
         const onMouseMoveOrDown = throttleForAnimation((ev) => {
             this.toggleOverlaysVisibility(true);
-            this.refreshPosition();
+            this.refreshPositions();
             ev.currentTarget.removeEventListener("mousemove", onMouseMoveOrDown);
             ev.currentTarget.removeEventListener("mousedown", onMouseMoveOrDown);
         });
@@ -53,17 +55,20 @@ export class BuilderOverlayPlugin extends Plugin {
                 clearTimeout(this.scrollingTimeout);
                 this.scrollingTimeout = setTimeout(() => {
                     this.toggleOverlaysVisibility(true);
-                    this.refreshPosition();
+                    this.refreshPositions();
                 }, 250);
             }),
             { capture: true }
         );
 
-        this._cleanups.push(() => this.removeBuilderOverlay());
+        this._cleanups.push(() => {
+            this.removeBuilderOverlays();
+            this.resizeObserver.disconnect();
+        });
     }
 
-    openBuilderOverlay(optionsContainer) {
-        this.removeBuilderOverlay();
+    openBuilderOverlays(optionsContainer) {
+        this.removeBuilderOverlays();
         if (!optionsContainer.length) {
             return;
         }
@@ -74,10 +79,10 @@ export class BuilderOverlayPlugin extends Plugin {
                 iframe: this.iframe,
                 overlayContainer: this.overlayContainer,
                 addStep: this.dependencies.history.addStep,
-                refreshAllOverlaysPosition: this.refreshPosition.bind(this),
             });
             this.overlays.push(overlay);
             this.overlayContainer.append(overlay.overlayElement);
+            this.resizeObserver.observe(overlay.overlayTarget, { box: "border-box" });
         });
 
         // Activate the last overlay.
@@ -95,37 +100,27 @@ export class BuilderOverlayPlugin extends Plugin {
                 }
             }
         }
-
-        // TODO check if resizeObserver still needed.
-        // this.resizeObserver = new ResizeObserver(this.update.bind(this));
-        // this.resizeObserver.observe(this.overlayTarget);
     }
 
-    removeBuilderOverlay() {
+    removeBuilderOverlays() {
         this.overlays.forEach((overlay) => {
             overlay.destroy();
             overlay.overlayElement.remove();
+            this.resizeObserver.unobserve(overlay.overlayTarget);
         });
         this.overlays = [];
-        // this.resizeObserver?.disconnect();
     }
 
-    _update() {
+    refreshOverlays() {
         this.overlays.forEach((overlay) => {
             overlay.refreshPosition();
             overlay.refreshHandles();
         });
     }
 
-    refreshPosition() {
+    refreshPositions() {
         this.overlays.forEach((overlay) => {
             overlay.refreshPosition();
-        });
-    }
-
-    refreshHandles() {
-        this.overlays.forEach((overlay) => {
-            overlay.refreshHandles();
         });
     }
 

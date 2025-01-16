@@ -1,6 +1,8 @@
 import { expect, test } from "@odoo/hoot";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./helpers";
 import { contains } from "@web/../tests/web_test_helpers";
+import { queryOne } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
 
 defineWebsiteModels();
 
@@ -25,6 +27,26 @@ test("Toggle the overlays when clicking on an option element", async () => {
     expect(".oe_overlay").toHaveCount(2);
     expect(".oe_overlay.oe_active").toHaveCount(1);
     expect(".oe_overlay.oe_active").toHaveRect(":iframe .col-lg-3");
+});
+
+test("Refresh the overlays when their target size changes", async () => {
+    await setupWebsiteBuilder(`
+        <section>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3" style="height: 20px;">
+                        <p>TEST</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    `);
+    await contains(":iframe .col-lg-3").click();
+    expect(".oe_overlay.oe_active").toHaveRect(":iframe .col-lg-3");
+
+    queryOne(":iframe .col-lg-3").style.height = "50px";
+    await animationFrame();
+    expect(".oe_overlay.oe_active").toHaveStyle({ height: "50px" });
 });
 
 test("Resize vertically (sizingY)", async () => {

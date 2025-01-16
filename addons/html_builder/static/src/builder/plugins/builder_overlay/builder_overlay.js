@@ -23,9 +23,8 @@ export const sizingGrid = {
 };
 
 export class BuilderOverlay {
-    constructor(overlayTarget, { iframe, overlayContainer, addStep, refreshAllOverlaysPosition }) {
+    constructor(overlayTarget, { iframe, overlayContainer, addStep }) {
         this.addStep = addStep;
-        this.refreshAllOverlaysPosition = refreshAllOverlaysPosition;
         this.iframe = iframe;
         this.overlayContainer = overlayContainer;
         this.overlayElement = renderToElement("html_builder.BuilderOverlay");
@@ -500,7 +499,6 @@ export class BuilderOverlay {
         this.overlayElement.classList.remove("o_handlers_idle");
 
         const onSizingMove = (ev) => {
-            let changeTotal = false;
             for (const dir of directions) {
                 const configValues = dir.config.values;
                 const currentIndex = dir.currentIndex;
@@ -556,11 +554,6 @@ export class BuilderOverlay {
                     onResize(dir.compass, dir.initialClasses, dir.currentIndex);
                     // TODO notify other options (e.g. steps)
                 }
-                changeTotal = changeTotal || change;
-            }
-
-            if (changeTotal) {
-                this.refreshAllOverlaysPosition();
             }
         };
 
