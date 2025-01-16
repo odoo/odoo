@@ -40,6 +40,7 @@ import { FormController } from "@web/views/form/form_controller";
 import { Counter, EmbeddedWrapperMixin } from "./_helpers/embedded_component";
 import { moveSelectionOutsideEditor, setSelection } from "./_helpers/selection";
 import { insertText, pasteOdooEditorHtml, pasteText, undo } from "./_helpers/user_actions";
+import { unformat } from "./_helpers/format";
 
 class Partner extends models.Model {
     txt = fields.Html({ trim: true });
@@ -111,6 +112,11 @@ beforeEach(() => {
         onEditorLoad(editor) {
             htmlEditor = editor;
             return super.onEditorLoad(...arguments);
+        },
+        getConfig() {
+            const config = super.getConfig();
+            config.Plugins = config.Plugins.filter((Plugin) => Plugin.id !== "editorVersion");
+            return config;
         },
     });
 });
@@ -1374,7 +1380,7 @@ describe("sandbox", () => {
     });
 
     function htmlDocumentTextTemplate(text, color) {
-        return `
+        return unformat(`
         <html>
             <head>
                 <style>
@@ -1387,7 +1393,7 @@ describe("sandbox", () => {
                 ${text}
             </body>
         </html>
-        `;
+        `);
     }
 
     test("sandboxed preview display and editing", async () => {
