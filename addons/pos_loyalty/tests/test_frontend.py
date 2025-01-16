@@ -116,6 +116,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'use_pricelist': False,
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.product_b.uom_id = 1
 
     def create_programs(self, details):
         """
