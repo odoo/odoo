@@ -803,3 +803,18 @@ export function createProductFromFrontend(name, barcode, list_price, category) {
 export function editProductFromFrontend(name, barcode, list_price) {
     return productInputSteps(name, barcode, list_price);
 }
+
+export function selectPreset(name = "Eat In") {
+    return [
+        {
+            content: "select Tackout preset",
+            trigger: `.product-screen .pads .control-buttons .preset-button`,
+            run: "click",
+        },
+        {
+            content: "select preset",
+            trigger: `.modal button:contains(${name})`,
+            run: "click",
+        },
+    ];
+}
