@@ -28,11 +28,11 @@ export class AccountMoveService {
         return false;
     }
 
-    async downloadPdf(accountMoveId) {
+    async downloadPdf(accountMoveId, target = "download") {
         const downloadAction = await this.orm.call(
             "account.move",
             "action_invoice_download_pdf",
-            [accountMoveId]
+            [accountMoveId, target]
         );
         await this.action.doAction(downloadAction);
     }
