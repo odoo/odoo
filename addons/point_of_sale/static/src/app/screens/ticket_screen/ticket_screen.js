@@ -28,6 +28,7 @@ import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { ConnectionLostError } from "@web/core/network/rpc";
 
+const { DateTime } = luxon;
 const NBR_BY_PAGE = 30;
 
 export class TicketScreen extends Component {
@@ -64,9 +65,7 @@ export class TicketScreen extends Component {
         this.ui = useService("ui");
         this.dialog = useService("dialog");
         this.numberBuffer = useService("number_buffer");
-        this.doPrint = useTrackedAsync((_selectedSyncedOrder) =>
-            this.pos.printReceipt({ order: _selectedSyncedOrder })
-        );
+        this.doPrint = useTrackedAsync((_selectedSyncedOrder) => this.print(_selectedSyncedOrder));
         this.numberBuffer.use({
             triggerAtInput: (event) => this._onUpdateSelectedOrderline(event),
         });
@@ -132,6 +131,9 @@ export class TicketScreen extends Component {
                 this.onClickOrder(firstFilteredOrder);
             }
         }
+    }
+    async print(order) {
+        await this.pos.printReceipt({ order: order });
     }
     async onFilterSelected(selectedFilter) {
         this.state.filter = selectedFilter;
@@ -804,6 +806,25 @@ export class TicketScreen extends Component {
 
         if (idsNotInCacheOrOutdated.length > 0) {
             await this.pos.data.read("pos.order", Array.from(new Set(idsNotInCacheOrOutdated)));
+        }
+    }
+    //#endregion
+    getPresetTimeColor(order) {
+        const slot = order.preset_id.actualPreset;
+        const presetTime = DateTime.fromSQL(order.preset_time);
+        if (!slot) {
+            if (presetTime < DateTime.now()) {
+                return "bg-danger text-white";
+            } else {
+                return "bg-light text-dark";
+            }
+        }
+        if (slot.start <= presetTime && presetTime < slot.end) {
+            return "bg-warning text-dark";
+        } else if (presetTime < slot.start) {
+            return "bg-danger text-white";
+        } else {
+            return "bg-light text-dark";
         }
     }
 }

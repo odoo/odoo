@@ -39,7 +39,7 @@ export class PrinterService extends Reactive {
             errorCode: printResult.errorCode,
         };
     }
-    async print(component, props, options) {
+    async print(component, props, options = {}) {
         this.state.isPrinting = true;
         const el = await this.renderer.toHtml(component, props);
         try {

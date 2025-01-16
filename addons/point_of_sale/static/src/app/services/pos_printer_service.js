@@ -10,7 +10,7 @@ export const posPrinterService = {
         return new PosPrinterService(env, { hardware_proxy, dialog, renderer });
     },
 };
-class PosPrinterService extends PrinterService {
+export class PosPrinterService extends PrinterService {
     constructor(...args) {
         super(...args);
         this.setup(...args);

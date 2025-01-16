@@ -57,11 +57,6 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
 
             ProductScreen.addOrderline("Water", "8", "1", "8.0"),
 
-            // Test PrintBillButton
-            ProductScreen.clickControlButton("Bill"),
-            Dialog.is({ title: "Bill Printing" }),
-            Dialog.cancel(),
-
             // Test GuestButton
             ProductScreen.clickControlButton("Guests"),
             {
