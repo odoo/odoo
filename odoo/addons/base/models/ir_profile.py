@@ -40,11 +40,15 @@ class IrProfile(models.Model):
     sql_count = fields.Integer('Queries Count')
     traces_async = fields.Text('Traces Async', prefetch=False)
     traces_sync = fields.Text('Traces Sync', prefetch=False)
+    others = fields.Text('others', prefetch=False)
     qweb = fields.Text('Qweb', prefetch=False)
     entry_count = fields.Integer('Entry count')
 
     speedscope = fields.Binary('Speedscope', compute='_compute_speedscope')
     speedscope_url = fields.Text('Open', compute='_compute_speedscope_url')
+
+    config_url = fields.Text('Open profiles config', compute='_compute_config_url')
+    has_memory = fields.Boolean('Has Memory Profile', compute='_compute_has_memory')
 
     @api.autovacuum
     def _gc_profile(self):
@@ -54,6 +58,24 @@ class IrProfile(models.Model):
         records.unlink()
         return len(records), len(records) == GC_UNLINK_LIMIT  # done, remaining
 
+    def _compute_has_memory(self):
+        for profile in self:
+            profile.has_memory = bool(profile.others and json.loads(profile.others).get("memory"))
+
+    def _generate_memory_profile(self, params):
+        memory_graph = []
+        memory_limit = params.get('memory_limit', 0)
+        for profile in self:
+            if profile.others:
+                memory = json.loads(profile.others).get("memory", "[{}]")
+                for entry in json.loads(memory)[:-1]:   # Eleminating the last element is due to the PeriodicCollector class taking an empty last frame at the end of the thread collection.
+                    memory_graph.append([sample for sample in entry if sample['size'] > memory_limit])
+        return memory_graph
+
+    def _compute_config_url(self):
+        for profile in self:
+            profile.config_url = f'/web/profile_config/{profile.id}'
+
     @api.depends('init_stack_trace')
     def _compute_speedscope(self):
         # The params variable is done to control input from the user
@@ -62,16 +84,17 @@ class IrProfile(models.Model):
         for execution in self:
             execution.speedscope = base64.b64encode(execution._generate_speedscope(params))
 
-    def _parse_params(self, params):
+    def _parse_params(self, params = dict()):
         return {
             'constant_time' : str2bool(params.get('constant_time', False)),
             'aggregate_sql' : str2bool(params.get('aggregate_sql', False)),
-            'use_context' : str2bool(params.get('use_execution_context', False)),
-            'combined_profile' : str2bool(params.get('combined_profile', False)),
-            'sql_no_gap_profile' : str2bool(params.get('sql_no_gap_profile', False)),
-            'sql_density_profile' : str2bool(params.get('sql_density_profile', False)),
-            'frames_profile' : str2bool(params.get('frames_profile', False)),
+            'use_context' : str2bool(params.get('use_execution_context', True)),
+            'combined_profile' : str2bool(params.get('combined_profile', True)),
+            'sql_no_gap_profile' : str2bool(params.get('sql_no_gap_profile', True)),
+            'sql_density_profile' : str2bool(params.get('sql_density_profile', True)),
+            'frames_profile' : str2bool(params.get('frames_profile', True)),
             'profile_aggregation_mode': params.get('profile_aggregation_mode', 'tabs'),
+            'memory_limit': int(params.get('memory_limit', 0))
         }
 
     def _generate_speedscope(self, params):

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="view_memory">
+        &lt;!DOCTYPE html&gt;
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                <title>Memory Usage Visualization</title>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+            </head>
+            <body>
+                <canvas id="totalMemoryChart" height="629" style="display: block; box-sizing: border-box; height: 629px; width: 1889px;" width="1889"></canvas>
+                <canvas id="memoryChart" width="1889" height="1416" style="display: block; box-sizing: border-box; height: 1416px; width: 1889px;"></canvas>
+
+                <script>
+                    const rawData = JSON.parse(atob('<t t-esc="memory_graph"/>'))
+                    function formatBytes(bytes) {
+                        if (bytes === 0) return '0 B';
+                        const k = 1024;
+                        const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+                        const i = Math.floor(Math.log(Math.abs(bytes)) / Math.log(k));
+                        const value = bytes / Math.pow(k, i);
+                        return `${value.toFixed(1)} ${sizes[i]}`;
+                    }
+
+                    const totalSizes = rawData.map(list =>
+                        list.reduce((sum, entry) => sum + entry.size, 0)
+                    );
+
+                    const lineLabels = rawData.map((_, i) => `List ${i + 1}`);
+
+                    const ctxLine = document.getElementById('totalMemoryChart');
+                    const ctxBar = document.getElementById('memoryChart').getContext('2d');
+                    let selectedIndexes = [];
+
+                    const updateBarChart = () => {
+                        const datasets = [];
+
+                        if (selectedIndexes.length === 1) {
+                            const data = rawData[selectedIndexes[0]];
+                            datasets.push({
+                                label: `Breakdown for List ${selectedIndexes[0] + 1}`,
+                                data: data.map(e => e.size),
+                                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            });
+
+                            breakdownChart.data.labels = data.map(e => `${e.file[0]}:${e.file[1]}`);
+                            breakdownChart.data.datasets = datasets;
+                            breakdownChart.options.plugins.datalabels.display = true;
+                            breakdownChart.options.plugins.datalabels.formatter = (value, context) => formatBytes(value);
+                            breakdownChart.update();
+
+                        } else if (selectedIndexes.length === 2) {
+                            const [idx1, idx2] = selectedIndexes;
+
+                            const data1 = rawData[idx1];
+                            const data2 = rawData[idx2];
+
+                            const labelSet = new Set([
+                                ...data1.map(e => `${e.file[0]}:${e.file[1]}`),
+                                ...data2.map(e => `${e.file[0]}:${e.file[1]}`)
+                            ]);
+
+                            let diffData = [];
+
+                            labelSet.forEach(label => {
+                                const entry1 = data1.find(e => `${e.file[0]}:${e.file[1]}` === label);
+                                const entry2 = data2.find(e => `${e.file[0]}:${e.file[1]}` === label);
+                                const size1 = entry1 ? entry1.size : 0;
+                                const size2 = entry2 ? entry2.size : 0;
+                                const diff = size2 - size1;
+                                if (diff !== 0) {
+                                    diffData.push({ label, diff });
+                                }
+                            });
+
+                            diffData.sort((a, b) => b.diff - a.diff);
+
+                            breakdownChart.data.labels = diffData.map(e => e.label);
+                            breakdownChart.data.datasets = [{
+                                label: `Difference (List ${idx2 + 1} - List ${idx1 + 1})`,
+                                data: diffData.map(e => e.diff),
+                                backgroundColor: diffData.map(e => e.diff >= 0 ? 'rgba(75, 192, 192, 0.6)' : 'rgba(255, 99, 132, 0.6)'),
+                                borderColor: diffData.map(e => e.diff >= 0 ? 'rgba(75, 192, 192, 1)' : 'rgba(255, 99, 132, 1)'),
+                                borderWidth: 1
+                            }];
+
+                            breakdownChart.options.plugins.datalabels.display = true;
+                            breakdownChart.options.plugins.datalabels.formatter = (value) => formatBytes(value);
+                            breakdownChart.update();
+                        } else {
+                            breakdownChart.data.labels = [];
+                            breakdownChart.data.datasets = [];
+                            breakdownChart.update();
+                        }
+
+                        totalChart.update();
+                    };
+
+                    const totalChart = new Chart(ctxLine.getContext('2d'), {
+                        type: 'line',
+                        data: {
+                            labels: lineLabels,
+                            datasets: [{
+                                label: 'Total Memory Usage',
+                                data: totalSizes,
+                                fill: false,
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                tension: 0.1,
+                                pointBackgroundColor: (ctx) => selectedIndexes.includes(ctx.dataIndex) ? 'rgba(255, 99, 132, 1)' : 'rgba(75, 192, 192, 1)',
+                                pointRadius: (ctx) => selectedIndexes.includes(ctx.dataIndex) ? 7 : 4,
+                                pointBorderWidth: (ctx) => selectedIndexes.includes(ctx.dataIndex) ? 3 : 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Total Memory Usage Over Time'
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: (context) => `Total: ${formatBytes(context.raw)}`
+                                    }
+                                }
+                            },
+                            onClick: (evt, elements) => {
+                                if (elements.length === 0) {
+                                    selectedIndexes = [];
+                                } else {
+                                    const idx = elements[0].index;
+                                    if (evt.native.shiftKey) {
+                                        if (!selectedIndexes.includes(idx)) {
+                                            selectedIndexes.push(idx);
+                                        }
+                                    } else {
+                                        selectedIndexes = [idx];
+                                    }
+                                    if (selectedIndexes.length > 2) {
+                                        selectedIndexes = selectedIndexes.slice(-2);
+                                    }
+                                }
+                                updateBarChart();
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: formatBytes
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Total Memory'
+                                    }
+                                },
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Lists'
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    const breakdownChart = new Chart(ctxBar, {
+                        type: 'bar',
+                        data: {
+                            labels: [],
+                            datasets: []
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            responsive: true,
+                            plugins: {
+                                legend: { display: false },
+                                title: {
+                                    display: true,
+                                    text: 'Breakdown by File:Line'
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: (context) => `${context.dataset.label}: ${formatBytes(context.raw)}`
+                                    }
+                                },
+                                datalabels: {
+                                    anchor: 'end',
+                                    align: 'right',
+                                    color: '#000',
+                                    font: {
+                                        weight: 'bold'
+                                    },
+                                    formatter: (value) => formatBytes(value),
+                                    display: true
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: formatBytes
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Memory Usage'
+                                    }
+                                },
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: 'File:Line'
+                                    }
+                                }
+                            }
+                        },
+                        plugins: [ChartDataLabels]
+                    });
+
+                    updateBarChart();
+                </script>
+            </body>
+            </html>
+
+
+    </template>
+</odoo>
