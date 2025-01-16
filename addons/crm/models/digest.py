@@ -32,8 +32,8 @@ class Digest(models.Model):
 
     def _compute_kpis_actions(self, company, user):
         res = super(Digest, self)._compute_kpis_actions(company, user)
-        res['kpi_crm_lead_created'] = 'crm.crm_lead_action_pipeline&menu_id=%s' % self.env.ref('crm.crm_menu_root').id
-        res['kpi_crm_opportunities_won'] = 'crm.crm_lead_action_pipeline&menu_id=%s' % self.env.ref('crm.crm_menu_root').id
+        res['kpi_crm_lead_created'] = 'crm.crm_lead_action_pipeline?menu_id=%s' % self.env.ref('crm.crm_menu_root').id
+        res['kpi_crm_opportunities_won'] = 'crm.crm_lead_action_pipeline?menu_id=%s' % self.env.ref('crm.crm_menu_root').id
         if user.has_group('crm.group_use_lead'):
-            res['kpi_crm_lead_created'] = 'crm.crm_lead_all_leads&menu_id=%s' % self.env.ref('crm.crm_menu_root').id
+            res['kpi_crm_lead_created'] = 'crm.crm_lead_all_leads?menu_id=%s' % self.env.ref('crm.crm_menu_root').id
         return res
