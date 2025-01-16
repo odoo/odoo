@@ -140,6 +140,18 @@ export function strikeThrough(editor) {
 export function setFontSize(size) {
     return (editor) => execCommand(editor, "formatFontSize", { size });
 }
+export function setFontFamily(fontFamily) {
+    return (editor) => {
+        editor.shared.format.formatSelection("fontFamily", {
+            applyStyle: fontFamily !== false,
+            formatProps: {
+                name: fontFamily + "_name",
+                nameShort: fontFamily + "_nameShort",
+                fontFamily: fontFamily,
+            },
+        });
+    };
+}
 /** @param {Editor} editor */
 export function switchDirection(editor) {
     return execCommand(editor, "switchDirection");
