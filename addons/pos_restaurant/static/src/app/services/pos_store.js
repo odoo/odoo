@@ -4,8 +4,6 @@ import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { EditOrderNamePopup } from "@pos_restaurant/app/popup/edit_order_name_popup/edit_order_name_popup";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
-import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt_screen";
-import { TipScreen } from "../screens/tip_screen/tip_screen";
 
 patch(PosStore.prototype, {
     /**
@@ -48,6 +46,106 @@ patch(PosStore.prototype, {
         }
         return super.defaultScreen;
     },
+<<<<<<< master
+||||||| f1a653d8afe029c89cac220f7884f6d7d4b2d0e7
+    async recordSynchronisation(data) {
+        await super.recordSynchronisation(...arguments);
+        if (data.records["pos.order"]?.length > 0) {
+            // Verify if there is only 1 order by table.
+            const orderByTableId = this.models["pos.order"].reduce((acc, order) => {
+                // Floating order doesn't need to be verified.
+                if (!order.finalized && order.table_id?.id) {
+                    acc[order.table_id.id] = acc[order.table_id.id] || [];
+                    acc[order.table_id.id].push(order);
+                }
+                return acc;
+            }, {});
+
+            for (const orders of Object.values(orderByTableId)) {
+                if (orders.length > 1) {
+                    // The only way to get here is if there is several waiters on the same table.
+                    // In this case we take orderline of the local order and we add it to the synced order.
+                    const syncedOrder = orders.find((order) => typeof order.id === "number");
+                    const localOrders = orders.find((order) => typeof order.id !== "number");
+
+                    let watcher = 0;
+                    while (localOrders.lines.length > 0) {
+                        if (watcher > 1000) {
+                            break;
+                        }
+
+                        const line = localOrders.lines.pop();
+                        line.update({ order_id: syncedOrder });
+                        line.setDirty();
+                        watcher++;
+                    }
+
+                    // Remove local orders from the local database.
+                    if (this.getOrder()?.id === localOrders.id) {
+                        this.setOrder(syncedOrder);
+                        this.addPendingOrder([syncedOrder.id]);
+                    }
+
+                    localOrders.delete();
+                }
+            }
+            this.computeTableCount();
+        }
+    },
+    async closingSessionNotification(data) {
+        await super.closingSessionNotification(...arguments);
+        this.computeTableCount(data);
+    },
+=======
+    async recordSynchronisation(data) {
+        await super.recordSynchronisation(...arguments);
+        if (data.records["pos.order"]?.length > 0) {
+            // Verify if there is only 1 order by table.
+            const orderByTableId = this.models["pos.order"].reduce((acc, order) => {
+                // Floating order doesn't need to be verified.
+                if (!order.finalized && order.table_id?.id) {
+                    acc[order.table_id.id] = acc[order.table_id.id] || [];
+                    acc[order.table_id.id].push(order);
+                }
+                return acc;
+            }, {});
+
+            for (const orders of Object.values(orderByTableId)) {
+                if (orders.length > 1) {
+                    // The only way to get here is if there is several waiters on the same table.
+                    // In this case we take orderline of the local order and we add it to the synced order.
+                    const syncedOrder = orders.find((order) => typeof order.id === "number");
+                    const localOrders = orders.find((order) => typeof order.id !== "number");
+
+                    let watcher = 0;
+                    while (localOrders.lines.length > 0) {
+                        if (watcher > 1000) {
+                            break;
+                        }
+
+                        const line = localOrders.lines.pop();
+                        line.update({ order_id: syncedOrder });
+                        line.setDirty();
+                        watcher++;
+                    }
+
+                    // Remove local orders from the local database.
+                    if (this.getOrder()?.id === localOrders.id) {
+                        this.setOrder(syncedOrder);
+                        this.addPendingOrder([syncedOrder.id]);
+                    }
+
+                    localOrders.delete();
+                }
+            }
+            this.computeTableCount();
+        }
+    },
+    async closingSessionNotification() {
+        await super.closingSessionNotification(...arguments);
+        this.computeTableCount();
+    },
+>>>>>>> e6ae7b655b709b59a494c51b50d7be2aec7260ed
     async onDeleteOrder(order) {
         const orderIsDeleted = await super.onDeleteOrder(...arguments);
         if (
@@ -58,6 +156,7 @@ patch(PosStore.prototype, {
             this.showScreen("FloorScreen");
         }
     },
+<<<<<<< master
     async wsSyncTableCount(data) {
         if (data.login_number == this.session.login_number) {
             this.computeTableCount(data);
@@ -163,6 +262,116 @@ patch(PosStore.prototype, {
         const tables = tableIds
             ? this.models["restaurant.table"].readMany(tableIds)
             : this.models["restaurant.table"].getAll();
+||||||| f1a653d8afe029c89cac220f7884f6d7d4b2d0e7
+    async wsSyncTableCount(data) {
+        if (data.login_number === this.session.login_number) {
+            this.computeTableCount(data);
+            return;
+        }
+
+        const missingTable = data["table_ids"].find(
+            (tableId) => !(tableId in this.models["restaurant.table"].getAllBy("id"))
+        );
+        if (missingTable) {
+            const response = await this.data.searchRead("restaurant.floor", [
+                ["pos_config_ids", "in", this.config.id],
+            ]);
+
+            const table_ids = response.map((floor) => floor.raw.table_ids).flat();
+            await this.data.read("restaurant.table", table_ids);
+        }
+        const tableLocalOrders = this.models["pos.order"].filter(
+            (o) => data["table_ids"].includes(o.table_id?.id) && !o.finalized
+        );
+        const localOrderlines = tableLocalOrders
+            .filter((o) => typeof o.id === "number")
+            .flatMap((o) => o.lines)
+            .filter((l) => typeof l.id !== "number");
+        const lineIdByOrderId = localOrderlines.reduce((acc, curr) => {
+            if (!acc[curr.order_id.id]) {
+                acc[curr.order_id.id] = [];
+            }
+            acc[curr.order_id.id].push(curr.id);
+            return acc;
+        }, {});
+
+        const orders = await this.data.searchRead("pos.order", [
+            ["session_id", "=", this.session.id],
+            ["table_id", "in", data["table_ids"]],
+        ]);
+        await this.data.read(
+            "pos.order.line",
+            orders.flatMap((o) => o.lines).map((l) => l.id),
+            ["qty"]
+        );
+        for (const [orderId, lineIds] of Object.entries(lineIdByOrderId)) {
+            const lines = this.models["pos.order.line"].readMany(lineIds);
+            for (const line of lines) {
+                line.update({ order_id: orderId });
+            }
+        }
+
+        let isDraftOrder = false;
+        for (const order of orders) {
+            if (order.state !== "draft") {
+                this.removePendingOrder(order);
+                continue;
+            } else {
+                this.addPendingOrder([order.id]);
+            }
+
+            const tableId = order.table_id?.id;
+            if (!tableId) {
+                continue;
+            }
+
+            const draftOrder = this.models["pos.order"].find(
+                (o) => o.table_id?.id === tableId && o.id !== order.id && o.state === "draft"
+            );
+
+            if (!draftOrder) {
+                continue;
+            }
+
+            for (const orphanLine of draftOrder.lines) {
+                const adoptingLine = order.lines.find((l) => l.canBeMergedWith(orphanLine));
+                if (adoptingLine && adoptingLine.id !== orphanLine.id) {
+                    adoptingLine.merge(orphanLine);
+                } else if (!adoptingLine) {
+                    orphanLine.update({ order_id: order });
+                }
+            }
+
+            if (this.selectedOrderUuid === draftOrder.uuid) {
+                this.selectedOrderUuid = order.uuid;
+            }
+
+            await this.removeOrder(draftOrder, true);
+            isDraftOrder = true;
+        }
+
+        if (
+            this.getOrder()?.finalized &&
+            ![ReceiptScreen, TipScreen].includes([this.mainScreen.component])
+        ) {
+            this.addNewOrder();
+        }
+
+        if (isDraftOrder) {
+            await this.syncAllOrders();
+        }
+
+        this.computeTableCount(data);
+    },
+    computeTableCount(data) {
+        const tableIds = data?.table_ids;
+        const tables = tableIds
+            ? this.models["restaurant.table"].readMany(tableIds)
+            : this.models["restaurant.table"].getAll();
+=======
+    computeTableCount() {
+        const tables = this.models["restaurant.table"].getAll();
+>>>>>>> e6ae7b655b709b59a494c51b50d7be2aec7260ed
         const orders = this.getOpenOrders();
         for (const table of tables) {
             const tableOrders = orders.filter(
@@ -264,7 +473,6 @@ patch(PosStore.prototype, {
             localStorage.getItem("floorPlanStyle") || (this.ui.isSmall ? "kanban" : "default");
         if (this.config.module_pos_restaurant) {
             this.currentFloor = this.config.floor_ids?.length > 0 ? this.config.floor_ids[0] : null;
-            this.bus.subscribe("SYNC_ORDERS", this.wsSyncTableCount.bind(this));
         }
 
         return await super.afterProcessServerData(...arguments);
