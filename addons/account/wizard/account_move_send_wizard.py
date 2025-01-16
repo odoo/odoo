@@ -361,27 +361,15 @@ class AccountMoveSendWizard(models.TransientModel):
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
 
-    @api.model
-    def _action_download(self, attachments):
-        """ Download the PDF attachment, or a zip of attachments if there are more than one. """
-        return {
-            'type': 'ir.actions.act_url',
-            'url': f'/account/download_invoice_attachments/{",".join(map(str, attachments.ids))}',
-            'close': True,
-        }
-
     def action_send_and_print(self, allow_fallback_pdf=False):
         """ Create invoice documents and send them."""
         self.ensure_one()
         if self.alerts:
             self._raise_danger_alerts(self.alerts)
         self._update_preferred_settings()
-        attachments = self._generate_and_send_invoices(
+        self._generate_and_send_invoices(
             self.move_id,
             **self._get_sending_settings(),
             allow_fallback_pdf=allow_fallback_pdf,
         )
-        if attachments and self.sending_methods and 'manual' in self.sending_methods:
-            return self._action_download(attachments)
-        else:
-            return {'type': 'ir.actions.act_window_close'}
+        return {'type': 'ir.actions.act_window_close'}
