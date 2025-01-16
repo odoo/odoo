@@ -136,7 +136,7 @@
                                         <div t-esc="table.name" class="label fw-bolder fs-4 position-absolute top-50 start-50 translate-middle" />
                                     </div>
                                     <div
-                                        t-esc="getOrderCount(table)" t-if="getOrderCount(table)"
+                                        t-esc="this.env.utils.formatProductQty(getOrderCount(table), false)" t-if="getOrderCount(table)"
                                         t-att-class="{
                                             'text-bg-danger': table.uiState.changeCount,
                                             'text-bg-info'  : !table.uiState.changeCount and table.uiState.skipCount,
