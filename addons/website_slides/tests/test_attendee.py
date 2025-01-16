@@ -603,7 +603,7 @@ class TestAttendeeCase(HttpCaseWithUserPortal):
             "Mail subject should have been translated into recipient's language"
         )
 
-    @users('demo', 'portal')
+    @users('user_emp', 'portal')
     def test_channel_visibility_on_website(self):
         """Check visibility of channels for Internal/Portal users."""
         visible_channel = self.env['slide.channel'].search([
