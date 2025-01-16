@@ -188,8 +188,8 @@ class Many2one(_Relational[M]):
     def __init__(self, comodel_name: str | Sentinel = SENTINEL, string: str | Sentinel = SENTINEL, **kwargs):
         super(Many2one, self).__init__(comodel_name=comodel_name, string=string, **kwargs)
 
-    def _setup_attrs(self, model_class, name):
-        super()._setup_attrs(model_class, name)
+    def _setup_attrs__(self, model_class, name):
+        super()._setup_attrs__(model_class, name)
         # determine self.delegate
         if not self.delegate and name in model_class._inherits.values():
             self.delegate = True

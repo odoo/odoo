@@ -351,7 +351,7 @@ class Field(typing.Generic[T]):
         assert '_models' not in globals() or isinstance(owner, _models.MetaModel)
         self.model_name = owner._name
         self.name = name
-        if getattr(owner, 'pool', None) is None:  # models.is_definition_class(owner)
+        if getattr(owner, 'pool', None) is None:  # models.is_model_definition(owner)
             # only for fields on definition classes, not registry classes
             self._module = owner._module
             owner._field_definitions.append(self)
@@ -359,7 +359,7 @@ class Field(typing.Generic[T]):
         if not self.args.get('related'):
             self._direct = True
         if self._direct or self._toplevel:
-            self._setup_attrs(owner, name)
+            self._setup_attrs__(owner, name)
             if self._toplevel:
                 # free memory, self.args and self._base_fields are no longer useful
                 self.__dict__.pop('args', None)
@@ -446,7 +446,7 @@ class Field(typing.Generic[T]):
 
         return attrs
 
-    def _setup_attrs(self, model_class, name):
+    def _setup_attrs__(self, model_class, name):
         """ Initialize the field parameter attributes. """
         attrs = self._get_attrs(model_class, name)
 
