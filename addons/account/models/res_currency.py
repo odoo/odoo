@@ -103,7 +103,9 @@ class ResCurrency(models.Model):
         domestic_currency_companies = companies.filtered(lambda x: x.currency_id == main_company.currency_id)
         other_companies = companies - domestic_currency_companies
 
-        table_builders = [self._get_table_builder_domestic_currency(domestic_currency_companies, use_cta_rates)]
+        table_builders = []
+        if domestic_currency_companies:
+            table_builders += [self._get_table_builder_domestic_currency(domestic_currency_companies, use_cta_rates)]
 
         last_date_to = None
         for period_key, date_from, date_to in date_periods:
