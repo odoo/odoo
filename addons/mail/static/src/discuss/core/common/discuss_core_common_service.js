@@ -1,6 +1,5 @@
 import { reactive } from "@odoo/owl";
 
-import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 export class DiscussCoreCommon {
@@ -31,10 +30,7 @@ export class DiscussCoreCommon {
             const { Thread } = this.store.insert(payload);
             const [thread] = Thread;
             if (thread.notifyOnLeave) {
-                this.notificationService.add(
-                    _t("You left %(channel)s.", { channel: thread.displayName }),
-                    { type: "info" }
-                );
+                this.notificationService.add(thread.leaveNotificationMessage, { type: "info" });
             }
             thread.closeChatWindow();
         });
