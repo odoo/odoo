@@ -62,7 +62,7 @@
                                             <td class="align-middle">
                                                 <div class="fw-bolder"><t t-esc="getTotal(order)"></t></div>
                                             </td>
-                                            <td class="align-middle">
+                                            <td class="align-middle text-end">
                                                 <t t-set="status" t-value="getStatus(order)" />
                                                 <div t-attf-class="badge rounded fs-6 text-bg-{{
                                                     status === 'Ongoing' || status === 'Payment'
@@ -74,7 +74,7 @@
                                                     <t t-esc="status"></t>
                                                 </div>
                                             </td>
-                                            <td class="text-end" name="delete-column">
+                                            <td class="text-end delete-column" name="delete-column">
                                                 <button t-if="!shouldHideDeleteButton(order) and this.pos.cashier._role !== 'minimal'" t-on-click.stop="() => this.pos.onDeleteOrder(order)" class="btn btn-link btn-lg text-danger">
                                                     <i class="fa fa-trash" aria-hidden="true"/>
                                                 </button>
