@@ -969,7 +969,7 @@ class AccountPaymentRegister(models.TransientModel):
             'memo': self.communication,
             'journal_id': self.journal_id.id,
             'company_id': self.company_id.id,
-            'currency_id': self.currency_id.id,
+            'currency_id': self.currency_id.id or self.env.company.currency_id.id,
             'partner_id': self.partner_id.id,
             'partner_bank_id': self.partner_bank_id.id,
             'payment_method_line_id': self.payment_method_line_id.id,
