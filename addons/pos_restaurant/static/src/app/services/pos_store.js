@@ -127,7 +127,7 @@ patch(PosStore.prototype, {
         const mergedCourses = this.mergeCourses(sourceOrder, destOrder);
         while (sourceOrder.lines.length) {
             const orphanLine = sourceOrder.lines[0];
-            const destinationLine = destOrder.lines.find((l) => l.canBeMergedWith(orphanLine));
+            const destinationLine = destOrder?.lines?.find((l) => l.canBeMergedWith(orphanLine));
             let uuid = "";
             if (destinationLine) {
                 destinationLine.merge(orphanLine);
@@ -196,8 +196,8 @@ patch(PosStore.prototype, {
             }
         }
 
-        await this.deleteOrders([sourceOrder], [], true);
-        await this.syncAllOrders({ orders: [destOrder] });
+        this.deleteOrders([sourceOrder], [], true);
+        this.syncAllOrders({ orders: [destOrder] });
         return destOrder;
     },
     mergeCourses(sourceOrder, destOrder) {
@@ -671,7 +671,7 @@ patch(PosStore.prototype, {
         const originalTable = order.table_id;
         this.alert.dismiss();
 
-        if (destinationTable.id === originalTable?.id) {
+        if (destinationTable.rootTable.id === originalTable?.id) {
             this.setOrder(order);
             this.setTable(destinationTable);
             return false;
@@ -680,11 +680,12 @@ patch(PosStore.prototype, {
         if (!this.tableHasOrders(destinationTable)) {
             order.table_id = destinationTable;
             this.setOrder(order);
-            this.addPendingOrder([order.id]);
+            this.syncAllOrders({ orders: [order] });
             return false;
         }
         return true;
     },
+
     async transferOrder(orderUuid, destinationTable = null, destinationOrder = null) {
         if (!destinationTable && !destinationOrder) {
             return;

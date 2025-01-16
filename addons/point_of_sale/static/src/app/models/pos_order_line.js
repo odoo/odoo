@@ -24,6 +24,7 @@ export class PosOrderline extends Base {
         // Data that are not saved in the backend
         this.uiState = {
             hasChange: true,
+            savedQuantity: 0,
         };
     }
 
@@ -680,7 +681,7 @@ export class PosOrderline extends Base {
     }
     // FIXME what is the use of this ?
     updateSavedQuantity() {
-        this.saved_quantity = this.qty;
+        this.uiState.savedQuantity = this.qty;
     }
     getPriceExtra() {
         return this.price_extra;

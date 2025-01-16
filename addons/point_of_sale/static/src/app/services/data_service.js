@@ -672,7 +672,9 @@ export class PosData extends Reactive {
             }
 
             records.push(record);
-            this.ormWrite(model, [record.id], dataToUpdate);
+            if (typeof id === "number") {
+                this.ormWrite(model, [record.id], dataToUpdate);
+            }
         }
 
         return records;

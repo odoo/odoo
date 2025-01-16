@@ -272,7 +272,7 @@ export class PosStore extends WithLazyGetterTrap {
 
         try {
             const paidOrderNotSynced = this.models["pos.order"].filter(
-                (order) => order.state === "paid" && order.id !== "number"
+                (order) => order.state === "paid" && typeof order.id !== "number"
             );
             this.addPendingOrder(paidOrderNotSynced.map((o) => o.id));
             await this.syncAllOrders({ throw: true });
@@ -295,6 +295,7 @@ export class PosStore extends WithLazyGetterTrap {
                     order.state = "cancel";
                 }
             }
+            this.session.state = "closed";
         }
 
         setTimeout(() => {
@@ -1242,7 +1243,7 @@ export class PosStore extends WithLazyGetterTrap {
                 if (refundedOrderLine && ["paid", "done"].includes(line.order_id.state)) {
                     const order = refundedOrderLine.order_id;
                     if (order) {
-                        delete order.uiState.lineToRefund[refundedOrderLine.uuid];
+                        delete order.uiState?.lineToRefund[refundedOrderLine.uuid];
                     }
                 }
             }
@@ -1252,8 +1253,11 @@ export class PosStore extends WithLazyGetterTrap {
             if (data["pos.session"].length > 0) {
                 // Replace the original session by the rescue one. And the rescue one will have
                 // a higher id than the original one since it's the last one created.
-                const session = this.models["pos.session"].sort((a, b) => a.id - b.id)[0];
-                session.delete();
+                const sessions = this.models["pos.session"].getAll().sort((a, b) => a.id - b.id);
+                if (sessions.length > 1) {
+                    const sessionToDelete = sessions.slice(0, -1);
+                    this.models["pos.session"].deleteMany(sessionToDelete);
+                }
                 this.models["pos.order"]
                     .getAll()
                     .filter((order) => order.state === "draft")
@@ -1394,7 +1398,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     // change the current order
-    setOrder(order, options) {
+    setOrder(order) {
         if (this.getOrder()) {
             this.getOrder().updateSavedQuantity();
         }
@@ -1528,15 +1532,20 @@ export class PosStore extends WithLazyGetterTrap {
                 order,
                 basic_receipt: basic,
             },
-            { webPrintFallback: true }
+            this.printOptions
         );
         if (!printBillActionTriggered) {
-            order.nb_print += 1;
+            order.nb_print = order.nb_print ? order.nb_print + 1 : 1;
             if (typeof order.id === "number" && result) {
                 await this.data.write("pos.order", [order.id], { nb_print: order.nb_print });
             }
+        } else if (!order.nb_print) {
+            order.nb_print = 0;
         }
-        return true;
+        return result;
+    }
+    get printOptions() {
+        return { webPrintFallback: true };
     }
     getOrderChanges(order = this.getOrder()) {
         return getOrderChanges(order, this.config.preparationCategories);
@@ -1883,6 +1892,7 @@ export class PosStore extends WithLazyGetterTrap {
             preset = await makeAwaitable(this.dialog, SelectionPopup, {
                 title: _t("Select preset"),
                 list: selectionList,
+                size: "md",
             });
         }
 
