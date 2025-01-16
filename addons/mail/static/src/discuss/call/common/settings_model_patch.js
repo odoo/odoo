@@ -9,13 +9,13 @@ const SettingsPatch = {
     },
     getVolume(rtcSession) {
         return (
-            rtcSession.volume ||
+            rtcSession.volume ??
             this.volumes.find(
                 (volume) =>
                     (volume.persona.type === "partner" &&
                         volume.persona.id === rtcSession.partnerId) ||
                     (volume.persona.type === "guest" && volume.persona.id === rtcSession.guestId)
-            )?.volume ||
+            )?.volume ??
             0.5
         );
     },

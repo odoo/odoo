@@ -24,6 +24,7 @@ export class CallContextMenu extends Component {
             uploadStats: {},
             producerStats: {},
             peerStats: {},
+            rangeVolume: this.volume,
         });
         onMounted(() => {
             if (!this.env.debug) {
