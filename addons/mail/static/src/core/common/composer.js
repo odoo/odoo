@@ -539,9 +539,20 @@ export class Composer extends Component {
             // Reset signature when recovering an empty body.
             composer.emailAddSignature = true;
         }
+        let signature = this.store.self.signature;
+        if (signature) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(signature, 'text/html');
+            const divElement = document.createElement('div');
+            divElement.setAttribute('data-o-mail-quote', '1');
+            const br = document.createElement("br");
+            const textNode = document.createTextNode("-- ");
+            divElement.append(textNode, br, ...doc.body.childNodes);
+            signature = divElement.outerHTML;
+        }
         default_body = this.formatDefaultBodyForFullComposer(
             default_body,
-            this.props.composer.emailAddSignature ? markup(this.store.self.signature) : ""
+            this.props.composer.emailAddSignature ? markup(signature) : ""
         );
         const context = {
             default_attachment_ids: attachmentIds,

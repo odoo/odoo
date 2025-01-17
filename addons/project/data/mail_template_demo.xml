@@ -14,7 +14,7 @@
     It is my pleasure to let you know that we have successfully completed the project "<strong t-out="object.name or ''">Renovations</strong>".
     <t t-if="user.signature">
         <br />
-        <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+        <div>--<br/><t t-out="user.signature or ''">Mitchell Admin</t></div>
     </t>
 </div>
 <br/><span style="margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;" groups="project.group_project_stages">You are receiving this email because your project has been moved to the stage <b t-out="object.stage_id.name or ''">Done</b></span>
