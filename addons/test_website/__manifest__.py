@@ -39,7 +39,7 @@ models which only purpose is to run tests.""",
             'http://test.external.link/style2.css',
         ],
         'web.assets_frontend': [
-            'test_website/static/src/js/test_error.js',
+            'test_website/static/src/interactions/**/*',
         ],
         'web.assets_tests': [
             'test_website/static/tests/tours/*',

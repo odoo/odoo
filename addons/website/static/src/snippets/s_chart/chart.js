@@ -108,12 +108,18 @@ export class Chart extends Interaction {
         });
     }
 
+    /**
+     * @param {Array[string] || string} paramColor
+     */
     convertToCSS(paramColor) {
         return Array.isArray(paramColor)
             ? paramColor.map(color => this.convertToCSSColor(color))
             : this.convertToCSSColor(paramColor);
     }
 
+    /**
+     * @param {string} color
+     */
     convertToCSSColor(color) {
         return color ? weUtils.getCSSVariableValue(color, this.style) || color : "transparent";
     }

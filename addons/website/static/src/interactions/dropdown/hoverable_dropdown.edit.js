@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 
 const HoverableDropdownEdit = I => class extends I {
     /**
-     * @param {Event} ev
+     * @param {MouseEvent} ev
      * @param {HTMLElement} currentTargetEl
      */
     onMouseEnter(ev, currentTargetEl) {

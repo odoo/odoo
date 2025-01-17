@@ -106,6 +106,9 @@ export class SearchBar extends Interaction {
         return res;
     }
 
+    /**
+     * @param {Object} res
+     */
     render(res) {
         if (this.menuEl) {
             this.services["public.interactions"].stopInteractions(this.menuEl);
@@ -160,6 +163,9 @@ export class SearchBar extends Interaction {
         }
     }
 
+    /**
+     * @param {MouseEvent} ev
+     */
     onKeydown(ev) {
         switch (ev.key) {
             case "Escape":
@@ -184,6 +190,9 @@ export class SearchBar extends Interaction {
         }
     }
 
+    /**
+     * @param {MouseEvent} ev
+     */
     onSearch(ev) {
         if (this.inputEl.value) { // actual search
             this.limit = 0; // prevent autocomplete

@@ -1,11 +1,10 @@
-import "@website/snippets/s_website_form/000";  // force deps
-import { uniqueId } from "@web/core/utils/functions";
-import publicWidget from '@web/legacy/js/public/public_widget';
 import { session } from "@web/session";
 
 
-const turnStile = {
-    addTurnstile(action, selector) {
+export class TurnStile {
+    static turnstileURL = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+
+    constructor(action, selector) {
         const cf = new URLSearchParams(window.location.search).get("cf");
         const mode = cf == "show" ? "always" : "interaction-only";
         const turnstileEl = document.createElement("div");
@@ -29,94 +28,35 @@ const turnStile = {
                 throw error;
             }
             function turnstileBeforeInteractive() {
-                const btnEl = document.querySelector('${selector}');
-                if (btnEl && !btnEl.classList.contains('disabled')) {
-                    btnEl.classList.add('disabled', 'cf_form_disabled');
+                const btnEl = document.querySelector("${selector}");
+                if (btnEl && !btnEl.classList.contains("disabled")) {
+                    btnEl.classList.add("disabled", "cf_form_disabled");
                 }
             }
             function turnstileAfterInteractive() {
-                const btnEl = document.querySelector('${selector}');
-                if (btnEl && btnEl.classList.contains('cf_form_disabled')) {
-                    btnEl.classList.remove('disabled', 'cf_form_disabled');
+                const btnEl = document.querySelector("${selector}");
+                if (btnEl && btnEl.classList.contains("cf_form_disabled")) {
+                    btnEl.classList.remove("disabled", "cf_form_disabled");
                 }
             }
         `;
 
         const script2El = document.createElement("script");
         script2El.className = "s_turnstile";
-        script2El.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+        script2El.src = TurnStile.turnstileURL;
 
-        return [turnstileEl, script1El, script2El];
-    },
+        this.turnstileEl = turnstileEl;
+        this.script1El = script1El;
+        this.script2El = script2El;
+    }
 
     /**
      * Remove potential existing loaded script/token
-    */
-    cleanTurnstile: function () {
-        const turnstileEls = this.el.querySelectorAll(".s_turnstile");
+     *
+     * @param {HTMLElement} el
+     */
+    static clean(el) {
+        const turnstileEls = el.querySelectorAll(".s_turnstile");
         turnstileEls.forEach(element => element.remove());
-    },
-
-    /**
-     * @override
-     * Discard all library changes to reset the state of the Html.
-    */
-    destroy: function () {
-        this.cleanTurnstile();
-        this._super(...arguments);
-    },
-};
-
-publicWidget.registry.s_website_form.include({
-    ...turnStile,
-
-    /**
-     * @override
-    */
-    start() {
-        const res = this._super(...arguments);
-        this.cleanTurnstile();
-        if (
-            !this.isEditable &&
-            !this.el.querySelector(".s_turnstile") &&
-            session.turnstile_site_key
-        ) {
-            this.uniq = uniqueId("turnstile_");
-            this.el.classList.add(this.uniq);
-            const [turnstileEl, script1El, script2El] = this.addTurnstile(
-                "website_form",
-                `.${this.uniq} .s_website_form_send,.${this.uniq} .o_website_form_send`,
-            );
-            const formSendEl = this.el.querySelector(".s_website_form_send, .o_website_form_send");
-            formSendEl.parentNode.insertBefore(turnstileEl, formSendEl);
-            formSendEl.parentNode.insertBefore(script1El, formSendEl.nextSibling);
-            formSendEl.parentNode.insertBefore(script2El, formSendEl.nextSibling);
-        }
-        return res;
-    },
-});
-
-publicWidget.registry.turnstileCaptcha = publicWidget.Widget.extend({
-    ...turnStile,
-
-    selector: "[data-captcha]",
-
-    async willStart() {
-        this._super(...arguments);
-        this.cleanTurnstile();
-        if (
-            !this.isEditable &&
-            !this.el.querySelector(".s_turnstile") &&
-            session.turnstile_site_key
-        ) {
-            this.uniq = uniqueId("turnstile_");
-            const action = this.el.dataset.captcha || "generic";
-            const [turnstileEl, script1El, script2El] = this.addTurnstile(action, `.${this.uniq}`);
-            const submitButton = this.el.querySelector("button[type='submit']");
-            submitButton.classList.add(this.uniq);
-            submitButton.parentNode.insertBefore(turnstileEl, submitButton);
-            this.el.appendChild(script1El);
-            this.el.appendChild(script2El);
-        }
-    },
-});
+    }
+}

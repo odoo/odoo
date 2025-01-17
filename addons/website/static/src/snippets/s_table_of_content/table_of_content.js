@@ -145,6 +145,9 @@ export class TableOfContent extends Interaction {
         }
     }
 
+    /**
+     * @param {string} target
+     */
     activate(target) {
         const element = document.querySelector(`[href="${target}"]`);
         if (!element || !isVisible(element)) {

@@ -1,30 +1,25 @@
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { CourseTagAddDialog } from "@website_slides/js/public/components/course_tag_add_dialog/course_tag_add_dialog";
-import publicWidget from '@web/legacy/js/public/public_widget';
 
-publicWidget.registry.websiteSlidesTag = publicWidget.Widget.extend({
-    selector: '.o_wslides_js_channel_tag_add',
-    events: {
-        'click': '_onAddTagClick',
-    },
+export class TagAdd extends Interaction {
+    static selector = ".o_wslides_js_channel_tag_add";
+    dynamicContent = {
+        _root: {
+            "t-on-click.prevent": this.onClick,
+        },
+    };
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onAddTagClick: function (ev) {
-        ev.preventDefault();
-        const channelTagIds = ev.currentTarget.dataset.channelTagIds;
-        this.call("dialog", "add", CourseTagAddDialog, {
-            channelId: parseInt(ev.currentTarget.dataset.channelId, 10),
-            tagIds: channelTagIds ? JSON.parse(channelTagIds) : [],
+    onClick() {
+        const data = this.el.dataset;
+        this.services.dialog.add(CourseTagAddDialog, {
+            channelId: parseInt(data.channelId, 10),
+            tagIds: data.channelTagIds ? JSON.parse(data.channelTagIds) : [],
         });
-    },
-});
+    }
+}
 
-export default {
-    websiteSlidesTag: publicWidget.registry.websiteSlidesTag,
-};
+registry
+    .category("public.interactions")
+    .add("website_slides.tag_add", TagAdd);

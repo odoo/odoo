@@ -53,7 +53,14 @@
             'website_event/static/src/js/tours/**/*',
         ],
         'web.assets_tests': [
-            'website_event/static/tests/**/*',
+            'website_event/static/tests/tours/**/*',
+        ],
+        'web.assets_unit_tests': [
+            'website_event/static/tests/interactions/**/*',
+        ],
+        'web.assets_unit_tests_setup': [
+            'website_event/static/src/snippets/**/*.js',
+            ('remove', 'website_event/static/src/snippets/**/options.js'),
         ],
         'web.assets_frontend': [
             'website_event/static/src/js/tours/**/*',
@@ -61,9 +68,11 @@
             'website_event/static/src/scss/event_templates_list.scss',
             'website_event/static/src/scss/event_templates_page.scss',
             'website_event/static/src/interactions/*.js',
+            'website_event/static/src/snippets/**/*.js',
+            ('remove', 'website_event/static/src/snippets/**/options.js'),
         ],
         'website.assets_wysiwyg': [
-            '/website_event/static/src/snippets/s_events/options.js',
+            'website_event/static/src/snippets/s_events/options.js',
             'website_event/static/src/snippets/options.js',
         ],
         'website.assets_editor': [

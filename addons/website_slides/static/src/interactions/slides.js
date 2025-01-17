@@ -1,32 +1,25 @@
-import publicWidget from '@web/legacy/js/public/public_widget';
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { deserializeDateTime } from "@web/core/l10n/dates";
 
-publicWidget.registry.websiteSlides = publicWidget.Widget.extend({
-    selector: '#wrapwrap',
+export class Slides extends Interaction {
+    static selector = "timeago.timeago";
 
-    /**
-     * @override
-     * @param {Object} parent
-     */
-    start: function (parent) {
-        var defs = [this._super.apply(this, arguments)];
+    setup() {
+        const datetime = this.el.getAttribute('datetime');
+        const datetimeObj = deserializeDateTime(datetime);
+        // If the presentation is more than 1 week old, return the publication date
+        // Else, return the relative time since the publication.
+        // 1 week (s) = 7 d * 24 h * 60 m * 60 s * 1000 ms
+        if (datetimeObj && new Date().getTime() - datetimeObj.valueOf() > 7 * 24 * 60 * 60 * 1000) {
+            this.el.innerText = datetimeObj.toFormat('DD');
+        } else {
+            this.el.innerText = datetimeObj.toRelative();
+        }
+    }
+}
 
-        $("timeago.timeago").toArray().forEach((el) => {
-            var datetime = $(el).attr('datetime');
-            var datetimeObj = deserializeDateTime(datetime);
-            // if presentation 7 days, 24 hours, 60 min, 60 second, 1000 millis old(one week)
-            // then return fix formate string else timeago
-            var displayStr = '';
-            if (datetimeObj && new Date().getTime() - datetimeObj.valueOf() > 7 * 24 * 60 * 60 * 1000) {
-                displayStr = datetimeObj.toFormat('DD');
-            } else {
-                displayStr = datetimeObj.toRelative();
-            }
-            $(el).text(displayStr);
-        });
-
-        return Promise.all(defs);
-    },
-});
-
-export default publicWidget.registry.websiteSlides;
+registry
+    .category("public.interactions")
+    .add("website_slides.slides", Slides);

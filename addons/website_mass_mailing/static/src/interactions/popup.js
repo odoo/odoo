@@ -1,34 +1,30 @@
-import PopupWidget from '@website/snippets/s_popup/000';
+import { patch } from "@web/core/utils/patch";
+import { Popup } from "@website/interactions/popup/popup";
 
-PopupWidget.include({
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
+patch(Popup.prototype, {
     /**
      * Prevents the (newsletter) popup to be shown if the user is subscribed.
      *
      * @override
      */
-    _canShowPopup() {
+    canShowPopup() {
         if (
-            this.$el.is('.o_newsletter_popup') &&
-            this.$el.find('input.js_subscribe_value, input.js_subscribe_email').prop('disabled') // js_subscribe_email is kept by compatibility (it was the old name of js_subscribe_value)
+            this.el.classList.contains("o_newsletter_popup")
+            // js_subscribe_email is kept by compatibility (it was the old name
+            // of js_subscribe_value)
+            && this.el.querySelector("input.js_subscribe_value, input.js_subscribe_email")?.disabled
         ) {
             return false;
         }
-        return this._super(...arguments);
+        return super.canShowPopup(...arguments);
     },
     /**
      * @override
      */
-    _canBtnPrimaryClosePopup(primaryBtnEl) {
-        if (primaryBtnEl.classList.contains('js_subscribe_btn')) {
+    canBtnPrimaryClosePopup(primaryBtnEl) {
+        if (primaryBtnEl.classList.contains("js_subscribe_btn")) {
             return false;
         }
-        return this._super(...arguments);
+        return super.canBtnPrimaryClosePopup(...arguments);
     },
 });
-
-export default PopupWidget;

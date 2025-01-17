@@ -3,6 +3,7 @@ import { Interaction } from "@web/public/interaction";
 
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { browser } from "@web/core/browser/browser";
+import { verifyHttpsUrl } from "@website/utils/misc";
 
 export class SearchBarResults extends Interaction {
     static selector = ".o_searchbar_form .o_dropdown_menu";
@@ -92,7 +93,7 @@ export class SearchBarResults extends Interaction {
         }
     }
 
-    onMousedown(ev) {
+    onMousedown() {
         // On Safari, links and buttons are not focusable by default. We need
         // to get around that behavior to avoid onFocusOut() from triggering
         // render(), as this would prevent the click from working.
@@ -101,13 +102,16 @@ export class SearchBarResults extends Interaction {
         }
     }
 
-    onMouseup(ev) {
+    onMouseup() {
         // See comment in onMousedown.
         if (isBrowserSafari) {
             this.searchBarEl.dispatchEvent(new CustomEvent('safarihack', { detail: { linkHasFocus: false } }));
         }
     }
 
+    /**
+     * @param {MouseEvent} ev
+     */
     onKeydown(ev) {
         switch (ev.key) {
             case "ArrowUp":
@@ -128,11 +132,7 @@ export class SearchBarResults extends Interaction {
      * @param {PointerEvent} ev
      */
     onExtraLinkClick(ev) {
-        const url = new URL(ev.currentTarget.dataset.target, browser.location.href);
-        if (!/https?:/.test(url.protocol)) {
-            return;
-        }
-        browser.location.href = url;
+        browser.location.href = verifyHttpsUrl(ev.currentTarget.dataset.target);
     }
 }
 

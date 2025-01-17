@@ -112,7 +112,7 @@ export class MegaMenuDropdown extends Interaction {
     }
 
     /**
-     * @param {Event} ev
+     * @param {MouseEvent} ev
      * @param {HTMLElement} currentTargetEl
      */
     onHoverMegaMenu(ev, currentTargetEl) {
