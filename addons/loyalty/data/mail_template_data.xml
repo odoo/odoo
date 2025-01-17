@@ -92,7 +92,7 @@
         Thank you,
         <t t-if="object._get_signature()">
             <br />
-            <t t-out="object._get_signature() or ''">--<br/>Mitchell Admin</t>
+            <div>--<br/><t t-out="object._get_signature() or ''">Mitchell Admin</t></div>
         </t>
     </td>
 </tr>

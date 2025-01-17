@@ -363,7 +363,7 @@
         </tr>
         <tr>
             <td t-if="not user.share and user.active" style="padding:15px 20px 10px 20px;">
-                <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+                <div>--<br/><t t-out="user.signature or ''">Mitchell Admin</t></div>
             </td>
             <td t-else="" style="padding:15px 20px 10px 20px;">
                 <t t-out="user.company_id.name or ''"/>

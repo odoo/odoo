@@ -36,7 +36,7 @@
                     Thank you,
                     <t t-if="object.user_id.name">
                         <br />
-                        <t t-out="object.user_id.name or ''">--<br/>Mitchell Admin</t>
+                        <div>--<br/><t t-out="object.user_id.name or ''">Mitchell Admin</t></div>
                     </t>
                 </p>
             </div>
