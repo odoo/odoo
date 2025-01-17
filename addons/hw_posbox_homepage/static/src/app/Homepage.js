@@ -147,7 +147,7 @@ export class Homepage extends Component {
 			</SingleData>
             <SingleData t-if="store.advanced and !store.base.is_access_point_up" name="'Version'" value="state.data.version" icon="'fa-microchip'">
                 <t t-set-slot="button">
-                    <UpdateDialog t-if="this.store.isLinux" />
+                    <UpdateDialog />
                 </t>
             </SingleData>
             <SingleData t-if="store.advanced" name="'IP address'" value="state.data.ip" icon="'fa-globe'" />
