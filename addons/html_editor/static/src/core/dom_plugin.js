@@ -22,7 +22,6 @@ import {
 import { closestElement, descendants, firstLeaf, lastLeaf } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
 import { DIRECTIONS, childNodeIndex, nodeSize, rightPos } from "../utils/position";
-import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { convertList, getListMode } from "@html_editor/utils/list";
 
 /**
@@ -424,14 +423,8 @@ export class DomPlugin extends Plugin {
                     block.nodeName
                 )
             ) {
-                if (tagName === "P") {
-                    if (block.nodeName === "LI") {
-                        continue;
-                    } else if (block.parentNode.nodeName === "LI") {
-                        cursors.update(callbacksForCursorUpdate.unwrap(block));
-                        unwrapContents(block);
-                        continue;
-                    }
+                if (tagName === "P" && block.nodeName === "LI") {
+                    continue;
                 }
 
                 const newEl = setTagName(block, tagName);
