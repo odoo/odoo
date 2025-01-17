@@ -246,6 +246,11 @@ export class PosStore extends Reactive {
 
     async closingSessionNotification(data) {
         if (data.login_number == this.session.login_number) {
+            const order = this.get_order();
+            if (order && !order.lines.length && !order.payment_ids.length) {
+                order.uiState.preventCreation = true;
+                order.state = "cancel";
+            }
             return;
         }
 
@@ -271,6 +276,7 @@ export class PosStore extends Reactive {
             const orders = this.models["pos.order"].filter((o) => typeof o.id !== "number");
             for (const order of orders) {
                 if (!order.finalized) {
+                    order.uiState.preventCreation = true;
                     order.state = "cancel";
                 }
             }
