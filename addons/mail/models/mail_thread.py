@@ -3699,7 +3699,7 @@ class MailThread(models.AbstractModel):
         if author_user:
             email_add_signature = msg_vals.get('email_add_signature', message.email_add_signature)
             if email_add_signature:
-                signature = author_user.signature
+                signature = Markup('<div>-- <br/>%s</div>') % author_user.signature
 
         if force_email_company:
             company = force_email_company

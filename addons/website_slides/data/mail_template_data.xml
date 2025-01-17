@@ -27,7 +27,7 @@
                         Enjoy this exclusive content!
                         <t t-if="user.signature">
                             <br />
-                            <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+                            <div>--<br/><t t-out="user.signature or ''">Mitchell Admin</t></div>
                         </t>
                     </p>
                 </div>
@@ -59,7 +59,7 @@
                         </div>
                         <t t-if="user.signature">
                             <br />
-                            <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+                            <div>--<br/><t t-out="user.signature or ''">Mitchell Admin</t></div>
                         </t>
                     </p>
                 </div>
@@ -92,7 +92,7 @@
                         Enjoy this exclusive content!
                         <t t-if="object.channel_id.user_id.signature">
                             <br />
-                            <t t-out="object.channel_id.user_id.signature or ''">--<br/>Mitchell Admin</t>
+                            <div>--<br/><t t-out="object.channel_id.user_id.signature or ''">Mitchell Admin</t></div>
                         </t>
                     </div>
                 </div>
@@ -127,7 +127,7 @@
                         </div>
                         <t t-if="user.signature">
                             <br />
-                            <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+                            <div>--<br/><t t-out="user.signature or ''">Mitchell Admin</t></div>
                         </t>
                     </p>
                 </div>
