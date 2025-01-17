@@ -258,7 +258,7 @@ class MailThread(models.AbstractModel):
                         })
 
         if sms_all and not put_in_queue:
-            sms_all.filtered(lambda sms: sms.state == 'outgoing').send(auto_commit=False, raise_exception=False)
+            sms_all.filtered(lambda sms: sms.state == 'outgoing').send(raise_exception=False)
 
         return True
 
