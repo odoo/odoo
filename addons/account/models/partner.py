@@ -19,6 +19,11 @@ from odoo.addons.base_vat.models.res_partner import _ref_vat
 _logger = logging.getLogger(__name__)
 
 
+_ref_company_registry = {
+    'jp': '7000012050002',
+}
+
+
 class AccountFiscalPosition(models.Model):
     _name = 'account.fiscal.position'
     _description = 'Fiscal Position'
@@ -339,6 +344,7 @@ class ResPartner(models.Model):
 
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
     partner_vat_placeholder = fields.Char(compute='_compute_partner_vat_placeholder')
+    partner_company_registry_placeholder = fields.Char(compute='_compute_partner_company_registry_placeholder')
 
     @api.depends('company_id')
     @api.depends_context('allowed_company_ids')
@@ -1021,3 +1027,12 @@ class ResPartner(models.Model):
                     placeholder = _("%s, or / if not applicable", expected_vat)
 
             partner.partner_vat_placeholder = placeholder
+
+    @api.depends('country_id')
+    def _compute_partner_company_registry_placeholder(self):
+        """ Provides a dynamic placeholder on the company registry field for countries that may need it.
+        Add your country and the value you want in the _ref_company_registry map.
+        """
+        for partner in self:
+            country_code = partner.country_id.code or ''
+            partner.partner_company_registry_placeholder = _ref_company_registry.get(country_code.lower(), '')
