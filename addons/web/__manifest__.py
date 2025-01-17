@@ -228,15 +228,12 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
             'web/static/src/core/commands/default_providers.js',
             'web/static/src/core/commands/command_palette.js',
-            'web/static/src/public/error_notifications.js',
-            'web/static/src/public/public_component_service.js',
-            'web/static/src/public/datetime_picker_widget.js',
+            'web/static/src/public/**/*.js',
+            ('remove', 'web/static/src/public/database_manager.js'),
 
             'web/static/src/legacy/js/public/public_root.js',
             'web/static/src/legacy/js/public/public_root_instance.js',
             'web/static/src/legacy/js/public/public_widget.js',
-            'web/static/src/legacy/js/public/signin.js',
-
         ],
         'web.assets_frontend_lazy': [
             ('include', 'web.assets_frontend'),
@@ -449,6 +446,10 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web.assets_backend'),
             ('include', 'web.assets_backend_lazy'),
 
+            'web/static/src/public/**/*.js',
+            ('remove', 'web/static/src/public/database_manager.js'),
+            ('remove', 'web/static/src/public/datetime_picker_widget.js'), # remove this remove when it has been converted
+            ('remove', 'web/static/src/public/error_notifications.js'),
             'web/static/src/public/public_component_service.js',
             'web/static/src/webclient/clickbot/clickbot.js',
         ],
