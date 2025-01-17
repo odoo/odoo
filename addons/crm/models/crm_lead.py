@@ -1932,13 +1932,13 @@ class CrmLead(models.Model):
                 _('Deadline: %s', self.date_deadline.strftime(get_lang(self.env).date_format)))
         return render_context
 
-    def _notify_get_reply_to(self, default=None):
+    def _notify_get_reply_to(self, default=None, author_id=False):
         # Override to set alias of lead and opportunities to their sales team if any
-        aliases = self.mapped('team_id').sudo()._notify_get_reply_to(default=default)
+        aliases = self.mapped('team_id').sudo()._notify_get_reply_to(default=default, author_id=author_id)
         res = {lead.id: aliases.get(lead.team_id.id) for lead in self}
         leftover = self.filtered(lambda rec: not rec.team_id)
         if leftover:
-            res.update(super(CrmLead, leftover)._notify_get_reply_to(default=default))
+            res.update(super(CrmLead, leftover)._notify_get_reply_to(default=default, author_id=author_id))
         return res
 
     def _message_get_default_recipients(self):

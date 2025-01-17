@@ -2411,7 +2411,7 @@ class MailThread(models.AbstractModel):
         if 'record_company_id' not in msg_values:
             msg_values['record_company_id'] = self._mail_get_companies(default=self.env.company)[self.id].id
         if 'reply_to' not in msg_values:
-            msg_values['reply_to'] = self._notify_get_reply_to(default=email_from)[self.id]
+            msg_values['reply_to'] = self._notify_get_reply_to(default=email_from, author_id=author_id)[self.id]
 
         msg_values.update(
             self._process_attachments_for_post(attachments, attachment_ids, msg_values)
@@ -2892,7 +2892,7 @@ class MailThread(models.AbstractModel):
             if 'record_company_id' not in msg_values:
                 msg_values['record_company_id'] = self._mail_get_companies(default=self.env.company)[self.id].id
         if 'reply_to' not in msg_values:
-            msg_values['reply_to'] = self._notify_get_reply_to(default=email_from)[self.id if self else False]
+            msg_values['reply_to'] = self._notify_get_reply_to(default=email_from, author_id=author_id)[self.id if self else False]
 
         msg_values.update(
             self._process_attachments_for_post(attachments, attachment_ids, msg_values)
@@ -2997,7 +2997,7 @@ class MailThread(models.AbstractModel):
             'email_add_signature': False,  # False as no notification -> no need to compute signature
             'message_id': generate_tracking_message_id('message-notify'),  # why? this is all but a notify
             'partner_ids': partner_ids,
-            'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from)[False],
+            'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from, author_id=author_id)[False],
         }
 
         values_list = [dict(base_message_values,

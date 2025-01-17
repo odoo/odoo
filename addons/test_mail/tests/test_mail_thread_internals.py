@@ -1024,7 +1024,10 @@ class TestNoThread(MailCommon, TestRecipients):
                 with self.assertPostNotifications([{
                         'content': 'Hello Paulo',
                         'email_values': {
-                            'reply_to': self.company_admin.catchall_formatted,
+                            'reply_to': tools.mail.formataddr((
+                                self.partner_employee.name,
+                                self.company_admin.catchall_email,
+                            )),
                         },
                         'message_type': 'user_notification',
                         'notif': [{
@@ -1111,7 +1114,10 @@ class TestNoThread(MailCommon, TestRecipients):
         with self.assertPostNotifications([{
                 'content': 'Hello Paulo',
                 'email_values': {
-                    'reply_to': self.company_admin.catchall_formatted,
+                    'reply_to': tools.mail.formataddr((
+                        self.partner_employee.name,
+                        self.company_admin.catchall_email,
+                    )),
                     'subject': 'Test Notify',
                 },
                 'message_type': 'user_notification',
