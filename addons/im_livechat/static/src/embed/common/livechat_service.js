@@ -131,7 +131,7 @@ export class LivechatService {
         if (!this.thread) {
             return;
         }
-        this.store.chatHub.opened.add({ thread: this.thread }).autofocus++;
+        this.thread.openChatWindow({ focus: true });
         await this.busService.addChannel(`mail.guest_${this.guestToken}`);
         await this.env.services["mail.store"].initialize();
         return this.thread;

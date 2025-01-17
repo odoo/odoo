@@ -18,8 +18,6 @@ registerRoute("/im_livechat/get_session", get_session);
 async function get_session(request) {
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
-    /** @type {import("mock_models").DiscussChannelMember} */
-    const DiscussChannelMember = this.env["discuss.channel.member"];
     /** @type {import("mock_models").LivechatChannel} */
     const LivechatChannel = this.env["im_livechat.channel"];
     /** @type {import("mock_models").ResCountry} */
@@ -68,6 +66,7 @@ async function get_session(request) {
         store.add("discuss.channel", {
             channel_type: "livechat",
             chatbot_current_step_id: channelVals.chatbot_current_step_id,
+            fetchChannelInfoState: "fetched",
             id: -1,
             isLoaded: true,
             livechat_active: true,
@@ -76,6 +75,7 @@ async function get_session(request) {
                 makeKwArgs({ fields: ["avatar_128", "user_livechat_username"] })
             ),
             name: channelVals["name"],
+            open_chat_window: true,
             scrollUnread: false,
             state: "open",
         });
@@ -89,12 +89,14 @@ async function get_session(request) {
     } else {
         memberDomain.push(["guest_id", "!=", false]);
     }
-    const [memberId] = DiscussChannelMember.search(memberDomain);
-    DiscussChannelMember.write([memberId], { fold_state: "open" });
     const store = new mailDataHelpers.Store();
     ResUsers._init_store_data(store);
     store.add(DiscussChannel.browse(channelId));
-    store.add(DiscussChannel.browse(channelId), { isLoaded: true, scrollUnread: false });
+    store.add(DiscussChannel.browse(channelId), {
+        isLoaded: true,
+        open_chat_window: true,
+        scrollUnread: false,
+    });
     return store.get_result();
 }
 
@@ -165,15 +167,13 @@ async function get_emoji_bundle(request) {
 }
 
 patch(mailDataHelpers, {
-    async processRequest(request) {
-        const store = await super.processRequest(...arguments);
-        const { livechat_channels } = await parseRequestParams(request);
-        if (livechat_channels) {
+    _process_request_for_internal_user(store, name, params) {
+        super._process_request_for_internal_user(...arguments);
+        if (name === "im_livechat.channel") {
             store.add(
                 this.env["im_livechat.channel"].search([]),
                 makeKwArgs({ fields: ["are_you_inside", "name"] })
             );
         }
-        return store;
     },
 });

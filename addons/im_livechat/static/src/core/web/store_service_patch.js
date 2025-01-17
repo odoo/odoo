@@ -3,10 +3,11 @@ import { compareDatetime } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(Store.prototype, {
+/** @type {import("models").Store} */
+const storePatch = {
     setup() {
         super.setup(...arguments);
-        this.livechatChannels = this.makeCachedFetchData({ livechat_channels: true });
+        this.livechatChannels = this.makeCachedFetchData("im_livechat.channel");
         this.has_access_livechat = false;
     },
     /**
@@ -50,4 +51,5 @@ patch(Store.prototype, {
         }
         return threadTypes;
     },
-});
+};
+patch(Store.prototype, storePatch);

@@ -4,34 +4,19 @@ import {
     defineMailModels,
     onRpcBefore,
     patchUiSize,
+    setupChatHub,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { asyncStep, Command, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
+import { asyncStep, waitForSteps } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
 
 test("chat window does not fetch messages if hidden", async () => {
     const pyEnv = await startServer();
-    const [channeId1, channelId2, channelId3] = pyEnv["discuss.channel"].create([
-        {
-            channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
-            ],
-        },
-        {
-            channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
-            ],
-        },
-        {
-            channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
-            ],
-        },
-    ]);
+    const [channeId1, channelId2, channelId3] = pyEnv["discuss.channel"].create([{}, {}, {}]);
     pyEnv["mail.message"].create([
         {
             body: "Orange",
@@ -54,6 +39,7 @@ test("chat window does not fetch messages if hidden", async () => {
     ]);
     patchUiSize({ width: 900 }); // enough for 2 open chat windows max
     onRpcBefore("/discuss/channel/messages", () => asyncStep("fetch_messages"));
+    setupChatHub({ opened: [channelId3, channelId2, channeId1] });
     await start();
     await contains(".o-mail-ChatWindow", { count: 2 });
     await contains(".o-mail-ChatBubble", { count: 1 });
@@ -66,23 +52,7 @@ test("chat window does not fetch messages if hidden", async () => {
 
 test("click on hidden chat window should fetch its messages", async () => {
     const pyEnv = await startServer();
-    const [channeId1, channelId2, channelId3] = pyEnv["discuss.channel"].create([
-        {
-            channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
-            ],
-        },
-        {
-            channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
-            ],
-        },
-        {
-            channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
-            ],
-        },
-    ]);
+    const [channeId1, channelId2, channelId3] = pyEnv["discuss.channel"].create([{}, {}, {}]);
     pyEnv["mail.message"].create([
         {
             body: "Orange",
@@ -105,6 +75,7 @@ test("click on hidden chat window should fetch its messages", async () => {
     ]);
     patchUiSize({ width: 900 }); // enough for 2 open chat windows max
     onRpcBefore("/discuss/channel/messages", () => asyncStep("fetch_messages"));
+    setupChatHub({ opened: [channelId3, channelId2, channeId1] });
     await start();
     await contains(".o-mail-ChatWindow", { count: 2 });
     await contains(".o-mail-ChatBubble", { count: 1 });

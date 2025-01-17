@@ -44,9 +44,9 @@ export class Chatter extends Component {
             ) {
                 this.changeThread(nextProps.threadModel, nextProps.threadId);
             }
-            if (!this.env.chatter || this.env.chatter?.fetchData) {
+            if (!this.env.chatter || this.env.chatter?.fetchThreadData) {
                 if (this.env.chatter) {
-                    this.env.chatter.fetchData = false;
+                    this.env.chatter.fetchThreadData = false;
                 }
                 this.load(this.state.thread, this.requestList);
             }
@@ -96,7 +96,7 @@ export class Chatter extends Component {
         if (!thread.id || !this.state.thread?.eq(thread)) {
             return;
         }
-        thread.fetchData(requestList);
+        thread.fetchThreadData(requestList);
     }
 
     onCloseFullComposerCallback() {
@@ -105,9 +105,9 @@ export class Chatter extends Component {
 
     _onMounted() {
         this.changeThread(this.props.threadModel, this.props.threadId);
-        if (!this.env.chatter || this.env.chatter?.fetchData) {
+        if (!this.env.chatter || this.env.chatter?.fetchThreadData) {
             if (this.env.chatter) {
-                this.env.chatter.fetchData = false;
+                this.env.chatter.fetchThreadData = false;
             }
             this.load(this.state.thread, this.requestList);
         }

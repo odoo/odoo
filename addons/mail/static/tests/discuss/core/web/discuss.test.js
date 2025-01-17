@@ -40,16 +40,14 @@ test("can create a new channel", async () => {
     await start();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            init_messaging: {},
-            failures: true,
-            systray_get_activities: true,
+            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
     await openDiscuss();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            channels_as_member: true,
+            fetch_params: ["channels_as_member"],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
         '/mail/inbox/messages - {"fetch_params":{"limit":30}}',
@@ -69,7 +67,7 @@ test("can create a new channel", async () => {
     ]);
     await waitForSteps([
         `/discuss/channel/create_channel - ${JSON.stringify({
-            name: "abc"
+            name: "abc",
         })}`,
         `/discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":${selfMember.new_message_separator}}}`,
     ]);
@@ -85,10 +83,7 @@ test("can make a DM chat", async () => {
         }
     });
     onRpc((params) => {
-        if (
-            params.model === "discuss.channel" &&
-            ["search_read"].includes(params.method)
-        ) {
+        if (params.model === "discuss.channel" && ["search_read"].includes(params.method)) {
             asyncStep(
                 `${params.route} - ${JSON.stringify(
                     pick(params, "args", "kwargs", "method", "model")
@@ -99,16 +94,14 @@ test("can make a DM chat", async () => {
     await start();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            init_messaging: {},
-            failures: true,
-            systray_get_activities: true,
+            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
     await openDiscuss();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            channels_as_member: true,
+            fetch_params: ["channels_as_member"],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
         '/mail/inbox/messages - {"fetch_params":{"limit":30}}',
@@ -124,10 +117,7 @@ test("can make a DM chat", async () => {
     await waitForSteps([
         `/discuss/search - {"term":""}`,
         `/discuss/search - {"term":"mario"}`,
-        `/discuss/channel/get_or_create_chat - ${JSON.stringify({
-            partners_to: [partnerId],
-            force_open: false,
-        })}`,
+        `/discuss/channel/get_or_create_chat - ${JSON.stringify({ partners_to: [partnerId] })}`,
         `/discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":0}}`,
     ]);
 });

@@ -15,7 +15,7 @@ test("chat request opens chat window", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ guest_id: guestId, fold_state: "open" }),
+            Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
         livechat_active: true,
@@ -26,7 +26,7 @@ test("chat request opens chat window", async () => {
     patchWithCleanup(session.livechatData, {
         options: {
             ...session.livechatData.options,
-            force_thread: { id: channel.id, model: "discuss.channel" },
+            force_thread: { id: channel.id, model: "discuss.channel", open_chat_window: true },
         },
     });
     await start({

@@ -35,16 +35,14 @@ test("Receiving a new message out of discuss app should open a chat bubble", asy
         channel_type: "chat",
     });
     onRpcBefore("/mail/data", (args) => {
-        if (args.init_messaging) {
+        if (args.fetch_params.includes("init_messaging")) {
             asyncStep(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
     await start();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            init_messaging: {},
-            failures: true,
-            systray_get_activities: true,
+            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
@@ -72,16 +70,14 @@ test("Receiving a new message in discuss app should open a chat bubble after lea
         channel_type: "chat",
     });
     onRpcBefore("/mail/data", (args) => {
-        if (args.init_messaging) {
+        if (args.fetch_params.includes("init_messaging")) {
             asyncStep(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
     await start();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            init_messaging: {},
-            failures: true,
-            systray_get_activities: true,
+            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);

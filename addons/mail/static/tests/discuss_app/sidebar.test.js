@@ -6,12 +6,13 @@ import {
     onRpcBefore,
     openDiscuss,
     openFormView,
+    setupChatHub,
     start,
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { press, queryFirst } from "@odoo/hoot-dom";
+import { animationFrame, press, queryFirst } from "@odoo/hoot-dom";
 import { Deferred, mockDate } from "@odoo/hoot-mock";
 import {
     asyncStep,
@@ -254,19 +255,12 @@ test("sidebar: open pinned channel", async () => {
 
 test("sidebar: open channel and leave it", async () => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "General",
-        channel_member_ids: [
-            Command.create({
-                fold_state: "open",
-                partner_id: serverState.partnerId,
-            }),
-        ],
-    });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     onRpc("discuss.channel", "action_unfollow", ({ args }) => {
         asyncStep("action_unfollow");
         expect(args[0]).toBe(channelId);
     });
+    setupChatHub({ opened: [channelId] });
     await start();
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
@@ -806,16 +800,14 @@ test("channel - states: open from the bus", async () => {
         is_discuss_sidebar_category_channel_open: false,
     });
     onRpcBefore("/mail/data", (args) => {
-        if (args.init_messaging) {
+        if (args.fetch_params.includes("init_messaging")) {
             asyncStep(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
     await start();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            init_messaging: {},
-            failures: true,
-            systray_get_activities: true,
+            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
@@ -958,16 +950,14 @@ test("chat - states: open from the bus", async () => {
         is_discuss_sidebar_category_chat_open: false,
     });
     onRpcBefore("/mail/data", (args) => {
-        if (args.init_messaging) {
+        if (args.fetch_params.includes("init_messaging")) {
             asyncStep(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
     await start();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            init_messaging: {},
-            failures: true,
-            systray_get_activities: true,
+            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
@@ -1104,8 +1094,16 @@ test("Can leave channel", async () => {
 test("Do no channel_info after unpin", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General", channel_type: "chat" });
-    onRpcBefore("/discuss/channel/info", () => asyncStep("channel_info"));
+    onRpc("/mail/data", async (request) => {
+        const { params } = await request.json();
+        if (params.fetch_params.some((fetchParam) => fetchParam[0] === "discuss.channel")) {
+            asyncStep("channel_info");
+        }
+    });
+    setupChatHub({ opened: [channelId] });
     await start();
+    // ensure onRpc is at least set up properly (because then it is asserted negatively)
+    await waitForSteps(["channel_info"]);
     await openDiscuss(channelId);
     await click(".o-mail-DiscussSidebarChannel-commands [title='Unpin Conversation']");
     rpc("/mail/message/post", {
@@ -1117,6 +1115,7 @@ test("Do no channel_info after unpin", async () => {
         },
     });
     // weak test, no guarantee that we waited long enough for the potential rpc to be done
+    await animationFrame();
     await waitForSteps([]);
 });
 
@@ -1173,7 +1172,6 @@ test("Update channel data via bus notification", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "Sales",
-        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
         channel_type: "channel",
         create_uid: serverState.userId,
     });
@@ -1191,12 +1189,12 @@ test("sidebar: show loading on initial opening", async () => {
     // This could load a lot of data (all pinned conversations)
     const def = new Deferred();
     onRpcBefore("/mail/action", async (args) => {
-        if (args.channels_as_member) {
+        if (args.fetch_params.includes("channels_as_member")) {
             await def;
         }
     });
     onRpcBefore("/mail/data", async (args) => {
-        if (args.channels_as_member) {
+        if (args.fetch_params.includes("channels_as_member")) {
             await def;
         }
     });

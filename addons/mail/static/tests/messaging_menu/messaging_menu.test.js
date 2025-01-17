@@ -1092,7 +1092,7 @@ test("can open messaging menu even if messaging is not initialized", async () =>
     await startServer();
     const def = new Deferred();
     onRpcBefore("/mail/data", async (args) => {
-        if (args.init_messaging) {
+        if (args.fetch_params.includes("init_messaging")) {
             await def;
         }
     });
@@ -1107,12 +1107,12 @@ test("can open messaging menu even if channels are not fetched", async () => {
     pyEnv["discuss.channel"].create({ name: "General" });
     const def = new Deferred();
     onRpcBefore("/mail/action", async (args) => {
-        if (args.channels_as_member) {
+        if (args.fetch_params.includes("channels_as_member")) {
             await def;
         }
     });
     onRpcBefore("/mail/data", async (args) => {
-        if (args.channels_as_member) {
+        if (args.fetch_params.includes("channels_as_member")) {
             await def;
         }
     });

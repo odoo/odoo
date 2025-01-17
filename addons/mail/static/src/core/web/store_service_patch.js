@@ -29,6 +29,11 @@ const StorePatch = {
         this.starred = Record.one("Thread");
         this.history = Record.one("Thread");
     },
+    async initialize() {
+        this.fetchStoreData("failures");
+        this.fetchStoreData("systray_get_activities");
+        await super.initialize(...arguments);
+    },
     onStarted() {
         super.onStarted(...arguments);
         this.inbox = {
@@ -55,13 +60,6 @@ const StorePatch = {
             // BroadcastChannel API is not supported (e.g. Safari < 15.4), so disabling it.
             this.activityBroadcastChannel = null;
         }
-    },
-    get initMessagingParams() {
-        return {
-            ...super.initMessagingParams,
-            failures: true,
-            systray_get_activities: true,
-        };
     },
     onUpdateActivityGroups() {},
     async scheduleActivity(resModel, resIds, defaultActivityTypeId = undefined) {

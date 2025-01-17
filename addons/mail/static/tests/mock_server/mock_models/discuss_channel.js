@@ -342,7 +342,7 @@ export class DiscussChannel extends models.ServerModel {
                 channelMemberIds.length === partners.length &&
                 channel.channel_member_ids.length === partners.length
             ) {
-                return new mailDataHelpers.Store(DiscussChannel.browse(channel.id)).get_result();
+                return channel;
             }
         }
         const id = this.create({
@@ -360,7 +360,7 @@ export class DiscussChannel extends models.ServerModel {
             [id],
             partners.map(({ id }) => id)
         );
-        return new mailDataHelpers.Store(DiscussChannel.browse(id)).get_result();
+        return DiscussChannel.browse(id)[0];
     }
 
     /** @param {number[]} ids */
@@ -417,7 +417,6 @@ export class DiscussChannel extends models.ServerModel {
                 Object.assign(res, {
                     custom_channel_name: memberOfCurrentUser.custom_channel_name,
                     is_pinned: memberOfCurrentUser.is_pinned,
-                    state: memberOfCurrentUser.fold_state || "closed",
                 });
                 if (memberOfCurrentUser.rtc_inviting_session_id) {
                     res.rtcInvitingSession = mailDataHelpers.Store.one(

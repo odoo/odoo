@@ -31,9 +31,4 @@ patch(Store.prototype, {
         }
         this.isReady.resolve();
     },
-    get initMessagingParams() {
-        const params = super.initMessagingParams;
-        params.init_messaging.channel_types = ["livechat"];
-        return params;
-    },
 });

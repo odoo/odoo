@@ -8,7 +8,7 @@ import {
 import { describe, test } from "@odoo/hoot";
 import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
 import { MockServer, onRpc } from "@web/../tests/web_test_helpers";
-import { mail_thread_data } from "@mail/../tests/mock_server/mail_mock_server";
+import { mail_data } from "@mail/../tests/mock_server/mail_mock_server";
 
 describe.current.tags("desktop");
 defineTestMailModels();
@@ -34,11 +34,14 @@ test("Send message button activation (access rights dependent)", async () => {
         `,
     });
     let userAccess = {};
-    onRpc("/mail/thread/data", async (req) => {
-        const res = await mail_thread_data.bind(MockServer.current)(req);
-        res["mail.thread"][0].hasWriteAccess = userAccess.hasWriteAccess;
-        res["mail.thread"][0].hasReadAccess = userAccess.hasReadAccess;
-        return res;
+    onRpc("/mail/data", async (request) => {
+        const { params } = await request.json();
+        if (params.fetch_params.some((fetchParam) => fetchParam[0] === "mail.thread")) {
+            const res = await mail_data.bind(MockServer.current)(request);
+            res["mail.thread"][0].hasWriteAccess = userAccess.hasWriteAccess;
+            res["mail.thread"][0].hasReadAccess = userAccess.hasReadAccess;
+            return res;
+        }
     });
     await start();
     const simpleId = pyEnv["mail.test.multi.company"].create({ name: "Test MC Simple" });

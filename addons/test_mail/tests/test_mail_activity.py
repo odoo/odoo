@@ -789,7 +789,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
             user_id=self.user_employee.id,
         )
         self.authenticate(self.user_employee.login, self.user_employee.login)
-        data = self.make_jsonrpc_request("/mail/data", {"systray_get_activities": True})
+        data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["systray_get_activities"]})
         total_count = sum(
             record["total_count"]
             for record in data["Store"]["activityGroups"]
