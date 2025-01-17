@@ -1609,10 +1609,6 @@ class TestMailgateway(MailGatewayCommon):
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_message_process_reply_to_new_thread(self):
         """ Test replies not being considered as replies but use destination information instead (aka, mass post + specific reply to using aliases) """
-        # shorten company name to prevent 68 character formatting from
-        # triggering and making the assert missmatch.
-        # See _notify_get_reply_to_formatted_email method
-        self.user_employee.company_id.name = "Forced"
         first_record = self.env['mail.test.simple'].with_user(self.user_employee).create({'name': 'Replies to Record'})
         record_msg = first_record.message_post(
             subject='Discussion',
@@ -1621,8 +1617,7 @@ class TestMailgateway(MailGatewayCommon):
         )
         self.assertEqual(
             record_msg.reply_to,
-            formataddr((f'{self.user_employee.company_id.name} {first_record.name}',
-                        f'{self.alias_catchall}@{self.alias_domain}'))
+            formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}'))
         )
         mail_msg = first_record.message_post(
             subject='Replies to Record',
