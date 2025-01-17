@@ -1,0 +1,13 @@
+@mixin unset-button-user-agent() {
+    appearance: none;
+    margin: unset;
+    padding: unset;
+    background: unset;
+    border: unset;
+    font-family: inherit;
+    font-size: 100%;
+}
+
+.reset-button {
+    @include unset-button-user-agent();
+}
