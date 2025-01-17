@@ -921,18 +921,7 @@ class AccountMoveLine(models.Model):
     def _compute_tax_key(self):
         for line in self:
             if line.tax_repartition_line_id:
-                line.tax_key = frozendict({
-                    'tax_repartition_line_id': line.tax_repartition_line_id.id,
-                    'group_tax_id': line.group_tax_id.id,
-                    'account_id': line.account_id.id,
-                    'currency_id': line.currency_id.id,
-                    'analytic_distribution': line.analytic_distribution,
-                    'tax_ids': [(6, 0, line.tax_ids.ids)],
-                    'tax_tag_ids': [(6, 0, line.tax_tag_ids.ids)],
-                    'partner_id': line.partner_id.id,
-                    'move_id': line.move_id.id,
-                    'display_type': line.display_type,
-                })
+                line.tax_key = frozendict(line._get_tax_key())
             else:
                 line.tax_key = frozendict({'id': line.id})
 
@@ -966,18 +955,7 @@ class AccountMoveLine(models.Model):
             rate = line.amount_currency / line.balance if line.balance else 1
             line.compute_all_tax_dirty = True
             line.compute_all_tax = {
-                frozendict({
-                    'tax_repartition_line_id': tax['tax_repartition_line_id'],
-                    'group_tax_id': tax['group'] and tax['group'].id or False,
-                    'account_id': tax['account_id'] or line.account_id.id,
-                    'currency_id': line.currency_id.id,
-                    'analytic_distribution': ((tax['analytic'] or not tax['use_in_tax_closing']) and line.move_id.state == 'draft') and line.analytic_distribution,
-                    'tax_ids': [(6, 0, tax['tax_ids'])],
-                    'tax_tag_ids': [(6, 0, tax['tag_ids'])],
-                    'partner_id': line.move_id.partner_id.id or line.partner_id.id,
-                    'move_id': line.move_id.id,
-                    'display_type': line.display_type,
-                }): {
+                frozendict(line._get_compute_all_tax_key(tax)): {
                     'name': tax['name'] + (' ' + _('(Discount)') if line.display_type == 'epd' else ''),
                     'balance': tax['amount'] / rate,
                     'amount_currency': tax['amount'],
@@ -990,6 +968,35 @@ class AccountMoveLine(models.Model):
                 line.compute_all_tax[frozendict({'id': line.id})] = {
                     'tax_tag_ids': [(6, 0, compute_all_currency['base_tags'])],
                 }
+
+    def _get_compute_all_tax_key(self, tax):
+        self.ensure_one()
+        values = self._get_tax_key()
+        values.update({
+            'tax_repartition_line_id': tax['tax_repartition_line_id'],
+            'group_tax_id': tax['group'] and tax['group'].id or False,
+            'account_id': tax['account_id'] or self.account_id.id,
+            'analytic_distribution': ((tax['analytic'] or not tax[
+                'use_in_tax_closing']) and self.move_id.state == 'draft') and self.analytic_distribution,
+            'tax_ids': [(6, 0, tax['tax_ids'])],
+            'tax_tag_ids': [(6, 0, tax['tag_ids'])],
+        })
+        return values
+
+    def _get_tax_key(self):
+        self.ensure_one()
+        return {
+            'tax_repartition_line_id': self.tax_repartition_line_id.id,
+            'group_tax_id': self.group_tax_id.id,
+            'account_id': self.account_id.id,
+            'currency_id': self.currency_id.id,
+            'analytic_distribution': self.analytic_distribution,
+            'tax_ids': [(6, 0, self.tax_ids.ids)],
+            'tax_tag_ids': [(6, 0, self.tax_tag_ids.ids)],
+            'partner_id': self.partner_id.id,
+            'move_id': self.move_id.id,
+            'display_type': self.display_type,
+        }
 
     @api.depends('tax_ids', 'account_id', 'company_id')
     def _compute_epd_key(self):
