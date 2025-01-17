@@ -53,6 +53,7 @@ export const imStatusService = {
             }
             startAwayTimeout();
         });
+        return { updateBusPresence };
     },
 };
 
