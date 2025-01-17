@@ -11,6 +11,7 @@ from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
 from odoo.addons.account.models.product import ACCOUNT_DOMAIN
+from odoo.addons.account.models.partner import _ref_company_registry
 from odoo.addons.base_vat.models.res_partner import _ref_vat
 
 
@@ -261,6 +262,7 @@ class ResCompany(models.Model):
         help="Default on whether the sales price used on the product and invoices with this Company includes its taxes."
     )
     company_vat_placeholder = fields.Char(compute='_compute_company_vat_placeholder')
+    company_registry_placeholder = fields.Char(compute='_compute_company_registry_placeholder')
 
     income_account_id = fields.Many2one(
         comodel_name='account.account',
@@ -1059,3 +1061,12 @@ class ResCompany(models.Model):
                     placeholder = _("%s, or / if not applicable", expected_vat)
 
             company.company_vat_placeholder = placeholder
+
+    @api.depends('country_id', 'account_fiscal_country_id')
+    def _compute_company_registry_placeholder(self):
+        """ Provides a dynamic placeholder on the company registry field for countries that may need it.
+        Add your country and the value you want in the _ref_company_registry map in the partner.py file.
+        """
+        for company in self:
+            country_code = (company.account_fiscal_country_id or company.country_id).code or ''
+            company.company_registry_placeholder = _ref_company_registry.get(country_code.lower(), '')
