@@ -254,6 +254,8 @@ def tag_quote(el):
         el.set('data-o-mail-quote', '1')
     if el.getparent() is not None and (el.getparent().get('data-o-mail-quote') or el.getparent().get('data-o-mail-quote-container')) and not el.getparent().get('data-o-mail-quote-node'):
         el.set('data-o-mail-quote', '1')
+    if el.getprevious() is not None and el.getprevious().get('data-o-mail-quote') and not el.text_content().strip():
+        el.set('data-o-mail-quote', '1')
 
 
 def fromstring(html_, base_url=None, parser=None, **kw):
