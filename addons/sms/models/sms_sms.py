@@ -5,7 +5,7 @@ from uuid import uuid4
 
 from werkzeug.urls import url_join
 
-from odoo import api, fields, models, modules, tools, _
+from odoo import api, fields, models, tools, _
 from odoo.addons.sms.tools.sms_api import SmsApi
 
 _logger = logging.getLogger(__name__)
@@ -96,20 +96,22 @@ class SmsSms(models.Model):
     def action_set_outgoing(self):
         self._update_sms_state_and_trackers('outgoing', failure_type=False)
 
-    def send(self, unlink_failed=False, unlink_sent=True, auto_commit=False, raise_exception=False):
+    def send(self, unlink_failed=False, unlink_sent=True, raise_exception=False):
         """ Main API method to send SMS.
+
+        This contacts an external server. If the transaction fails, it may be
+        retried which can result in sending multiple SMS messages!
 
           :param unlink_failed: unlink failed SMS after IAP feedback;
           :param unlink_sent: unlink sent SMS after IAP feedback;
-          :param auto_commit: commit after each batch of SMS;
           :param raise_exception: raise if there is an issue contacting IAP;
         """
-        self = self.filtered(lambda sms: sms.state == 'outgoing' and not sms.to_delete)
-        for batch_ids in self._split_batch():
-            self.browse(batch_ids)._send(unlink_failed=unlink_failed, unlink_sent=unlink_sent, raise_exception=raise_exception)
-            # auto-commit if asked except in testing mode
-            if auto_commit is True and not modules.module.current_test:
-                self._cr.commit()
+
+        domain = [('state', '=', 'outgoing'), ('to_delete', '!=', True)]
+        records = self.try_lock_for_update().filtered_domain(domain)
+        for batch_ids in tools.split_every(self._get_send_batch_size(), records.ids):
+            records = self.browse(batch_ids)
+            records._send(unlink_failed=unlink_failed, unlink_sent=unlink_sent, raise_exception=raise_exception)
 
     def resend_failed(self):
         sms_to_send = self.filtered(lambda sms: sms.state == 'error' and not sms.to_delete)
@@ -139,35 +141,20 @@ class SmsSms(models.Model):
         }
 
     @api.model
-    def _process_queue(self, ids=None):
-        """ Send immediately queued messages, committing after each message is sent.
-        This is not transactional and should not be called during another transaction!
-
-       :param list ids: optional list of emails ids to send. If passed no search
-         is performed, and these ids are used instead.
-        """
+    def _process_queue(self):
+        """ CRON job to send queued SMS messages. """
         domain = [('state', '=', 'outgoing'), ('to_delete', '!=', True)]
 
-        filtered_ids = self.search(domain, limit=10000).ids  # TDE note: arbitrary limit we might have to update
-        if ids:
-            ids = list(set(filtered_ids) & set(ids))
-        else:
-            ids = filtered_ids
-        ids.sort()
+        batch_size = self._get_send_batch_size()
+        records = self.search(domain, limit=batch_size, order='id').try_lock_for_update()
+        if not records:
+            return
 
-        res = None
-        try:
-            # auto-commit except in testing mode
-            auto_commit = not modules.module.current_test
-            res = self.browse(ids).send(unlink_failed=False, unlink_sent=True, auto_commit=auto_commit, raise_exception=False)
-        except Exception:
-            _logger.exception("Failed processing SMS queue")
-        return res
+        records._send(unlink_failed=False, unlink_sent=True, raise_exception=False)
+        self.env['ir.cron']._commit_progress(len(records), remaining=self.search_count(domain) if len(records) == batch_size else 0)
 
-    def _split_batch(self):
-        batch_size = int(self.env['ir.config_parameter'].sudo().get_param('sms.session.batch.size', 500))
-        for sms_batch in tools.split_every(batch_size, self.ids):
-            yield sms_batch
+    def _get_send_batch_size(self):
+        return int(self.env['ir.config_parameter'].sudo().get_param('sms.session.batch.size', 500))
 
     def _send(self, unlink_failed=False, unlink_sent=True, raise_exception=False):
         """Send SMS after checking the number (presence and formatting)."""
