@@ -95,7 +95,7 @@ export class DiscussCoreCommon {
      * @param {{ notifId: number}} metadata
      */
     _handleNotificationChannelDelete(thread, metadata) {
-        thread.closeChatWindow();
+        thread.closeChatWindow({ force: true });
         thread.messages.splice(0, thread.messages.length);
         thread.delete();
     }
