@@ -186,6 +186,8 @@ class HrEmployee(models.Model):
     message_has_error = fields.Boolean(groups="hr.group_hr_user")
     message_has_error_counter = fields.Integer(groups="hr.group_hr_user")
     message_attachment_count = fields.Integer(groups="hr.group_hr_user")
+    address_id = fields.Many2one(tracking=True)
+    work_phone = fields.Char(tracking=True)
 
     _barcode_uniq = models.Constraint(
         'unique (barcode)',
