@@ -305,7 +305,7 @@ def serialize_xml(node):
     return etree.tostring(node, method='xml', encoding='unicode')
 
 
-MODIFIER_ATTRS = {"invisible", "readonly", "required", "column_invisible", "attrs", "states"}
+MODIFIER_ATTRS = {"invisible", "readonly", "required", "column_invisible", "attrs"}
 def xml_term_adapter(term_en):
     """
     Returns an `adapter(term)` function that will ensure the modifiers are copied
@@ -317,15 +317,13 @@ def xml_term_adapter(term_en):
     orig_node = parse_xml(f"<div>{term_en}</div>")
 
     def same_struct_iter(left, right):
-        if left.tag != right.tag:
+        if left.tag != right.tag or len(left) != len(right):
             raise ValueError("Non matching struct")
         yield left, right
         left_iter = left.iterchildren()
         right_iter = right.iterchildren()
         for lc, rc in zip(left_iter, right_iter):
             yield from same_struct_iter(lc, rc)
-        if next(left_iter, None) is not None or next(right_iter, None) is not None:
-            raise ValueError("Non matching struct")
 
     def adapter(term):
         new_node = parse_xml(f"<div>{term}</div>")
@@ -334,10 +332,10 @@ def xml_term_adapter(term_en):
                 removed_attrs = [k for k in new_n.attrib if k in MODIFIER_ATTRS and k not in orig_n.attrib]
                 for k in removed_attrs:
                     del new_n.attrib[k]
-                keep_attrs = {k: v for k, v in orig_n.attrib.items() if k in MODIFIER_ATTRS}
+                keep_attrs = {k: v for k, v in orig_n.attrib.items()}
                 new_n.attrib.update(keep_attrs)
         except ValueError:  # non-matching structure
-            return term
+            return None
 
         # remove tags <div> and </div> from result
         return serialize_xml(new_node)[5:-6]
