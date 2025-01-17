@@ -80,6 +80,9 @@ export class GallerySlider extends Interaction {
         }, 0);
     }
 
+    /**
+     * @param {MouseEvent} ev
+     */
     onClickIndicator(ev) {
         // Delegate from this.indicatorEl.
         const dispatchedEl = ev.target.closest("li:not([data-bs-slide-to])");
@@ -126,7 +129,6 @@ export class GallerySlider extends Interaction {
         }
         this.hide();
     }
-
 }
 
 registry

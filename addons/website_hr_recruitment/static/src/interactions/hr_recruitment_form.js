@@ -1,95 +1,98 @@
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 
-publicWidget.registry.hrRecruitment = publicWidget.Widget.extend({
-    selector : '#hr_recruitment_form',
-    events: {
-        'click #apply-btn': '_onClickApplyButton',
-        "focusout #recruitment1" : "_onFocusOutName",
-        'focusout #recruitment2' : '_onFocusOutMail',
-        "focusout #recruitment3" : "_onFocusOutPhone",
-        'focusout #recruitment4' : '_onFocusOutLinkedin',
-    },
+export class HrRecruitmentForm extends Interaction {
+    static selector = "#hr_recruitment_form";
+    dynamicContent = {
+        "#apply-btn": { "t-on-click": this.onApplyButtonClick },
+        "#recruitment1": { "t-on-focusout": (ev) => this.checkRedundant(ev.currentTarget, "name", this.warningMessageEl) },
+        "#recruitment2": { "t-on-focusout": (ev) => this.checkRedundant(ev.currentTarget, "email", this.warningMessageEl) },
+        "#recruitment3": { "t-on-focusout": (ev) => this.checkRedundant(ev.currentTarget, "phone", this.warningMessageEl) },
+        "#recruitment4": {
+            "t-on-focusout": this.onLinkedinFocusOut,
+            "t-att-required": () => this.isIncomplete,
+        },
+        "#recruitment6": {
+            "t-att-required": () => this.isIncomplete,
+        },
+    };
 
-    _onClickApplyButton (ev) {
-        const linkedinProfileEl = document.querySelector("#recruitment4");
-        const resumeEl = document.querySelector("#recruitment6");
+    setup() {
+        this.linkedinInputEl = this.el.querySelector("#recruitment4");
+        this.linkedinMessageEl = document.querySelector("#linkedin-message");
+        this.warningMessageEl = document.querySelector("#warning-message");
+        this.isIncomplete = false;
+    }
 
-        const isLinkedinEmpty = !linkedinProfileEl || linkedinProfileEl.value.trim() === "";
-        const isResumeEmpty = !resumeEl || !resumeEl.files.length;
-        if (isLinkedinEmpty && isResumeEmpty) {
-            linkedinProfileEl?.setAttribute("required", true);
-            resumeEl?.setAttribute("required", true);
-        } else {
-            linkedinProfileEl?.removeAttribute("required");
-            resumeEl?.removeAttribute("required");
-        }
-    },
-
-    hideWarningMessage(targetEl, messageContainerId) {
-        targetEl.classList.remove("border-warning");
-        document.querySelector(messageContainerId)?.classList.add("d-none");
-    },
-
-    showWarningMessage(targetEl, messageContainerId, message) {
+    /**
+    * @param {HTMLElement} targetEl
+    * @param {HTMLElement} messageContainerEl
+    * @param {string} message
+    */
+    showWarningMessage(targetEl, messageContainerEl, message) {
         targetEl.classList.add("border-warning");
-        document.querySelector(messageContainerId).textContent = message;
-        document.querySelector(messageContainerId)?.classList.remove("d-none");
-    },
+        messageContainerEl.textContent = message;
+        messageContainerEl.classList.remove("d-none");
+    }
 
-    async _onFocusOutName(ev) {
-        const field = "name"
-        const messageContainerId = "#warning-message";
-        await this.checkRedundant(ev.currentTarget, field, messageContainerId);
-    },
+    /**
+    * @param {HTMLElement} targetEl
+    * @param {HTMLElement} messageContainerEl
+    */
+    hideWarningMessage(targetEl, messageContainerEl) {
+        targetEl.classList.remove("border-warning");
+        messageContainerEl.classList.add("d-none");
+    }
 
-    async _onFocusOutMail (ev) {
-        const field = "email"
-        const messageContainerId = "#warning-message";
-        await this.checkRedundant(ev.currentTarget, field, messageContainerId);
-    },
-
-    async _onFocusOutPhone (ev) {
-        const field = "phone"
-        const messageContainerId = "#warning-message";
-        await this.checkRedundant(ev.currentTarget, field, messageContainerId);
-    },
-
-    async _onFocusOutLinkedin (ev) {
-        const targetEl = ev.currentTarget;
-        const linkedin = targetEl.value;
-        const field = "linkedin";
-        const messageContainerId = "#linkedin-message";
-        const linkedin_regex = /^(https?:\/\/)?([\w\.]*)linkedin\.com\/in\/(.*?)(\/.*)?$/;
-        let hasWarningMessage = false;
-        if (!linkedin_regex.test(linkedin) && linkedin !== "") {
-            const message = _t("The profile that you gave us doesn't seems like a linkedin profile")
-            this.showWarningMessage(targetEl, "#linkedin-message", message);
-            hasWarningMessage = true;
-        } else {
-            this.hideWarningMessage(targetEl, "#linkedin-message");
-        }
-        await this.checkRedundant(targetEl, field, messageContainerId, hasWarningMessage);
-    },
-
-    async checkRedundant(targetEl, field, messageContainerId, keepPreviousWarningMessage = false) {
+    /**
+     * @param {HTMLElement} targetEl
+     * @param {string} field
+     * @param {HTMLElement} messageContainerEl
+     * @param {boolean} [keepPreviousWarningMessage=false]
+     */
+    async checkRedundant(targetEl, field, messageContainerEl, keepPreviousWarningMessage = false) {
         const value = targetEl.value;
         if (!value) {
-            this.hideWarningMessage(targetEl, messageContainerId);
+            this.hideWarningMessage(targetEl, messageContainerEl);
             return;
         }
         const job_id = document.querySelector("#recruitment7").value;
-        const data = await rpc("/website_hr_recruitment/check_recent_application", {
+        const data = await this.waitFor(rpc("/website_hr_recruitment/check_recent_application", {
             field: field,
             value: value,
             job_id: job_id,
-        });
+        }));
 
         if (data.message) {
-            this.showWarningMessage(targetEl, messageContainerId, data.message);
+            this.showWarningMessage(targetEl, messageContainerEl, data.message);
         } else if (!keepPreviousWarningMessage) {
-            this.hideWarningMessage(targetEl, messageContainerId);
+            this.hideWarningMessage(targetEl, messageContainerEl);
         }
-    },
-});
+    }
+
+    onApplyButtonClick() {
+        const isEmptyLinkedin = !this.linkedinInputEl || this.linkedinInputEl.value.trim() === "";
+        const isEmptyResume = !this.resumeInputEl || !this.resumeInputEl.files.length;
+        this.isIncomplete = isEmptyLinkedin && isEmptyResume;
+    }
+
+    onLinkedinFocusOut() {
+        const linkedin = this.linkedinInputEl.value;
+        const linkedin_regex = /^(https?:\/\/)?([\w\.]*)linkedin\.com\/in\/(.*?)(\/.*)?$/;
+        const isLinkedinValid = !linkedin_regex.test(linkedin) && linkedin !== "";
+        if (isLinkedinValid) {
+            const message = _t("The profile that you gave us doesn't seems like a linkedin profile");
+            this.showWarningMessage(this.linkedinInputEl, this.linkedinMessageEl, message);
+        } else {
+            this.hideWarningMessage(this.linkedinInputEl, this.linkedinMessageEl);
+        }
+        this.checkRedundant(this.linkedinInputEl, "linkedin", this.linkedinMessageEl, isLinkedinValid);
+    }
+}
+
+registry
+    .category("public.interactions")
+    .add("website_hr_recruitment.hr_recruitment_form", HrRecruitmentForm);

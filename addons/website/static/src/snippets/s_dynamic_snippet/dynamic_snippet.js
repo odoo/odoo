@@ -5,6 +5,7 @@ import { rpc } from "@web/core/network/rpc";
 import { listenSizeChange, utils as uiUtils } from "@web/core/ui/ui_service";
 import { uniqueId } from "@web/core/utils/functions";
 import { renderToFragment } from "@web/core/utils/render";
+import { verifyHttpsUrl } from "@website/utils/misc";
 
 import { markup } from "@odoo/owl";
 
@@ -189,9 +190,11 @@ export class DynamicSnippet extends Interaction {
 
     /**
      * Navigates to the call to action url.
+     *
+     * @param {Event} ev
      */
     callToAction(ev) {
-        window.location = ev.currentTarget.dataset.url;
+        window.location = verifyHttpsUrl(ev.currentTarget.dataset.url);
     }
 }
 

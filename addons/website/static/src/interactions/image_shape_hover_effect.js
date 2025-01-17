@@ -85,6 +85,7 @@ export class ImageShapeHoverEffect extends Interaction {
      * Converts the SVG to a data URI and set it as the image source.
      *
      * @param {HTMLElement} svg
+     * @param {Function} resolve
 ￼    */
     setImgSrc(svg, resolve) {
         // Add random class to prevent browser from caching image. Otherwise the
