@@ -155,7 +155,7 @@ class SaleOrderLine(models.Model):
     def _compute_is_mto(self):
         """ Verify the route of the product based on the warehouse
             set 'is_available' at True if the product availability in stock does
-            not need to be verified, which is the case in MTO, Cross-Dock or Drop-Shipping
+            not need to be verified, which is the case in MTO, Drop-Shipping
         """
         self.is_mto = False
         for line in self:
