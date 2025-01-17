@@ -454,7 +454,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
             ],
         })
 
-        expense_sheet._do_approve()
+        expense_sheet.action_approve_expense_sheets()
         expense_sheet.action_sheet_move_create()
 
         self.assertRecordValues(sale_order.order_line, [
@@ -552,7 +552,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
             ],
         })
 
-        expense_sheet._do_approve()
+        expense_sheet.action_approve_expense_sheets()
         expense_sheet.action_sheet_move_create()
 
         self.assertRecordValues(sale_order.order_line, [
