@@ -203,14 +203,11 @@ class HrEmployeeBase(models.AbstractModel):
         for employee in self.filtered('job_id'):
             employee.job_title = employee.job_id.name
 
-    @api.depends('address_id')
+    @api.depends('address_id.phone')
     def _compute_phones(self):
         for employee in self:
-            if employee.address_id and employee.address_id.phone:
-                employee.work_phone = employee.address_id.phone
-            else:
-                employee.work_phone = False
-
+            employee.work_phone = employee.address_id.phone
+    
     @api.depends('work_contact_id', 'work_contact_id.phone', 'work_contact_id.email')
     def _compute_work_contact_details(self):
         for employee in self:
