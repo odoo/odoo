@@ -7,8 +7,7 @@
             <field name="company_id" ref="main_company"/>
             <field name="company_ids" eval="[Command.link(ref('main_company'))]"/>
             <field name="email">odoobot@example.com</field>
-            <field name="signature"><![CDATA[<span>-- <br/>
-System</span>]]></field>
+            <field name="signature">System</field>
         </record>
 
         <!-- user 2 is the human admin user -->
@@ -19,8 +18,7 @@ System</span>]]></field>
             <field name="company_id" ref="main_company"/>
             <field name="company_ids" eval="[Command.link(ref('main_company'))]"/>
             <field name="groups_id" eval="[Command.set([])]"/>
-            <field name="signature"><![CDATA[<span>-- <br/>
-Administrator</span>]]></field>
+            <field name="signature">Administrator</field>
         </record>
 
         <record id="user_admin_settings" model="res.users.settings" forcecreate="0">
