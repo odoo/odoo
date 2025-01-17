@@ -75,7 +75,6 @@ export { Command } from "./_framework/mock_server/mock_model";
 export {
     authenticate,
     defineActions,
-    defineEmbeddedActions,
     defineMenus,
     defineModels,
     defineParams,

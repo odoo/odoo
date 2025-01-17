@@ -1,3 +1,8 @@
+/**
+ * This file is no longer used, and is kept for compatibility (stable policy).
+ * To be removed in master.
+ */
+
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { FileMediaDialog } from "@html_editor/main/media/media_dialog/file_media_dialog";
@@ -26,7 +31,6 @@ export class FilePlugin extends Plugin {
                         noVideos: true,
                         noImages: true,
                         noIcons: true,
-                        noDocuments: true,
                     });
                 },
             },

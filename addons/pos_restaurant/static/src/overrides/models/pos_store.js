@@ -88,9 +88,9 @@ patch(PosStore.prototype, {
         }
         return orderIsDeleted;
     },
-    async closingSessionNotification(data) {
+    async closingSessionNotification() {
         await super.closingSessionNotification(...arguments);
-        this.computeTableCount(data);
+        this.computeTableCount();
     },
     computeTableCount() {
         const tables = this.models["restaurant.table"].getAll();

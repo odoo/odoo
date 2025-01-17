@@ -6,6 +6,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { session } from "@web/session";
 import wUtils from '@website/js/utils';
 import { Component } from "@odoo/owl";
 
@@ -34,7 +35,11 @@ export class WebsiteSwitcherSystray extends Component {
                 'data-tooltip-position': 'left',
             }),
             callback: () => {
-                if (website.domain && !wUtils.isHTTPSorNakedDomainRedirection(website.domain, window.location.origin)) {
+                // TODO share this condition with the website_preview somehow
+                // -> we should probably show the redirection warning here too
+                if (!session.website_bypass_domain_redirect // Used by the Odoo support (bugs to be expected)
+                        && website.domain
+                        && !wUtils.isHTTPSorNakedDomainRedirection(website.domain, window.location.origin)) {
                     const { location: { pathname, search, hash } } = this.websiteService.contentWindow;
                     const path = pathname + search + hash;
                     window.location.href = `${encodeURI(website.domain)}/odoo/action-website.website_preview?path=${encodeURIComponent(path)}&website_id=${encodeURIComponent(website.id)}`;

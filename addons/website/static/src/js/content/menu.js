@@ -829,10 +829,14 @@ publicWidget.registry.MegaMenuDropdown = publicWidget.Widget.extend({
         const megaMenuEls = this.el.querySelectorAll(".o_mega_menu");
         let matchingLink = null;
         megaMenuEls.forEach((megaMenuEl, position) => {
-            const linkEls = Array.from(megaMenuEl.querySelectorAll(`a:not([href="#"])`));
+            const linkEls = Array.from(megaMenuEl.querySelectorAll(`a[href]:not([href="#"])`));
             matchingLink = linkEls.find((linkEl) => {
-                const url = new URL(linkEl.href);
-                return `${url.origin}${url.pathname}` === currentHrefWithoutHash;
+                try {
+                    const url = new URL(linkEl.href);
+                    return `${url.origin}${url.pathname}` === currentHrefWithoutHash;
+                } catch {
+                    return false;
+                }
             });
             if (matchingLink) {
                 const megaMenuToggleEl = megaMenuEl

@@ -4,7 +4,7 @@ import { Component, onWillRender, useEffect, useRef, useState, xml } from "@odoo
 import { Test } from "../core/test";
 import { formatTime } from "../hoot_utils";
 import { getTitle, setTitle } from "../mock/window";
-import { getColors } from "./hoot_colors";
+import { getColors, onColorSchemeChange } from "./hoot_colors";
 import { HootTestPath } from "./hoot_test_path";
 
 /**
@@ -284,6 +284,10 @@ export class HootStatusPanel extends Component {
             () => [this.canvasRef.el]
         );
 
+        onColorSchemeChange(() => {
+            this.progressBarIndex = 0;
+            this.updateProgressBar();
+        });
         onWillRender(() => this.updateProgressBar());
     }
 
@@ -334,6 +338,7 @@ export class HootStatusPanel extends Component {
         const { done, tests } = this.runnerState;
         const doneList = [...done];
         const cellSize = width / tests.length;
+        const minSize = $ceil(cellSize);
         const colors = getColors();
 
         while (this.progressBarIndex < done.size) {
@@ -353,7 +358,7 @@ export class HootStatusPanel extends Component {
                     ctx.fillStyle = colors.skip;
                     break;
             }
-            ctx.fillRect(x, 0, $ceil(cellSize), height);
+            ctx.fillRect(x, 0, minSize, height);
             this.progressBarIndex++;
         }
     }

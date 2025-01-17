@@ -18,6 +18,7 @@ from odoo.tools.sql import column_exists, create_column
 from odoo.addons.account.tools import format_structured_reference_iso
 from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
 from odoo.osv import expression
+from odoo.tools.misc import clean_context
 from odoo.tools import (
     create_index,
     date_utils,
@@ -2986,7 +2987,7 @@ class AccountMove(models.Model):
         if to_delete:
             self.env['account.move.line'].browse(to_delete).with_context(dynamic_unlink=True).unlink()
         if to_create:
-            self.env['account.move.line'].create([
+            self.env['account.move.line'].with_context(clean_context(self.env.context)).create([
                 {**key, **values, 'display_type': line_type}
                 for key, values in to_create.items()
             ])
@@ -3503,6 +3504,8 @@ class AccountMove(models.Model):
         last_month = int(self.company_id.fiscalyear_last_month)
         is_staggered_year = last_month != 12 or last_day != 31
         if is_staggered_year:
+            max_last_day = calendar.monthrange(self.date.year, last_month)[1]
+            last_day = min(last_day, max_last_day)
             if self.date > date(self.date.year, last_month, last_day):
                 year_part = "%s-%s" % (self.date.strftime('%y'), (self.date + relativedelta(years=1)).strftime('%y'))
             else:

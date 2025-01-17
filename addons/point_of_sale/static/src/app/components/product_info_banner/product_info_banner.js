@@ -16,7 +16,7 @@ export class ProductInfoBanner extends Component {
 
     setup() {
         this.pos = usePos();
-        this.fetchStock = useTrackedAsync((p) => this.pos.getProductInfo(p, 1));
+        this.fetchStock = useTrackedAsync((p) => this.pos.getProductInfo(p, 1), { keepLast: true });
         this.ui = useState(useService("ui"));
         this.state = useState({
             other_warehouses: [],

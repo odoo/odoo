@@ -237,6 +237,7 @@ class AccruedExpenseRevenue(models.TransientModel):
             'journal_id': self.journal_id.id,
             'date': self.date,
             'line_ids': move_lines,
+            'currency_id': orders.currency_id.id or self.company_id.currency_id.id,
         }
         return move_vals, orders_with_entries
 
@@ -245,6 +246,9 @@ class AccruedExpenseRevenue(models.TransientModel):
 
         if self.reversal_date <= self.date:
             raise UserError(_('Reversal date must be posterior to date.'))
+        orders = self.env[self._context['active_model']].with_company(self.company_id).browse(self._context['active_ids'])
+        if len({order.currency_id or order.company_id.currency_id for order in orders}) != 1:
+            raise UserError(_('Cannot create an accrual entry with orders in different currencies.'))
 
         move_vals, orders_with_entries = self._compute_move_vals()
         move = self.env['account.move'].create(move_vals)

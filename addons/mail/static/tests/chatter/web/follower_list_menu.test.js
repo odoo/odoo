@@ -10,6 +10,7 @@ import {
     step,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
+import { tick } from "@odoo/hoot-dom";
 import { mockService, onRpc, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -176,7 +177,7 @@ test("Load 100 followers at once", async () => {
     await contains(".o-mail-Followers-dropdown", { text: "Load more" });
     await scroll(".o-mail-Followers-dropdown", "bottom");
     await contains(".o-mail-Follower", { count: 201 });
-    await new Promise(setTimeout); // give enough time for the useVisible hook to register load more as hidden
+    await tick(); // give enough time for the useVisible hook to register load more as hidden
     await scroll(".o-mail-Followers-dropdown", "bottom");
     await contains(".o-mail-Follower", { count: 210 });
     await contains(".o-mail-Followers-dropdown span", { count: 0, text: "Load more" });
@@ -214,7 +215,7 @@ test("Load 100 recipients at once", async () => {
     await contains(".o-mail-RecipientList", { text: "Load more" });
     await scroll(".o-mail-RecipientList", "bottom");
     await contains(".o-mail-RecipientList li", { count: 200 });
-    await new Promise(setTimeout); // give enough time for the useVisible hook to register load more as hidden
+    await tick(); // give enough time for the useVisible hook to register load more as hidden
     await scroll(".o-mail-RecipientList", "bottom");
     await contains(".o-mail-RecipientList li", { count: 209 });
     await contains(".o-mail-RecipientList span", { count: 0, text: "Load more" });

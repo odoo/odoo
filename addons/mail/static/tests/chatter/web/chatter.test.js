@@ -647,7 +647,6 @@ test("form views in dialogs do not have chatter", async () => {
             id: 1,
             name: "Partner",
             res_model: "res.partner",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
             target: "new",
         },

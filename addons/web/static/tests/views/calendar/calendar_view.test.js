@@ -3856,7 +3856,6 @@ test(`initial_date given in the context`, async () => {
             id: 1,
             name: "context initial date",
             res_model: "event",
-            type: "ir.actions.act_window",
             views: [[1, "calendar"]],
             context: { initial_date: "2016-01-30 08:00:00" }, // 30th of january
         },
@@ -4984,7 +4983,6 @@ test("sample data are not removed when switching back from calendar view", async
             id: 1,
             name: "Partners",
             res_model: "event",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "calendar"],
@@ -5038,7 +5036,6 @@ test(`Retaining the 'all' filter value on re-rendering`, async () => {
             id: 1,
             name: "Partners",
             res_model: "event",
-            type: "ir.actions.act_window",
             views: [
                 [false, "calendar"],
                 [false, "list"],
@@ -5098,7 +5095,6 @@ test("save selected date during view switching", async () => {
             id: 1,
             name: "Partners",
             res_model: "event",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "calendar"],
