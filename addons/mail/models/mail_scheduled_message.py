@@ -258,7 +258,7 @@ class MailScheduledMessage(models.Model):
 
         # restart cron if needed
         if self.search_count(domain, limit=1):
-            self.env('mail.ir_cron_post_scheduled_message')._trigger()
+            self.env.ref('mail.ir_cron_post_scheduled_message')._trigger()
 
     def _to_store_defaults(self):
         return [
