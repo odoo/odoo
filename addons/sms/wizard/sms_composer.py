@@ -245,7 +245,7 @@ class SmsComposer(models.TransientModel):
             records._message_log_batch(**log_values)
 
         if sms_all and self.mass_force_send:
-            sms_all.filtered(lambda sms: sms.state == 'outgoing').send(auto_commit=False, raise_exception=False)
+            sms_all.filtered(lambda sms: sms.state == 'outgoing').send(raise_exception=False)
             return self.env['sms.sms'].sudo().search([('id', 'in', sms_all.ids)])
         return sms_all
 
