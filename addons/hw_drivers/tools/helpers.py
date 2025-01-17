@@ -440,12 +440,15 @@ def delete_iot_handlers():
 
 @toggleable
 @require_db
-def download_iot_handlers(auto=True):
-    """Get the drivers from the configured Odoo server"""
-    server = get_odoo_server_url()
+def download_iot_handlers(auto=True, server_url=None):
+    """Get the drivers from the configured Odoo server
+
+    :param auto: If True, the download will depend on the parameter set in the database
+    :param server_url: The URL of the connected Odoo database (provided by decorator).
+    """
     try:
         response = requests.post(
-            server + '/iot/get_handlers', data={'mac': get_mac_address(), 'auto': auto}, timeout=8
+            server_url + '/iot/get_handlers', data={'mac': get_mac_address(), 'auto': auto}, timeout=8
         )
         response.raise_for_status()
     except requests.exceptions.RequestException:
