@@ -1,48 +1,50 @@
+# ruff: noqa: F401, PLC0415
+# ignore import not at top of the file
 import os
 import time
-from pathlib import Path
+from .evented import patch_evented
 
 
-class Monkeypatch():
+modules = {}
 
-    cwd = Path(__path__[0]).absolute()
-    modules = {}
 
-    @classmethod
-    def patch_module(cls, module_name):
-        fq_patcher = f"{__name__}.{module_name.replace('.', '_')}"
-        if patcher_module := os.sys.modules.get(fq_patcher):
-            return {}
+def set_timezone_utc():
+    os.environ['TZ'] = 'UTC'  # Set the timezone
+    if hasattr(time, 'tzset'):
+        time.tzset()
 
-        # Import the monkeypatcher module
-        __import__(fq_patcher)
 
-        # Patch the related module
-        patcher_module = os.sys.modules.get(fq_patcher)
-        if not (patched_modules := patcher_module.patch()):
-            return {}
+def register(patched_modules):
+    modules.update(patched_modules)
+    for patched_module in patched_modules.values():
+        patched_module._patched = True
 
-        cls.modules.update(patched_modules)
 
-        # Save some info on the patched module for runtime inspection
-        for patched_module in patched_modules.values():
-            patched_module._patched = True
+def patch_all():
+    patch_evented()
+    set_timezone_utc()
 
-        return patched_modules
-
-    @classmethod
-    def patch_pre(cls):
-        """ Import all modules in this folder but werkzeug_urls
-            which has to be patched after odoo.tools are loaded
-        """
-        cls.patch_module('evented')
-
-        os.environ['TZ'] = 'UTC'
-        if hasattr(time, 'tzset'):
-            time.tzset()
-
-        excluded_names = ('__init__', 'evented', 'werkzeug_urls')
-        excluded = {cls.cwd / f"{name}.py" for name in excluded_names}
-        modules_paths = set(cls.cwd.glob('*.py')) - excluded
-        for module_path in modules_paths:
-            cls.patch_module(module_path.stem)
+    from .codecs import patch_codecs
+    patch_codecs()
+    from .mimetypes import patch_mimetypes
+    patch_mimetypes()
+    from .pytz import patch_pytz
+    patch_pytz()
+    from .literal_eval import patch_literal_eval
+    patch_literal_eval()
+    from .num2words import patch_num2words
+    patch_num2words()
+    from .stdnum import patch_stdnum
+    patch_stdnum()
+    from .zeep import patch_zeep
+    patch_zeep()
+    from .win32 import patch_win32
+    patch_win32()
+    from .csv import patch_csv
+    patch_csv()
+    from .re import patch_re
+    patch_re()
+    from .xlsxwriter import patch_xlsxwriter
+    patch_xlsxwriter()
+    from .xlwt import patch_xlwt
+    patch_xlwt()

@@ -40,7 +40,6 @@ from lxml import etree, objectify
 
 import odoo
 import odoo.addons
-from odoo._monkeypatches import Monkeypatch
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
 # There are moved to loglevels until we refactor tools.
 from odoo.loglevels import exception_to_unicode, get_encodings, ustr  # noqa: F401
@@ -419,8 +418,10 @@ def merge_sequences(*iterables: Iterable[T]) -> list[T]:
             prev = item
     return topological_sort(deps)
 
-xlwt = Monkeypatch.modules.get('xlwt')
-xlsxwriter = Monkeypatch.modules.get('xlsxwriter')
+import xlwt  # noqa: E402, F401
+import xlsxwriter  # noqa: E402, F401
+
+
 def get_iso_codes(lang: str) -> str:
     if lang.find('_') != -1:
         if lang.split('_')[0] == lang.split('_')[1].lower():

@@ -15,8 +15,8 @@ from .json import json_default
 
 # Monkeypatch -- werkzeug_urls requires json_default
 # and is needed by modules below, i.e. `mail.validate_url`
-from odoo._monkeypatches import Monkeypatch
-Monkeypatch.patch_module('werkzeug.urls')
+from odoo._monkeypatches.werkzeug_urls import patch_werkzeug_urls
+patch_werkzeug_urls()
 
 from .mail import *
 from .misc import *

@@ -1,16 +1,10 @@
 import re
+import xlsxwriter
+
+from odoo._monkeypatches import register
 
 
-try:
-    import xlsxwriter
-except ImportError:
-    xlsxwriter = None
-
-
-def patch():
-    if not xlsxwriter:
-        return {}
-
+def patch_xlsxwriter():
     # add some sanitization to respect the excel sheet name restrictions
     # as the sheet name is often translatable, can not control the input
     class PatchedXlsxWorkbook(xlsxwriter.Workbook):
@@ -23,4 +17,4 @@ def patch():
             return super(PatchedXlsxWorkbook, self).add_worksheet(name, worksheet_class=None)
 
     xlsxwriter.Workbook = PatchedXlsxWorkbook
-    return {'xlsxwriter': xlsxwriter}
+    register({'xlsxwriter': xlsxwriter})

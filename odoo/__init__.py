@@ -42,10 +42,13 @@ def registry(database_name=None):
 
 
 # ----------------------------------------------------------
-# Monkeypatch -- `evented` and `timezone` are required ASAP
+# Import tools to patch code and libraries
+# required to do as early as possible for evented and timezone
+# werkzeug.urls monkeypatching is postponed
 # ----------------------------------------------------------
-from ._monkeypatches import Monkeypatch
-Monkeypatch.patch_pre()
+from . import _monkeypatches
+_monkeypatches.patch_all()
+
 
 # ----------------------------------------------------------
 # Imports
@@ -57,9 +60,10 @@ from . import modules
 from . import netsvc
 from . import osv
 from . import release
-from . import tools  # monkeypatches werkzeug.urls
-from . import service  # uses werkzeug.urls
-from . import sql_db  # uses werkzeug.urls
+# both service and sql_db use werkzeug.urls, which is monkeypatched by tools
+from . import tools
+from . import service
+from . import sql_db
 
 # ----------------------------------------------------------
 # Model classes, fields, api decorators, and translations

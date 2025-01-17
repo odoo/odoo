@@ -17,6 +17,9 @@ from werkzeug.routing import Rule
 from werkzeug.urls import _decode_idna
 from werkzeug.wrappers import Request, Response
 
+from odoo._monkeypatches import register
+
+
 Rule_get_func_code = hasattr(Rule, '_get_func_code') and Rule._get_func_code
 
 
@@ -1040,7 +1043,7 @@ def url_join(
     return url_unparse((scheme, netloc, path, query, fragment))
 
 
-def patch():
+def patch_werkzeug_urls():
     from ..tools.json import scriptsafe  # noqa: PLC0415
     Request.json_module = Response.json_module = scriptsafe
 
@@ -1053,19 +1056,20 @@ def patch():
             return Rule_get_func_code(code, name)
         Rule._get_func_code = _get_func_code
 
-    # Check if URLs is already patched
-    if not hasattr(urls, 'url_join'):
-        # see https://github.com/pallets/werkzeug/compare/2.3.0..3.0.0
-        # see https://github.com/pallets/werkzeug/blob/2.3.0/src/werkzeug/urls.py for replacement
-        urls.url_decode = url_decode
-        urls.url_encode = url_encode
-        urls.url_join = url_join
-        urls.url_parse = url_parse
-        urls.url_quote = url_quote
-        urls.url_unquote = url_unquote
-        urls.url_quote_plus = url_quote_plus
-        urls.url_unquote_plus = url_unquote_plus
-        urls.url_unparse = url_unparse
-        urls.URL = URL
+    if hasattr(urls, 'url_join'):
+        # URLs are already patched
+        return
+    # see https://github.com/pallets/werkzeug/compare/2.3.0..3.0.0
+    # see https://github.com/pallets/werkzeug/blob/2.3.0/src/werkzeug/urls.py for replacement
+    urls.url_decode = url_decode
+    urls.url_encode = url_encode
+    urls.url_join = url_join
+    urls.url_parse = url_parse
+    urls.url_quote = url_quote
+    urls.url_unquote = url_unquote
+    urls.url_quote_plus = url_quote_plus
+    urls.url_unquote_plus = url_unquote_plus
+    urls.url_unparse = url_unparse
+    urls.URL = URL
 
-    return {'werkzeug.urls': urls}
+    register({'werkzeug.urls': urls})

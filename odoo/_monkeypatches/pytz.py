@@ -17,6 +17,9 @@ This list could be improved for other purposes.
 
 import pytz
 
+from odoo._monkeypatches import register
+
+
 _tz_mapping = {
     "Africa/Asmera": "Africa/Nairobi",
     "America/Argentina/ComodRivadavia": "America/Argentina/Catamarca",
@@ -122,11 +125,11 @@ _tz_mapping = {
 original_pytz_timezone = pytz.timezone
 
 
-def patch():
+def patch_pytz():
     def timezone(name):
         if name not in pytz.all_timezones_set and name in _tz_mapping:
             name = _tz_mapping[name]
         return original_pytz_timezone(name)
 
     pytz.timezone = timezone
-    return {'pytz': pytz}
+    register({'pytz': pytz})

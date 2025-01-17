@@ -1,5 +1,8 @@
 # ruff: noqa: PLC0415
 
+from odoo._monkeypatches import register
+
+
 _soap_clients = {}
 
 
@@ -48,11 +51,11 @@ def new_get_soap_client(wsdlurl, timeout=30):
     return _soap_clients[(wsdlurl, timeout)]
 
 
-def patch():
+def patch_stdnum():
     try:
         from stdnum import util
     except ImportError:
-        return {} # nothing to patch
+        return  # nothing to patch
 
     util.get_soap_client = new_get_soap_client
-    return {'stdnum.util': util}
+    register({'stdnum.util': util})

@@ -10,11 +10,11 @@ import sys
 odoo.evented = False
 
 
-def patch():
+def patch_evented():
     if odoo.evented or not (len(sys.argv) > 1 and sys.argv[1] == 'gevent'):
-        return {}
-
+        return
     sys.argv.remove('gevent')
+    from odoo._monkeypatches import register  # noqa: PLC0415
     import gevent.monkey  # noqa: PLC0415
     import psycopg2  # noqa: PLC0415
     from gevent.socket import wait_read, wait_write  # noqa: PLC0415
@@ -36,7 +36,6 @@ def patch():
             else:
                 raise psycopg2.OperationalError(
                     "Bad result from poll: %r" % state)
-
     psycopg2.extensions.set_wait_callback(gevent_wait_callback)
     odoo.evented = True
-    return {'gevent': gevent, 'psycopg2': psycopg2}
+    register({'gevent': gevent, 'psycopg2': psycopg2})

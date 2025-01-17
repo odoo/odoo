@@ -1,16 +1,10 @@
 import re
+import xlwt
+
+from odoo._monkeypatches import register
 
 
-try:
-    import xlwt
-except ImportError:
-    xlwt = None
-
-
-def patch():
-    if not xlwt:
-        return {}
-
+def patch_xlwt():
     # add some sanitization to respect the excel sheet name restrictions
     # as the sheet name is often translatable, can not control the input
     class PatchedWorkbook(xlwt.Workbook):
@@ -23,4 +17,4 @@ def patch():
             return super(PatchedWorkbook, self).add_sheet(name, cell_overwrite_ok=cell_overwrite_ok)
 
     xlwt.Workbook = PatchedWorkbook
-    return {'xlwt': xlwt}
+    register({'xlwt': xlwt})

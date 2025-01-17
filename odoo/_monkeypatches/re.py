@@ -1,6 +1,9 @@
 import re
 
-def patch():
+from odoo._monkeypatches import register
+
+
+def patch_re():
     """ Default is 512, a little too small for odoo """
     re._MAXCACHE = 4096
-    return {'re': re}
+    register({'re': re})
