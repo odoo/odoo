@@ -222,6 +222,20 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 await this._finalizeValidation();
             }
         }
+        async doInvoice(accountMoveId) {
+            const actionRecord = this.env.pos.invoiceActionRecord;
+            if (actionRecord && this.env.pos.shouldInvoiceNewTab(actionRecord)) {
+                return this.env.legacyActionManager.do_action({
+                    type: "ir.actions.act_url",
+                    url: `/report/pdf/${actionRecord.report_name}/${accountMoveId}`,
+                });
+            }
+            return this.env.legacyActionManager.do_action(this.env.pos.invoiceReportAction, {
+                additional_context: {
+                    active_ids: [accountMoveId],
+                },
+            });
+        }
         async _finalizeValidation() {
             if ((this.currentOrder.is_paid_with_cash() || this.currentOrder.get_change()) && this.env.pos.config.iface_cashdrawer && this.env.proxy && this.env.proxy.printer) {
                 this.env.proxy.printer.open_cashbox();
@@ -245,11 +259,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 // 2. Invoice.
                 if (this.shouldDownloadInvoice() && this.currentOrder.is_to_invoice()) {
                     if (syncOrderResult.length) {
-                        await this.env.legacyActionManager.do_action(this.env.pos.invoiceReportAction, {
-                            additional_context: {
-                                active_ids: [syncOrderResult[0].account_move],
-                            },
-                        });
+                        await this.doInvoice(syncOrderResult[0].account_move);
                     } else {
                         throw { code: 401, message: 'Backend Invoice', data: { order: this.currentOrder } };
                     }
