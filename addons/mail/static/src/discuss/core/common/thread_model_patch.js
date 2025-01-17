@@ -6,7 +6,6 @@ import { _t } from "@web/core/l10n/translation";
 import { formatList } from "@web/core/l10n/utils";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { Mutex } from "@web/core/utils/concurrency";
 import { patch } from "@web/core/utils/patch";
 import { imageUrl } from "@web/core/utils/urls";
 
@@ -28,7 +27,6 @@ const threadPatch = {
             },
         });
         this.default_display_mode = undefined;
-        this.fetchChannelMutex = new Mutex();
         this.fetchChannelInfoDeferred = undefined;
         this.fetchChannelInfoState = "not_fetched";
         this.hasOtherMembersTyping = Record.attr(false, {
@@ -210,20 +208,6 @@ const threadPatch = {
             return this.name;
         }
         return super.displayName;
-    },
-    async fetchChannelInfo() {
-        return this.fetchChannelMutex.exec(async () => {
-            if (!(this.localId in this.store.Thread.records)) {
-                return; // channel was deleted in-between two calls
-            }
-            const data = await rpc("/discuss/channel/info", { channel_id: this.id });
-            if (data) {
-                this.store.insert(data);
-            } else {
-                this.delete();
-            }
-            return data ? this : undefined;
-        });
     },
     async fetchChannelMembers() {
         if (this.fetchMembersState === "pending") {

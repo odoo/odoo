@@ -1,19 +1,17 @@
 import { Thread } from "@mail/core/common/thread_model";
-import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 
 patch(Thread.prototype, {
     /** @param {string[]} requestList */
-    async fetchData(requestList) {
+    async fetchThreadData(requestList) {
         if (requestList.includes("messages")) {
             this.fetchNewMessages();
         }
-        const result = await rpc("/mail/thread/data", {
+        await this.store.fetchStoreData("mail.thread", {
+            access_params: this.rpcParams,
             request_list: requestList,
             thread_id: this.id,
             thread_model: this.model,
-            ...this.rpcParams,
         });
-        this.store.insert(result, { html: true });
     },
 });

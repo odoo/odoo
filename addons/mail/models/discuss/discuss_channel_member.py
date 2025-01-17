@@ -36,7 +36,6 @@ class DiscussChannelMember(models.Model):
     seen_message_id = fields.Many2one('mail.message', string='Last Seen', index="btree_not_null")
     new_message_separator = fields.Integer(help="Message id before which the separator should be displayed", default=0, required=True)
     message_unread_counter = fields.Integer('Unread Messages Counter', compute='_compute_message_unread', compute_sudo=True)
-    fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='closed')
     custom_notifications = fields.Selection(
         [("all", "All Messages"), ("mentions", "Mentions Only"), ("no_notif", "Nothing")],
         "Customized Notifications",
@@ -287,25 +286,6 @@ class DiscussChannelMember(models.Model):
         self.ensure_one()
         return fields
 
-    def _channel_fold(self, state, state_count):
-        """Update the fold_state of the given member. The change will be
-        broadcasted to the member channel.
-
-        :param state: the new status of the session for the current member.
-        """
-        self.ensure_one()
-        if self.fold_state == state:
-            return
-        self.fold_state = state
-        self._bus_send(
-            "discuss.Thread/fold_state",
-            {
-                "fold_state": self.fold_state,
-                "foldStateCount": state_count,
-                "id": self.channel_id.id,
-                "model": "discuss.channel",
-            },
-        )
     # --------------------------------------------------------------------------
     # RTC (voice/video)
     # --------------------------------------------------------------------------
