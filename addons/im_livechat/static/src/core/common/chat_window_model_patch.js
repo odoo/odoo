@@ -13,16 +13,19 @@ patch(ChatWindow.prototype, {
         this.livechatStep = CW_LIVECHAT_STEP.NONE;
     },
 
-    async close(...args) {
+    async close(options = {}) {
         if (this.thread?.channel_type !== "livechat") {
-            return super.close(...args);
+            return super.close(...arguments);
+        }
+        if (options.force) {
+            this.livechatStep = CW_LIVECHAT_STEP.CONFIRM_CLOSE;
         }
         const isSelfVisitor = this.thread.livechatVisitorMember?.persona?.eq(this.store.self);
         switch (this.livechatStep) {
             case CW_LIVECHAT_STEP.NONE: {
                 if (this.thread.isTransient) {
                     this.thread.delete();
-                    super.close(...args);
+                    super.close(...arguments);
                     break;
                 }
                 if (!this.thread.livechat_active) {
@@ -30,13 +33,13 @@ patch(ChatWindow.prototype, {
                         this.livechatStep = CW_LIVECHAT_STEP.FEEDBACK;
                         this.open({ notifyState: this.thread?.state !== "open" });
                     } else {
-                        super.close(...args);
+                        super.close(...arguments);
                     }
                     break;
                 }
                 this.actionsDisabled = true;
                 this.livechatStep = CW_LIVECHAT_STEP.CONFIRM_CLOSE;
-                if (!this.hubAsOpened) {
+                if (!this.hubAsOpened && !options.noLeaveChannel) {
                     this.open();
                 }
                 break;
@@ -48,12 +51,12 @@ patch(ChatWindow.prototype, {
                     this.livechatStep = CW_LIVECHAT_STEP.FEEDBACK;
                 } else {
                     this.livechatStep = CW_LIVECHAT_STEP.NONE;
-                    super.close(...args);
+                    super.close(...arguments);
                 }
                 break;
             }
             case CW_LIVECHAT_STEP.FEEDBACK: {
-                super.close(...args);
+                super.close(...arguments);
                 break;
             }
         }
@@ -61,21 +64,5 @@ patch(ChatWindow.prototype, {
             this.store.env.services["im_livechat.livechat"]?.leave();
             this.store.env.services["im_livechat.chatbot"]?.stop();
         }
-    },
-    async _onClose(param1 = {}, ...args) {
-        const thread = this.thread;
-        if (!thread) {
-            return super._onClose(param1, ...args);
-        }
-        if (
-            thread.channel_type === "livechat" &&
-            thread.livechatVisitorMember?.persona?.notEq(this.store.self)
-        ) {
-            param1.notifyState = false;
-            super._onClose(param1, ...args);
-            this.delete();
-            return thread.leaveChannel({ force: true });
-        }
-        return super._onClose(param1, ...args);
     },
 });

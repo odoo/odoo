@@ -32,7 +32,7 @@ export class DiscussCoreCommon {
             if (thread.notifyOnLeave) {
                 this.notificationService.add(thread.leaveNotificationMessage, { type: "info" });
             }
-            thread.closeChatWindow();
+            thread.closeChatWindow({ noLeaveChannel: true });
         });
         this.busService.subscribe("discuss.channel/delete", (payload, metadata) => {
             const thread = this.store.Thread.insert({
@@ -95,7 +95,7 @@ export class DiscussCoreCommon {
      * @param {{ notifId: number}} metadata
      */
     _handleNotificationChannelDelete(thread, metadata) {
-        thread.closeChatWindow();
+        thread.closeChatWindow({ noLeaveChannel: true, force: true });
         thread.messages.splice(0, thread.messages.length);
         thread.delete();
     }

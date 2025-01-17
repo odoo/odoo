@@ -708,6 +708,11 @@ export class Thread extends Record {
         return cw;
     }
 
+    closeChatWindow({ noLeaveChannel = false, force = false } = {}) {
+        const chatWindow = this.store.ChatWindow.get({ thread: this });
+        chatWindow?.close({ notifyState: false, noLeaveChannel, force });
+    }
+
     pin() {
         if (this.model !== "discuss.channel" || this.store.self.type !== "partner") {
             return;
