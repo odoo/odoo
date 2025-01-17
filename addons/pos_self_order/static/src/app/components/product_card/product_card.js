@@ -103,15 +103,7 @@ export class ProductCard extends Component {
             this.flyToCart();
             this.scaleUpPrice();
 
-            const isProductInCart = this.selfOrder.currentOrder.lines.find(
-                (line) => line.product_id === product.id
-            );
-
-            if (isProductInCart) {
-                isProductInCart.qty += qty;
-            } else {
-                this.selfOrder.addToCart(product, 1);
-            }
+            this.selfOrder.addToCart(product, qty);
         }
     }
 
@@ -122,12 +114,5 @@ export class ProductCard extends Component {
                 this.selectProduct(qty);
             },
         });
-    }
-
-    get isHtmlEmpty() {
-        const div = Object.assign(document.createElement("div"), {
-            innerHTML: this.props.productTemplate.public_description,
-        });
-        return div.innerText.trim() === "";
     }
 }
