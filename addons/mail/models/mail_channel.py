@@ -190,7 +190,7 @@ class Channel(models.Model):
             if any(cmd[0] not in (4, 6) for cmd in partner_ids_cmd):
                 raise ValidationError(_('Invalid value when creating a channel with members, only 4 or 6 are allowed.'))
             partner_ids = [cmd[1] for cmd in partner_ids_cmd if cmd[0] == 4]
-            partner_ids += [cmd[2] for cmd in partner_ids_cmd if cmd[0] == 6]
+            partner_ids += [p_id for cmd in partner_ids_cmd if cmd[0] == 6 for p_id in cmd[2]]
 
             # find partners to add from channel_last_seen_partner_ids
             membership_ids_cmd = vals.get('channel_last_seen_partner_ids') or []
