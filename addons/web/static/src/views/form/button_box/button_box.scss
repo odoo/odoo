@@ -176,9 +176,15 @@
     grid-template-columns: repeat(var(--button-box-per-row), minmax(0, 1fr));
     overflow: hidden;
     gap: var(--button-box-gap);
-    width: calc(100vw - var(--button-box-spacing) * 2) !important;
-    left: var(--button-box-spacing) !important;
-    right: var(--button-box-spacing) !important;
+
+    &:has(.o-dropdown-item:only-child) {
+        --button-box-per-row: 1;
+    }
+    &:not(:has(.o-dropdown-item:only-child)) {
+        width: calc(100vw - var(--button-box-spacing) * 2) !important;
+        left: var(--button-box-spacing) !important;
+        right: var(--button-box-spacing) !important;
+    }
 
     > span .o_field_widget, .o_stat_info, .o_stat_value {
         @include text-truncate;
