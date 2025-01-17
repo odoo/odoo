@@ -307,7 +307,7 @@ def prettify_domain(domain, pre_indent=0):
     for term in domain:
         top = stack[-1]
 
-        if is_operator(term):
+        if term in DOMAIN_OPERATORS:
             # when a same operator appears twice in a row, we want to
             # include the second one on the same line as the former one
             if (not top['terms'] and commits
@@ -357,26 +357,17 @@ def prettify_domain(domain, pre_indent=0):
 def normalize_leaf(element):
     """ Change a term's operator to some canonical form, simplifying later
         processing. """
-    # TODO deprecate
+    warnings.warn("Since 19.0, use Domain() object", DeprecationWarning)
     if not is_leaf(element):
         return element
-    left, operator, right = element
-    original = operator
-    operator = operator.lower()
-    if operator == '<>':
-        operator = '!='
-    if isinstance(right, bool) and operator in ('in', 'not in'):
-        _logger.warning("The domain term '%s' should use the '=' or '!=' operator." % ((left, original, right),))
-        operator = '=' if operator == 'in' else '!='
-    if isinstance(right, (list, tuple)) and operator in ('=', '!='):
-        _logger.warning("The domain term '%s' should use the 'in' or 'not in' operator." % ((left, original, right),))
-        operator = 'in' if operator == '=' else 'not in'
-    return left, operator, right
+    domain = orm_domains.Domain(*element)
+    assert isinstance(domain, orm_domains.DomainCondition)
+    return next(iter(domain))
 
 
 def is_operator(element):
     """ Test whether an object is a valid domain operator. """
-    # TODO deprecate
+    warnings.warn("Since 19.0, use Domain() object", DeprecationWarning)
     return isinstance(element, str) and element in DOMAIN_OPERATORS
 
 
@@ -391,7 +382,7 @@ def is_leaf(element):
 
         Note: OLD TODO change the share wizard to use this function.
     """
-    # TODO deprecate
+    warnings.warn("Since 19.0, use Domain() object", DeprecationWarning)
     INTERNAL_OPS = TERM_OPERATORS | {'<>'}
     return (isinstance(element, tuple) or isinstance(element, list)) \
         and len(element) == 3 \
@@ -401,12 +392,12 @@ def is_leaf(element):
 
 
 def is_boolean(element):
-    # TODO deprecate
+    warnings.warn("Since 19.0, use Domain() object", DeprecationWarning)
     return element == TRUE_LEAF or element == FALSE_LEAF
 
 
 def check_leaf(element):
-    # TODO deprecate
+    warnings.warn("Since 19.0, use Domain() object", DeprecationWarning)
     if not is_operator(element) and not is_leaf(element):
         raise ValueError("Invalid leaf %s" % str(element))
 
