@@ -7,6 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { Record } from "@mail/core/common/record";
 import { assignDefined, compareDatetime } from "@mail/utils/common/misc";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 let nextId = 1;
 
@@ -249,7 +250,7 @@ patch(ThreadService.prototype, {
                 }
             )
         );
-        if (autofocus) {
+        if (autofocus && !isMobileOS()) {
             chatWindow.autofocus++;
         }
         if (thread) {
