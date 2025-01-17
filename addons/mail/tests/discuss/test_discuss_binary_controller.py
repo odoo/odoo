@@ -44,8 +44,8 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
             self.guest_2,
             (
                 (self.user_public, False),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_admin, True),
             ),
@@ -65,8 +65,8 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
             self.user_employee_nopartner.partner_id,
             (
                 (self.user_public, False),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_admin, True),
             ),
@@ -85,8 +85,8 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
             self.guest_2,
             (
                 (self.user_public, False),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_admin, True),
             ),
@@ -107,8 +107,8 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
             self.user_employee_nopartner.partner_id,
             (
                 (self.user_public, False),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_admin, True),
             ),
@@ -182,8 +182,8 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
             self.guest_2,
             (
                 (self.user_public, False),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_admin, True),
             ),
@@ -211,8 +211,8 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
             self.user_employee_nopartner.partner_id,
             (
                 (self.user_public, False),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_admin, True),
             ),
@@ -276,9 +276,9 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
         self._execute_subtests(
             self.guest_2,
             (
-                (self.user_public, True),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.user_public, False),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_admin, True),
             ),
@@ -295,9 +295,9 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
         self._execute_subtests(
             self.user_employee_nopartner.partner_id,
             (
-                (self.user_public, True),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.user_public, False),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_admin, True),
             ),
@@ -359,9 +359,9 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
         self._execute_subtests(
             self.guest_2,
             (
-                (self.user_public, True),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.user_public, False),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_admin, True),
             ),
@@ -381,9 +381,9 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
         self._execute_subtests(
             self.user_employee_nopartner.partner_id,
             (
-                (self.user_public, True),
-                (self.guest, True),
-                (self.user_portal, True),
+                (self.user_public, False),
+                (self.guest, False),
+                (self.user_portal, False),
                 (self.user_employee, True),
                 (self.user_admin, True),
             ),

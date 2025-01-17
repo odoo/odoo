@@ -1,14 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, Command
+from odoo.tools.misc import limited_field_access_token
 from odoo.tests import HttpCase
 from odoo.tests.common import tagged
 
 
 @tagged("post_install", "-at_install")
 class TestAvatarAcl(HttpCase):
-    def get_avatar_url(self, record):
-        return f"/web/image?field=avatar_128&id={record.id}&model={record._name}&unique={fields.Datetime.to_string(record.write_date)}"
+    def get_avatar_url(self, record, add_token=False):
+        access_token = ""
+        if add_token:
+            access_token = f"&access_token={limited_field_access_token(record, 'avatar_128')}"
+        return f"/web/image?field=avatar_128&id={record.id}&model={record._name}&unique={fields.Datetime.to_string(record.write_date)}{access_token}"
 
     def test_partner_open_guest_avatar(self):
         self.env["res.users"].create(
@@ -87,6 +91,8 @@ class TestAvatarAcl(HttpCase):
         )
         channel.add_members(guest_ids=[guest.id], partner_ids=[partner.id])
         res = self.url_open(url=self.get_avatar_url(partner))
+        self.assertEqual(res.headers["Content-Disposition"], "inline; filename=placeholder.png")
+        res = self.url_open(url=self.get_avatar_url(partner, add_token=True))
         self.assertEqual(res.headers["Content-Disposition"], f'inline; filename="{partner.name}.svg"')
 
     def test_partner_open_partner_avatar(self):
@@ -142,6 +148,8 @@ class TestAvatarAcl(HttpCase):
         )
         channel.add_members(guest_ids=[guest.id, guest2.id])
         res = self.url_open(url=self.get_avatar_url(guest2))
+        self.assertEqual(res.headers["Content-Disposition"], "inline; filename=placeholder.png")
+        res = self.url_open(url=self.get_avatar_url(guest2, add_token=True))
         self.assertEqual(res.headers["Content-Disposition"], 'inline; filename="Guest 2.svg"')
 
     def test_portal_open_partner_avatar(self):
@@ -198,4 +206,6 @@ class TestAvatarAcl(HttpCase):
         )
         channel.add_members(partner_ids=[partner.id, partner2.id])
         res = self.url_open(url=self.get_avatar_url(partner2))
+        self.assertEqual(res.headers["Content-Disposition"], "inline; filename=placeholder.png")
+        res = self.url_open(url=self.get_avatar_url(partner2, add_token=True))
         self.assertEqual(res.headers["Content-Disposition"], f'inline; filename="{partner2.name}.svg"')

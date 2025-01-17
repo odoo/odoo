@@ -21,8 +21,8 @@ export class MailMessageReaction extends models.ServerModel {
             const partners = ResPartner.browse(
                 reactionGroup.map((reaction) => reaction.partner_id)
             );
-            store.add(guests, makeKwArgs({ fields: ["name", "write_date"] }));
-            store.add(partners, makeKwArgs({ fields: ["name", "write_date"] }));
+            store.add(guests, makeKwArgs({ fields: ["avatar_128", "name"] }));
+            store.add(partners, makeKwArgs({ fields: ["avatar_128", "name"] }));
             const data = {
                 content: content,
                 count: reactionGroup.length,

@@ -4,9 +4,12 @@
 import io
 import base64
 
+from datetime import datetime, timedelta
+from freezegun import freeze_time
 from PIL import Image
 from werkzeug.urls import url_unquote_plus
 
+from odoo.tools.misc import limited_field_access_token
 from odoo.tests.common import HttpCase, tagged
 
 
@@ -157,3 +160,77 @@ class TestImage(HttpCase):
         assert_filenames(f'/web/image/{att.id}/4wzb_!!63148-0-t1.jpg_360x1Q75.jpg_.webp',
             r"""4wzb_!!63148-0-t1.jpg_360x1Q75.jpg_.webp""",
         )
+
+    def test_05_web_image_access_token(self):
+        """Tests that valid access tokens grant access to binary data."""
+
+        def get_datetime_from_token(token):
+            return datetime.fromtimestamp(int(token.rsplit("o", 1)[1], 16))
+
+        def get_datetime_from_record_field(record, field):
+            return get_datetime_from_token(limited_field_access_token(record, field))
+
+        attachment = self.env["ir.attachment"].create(
+            {
+                "datas": b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+                "name": "test.gif",
+                "mimetype": "image/gif",
+            }
+        )
+        # no token: ko
+        res = self.url_open(f"/web/image/{attachment.id}")
+        res.raise_for_status()
+        self.assertEqual(res.headers["Content-Disposition"], "inline; filename=placeholder.png")
+        # invalid token: ko
+        res = self.url_open(f"/web/image/{attachment.id}?access_token=invalid_token")
+        res.raise_for_status()
+        self.assertEqual(res.headers["Content-Disposition"], "inline; filename=placeholder.png")
+        # valid token: ok
+        token = limited_field_access_token(attachment, "raw")
+        res = self.url_open(f"/web/image/{attachment.id}?access_token={token}")
+        res.raise_for_status()
+        self.assertEqual(res.headers["Content-Disposition"], "inline; filename=test.gif")
+        # token about to expire: ok
+        with freeze_time(get_datetime_from_token(token) - timedelta(seconds=1)):
+            res = self.url_open(f"/web/image/{attachment.id}?access_token={token}")
+            res.raise_for_status()
+            self.assertEqual(res.headers["Content-Disposition"], "inline; filename=test.gif")
+        # expired token: ko
+        with freeze_time(get_datetime_from_token(token)):
+            res = self.url_open(f"/web/image/{attachment.id}?access_token={token}")
+            res.raise_for_status()
+            self.assertEqual(res.headers["Content-Disposition"], "inline; filename=placeholder.png")
+        # within a 14-days period, the same token is generated
+        start_of_period = datetime(2021, 2, 18, 0, 0, 0)  # 14-days period 2021-02-18 to 2021-03-04
+        base_result = datetime(2021, 3, 24, 15, 25, 40)
+        for i in range(14):
+            with freeze_time(start_of_period + timedelta(days=i, hours=i % 24, minutes=i % 60)):
+                self.assertEqual(
+                    get_datetime_from_record_field(self.env["ir.attachment"].browse(2), "raw"),
+                    base_result,
+                )
+        # on each following 14-days period another token is generated, valid for exactly 14 extra
+        # days from the previous token
+        for i in range(50):
+            with freeze_time(
+                start_of_period + timedelta(days=14 * i + i % 14, hours=i % 24, minutes=i % 60)
+            ):
+                self.assertEqual(
+                    get_datetime_from_record_field(self.env["ir.attachment"].browse(2), "raw"),
+                    base_result + timedelta(days=14 * i),
+                )
+        with freeze_time(datetime(2021, 3, 1, 1, 2, 3)):
+            # at the same time...
+            self.assertEqual(
+                get_datetime_from_record_field(self.env["ir.attachment"].browse(2), "raw"),
+                base_result,
+            )
+            # a different record generates a different token
+            record_res = get_datetime_from_record_field(self.env["ir.attachment"].browse(3), "raw")
+            self.assertNotIn(record_res, [base_result])
+            # a different field generates a different token
+            field_res = get_datetime_from_record_field(self.env["ir.attachment"].browse(3), "datas")
+            self.assertNotIn(field_res, [base_result, record_res])
+            # a different model generates a different token
+            model_res = get_datetime_from_record_field(self.env["res.partner"].browse(3), "raw")
+            self.assertNotIn(model_res, [base_result, record_res, field_res])

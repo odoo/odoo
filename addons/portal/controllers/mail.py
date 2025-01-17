@@ -50,7 +50,7 @@ class PortalChatter(http.Controller):
             ):
                 partner = portal_partner
         store.add_global_values(
-            store_self=Store.One(partner, ["active", "name", "user", "write_date"])
+            store_self=Store.One(partner, ["active", "avatar_128", "name", "user"])
         )
         if request.env.user.has_group("website.group_website_restricted_editor"):
             store.add(partner, {"is_user_publisher": True})

@@ -370,7 +370,7 @@ class DiscussChannel(models.Model):
             diff = []
             for field_name, value in new_vals.items():
                 if value != old_vals[channel][field_name]:
-                    diff.append(channel._field_store_repr(field_name))
+                    diff.append(field_name)
             if diff:
                 channel._bus_send_store(channel, diff)
         if vals.get('group_ids'):
@@ -396,10 +396,10 @@ class DiscussChannel(models.Model):
         """Return the default Store representation of the given field name, which can be passed as
         param to the various Store methods."""
         if field_name == "group_public_id":
-            return Store.Attr("authorizedGroupFullName", lambda c: c.group_public_id.full_name)
+            return [Store.Attr("authorizedGroupFullName", lambda c: c.group_public_id.full_name)]
         if field_name == "group_ids":
-            return Store.Attr("group_based_subscription", lambda c: bool(c.group_ids))
-        return field_name
+            return [Store.Attr("group_based_subscription", lambda c: bool(c.group_ids))]
+        return [field_name]
 
     # ------------------------------------------------------------
     # MEMBERS MANAGEMENT
@@ -981,8 +981,8 @@ class DiscussChannel(models.Model):
             "default_display_mode",
             "description",
             Store.One("from_message_id"),
-            self._field_store_repr("group_ids"),
-            self._field_store_repr("group_public_id"),
+            "group_ids",
+            "group_public_id",
             Store.Many(
                 "invited_member_ids",
                 [
