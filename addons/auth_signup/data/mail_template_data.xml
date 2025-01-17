@@ -252,11 +252,15 @@
         <record id="portal_set_password_email" model="mail.template">
             <field name="name">Settings: New Portal User Invite</field>
             <field name="model_id" ref="base.model_res_users"/>
-            <field name="subject">Your account at {{ object.company_id.name }}</field>
+            <field name="subject">Your account at {{ object.company_id.name or object.partner_id.company_id.name }}</field>
             <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
-            <field name="email_to">{{ object.email_formatted }}</field>
+            <field name="email_to">{{ object.email_formatted or object.partner_id.email_formatted }}</field>
             <field name="description">Sent to new portal user after you invited them</field>
             <field name="body_html" type="html">
+                <!-- defaulting to the partner as fallback for preview wizard (used when user hasn't been created yet) -->
+                <t t-set="user_name" t-value="object.name or object.partner_id.name or ''"/>
+                <t t-set="company_name" t-value="object.company_id.name or object.partner_id.company_id.name or ''"/>
+                <t t-set="signup_url" t-value="object.partner_id and object.partner_id._get_signup_url()"/>
 <table border="0" cellpadding="0" cellspacing="0"
     style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
     <tr><td align="center">
@@ -271,7 +275,7 @@
                             <tr>
                                 <td valign="middle">
                                     <span style="font-size: 10px;">Your Account</span><br/>
-                                    <span style="font-size: 20px; font-weight: bold;" t-out="object.name or ''">Marc Demo</span>
+                                    <span style="font-size: 20px; font-weight: bold;" t-out="user_name">Marc Demo</span>
                                 </td>
                                 <td valign="middle" align="right" t-if="not object.company_id.uses_default_logo">
                                     <img t-attf-src="/logo.png?company={{ object.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;"
@@ -291,12 +295,12 @@
                             style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                             <tr><td valign="top" style="font-size: 13px;">
                                 <div>
-                                    Dear <t t-out="object.name or ''">Marc Demo</t>,<br/> <br/>
-                                    Welcome to <t t-out="object.company_id.name">YourCompany</t>'s Portal!<br/><br/>
+                                    Dear <t t-out="user_name">Marc Demo</t>,<br/> <br/>
+                                    Welcome to <t t-out="company_name">YourCompany</t>'s Portal!<br/><br/>
                                     An account has been created for you with the following login: <t t-out="object.login">demo</t><br/><br/>
                                     Click on the button below to pick a password and activate your account.
                                     <div style="margin: 16px 0px 16px 0px; text-align: center;">
-                                        <a t-att-href="object.partner_id._get_signup_url()"
+                                        <a t-att-href="signup_url"
                                         t-attf-style="display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;">
                                             <strong>Activate Account</strong>
                                         </a>
@@ -316,7 +320,7 @@
                         <table border="0" cellpadding="0" cellspacing="0" width="590"
                             style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
                             <tr><td valign="middle" align="left">
-                                <t t-out="object.company_id.name or ''">YourCompany</t>
+                                <t t-out="company_name">YourCompany</t>
                             </td></tr>
                             <tr><td valign="middle" align="left" style="opacity: 0.7;">
                                 <t t-out="object.company_id.phone or ''">+1 650-123-4567</t>
