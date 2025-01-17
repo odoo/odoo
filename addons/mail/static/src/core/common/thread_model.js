@@ -685,6 +685,11 @@ export class Thread extends Record {
         return cw;
     }
 
+    closeChatWindow(options = {}) {
+        const chatWindow = this.store.ChatWindow.get({ thread: this });
+        chatWindow?.close({ notifyState: false, ...options });
+    }
+
     pin() {
         if (this.model !== "discuss.channel" || this.store.self.type !== "partner") {
             return;
