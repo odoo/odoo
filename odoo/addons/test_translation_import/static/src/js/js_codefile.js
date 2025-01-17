@@ -46,5 +46,7 @@ export class TestTranslationExportModel {
         _t(dummyFunction`NO - JS Export 06 ${term}`);
 
         _t(dummyFunction("NO - JS Export 07"));
+
+        dummyFunction(`NO - JS Export 08${_t("JS Export 27")}NO - JS Export 09`);
     }
 }

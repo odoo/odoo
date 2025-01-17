@@ -27,10 +27,10 @@ if TYPE_CHECKING:
     # The result of extracting terms, a 4-tuple containing:
     # (lineno: int, messages: str | tuple[str, ...], comments: list[str], context: str | None)
     #   - `lineno`: The line number of the extracted term(s)
+    #   - `funcname`: The translation function name
     #   - `messages`: The extracted term(s). A single one or multiple in case of e.g. `ngettext`
     #   - `comments`: The extracted translator comments for the term(s)
-    #   - `context`: The (optional) context key associated with the term(s)
-    _ExtractionResult: TypeAlias = tuple[int, str | tuple[str, ...], list[str], str | None]
+    _ExtractionResult: TypeAlias = tuple[int, str, str | tuple[str, ...], list[str]]
 
     # The possible options to pass to the extraction function
     class _PyOptions(TypedDict, total=False):

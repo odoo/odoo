@@ -28,10 +28,10 @@ if TYPE_CHECKING:
     # The result of extracting terms, a 4-tuple containing:
     # (lineno: int, messages: str | tuple[str, ...], comments: list[str], context: str | None)
     #   - `lineno`: The line number of the extracted term(s)
+    #   - `funcname`: The translation function name
     #   - `messages`: The extracted term(s). A single one or multiple in case of e.g. `ngettext`
     #   - `comments`: The extracted translator comments for the term(s)
-    #   - `context`: The (optional) context key associated with the term(s)
-    _ExtractionResult: TypeAlias = tuple[int, str | tuple[str, ...], list[str], str | None]
+    _ExtractionResult: TypeAlias = tuple[int, str, str | tuple[str, ...], list[str]]
 
     # The file object to pass to the extraction function
     class _FileObj(SupportsRead[bytes], SupportsReadline[bytes], Protocol):
@@ -51,7 +51,8 @@ def parse_template_string(
     keywords: Mapping[str, _Keyword],
     comment_tags: Collection[str],
     options: _JSOptions,
-    lineno: int = 1,
+    lineno: int = 0,
+    keyword: str = "",
 ) -> Generator[_ExtractionResult, None, None]:
     prev_character = None
     level = 0
@@ -62,10 +63,12 @@ def parse_template_string(
             inside_str = character
         elif inside_str == character and prev_character != r'\\':
             inside_str = False
-        if level:
+        if level or keyword:
             expression_contents += character
         if not inside_str:
             if character == '{' and prev_character == '$':
+                if keyword:
+                    break
                 level += 1
             elif level and character == '}':
                 level -= 1
@@ -76,6 +79,8 @@ def parse_template_string(
                     lineno += len(line_re.findall(expression_contents))
                     expression_contents = ''
         prev_character = character
+    if keyword:
+        yield (lineno, keyword, expression_contents, [])
 
 
 def extract_javascript(
@@ -83,6 +88,7 @@ def extract_javascript(
     keywords: Mapping[str, _Keyword],
     comment_tags: Collection[str],
     options: _JSOptions,
+    lineno_offset: int = 0,
 ) -> Generator[_ExtractionResult, None, None]:
     """
     Extract all translatable terms from a Javascript source file.
@@ -117,6 +123,7 @@ def extract_javascript(
         dotted=dotted,
         template_string=options.get('template_string', True),
     ):
+        token: Token = Token(token.type, token.value, token.lineno + lineno_offset)
         if token.type == 'name' and token.value in ('class', 'function'):
             # We're entering a class or function definition.
             in_def = True
@@ -130,7 +137,6 @@ def extract_javascript(
         elif (
             last_token
             and last_token.type == 'name'
-            and last_token.value in keywords
             and token.type == 'template_string'
         ):
             # Turn keyword`foo` expressions into keyword("foo") function calls.
@@ -157,11 +163,21 @@ def extract_javascript(
             token = Token('operator', ')', token.lineno)
 
         if (
-            options.get('parse_template_string')
+            options.get('parse_template_string', True)
             and (not last_token or last_token.type != 'name' or last_token.value not in keywords)
             and token.type == 'template_string'
         ):
-            yield from parse_template_string(token.value, keywords, comment_tags, options, token.lineno)
+            keyword = ""
+            if function_stack and function_stack[-1]['function_name'] in keywords:
+                keyword = function_stack[-1]['function_name']
+            yield from parse_template_string(
+                token.value,
+                keywords,
+                comment_tags,
+                options,
+                token.lineno,
+                keyword,
+            )
 
         elif token.type == 'operator' and token.value == '(':
             if last_token and last_token.type == 'name':
@@ -262,7 +278,7 @@ def extract_javascript(
         elif function_stack and token.type == 'operator' and token.value == ')':
             function_stack.pop()
 
-        if in_translator_comments and translator_comments[-1][0] < lineno:
+        if in_translator_comments and translator_comments[-1][0] < token.lineno:
             # We have a newline between the comment lines, so they don't belong together anymore.
             in_translator_comments = False
 
