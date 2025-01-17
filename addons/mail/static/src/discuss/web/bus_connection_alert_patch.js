@@ -1,6 +1,6 @@
 import { patch } from "@web/core/utils/patch";
-import { BusConnectionAlert } from "@bus/components/bus_connection_alert";
 import { useService } from "@web/core/utils/hooks";
+import { BusConnectionAlert } from "@mail/discuss/core/public_web/bus_connection_alert";
 
 patch(BusConnectionAlert.prototype, {
     setup() {
