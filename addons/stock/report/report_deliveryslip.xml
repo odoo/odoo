@@ -41,10 +41,10 @@
                     </div>
                 </t>
                 <div class="page">
-                    <h2 t-out="o.picking_type_id._get_code_report_name()" style="margin-top: 15px;"/>
-                    <h3>
+                    <h2 style="margin-top: 15px;">
+                        <span t-out="o.picking_type_id._get_code_report_name()"/>
                         <span t-field="o.name">WH/OUT/0001</span>
-                    </h3>
+                    </h2>
                     <div class="oe_structure"></div>
                     <div id="informations" class="report-wrapping-flexbox clearfix row mb-4">
                         <div t-if="o.origin" class="col col-3 mw-100 mb-2" name="div_origin">
