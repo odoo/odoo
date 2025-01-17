@@ -473,7 +473,7 @@ export class SelfOrder extends Reactive {
     }
 
     markupDescriptions() {
-        for (const product of this.models["product.product"].getAll()) {
+        for (const product of this.models["product.template"].getAll()) {
             product.public_description = product.public_description
                 ? markup(product.public_description)
                 : "";
