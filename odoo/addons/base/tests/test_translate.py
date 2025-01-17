@@ -1084,29 +1084,130 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view.with_env(env_fr).arch_db, archf % (terms_fr[0], terms_en[1], terms_en[2]))
         self.assertEqual(view.with_env(env_nl).arch_db, archf % (terms_nl[0], terms_en[1], terms_en[2]))
 
-    def test_sync_xml_close_terms(self):
-        """ Check translations of 'arch' after xml tags changes in source terms. """
-        archf = '<form string="X">%s<div>%s</div>%s</form>'
-        terms_en = ('RandomRandom1', 'RandomRandom2', 'RandomRandom3')
-        terms_fr = ('RandomRandom1', 'AléatoireAléatoire2', 'AléatoireAléatoire3')
-        view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr)
+    def test_sync_xml_inline_modifiers(self):
+        """ Check translations of 'arch' after xml tags changes in source terms
+            when source term had updated modifiers attributes
+        """
+        archf = '''<form class="row">
+    %s
+    <div class="s_table_of_content_vertical_navbar" data-name="Navbar" contenteditable="false">
+        <div class="s_table_of_content_navbar" style="top: 76px;"><a href="#table_of_content_heading_1672668075678_4" class="table_of_content_link">%s</a></div>
+    </div>
+    <div class="s_table_of_content_main" data-name="Content">
+        <section class="pb16">
+            <h1 data-anchor="true" class="o_default_snippet_text" id="table_of_content_heading_1672668075678_4">%s</h1>
+        </section>
+    </div>
+</form>'''
+        terms_en = ('Bread and cheese', 'Knive and Fork', 'Knive <span style="font-weight:bold">and</span> Fork')
+        terms_fr = ('Pain et fromage', 'Couteau et Fourchette', 'Couteau <span style="font-weight:bold">et</span> Fourchette')
+        terms_nl = ('Brood and kaas', 'Mes en Vork', 'Mes en Vork')
+        view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr, nl_NL=terms_nl)
 
-        env_nolang = self.env(context={})
-        env_en = self.env(context={'lang': 'en_US'})
-        env_fr = self.env(context={'lang': 'fr_FR'})
+        env_nolang = self.env(context={"install_mode": True})
+        env_en = self.env(context={'lang': 'en_US', "install_mode": True})
+        env_fr = self.env(context={'lang': 'fr_FR', "install_mode": True})
+        env_nl = self.env(context={'lang': 'nl_NL', "install_mode": True})
 
         self.assertEqual(view.with_env(env_nolang).arch_db, archf % terms_en)
         self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
         self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_fr)
+        self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
 
-        # modify source term in view
-        terms_en = ('RandomRandom1', 'SomethingElse', 'RandomRandom3')
+        # modify attributes in source term
+        terms_en = ('Bread and cheese', 'Knife and Fork', 'Knife <span invisible="1">and</span> Fork')
         view.with_env(env_en).write({'arch_db': archf % terms_en})
+        terms_fr = ('Pain et fromage', 'Couteau et Fourchette', 'Couteau <span style="font-weight:bold" invisible="1">et</span> Fourchette')
+        terms_nl = ('Brood and kaas', 'Mes en Vork', 'Knife <span invisible="1">and</span> Fork')
 
-        # check whether close terms have correct translations
+        # check whether translations have been kept
         self.assertEqual(view.with_env(env_nolang).arch_db, archf % terms_en)
         self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
-        self.assertEqual(view.with_env(env_fr).arch_db, archf % ('RandomRandom1', 'SomethingElse', 'AléatoireAléatoire3'))
+        self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_fr)
+        self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
+
+        # modify attributes in source term
+        terms_en = ('Bread and cheese', 'Knife and Fork', 'Knife <span style="text-align: center;" readonly="1">and</span> Fork')
+        view.with_env(env_en).write({'arch_db': archf % terms_en})
+        terms_fr = ('Pain et fromage', 'Couteau et Fourchette', 'Couteau <span style="text-align: center;" readonly="1">et</span> Fourchette')
+        terms_nl = ('Brood and kaas', 'Mes en Vork', 'Knife <span style="text-align: center;" readonly="1">and</span> Fork')
+
+        # check whether translations have been kept
+        self.assertEqual(view.with_env(env_nolang).arch_db, archf % terms_en)
+        self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
+        self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_fr)
+        self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
+
+    def test_sync_xml_upgrade(self):
+        # text term and xml term with the same text content, text term is removed, xml term is changed
+        archf = '<form>%s<div>%s</div></form>'
+        terms_en = ('Draft', '<span invisible="1">Draft</span>')
+        terms_fr = ('Brouillon', '<span invisible="1">Brouillon</span>')
+        view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr)
+
+        archf = '<form><div>%s</div></form>'
+        terms_en = ('<span invisible="0">Draft</span>')
+        terms_fr = ('<span invisible="0">Brouillon</span>')
+        view.with_context(install_mode=True).write({'arch_db': archf % terms_en})
+
+        self.assertEqual(view.arch_db, archf % terms_en)
+        self.assertEqual(view.with_context(lang='fr_FR').arch_db, archf % terms_fr)
+        
+        # change the order of the text term and the xml term and redo the previous test
+        archf = '<form>%s<div>%s</div></form>'
+        terms_en = ('<span invisible="1">Draft</span>', 'Draft')
+        terms_fr = ('<span invisible="1">Brouillon</span>', 'Brouillon')
+        view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr)
+
+        archf = '<form><div>%s</div></form>'
+        terms_en = ('<span invisible="0">Draft</span>')
+        terms_fr = ('<span invisible="0">Brouillon</span>')
+        view.with_context(install_mode=True).write({'arch_db': archf % terms_en})
+
+        self.assertEqual(view.arch_db, archf % terms_en)
+        self.assertEqual(view.with_context(lang='fr_FR').arch_db, archf % terms_fr)
+
+        # xml terms with same text context but different structure, one is removed, another is changed
+        archf = '<form>%s<div>%s</div></form>'
+        terms_en = ('<i>Draft</i>', '<span invisible="1">Draft</span>')
+        terms_fr = ('<i>Brouillon</i>', '<span invisible="1">Brouillon</span>')
+        view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr)
+
+        archf = '<form><div>%s</div></form>'
+        terms_en = ('<span invisible="2">Draft</span>')
+        terms_fr = ('<span invisible="2">Brouillon</span>')
+        view.with_context(install_mode=True).write({'arch_db': archf % terms_en})
+
+        self.assertEqual(view.arch_db, archf % terms_en)
+        self.assertEqual(view.with_context(lang='fr_FR').arch_db, archf % terms_fr)
+
+        # terms with same text context but different structure, both are removed
+        archf = '<form>%s<div>%s</div></form>'
+        terms_en = ('<i>Draft</i>', '<span invisible="1">Draft</span>')
+        terms_fr = ('<i>Brouillon</i>', '<span invisible="1">Brouillon</span>')
+        view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr)
+
+        archf = '<form><div title="%s"/>%s</form>'
+        terms_en = ('Draft', 'Draft')
+        terms_fr = ('Draft', 'Draft')  # ('Brouillon', 'Brouillon') would be better
+        view.with_context(install_mode=True).write({'arch_db': archf % terms_en})
+
+        self.assertEqual(view.arch_db, archf % terms_en)
+        self.assertEqual(view.with_context(lang='fr_FR').arch_db, archf % terms_fr)
+
+        # text term and xml text term with the same text content, both are removed
+        archf = '<form>%s<div>%s</div></form>'
+        terms_en = ('Draft', '<span invisible="1">Draft</span>')
+        terms_fr = ('Brouillon', '<span invisible="1">Brouillon</span>')
+        view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr)
+
+        archf = '<form><div>%s</div></form>'
+        terms_en = ('<i>Draft</i>')
+        terms_fr = ('<i>Draft</i>')  # '<i>Brouillon</i> would be better
+        view.with_context(install_mode=True).write({'arch_db': archf % terms_en})
+
+        self.assertEqual(view.arch_db, archf % terms_en)
+        self.assertEqual(view.with_context(lang='fr_FR').arch_db, archf % terms_fr)
 
     def test_cache_consistency(self):
         view = self.env["ir.ui.view"].create({
