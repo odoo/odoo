@@ -279,67 +279,6 @@ class TestMailNotifyAPI(TestMessagePostCommon):
                 self.assertFalse(partner_info['has_button_access'])
                 self.assertFalse(emp_info['has_button_access'])
 
-    @users('employee_c2')
-    def test_notify_reply_to_computation_mc(self):
-        """ Test reply-to computation in multi company mode. Add notably tests
-        depending on user and records company_id / company_ids. """
-
-        # Test1: no company_id field: depends on current user browsing
-        test_record = self.test_record.with_env(self.env)
-        self.assertEqual(
-            test_record._notify_get_reply_to()[test_record.id],
-            formataddr((
-                f"{self.user_employee_c2.company_id.name} {test_record.name}",
-                f"{self.alias_catchall_c2}@{self.alias_domain_c2_name}"))
-        )
-        test_record_c1 = test_record.with_user(self.user_employee)
-        self.assertEqual(
-            test_record_c1._notify_get_reply_to()[test_record_c1.id],
-            formataddr((
-                f"{self.user_employee.company_id.name} {test_record_c1.name}",
-                f"{self.alias_catchall}@{self.alias_domain}"))
-        )
-
-        # Test2: MC environment get default value from env
-        self.user_employee_c2.write({'company_ids': [(4, self.user_employee.company_id.id)]})
-        test_records = self.env['mail.test.multi.company'].create([
-            {'name': 'Test',
-             'company_id': self.user_employee.company_id.id},
-            {'name': 'Test',
-             'company_id': self.user_employee_c2.company_id.id},
-        ])
-        res = test_records._notify_get_reply_to()
-        for test_record in test_records:
-            company = test_record.company_id
-            if company == self.company_2:
-                alias_domain = self.alias_domain_c2_name
-                alias_catchall = self.alias_catchall_c2
-            else:
-                alias_domain = self.alias_domain
-                alias_catchall = self.alias_catchall
-
-            self.assertEqual(
-                res[test_record.id],
-                formataddr((f"{company.name} {test_record.name}", f"{alias_catchall}@{alias_domain}"))
-            )
-
-        # Test3: get company from record (company_id field)
-        self.user_employee_c2.write({'company_ids': [(4, self.company_3.id)]})
-        test_records = self.env['mail.test.multi.company'].create([
-            {'name': 'Test1',
-            'company_id': self.company_3.id},
-            {'name': 'Test2',
-            'company_id': self.company_3.id},
-        ])
-        res = test_records._notify_get_reply_to()
-        for test_record in test_records:
-            self.assertEqual(
-                res[test_record.id],
-                formataddr((
-                    f"{self.company_3.name} {test_record.name}",
-                    f"{self.alias_catchall_c3}@{self.alias_domain_c3_name}"))
-            )
-
 
 @tagged('mail_post', 'mail_notify')
 class TestMessageNotify(TestMessagePostCommon):
@@ -599,7 +538,7 @@ class TestMessageLog(TestMessagePostCommon):
                     'model': test_record._name,
                     'notified_partner_ids': self.env['res.partner'],
                     'partner_ids': self.env['res.partner'],
-                    'reply_to': formataddr((self.company_admin.name, f'{self.alias_catchall}@{self.alias_domain}')),
+                    'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
                     'res_id': test_record.id,
                 },
                 'notif': [],
@@ -633,7 +572,7 @@ class TestMessageLog(TestMessagePostCommon):
                         'model': test_record._name,
                         'notified_partner_ids': self.env['res.partner'],
                         'partner_ids': self.env['res.partner'],
-                        'reply_to': formataddr((self.company_admin.name, f'{self.alias_catchall}@{self.alias_domain}')),
+                        'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
                         'res_id': test_record.id,
                     },
                     'notif': [],
@@ -670,7 +609,7 @@ class TestMessageLog(TestMessagePostCommon):
                         'model': test_record._name,
                         'notified_partner_ids': self.env['res.partner'],
                         'partner_ids': self.test_partners[:5],
-                        'reply_to': formataddr((self.company_admin.name, f'{self.alias_catchall}@{self.alias_domain}')),
+                        'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
                         'res_id': test_record.id,
                     },
                     'notif': [],
@@ -701,7 +640,7 @@ class TestMessageLog(TestMessagePostCommon):
                         'is_internal': True,
                         'model': test_record._name,
                         'notified_partner_ids': self.env['res.partner'],
-                        'reply_to': formataddr((self.company_admin.name, f'{self.alias_catchall}@{self.alias_domain}')),
+                        'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
                         'res_id': test_record.id,
                     },
                     'notif': [],
@@ -761,7 +700,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                         'message_type': 'comment',
                         'model': test_record._name,
                         'notified_partner_ids': self.partner_employee_2,
-                        'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+                        'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
                         'res_id': test_record.id,
                         'subtype_id': self.env.ref('mail.mt_comment'),
                     },
@@ -920,7 +859,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                     'notified_partner_ids': self.partner_employee_2,
                     'parent_id': creation_msg,
                     'record_name': test_record.name,
-                    'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+                    'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
                     'res_id': test_record.id,
                     'subject': test_record.name,
                 },
@@ -1010,7 +949,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                                 'notified_partner_ids': self.partner_employee_2,
                                 'reply_to': formataddr(
                                     (
-                                        f'{expected_company.name} {record.name}',
+                                        self.user_erp_manager.name,
                                         f'{expected_alias_domain.catchall_alias}@{expected_alias_domain.name}'
                                     )
                                 ),
@@ -1526,14 +1465,16 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                     'body_content': f'Body for: {test_record.name}',
                 },
                 fields_values={
+                    'author_id': self.partner_employee,
                     'auto_delete': True,
+                    'email_from': self.partner_employee.email_formatted,
                     'is_internal': False,
                     'is_notification': True,  # auto_delete_keep_log -> keep underlying mail.message
                     'message_type': 'email_outgoing',
                     'model': test_record._name,
                     'notified_partner_ids': self.env['res.partner'],
                     'subtype_id': self.env['mail.message.subtype'],
-                    'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+                    'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
                     'res_id': test_record.id,
                 }
             )
@@ -1566,7 +1507,9 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                     'subject': 'About mass mailing',
                 },
                 fields_values={
+                    'author_id': self.partner_employee,
                     'auto_delete': False,
+                    'email_from': self.partner_employee.email_formatted,
                     'is_internal': False,
                     'is_notification': False,  # no to_delete -> no keep_log
                     'message_type': 'email_outgoing',
@@ -1574,7 +1517,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                     'notified_partner_ids': self.env['res.partner'],
                     'recipient_ids': test_record.customer_id,
                     'subtype_id': self.env['mail.message.subtype'],
-                    'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+                    'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
                     'res_id': test_record.id,
                 }
             )
@@ -1622,7 +1565,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                     'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
                     'is_internal': False,
                     'model': test_record._name,
-                    'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+                    'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
                     'res_id': test_record.id,
                 },
                 'notif': [
@@ -1662,7 +1605,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                 'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
                 'is_internal': False,
                 'model': test_record._name,
-                'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+                'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
                 'res_id': test_record.id,
              },
             'notif': [
@@ -1700,7 +1643,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                 'is_internal': False,
                 'message_type': 'comment',
                 'model': test_record._name,
-                'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+                'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
                 'res_id': test_record.id,
              },
             'notif': [
@@ -1734,7 +1677,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                 'is_internal': False,
                 'message_type': 'notification',
                 'model': test_record._name,
-                'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+                'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
                 'res_id': test_record.id,
             },
             'notif': [

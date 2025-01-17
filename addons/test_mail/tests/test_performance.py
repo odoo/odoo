@@ -767,16 +767,13 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         with self.assertQueryCount(admin=1, employee=1):
             test_records = self.env['mail.test.container'].browse(test_records_sudo.ids)
             reply_to = test_records._notify_get_reply_to(
-                default=self.env.user.email_formatted
+                default=self.env.user.email_formatted,
             )
 
         for record in test_records:
             self.assertEqual(
                 reply_to[record.id],
-                formataddr((
-                    f"{record.env.company.name} {record.name}",
-                    f"{record.alias_name}@{self.alias_domain}"
-                ))
+                formataddr((self.env.user.name, f"{record.alias_name}@{self.alias_domain}"))
             )
 
 
@@ -837,7 +834,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             'mail_message_id': message.id,
             'recipient_ids': [(4, pid) for pid in self.partners.ids],
         })
-        with self.assertQueryCount(admin=8, employee=8):
+        with self.assertQueryCount(admin=9, employee=9):
             self.env['mail.mail'].sudo().browse(mail.ids).send()
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
@@ -876,7 +873,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             unlinked_mails |= set(records.ids)
         unlinked_mails = set()
 
-        with self.assertQueryCount(admin=30, employee=30), \
+        with self.assertQueryCount(admin=31, employee=31), \
              patch.object(type(self.env['mail.mail']), 'unlink', _patched_unlink):
             self.env['mail.mail'].sudo().browse(mails.ids).send()
 

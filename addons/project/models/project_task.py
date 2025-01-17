@@ -1631,13 +1631,13 @@ class ProjectTask(models.Model):
 
         return groups
 
-    def _notify_get_reply_to(self, default=None):
+    def _notify_get_reply_to(self, default=None, author_id=False):
         # Override to set alias of tasks to their project if any
-        aliases = self.sudo().mapped('project_id')._notify_get_reply_to(default=default)
+        aliases = self.sudo().mapped('project_id')._notify_get_reply_to(default=default, author_id=author_id)
         res = {task.id: aliases.get(task.project_id.id) for task in self}
         leftover = self.filtered(lambda rec: not rec.project_id)
         if leftover:
-            res.update(super(ProjectTask, leftover)._notify_get_reply_to(default=default))
+            res.update(super(ProjectTask, leftover)._notify_get_reply_to(default=default, author_id=author_id))
         return res
 
     def _ensure_personal_stages(self):

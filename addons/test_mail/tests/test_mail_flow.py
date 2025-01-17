@@ -242,9 +242,6 @@ class TestMailFlow(MailCommon, TestRecipients):
 
         external_partners = partner_sylvie + partner_pay + partner_accounting + self.customer_portal_zboing + self.partner_portal
         internal_partners = self.partner_employee + self.partner_employee_2
-        expected_chatter_reply_to = formataddr(
-            (f'{self.env.company.name} {lead.name}', f'{self.alias_catchall}@{self.alias_domain}')
-        )
         self.assertMailNotifications(
             responsible_answer,
             [
@@ -265,7 +262,9 @@ class TestMailFlow(MailCommon, TestRecipients):
                         'parent_id': incoming_email,
                         # matches posted message
                         'partner_ids': partner_sylvie + partner_pay + partner_accounting + self.customer_portal_zboing,
-                        'reply_to': expected_chatter_reply_to,
+                        'reply_to': formataddr((
+                            self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}'
+                        )),
                         'subtype_id': self.env.ref('mail.mt_comment'),
                     },
                     'notif': [
@@ -322,13 +321,20 @@ class TestMailFlow(MailCommon, TestRecipients):
                         # Cc: received email CC - an email still not partnerized (invoicing) and customer_zboing
                         'incoming_email_cc': f'{self.test_emails[3]}, {self.test_emails[4]}',
                         # To: received email Msg-To - customer who replies + email Reply-To
-                        'incoming_email_to': ', '.join((external_partners - partner_sylvie - self.customer_zboing).mapped('email_formatted') + [expected_chatter_reply_to]),
+                        'incoming_email_to':
+                            ', '.join((external_partners - partner_sylvie - self.customer_zboing).mapped('email_formatted') +
+                            [formataddr((
+                                self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}'
+                            ))]),
                         'mail_server_id': self.env['ir.mail_server'],
                         # notified: followers - already mailed, aka internal only
                         'notified_partner_ids': internal_partners,
                         'parent_id': incoming_email,
                         # same reasoning as email_to/cc
                         'partner_ids': external_partners - partner_sylvie,
+                        'reply_to': formataddr((
+                            partner_sylvie.name, f'{self.alias_catchall}@{self.alias_domain}'
+                        )),
                         'subject': f'Re: Re: {lead.name}',
                         'subtype_id': self.env.ref('mail.mt_comment'),
                     },

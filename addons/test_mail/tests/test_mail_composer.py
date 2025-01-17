@@ -2912,7 +2912,7 @@ class TestComposerResultsMass(TestMailComposer):
                 composer = composer_form.save()
 
                 # ensure some parameters used afterwards
-                author = self.env.user.partner_id
+                author = self.partner_employee
                 self.assertEqual(composer.author_id, author,
                                  'Author is not synchronized, as template email_from does not match existing partner')
                 self.assertEqual(composer.email_from, self.template.email_from)
@@ -2980,7 +2980,7 @@ class TestComposerResultsMass(TestMailComposer):
                                             'email_from': self.partner_employee_2.email_formatted,
                                             'mail_server_id': self.mail_server_domain,
                                             'reply_to': formataddr((
-                                                f'{self.env.user.company_id.name} {record.name}',
+                                                author.name,
                                                 f'{self.alias_catchall}@{self.alias_domain}'
                                             )),
                                             'subject': exp_subject,
@@ -3398,7 +3398,7 @@ class TestComposerResultsMass(TestMailComposer):
                     # single email event if email field is multi-email
                     'email_from': formataddr((self.user_employee.name, 'email.from.1@test.mycompany.com')),
                     'reply_to': formataddr((
-                        f'{self.env.user.company_id.name} {record.name}',
+                        self.partner_employee.name,
                         f'{self.alias_catchall}@{self.alias_domain}'
                     )),
                     'subject': f'TemplateSubject {record.name}',
@@ -3407,7 +3407,7 @@ class TestComposerResultsMass(TestMailComposer):
                     # currently holding multi-email 'email_from'
                     'email_from': self.partner_employee.email_formatted,
                     'reply_to': formataddr((
-                        f'{self.env.user.company_id.name} {record.name}',
+                        self.partner_employee.name,
                         f'{self.alias_catchall}@{self.alias_domain}'
                     )),
                 },

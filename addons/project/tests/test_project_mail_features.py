@@ -150,7 +150,7 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                         'partner_ids': self.partner_1 + self.partner_2,
                         'parent_id': self.env['mail.message'],
                         'reply_to': formataddr((
-                            f'{self.env.company.name} {self.project_followers.name}',
+                            self.user_portal.name,
                             self.project_followers_alias.alias_full_name
                         )),
                         'subject': f'Test from {self.user_portal.name}',
@@ -200,10 +200,6 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                 new_partner_customer = self.env['res.partner'].search([('email_normalized', '=', 'new.customer@test.agrolait.com')])
                 self.assertFalse(new_partner_customer)
 
-                expected_chatter_reply_to = formataddr(
-                    (f'{self.env.company.name} {self.project_followers.name}', self.project_followers_alias.alias_full_name)
-                )
-
                 self.assertIn('Please call me as soon as possible', task.description)
                 self.assertEqual(task.email_cc, f'"New Cc" <new.cc@test.agrolait.com>, {self.partner_2.email_formatted}')
                 self.assertEqual(task.name, f'Test from {author.email_formatted}')
@@ -240,7 +236,7 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                                 # deduced from 'To' and 'Cc' (recognized partners)
                                 'partner_ids': self.partner_1 + self.partner_2,
                                 'parent_id': self.env['mail.message'],
-                                'reply_to': expected_chatter_reply_to,
+                                'reply_to': formataddr((author.name, self.project_followers_alias.alias_full_name)),
                                 'subject': f'Test from {author.email_formatted}',
                                 'subtype_id': self.env.ref('project.mt_task_new'),
                             },
@@ -273,10 +269,7 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                                 # default recipients: partner_id
                                 'partner_ids': author,
                                 'parent_id': incoming_email,
-                                'reply_to': formataddr((
-                                    f'{self.env.company.name} {self.project_followers.name}',
-                                    self.project_followers_alias.alias_full_name
-                                )),
+                                'reply_to': formataddr((acknowledgement_author.name, self.project_followers_alias.alias_full_name)),
                                 'subject': f'Test Acknowledge {task.name}',
                                 # defined by _track_template
                                 'subtype_id': self.env.ref('mail.mt_note'),
@@ -371,7 +364,7 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                                 'parent_id': incoming_email,
                                 # coming from post
                                 'partner_ids': recipients,
-                                'reply_to': expected_chatter_reply_to,
+                                'reply_to': formataddr((self.user_projectuser.name, self.project_followers_alias.alias_full_name)),
                                 'subject': f'Re: {task.name}',
                                 'subtype_id': self.env.ref('mail.mt_comment'),
                             },
@@ -441,14 +434,17 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                                 # coming from incoming email
                                 'incoming_email_cc': f'"Another Cc" <another.cc@test.agrolait.com>, {self.partner_3.email}',
                                 # To: received email Msg-To - customer who replies + email Reply-To
-                                'incoming_email_to': ', '.join(external_partners.mapped('email_formatted') + [expected_chatter_reply_to]),
+                                'incoming_email_to': ', '.join(
+                                    external_partners.mapped('email_formatted') +
+                                    [formataddr((self.user_projectuser.name, self.project_followers_alias.alias_full_name))]
+                                ),
                                 'mail_server_id': self.env['ir.mail_server'],
                                 # notified: followers - already emailed, aka internal only
                                 'notified_partner_ids': internal_followers,
                                 'parent_id': incoming_email,
                                 # same reasoning as email_to/cc
                                 'partner_ids': external_partners + self.partner_3,
-                                'reply_to': expected_chatter_reply_to,
+                                'reply_to': formataddr((author.name, self.project_followers_alias.alias_full_name)),
                                 'subject': f'Re: Re: {task.name}',
                                 'subtype_id': self.env.ref('mail.mt_comment'),
                             },
@@ -507,9 +503,7 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                         # followers of 'new task' type
                         'partner_ids': (self.user_projectuser + self.user_projectmanager).partner_id,
                         'parent_id': self.env['mail.message'],
-                        'reply_to': formataddr((
-                            f'{self.env.company.name} {self.project_followers.name}',
-                            self.project_followers_alias.alias_full_name
+                        'reply_to': formataddr((self.user_projectmanager.name, self.project_followers_alias.alias_full_name
                         )),
                         'subject': test_task.name,
                         'subtype_id': self.env.ref('mail.mt_note'),
