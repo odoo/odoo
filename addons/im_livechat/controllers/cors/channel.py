@@ -16,11 +16,6 @@ class LivechatChannelController(ChannelController):
         force_guest_env(guest_token)
         return self.discuss_channel_mark_as_read(**kwargs)
 
-    @route("/im_livechat/cors/channel/fold", methods=["POST"], type="jsonrpc", auth="public", cors="*")
-    def livechat_channel_fold(self, guest_token, channel_id, state, state_count):
-        force_guest_env(guest_token)
-        return self.discuss_channel_fold(channel_id, state, state_count)
-
     @route("/im_livechat/cors/channel/notify_typing", methods=["POST"], type="jsonrpc", auth="public", cors="*")
     def livechat_channel_notify_typing(self, guest_token, channel_id, is_typing):
         force_guest_env(guest_token)

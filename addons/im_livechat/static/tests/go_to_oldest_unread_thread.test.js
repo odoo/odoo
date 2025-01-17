@@ -4,6 +4,7 @@ import {
     insertText,
     openDiscuss,
     patchUiSize,
+    setupChatHub,
     start,
     startServer,
     triggerHotkey,
@@ -100,10 +101,7 @@ test("switching to folded chat window unfolds it", async () => {
         {
             anonymous_name: "Visitor 11",
             channel_member_ids: [
-                Command.create({
-                    partner_id: serverState.partnerId,
-                    fold_state: "open",
-                }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ guest_id: guestId_1 }),
             ],
             channel_type: "livechat",
@@ -116,7 +114,6 @@ test("switching to folded chat window unfolds it", async () => {
             channel_member_ids: [
                 Command.create({
                     partner_id: serverState.partnerId,
-                    fold_state: "folded",
                     last_interest_dt: "2021-01-02 10:00:00",
                 }),
                 Command.create({ guest_id: guestId_2 }),
@@ -133,6 +130,7 @@ test("switching to folded chat window unfolds it", async () => {
         model: "discuss.channel",
         res_id: channelIds[1],
     });
+    setupChatHub({ opened: [channelIds[0]], folded: [channelIds[1]] });
     await start();
     await contains(".o-mail-ChatBubble[name='Visitor 12']");
     await focus(".o-mail-Composer-input", {
@@ -152,14 +150,11 @@ test("switching to hidden chat window unhides it", async () => {
         { name: "Visitor 11" },
         { name: "Visitor 12" },
     ]);
-    const [livechat_1] = pyEnv["discuss.channel"].create([
+    const channelIds = pyEnv["discuss.channel"].create([
         {
             anonymous_name: "Visitor 11",
             channel_member_ids: [
-                Command.create({
-                    partner_id: serverState.partnerId,
-                    fold_state: "open",
-                }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ guest_id: guestId_1 }),
             ],
             channel_type: "livechat",
@@ -172,7 +167,6 @@ test("switching to hidden chat window unhides it", async () => {
             channel_member_ids: [
                 Command.create({
                     partner_id: serverState.partnerId,
-                    fold_state: "open",
                     last_interest_dt: "2021-01-02 10:00:00",
                 }),
                 Command.create({ guest_id: guestId_2 }),
@@ -182,19 +176,16 @@ test("switching to hidden chat window unhides it", async () => {
             livechat_operator_id: serverState.partnerId,
             name: "Livechat 2",
         },
-        {
-            channel_member_ids: [
-                Command.create({ partner_id: serverState.partnerId, fold_state: "open" }),
-            ],
-            name: "general",
-        },
+        { name: "general" },
     ]);
+    const [livechat_1] = channelIds;
     pyEnv["mail.message"].create({
         author_guest_id: guestId_2,
         body: "Hello",
         model: "discuss.channel",
         res_id: livechat_1,
     });
+    setupChatHub({ opened: channelIds.reverse() });
     patchUiSize({ width: 900 }); // enough for 2 chat windows max
     await start();
     // FIXME: expected order: general, 12, 11

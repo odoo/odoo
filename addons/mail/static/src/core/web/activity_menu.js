@@ -24,7 +24,7 @@ export class ActivityMenu extends Component {
     }
 
     onBeforeOpen() {
-        this.store.fetchData({ systray_get_activities: true });
+        this.store.fetchStoreData("systray_get_activities");
     }
 
     availableViews(group) {

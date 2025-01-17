@@ -9,6 +9,7 @@ import {
     contains,
     insertText,
     onRpcBefore,
+    setupChatHub,
     start,
     startServer,
     triggerHotkey,
@@ -32,7 +33,7 @@ test("persisted session history", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ guest_id: guestId, fold_state: "open" }),
+            Command.create({ guest_id: guestId }),
         ],
         livechat_active: true,
         channel_type: "livechat",
@@ -54,6 +55,7 @@ test("persisted session history", async () => {
         model: "discuss.channel",
         message_type: "comment",
     });
+    setupChatHub({ opened: [channelId] });
     await start({
         authenticateAs: { ...pyEnv["mail.guest"].read(guestId)[0], _name: "mail.guest" },
     });
@@ -113,12 +115,18 @@ test("Only necessary requests are made when creating a new chat", async () => {
             persisted: true,
         })}`,
         `/mail/data - ${JSON.stringify({
-            init_messaging: {
-                channel_types: ["livechat"],
+            fetch_params: [
+                "failures", // called because mail/core/web is loaded in test bundle
+                "systray_get_activities", // called because mail/core/web is loaded in test bundle
+                ["discuss.channel", [threadId]],
+                "init_messaging",
+            ],
+            context: {
+                lang: "en",
+                tz: "taht",
+                uid: serverState.userId,
+                allowed_company_ids: [1],
             },
-            failures: true, // called because mail/core/web is loaded in test bundle
-            systray_get_activities: true, // called because mail/core/web is loaded in test bundle
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
         `/mail/message/post - ${JSON.stringify({
             post_data: {

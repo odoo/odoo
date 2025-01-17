@@ -296,10 +296,8 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         self.env["discuss.channel"].browse(channel_id).message_post(body="cc")
         self.assertTrue(member.is_pinned, "channel should be pinned for operator after visitor sent a message")
         self.authenticate(operator.login, self.password)
-        operator_channels = self.make_jsonrpc_request("/mail/data", {"channels_as_member": True})[
-            "discuss.channel"
-        ]
-        channel_ids = [channel["id"] for channel in operator_channels]
+        data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["channels_as_member"]})
+        channel_ids = [channel["id"] for channel in data["discuss.channel"]]
         self.assertIn(channel_id, channel_ids, "channel should be fetched by operator on new page")
 
     def test_read_channel_unpined_for_operator_after_one_day(self):
@@ -332,47 +330,3 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         with freeze_time(fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=1))):
             member_of_operator._gc_unpin_livechat_sessions()
         self.assertTrue(member_of_operator.is_pinned, "unread channel should not be unpinned after autovacuum")
-
-    def test_only_active_livechats_returned_by_init_messaging(self):
-        self.authenticate(None, None)
-        operator = new_test_user(self.env, login="John")
-        self.env["bus.presence"].create({"user_id": operator.id, "status": "online"})
-        livechat_channel = self.env["im_livechat.channel"].create(
-            {"name": "Customer Support", "user_ids": [operator.id]}
-        )
-        inactive_livechat = self.env["discuss.channel"].browse(
-            self.make_jsonrpc_request(
-                "/im_livechat/get_session",
-                {
-                    "anonymous_name": "Visitor",
-                    "channel_id": livechat_channel.id,
-                    "persisted": True,
-                },
-            )["discuss.channel"][0]["id"]
-        )
-        self.make_jsonrpc_request(
-            "/im_livechat/visitor_leave_session", {"channel_id": inactive_livechat.id}
-        )
-        guest = inactive_livechat.channel_member_ids.filtered(lambda m: m.guest_id).guest_id
-        non_livechat_channel = self.env['discuss.channel']._create_channel(name="General", group_id=None)
-        non_livechat_channel.add_members(guest_ids=guest.ids)
-        non_livechat_channel.channel_member_ids.fold_state = "open"
-        active_livechat = self.env["discuss.channel"].browse(
-            self.make_jsonrpc_request(
-                "/im_livechat/get_session",
-                {
-                    "anonymous_name": "Visitor",
-                    "channel_id": livechat_channel.id,
-                    "persisted": True,
-                },
-            )["discuss.channel"][0]["id"]
-        )
-        init_messaging_result = self.make_jsonrpc_request("/mail/action", {"init_messaging": {}})
-        self.assertEqual(len(init_messaging_result["discuss.channel"]), 2)
-        self.assertEqual(init_messaging_result["discuss.channel"][0]["channel_type"], "channel")
-        self.assertEqual(init_messaging_result["discuss.channel"][1]["channel_type"], "livechat")
-        init_messaging_result = self.make_jsonrpc_request("/mail/action", {"init_messaging": {
-            "channel_types": ["livechat"],
-        }})
-        self.assertEqual(len(init_messaging_result["discuss.channel"]), 1)
-        self.assertEqual(init_messaging_result["discuss.channel"][0]["id"], active_livechat.id)

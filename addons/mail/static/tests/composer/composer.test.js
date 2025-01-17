@@ -13,6 +13,7 @@ import {
     pasteFiles,
     patchUiSize,
     scroll,
+    setupChatHub,
     start,
     startServer,
     triggerHotkey,
@@ -257,16 +258,11 @@ test("reset emoji picker scroll value after an emoji is picked", async () => {
 
 test("keep emoji picker scroll value independent if two or more different emoji pickers are used", async () => {
     const pyEnv = await startServer();
-    const channel_member_ids = [
-        Command.create({
-            fold_state: "open",
-            partner_id: serverState.partnerId,
-        }),
-    ];
-    pyEnv["discuss.channel"].create([
-        { name: "roblox-jaywalking", channel_member_ids },
-        { name: "Sales", channel_member_ids },
+    const channelIds = pyEnv["discuss.channel"].create([
+        { name: "roblox-jaywalking" },
+        { name: "Sales" },
     ]);
+    setupChatHub({ opened: channelIds });
     await start();
     await click("button[title='Add Emojis']", {
         parent: [".o-mail-ChatWindow", { text: "Sales" }],
@@ -1110,24 +1106,12 @@ test("ENTER closes canned response suggestions", async () => {
 test("Tab to select of canned response suggestion works in chat window", async () => {
     // This might conflict with focusing next chat window
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create([
-        {
-            name: "General",
-            channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
-            ],
-        },
-        {
-            name: "Extra",
-            channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
-            ],
-        },
-    ]);
+    const channelIds = pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Extra" }]);
     pyEnv["mail.canned.response"].create([
         { source: "Hello", substitution: "Hello! How are you?" },
         { source: "Goodbye", substitution: "Goodbye! See you soon!" },
     ]);
+    setupChatHub({ opened: channelIds });
     await start();
     await contains(".o-mail-ChatWindow", { count: 2 });
     await insertText(".o-mail-ChatWindow:eq(0) .o-mail-Composer-input", ":");

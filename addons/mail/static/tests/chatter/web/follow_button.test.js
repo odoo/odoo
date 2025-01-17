@@ -31,6 +31,8 @@ test("hover following button", async () => {
     await start();
     await openFormView("res.partner", threadId);
     await contains(".o-mail-Chatter-follow", { text: "Following" });
+    // ensure no re-rendering after mouseenter because messages can be loaded before or after data
+    await contains(".o-mail-Thread", { text: "The conversation is empty." });
     await triggerEvents(".o-mail-Chatter-follow", ["mouseenter"], { text: "Following" });
     await contains(".o-mail-Chatter-follow", { text: "Unfollow" });
 });

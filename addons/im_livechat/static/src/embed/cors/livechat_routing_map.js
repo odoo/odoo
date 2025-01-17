@@ -14,7 +14,6 @@ livechatRoutingMap
     .add("/discuss/channel/messages", "/im_livechat/cors/channel/messages")
     .add("/discuss/channel/notify_typing", "/im_livechat/cors/channel/notify_typing")
     .add("/discuss/channel/mark_as_read", "/im_livechat/cors/channel/mark_as_read")
-    .add("/discuss/channel/fold", "/im_livechat/cors/channel/fold")
     .add("/mail/attachment/delete", "/im_livechat/cors/attachment/delete")
     .add("/discuss/channel/ping", "/im_livechat/cors/channel/ping")
     .add("/mail/action", "/im_livechat/cors/action")

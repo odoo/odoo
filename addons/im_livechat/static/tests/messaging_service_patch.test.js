@@ -1,10 +1,11 @@
-import { contains, onRpcBefore, start, startServer } from "@mail/../tests/mail_test_helpers";
+import { contains, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, test } from "@odoo/hoot";
 import {
     asyncStep,
     Command,
     mockService,
+    onRpc,
     serverState,
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
@@ -26,18 +27,17 @@ test("Notify message received out of focus", async () => {
             Command.create({ guest_id: guestId }),
         ],
     });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.init_messaging) {
-            asyncStep(`/mail/data - ${JSON.stringify(args)}`);
+    onRpc("/mail/data", async (request) => {
+        const { params } = await request.json();
+        if (params.fetch_params.includes("init_messaging")) {
+            asyncStep(`/mail/data - ${JSON.stringify(params)}`);
         }
     });
     mockService("presence", { isOdooFocused: () => false });
     await start();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            init_messaging: {},
-            failures: true,
-            systray_get_activities: true,
+            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
             context: {
                 lang: "en",
                 tz: "taht",

@@ -7,13 +7,13 @@ export const CW_LIVECHAT_STEP = {
     FEEDBACK: "FEEDBACK", // currently showing feedback panel
 };
 
-patch(ChatWindow.prototype, {
+/** @type {import("models").ChatWindow} */
+const chatWindowPatch = {
     setup() {
         super.setup(...arguments);
         this.livechatStep = CW_LIVECHAT_STEP.NONE;
     },
-
-    async close(...args) {
+    close(...args) {
         if (this.thread?.channel_type !== "livechat") {
             return super.close(...args);
         }
@@ -62,20 +62,18 @@ patch(ChatWindow.prototype, {
             this.store.env.services["im_livechat.chatbot"]?.stop();
         }
     },
-    async _onClose(param1 = {}, ...args) {
-        const thread = this.thread;
-        if (!thread) {
-            return super._onClose(param1, ...args);
-        }
+    _onClose() {
         if (
-            thread.channel_type === "livechat" &&
-            thread.livechatVisitorMember?.persona?.notEq(this.store.self)
+            this.thread?.channel_type === "livechat" &&
+            this.thread.livechatVisitorMember?.persona?.notEq(this.store.self)
         ) {
-            param1.notifyState = false;
-            super._onClose(param1, ...args);
+            const thread = this.thread; // save ref before delete
+            super._onClose();
             this.delete();
-            return thread.leaveChannel({ force: true });
+            thread.leaveChannel({ force: true });
+        } else {
+            super._onClose();
         }
-        return super._onClose(param1, ...args);
     },
-});
+};
+patch(ChatWindow.prototype, chatWindowPatch);
