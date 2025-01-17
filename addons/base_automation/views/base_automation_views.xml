@@ -38,7 +38,8 @@
 
                     <field name="filter_pre_domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}"
                            attrs="{'invisible': [('trigger', 'not in', ['on_write', 'on_create_or_write'])]}"/>
-                    <field name="filter_domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}"/>
+                    <field name="filter_domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}"
+                           attrs="{'invisible': [('trigger', 'in', ['on_change'])]}"/>
                     <field name="trg_date_id"
                         options="{'no_open': True, 'no_create': True}"
                         attrs="{'invisible': [('trigger', '!=', 'on_time')], 'required': [('trigger', '=', 'on_time')]}"/>
