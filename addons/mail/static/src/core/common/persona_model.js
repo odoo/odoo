@@ -83,7 +83,13 @@ export class Persona extends Record {
     /** @type {number} */
     userId;
     /** @type {ImStatus} */
-    im_status;
+    im_status = Record.attr(null, {
+        onUpdate() {
+            if (this.eq(this.store.self) && this.im_status === "offline") {
+                this.store.env.services.im_status.updateBusPresence();
+            }
+        },
+    });
     /** @type {boolean} */
     is_public;
     /** @type {'email' | 'inbox'} */
