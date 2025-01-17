@@ -64,6 +64,7 @@ const fillEmpty = OdooEditorLib.fillEmpty;
 const isVisible = OdooEditorLib.isVisible;
 const getSelectedNodes = OdooEditorLib.getSelectedNodes;
 const isBlock = OdooEditorLib.isBlock;
+const getTraversedNodes = OdooEditorLib.getTraversedNodes;
 
 function getJqueryFromDocument(doc) {
     if (doc.defaultView && doc.defaultView.$) {
@@ -1548,6 +1549,7 @@ export class Wysiwyg extends Component {
                     this.odooEditor.deleteRange();
                     this.odooEditor.execCommand('setTag', 'p');
                 }
+                this.odooEditor.execCommand('removeFormat');
                 this.odooEditor.historyPauseSteps();
                 const insertedNodes = this.odooEditor.execCommand('insert', content);
                 this.odooEditor.historyUnpauseSteps();
@@ -1587,6 +1589,7 @@ export class Wysiwyg extends Component {
         };
         if (mode === 'alternatives') {
             params.originalText = this.odooEditor.document.getSelection().toString() || '';
+            params.originalBlocks = [...new Set(getTraversedNodes(this.odooEditor.editable).map(closestBlock))];
         }
         this.odooEditor.document.getSelection().collapseToEnd();
         this.env.services.dialog.add(

@@ -2,12 +2,15 @@
 
 import { ChatGPTDialog } from '@web_editor/js/wysiwyg/widgets/chatgpt_dialog';
 import { useState, status } from "@odoo/owl";
+import { ancestors, descendants, unwrapContents } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
+import { sanitize } from "@web_editor/js/editor/odoo-editor/src/utils/sanitize";
 
 export class ChatGPTAlternativesDialog extends ChatGPTDialog {
     static template = 'web_edior.ChatGPTAlternativesDialog';
     static props = {
         ...super.props,
         originalText: String,
+        originalBlocks: { type: Array, element: Element },
         alternativesModes: { type: Object, optional: true },
         numberOfAlternatives: { type: Number, optional: true },
     };
@@ -121,5 +124,69 @@ export class ChatGPTAlternativesDialog extends ChatGPTDialog {
             }
         }
         this.state.messagesInProgress = 0;
+    }
+
+    _postprocessGeneratedContent(content) {
+        const fragment = super._postprocessGeneratedContent(content);
+        // Keep the block formatting of the original text, matching each
+        // generated line with each block of the original text. If there are
+        // more generated lines than there were blocks, use the last block type
+        // for the new lines.
+        const originalBlocks = this.props.originalBlocks.filter(block => (
+            // Only keep lowest level blocks.
+            !descendants(block).some(descendant => this.props.originalBlocks.includes(descendant))
+        ));
+        let originalBlock;
+        const generatedLines = [...fragment.childNodes];
+        for (const generatedLine of generatedLines) {
+            originalBlock = originalBlocks.shift() || originalBlock;
+            // Only apply the style if the original post processing didn't apply
+            // a special style (ie, the generated line started with "-" so it
+            // created a list).
+            if (originalBlock && generatedLine.nodeName === "P") {
+                if (originalBlock.nodeName === "LI") {
+                    // Reconstruct the list structure.
+                    const listStructure = ancestors(originalBlock, this.editable)
+                        .filter(ancestor => ["LI", "UL", "OL"].includes(ancestor.nodeName))
+                        .reverse();
+                    listStructure.push(originalBlock);
+                    let listStructureParent;
+                    for (const listStructureElement of listStructure) {
+                        const clone = listStructureElement.cloneNode();
+                        if (listStructureParent) {
+                            listStructureParent.append(clone);
+                        } else {
+                            generatedLine.before(clone);
+                        }
+                        listStructureParent = clone;
+                        if (listStructureElement === originalBlock) {
+                            listStructureParent.append(...generatedLine.childNodes);
+                            generatedLine.remove();
+                        }
+                    }
+                } else {
+                    const clone = originalBlock.cloneNode();
+                    generatedLine.before(clone);
+                    clone.append(...generatedLine.childNodes);
+                    generatedLine.remove();
+                }
+            }
+        }
+        // Sanitize the content (so lists get merged together etc.)
+        let body = document.createElement("div");
+        body.setAttribute("contenteditable", "true");
+        body.append(...fragment.childNodes);
+        body = sanitize(body);
+        fragment.append(...body.childNodes);
+        // If the generated content is a single nested list, un-nest it.
+        if (fragment.childElementCount === 1 && fragment.firstChild.matches("ul, ol")) {
+            while ([...fragment.firstChild.children].every(child => child.matches("li.oe-nested"))) {
+                for (const nestedLi of fragment.firstChild.children) {
+                    unwrapContents(nestedLi);
+                }
+                unwrapContents(fragment.firstChild);
+            }
+        }
+        return fragment;
     }
 }
