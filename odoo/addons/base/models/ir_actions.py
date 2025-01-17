@@ -1079,9 +1079,11 @@ class IrActionsServer(models.Model):
 
     def copy_data(self, default=None):
         default = default or {}
+        vals_list = super().copy_data(default=default)
         if not default.get('name'):
-            default['name'] = _('%s (copy)', self.name)
-        return super().copy_data(default=default)
+            for vals in vals_list:
+                vals['name'] = _('%s (copy)', vals.get('name', ''))
+        return vals_list
 
 class IrActionsTodo(models.Model):
     """
