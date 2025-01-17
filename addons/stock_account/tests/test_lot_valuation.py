@@ -272,14 +272,7 @@ class TestLotValuation(TestStockValuationCommon):
             'inventory_quantity': 10
         })
         with self.assertRaises(UserError):
-            stock_confirmation_action = inventory_quant.action_apply_inventory()
-            stock_confirmation_wizard_form = Form(
-                self.env['stock.track.confirmation'].with_context(
-                    **stock_confirmation_action['context'])
-            )
-
-            stock_confirmation_wizard = stock_confirmation_wizard_form.save()
-            stock_confirmation_wizard.action_confirm()
+            inventory_quant.action_apply_inventory()
 
     def test_inventory_adjustment_existing_lot(self):
         """ If a lot exist, inventory takes its cost, if not, takes standard price """
