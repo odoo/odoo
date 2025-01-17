@@ -5,6 +5,7 @@ import { rpc } from "@web/core/network/rpc";
 import publicRootData from '@web/legacy/js/public/public_root';
 import "@website/libs/zoomodoo/zoomodoo";
 import { pick } from "@web/core/utils/objects";
+import { isIOS } from "@web/core/browser/feature_detection";
 
 import { markup } from "@odoo/owl";
 
@@ -37,7 +38,10 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
     start: function () {
         // Enable magnify on zommable img
         this.$('.zoomable img[data-zoom]').zoomOdoo();
-
+        // On iOS devices with small screens, this hides the address bar by scrolling the window slightly.
+        if (this.env.isSmall && isIOS()) {
+            window.scrollTo(0, 1);
+        }
         return this._super.apply(this, arguments);
     },
 
