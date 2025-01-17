@@ -431,6 +431,7 @@ class AccountMoveSend(models.AbstractModel):
             .with_context(
                 no_new_invoice=True,
                 mail_notify_author=author_id in partner_ids,
+                email_notification_allow_footer=True,
             ).message_post(
                 message_type='comment',
                 **kwargs,
