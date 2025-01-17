@@ -34,7 +34,6 @@ class TestSubcontractingBasic(TransactionCase):
             "route_ids",
             "pbm_route_id",
             "subcontracting_route_id",
-            "crossdock_route_id",
             "reception_route_id",
             "delivery_route_id"
         ]
