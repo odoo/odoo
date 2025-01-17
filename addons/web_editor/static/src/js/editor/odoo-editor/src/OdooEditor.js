@@ -4401,7 +4401,12 @@ export class OdooEditor extends EventTarget {
                 };
                 while (ZERO_WIDTH_CHARS.includes(adjacentCharacter) && hasSelectionChanged(previousSelection)) {
                     const selection = this.document.getSelection();
-                    previousSelection = {...selection};
+                    previousSelection = {
+                        anchorNode: selection.anchorNode,
+                        anchorOffset: selection.anchorOffset,
+                        focusNode: selection.focusNode,
+                        focusOffset: selection.focusOffset,
+                    };
                     selection.modify(
                         ev.shiftKey ? 'extend' : 'move',
                         side === 'previous' ? 'backward' : 'forward',
