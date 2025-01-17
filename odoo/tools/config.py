@@ -314,6 +314,10 @@ class configmanager(object):
         group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=2,
                          help="Maximum number of threads processing concurrently cron jobs (default 2).",
                          type="int")
+        group.add_option("--limit-time-worker-cron", dest="limit_time_worker_cron", my_default=0,
+                         help="Maximum time a cron thread/worker stays alive before it is restarted. "
+                              "Set to 0 to disable. (default: 0)",
+                         type="int")
         group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
                          help="Try to enable the unaccent extension when creating new databases.")
         group.add_option("--geoip-db", dest="geoip_database", my_default='/usr/share/GeoIP/GeoLite2-City.mmdb',
@@ -457,7 +461,8 @@ class configmanager(object):
                 'db_maxconn', 'import_partial', 'addons_path', 'upgrade_path',
                 'syslog', 'without_demo', 'screencasts', 'screenshots',
                 'dbfilter', 'log_level', 'log_db',
-                'log_db_level', 'geoip_database', 'dev_mode', 'shell_interface'
+                'log_db_level', 'geoip_database', 'dev_mode', 'shell_interface',
+                'limit_time_worker_cron',
         ]
 
         for arg in keys:
