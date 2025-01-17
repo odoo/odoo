@@ -34,18 +34,19 @@ export class ChatWindow extends Record {
     }
 
     close(options = {}) {
-        const { escape = false, notifyState = true } = options;
+        const { escape = false } = options;
+        options.notifyState ??= true;
         const chatHub = this.store.chatHub;
         const indexAsOpened = chatHub.opened.findIndex((w) => w.eq(this));
         this.store.chatHub.opened.delete(this);
         this.store.chatHub.folded.delete(this);
-        if (notifyState) {
+        if (options.notifyState) {
             this.store.chatHub.save();
         }
         if (escape && indexAsOpened !== -1 && chatHub.opened.length > 0) {
             chatHub.opened[indexAsOpened === 0 ? 0 : indexAsOpened - 1].focus();
         }
-        this._onClose();
+        this._onClose(options);
         this.delete();
     }
 
