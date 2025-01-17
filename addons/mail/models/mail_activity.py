@@ -260,7 +260,9 @@ class MailActivity(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        activities = super(MailActivity, self).create(vals_list)
+        quick_update_context = self.env.context.get('mail_activity_quick_update', False)
+        activities = super(MailActivity, self.with_context(mail_activity_quick_update=True)).create(vals_list)
+        activities = activities.with_context(mail_activity_quick_update=quick_update_context)
         for activity in activities:
             need_sudo = False
             try:  # in multicompany, reading the partner might break
