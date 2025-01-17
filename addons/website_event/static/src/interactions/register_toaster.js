@@ -1,30 +1,21 @@
 import { _t } from "@web/core/l10n/translation";
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { registry } from "@web/core/registry";
+import { Interaction } from "@web/public/interaction";
 
-publicWidget.registry.RegisterToasterWidget = publicWidget.Widget.extend({
-    selector: '.o_wevent_register_toaster',
-    /**
-     * @override
-     */
-    init() {
-        this._super(...arguments);
-        this.notification = this.bindService("notification");
-    },
-    /**
-     * This widget allows to display a toast message on the page.
-     *
-     * @override
-     */
-    start: function () {
+export class RegisterToaster extends Interaction {
+    static selector = ".o_wevent_register_toaster";
+
+    setup() {
         const message = this.el.dataset.message;
         if (message && message.length) {
-            this.notification.add(message, {
+            this.services.notification.add(message, {
                 title: _t("Register"),
                 type: 'info',
             });
         }
-        return this._super.apply(this, arguments);
-    },
-});
+    }
+}
 
-export default publicWidget.registry.RegisterToasterWidget;
+registry
+    .category("public.interactions")
+    .add("website_event.register_toaster", RegisterToaster);

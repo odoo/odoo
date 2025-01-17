@@ -1,65 +1,32 @@
-import publicWidget from "@web/legacy/js/public/public_widget";
-import "@website/js/content/snippets.animation";
-import { renderToElement } from "@web/core/utils/render";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 
-const ForumShare = publicWidget.Widget.extend({
-    selector: '',
-    events: {},
+export class WebsiteForumShare extends Interaction {
+    static selector = ".website_forum";
 
-    /**
-     * @override
-     * @param {Object} parent
-     * @param {Object} options
-     * @param {string} targetType
-     */
-    init: function (parent, options, targetType) {
-        this._super.apply(this, arguments);
-        this.targetType = targetType;
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        var def = this._super.apply(this, arguments);
-        var $question = this.$('article.question');
-        if (this.targetType) {
-            const modalEl = renderToElement("website.social_modal", {
-                target_type: this.targetType,
-                state: $question.data('state'),
-            });
-            // Remove modal from DOM once it's closed.
-            modalEl.addEventListener("hidden.bs.modal", () => {
-                modalEl.remove();
-            });
-            this.el.appendChild(modalEl);
-            this.trigger_up('widgets_start_request', {
-                editableMode: false,
-                $target: $(modalEl.querySelector(".s_share")),
-            });
-            $('#oe_social_share_modal').modal('show');
-        }
-        return def;
-    },
-});
-
-publicWidget.registry.websiteForumShare = publicWidget.Widget.extend({
-    selector: '.website_forum',
-
-    /**
-     * @override
-     */
-    start: function () {
+    start() {
         // Retrieve stored social data
-        if (sessionStorage.getItem('social_share')) {
-            var socialData = JSON.parse(sessionStorage.getItem('social_share'));
-            // Dummy div to attach the ForumShare publicwidget
-            const divEl = document.createElement("div");
-            divEl.classList.add("social-modal");
-            document.body.appendChild(divEl);
-            (new ForumShare(this, false, socialData.targetType)).attachTo(divEl);
-            sessionStorage.removeItem('social_share');
-        }
+        if (sessionStorage.getItem("social_share")) {
+            const socialData = JSON.parse(sessionStorage.getItem("social_share"));
 
-        return this._super.apply(this, arguments);
-    },
-});
+            if (socialData.targetType) {
+                const questionEl = document.querySelector(".o_wforum_question");
+                this.renderAt("website.social_modal", {
+                    target_type: socialData.targetType,
+                    state: questionEl.dataset.state,
+                }, document.body, "beforeend", (els) => {
+                    this.addListener(els[0], "hidden.bs.modal", () => els[0].remove());
+                });
+                const bsModal = window.Modal.getOrCreateInstance(document.querySelector("#oe_social_share_modal"));
+                bsModal.show();
+                this.registerCleanup(() => bsModal.dispose());
+            }
+
+            sessionStorage.removeItem("social_share");
+        }
+    }
+}
+
+registry
+    .category("public.interactions")
+    .add("website_forum.website_forum_share", WebsiteForumShare);

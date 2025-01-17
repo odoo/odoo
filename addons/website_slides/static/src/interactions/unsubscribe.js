@@ -1,34 +1,17 @@
-import publicWidget from '@web/legacy/js/public/public_widget';
-import { SlideUnsubscribeDialog } from "./public/components/slide_unsubscribe_dialog/slide_unsubscribe_dialog";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 
-publicWidget.registry.websiteSlidesUnsubscribe = publicWidget.Widget.extend({
-    selector: '.o_wslides_js_channel_unsubscribe',
-    events: {
-        'click': '_onUnsubscribeClick',
-    },
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+import { SlideUnsubscribeDialog } from "../js/public/components/slide_unsubscribe_dialog/slide_unsubscribe_dialog";
 
-    _openDialog: function ($element) {
-        var data = $element.data();
-        this.call("dialog", "add", SlideUnsubscribeDialog, data);
-    },
+export class Unsubscribe extends Interaction {
+    static selector = ".o_wslides_js_channel_unsubscribe";
+    dynamicContent = {
+        _root: {
+            "t-on-click.prevent": () => this.services.dialog.add(SlideUnsubscribeDialog, this.el.dataset),
+        },
+    };
+}
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onUnsubscribeClick: function (ev) {
-        ev.preventDefault();
-        this._openDialog($(ev.currentTarget));
-    },
-});
-
-export default {
-    websiteSlidesUnsubscribe: publicWidget.registry.websiteSlidesUnsubscribe
-};
+registry
+    .category("public.interactions")
+    .add("website_slides.unsubscribe", Unsubscribe);

@@ -1,23 +1,14 @@
-import PopupWidget from '@website/snippets/s_popup/000';
+import { patch } from "@web/core/utils/patch";
+import { Popup } from "@website/interactions/popup/popup";
 
-PopupWidget.include({
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
+patch(Popup.prototype, {
     /**
-     * Checks if the given primary button should allow or not to close the
-     * modal.
-     *
      * @override
      */
-    _canBtnPrimaryClosePopup(primaryBtnEl) {
+    canBtnPrimaryClosePopup(primaryBtnEl) {
         return (
-            this._super(...arguments)
+            super.canBtnPrimaryClosePopup(...arguments)
             && !primaryBtnEl.classList.contains("js_add_cart")
         );
     },
 });
-
-export default PopupWidget;

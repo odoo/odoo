@@ -1,100 +1,92 @@
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { escape } from "@web/core/utils/strings";
-import { renderToElement } from "@web/core/utils/render";
-import publicWidget from "@web/legacy/js/public/public_widget";
 import { post } from "@web/core/network/http_service";
 import { Component } from "@odoo/owl";
 import { rpc, RPCError } from "@web/core/network/rpc";
 
 /**
- * Widget PortalComposer
- *
  * Display the composer (according to access right)
- *
  */
-var PortalComposer = publicWidget.Widget.extend({
-    template: 'portal.Composer',
-    events: {
-        'change .o_portal_chatter_file_input': '_onFileInputChange',
-        'click .o_portal_chatter_attachment_btn': '_onAttachmentButtonClick',
-        'click .o_portal_chatter_attachment_delete': 'async _onAttachmentDeleteClick',
-        'click .o_portal_chatter_composer_btn': 'async _onSubmitButtonClick',
-    },
+export class PortalComposer extends Interaction {
+    static selector = ".o_portal_chatter_composer";
+    static selectorHas = ".o_portal_chatter_composer_input";
+    dynamicContent = {
+        ".o_portal_chatter_file_input": {
+            "t-on-change": this.onFileInputChange,
+        },
+        ".o_portal_chatter_attachment_btn": {
+            "t-on-click": this.onAttachmentButtonClick,
+        },
+        ".o_portal_chatter_attachment_delete": {
+            "t-on-click.prevent.stop.withTarget": this.locked(this.onAttachmentDeleteClick, true),
+        },
+        ".o_portal_chatter_composer_btn": {
+            "t-on-click.prevent.withTarget": this.locked(this.onSubmitButtonClick, true),
+        },
+    };
 
-    /**
-     * @constructor
-     */
-    init: function (parent, options) {
-        this._super.apply(this, arguments);
-        this.options = Object.assign({
-            'allow_composer': true,
-            'display_composer': false,
-            'csrf_token': odoo.csrf_token,
-            'token': false,
-            'res_model': false,
-            'res_id': false,
-            'send_button_label': _t("Send"),
-        }, options || {});
-        this.attachments = [];
-        this.notification = this.bindService("notification");
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        var self = this;
-        this.$attachmentButton = this.$('.o_portal_chatter_attachment_btn');
-        this.$fileInput = this.$('.o_portal_chatter_file_input');
-        this.$sendButton = this.$('.o_portal_chatter_composer_btn');
-        this.$attachments = this.$('.o_portal_chatter_composer_input .o_portal_chatter_attachments');
-        this.$inputTextarea = this.$('.o_portal_chatter_composer_input textarea[name="message"]');
-
-        return this._super.apply(this, arguments).then(function () {
-            if (self.options.default_attachment_ids) {
-                self.attachments = self.options.default_attachment_ids || [];
-                self.attachments.forEach((attachment) => {
-                    attachment.state = 'done';
-                });
-                self._updateAttachments();
+    static prepareOptions(options) {
+        if (typeof options.default_attachment_ids === "string") {
+            options.default_attachment_ids = JSON.parse(options.default_attachment_ids);
+        }
+        for (const name of ["res_id", "partner_id", "pid"]) {
+            if (typeof options[name] === "string") {
+                options[name] = parseInt(options[name]);
             }
-            return Promise.resolve();
-        });
-    },
+        }
+        return Object.assign({
+            "allow_composer": true,
+            "display_composer": false,
+            "csrf_token": odoo.csrf_token,
+            "token": false,
+            "res_model": false,
+            "res_id": false,
+            "send_button_label": _t("Send"),
+        }, options || {});
+    }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+    setup() {
+        this.options = this.env.portalComposerOptions || PortalComposer.prepareOptions({});
+        this.attachments = [];
+        this.attachmentButtonEl = this.el.querySelector(".o_portal_chatter_attachment_btn");
+        this.fileInputEl = this.el.querySelector(".o_portal_chatter_file_input");
+        this.sendButtonEl = this.el.querySelector(".o_portal_chatter_composer_btn");
+        this.attachmentsEl = this.el.querySelector(".o_portal_chatter_composer_input .o_portal_chatter_attachments");
+        this.inputTextareaEl = this.el.querySelector('.o_portal_chatter_composer_input textarea[name="message"]');
+    }
 
-    /**
-     * @private
-     */
-    _onAttachmentButtonClick: function () {
-        this.$fileInput.click();
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     * @returns {Promise}
-     */
-    _onAttachmentDeleteClick: function (ev) {
-        var self = this;
-        var attachmentId = $(ev.currentTarget).closest('.o_portal_chatter_attachment').data('id');
-        var accessToken = this.attachments.find(attachment => attachment.id === attachmentId).access_token;
-        ev.preventDefault();
-        ev.stopPropagation();
+    start() {
+        if (this.options.default_attachment_ids) {
+            this.attachments = this.options.default_attachment_ids || [];
+            for (const attachment of this.attachments) {
+                attachment.state = "done";
+            }
+            this.updateAttachments();
+        }
+    }
 
-        this.$sendButton.prop('disabled', true);
+    onAttachmentButtonClick() {
+        this.fileInputEl.click();
+    }
 
-        return rpc('/portal/attachment/remove', {
-            'attachment_id': attachmentId,
-            'access_token': accessToken,
-        }).then(function () {
-            self.attachments = self.attachments.filter(attachment => attachment.id !== attachmentId);
-            self._updateAttachments();
-            self.$sendButton.prop('disabled', false);
-        });
-    },
-    _prepareAttachmentData: function (file) {
+    async onAttachmentDeleteClick(ev, currentTargetEl) {
+        const attachmentId = parseInt(currentTargetEl.closest(".o_portal_chatter_attachment").dataset.id);
+        const accessToken = this.attachments.find(attachment => attachment.id === attachmentId).access_token;
+
+        this.sendButtonEl.disabled = true;
+
+        await this.waitFor(rpc("/portal/attachment/remove", {
+            "attachment_id": attachmentId,
+            "access_token": accessToken,
+        }));
+        this.attachments = this.attachments.filter(attachment => attachment.id !== attachmentId);
+        this.updateAttachments();
+        this.sendButtonEl.disabled = false;
+    }
+
+    prepareAttachmentData(file) {
         return {
             is_pending: true,
             thread_id: this.options.res_id,
@@ -102,55 +94,45 @@ var PortalComposer = publicWidget.Widget.extend({
             token: this.options.token,
             ufile: file,
         };
-    },
-    /**
-     * @private
-     * @returns {Promise}
-     */
-    _onFileInputChange: function () {
-        var self = this;
+    }
 
-        this.$sendButton.prop('disabled', true);
+    async onFileInputChange() {
+        this.sendButtonEl.disabled = true;
 
-        return Promise.all([...this.$fileInput[0].files].map((file) => {
-            return new Promise(function (resolve, reject) {
-                var data = self._prepareAttachmentData(file);
+        await this.waitFor(Promise.all([...this.fileInputEl.files].map((file) => {
+            return new Promise((resolve, reject) => {
+                const data = this.prepareAttachmentData(file);
                 if (odoo.csrf_token) {
                     data.csrf_token = odoo.csrf_token;
                 }
-                post('/mail/attachment/upload', data).then(function (res) {
+                this.waitFor(post("/mail/attachment/upload", data)).then((res) => {
                     let attachment = res.data["ir.attachment"][0]
-                    attachment.state = 'pending';
-                    self.attachments.push(attachment);
-                    self._updateAttachments();
+                    attachment.state = "pending";
+                    this.attachments.push(attachment);
+                    this.updateAttachments();
                     resolve();
-                }).catch(function (error) {
+                }).catch((error) => {
                     if (error instanceof RPCError) {
-                        self.notification.add(
+                        this.services.notification.add(
                             _t("Could not save file <strong>%s</strong>", escape(file.name)),
-                            { type: 'warning', sticky: true }
+                            { type: "warning", sticky: true }
                         );
                         resolve();
                     }
                 });
             });
-        })).then(function () {
-            // ensures any selection triggers a change, even if the same files are selected again
-            self.$fileInput[0].value = null;
-            self.$sendButton.prop('disabled', false);
-        });
-    },
-    /**
-     * prepares data to send message
-     *
-     * @private
-     */
-    _prepareMessageData: function () {
+        })));
+        // ensures any selection triggers a change, even if the same files are selected again
+        this.fileInputEl.value = null;
+        this.sendButtonEl.disabled = false;
+    }
+
+    prepareMessageData() {
         return Object.assign(this.options || {}, {
             thread_model: this.options.res_model,
             thread_id: this.options.res_id,
             post_data: {
-                body: this.$('textarea[name="message"]').val(),
+                body: this.el.querySelector('textarea[name="message"]').value,
                 attachment_ids: this.attachments.map((a) => a.id),
                 message_type: "comment",
                 subtype_xmlid: "mail.mt_comment",
@@ -160,59 +142,48 @@ var PortalComposer = publicWidget.Widget.extend({
             hash: this.options.hash,
             pid: this.options.pid,
         });
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onSubmitButtonClick: function (ev) {
-        ev.preventDefault();
-        const error = this._onSubmitCheckContent();
+    }
+
+    async onSubmitButtonClick(ev, currentTargetEl) {
+        const error = this.onSubmitCheckContent();
         if (error) {
-            this.$inputTextarea.addClass('border-danger');
-            this.$(".o_portal_chatter_composer_error").text(error).removeClass('d-none');
+            this.inputTextareaEl.classList.add("border-danger");
+            const errorEl = this.el.querySelector(".o_portal_chatter_composer_error");
+            errorEl.innerText = error;
+            errorEl.classList.remove("d-none");
             return Promise.reject();
         } else {
-            return this._chatterPostMessage(ev.currentTarget.getAttribute('data-action'));
+            return this.chatterPostMessage(currentTargetEl.dataset.action);
         }
-    },
+    }
 
-    /**
-     * @private
-     */
-    _onSubmitCheckContent: function () {
-        if (!this.$inputTextarea.val().trim() && !this.attachments.length) {
-            return _t('Some fields are required. Please make sure to write a message or attach a document');
+    onSubmitCheckContent() {
+        if (!this.inputTextareaEl.value.trim() && !this.attachments.length) {
+            return _t("Some fields are required. Please make sure to write a message or attach a document");
         };
-    },
+    }
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _updateAttachments: function () {
-        this.$attachments.empty().append(renderToElement('portal.Chatter.Attachments', {
+    updateAttachments() {
+        this.attachmentsEl.replaceChildren();
+        this.renderAt("portal.Chatter.Attachments", {
             attachments: this.attachments,
             showDelete: true,
-        }));
-    },
+        }, this.attachmentsEl);
+    }
+
     /**
      * post message using rpc call and display new message and message count
      *
-     * @private
      * @param {String} route
      * @returns {Promise}
      */
-    _chatterPostMessage: async function (route) {
-        const result = await rpc(route, this._prepareMessageData());
-        Component.env.bus.trigger('reload_chatter_content', result);
+    async chatterPostMessage(route) {
+        const result = await this.waitFor(rpc(route, this.prepareMessageData()));
+        Component.env.bus.trigger("reload_chatter_content", result);
         return result;
-    },
-});
+    }
+}
 
-export default {
-    PortalComposer: PortalComposer,
-};
+registry
+    .category("public.interactions")
+    .add("portal.portal_composer", PortalComposer);

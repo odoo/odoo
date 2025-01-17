@@ -89,6 +89,9 @@ export class Gallery extends Interaction {
         modalBS.show();
     }
 
+    /**
+     * @param {MouseEvent} ev
+     */
     onModalKeydown(ev) {
         if (ev.key === "ArrowLeft" || ev.key === "ArrowRight") {
             const side = ev.key === "ArrowLeft" ? "prev" : "next";
