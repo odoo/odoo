@@ -27,6 +27,15 @@ patch(Thread.prototype, {
                 return visitor;
             },
         });
+        this.open_chat_window = Record.attr(undefined, {
+            /** @this {import("models").Thread} */
+            onUpdate() {
+                if (this.open_chat_window) {
+                    this.openChatWindow({ focus: true });
+                    this.open_chat_window = undefined;
+                }
+            },
+        });
     },
     get autoOpenChatWindowOnNewMessage() {
         return this.channel_type === "livechat" || super.autoOpenChatWindowOnNewMessage;

@@ -124,7 +124,6 @@ class DiscussChannel(models.Model):
         if self.livechat_active:
             member = self.channel_member_ids.filtered(lambda m: m.is_self)
             if member:
-                member.fold_state = "closed"
                 # sudo: discuss.channel.rtc.session - member of current user can leave call
                 member.sudo()._rtc_leave_call()
             # sudo: discuss.channel - visitor left the conversation, state must be updated

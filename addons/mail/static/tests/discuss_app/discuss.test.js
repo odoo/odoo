@@ -49,16 +49,14 @@ test("sanity check", async () => {
     await start();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            init_messaging: {},
-            failures: true,
-            systray_get_activities: true,
+            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
     await openDiscuss();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            channels_as_member: true,
+            fetch_params: ["channels_as_member"],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
         '/mail/inbox/messages - {"fetch_params":{"limit":30}}',
@@ -1097,7 +1095,7 @@ test("out-of-focus notif on needaction message in channel", async () => {
         },
     });
     onRpcBefore("/mail/data", async (args) => {
-        if (args.init_messaging) {
+        if (args.fetch_params.includes("init_messaging")) {
             asyncStep("init_messaging");
         }
     });
@@ -1142,7 +1140,7 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
         },
     });
     onRpcBefore("/mail/data", async (args) => {
-        if (args.init_messaging) {
+        if (args.fetch_params.includes("init_messaging")) {
             asyncStep("init_messaging");
         }
     });
@@ -1185,7 +1183,7 @@ test("no out-of-focus notif on non-needaction message in channel", async () => {
         },
     });
     onRpcBefore("/mail/data", async (args) => {
-        if (args.init_messaging) {
+        if (args.fetch_params.includes("init_messaging")) {
             asyncStep("init_messaging");
         }
     });
@@ -1315,7 +1313,7 @@ test("out-of-focus notif takes new inbox messages into account", async () => {
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     mockService("presence", { isOdooFocused: () => false });
     onRpcBefore("/mail/data", async (args) => {
-        if (args.init_messaging) {
+        if (args.fetch_params.includes("init_messaging")) {
             asyncStep("init_messaging");
         }
     });
@@ -1354,7 +1352,7 @@ test("out-of-focus notif on needaction message in group chat contributes only on
     });
     mockService("presence", { isOdooFocused: () => false });
     onRpcBefore("/mail/data", async (args) => {
-        if (args.init_messaging) {
+        if (args.fetch_params.includes("init_messaging")) {
             asyncStep("init_messaging");
         }
     });
@@ -1388,14 +1386,10 @@ test("inbox notifs shouldn't play sound nor open chat bubble", async () => {
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
-    pyEnv["discuss.channel"].create({
-        name: "general",
-        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
-        channel_type: "channel",
-    });
+    pyEnv["discuss.channel"].create({ name: "general", channel_type: "channel" });
     mockService("presence", { isOdooFocused: () => false });
     onRpcBefore("/mail/data", async (args) => {
-        if (args.init_messaging) {
+        if (args.fetch_params.includes("init_messaging")) {
             asyncStep("init_messaging");
         }
     });
@@ -1447,7 +1441,7 @@ test("should auto-pin chat when receiving a new DM", async () => {
         channel_type: "chat",
     });
     onRpcBefore("/mail/data", async (args) => {
-        if (args.init_messaging) {
+        if (args.fetch_params.includes("init_messaging")) {
             asyncStep("init_messaging");
         }
     });
@@ -1819,13 +1813,11 @@ test("failure on loading more messages should display error and prompt retry but
         name: "General",
     });
     const messageIds = pyEnv["mail.message"].create(
-        [...Array(60).keys()].map(() => {
-            return {
-                body: "coucou",
-                model: "discuss.channel",
-                res_id: channelId,
-            };
-        })
+        [...Array(60).keys()].map(() => ({
+            body: "coucou",
+            model: "discuss.channel",
+            res_id: channelId,
+        }))
     );
     const [selfMember] = pyEnv["discuss.channel.member"].search_read([
         ["partner_id", "=", serverState.partnerId],
@@ -1860,13 +1852,11 @@ test("Retry loading more messages on failed load more messages should load more 
         name: "General",
     });
     const messageIds = pyEnv["mail.message"].create(
-        [...Array(90).keys()].map(() => {
-            return {
-                body: "coucou",
-                model: "discuss.channel",
-                res_id: channelId,
-            };
-        })
+        [...Array(90).keys()].map(() => ({
+            body: "coucou",
+            model: "discuss.channel",
+            res_id: channelId,
+        }))
     );
     const [selfMember] = pyEnv["discuss.channel.member"].search_read([
         ["partner_id", "=", serverState.partnerId],

@@ -4,6 +4,7 @@ import {
     click,
     contains,
     openDiscuss,
+    setupChatHub,
     start,
     startServer,
     triggerHotkey,
@@ -85,10 +86,10 @@ test("from chat window", async () => {
         name: "HR",
         user_ids: [serverState.userId],
     });
-    pyEnv["discuss.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_type: "livechat",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId, fold_state: "open" }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
         livechat_active: true,
@@ -96,6 +97,7 @@ test("from chat window", async () => {
         livechat_operator_id: serverState.partnerId,
         create_uid: serverState.publicUserId,
     });
+    setupChatHub({ opened: [channelId] });
     await start();
     await contains(".o-mail-ChatWindow");
     await click("button[title*='Close Chat Window']");
@@ -119,7 +121,7 @@ test("visitor leaving ends the livechat conversation", async () => {
     const channel_id = pyEnv["discuss.channel"].create({
         channel_type: "livechat",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId, fold_state: "open" }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
         livechat_active: true,
@@ -127,6 +129,7 @@ test("visitor leaving ends the livechat conversation", async () => {
         livechat_operator_id: serverState.partnerId,
         create_uid: serverState.publicUserId,
     });
+    setupChatHub({ opened: [channel_id] });
     await start();
     await contains(".o-mail-ChatWindow");
     // simulate visitor leaving

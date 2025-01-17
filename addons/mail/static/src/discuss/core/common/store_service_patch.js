@@ -36,6 +36,17 @@ const storeServicePatch = {
         channel.open();
         return channel;
     },
+    async fetchChannel(channelId) {
+        const channelIds = this.fetchParams.find(
+            (fetchParams) => fetchParams[0] === "discuss.channel"
+        );
+        if (channelIds) {
+            channelIds[1].push(channelId);
+            await this.fetchDeferred;
+        } else {
+            await this.fetchStoreData("discuss.channel", [channelId]);
+        }
+    },
     /**
      * List of known partner ids with a direct chat, ordered
      * by most recent interest (1st item being the most recent)

@@ -4,6 +4,7 @@ from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.http import request
+from odoo.tools.misc import OrderedSet
 from odoo.addons.mail.controllers.webclient import WebclientController
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 from odoo.addons.mail.tools.discuss import Store
@@ -11,23 +12,51 @@ from odoo.addons.mail.tools.discuss import Store
 
 class DiscussChannelWebclientController(WebclientController):
     """Override to add discuss channel specific features."""
-    def _process_request_for_all(self, store, **kwargs):
-        """Override to return channel as member and last messages."""
-        super()._process_request_for_all(store, **kwargs)
-        if kwargs.get("channels_as_member"):
-            channels = request.env["discuss.channel"]._get_channels_as_member()
+
+    def _process_request_loop(self, store: Store, fetch_params):
+        """Override to add discuss channel specific features."""
+        # aggregate of channels to return, to batch them in a single query when all the fetch params
+        # have been processed
+        request.update_context(
+            channels=request.env["discuss.channel"], add_channels_last_message=False
+        )
+        super()._process_request_loop(store, fetch_params)
+        channels = request.env.context["channels"]
+        if channels:
+            store.add(channels)
+        if request.env.context["add_channels_last_message"]:
             # fetch channels data before messages to benefit from prefetching (channel info might
             # prefetch a lot of data that message format could use)
-            store.add(channels)
             store.add(channels._get_last_messages(), for_current_user=True)
+
+    def _process_request_for_all(self, store: Store, name, params):
+        """Override to return channel as member and last messages."""
+        super()._process_request_for_all(store, name, params)
+        if name == "init_messaging":
+            member_domain = [("is_self", "=", True), ("rtc_inviting_session_id", "!=", False)]
+            channel_domain = [("channel_member_ids", "any", member_domain)]
+            channels = request.env["discuss.channel"].search(channel_domain)
+            request.update_context(channels=request.env.context["channels"] | channels)
+        if name == "channels_as_member":
+            channels = request.env["discuss.channel"]._get_channels_as_member()
+            request.update_context(
+                channels=request.env.context["channels"] | channels, add_channels_last_message=True
+            )
+        if name == "discuss.channel":
+            channels = request.env["discuss.channel"].search([("id", "in", params)])
+            request.update_context(channels=request.env.context["channels"] | channels)
+            if not_found_channels := request.env["discuss.channel"].browse(
+                OrderedSet(int(cid) for cid in params) - OrderedSet(channels.ids)
+            ):
+                store.delete(not_found_channels)
 
 
 class ChannelController(http.Controller):
     @http.route("/discuss/channel/get_or_create_chat", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
-    def discuss_get_or_create_chat(self, partners_to, pin=True, force_open=False):
-        channel = request.env["discuss.channel"]._get_or_create_chat(partners_to, pin, force_open)
-        return Store(channel).get_result()
+    def discuss_get_or_create_chat(self, partners_to, pin=True):
+        channel = request.env["discuss.channel"]._get_or_create_chat(partners_to, pin)
+        return {"channel_id": channel.id, "data": Store(channel).get_result()}
 
     @http.route("/discuss/channel/create_channel", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
@@ -55,14 +84,6 @@ class ChannelController(http.Controller):
         if not channel or not data:
             raise NotFound()
         channel.write({"image_128": data})
-
-    @http.route("/discuss/channel/info", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
-    @add_guest_to_context
-    def discuss_channel_info(self, channel_id):
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
-        if not channel:
-            return
-        return Store(channel).get_result()
 
     @http.route("/discuss/channel/messages", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
@@ -148,14 +169,6 @@ class ChannelController(http.Controller):
         # sudo: ir.attachment - reading attachments of a channel that the current user can access
         attachments = request.env["ir.attachment"].sudo().search(domain, limit=limit, order="id DESC")
         return Store(attachments).get_result()
-
-    @http.route("/discuss/channel/fold", methods=["POST"], type="jsonrpc", auth="public")
-    @add_guest_to_context
-    def discuss_channel_fold(self, channel_id, state, state_count):
-        member = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
-        if not member:
-            raise NotFound()
-        return member._channel_fold(state, state_count)
 
     @http.route("/discuss/channel/join", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context

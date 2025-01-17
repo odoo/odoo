@@ -40,22 +40,6 @@ export class Thread extends Record {
     static insert(data) {
         return super.insert(...arguments);
     }
-    static new() {
-        const thread = super.new(...arguments);
-        Record.onChange(thread, ["state"], () => {
-            if (thread.state === "open" && !this.store.env.services.ui.isSmall) {
-                const cw = this.store.ChatWindow?.insert({ thread });
-                thread.store.chatHub.opened.delete(cw);
-                thread.store.chatHub.opened.unshift(cw);
-            }
-            if (thread.state === "folded") {
-                const cw = this.store.ChatWindow?.insert({ thread });
-                thread.store.chatHub.folded.delete(cw);
-                thread.store.chatHub.folded.unshift(cw);
-            }
-        });
-        return thread;
-    }
     static async getOrFetch(data) {
         return this.get(data);
     }
@@ -205,8 +189,6 @@ export class Thread extends Record {
         inverse: "threadAsNeedaction",
         sort: (message1, message2) => message1.id - message2.id,
     });
-    /** @type {'open' | 'folded' | 'closed'} */
-    state;
     status = "new";
     /**
      * Stored scoll position of thread from top in ASC order.
@@ -692,19 +674,14 @@ export class Thread extends Record {
     /** @param {Object} [options] */
     open(options) {}
 
-    openChatWindow({ fromMessagingMenu } = {}) {
+    openChatWindow({ focus = true, fromMessagingMenu } = {}) {
         const cw = this.store.ChatWindow.insert(
             assignDefined({ thread: this }, { fromMessagingMenu })
         );
-        this.store.chatHub.opened.delete(cw);
-        this.store.chatHub.opened.unshift(cw);
-        if (!isMobileOS()) {
-            cw.focus();
-        } else {
+        cw.open({ focus: focus && !isMobileOS() });
+        if (isMobileOS()) {
             this.markAsRead();
         }
-        this.state = "open";
-        cw.notifyState();
         return cw;
     }
 

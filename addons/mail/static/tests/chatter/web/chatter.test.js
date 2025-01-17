@@ -42,9 +42,7 @@ test("simple chatter on a record", async () => {
     await start();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            init_messaging: {},
-            failures: true,
-            systray_get_activities: true,
+            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
@@ -52,10 +50,32 @@ test("simple chatter on a record", async () => {
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Chatter-topbar");
     await contains(".o-mail-Thread");
-    await waitForSteps([
-        `/mail/thread/data - {"request_list":["activities","attachments","followers","scheduledMessages","suggestedRecipients"],"thread_id":${partnerId},"thread_model":"res.partner"}`,
-        `/mail/thread/messages - {"thread_id":${partnerId},"thread_model":"res.partner","fetch_params":{"limit":30}}`,
-    ]);
+    await waitForSteps(
+        [
+            `/mail/data - ${JSON.stringify({
+                fetch_params: [
+                    [
+                        "mail.thread",
+                        {
+                            access_params: {},
+                            request_list: [
+                                "activities",
+                                "attachments",
+                                "followers",
+                                "scheduledMessages",
+                                "suggestedRecipients",
+                            ],
+                            thread_id: partnerId,
+                            thread_model: "res.partner",
+                        },
+                    ],
+                ],
+                context: { lang: "en", tz: "taht", uid: 7, allowed_company_ids: [1] },
+            })}`,
+            `/mail/thread/messages - {"thread_id":${partnerId},"thread_model":"res.partner","fetch_params":{"limit":30}}`,
+        ],
+        { ignoreOrder: true }
+    );
 });
 
 test("can post a message on a record thread", async () => {
@@ -128,7 +148,12 @@ test("No attachment loading spinner when creating records", async () => {
 });
 
 test("No attachment loading spinner when switching from loading record to creation of record", async () => {
-    onRpc("/mail/thread/data", async () => await new Deferred());
+    onRpc("/mail/data", async (request) => {
+        const { params } = await request.json();
+        if (params.fetch_params.some((fetchParam) => fetchParam[0] === "mail.thread")) {
+            await new Deferred();
+        }
+    });
     const pyEnv = await startServer();
     await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John" });

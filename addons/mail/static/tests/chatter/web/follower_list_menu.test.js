@@ -37,7 +37,7 @@ test("base rendering editable", async () => {
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Followers");
     await contains(".o-mail-Followers-button");
-    expect(".o-mail-Followers-button:first").toBeEnabled();
+    await contains(".o-mail-Followers-button:first:enabled");
     await contains(".o-mail-Followers-dropdown", { count: 0 });
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Followers-dropdown");
@@ -163,14 +163,12 @@ test("Load 100 followers at once", async () => {
         [...Array(210).keys()].map((i) => ({ display_name: `Partner${i}`, name: `Partner${i}` }))
     );
     pyEnv["mail.followers"].create(
-        [...Array(210).keys()].map((i) => {
-            return {
-                is_active: true,
-                partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
-                res_id: partnerIds[0],
-                res_model: "res.partner",
-            };
-        })
+        [...Array(210).keys()].map((i) => ({
+            is_active: true,
+            partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
+            res_id: partnerIds[0],
+            res_model: "res.partner",
+        }))
     );
     await start();
     await openFormView("res.partner", partnerIds[0]);
@@ -197,14 +195,12 @@ test("Load 100 recipients at once", async () => {
         }))
     );
     pyEnv["mail.followers"].create(
-        [...Array(210).keys()].map((i) => {
-            return {
-                is_active: true,
-                partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
-                res_id: partnerIds[0],
-                res_model: "res.partner",
-            };
-        })
+        [...Array(210).keys()].map((i) => ({
+            is_active: true,
+            partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
+            res_id: partnerIds[0],
+            res_model: "res.partner",
+        }))
     );
     await start();
     await openFormView("res.partner", partnerIds[0]);

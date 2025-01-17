@@ -347,10 +347,13 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
                 self.authenticate(user.login, user.login)
                 with patch.object(MailTestMultiCompanyWithActivity, '_check_access', autospec=True,
                                   side_effect=_mock_check_access):
-                    activity_groups = self.make_jsonrpc_request("/mail/data", {
-                        "systray_get_activities": True,
-                        "context": {"allowed_company_ids": allowed_company_ids}
-                    })["Store"]["activityGroups"]
+                    activity_groups = self.make_jsonrpc_request(
+                        "/mail/data",
+                        {
+                            "fetch_params": ["systray_get_activities"],
+                            "context": {"allowed_company_ids": allowed_company_ids},
+                        },
+                    )["Store"]["activityGroups"]
                 activity_groups_by_model = {ag["model"]: ag for ag in activity_groups}
                 other_activities_model_name = 'mail.activity'
                 if expected_other_activities:
@@ -399,10 +402,13 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
                           side_effect=lambda self, operation: (self, lambda: AccessError("Nope"))):
             for companies in (company_1_all, company_2_admin_only, company_1_all | company_2_admin_only):
                 with self.subTest(companies=companies):
-                    activity_groups = self.make_jsonrpc_request("/mail/data", {
-                        "systray_get_activities": True,
-                        "context": {"allowed_company_ids": companies.ids}
-                    })["Store"]["activityGroups"]
+                    activity_groups = self.make_jsonrpc_request(
+                        "/mail/data",
+                        {
+                            "fetch_params": ["systray_get_activities"],
+                            "context": {"allowed_company_ids": companies.ids},
+                        },
+                    )["Store"]["activityGroups"]
                     other_activity_group = next(ag for ag in activity_groups if ag['model'] == 'mail.activity')
                     self.assertEqual(other_activity_group["total_count"], 5)
 

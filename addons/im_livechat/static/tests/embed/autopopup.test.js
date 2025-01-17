@@ -4,7 +4,7 @@ import {
     loadDefaultEmbedConfig,
 } from "@im_livechat/../tests/livechat_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { contains, start, startServer } from "@mail/../tests/mail_test_helpers";
+import { contains, setupChatHub, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { Command, onRpc, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -17,7 +17,7 @@ test("persisted session", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ guest_id: guestId, fold_state: "open" }),
+            Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
         livechat_active: true,
@@ -32,6 +32,7 @@ test("persisted session", async () => {
             livechatUserId: serverState.publicUserId,
         })
     );
+    setupChatHub({ opened: [channelId] });
     await start({
         authenticateAs: { ...pyEnv["mail.guest"].read(guestId)[0], _name: "mail.guest" },
     });
@@ -41,12 +42,10 @@ test("persisted session", async () => {
 test("rule received in init", async () => {
     await startServer();
     await loadDefaultEmbedConfig();
-    onRpc("/im_livechat/init", () => {
-        return {
-            available_for_me: true,
-            rule: { action: "auto_popup", auto_popup_delay: 0 },
-        };
-    });
+    onRpc("/im_livechat/init", () => ({
+        available_for_me: true,
+        rule: { action: "auto_popup", auto_popup_delay: 0 },
+    }));
     await start({ authenticateAs: false });
     await contains(".o-mail-ChatWindow");
 });

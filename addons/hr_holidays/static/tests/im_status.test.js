@@ -3,7 +3,7 @@ import { describe, test } from "@odoo/hoot";
 import { Persona } from "@mail/core/common/persona_model";
 import { startServer, start, openDiscuss, contains } from "@mail/../tests/mail_test_helpers";
 
-import { Command, serverState, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { serverState, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { defineHrHolidaysModels } from "@hr_holidays/../tests/hr_holidays_test_helpers";
 
 describe.current.tags("desktop");
@@ -15,10 +15,7 @@ test("change icon on change partner im_status for leave variants", async () => {
         im_status: "online",
         out_of_office_date_end: "2023-01-01",
     });
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
-        channel_type: "chat",
-    });
+    const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     patchWithCleanup(Persona, { IM_STATUS_DEBOUNCE_DELAY: 0 });
     await start();
     await openDiscuss(channelId);

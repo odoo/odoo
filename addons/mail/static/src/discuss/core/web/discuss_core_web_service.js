@@ -32,18 +32,7 @@ export class DiscussCoreWeb {
             }
             const chat = await this.store.getChat({ partnerId });
             if (chat && !this.ui.isSmall) {
-                this.store.chatHub.opened.add({ thread: chat });
-            }
-        });
-        this.busService.subscribe("discuss.Thread/fold_state", async (data) => {
-            const thread = await this.store.Thread.getOrFetch(data);
-            if (data.fold_state && thread && data.foldStateCount > thread.foldStateCount) {
-                thread.foldStateCount = data.foldStateCount;
-                thread.state = data.fold_state;
-                if (thread.state === "closed") {
-                    const chatWindow = this.store.ChatWindow.get({ thread });
-                    chatWindow?.close({ notifyState: false });
-                }
+                chat.openChatWindow({ focus: false });
             }
         });
         this.env.bus.addEventListener("mail.message/delete", ({ detail: { message } }) => {

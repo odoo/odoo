@@ -154,14 +154,15 @@ class LivechatController(http.Controller):
                 store.add(welcome_steps)
             operator = request.env["res.partner"].sudo().browse(channel_vals["livechat_operator_id"])
             channel_info = {
+                "fetchChannelInfoState": "fetched",
                 "id": -1,  # only one temporary thread at a time, id does not matter.
                 "isLoaded": True,
                 "livechat_operator_id": Store.One(
                     operator, ["avatar_128", "user_livechat_username"]
                 ),
                 "name": channel_vals["name"],
+                "open_chat_window": True,
                 "scrollUnread": False,
-                "state": "open",
                 "channel_type": "livechat",
                 "chatbot": chatbot_data,
             }
@@ -182,10 +183,16 @@ class LivechatController(http.Controller):
                     post_joined_message=False
                 )
             channel = channel.with_context(guest=guest)  # a new guest was possibly created
-            channel.channel_member_ids.filtered(lambda m: m.is_self).fold_state = "open"
             if not chatbot_script or chatbot_script.operator_partner_id != channel.livechat_operator_id:
                 channel._broadcast([channel.livechat_operator_id.id])
-            store.add(channel, extra_fields={"isLoaded": not chatbot_script, "scrollUnread": False})
+            store.add(
+                channel,
+                extra_fields={
+                    "isLoaded": not chatbot_script,
+                    "open_chat_window": True,
+                    "scrollUnread": False,
+                },
+            )
             if guest:
                 store.add_global_values(guest_token=guest._format_auth_cookie())
         request.env["res.users"]._init_store_data(store)

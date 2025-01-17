@@ -55,7 +55,7 @@ class Website(models.Model):
                         # update the channel to link it to the current guest.
                         chat_request_channel.write({'channel_member_ids': [
                             Command.unlink(channel_guest_member.id),
-                            Command.create({'guest_id': current_guest.id, 'fold_state': 'open'})
+                            Command.create({'guest_id': current_guest.id})
                         ]})
                     if not current_guest and channel_guest_member:
                         channel_guest_member.guest_id._set_auth_cookie()
@@ -64,6 +64,7 @@ class Website(models.Model):
                     chat_request_session = {
                         "id": chat_request_channel.id,
                         "model": "discuss.channel",
+                        "open_chat_window": True,
                     }
         return chat_request_session
 

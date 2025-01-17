@@ -1,4 +1,5 @@
 import {
+    assertChatHub,
     click,
     contains,
     defineMailModels,
@@ -10,6 +11,7 @@ import {
     openDiscuss,
     openFormView,
     scroll,
+    setupChatHub,
     start,
     startServer,
     triggerEvents,
@@ -281,13 +283,13 @@ test("mark channel as fetched when a new message is loaded", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
     onRpcBefore("/mail/data", (args) => {
-        if (args.init_messaging) {
+        if (args.fetch_params.includes("init_messaging")) {
             asyncStep(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
@@ -299,13 +301,17 @@ test("mark channel as fetched when a new message is loaded", async () => {
         expect(args[0][0]).toBe(channelId);
         asyncStep("rpc:channel_fetch");
     });
+    setupChatHub({ opened: [channelId] });
     await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            init_messaging: {},
-            failures: true,
-            systray_get_activities: true,
+            fetch_params: [
+                "failures",
+                "systray_get_activities",
+                ["discuss.channel", [channelId]],
+                "init_messaging",
+            ],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
@@ -695,9 +701,7 @@ test("chat window header should not have unread counter for non-channel thread",
     await contains(".o-mail-ChatWindow-counter", { count: 0, text: "1" });
 });
 
-test("[technical] opening a non-channel chat window should not call channel_fold", async () => {
-    // channel_fold should not be called when opening non-channels in chat
-    // window, because there is no server sync of fold state for them.
+test("non-channel chat window are saved", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "test" });
     const messageId = pyEnv["mail.message"].create({
@@ -713,18 +717,21 @@ test("[technical] opening a non-channel chat window should not call channel_fold
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
     });
-    onRpcBefore("/discuss/channel/fold", () => {
-        const message = "should not call channel_fold when opening a non-channel chat window";
-        expect.step(message);
-        console.error(message);
-        throw Error(message);
-    });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow", { count: 0 });
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow");
+    assertChatHub({ opened: [{ id: partnerId, model: "res.partner" }] });
+});
+
+test("non-channel chat window are restored", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "test partner" });
+    setupChatHub({ opened: [{ id: partnerId, model: "res.partner" }] });
+    await start();
+    await contains(".o-mail-ChatWindow:contains('test partner')");
 });
 
 test("Thread messages are only loaded once", async () => {

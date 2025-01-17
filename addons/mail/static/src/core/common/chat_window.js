@@ -149,9 +149,9 @@ export class ChatWindow extends Component {
         chatWindow.fold();
     }
 
-    async close(options) {
+    close(options) {
         const chatWindow = toRaw(this.props.chatWindow);
-        await chatWindow.close(options);
+        chatWindow.close(options);
     }
 
     get actionsMenuTitleText() {

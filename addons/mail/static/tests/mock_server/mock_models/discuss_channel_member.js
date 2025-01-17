@@ -6,7 +6,6 @@ import { serializeDateTime, today } from "@web/core/l10n/dates";
 export class DiscussChannelMember extends models.ServerModel {
     _name = "discuss.channel.member";
 
-    fold_state = fields.Generic({ default: "closed" });
     is_pinned = fields.Generic({ compute: "_compute_is_pinned" });
     unpin_dt = fields.Datetime({ string: "Unpin date" });
     message_unread_counter = fields.Generic({ default: 0 });
@@ -61,44 +60,6 @@ export class DiscussChannelMember extends models.ServerModel {
             ["model", "=", "discuss.channel"],
             ["id", ">=", member.new_message_separator],
         ]);
-    }
-
-    /**
-     * @param {number} id
-     * @param {string} [state]
-     * @param {number} [state_count]
-     */
-    _channel_fold(id, state, state_count) {
-        const kwargs = getKwArgs(arguments, "id", "state", "state_count");
-        id = kwargs.id;
-        delete kwargs.id;
-        state = kwargs.state;
-        state_count = kwargs.state_count;
-
-        /** @type {import("mock_models").BusBus} */
-        const BusBus = this.env["bus.bus"];
-        /** @type {import("mock_models").MailGuest} */
-        const MailGuest = this.env["mail.guest"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
-
-        const [member] = this.search_read([["id", "=", id]]);
-        if (member.fold_state === state) {
-            return;
-        }
-        this.write([id], { fold_state: state });
-        let target;
-        if (member.partner_id) {
-            [target] = ResPartner.search_read([["id", "=", member.partner_id[0]]]);
-        } else {
-            [target] = MailGuest.search_read([["id", "=", member.guest_id[0]]]);
-        }
-        BusBus._sendone(target, "discuss.Thread/fold_state", {
-            foldStateCount: state_count,
-            id: member.channel_id[0],
-            model: "discuss.channel",
-            fold_state: state,
-        });
     }
 
     /** @param {number[]} ids */

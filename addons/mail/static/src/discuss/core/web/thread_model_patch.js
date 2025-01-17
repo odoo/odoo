@@ -3,10 +3,6 @@ import { Thread } from "@mail/core/common/thread_model";
 import { patch } from "@web/core/utils/patch";
 
 patch(Thread.prototype, {
-    setup() {
-        super.setup(...arguments);
-        this.foldStateCount = 0;
-    },
     onPinStateUpdated() {
         super.onPinStateUpdated();
         if (!this.displayToSelf && !this.isLocallyPinned && this.eq(this.store.discuss.thread)) {
