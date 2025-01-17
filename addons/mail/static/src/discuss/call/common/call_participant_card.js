@@ -205,6 +205,13 @@ export class CallParticipantCard extends Component {
         document.addEventListener("mousemove", onMousemove);
     }
 
+    onTouchMove(ev) {
+        if (!this.props.inset) {
+            return;
+        }
+        this.drag(ev);
+    }
+
     drag(ev) {
         this.state.drag = true;
         const insetEl = this.root.el;
