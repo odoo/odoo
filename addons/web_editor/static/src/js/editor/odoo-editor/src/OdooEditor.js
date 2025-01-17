@@ -862,6 +862,11 @@ export class OdooEditor extends EventTarget {
         let previousItem = null;
         let previousValue = -1;
         const style = this.document.defaultView.getComputedStyle(this.document.body);
+        const smallFontSizeVariables = [
+            "small-twelve-font-size",
+            "small-ten-font-size",
+            "small-eight-font-size",
+        ];
         for (const itemEl of fontSizeDropdownEl.querySelectorAll("[data-dynamic-value]")) {
             const variableName = itemEl.dataset.dynamicValue;
             const strValue = this.options.getCSSVariableValue(variableName, style);
@@ -878,6 +883,13 @@ export class OdooEditor extends EventTarget {
             }
             previousItem = itemEl;
             previousValue = pxValue;
+
+            if (
+                this.options.showResponsiveFontSizesBadges &&
+                smallFontSizeVariables.includes(variableName)
+            ) {
+                itemEl.classList.add("d-none");
+            }
         }
 
         for (const badgeEl of fontSizeDropdownEl.querySelectorAll(".o_we_font_size_badge")) {
