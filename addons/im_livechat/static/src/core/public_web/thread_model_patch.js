@@ -76,6 +76,6 @@ patch(Thread.prototype, {
         if (this.channel_type === "livechat" && this.channel_member_ids.length <= 2 && !force) {
             await this.askLeaveConfirmation(_t("Leaving will end the livechat. Proceed leaving?"));
         }
-        super.leave();
+        super.leaveChannel(...arguments);
     },
 });

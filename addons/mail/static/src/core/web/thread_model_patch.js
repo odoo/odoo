@@ -21,10 +21,6 @@ const threadPatch = {
     get recipientsFullyLoaded() {
         return this.recipientsCount === this.recipients.length;
     },
-    closeChatWindow() {
-        const chatWindow = this.store.ChatWindow.get({ thread: this });
-        chatWindow?.close({ notifyState: false });
-    },
     computeIsDisplayed() {
         if (this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {
             return this.eq(this.store.discuss.thread);
