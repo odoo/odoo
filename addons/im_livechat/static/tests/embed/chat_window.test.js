@@ -10,6 +10,7 @@ import {
     contains,
     inputFiles,
     insertText,
+    onRpcBefore,
     start,
     startServer,
     triggerHotkey,
@@ -20,6 +21,7 @@ import { describe, test } from "@odoo/hoot";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
 import {
+    asyncStep,
     mountWithCleanup,
     patchWithCleanup,
     serverState,
@@ -115,4 +117,34 @@ test("avatar url contains access token for non-internal users", async () => {
             guest.id
         }/avatar_128?access_token=${guest.id}&unique=${deserializeDateTime(guest.write_date).ts}"]`
     );
+});
+
+test("can close confirm livechat with keyboard", async () => {
+    await startServer();
+    await loadDefaultEmbedConfig();
+    onRpcBefore((route) => {
+        if (route === "/im_livechat/visitor_leave_session") {
+            asyncStep(route);
+        }
+    });
+    await start({ authenticateAs: false });
+    await mountWithCleanup(LivechatButton);
+    await click(".o-livechat-LivechatButton");
+    await contains(".o-mail-ChatWindow");
+    await insertText(".o-mail-Composer-input", "Hello");
+    await triggerHotkey("Enter");
+    await contains(".o-mail-Message", { text: "Hello" });
+    await triggerHotkey("Escape");
+    await contains(".o-livechat-CloseConfirmation", {
+        text: "Leaving will end the livechat. Proceed leaving?",
+    });
+    await triggerHotkey("Escape");
+    await contains(".o-livechat-CloseConfirmation", { count: 0 });
+    await triggerHotkey("Escape");
+    await contains(".o-livechat-CloseConfirmation", {
+        text: "Leaving will end the livechat. Proceed leaving?",
+    });
+    await triggerHotkey("Enter");
+    await waitForSteps(["/im_livechat/visitor_leave_session"]);
+    await contains(".o-mail-ChatWindow", { text: "Did we correctly answer your question?" });
 });
