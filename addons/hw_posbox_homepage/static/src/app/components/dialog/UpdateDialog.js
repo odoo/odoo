@@ -27,6 +27,12 @@ export class UpdateDialog extends Component {
     }
 
     async getVersionInfo() {
+        if (!this.store.isLinux) {
+            this.state.odooIsUpToDate = true;
+            this.state.imageIsUpToDate = true;
+            this.state.initialization = false;
+            return
+        }
         try {
             const data = await this.store.rpc({
                 url: "/hw_posbox_homepage/version_info",
@@ -93,7 +99,7 @@ export class UpdateDialog extends Component {
                     <p>Currently fetching update data...</p>
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-3" t-if="this.store.isLinux">
                     <h6>Operating System Update</h6>
                     <div t-if="this.state.imageIsUpToDate" class="text-success px-2 small">
                         Operating system is up to date
@@ -111,7 +117,7 @@ export class UpdateDialog extends Component {
                     </div>
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-3" t-if="this.store.isLinux">
                     <h6>IoT Box Update</h6>
                     <div t-if="this.state.odooIsUpToDate" class="text-success px-2 small">
                         IoT Box is up to date.
