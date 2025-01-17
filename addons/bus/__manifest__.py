@@ -13,7 +13,6 @@
         'web.assets_backend': [
             'bus/static/src/*.js',
             'bus/static/src/services/**/*.js',
-            'bus/static/src/components/**/*',
             'bus/static/src/workers/websocket_worker.js',
             'bus/static/src/workers/websocket_worker_utils.js',
         ],
