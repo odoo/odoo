@@ -81,6 +81,11 @@ class ProductTemplate(models.Model):
                     product._send_availability_status()
         return res
 
+    def _can_return_content(self, field_name=None, access_token=None):
+        if self.sudo().self_order_available and field_name == "image_512":
+            return True
+        return super()._can_return_content(field_name, access_token)
+
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
@@ -114,6 +119,6 @@ class ProductProduct(models.Model):
                 })
 
     def _can_return_content(self, field_name=None, access_token=None):
-        if self.self_order_available and field_name in ["image_128", "image_512"]:
+        if self.sudo().self_order_available and field_name == "image_512":
             return True
         return super()._can_return_content(field_name, access_token)
