@@ -29,6 +29,9 @@ export class BaseHeaderSpecial extends BaseHeader {
         this.dropdownClickedEl = null;
     }
 
+    /**
+     * @param {Event} ev
+     */
     onDropdownShow(ev) {
         // If a dropdown inside the element 'this.hideEl' is clicked while the 
         // header is fixed, we need to scroll the page up so that the 

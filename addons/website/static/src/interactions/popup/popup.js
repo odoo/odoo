@@ -189,7 +189,7 @@ export class Popup extends Interaction {
     }
 
     /**
-     * @param {Event} ev
+     * @param {MouseEvent} ev
      */
     onBtnPrimaryClick(ev) {
         if (this.canBtnPrimaryClosePopup(ev.target)) {
@@ -219,7 +219,7 @@ export class Popup extends Interaction {
     }
 
     /**
-     * @param {Event} ev
+     * @param {HashChangeEvent} ev
      */
     onHashChange(ev) {
         if (this.modalShownOnClickEl) {

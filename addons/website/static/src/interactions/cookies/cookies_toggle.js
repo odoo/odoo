@@ -34,6 +34,9 @@ export class CookiesToggle extends Interaction {
         return this.isModalShown() ? _t("Hide the cookies bar") : _t("Show the cookies bar");
     }
 
+    /**
+     * @param {MouseEvent} ev
+     */
     async onClick(ev) {
         if (ev.currentTarget === this.el) {
             this.services.website_cookies.bus.trigger("cookiesBar.toggle");

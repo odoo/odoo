@@ -60,7 +60,7 @@ export class CookiesBar extends Popup {
     }
 
     /**
-     * @param {Event} ev
+     * @param {MouseEvent} ev
      */
     onAcceptClick(ev) {
         const isFullConsent = ev.target.id === "cookies-consent-all";

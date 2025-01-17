@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { _t } from "@web/core/l10n/translation";
 import { isCSSColor } from "@web/core/utils/colors";
+import { verifyHttpsUrl } from "@website/utils/misc";
 
 export class Countdown extends Interaction {
     static selector = ".s_countdown";
@@ -83,7 +84,7 @@ export class Countdown extends Interaction {
      */
     handleEndCountdownAction() {
         if (this.endAction === "redirect") {
-            const redirectUrl = this.el.dataset.redirectUrl || "/";
+            const redirectUrl = verifyHttpsUrl(this.el.dataset.redirectUrl) || "/";
             if (this.hereBeforeTimerEnds) {
                 this.waitForTimeout(() => window.location = redirectUrl, 500);
             } else {

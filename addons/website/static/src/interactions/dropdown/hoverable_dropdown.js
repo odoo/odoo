@@ -52,7 +52,7 @@ export class HoverableDropdown extends Interaction {
     }
 
     /**
-     * @param {Event} ev
+     * @param {MouseEvent} ev
      * @param {HTMLElement} currentTargetEl
      */
     onMouseEnter(ev, currentTargetEl) {
@@ -76,7 +76,7 @@ export class HoverableDropdown extends Interaction {
     }
 
     /**
-     * @param {Event} ev
+     * @param {MouseEvent} ev
      * @param {HTMLElement} currentTargetEl
      */
     onMouseLeave(ev, targelEl) {

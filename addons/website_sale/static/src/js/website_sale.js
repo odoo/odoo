@@ -1,9 +1,7 @@
 import { hasTouch, isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { rpc } from "@web/core/network/rpc";
-import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
-import { throttleForAnimation } from "@web/core/utils/timing";
+import { utils as uiUtils } from "@web/core/ui/ui_service";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import { extraMenuUpdateCallbacks } from "@website/js/content/menu";
 import "@website/libs/zoomodoo/zoomodoo";
 import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
@@ -664,113 +662,13 @@ publicWidget.registry.WebsiteSaleAccordionProduct = publicWidget.Widget.extend({
     },
 });
 
-publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
-    selector: '#o-carousel-product',
-    disabledInEditableMode: false,
-    events: {
-        'wheel .o_carousel_product_indicators': '_onMouseWheel',
-    },
-
-    /**
-     * @override
-     */
-    async start() {
-        await this._super(...arguments);
-        this._updateCarouselPosition();
-        this.throttleOnResize = throttleForAnimation(this._onSlideCarouselProduct.bind(this));
-        extraMenuUpdateCallbacks.push(this._updateCarouselPosition.bind(this));
-        if (this.$el.find('.carousel-indicators').length > 0) {
-            this.$el.on('slide.bs.carousel.carousel_product_slider', this._onSlideCarouselProduct.bind(this));
-            $(window).on('resize.carousel_product_slider', this.throttleOnResize);
-            this._updateJustifyContent();
-        }
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        this.$el.css('top', '');
-        this.$el.off('.carousel_product_slider');
-        if (this.throttleOnResize) {
-            this.throttleOnResize.cancel();
-        }
-        this._super(...arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _updateCarouselPosition() {
-        let size = 5;
-        for (const el of document.querySelectorAll('.o_top_fixed_element')) {
-            size += $(el).outerHeight();
-        }
-        this.$el.css('top', size);
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Center the selected indicator to scroll the indicators list when it
-     * overflows.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    _onSlideCarouselProduct: function (ev) {
-        const isReversed = this.$el.css('flex-direction') === "column-reverse";
-        const isLeftIndicators = this.$el.hasClass('o_carousel_product_left_indicators');
-        const $indicatorsDiv = isLeftIndicators ? this.$el.find('.o_carousel_product_indicators') : this.$el.find('.carousel-indicators');
-        let indicatorIndex = $(ev.relatedTarget).index();
-        indicatorIndex = indicatorIndex > -1 ? indicatorIndex : this.$el.find('li.active').index();
-        const $indicator = $indicatorsDiv.find('[data-bs-slide-to=' + indicatorIndex + ']');
-        const indicatorsDivSize = isLeftIndicators && !isReversed ? $indicatorsDiv.outerHeight() : $indicatorsDiv.outerWidth();
-        const indicatorSize = isLeftIndicators && !isReversed ? $indicator.outerHeight() : $indicator.outerWidth();
-        const indicatorPosition = isLeftIndicators && !isReversed ? $indicator.position().top : $indicator.position().left;
-        const scrollSize = isLeftIndicators && !isReversed ? $indicatorsDiv[0].scrollHeight : $indicatorsDiv[0].scrollWidth;
-        let indicatorsPositionDiff = (indicatorPosition + (indicatorSize/2)) - (indicatorsDivSize/2);
-        indicatorsPositionDiff = Math.min(indicatorsPositionDiff, scrollSize - indicatorsDivSize);
-        this._updateJustifyContent();
-        const indicatorsPositionX = isLeftIndicators && !isReversed ? '0' : '-' + indicatorsPositionDiff;
-        const indicatorsPositionY = isLeftIndicators && !isReversed ? '-' + indicatorsPositionDiff : '0';
-        const translate3D = indicatorsPositionDiff > 0 ? "translate3d(" + indicatorsPositionX + "px," + indicatorsPositionY + "px,0)" : '';
-        $indicatorsDiv.css("transform", translate3D);
-    },
-    /**
-     * @private
-     */
-     _updateJustifyContent: function () {
-        const $indicatorsDiv = this.$el.find('.carousel-indicators');
-        $indicatorsDiv.css('justify-content', 'start');
-        if (uiUtils.getSize() <= SIZES.MD) {
-            if (($indicatorsDiv.children().last().position().left + this.$el.find('li').outerWidth()) < $indicatorsDiv.outerWidth()) {
-                $indicatorsDiv.css('justify-content', 'center');
-            }
-        }
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onMouseWheel: function (ev) {
-        ev.preventDefault();
-        if (ev.originalEvent.deltaY > 0) {
-            this.$el.carousel('next');
-        } else {
-            this.$el.carousel('prev');
-        }
-    },
-});
-
 publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend({
     selector: '#o_product_page_reviews',
     disabledInEditableMode: false,
+
+    init() {
+        this.website_menus = this.bindService("website_menus");
+    },
 
     /**
      * @override
@@ -778,7 +676,7 @@ publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend
     async start() {
         await this._super(...arguments);
         this._updateChatterComposerPosition();
-        extraMenuUpdateCallbacks.push(this._updateChatterComposerPosition.bind(this));
+        this.website_menus.registerCallback(this._updateChatterComposerPosition.bind(this));
     },
     /**
      * @override

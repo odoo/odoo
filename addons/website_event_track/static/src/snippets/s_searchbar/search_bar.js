@@ -1,12 +1,11 @@
-/** @odoo-module **/
+import { patch } from "@web/core/utils/patch";
+import { SearchBar } from "@website/snippets/s_searchbar/search_bar";
 
-import publicWidget from '@web/legacy/js/public/public_widget';
-
-publicWidget.registry.searchBar.include({
+patch(SearchBar.prototype, {
     /**
      * @override
      */
-    _getFieldsNames() {
-        return [...this._super(), 'partner_name'];
-    }
+    getFieldsNames() {
+        return [...super.getFieldsNames(), 'partner_name'];
+    },
 });

@@ -59,7 +59,7 @@ The Dashboard for the Sales Manager will include
     ],
     'assets': {
         'web.assets_frontend': [
-            'sale_management/static/src/js/**/*',
+            'sale_management/static/src/interactions/**/*',
         ],
     },
     'application': True,

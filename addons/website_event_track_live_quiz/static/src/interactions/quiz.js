@@ -1,47 +1,26 @@
 import { rpc } from "@web/core/network/rpc";
-import Quiz from "@website_event_track_quiz/js/event_quiz";
+import { patch } from "@web/core/utils/patch";
 
-var WebsiteEventTrackSuggestionQuiz = Quiz.include({
-    /**
-     * @override
-     */
-    willStart: function () {
-        return Promise.all([
-            this._super(...arguments),
-            this._getTrackSuggestion()
-        ]);
+import { Quiz } from "@website_event_track_quiz/interactions/quiz";
+
+patch(Quiz.prototype, {
+    async willStart() {
+        await super.willStart();
+        return this.getTrackSuggestion();
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    _submitQuiz: function () {
-        var self = this;
-        return this._super(...arguments).then(function (data) {
-            if (data.quiz_completed) {
-                self.$('.o_quiz_js_quiz_next_track')
-                    .removeClass('btn-light')
-                    .addClass('btn-secondary');
-            }
-
-            return Promise.resolve(data);
-        });
+    async submitQuiz() {
+        const data = await super.submitQuiz();
+        if (data.quiz_completed) {
+            const nextTrackEl = this.el.querySelector(".o_quiz_js_quiz_next_track");
+            nextTrackEl.classList.remove("btn-light");
+            nextTrackEl.classList.add("btn-secondary");
+        }
+        return data;
     },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    _getTrackSuggestion: function () {
-        var self = this;
-        return rpc('/event_track/get_track_suggestion', {
+    async getTrackSuggestion() {
+        const suggestion = await this.waitFor(rpc('/event_track/get_track_suggestion', {
             track_id: this.track.id,
-        }).then(function (suggestion) {
-            self.nextSuggestion = suggestion;
-            return Promise.resolve();
-        });
-    }
+        }));
+        this.nextSuggestion = suggestion;
+    },
 });
-
-export default WebsiteEventTrackSuggestionQuiz;

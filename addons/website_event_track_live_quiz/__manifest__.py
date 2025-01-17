@@ -19,6 +19,7 @@
     'auto_install': True,
     'assets': {
         'web.assets_frontend': [
+            'website_event_track_live_quiz/static/src/interactions/**/*',
             'website_event_track_live_quiz/static/src/js/**/*',
             'website_event_track_live_quiz/static/src/xml/**/*',
         ],

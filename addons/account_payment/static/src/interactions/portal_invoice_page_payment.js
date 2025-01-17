@@ -1,18 +1,16 @@
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 
-publicWidget.registry.PortalInvoicePagePayment = publicWidget.Widget.extend({
-    selector: "#portal_pay",
+export class PortalInvoicePagePayment extends Interaction {
+    static selector = "#portal_pay";
 
-    /**
-     * Show the payment dialog when the context parameter is set.
-     *
-     * @returns {void}
-     */
-    start() {
+    setup() {
         if (this.el.dataset.payment) {
-            const paymentDialog = new Modal("#pay_with");
-            paymentDialog.show();
+            (new Modal("#pay_with")).show();
         }
-        return this._super(...arguments);
-    },
-});
+    }
+}
+
+registry
+    .category("public.interactions")
+    .add("account_payment.portal_invoice_page_payment", PortalInvoicePagePayment);

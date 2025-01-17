@@ -1,28 +1,14 @@
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 
-publicWidget.registry.EventLeaderboard = publicWidget.Widget.extend({
-    selector: '.o_wevent_quiz_leaderboard',
+export class Leaderboard extends Interaction {
+    static selector = ".o_wevent_quiz_leaderboard .o_wevent_quiz_scroll_to";
 
-    /**
-     * Basic override to scroll to current visitor's position.
-     */
-    start: function () {
-        var self = this;
-        return this._super(...arguments).then(function () {
-            var $scrollTo = self.$('.o_wevent_quiz_scroll_to');
-            if ($scrollTo.length !== 0) {
-                var offset = $('.o_header_standard').height();
-                var $appMenu = $('.o_main_navbar');
-                if ($appMenu.length !== 0) {
-                    offset += $appMenu.height();
-                }
-                window.scrollTo({
-                    top: $scrollTo.offset().top - offset,
-                    behavior: 'smooth'
-                });
-            }
-        });
+    start() {
+        this.el.scrollIntoView({ behavior: "smooth" });
     }
-});
+}
 
-export default publicWidget.registry.EventLeaderboard;
+registry
+    .category("public.interactions")
+    .add("website_event_track_quiz.leaderboard", Leaderboard);

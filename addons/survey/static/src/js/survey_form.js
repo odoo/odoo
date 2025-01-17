@@ -493,6 +493,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         if (result && !result.error) {
             this.$(".o_survey_form_content").empty();
             this.$(".o_survey_form_content").html(result.survey_content);
+            // TODO Remove upon conversion to Interaction.
+            self.trigger_up("widgets_start_request", { $target: this.$el.find(".o_wslides_share") });
 
             if (result.survey_progress && this.$surveyProgress.length !== 0) {
                 this.$surveyProgress.html(result.survey_progress);
