@@ -120,13 +120,15 @@ class StockTraceabilityReport(models.TransientModel):
             whether the product is incoming or outgoing.
         """
         partner_name = move_line.picking_partner_id.name
-        return (
-            (partner_name, move_line.location_dest_id.name)
-            if move_line.picking_id.picking_type_code == 'incoming'
-            else (move_line.location_id.name, partner_name)
-            if move_line.picking_id.picking_type_code == 'outgoing'
-            else (move_line.location_id.name, move_line.location_dest_id.name)
-        )
+        source_name = move_line.location_id.display_name
+        destination_name = move_line.location_dest_id.display_name
+
+        if (picking_code := move_line.picking_id.picking_type_code) == 'incoming':
+            return partner_name, destination_name
+        elif picking_code == 'outgoing':
+            return source_name, partner_name
+        else:
+            return source_name, destination_name
 
     def _make_dict_move(self, level, parent_id, move_line, unfoldable=False):
         res_model, res_id, ref = self._get_reference(move_line)
