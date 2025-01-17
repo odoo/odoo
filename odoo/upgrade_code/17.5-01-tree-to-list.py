@@ -7,7 +7,7 @@ def upgrade(file_manager):
         return
 
     reg_tree_to_list_xml_mode = re.compile(r"""(<field[^>]* name=["'](view_mode|name|binding_view_types)["'][^>]*>([^<>]+,)?\s*)tree(\s*(,[^<>]+)?</field>)""")
-    reg_tree_to_list_tag = re.compile(r'\n([^:\n]|:(?!//))+([<,/])tree([ \n\r,>/])')
+    reg_tree_to_list_tag = re.compile(r'(\n(?:[^:\n]|:(?!//))+)([<,/])tree([ \n\r,>/])')
     reg_tree_to_list_xpath = re.compile(r"""(<xpath[^>]* expr=['"])([^<>]*/)?tree(/|[\['"])""")
     reg_tree_to_list_ref = re.compile(r'tree_view_ref')
     reg_tree_to_list_mode = re.compile(r"""(mode=['"][^'"]*)tree([^'"]*['"])""")
@@ -21,7 +21,7 @@ def upgrade(file_manager):
         content = file.content
         content = content.replace(' tree view ', ' list view ')
         content = reg_tree_to_list_xml_mode.sub(r'\1list\4', content)
-        content = reg_tree_to_list_tag.sub(r'\1list\2', content)
+        content = reg_tree_to_list_tag.sub(r'\1\2list\3', content)
         content = reg_tree_to_list_xpath.sub(r'\1\2list\3', content)
         content = reg_tree_to_list_ref.sub('list_view_ref', content)
         content = reg_tree_to_list_mode.sub(r'\1list\2', content)
