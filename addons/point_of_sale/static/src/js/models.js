@@ -11,6 +11,8 @@ var utils = require('web.utils');
 var { Gui } = require('point_of_sale.Gui');
 const { batched, uuidv4 } = require("point_of_sale.utils");
 const { escape } = require("@web/core/utils/strings");
+const { rpcService } = require('@web/core/network/rpc_service');
+const { isIOS, isIosApp } = require('@web/core/browser/feature_detection');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -162,7 +164,30 @@ class PosGlobalState extends PosModel {
         this.uom_unit_id = uom_id[1];
     }
 
+    shouldInvoiceNewTab(actionRecord) {
+        return (
+            (isIOS() || isIosApp()) &&
+            actionRecord.type === "ir.actions.report" &&
+            actionRecord.report_type === "qweb-pdf"
+        );
+    }
+
+    async loadInvoiceReportAction() {
+        try {
+            const future_rpc = rpcService.start({ bus: this.env.posbus });
+            const action = await future_rpc("/web/action/load", {
+                action_id: this.invoiceReportAction,
+            });
+            this.invoiceActionRecord = action;
+        } catch {
+            console.warn(
+                "Error loading invoice report action. In an iOS environment, " +
+                "invoicing an order will replace the current page which will cause reload of the app.");
+        }
+    }
+
     async after_load_server_data(){
+        await this.loadInvoiceReportAction();
         await this.load_product_uom_unit();
         await this.load_orders();
         this.set_start_order();
