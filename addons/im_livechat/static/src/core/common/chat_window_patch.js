@@ -13,6 +13,7 @@ patch(ChatWindow.prototype, {
         this.CW_LIVECHAT_STEP = CW_LIVECHAT_STEP;
     },
     onCloseConfirmationDialog() {
+        this.props.chatWindow.autofocus++;
         this.props.chatWindow.actionsDisabled = false;
         this.props.chatWindow.livechatStep = CW_LIVECHAT_STEP.NONE;
     },

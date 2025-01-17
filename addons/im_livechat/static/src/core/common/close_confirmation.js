@@ -6,7 +6,7 @@ export class CloseConfirmation extends Component {
     static props = ["onCloseConfirmationDialog", "onClickLeaveConversation"];
 
     setup() {
-        useAutofocus({ refName: "root" });
+        useAutofocus({ refName: "confirm" });
     }
 
     onKeydown(ev) {
