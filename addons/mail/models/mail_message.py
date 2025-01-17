@@ -932,7 +932,7 @@ class MailMessage(models.Model):
             # sudo: mail.message - reading reactions on accessible message is allowed
             Store.Many("reaction_ids", rename="reactions", sudo=True),
             # sudo: res.partner: reading limited data of recipients is acceptable
-            Store.Many("partner_ids", ["name", "write_date"], rename="recipients", sudo=True),
+            Store.Many("partner_ids", ["avatar_128", "name"], rename="recipients", sudo=True),
             "res_id",  # keep for iOS app
             "subject",
             # sudo: mail.message.subtype - reading description on accessible message is allowed
@@ -1081,10 +1081,10 @@ class MailMessage(models.Model):
             }
             # sudo: mail.message: access to author is allowed
             if guest_author := message.sudo().author_guest_id:
-                data["author"] = Store.One(guest_author, ["name", "write_date"])
+                data["author"] = Store.One(guest_author, ["avatar_128", "name"])
             # sudo: mail.message: access to author is allowed
             elif author := message.sudo().author_id:
-                data["author"] = Store.One(author, ["name", "is_company", "user", "write_date"])
+                data["author"] = Store.One(author, ["avatar_128", "name", "is_company", "user"])
             store.add(message, data)
 
     def _extras_to_store(self, store: Store, format_reply):
