@@ -1,5 +1,4 @@
 import { Component } from "@odoo/owl";
-import { CONNECTION_STATUS } from "@bus/services/bus_monitoring_service";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
@@ -8,20 +7,12 @@ import { useService } from "@web/core/utils/hooks";
  * @extends {Component<Props, Env>}
  */
 export class BusConnectionAlert extends Component {
-    static template = "bus.BusConnectionAlert";
+    static template = "mail.BusConnectionAlert";
     static props = {};
 
     setup() {
         this.busMonitoring = useService("bus.monitoring_service");
-        this.CONNECTION_STATUS = CONNECTION_STATUS;
-    }
-
-    /**
-     * Determine if a border should be shown around the screen in addition to
-     * the failure message when an issue is detected.
-     */
-    get showBorderOnFailure() {
-        return false;
+        this.store = useService("mail.store");
     }
 }
 
