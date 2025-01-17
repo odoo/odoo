@@ -15,7 +15,6 @@ ROUTE_NAMES = {
     'one_step': _lt('Receive in 1 step (stock)'),
     'two_steps': _lt('Receive in 2 steps (input + stock)'),
     'three_steps': _lt('Receive in 3 steps (input + quality + stock)'),
-    'crossdock': _lt('Cross-Dock'),
     'ship_only': _lt('Deliver in 1 step (ship)'),
     'pick_ship': _lt('Deliver in 2 steps (pick + ship)'),
     'pick_pack_ship': _lt('Deliver in 3 steps (pick + pack + ship)'),
@@ -80,7 +79,6 @@ class StockWarehouse(models.Model):
     qc_type_id = fields.Many2one('stock.picking.type', 'Quality Control Type', check_company=True, copy=False)
     store_type_id = fields.Many2one('stock.picking.type', 'Storage Type', check_company=True, copy=False)
     xdock_type_id = fields.Many2one('stock.picking.type', 'Cross Dock Type', check_company=True, copy=False)
-    crossdock_route_id = fields.Many2one('stock.route', 'Crossdock Route', ondelete='restrict', copy=False)
     reception_route_id = fields.Many2one('stock.route', 'Receipt Route', ondelete='restrict', copy=False)
     delivery_route_id = fields.Many2one('stock.route', 'Delivery Route', ondelete='restrict', copy=False)
     resupply_wh_ids = fields.Many2many(
@@ -475,7 +473,7 @@ class StockWarehouse(models.Model):
     def _create_or_update_route(self):
         """ Create or update the warehouse's routes.
         _get_routes_values method return a dict with:
-            - route field name (e.g: crossdock_route_id).
+            - route field name (e.g: delivery_route_id).
             - field that trigger an update on the route (key 'depends').
             - routing_key used in order to find rules contained in the route.
             - create values.
@@ -578,21 +576,6 @@ class StockWarehouse(models.Model):
                     'propagate_carrier': True
                 }
             },
-            'crossdock_route_id': {
-                'routing_key': 'crossdock',
-                'depends': ['delivery_steps', 'reception_steps'],
-                'route_update_values': {
-                    'name': self._format_routename(route_type='crossdock'),
-                    'active': self.reception_steps != 'one_step' and self.delivery_steps != 'ship_only'
-                },
-                'route_create_values': {
-                    'product_selectable': True,
-                    'product_categ_selectable': True,
-                    'active': self.delivery_steps != 'ship_only' and self.reception_steps != 'one_step',
-                    'company_id': self.company_id.id,
-                    'sequence': 20,
-                },
-            }
         }
 
     def _get_receive_routes_values(self, installed_depends):
@@ -794,9 +777,6 @@ class StockWarehouse(models.Model):
                     self.Routing(supplier_loc, warehouse.lot_stock_id, warehouse.in_type_id, 'pull'),
                     self.Routing(warehouse.wh_input_stock_loc_id, warehouse.wh_qc_stock_loc_id, warehouse.qc_type_id, 'push'),
                     self.Routing(warehouse.wh_qc_stock_loc_id, warehouse.lot_stock_id, warehouse.store_type_id, 'push')],
-                'crossdock': [
-                    self.Routing(supplier_loc, customer_loc, warehouse.in_type_id, 'pull'),
-                    self.Routing(warehouse.wh_input_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.xdock_type_id, 'push')],
                 'ship_only': [self.Routing(warehouse.lot_stock_id, customer_loc, warehouse.out_type_id, 'pull')],
                 'pick_ship': [
                     self.Routing(warehouse.lot_stock_id, customer_loc, warehouse.pick_type_id, 'pull'),
@@ -823,7 +803,6 @@ class StockWarehouse(models.Model):
             'three_steps': [
                 self.Routing(self.wh_input_stock_loc_id, self.wh_qc_stock_loc_id, self.qc_type_id, 'push'),
                 self.Routing(self.wh_qc_stock_loc_id, self.lot_stock_id, self.store_type_id, 'push')],
-            'crossdock': [self.Routing(self.wh_input_stock_loc_id, self.wh_output_stock_loc_id, self.xdock_type_id, 'push')],
         }
 
     def _get_inter_warehouse_route_values(self, supplier_warehouse):
