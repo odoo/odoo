@@ -1,7 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { loadBundle } from "@web/core/assets";
-import { loadSpreadsheetDependencies } from "./helpers";
 
 const actionRegistry = registry.category("actions");
 
@@ -17,7 +16,6 @@ const actionRegistry = registry.category("actions");
 export function addSpreadsheetActionLazyLoader(actionName, path, displayName) {
     const actionLazyLoader = async (env, action) => {
         // load the bundle which should redefine the action in the registry
-        await loadSpreadsheetDependencies();
         await loadBundle("spreadsheet.o_spreadsheet");
 
         if (actionRegistry.get(actionName) === actionLazyLoader) {
