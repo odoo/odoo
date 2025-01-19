@@ -2336,16 +2336,17 @@ class AccountMoveLine(models.Model):
         return plan_list, self.browse(all_aml_ids)
 
     def _reconcile_pre_hook(self):
-        not_paid_invoices = self.move_id.filtered(lambda move:
-            move.is_invoice(include_receipts=True)
-            and move.payment_state not in ('paid', 'in_payment')
-        )
-        return {'not_paid_invoices': not_paid_invoices}
+        invoices = self.move_id.filtered(lambda move: move.is_invoice(include_receipts=True))
+        return {
+            'not_paid_invoices': invoices.filtered(lambda inv: inv.payment_state not in ('paid', 'in_payment')),
+            'in_payment_invoices': invoices.filtered(lambda inv: inv.payment_state == 'in_payment'),
+        }
 
     def _reconcile_post_hook(self, data):
-        data['not_paid_invoices']\
-            .filtered(lambda move: move.payment_state in ('paid', 'in_payment'))\
-            ._invoice_paid_hook()
+        (
+            data['not_paid_invoices'].filtered(lambda inv: inv.payment_state in ('paid', 'in_payment'))
+            + data['in_payment_invoices'].filtered(lambda inv: inv.payment_state == 'paid')
+        )._invoice_paid_hook()
 
     @api.model
     def _reconcile_plan(self, reconciliation_plan):
