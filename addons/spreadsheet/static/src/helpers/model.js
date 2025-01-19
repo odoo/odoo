@@ -2,7 +2,6 @@
 
 import { parse, helpers, iterateAstNodes } from "@odoo/o-spreadsheet";
 import { isLoadingError } from "@spreadsheet/o_spreadsheet/errors";
-import { loadBundle } from "@web/core/assets";
 import { OdooSpreadsheetModel } from "@spreadsheet/model";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 
@@ -138,7 +137,6 @@ export async function freezeOdooData(model) {
                 figure.tag === "chart" &&
                 (figure.data.type.startsWith("odoo_") || figure.data.type === "geo")
             ) {
-                await loadBundle("web.chartjs_lib");
                 const img = odooChartToImage(model, figure);
                 figure.tag = "image";
                 figure.data = {
