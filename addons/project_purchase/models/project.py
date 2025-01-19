@@ -172,7 +172,6 @@ class Project(models.Model):
             query = self.env['account.move.line'].sudo()._search([
                 ('move_id.move_type', 'in', ['in_invoice', 'in_refund']),
                 ('parent_state', 'in', ['draft', 'posted']),
-                ('price_subtotal', '>', 0),
                 ('id', 'not in', purchase_order_line_invoice_line_ids),
             ])
             query.add_where('account_move_line.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
