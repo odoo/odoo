@@ -3919,7 +3919,7 @@ msgid ""
 "Convert helpdesk tickets to field service tasks.\n"
 msgstr ""
 "\n"
-"Преобразование заявок в службу технической поддержки в задачи по обслуживанию на местах.\n"
+"Преобразование заявок службы поддержки в задачи сервисной службы.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_unspsc
@@ -3979,7 +3979,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Создание отчетов для полевой службы\n"
+"Создание отчётов для сервисной службы\n"
 "================================\n"
 "\n"
 
@@ -4962,17 +4962,17 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Управление полевыми службами\n"
+"Управление сервисной службой\n"
 "=========================\n"
-"Этот модуль добавляет функции, необходимые для современного управления полевыми услугами.\n"
+"Этот модуль добавляет функции, необходимые для современного управления сервисной службой.\n"
 "Он устанавливает следующие приложения:\n"
-"- Проект\n"
-"- Timesheet\n"
+"- Проекты\n"
+"- Учёт рабочего времени\n"
 "\n"
 "Добавляет следующие возможности:\n"
-"- отчеты по задачам\n"
-"- Приложение FSM с пользовательским представлением для работника на месте\n"
-"- добавление продуктов в задания\n"
+"- отчёты по задачам\n"
+"- приложение FSM с пользовательским интерфейсом для выездного сотрудника\n"
+"- добавление продуктов в задачи\n"
 "\n"
 
 #. module: base
@@ -5093,72 +5093,70 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Функциональные\n"
-"----------\n"
+"Функциональность\n"
+"-----------------\n"
 "\n"
-"Уметь создавать журналы в Odoo для создания электронных счетов-фактур клиентов и отчетов в AFIP (через веб-сервисы).\n"
-"Доступны следующие варианты:\n"
+"Позволяет создавать журналы в Odoo для формирования электронных счетов для клиентов и отправки их в AFIP (через веб-сервисы).\n"
+"Доступные опции:\n"
 "\n"
-"    * Электронный счет-фактура - веб-сервис\n"
-"    * Экспортный ваучер - веб-сервис\n"
-"    * Электронная фискальная облигация - веб-сервис\n"
+"   * Электронный счёт - Веб-сервис\n"
+"   * Ваучер на экспорт - Веб-сервис\n"
+"   * Электронная фискальная облигация - Веб-сервис\n"
 "\n"
-"В электронных журналах, если вы подтвердите счет-фактуру, она будет подтверждена как в Odoo, так и в AFIP. Эта валидация\n"
-"происходит в тот момент, когда мы получаем из AFIP состояние \"одобрен/одобрен с замечаниями/отклонен\". Если счет-фактура\n"
-"был отклонен AFIP, он не будет опубликован в системе, и будет показано всплывающее сообщение с деталями ошибки (причинами отклонения)\n"
-"и подсказкой о том, в чем может быть проблема.\n"
+"В электронных журналах при валидации счёта он будет проверен как в Odoo, так и в AFIP. Проверка выполняется мгновенно, и мы получаем состояние: \n"
+"«одобрено/одобрено с замечанием/отклонено» от AFIP. Если счёт был отклонён AFIP, он не будет проведён в системе, а всплывающее сообщение покажет\n"
+"детали ошибки (причины отклонения) и подсказку о возможной проблеме.\n"
 "\n"
-"Для целей аудита и поиска неисправностей мы также добавили меню \"Consulit Invoice in AFIP\", которое позволяет нам просмотреть счета, ранее отправленные в AFIP, и последний использованный номер\n"
-"отправленные в AFIP, и последний номер, использованный в качестве поддержки для любых возможных проблем с синхронизацией последовательностей между Odoo и AFIP.\n"
+"Для целей аудита и устранения неполадок добавлено меню «Проверить счёт в AFIP», которое позволяет просматривать ранее отправленные в AFIP счета \n"
+"и последний использованный номер в качестве поддержки для возможных проблем с синхронизацией последовательностей между Odoo и AFIP.\n"
 "\n"
-"    ПРИМЕЧАНИЕ: Из представления формы журнала мы можем принудительно синхронизировать последовательности odoo для каждого из типов документов в\n"
-"    с последними номерами, зарегистрированными в AFIP.\n"
+"ПРИМЕЧАНИЕ: На форме Журнала можно вручную синхронизировать последовательности Odoo с каждым типом документа, используя последние номера,\n"
+"зарегистрированные в AFIP.\n"
 "\n"
-"В счетах поставщиков мы добавили функцию, которая может быть настроена в настройках учета, чтобы иметь возможность проверять\n"
-"счетов поставщиков в AFIP, чтобы проверить, являются ли счета поставщиков реальными (более подробную информацию можно найти в описании настроек).\n"
+"Для счетов поставщиков добавлена функция, которую можно настроить в параметрах учёта. Она позволяет проверять счета поставщиков в AFIP для подтверждения\n"
+"их подлинности (подробности см. в описании настройки).\n"
 "\n"
-"Конфигурация:\n"
+"Настройка:\n"
 "\n"
-"1. Перейдите в раздел Настройки учета > Аргентинская локализация\n"
+"1. Перейдите в Настройки учёта > Секция «Аргентинская локализация»\n"
 "\n"
-"    1.1. Настройте режим веб-сервисов AFIP:\n"
+"1.1. Настройте режим веб-сервисов AFIP:\n"
 "\n"
-"    * Тестовая среда, чтобы использовать демонстрационные сертификаты, которые будут использоваться для тестирования экземпляра и для выставления НЕ\n"
-"      реальные счета-фактуры в AFIP. только для тестирования. Для демонстрационных экземпляров уже предопределено, и вам не нужно будет настраивать\n"
-"      (в AFIP это обычно называется Homologation environment).\n"
-"    * Производственная среда предназначена для генерации реальных сертификатов и легальных счетов-фактур в AFIP,\n"
+"* Тестовая среда: используется для тестовых сертификатов, которые позволяют проверять систему без отправки реальных счетов в AFIP\n"
+"(в AFIP часто называется средой \"Гомологации\").\n"
+"* Рабочая среда: используется для генерации реальных сертификатов и отправки юридически значимых счетов в AFIP.\n"
 "\n"
-"    1.2. Настройте свой сертификат AFIP: Если вы находитесь в демонстрационном экземпляре, он будет установлен по умолчанию. Если вы\n"
-"         если вы находитесь в производственном экземпляре, просто загрузите свой AFIP-сертификат\n"
+"1.2. Настройте ваш сертификат AFIP: если вы работаете в тестовой среде, он будет установлен по умолчанию. \n"
+"Если вы в рабочей среде, загрузите свой сертификат AFIP.\n"
 "\n"
-"    1.3. В качестве опции вы можете указать, хотите ли вы, чтобы в AFIP можно было проверять счета поставщиков.\n"
+"1.3. Опционально настройте проверку счетов поставщиков в AFIP.\n"
 "\n"
-"2. Создайте журналы продаж, которые будут представлять каждый из ваших кассовых аппаратов AFIP (доступных на портале AFIP), которые вы хотите использовать в Odoo.\n"
+"2. Создайте журналы продаж, представляющие каждый из ваших POS AFIP (доступных в портале AFIP), которые вы хотите использовать в Odoo.\n"
 "\n"
-"    2.1. Поле \"Использовать документы\" установлено по умолчанию, пожалуйста, не изменяйте его\n"
-"    2.2. Установите систему AFIP POS для одной из электронных систем.\n"
+"2.1. Поле «Документы» установлено по умолчанию, не изменяйте его.\n"
+"2.2. Укажите систему POS AFIP для одного из электронных вариантов.\n"
 "\n"
-"        * Электронный счет-фактура - веб-сервис'\n"
-"        * Электронная фискальная облигация - веб-сервис'\n"
-"        * Экспортный ваучер - веб-сервис'\n"
+"      * Электронный счёт - Веб-сервис\n"
+"      * Электронная фискальная облигация - Веб-сервис\n"
+"      * Ваучер на экспорт - Веб-сервис\n"
 "\n"
-"    2.3. Установите номер AFIP POS и адрес AFIP POS с учетом того, что вы настроили на портале AFIP.\n"
+"2.3. Укажите номер POS AFIP и адрес POS AFIP, основываясь на настройках в вашем портале AFIP.\n"
 "\n"
-"    ПРИМЕЧАНИЕ: Вы можете использовать кнопку \"Проверить доступный AFIP POS\" в форме журнала, чтобы подтвердить использование для создания журналов.\n"
+"ПРИМЕЧАНИЕ: Вы можете использовать кнопку «Проверить доступные POS AFIP» на форме Журнала, чтобы убедиться в правильности настроек.\n"
 "\n"
-"Для получения дополнительной информации об аргентинском электронном выставлении счетов-фактур перейдите по ссылке http://www.afip.gob.ar/fe/ayuda.asp\n"
+"Для получения дополнительной информации об электронных счетах в Аргентине посетите http://www.afip.gob.ar/fe/ayuda.asp.\n"
 "\n"
-"Техническая\n"
-"---------\n"
+"Технические детали\n"
+"------------------\n"
 "\n"
-"Реализованные веб-сервисы являются наиболее распространенными:\n"
+"Реализованы наиболее распространённые веб-сервисы:\n"
 "\n"
-"* wsfev1 - \"Factura Electrónica\" (Электронный счет-фактура)\n"
+"* wsfev1 - \"Factura Electrónica\" (Электронный счёт)\n"
 "* wsbfev1 - \"Bono Fiscal Electrónico\" (Электронная фискальная облигация)\n"
-"* wsfexv1 - \"Factura de Exportación Electrónica\" (Электронный счет-фактура на экспорт - то же, что и экспортный ваучер)\n"
-"* wscdc - \"Constatación de Comprobantes\" (Верификация счетов-фактур)\n"
+"* wsfexv1 - \"Factura de Exportación Electrónica\" (Электронный экспортный счёт, аналог Ваучера на экспорт)\n"
+"* wscdc - \"Constatación de Comprobantes\" (Проверка счетов)\n"
 "\n"
-"Для получения информации о разработке перейдите по ссылке http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
+"Для информации по разработке посетите http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 "\n"
 
 #. module: base
@@ -11715,7 +11713,7 @@ msgid ""
 "======================================\n"
 msgstr ""
 "\n"
-"Удостоверение движения запасов для полевой службы\n"
+"Проверка перемещений запасов для сервисной службы\n"
 "======================================\n"
 
 #. module: base
@@ -16989,7 +16987,7 @@ msgstr "Азия/Улан-Батор"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__asia/ulan_bator
 msgid "Asia/Ulan_Bator"
-msgstr ""
+msgstr "Азия/Улан-Батор"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__asia/urumqi
@@ -17106,12 +17104,12 @@ msgstr "Атлантика/Канары"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__atlantic/cape_verde
 msgid "Atlantic/Cape_Verde"
-msgstr ""
+msgstr "Атлантика/Кабо-Верде"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__atlantic/faeroe
 msgid "Atlantic/Faeroe"
-msgstr ""
+msgstr "Атлантика/Фарерские_острова"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__atlantic/faroe
@@ -17121,7 +17119,7 @@ msgstr "Атлантика/Фареры"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__atlantic/jan_mayen
 msgid "Atlantic/Jan_Mayen"
-msgstr ""
+msgstr "Атлантика/Ян-Майен"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__atlantic/madeira
@@ -17136,12 +17134,12 @@ msgstr "Атлантика/Рейкьявик"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__atlantic/south_georgia
 msgid "Atlantic/South_Georgia"
-msgstr ""
+msgstr "Атлантика/Южная_Георгия"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__atlantic/st_helena
 msgid "Atlantic/St_Helena"
-msgstr ""
+msgstr "Атлантика/Остров_Святой_Елены"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__atlantic/stanley
@@ -17234,7 +17232,7 @@ msgstr "Австралия - Расчет заработной платы с б�
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__australia/act
 msgid "Australia/ACT"
-msgstr ""
+msgstr "Австралия/АСТ"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__australia/adelaide
@@ -17249,12 +17247,12 @@ msgstr "Австралия/Брисбен"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__australia/broken_hill
 msgid "Australia/Broken_Hill"
-msgstr ""
+msgstr "Австралия/Брокен-Хилл"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__australia/canberra
 msgid "Australia/Canberra"
-msgstr ""
+msgstr "Австралия/Канберра"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__australia/currie
@@ -17279,7 +17277,7 @@ msgstr "Австралия/Хобарт"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__australia/lhi
 msgid "Australia/LHI"
-msgstr ""
+msgstr "Австралия/Лорд-Хау"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__australia/lindeman
@@ -17289,7 +17287,7 @@ msgstr "Австралия/Линдэман"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__australia/lord_howe
 msgid "Australia/Lord_Howe"
-msgstr ""
+msgstr "Австралия/Лорд-Хау"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__australia/melbourne
@@ -17299,12 +17297,12 @@ msgstr "Австралия/Мельбурн"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__australia/nsw
 msgid "Australia/NSW"
-msgstr ""
+msgstr "Австралия/NSW"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__australia/north
 msgid "Australia/North"
-msgstr ""
+msgstr "Австралия/Северная_территория"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__australia/perth
@@ -17314,12 +17312,12 @@ msgstr "Австралия/Перт"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__australia/queensland
 msgid "Australia/Queensland"
-msgstr ""
+msgstr "Австралия/Квинсленд"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__australia/south
 msgid "Australia/South"
-msgstr ""
+msgstr "Австралия/Юг"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__australia/sydney
@@ -17329,22 +17327,22 @@ msgstr "Австралия/Сидней"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__australia/tasmania
 msgid "Australia/Tasmania"
-msgstr ""
+msgstr "Австралия/Тасмания"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__australia/victoria
 msgid "Australia/Victoria"
-msgstr ""
+msgstr "Австралия/Виктория"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__australia/west
 msgid "Australia/West"
-msgstr ""
+msgstr "Австралия/Запад"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__australia/yancowinna
 msgid "Australia/Yancowinna"
-msgstr ""
+msgstr "Австралия/Янкоуинна"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au_reports
@@ -18275,22 +18273,22 @@ msgstr "Бразилия - Продажа веб-сайтов"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__brazil/acre
 msgid "Brazil/Acre"
-msgstr ""
+msgstr "Бразилия/Акри"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__brazil/denoronha
 msgid "Brazil/DeNoronha"
-msgstr ""
+msgstr "Бразилия/Фернанду-ди-Норонья"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__brazil/east
 msgid "Brazil/East"
-msgstr ""
+msgstr "Бразилия/Восток"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__brazil/west
 msgid "Brazil/West"
-msgstr ""
+msgstr "Бразилия/Запад"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br
@@ -18415,7 +18413,7 @@ msgstr "Модуль-мост между испанской локализаци
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays_contract
 msgid "Bridge module between time off and contract"
-msgstr ""
+msgstr "Модуль-мост между отпусками и контрактами"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_booth_sale_exhibitor
@@ -18756,42 +18754,42 @@ msgstr "Канада — Бухгалтерские отчеты"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__canada/atlantic
 msgid "Canada/Atlantic"
-msgstr ""
+msgstr "Канада/Атлантика"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__canada/central
 msgid "Canada/Central"
-msgstr ""
+msgstr "Канада/Центральное"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__canada/eastern
 msgid "Canada/Eastern"
-msgstr ""
+msgstr "Канада/Восток"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__canada/mountain
 msgid "Canada/Mountain"
-msgstr ""
+msgstr "Канада/Горное"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__canada/newfoundland
 msgid "Canada/Newfoundland"
-msgstr ""
+msgstr "Канада/Ньюфаундленд"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__canada/pacific
 msgid "Canada/Pacific"
-msgstr ""
+msgstr "Канада/Тихоокеанское"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__canada/saskatchewan
 msgid "Canada/Saskatchewan"
-msgstr ""
+msgstr "Канада/Саскачеван"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__canada/yukon
 msgid "Canada/Yukon"
-msgstr ""
+msgstr "Канада/Юкон"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ca_check_printing
@@ -18840,7 +18838,7 @@ msgstr "Отменить обновление"
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "Cannot aggregate on %s parameter"
-msgstr ""
+msgstr "Невозможно агрегировать по параметру %s"
 
 #. module: base
 #. odoo-python
@@ -18878,7 +18876,7 @@ msgstr "Невозможно продублировать конфигураци
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "Cannot groupby on %s parameter"
-msgstr ""
+msgstr "Невозможно группировать по параметру %s"
 
 #. module: base
 #. odoo-python
@@ -19173,12 +19171,12 @@ msgstr "Чили — Электронное выставление счетов"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__chile/continental
 msgid "Chile/Continental"
-msgstr ""
+msgstr "Чили/Континентальная"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__chile/easterisland
 msgid "Chile/EasterIsland"
-msgstr ""
+msgstr "Чили/Остров_Пасхи"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cl_edi_website_sale
@@ -20220,7 +20218,7 @@ msgstr "Создать запись"
 #: model:ir.module.module,summary:base.module_industry_fsm_report
 #: model:ir.module.module,summary:base.module_industry_fsm_sale_report
 msgid "Create Reports for Field service workers"
-msgstr "Создание отчетов для работников полевых служб"
+msgstr "Создание отчётов для сотрудников сервисной службы"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_log__create_uid
@@ -20903,7 +20901,7 @@ msgstr "DIN 5008"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008_industry_fsm
 msgid "DIN 5008 - Field Service"
-msgstr "DIN 5008 - Обслуживание на местах"
+msgstr "DIN 5008 - Сервисная служба"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008_account_followup
@@ -22220,7 +22218,7 @@ msgstr "Интеграция счетов-фактур с налоговой с�
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__eire
 msgid "Eire"
-msgstr ""
+msgstr "Ирландия"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__partner_share
@@ -22423,7 +22421,7 @@ msgstr "Сотрудники, получившие назначение"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_employment_hero
 msgid "Employment Hero Payroll"
-msgstr ""
+msgstr "Зарплатный модуль Employment Hero"
 
 #. module: base
 #. odoo-python
@@ -22923,7 +22921,7 @@ msgstr "Европа/Афины"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__europe/belfast
 msgid "Europe/Belfast"
-msgstr ""
+msgstr "Европа/Белфаст"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__europe/belgrade
@@ -22943,7 +22941,7 @@ msgstr "Европа/Братислава"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__europe/brussels
 msgid "Europe/Brussels"
-msgstr ""
+msgstr "Европа/Брюссель"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__europe/bucharest
@@ -22993,7 +22991,7 @@ msgstr "Европа/Хельсинки"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__europe/isle_of_man
 msgid "Europe/Isle_of_Man"
-msgstr ""
+msgstr "Европа/Остров_Мэн"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__europe/istanbul
@@ -23038,7 +23036,7 @@ msgstr "Европа/Любляна"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__europe/london
 msgid "Europe/London"
-msgstr ""
+msgstr "Европа/Лондон"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__europe/luxembourg
@@ -23118,7 +23116,7 @@ msgstr "Россия/Самара"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__europe/san_marino
 msgid "Europe/San_Marino"
-msgstr ""
+msgstr "Европа/Сан-Марино"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__europe/sarajevo
@@ -23163,7 +23161,7 @@ msgstr "Европа/Тирана"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__europe/tiraspol
 msgid "Europe/Tiraspol"
-msgstr ""
+msgstr "Европа/Тирасполь"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__europe/ulyanovsk
@@ -23492,7 +23490,7 @@ msgstr "Тип экспорта"
 #: model:ir.module.module,description:base.module_l10n_us_hr_payroll_adp
 #: model:ir.module.module,summary:base.module_l10n_us_hr_payroll_adp
 msgid "Export Work Entries to ADP"
-msgstr ""
+msgstr "Экспорт рабочих записей в ADP"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_sd_worx
@@ -23515,7 +23513,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ca_payment_cpa005
 msgid "Export payments as CPA 005 AFT files"
-msgstr ""
+msgstr "Экспорт платежей в формате CPA 005 AFT"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_us_payment_nacha
@@ -23766,7 +23764,7 @@ msgstr "Поле \"%(field_name)s\" не существует в модели \"
 #. odoo-python
 #: code:addons/base/models/res_lang.py:0
 msgid "Field \"%s\" is not cached"
-msgstr ""
+msgstr "Поле «%s» не кэшировано"
 
 #. module: base
 #. odoo-python
@@ -23825,37 +23823,37 @@ msgstr "Имя поля"
 #: model:ir.module.category,name:base.module_category_services_field_service
 #: model:ir.module.module,shortdesc:base.module_industry_fsm
 msgid "Field Service"
-msgstr "Служебное Поле"
+msgstr "Сервисная служба"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_sale
 msgid "Field Service - Sale"
-msgstr "Выездная служба - продажа"
+msgstr "Сервисная служба – Продажи"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_sale_subscription
 msgid "Field Service - Sale Subscription"
-msgstr "Выездное обслуживание - Подписка на продажу"
+msgstr "Сервисная служба – Подписки на продажи"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_repair
 msgid "Field Service Repair"
-msgstr ""
+msgstr "Ремонт в сервисной службе"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_report
 msgid "Field Service Reports"
-msgstr "Отчеты о полевом обслуживании"
+msgstr "Отчёты сервисной службы"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_sale_report
 msgid "Field Service Reports - Sale"
-msgstr "Отчеты по полевой службе - Продажа"
+msgstr "Отчёты сервисной службы – Продажи"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_stock
 msgid "Field Service Stock"
-msgstr "Складское хозяйство"
+msgstr "Запасы сервисной службы"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__update_field_type
@@ -24392,7 +24390,7 @@ msgstr "Франция - интеграция Factur-X с Chorus Pro"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr
 msgid "France - Localizations"
-msgstr ""
+msgstr "Франция — Локализации"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_payroll_account
@@ -24425,7 +24423,7 @@ msgstr "Французская Гвиана"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_intrastat
 msgid "French Intrastat Declaration"
-msgstr ""
+msgstr "Французская декларация Интрастат"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_payroll
@@ -24525,7 +24523,7 @@ msgstr "GB"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__gb-eire
 msgid "GB-Eire"
-msgstr ""
+msgstr "Великобритания-Ирландия"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__gmt
@@ -25466,7 +25464,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_marketing_surveys
 msgid "Helps you manage your survey for review of different users."
-msgstr ""
+msgstr "Помогает управлять опросами для оценки различных пользователей."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_sales_sign
@@ -25542,7 +25540,7 @@ msgstr "Гонконг — Бухгалтерия"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hk_reports
 msgid "Hong Kong - Accounting Reports"
-msgstr ""
+msgstr "Гонконг — Бухгалтерские отчеты"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hk_hr_payroll
@@ -25608,7 +25606,7 @@ msgstr "Продукт Hr Expense Predict"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_contract
 msgid "Hr Holidays Contract"
-msgstr ""
+msgstr "Договор на отпуска в HR"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_extract
@@ -26460,57 +26458,57 @@ msgstr "Индийская зарплата"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__indian/antananarivo
 msgid "Indian/Antananarivo"
-msgstr ""
+msgstr "Индийский/Антананариву"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__indian/chagos
 msgid "Indian/Chagos"
-msgstr ""
+msgstr "Индийский/Чагос"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__indian/christmas
 msgid "Indian/Christmas"
-msgstr ""
+msgstr "Индийский/Остров_Рождества"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__indian/cocos
 msgid "Indian/Cocos"
-msgstr ""
+msgstr "Индийский/Кокосовые_острова"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__indian/comoro
 msgid "Indian/Comoro"
-msgstr ""
+msgstr "Индийский/Коморские_острова"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__indian/kerguelen
 msgid "Indian/Kerguelen"
-msgstr ""
+msgstr "Индийский/Кергелен"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__indian/mahe
 msgid "Indian/Mahe"
-msgstr ""
+msgstr "Индийский/Маэ"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__indian/maldives
 msgid "Indian/Maldives"
-msgstr ""
+msgstr "Индийский/Мальдивы"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__indian/mauritius
 msgid "Indian/Mauritius"
-msgstr ""
+msgstr "Индийский/Маврикий"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__indian/mayotte
 msgid "Indian/Mayotte"
-msgstr ""
+msgstr "Индийский/Майотта"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__indian/reunion
 msgid "Indian/Reunion"
-msgstr ""
+msgstr "Индийский/Реюньон"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__company_type__person
@@ -26702,6 +26700,8 @@ msgid ""
 "Integrate features developped in Mail in use case involving resources "
 "instead of users"
 msgstr ""
+"Интеграция функций, разработанных в Mail, в сценарии использования с "
+"ресурсами вместо пользователей."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_loyalty_delivery
@@ -26980,7 +26980,7 @@ msgstr "Недопустимый ключ: У представления QWeb д
 #. odoo-python
 #: code:addons/api.py:0
 msgid "Invalid language code: %s"
-msgstr ""
+msgstr "Неверный код языка: %s"
 
 #. module: base
 #. odoo-python
@@ -27550,7 +27550,7 @@ msgstr "Кувейт"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__kwajalein
 msgid "Kwajalein"
-msgstr ""
+msgstr "Кваджалейн"
 
 #. module: base
 #: model:res.country,name:base.kg
@@ -27893,7 +27893,7 @@ msgstr "Латвия - Бухгалтерский учет"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lv_reports
 msgid "Latvia - Accounting Reports"
-msgstr ""
+msgstr "Латвия — Бухгалтерские отчеты"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
@@ -28340,7 +28340,7 @@ msgstr "M - ПРОФЕССИОНАЛЬНАЯ, НАУЧНАЯ И ТЕХНИЧЕС
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__met
 msgid "MET"
-msgstr ""
+msgstr "MET"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_mrp
@@ -28401,12 +28401,12 @@ msgstr "Функции MRP для контроля качества с помо�
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__mst
 msgid "MST"
-msgstr ""
+msgstr "MST"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__mst7mdt
 msgid "MST7MDT"
-msgstr ""
+msgstr "MST7MDT"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_purchase_stock
@@ -29271,17 +29271,17 @@ msgstr "Отчет о пробном балансе за 13 месяц в Мек
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__mexico/bajanorte
 msgid "Mexico/BajaNorte"
-msgstr ""
+msgstr "Мексика/Баха-Норте"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__mexico/bajasur
 msgid "Mexico/BajaSur"
-msgstr ""
+msgstr "Мексика/Баха-Сур"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__mexico/general
 msgid "Mexico/General"
-msgstr ""
+msgstr "Мексика/Общее_время"
 
 #. module: base
 #: model:res.country,name:base.fm
@@ -29976,12 +29976,12 @@ msgstr "НПВП"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__nz
 msgid "NZ"
-msgstr ""
+msgstr "NZ"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__nz-chat
 msgid "NZ-CHAT"
-msgstr ""
+msgstr "NZ-CHAT"
 
 #. module: base
 #. odoo-python
@@ -30074,7 +30074,7 @@ msgstr "Науру"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__navajo
 msgid "Navajo"
-msgstr ""
+msgstr "Навахо"
 
 #. module: base
 #: model:res.country,name:base.np
@@ -33367,7 +33367,7 @@ msgstr "POS-ценник"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_test_pos_qr_payment
 msgid "POS QR Tests"
-msgstr ""
+msgstr "Тесты QR для POS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_razorpay
@@ -33442,232 +33442,232 @@ msgstr "Кошелек POS Viva"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__prc
 msgid "PRC"
-msgstr ""
+msgstr "PRC"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pst8pdt
 msgid "PST8PDT"
-msgstr ""
+msgstr "PST8PDT"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/apia
 msgid "Pacific/Apia"
-msgstr ""
+msgstr "Тихоокеанский/Апиа"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/auckland
 msgid "Pacific/Auckland"
-msgstr ""
+msgstr "Тихоокеанский/Окленд"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/bougainville
 msgid "Pacific/Bougainville"
-msgstr ""
+msgstr "Тихоокеанский/Бугенвиль"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/chatham
 msgid "Pacific/Chatham"
-msgstr ""
+msgstr "Тихоокеанский/Чатем"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/chuuk
 msgid "Pacific/Chuuk"
-msgstr ""
+msgstr "Тихоокеанский/Чуук"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/easter
 msgid "Pacific/Easter"
-msgstr ""
+msgstr "Тихоокеанский/Остров_Пасхи"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/efate
 msgid "Pacific/Efate"
-msgstr ""
+msgstr "Тихоокеанский/Эфате"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/enderbury
 msgid "Pacific/Enderbury"
-msgstr ""
+msgstr "Тихоокеанский/Эндербери"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/fakaofo
 msgid "Pacific/Fakaofo"
-msgstr ""
+msgstr "Тихоокеанский/Факаофо"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/fiji
 msgid "Pacific/Fiji"
-msgstr ""
+msgstr "Тихоокеанский/Фиджи"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/funafuti
 msgid "Pacific/Funafuti"
-msgstr ""
+msgstr "Тихоокеанский/Фунафути"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/galapagos
 msgid "Pacific/Galapagos"
-msgstr ""
+msgstr "Тихоокеанский/Галапагосы"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/gambier
 msgid "Pacific/Gambier"
-msgstr ""
+msgstr "Тихоокеанский/Гамбье"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/guadalcanal
 msgid "Pacific/Guadalcanal"
-msgstr ""
+msgstr "Тихоокеанский/Гуадалканал"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/guam
 msgid "Pacific/Guam"
-msgstr ""
+msgstr "Тихоокеанский/Гуам"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/honolulu
 msgid "Pacific/Honolulu"
-msgstr ""
+msgstr "Тихоокеанский/Гонолулу"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/johnston
 msgid "Pacific/Johnston"
-msgstr ""
+msgstr "Тихоокеанский/Джонстон"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/kanton
 msgid "Pacific/Kanton"
-msgstr ""
+msgstr "Тихоокеанский/Кантон"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/kiritimati
 msgid "Pacific/Kiritimati"
-msgstr ""
+msgstr "Тихоокеанский/Киритимати"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/kosrae
 msgid "Pacific/Kosrae"
-msgstr ""
+msgstr "Тихоокеанский/Косраэ"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/kwajalein
 msgid "Pacific/Kwajalein"
-msgstr ""
+msgstr "Тихоокеанский/Кваджалейн"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/majuro
 msgid "Pacific/Majuro"
-msgstr ""
+msgstr "Тихоокеанский/Маджуро"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/marquesas
 msgid "Pacific/Marquesas"
-msgstr ""
+msgstr "Тихоокеанский/Маркизские_острова"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/midway
 msgid "Pacific/Midway"
-msgstr ""
+msgstr "Тихоокеанский/Мидуэй"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/nauru
 msgid "Pacific/Nauru"
-msgstr ""
+msgstr "Тихоокеанский/Науру"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/niue
 msgid "Pacific/Niue"
-msgstr ""
+msgstr "Тихоокеанский/Ниуэ"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/norfolk
 msgid "Pacific/Norfolk"
-msgstr ""
+msgstr "Тихоокеанский/Норфолк"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/noumea
 msgid "Pacific/Noumea"
-msgstr ""
+msgstr "Тихоокеанский/Нумеа"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/pago_pago
 msgid "Pacific/Pago_Pago"
-msgstr ""
+msgstr "Тихоокеанский/Паго-Паго"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/palau
 msgid "Pacific/Palau"
-msgstr ""
+msgstr "Тихоокеанский/Палау"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/pitcairn
 msgid "Pacific/Pitcairn"
-msgstr ""
+msgstr "Тихоокеанский/Питкэрн"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/pohnpei
 msgid "Pacific/Pohnpei"
-msgstr ""
+msgstr "Тихоокеанский/Понпеи"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/ponape
 msgid "Pacific/Ponape"
-msgstr ""
+msgstr "Тихоокеанский/Понапе"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/port_moresby
 msgid "Pacific/Port_Moresby"
-msgstr ""
+msgstr "Тихоокеанский/Порт-Морсби"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/rarotonga
 msgid "Pacific/Rarotonga"
-msgstr ""
+msgstr "Тихоокеанский/Раротонга"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/saipan
 msgid "Pacific/Saipan"
-msgstr ""
+msgstr "Тихоокеанский/Сайпан"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/samoa
 msgid "Pacific/Samoa"
-msgstr ""
+msgstr "Тихоокеанский/Самоа"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/tahiti
 msgid "Pacific/Tahiti"
-msgstr ""
+msgstr "Тихоокеанский/Таити"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/tarawa
 msgid "Pacific/Tarawa"
-msgstr ""
+msgstr "Тихоокеанский/Тарава"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/tongatapu
 msgid "Pacific/Tongatapu"
-msgstr ""
+msgstr "Тихоокеанский/Тонгатапу"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/truk
 msgid "Pacific/Truk"
-msgstr ""
+msgstr "Тихоокеанский/Трук"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/wake
 msgid "Pacific/Wake"
-msgstr ""
+msgstr "Тихоокеанский/Уэйк"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/wallis
 msgid "Pacific/Wallis"
-msgstr ""
+msgstr "Тихоокеанский/Уоллис"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/yap
 msgid "Pacific/Yap"
-msgstr ""
+msgstr "Тихоокеанский/Яп"
 
 #. module: base
 #. odoo-python
@@ -33968,7 +33968,7 @@ msgstr "Путь (или глобальный шаблон)"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__path
 #: model:ir.model.fields,field_description:base.field_ir_cron__path
 msgid "Path to show in the URL"
-msgstr ""
+msgstr "Путь для отображения в URL"
 
 #. module: base
 #. odoo-python
@@ -33981,6 +33981,8 @@ msgstr ""
 #: model:ir.model.constraint,message:base.constraint_ir_actions_path_unique
 msgid "Path to show in the URL must be unique! Please choose another one."
 msgstr ""
+"Путь, отображаемый в URL должен быть уникальным! Пожалуйста, выберите "
+"другой."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__update_path
@@ -34664,7 +34666,7 @@ msgstr "Уведомления о наличии товара"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_barcodelookup
 msgid "Product Barcode Lookup"
-msgstr ""
+msgstr "Поиск товара по штрихкоду"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_comparison
@@ -34800,7 +34802,7 @@ msgstr "Проект - Продажа - Расходы"
 #: model:ir.module.module,shortdesc:base.module_project_enterprise_hr_skills
 #: model:ir.module.module,shortdesc:base.module_project_hr_skills
 msgid "Project - Skills"
-msgstr ""
+msgstr "Проект — Навыки"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_account_asset
@@ -35059,7 +35061,7 @@ msgstr "Подписки на продажу проектов"
 #: model:ir.module.module,summary:base.module_project_enterprise_hr_skills
 #: model:ir.module.module,summary:base.module_project_hr_skills
 msgid "Project skills"
-msgstr ""
+msgstr "Проектные навыки"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_fsm_sale
@@ -35530,12 +35532,12 @@ msgstr "РНК"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__roc
 msgid "ROC"
-msgstr ""
+msgstr "ROC"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__rok
 msgid "ROK"
-msgstr ""
+msgstr "ROK"
 
 #. module: base
 #: model:res.country,vat_label:base.hn
@@ -36068,7 +36070,7 @@ msgstr "Номер ресурса"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_resource_mail
 msgid "Resource Mail"
-msgstr ""
+msgstr "Почтовый ресурс"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__res_model
@@ -38264,7 +38266,7 @@ msgstr "Учет запасов"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_barcodelookup
 msgid "Stock Barcode - Barcode Lookup"
-msgstr ""
+msgstr "Склад — Поиск по штрихкоду"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_intrastat
@@ -38834,7 +38836,7 @@ msgstr "Название шаблона"
 #. odoo-python
 #: code:addons/base/models/assetsbundle.py:0
 msgid "Template name is missing."
-msgstr ""
+msgstr "Имя шаблона отсутствует."
 
 #. module: base
 #: model_terms:res.company,sign_terms:base.main_company
@@ -42104,8 +42106,8 @@ msgid ""
 "Validate stock moves for product added on sales orders through Field Service"
 " Management App"
 msgstr ""
-"Удостоверение движения запасов для продуктов, добавленных в заказы на "
-"продажу через приложение Field Service Management App"
+"Проверка перемещений запасов для товаров, добавленных в заказы на продажу "
+"через приложение управления сервисной службой"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__value
@@ -43954,12 +43956,6 @@ msgstr "l10n_be_pos_sale"
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2many
 msgid "many2many"
 msgstr "many2many"
-
-#. module: base
-#. odoo-python
-#: code:addons/base/models/ir_actions.py:0
-msgid "many2many fields cannot be evaluated by reference"
-msgstr "поля many2many не могут быть оценены по ссылке"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2one
