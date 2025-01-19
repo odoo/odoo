@@ -855,7 +855,7 @@ msgid ""
 "\"Python Code\" defines the amount of the tax.\n"
 msgstr ""
 "\n"
-"        Btw die in python-code wordt berekend bestaat uit twee blokken python-code die lokaal worden uitgevoerd, en die gegevens bevatten zoals prijs, product of contact.\n"
+"        Btw die in python-code wordt berekend bestaat uit twee blokken python-code die lokaal worden uitgevoerd, en die gegevens bevatten zoals prijs, product of partner.\n"
 "\n"
 "        \"Code toe te passen\" bepaalt of de btw al dan niet moet worden toegepast.\n"
 "\n"
@@ -1007,7 +1007,7 @@ msgstr ""
 "\n"
 "** Bank ** is optioneel.\n"
 "\n"
-"- * Contacten> Configuratie> Bankrekeningen> Bankrekeningen *\n"
+"- * Partners> Configuratie> Bankrekeningen> Bankrekeningen *\n"
 "\n"
 "Betalende rekening wordt in de lijst weergegeven als het rekeningnummer.\n"
 "\n"
@@ -1016,7 +1016,7 @@ msgstr ""
 "rekeningafschrift tegen de betaling.\n"
 "\n"
 "- Bankrekeningen van leveranciers kunnen op dezelfde plaats worden opgezet, maar dat is het wel\n"
-"over het algemeen gemakkelijker om ze in te stellen vanaf het contact van voor de verkoper.\n"
+"over het algemeen gemakkelijker om ze in te stellen vanaf de partner van voor de verkoper.\n"
 "\n"
 "- * Boekhouding> Leveranciers> Leveranciers *\n"
 "\n"
@@ -1601,7 +1601,7 @@ msgid ""
 msgstr ""
 "\n"
 "Boekhoudkundige rapporten voor Duitsland\n"
-"Bevat Balans-, Winst- en Verlies-, btw- en Contact-btw-rapporten\n"
+"Bevat Balans-, Winst- en Verlies-, btw- en btw-rapporten van partners\n"
 "Voegt ook DATEV-exportopties toe aan het grootboek\n"
 
 #. module: base
@@ -2087,10 +2087,10 @@ msgid ""
 "This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.\n"
 msgstr ""
 "\n"
-"Voeg een nieuw model toe met de naam 'Identificatietype' dat de btw-veldfunctionaliteit in het contact uitbreidt en de gebruiker in staat stelt om contactpersonen te identificeren (een eventuele factuur), niet alleen met hun belastingnummer (btw), maar ook met andere soorten identificaties, zoals een nationaal document , paspoort, buitenlandse ID, enz. Met deze module geïnstalleerd zie je nu in het contactformulier twee velden:\n"
+"Voeg een nieuw model toe met de naam 'Identificatietype' dat de btw-veldfunctionaliteit voor de partner uitbreidt en de gebruiker in staat stelt om contactpersonen te identificeren (een eventuele factuur), niet alleen met hun belastingnummer (btw), maar ook met andere soorten identificaties, zoals een nationaal document , paspoort, buitenlandse ID, enz. Met deze module geïnstalleerd zie je nu in het partnerformulier twee velden:\n"
 "\n"
-"* Identificatie type\n"
-"* Identificatie Nummer\n"
+"* Identificatietype\n"
+"* Identificatienummer\n"
 "\n"
 "Dit gedrag is een algemene vereiste voor sommige Latijns-Amerikaanse landen, zoals Argentinië en Chili. Als je lokalisatie deze vereisten heeft, moet je van deze module afhankelijk zijn en in je lokalisatiemodule de identificatietypen definiëren die in je land worden gebruikt. Over het algemeen worden dit soort identificaties gedefinieerd door de overheidsinstanties die de fiscale operaties reguleren. Bijvoorbeeld:\n"
 "\n"
@@ -2115,13 +2115,13 @@ msgstr ""
 "\n"
 "Regels bij het aanmaken van een nieuwe contact: We zien alleen de identificatietypen die zinvol zijn, rekening houdend met deze regels:\n"
 "\n"
-"* Als het contact geen landadres heeft ingesteld: toont de generieke identificatietypen plus degene die zijn gedefinieerd in het land van het gerelateerde bedrijf van het contact (als het contact geen specifiek bedrijf heeft, worden de identificatietypen weergegeven die betrekking hebben op het huidige gebruikersbedrijf)\n"
+"* Als de partner geen landadres heeft ingesteld: toont de generieke identificatietypen plus degene die zijn gedefinieerd in het land van het gerelateerde bedrijf van de partner (als de partner geen specifiek bedrijf heeft, worden de identificatietypen weergegeven die betrekking hebben op het huidige gebruikersbedrijf)\n"
 "\n"
-"* Als het contact een landadres heeft: toont de generieke identificatietypen plus degene die zijn gedefinieerd voor het land van het contact.\n"
+"* Als de partner een landadres heeft: toont de generieke identificatietypen plus degene die zijn gedefinieerd voor het land van de partner.\n"
 "\n"
 "Bij het aanmaken van een nieuw bedrijf, wordt op de gerelateerde contact altijd het gerelateerde land is_vat-identificatietype ingesteld.\n"
 "\n"
-"Alle gedefinieerde identificatietypen kunnen worden bekeken en geactiveerd / gedeactiveerd in het menu \"Contacten / Configuratie / Identificatietype\".\n"
+"Alle gedefinieerde identificatietypen kunnen worden bekeken en geactiveerd / gedeactiveerd in het menu \"Partners / Configuratie / Identificatietype\".\n"
 "\n"
 "Deze module is compatibel met de base_vat-module om btw-nummers te kunnen bevestigen voor elk land dat al dan niet de mogelijkheid heeft om meerdere identificatietypen te beheren.\n"
 "\n"
@@ -2171,9 +2171,9 @@ msgstr ""
 "Voeg een extra tabblad toe in het afrekenproces van de website/eCommerce met de Mexicaanse velden:\n"
 "\n"
 "- l10n_mx_edi_cfdi_to_public (verkoop.order/account.move)\n"
-"- l10n_mx_edi_fiscal_regime (res.contact)\n"
+"- l10n_mx_edi_fiscal_regime (res.partner)\n"
 "- l10n_mx_edi_usage (verkoop.order/account.move)\n"
-"- l10n_mx_edi_no_tax_breakdown (res.contact)\n"
+"- l10n_mx_edi_no_tax_breakdown (res.partner)\n"
 "\n"
 "Het extra tabblad verschijnt alleen als:\n"
 "\n"
@@ -2960,7 +2960,7 @@ msgid ""
 "Auto-complete partner companies' data\n"
 msgstr ""
 "\n"
-"Bedrijfsgegevens automatisch aanvullen\n"
+"Bedrijfsgegevens partner automatisch aanvullen\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_dimona
@@ -4185,7 +4185,7 @@ msgstr ""
 "Dit hangt af van antwoorden of beoordelingen van sommige vragen door verschillende gebruikers.\n"
 "Een onderzoek kan meerdere pagina's hebben. Elke pagina mag meerdere vragen bevatten en\n"
 "elke vraag mag meerdere antwoorden hebben. Verschillende gebruikers mogen verschillende\n"
-"antwoorden of vragen geven en afhankelijk hiervan wordt de enquête gedaan. Contacten krijgen ook\n"
+"antwoorden of vragen geven en afhankelijk hiervan wordt de enquête gedaan. Partners krijgen ook\n"
 "een e-mail toegestuurd met een persoonlijk token en een uitnodiging voor de enquête.\n"
 
 #. module: base
@@ -4579,7 +4579,7 @@ msgstr ""
 "je moet de nummersreeksen invoeren die je hebt gekregen\n"
 "door de overheid in Boekhouding> Klanten> e-Faktur\n"
 "\n"
-"Wanneer je een factuur bevestigd, waarbij het contact de ID PKP heeft\n"
+"Wanneer je een factuur bevestigd, waarbij de partner de ID PKP heeft\n"
 "aangevinkt, wordt er een fiscaal nummer aan die factuur toegewezen.\n"
 "Daarna kun je de nog te exporteren facturen filteren in het\n"
 "facturenlijst en klik op Actie> Download e-Faktur om te downloaden\n"
@@ -5615,7 +5615,7 @@ msgstr ""
 "\n"
 "* Dagboek verkoop geconfigureerd voor Voorgeprinte en Expofacturen in alle bedrijven\n"
 "* Facturen en andere documentvoorbeelden al gevalideerd in \"(AR) Responsable Inscripto\" bedrijf\n"
-"* Contacten voorbeeld voor de verschillende verantwoordelijkheids types:\n"
+"* Voorbeeld partners voor verschillende verantwoordelijkheidstypes:\n"
 "\n"
 "  * ADHOC (IVA Responsable Inscripto)\n"
 "  * Servicios Globales (IVA Sujeto Exento)\n"
@@ -5653,7 +5653,7 @@ msgstr ""
 "* Land AFIP-codes en Land btw-codes voor rechtspersonen, natuurlijke personen en anderen\n"
 "* Valuta AFIP-codes\n"
 "* Maateenheid AFIP-codes\n"
-"* Contacten: Consumidor Final en AFIP\n"
+"* Partners: Consumidor Final en AFIP\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
@@ -5714,7 +5714,7 @@ msgstr ""
 "* Documentsoorten (er zijn ongeveer 41 soorten inkoopdocumenten in Ecuador)\n"
 "* Identificatietypes\n"
 "* Ecuadoraanse banken\n"
-"* Contacten: Consumidor Final, SRI, IESS, en ook basis btw-geldigheidsverklaring\n"
+"* Partners: Consumidor Final, SRI, IESS, en ook basis btw-geldigheidsverklaring\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_pos
@@ -5933,7 +5933,7 @@ msgstr ""
 "\n"
 "Genereert Intrastat XML-rapport voor aangifte\n"
 "Op basis van facturen.\n"
-"Voegt de mogelijkheid toe om het land van herkomst van goederen en de btw van het contact op te geven in het Intrastat XML-rapport.\n"
+"Voegt de mogelijkheid toe om het land van herkomst van goederen en de btw van de partner op te geven in het Intrastat XML-rapport.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt_intrastat
@@ -5944,7 +5944,7 @@ msgid ""
 msgstr ""
 "\n"
 "Genereert Intrastat XML-rapport voor aangifte.\n"
-"Voegt de mogelijkheid toe om het land van herkomst van goederen en de btw van het contact op te geven in het Intrastat XML-rapport.\n"
+"Voegt de mogelijkheid toe om het land van herkomst van goederen en de btw van de partner op te geven in het Intrastat XML-rapport.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_intrastat
@@ -7353,7 +7353,7 @@ msgstr ""
 "Module voor het importeren van FEC-standaardbestanden, handig voor het importeren van boekhoudgeschiedenis.\n"
 "\n"
 "FEC-bestanden (fichier des écritures comptables) zijn de standaard boekhoudrapporten die Franse bedrijven moeten indienen bij de belastingdienst.\n"
-"Met deze module kun je rekeningen, dagboeken, contacten en verhuizingen uit deze bestanden importeren.\n"
+"Met deze module kun je rekeningen, dagboeken, partners en verhuizingen uit deze bestanden importeren.\n"
 "\n"
 "Alleen het CSV-formaat van FEC is geïmplementeerd.\n"
 "'utf-8', 'utf-8-sig' en 'iso8859_15' zijn de enige toegestane coderingen.\n"
@@ -7424,7 +7424,7 @@ msgstr ""
 "Module voor het importeren van SAF-T bestanden, handig voor het importeren van de boekhoudgeschiedenis.\n"
 "\n"
 "SAF-T bestanden zijn de standaard boekhoudrapportages die bedrijven in sommige landen moeten indienen bij de belastingdienst. \n"
-"Met deze module, kunnen rekeningen, dagboeken, contacten, belastingen en boekingen uit deze bestanden worden geïmporteerd.\n"
+"Met deze module, kunnen rekeningen, dagboeken, partners, belastingen en boekingen uit deze bestanden worden geïmporteerd.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_se_sie_import
@@ -7444,7 +7444,7 @@ msgstr ""
 "Module voor het importeren van SIE 5-standaardbestanden.\n"
 "\n"
 "Het huidige bereik van de module maakt de initialisatie van de boekhouding mogelijk door rekeningsaldi te importeren,\n"
-"contacten (Klanten & Leveranciers) en boekingen (dagboekgegevens moeten aanwezig zijn in het bestand).\n"
+"partners (Klanten & Leveranciers) en boekingen (dagboekgegevens moeten aanwezig zijn in het bestand).\n"
 "\n"
 "Het importeert geen analyse-, activa- en \"accountkoppelings\" -gegevens.\n"
 "\n"
@@ -7814,7 +7814,7 @@ msgstr ""
 "andere vormen van automatisering) en maakt het veel moeilijker om\n"
 "kennis over het importeer/exporteer systeem te verzamelen omdat het gespreid is over 3+ verschillende projecten.\n"
 "\n"
-"* In een meer uitbreidbare manier, zodat gebruikers en contacten hun eigen\n"
+"* In een meer uitbreidbare manier, zodat gebruikers en partners hun eigen\n"
 "front-end kunnen bouwen om via andere bestandsformaten te importeren (bijvoorbeeld OpenDocument\n"
 "bestanden) die mogelijk gemakkelijker te verwerken zijn in hun werk flow of vanuit\n"
 "hun data productie bronnen.\n"
@@ -8119,7 +8119,7 @@ msgid ""
 "========================\n"
 msgstr ""
 "\n"
-"Contact Geolokalisatie\n"
+"Geolokalisatie partners\n"
 "========================\n"
 
 #. module: base
@@ -8636,7 +8636,7 @@ msgid ""
 "Show your company address/partner address on Google Maps. Configure an API key in the Website settings.\n"
 msgstr ""
 "\n"
-"Toont je bedrijfsadres / contactadres op Google Maps. Configureer een API key in de website-instellingen.\n"
+"Toont je bedrijfsadres / partneradres op Google Maps. Configureer een API key in de website-instellingen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sign
@@ -8670,7 +8670,7 @@ msgstr ""
 "\n"
 "Deze module voegt voor de boekhouding het volgende toe:\n"
 " - Het rekeningschema van Singapore\n"
-" - Veld UEN (Uniek Entiteitsnummer) op bedrijf en contact\n"
+" - Veld UEN (Uniek Entiteitsnummer) op bedrijf en partner\n"
 " - Veld PermitNo en PermitNoDate op de factuur\n"
 "\n"
 
@@ -8912,7 +8912,7 @@ msgstr ""
 "De QR-factuur wordt bij de factuur gevoegd en vergemakkelijkt de betaling.\n"
 "\n"
 "Een QR-factuur wordt gegenereerd als:\n"
-"    - De contact op je factuur een volledig adres (straat, stad, postcode en land) in Zwitserland heeft\n"
+"    - De partner op je factuur een volledig adres (straat, stad, postcode en land) in Zwitserland heeft\n"
 "    - De optie om de Zwitserse QR-code te genereren is geselecteerd op de factuur (wordt standaard gedaan)\n"
 "    - Een correct rekeningnummer/QR-IBAN is ingestald op je bankdagboek\n"
 "    - (bij het gebruik van een QR-IBAN): de betalingsreferentie van de factuur is een QR-referentie\n"
@@ -9153,7 +9153,7 @@ msgstr ""
 "De leveringshandleiding (guia de despacho) is nodig als bewijs\n"
 "dat je goederen verzendt tussen A en B.\n"
 "\n"
-"Het is configureerbaar op het contact als er prijzen nodig zijn op het contact\n"
+"Het is configureerbaar op de partner als er prijzen nodig zijn op de partner\n"
 "leveringshandleiding en of ze uit de verkooporder moeten komen\n"
 "of het product zelf.\n"
 "\n"
@@ -9342,7 +9342,7 @@ msgid ""
 "This is a base module. It holds website-related stuff for Contact model (res.partner).\n"
 msgstr ""
 "\n"
-"Dit is een basis module. Het bevat website gerelateerde inhoud voor het contact model (res.contact)\n"
+"Dit is een basismodule. Het bevat website gerelateerde inhoud voor het partnermodel (res.partner)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_payment
@@ -9464,7 +9464,7 @@ msgstr ""
 "    * Lijstprijs\n"
 "    * Leveranciersprijs\n"
 "\n"
-"Prijslijst voorkeuren op product en/of contacten.\n"
+"Prijslijst voorkeuren op product en/of partners.\n"
 "\n"
 "Product labels met barcode afdrukken.\n"
 
@@ -9554,7 +9554,7 @@ msgstr ""
 "\n"
 "Wizards in deze module:\n"
 "--------------------------------\n"
-"    * Intracommunautaire aangifte: Lijst van klanten met btw en gefactureerde\n"
+"    * Intracommunautaire aangifte: Lijst van partners met btw en gefactureerde\n"
 "bedragen. Bereidt een XML-bestand voor.\n"
 "      \n"
 "        **Te volgen Pad :** Facturatie / Rapportages / Belgische aangiften / Intracommunautaire aangifte\n"
@@ -10674,18 +10674,18 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Met deze module kun je je resellers / contacten op je website publiceren en inkomende leads / verkoopkansen naar hen doorsturen.\n"
+"Met deze module kun je je resellers / partners op je website publiceren en inkomende leads / verkoopkansen naar hen doorsturen.\n"
 "\n"
 "\n"
-"** Publiceer een contact **\n"
+"** Publiceer een partner **\n"
 "\n"
-"Om een ​​contact te publiceren, stel je een * Niveau * in het contactformulier in (in de sectie Partneropdracht) en klik je op de knop * Publiceren *.\n"
+"Om een ​​partner te publiceren, stel je een * Niveau * in het contactformulier in (in de sectie Partneropdracht) en klik je op de knop * Publiceren *.\n"
 "\n"
 "** Forward leads **\n"
 "\n"
-"Het doorsturen van leads kan voor één of meerdere leads tegelijk worden gedaan. De actie is beschikbaar in de sectie * Toegewezen contact * van de lead- / verkoopkansformulierweergave en in het menu * Actie * van de lijstweergave.\n"
+"Het doorsturen van leads kan voor één of meerdere leads tegelijk worden gedaan. De actie is beschikbaar in de sectie * Toegewezen partner* van de lead- / verkoopkansformulierweergave en in het menu * Actie * van de lijstweergave.\n"
 "\n"
-"De automatische toewijzing wordt berekend op basis van het gewicht van partnerniveaus en de geolokalisatie. Contacten krijgen leads die zich om hen heen bevinden.\n"
+"De automatische toewijzing wordt berekend op basis van het gewicht van partnerniveaus en de geolokalisatie. Partners krijgen leads die zich om hen heen bevinden.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_update_tax_tags
@@ -12344,10 +12344,10 @@ msgid ""
 "only the country code will be validated.\n"
 msgstr ""
 "\n"
-"btw validatie voor btw-nummers van contacten.\n"
+"btw validatie voor btw-nummers van partners.\n"
 "=========================================\n"
 "\n"
-"Na het installeren van deze module worden waardes ingegeven in het btw-veld van de contacten\n"
+"Na het installeren van deze module worden waardes ingegeven in het btw-veld van de partners\n"
 "bevestigd voor alle ondersteunde landen. Het land is de afgeleide van de\n"
 "2-cijferige landcode die een prefix is van het btw-nummer, bijvoorbeeld \"BE0477472701\"\n"
 "wordt bevestigd volgens de belgische regels.\n"
@@ -15634,7 +15634,7 @@ msgid ""
 "Allows to send sms to website visitor if the visitor is linked to a partner."
 msgstr ""
 "Staat het versturen van SMS naar website bezoeker toe indien de bezoeker "
-"gekoppeld is aan een contact."
+"gekoppeld is aan een partner."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_sms
@@ -16669,7 +16669,7 @@ msgstr "Anguilla"
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "Another partner already has this barcode"
-msgstr "Een andere contact heeft reeds deze barcode"
+msgstr "Een andere partner heeft reeds deze barcode"
 
 #. module: base
 #: model:res.country,name:base.aq
@@ -17922,7 +17922,7 @@ msgstr "Automatische installatie vereist"
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_autocomplete
 msgid "Auto-complete partner companies' data"
-msgstr "Bedrijfsgegevens automatisch aanvullen"
+msgstr "Bedrijfsgegevens van partner automatisch aanvullen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__auto_install
@@ -19915,8 +19915,8 @@ msgid ""
 "Choose a subview of partners that includes only address fields, to change "
 "the way users can input addresses."
 msgstr ""
-"Kies een subweergave van contacten die enkel adres velden toont, om te "
-"wijzigen hoe gebruikers adressen kunnen ingeven."
+"Kies een subweergave van partners die alleen adresvelden bevat, om de manier"
+" waarop gebruikers adressen kunnen invoeren aan te passen."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -22125,7 +22125,7 @@ msgid ""
 "\n"
 "    name, partner_id.name"
 msgstr ""
-"Afhankelijkheden van bereken methode; een lijst van komma gescheiden veldnamen, zoals\n"
+"Afhankelijkheden van de compute-methode; een lijst van komma-gescheiden veldnamen, zoals:\n"
 "\n"
 "name, partner_id.name"
 
@@ -23079,7 +23079,7 @@ msgid ""
 "sharing data."
 msgstr ""
 "Ofwel een klant (geen gebruiker), ofwel een gedeelde gebruiker. Aangegeven "
-"dat de huidige contact een klant is zonder toegang of met een beperkte "
+"dat de huidige partner een klant is zonder toegang of met een beperkte "
 "toegang gemaakt voor het delen van gegevens."
 
 #. module: base
@@ -30591,12 +30591,12 @@ msgstr "Contacten samenvoegen"
 #. module: base
 #: model:ir.model,name:base.model_base_partner_merge_line
 msgid "Merge Partner Line"
-msgstr "Contactregel samenvoegen"
+msgstr "Partnerregel samenvoegen"
 
 #. module: base
 #: model:ir.model,name:base.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr "Contacten samenvoegen wizard"
+msgstr "Wizard Samenvoegen Partners"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -35302,38 +35302,38 @@ msgstr "Barscodes ontleden volgens de GS1-128 specificaties"
 #: model:ir.model.fields,field_description:base.field_res_company__partner_id
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 msgid "Partner"
-msgstr "Contact"
+msgstr "Partner"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_partner_autocomplete
 msgid "Partner Autocomplete"
-msgstr "Contact automatisch aanvullen"
+msgstr "Partner automatisch aanvullen"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_commissions
 msgid "Partner Commissions"
-msgstr "Klantcommissies"
+msgstr "Commissies Partners"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_category
 msgid "Partner Tags"
-msgstr "Contactlabels"
+msgstr "Labels Partners"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_title
 msgid "Partner Title"
-msgstr "Contacttitel"
+msgstr "Titel Partner"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_title_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_title_tree
 msgid "Partner Titles"
-msgstr "Juridische entiteit"
+msgstr "Titels Partner"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__active_partner
 msgid "Partner is Active"
-msgstr "Contact is actief"
+msgstr "Partner is actief"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_partner
@@ -35344,36 +35344,36 @@ msgstr "Partnermodule voor website"
 #: model:ir.model.fields,field_description:base.field_res_partner__same_company_registry_partner_id
 #: model:ir.model.fields,field_description:base.field_res_users__same_company_registry_partner_id
 msgid "Partner with same Company Registry"
-msgstr "Contact met hetzelfde bedrijfsregister"
+msgstr "Partner met hetzelfde bedrijfsregister"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__same_vat_partner_id
 #: model:ir.model.fields,field_description:base.field_res_users__same_vat_partner_id
 msgid "Partner with same Tax ID"
-msgstr "Contact met hetzelfde btw-nummer"
+msgstr "Partner met hetzelfde btw-nummer"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__partner_id
 msgid "Partner-related data of the user"
-msgstr "Contact gerelateerde gegevens van de gebruiker"
+msgstr "Partnergerelateerde gegevens van de gebruiker"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category__partner_ids
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Partners"
-msgstr "Contacten"
+msgstr "Partners"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_geolocalize
 msgid "Partners Geolocation"
-msgstr "Contact geolocatie"
+msgstr "Geolocatie Partner"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "Partners: %(category)s"
-msgstr "Contacten: %(category)s"
+msgstr "Partners: %(category)s"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_passkey
@@ -36759,7 +36759,7 @@ msgstr "Publiceer je ledenlijst"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_partner_assign
 msgid "Publish your resellers/partners and forward leads to them"
-msgstr "Publiceer je resellers / contacten en stuur leads naar hen door"
+msgstr "Publiceer je resellers / partners en stuur leads naar hen door"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__published_version
@@ -37376,7 +37376,7 @@ msgstr "Gerelateerd model"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__partner_id
 msgid "Related Partner"
-msgstr "Gerelateerde contact"
+msgstr "Gerelateerde partner"
 
 #. module: base
 #. odoo-python
@@ -38626,17 +38626,17 @@ msgstr "Zoek bank"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Search Partner"
-msgstr "Zoek contact"
+msgstr "Zoek partner"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_category_view_search
 msgid "Search Partner Category"
-msgstr "Zoek contactcategorie"
+msgstr "Zoek partnercategorie"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_search
 msgid "Search Partner Industry"
-msgstr "Zoek branche van contact"
+msgstr "Zoek branche van partner"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__search_view_id
@@ -39209,7 +39209,7 @@ msgstr "Deel groep"
 #: model:ir.model.fields,field_description:base.field_res_partner__partner_share
 #: model:ir.model.fields,field_description:base.field_res_users__partner_share
 msgid "Share Partner"
-msgstr "Deel contact"
+msgstr "Deel Partner"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__share
@@ -41087,7 +41087,7 @@ msgid ""
 "to tax."
 msgstr ""
 "Het btw-nummer. Waarden hier worden gevalideerd op basis van het "
-"landformaat. Je kunt '/' gebruiken om aan te geven dat het contact niet "
+"landformaat. Je kunt '/' gebruiken om aan te geven dat de partner niet "
 "belastingplichtig is."
 
 #. module: base
@@ -41154,7 +41154,7 @@ msgstr "De staatcode moet uniek zijn per land!"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_partner_bank_unique_number
 msgid "The combination Account Number/Partner must be unique."
-msgstr "De combinatie Rekeningnummer/Contact moet uniek zijn."
+msgstr "De combinatie Rekeningnummer/Partner moet uniek zijn."
 
 #. module: base
 #. odoo-python
@@ -41173,8 +41173,8 @@ msgid ""
 "The company assigned to this partner does not match the company this partner"
 " represents."
 msgstr ""
-"Het bedrijf dat is toegewezen aan deze contact komt niet overeen met het "
-"bedrijf dat deze contact vertegenwoordigt."
+"Het bedrijf dat is toegewezen aan deze partner komt niet overeen met het "
+"bedrijf dat deze partner vertegenwoordigt."
 
 #. module: base
 #. odoo-python
@@ -41718,7 +41718,7 @@ msgid ""
 "ID. It must be unique across all partners of a same country"
 msgstr ""
 "Het registratienummer van het bedrijf. Gebruik het als het verschilt van het"
-" btw-nummer. Het moet uniek zijn voor alle contacten van hetzelfde land"
+" btw-nummer. Het moet uniek zijn voor alle partners van hetzelfde land"
 
 #. module: base
 #. odoo-python
@@ -42786,7 +42786,7 @@ msgstr ""
 "Toni Rhodes werkt <b>sinds 10 jaar</b> in de IT-sector. Hij is bekend\n"
 "met name voor het verkopen van muizenvallen. Met die truc sneed hij\n"
 "IT-budget met bijna de helft in de afgelopen 2 jaar.\n"
-"Beroemde Managing Contact."
+"Beroemde Managing Partner."
 
 #. module: base
 #. odoo-python
@@ -44683,7 +44683,7 @@ msgstr "Website Modules Test"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_partner
 msgid "Website Partner"
-msgstr "Website contact"
+msgstr "Website Partner"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_payment
@@ -45311,7 +45311,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "You cannot create recursive Partner hierarchies."
-msgstr "Het is niet mogelijk een recursieve contact hiërarchie te maken."
+msgstr "Het is niet mogelijk een recursieve partnerhiërarchie te maken."
 
 #. module: base
 #. odoo-python
@@ -46044,13 +46044,6 @@ msgid "many2many"
 msgstr "many2many"
 
 #. module: base
-#. odoo-python
-#: code:addons/base/models/ir_actions.py:0
-msgid "many2many fields cannot be evaluated by reference"
-msgstr ""
-"many2many velden kunnen niet geëvalueerd worden door middel van referentie"
-
-#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2one
 msgid "many2one"
 msgstr "many2one"
@@ -46111,7 +46104,7 @@ msgid ""
 "env['res.partner'].create({'name': partner_name})"
 msgstr ""
 "partner_name = record.name + '_code'\n"
-"env['res.contact'].create({'name': partner_name})"
+"env['res.partner'].create({'name': partner_name})"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_payroll

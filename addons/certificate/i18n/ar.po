@@ -216,7 +216,7 @@ msgstr "خطأ في التحميل "
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
 msgid "Make sure to use a private key to sign documents."
-msgstr ""
+msgstr "احرص على استخدام مفتاح خاص للتوقيع على المستندات. "
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
@@ -346,7 +346,7 @@ msgstr "تاريخ انتهاء صلاحية الشهادة (بالتوقيت ا
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__date_start
 msgid "The date on which the certificate starts to be valid (UTC)"
-msgstr ""
+msgstr "التاريخ الذي تبدأ فيه مدة سريان الشهادة ( UTC) "
 
 #. module: certificate
 #. odoo-python
@@ -364,7 +364,7 @@ msgstr "تعذر تحميل المفتاح العام. "
 #. odoo-python
 #: code:addons/certificate/models/certificate.py:0
 msgid "The public key from the certificate could not be loaded."
-msgstr ""
+msgstr "تعذر تحميل المفتاح العام من الشهادة. "
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__serial_number
@@ -383,7 +383,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/certificate/models/certificate.py:0
 msgid "This certificate is not valid, its validity has expired."
-msgstr ""
+msgstr "هذه الشهادة غير صالحة، فقد انتهت صلاحيتها. "
 
 #. module: certificate
 #. odoo-python
@@ -400,6 +400,8 @@ msgid ""
 "Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
 "decryption: RSA."
 msgstr ""
+"خوارزمية التشفير غير المتماثل غير مدعومة '%s'. المدعومة حالياً لإغاء "
+"التشفير: RSA. "
 
 #. module: certificate
 #. odoo-python
@@ -416,6 +418,7 @@ msgid ""
 "Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC,"
 " RSA."
 msgstr ""
+"خوارزمية التشفير غير المتماثل غير مدعومة '%s'. المدعومة حالياً: EC، RSA. "
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__public_key_id
