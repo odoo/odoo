@@ -16,8 +16,7 @@
 # Abbas Ebadian, 2024
 # Hanna Kheradroosta, 2024
 # Hamed Mohammadi <hamed@dehongi.com>, 2024
-# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
-# Dynamic Business Group, 2025
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -25,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Dynamic Business Group, 2025\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,10 +64,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
 msgid "<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
-msgstr ""
-"```html\n"
-"<i class=\"fa fa-home\" role=\"img\" title=\"خانه\" aria-label=\"خانه\"/>\n"
-"```"
+msgstr "<i class=\"fa fa-home\" role=\"img\" title=\"خانه\" aria-label=\"خانه\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -78,9 +74,10 @@ msgid ""
 " only be captured in full. Handle the transactions individually to capture a"
 " partial amount.\"/>"
 msgstr ""
-"```html\n"
-"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture != 'full_only'\" title=\"برخی از تراکنش‌هایی که قصد تصاحب آن‌ها را دارید تنها به‌صورت کامل قابل تصاحب هستند. جهت تصاحب مبلغ جزئی، تراکنش‌ها را به‌صورت مجزا مدیریت کنید.\"/>\n"
-"```"
+"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture"
+" != 'full_only'\" title=\"برخی از تراکنش‌هایی که قصد دارید ثبت کنید فقط به "
+"صورت کامل قابل ثبت هستند. تراکنش‌ها را به صورت جداگانه مدیریت کنید تا مقدار "
+"جزئی را ثبت کنید.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -88,9 +85,8 @@ msgid ""
 "<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-"
 "toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
 msgstr ""
-"```html\n"
-"<i class=\"fa fa-trash\" title=\"حذف روش پرداخت\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>\n"
-"```"
+"<i class=\"fa fa-trash\" title=\"حذف روش پرداخت\" data-bs-toggle=\"tooltip\""
+" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
@@ -103,42 +99,28 @@ msgid ""
 "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
 "                                            Enable Payment Methods"
 msgstr ""
-"```html\n"
-"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
-"                                            فعال کردن روش‌های پرداخت\n"
-"```"
+"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> فعال‌سازی روش‌های "
+"پرداخت"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 msgid "<small class=\"text-600\">Save my payment details</small>"
-msgstr ""
-"```html\n"
-"<small class=\"text-600\">ذخیره‌سازی اطلاعات پرداخت من</small>\n"
-"```"
+msgstr "<small class=\"text-600\">ذخیره جزئیات پرداخت من</small>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "<span class=\"o_stat_text text-danger\">Unpublished</span>"
-msgstr ""
-"```html\n"
-"<span class=\"o_stat_text text-danger\">منتشر نشده</span>\n"
-"```"
+msgstr "<span class=\"o_stat_text text-danger\">منتشر نشده</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "<span class=\"o_stat_text text-success\">Published</span>"
-msgstr ""
-"```html\n"
-"<span class=\"o_stat_text text-success\">منتشر شده</span>\n"
-"```"
+msgstr "<span class=\"o_stat_text text-success\">منتشر شده</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "<span class=\"o_stat_text\">Saved Payment Methods</span>"
-msgstr ""
-"```html\n"
-"<span class=\"o_stat_text\">روش‌های پرداخت ذخیره شده</span>\n"
-"```"
+msgstr "<span class=\"o_stat_text\">روش‌های پرداخت ذخیره‌شده</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -147,11 +129,8 @@ msgid ""
 "                                All countries are supported.\n"
 "                            </span>"
 msgstr ""
-"```html\n"
-"<span class=\"oe_inline text-muted\" invisible=\"supported_country_ids\">\n"
-"                                همه کشورها پشتیبانی می‌شوند.\n"
-"                            </span>\n"
-"```"
+"<span class=\"oe_inline text-muted\" invisible=\"supported_country_ids\"> "
+"همه کشورها پشتیبانی می‌شوند. </span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -160,27 +139,21 @@ msgid ""
 "                                All currencies are supported.\n"
 "                            </span>"
 msgstr ""
-"```html\n"
-"<span class=\"oe_inline text-muted\" invisible=\"supported_currency_ids\">\n"
-"                                همه ارزها پشتیبانی می‌شوند.\n"
-"                            </span>\n"
-"```"
+"<span class=\"oe_inline text-muted\" invisible=\"supported_currency_ids\"> "
+"همه ارزها پشتیبانی می‌شوند. </span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 #: model_terms:ir.ui.view,arch_db:payment.token_form
 msgid "<span><i class=\"fa fa-lock\"/> Secured by</span>"
-msgstr "<span><i class=\"fa fa-lock\"/>  امن شده توسط</span>"
+msgstr "<span><i class=\"fa fa-lock\"/> امن‌شده توسط</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
 msgid ""
 "<span><i class=\"oi oi-arrow-right\"/> How to configure your PayPal "
 "account</span>"
-msgstr ""
-"```html\n"
-"<span><i class=\"oi oi-arrow-right\"/> چگونه حساب PayPal خود را پیکربندی کنید</span>\n"
-"```"
+msgstr "<span><i class=\"oi oi-arrow-right\"/> نحوه تنظیم حساب PayPal خود</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -201,9 +174,9 @@ msgid ""
 "                    moment for it to be processed. Check your payment provider configuration if\n"
 "                    the capture is still pending after a few minutes."
 msgstr ""
-"```html\n"
-"<strong>هشدار!</strong> یک دریافت جزئی در حال انتظار است. لطفاً لحظه‌ای صبر کنید تا پردازش شود. اگر پس از چند دقیقه دریافت همچنان در حال انتظار است، پیکربندی ارائه‌دهنده پرداخت خود را بررسی کنید.\n"
-"```"
+"<strong>هشدار!</strong> یک توقف جزئی در انتظار است. لطفاً صبر کنید تا پردازش"
+" شود. در صورتی که توقف همچنان ادامه دارد، تنظیمات ارائه دهنده پرداخت خود را "
+"بررسی کنید."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -219,10 +192,8 @@ msgid ""
 "<strong>Warning</strong> Creating a payment provider from the <em>CREATE</em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
-"```html\n"
-"<strong>هشدار</strong> ایجاد یک ارائه‌دهنده پرداخت از دکمه <em>ایجاد</em> پشتیبانی نمی‌شود.\n"
-"لطفاً به جای آن از عمل <em>تکرار</em> استفاده کنید.\n"
-"```"
+"<strong>هشدار</strong> ایجاد ارائه دهنده پرداخت از دکمه <em>ایجاد</em> "
+"پشتیبانی نمی‌شود. لطفاً به جای آن از عمل <em>تکثیر</em> استفاده کنید."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -230,10 +201,8 @@ msgid ""
 "<strong>Warning</strong> Make sure you are logged in as the\n"
 "                                    correct partner before making this payment."
 msgstr ""
-"```html\n"
-"<strong>هشدار</strong> مطمئن شوید که به عنوان شریک صحیح وارد شده‌اید\n"
-"                                    قبل از انجام این پرداخت.\n"
-"```"
+"<strong>هشدار</strong> اطمینان حاصل کنید که قبل از انجام این پرداخت به عنوان"
+" شریک صحیح وارد شده‌اید."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -483,10 +452,7 @@ msgstr "هش بازگشتی"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
 msgid "Callback Method"
-msgstr ""
-"```html\n"
-"روش بازگشتی\n"
-"```"
+msgstr "روش بازگشت"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_res_id
@@ -2201,10 +2167,7 @@ msgstr "انتقال وجه"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_xendit
 msgid "Xendit"
-msgstr ""
-"```html\n"
-"زندی\n"
-"```"
+msgstr "زندیٹ"
 
 #. module: payment
 #. odoo-python

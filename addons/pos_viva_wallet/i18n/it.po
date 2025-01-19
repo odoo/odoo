@@ -5,7 +5,7 @@
 # Translators:
 # Sergio Zanchetta <primes2h@gmail.com>, 2024
 # Wil Odoo, 2024
-# Marianna Ciofani, 2024
+# Marianna Ciofani, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2024-02-07 08:49+0000\n"
-"Last-Translator: Marianna Ciofani, 2024\n"
+"Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,13 +72,6 @@ msgstr "ID commerciante"
 #, python-format
 msgid "Message from Viva Wallet: %s"
 msgstr "Messaggio da Viva Wallet: %s"
-
-#. module: pos_viva_wallet
-#. odoo-python
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-#, python-format
-msgid "Not receive Bearer Token"
-msgstr "Token Bearer non ricevuto"
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -142,6 +135,17 @@ msgid "There are some issues between us and Viva Wallet, try again later.%s)"
 msgstr ""
 "Si sono verificati alcuni problemi tra noi e Viva Wallet, riprova più "
 "tardi.%s)"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Unable to retrieve Viva Wallet Bearer Token: Please verify that the Client "
+"ID and Client Secret are correct"
+msgstr ""
+"Impossibile recuperare il bearer token di Viva Wallet: verifica che l'ID "
+"client e il segreto client siano corretti"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_api_key

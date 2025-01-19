@@ -23,8 +23,7 @@
 # pfp pfp <pfpour@yahoo.com>, 2024
 # Hanna Kheradroosta, 2024
 # fardin mardani <fmardani0@gmail.com>, 2024
-# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
-# Dynamic Business Group, 2024
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -32,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Dynamic Business Group, 2024\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -122,10 +121,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__return_count
 msgid "# Returns"
-msgstr ""
-"```\n"
-"# بازده‌ها\n"
-"```"
+msgstr "# بازگشت‌ها"
 
 #. module: stock
 #. odoo-python
@@ -171,10 +167,7 @@ msgstr "%s (کپی)"
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
-msgstr ""
-"```plaintext\n"
-"%s --> واحد اندازه‌گیری محصول %s (%s) است - واحد اندازه‌گیری جابه‌جایی %s (%s) است\n"
-"```"
+msgstr "%s --> واحد محصول %s (%s) - واحد انتقال %s (%s)"
 
 #. module: stock
 #. odoo-python
@@ -271,13 +264,10 @@ msgid ""
 "* Available: The product of the stock move is reserved.\n"
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
-"```\n"
-"* جدید: انتقال موجودی ایجاد شده اما تأیید نشده است.\n"
-"* در انتظار انتقال دیگر: یک انتقال موجودی مرتبط باید قبل از این انجام شود.\n"
-"* در انتظار موجودی: انتقال موجودی تأیید شده اما محصول نمی‌تواند رزرو شود.\n"
-"* موجود: محصول انتقال موجودی رزرو شده است.\n"
-"* انجام شده: محصول منتقل شده و انتقال تأیید شده است.\n"
-"```"
+"* جدید: حرکت انبار ایجاد شده، اما تأیید نشده است. * در انتظار حرکت دیگر: یک "
+"حرکت انبار مرتبط باید قبل از این انجام شود. * در انتظار موجودی: حرکت انبار "
+"تأیید شده اما محصول نمی‌تواند رزرو شود. * موجود: محصول حرکت انبار رزرو شده "
+"است. * انجام شده: محصول منتقل شده و انتقال تأیید شده است."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -497,40 +487,22 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
-"```html\n"
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        سلام <t t-out=\"object.partner_id.name or ''\">براندون فریمن</t>,<br><br>\n"
-"        خوشحالیم که به اطلاع شما برسانیم سفارش شما ارسال شده است.\n"
-"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
-"            کد رهگیری شما \n"
-"            <strong>\n"
-"            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"></t>\n"
-"                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
-"                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"></a>\n"
-"                    </t>\n"
-"                </t>\n"
-"                <t t-else=\"\">\n"
-"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"></a>.\n"
-"                </t>\n"
-"            </t>\n"
-"            <t t-else=\"\">\n"
-"                <t t-out=\"object.carrier_tracking_ref or ''\"></t>.\n"
-"            </t>\n"
-"            </strong>\n"
-"        </t>\n"
-"        <br><br>\n"
-"        لطفاً برای جزئیات بیشتر، سفارش تحویل شما به پیوست مراجعه کنید.<br><br>\n"
-"        متشکرم,\n"
-"        <t t-if=\"user.signature\">\n"
-"            <br>\n"
-"            <t t-out=\"user.signature or ''\">--<br>میتچل ادمین</t>\n"
-"        </t>\n"
-"    </p>\n"
-"</div>\n"
-"```"
+"<div style=\"margin: 0px; padding: 0px;\"> <p style=\"margin: 0px; padding: "
+"0px; font-size: 13px;\"> سلام <t t-out=\"object.partner_id.name or "
+"''\">براندون فریمن</t>,<br><br> خوشحالیم به اطلاع شما برسانیم که سفارش شما "
+"ارسال شده است. <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\"> شماره پیگیری شما <strong> <t "
+"t-if=\"object.carrier_tracking_url\"> <t t-set=\"multiple_carrier_tracking\""
+" t-value=\"object.get_multiple_carrier_tracking()\"></t> <t "
+"t-if=\"multiple_carrier_tracking\"> <t "
+"t-foreach=\"multiple_carrier_tracking\" t-as=\"line\"> <br><a t-att-"
+"href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"></a> </t> </t> <t"
+" t-else=\"\"> <a t-attf-href=\"{{ object.carrier_tracking_url }}\" "
+"target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"></a>. </t> "
+"</t> <t t-else=\"\"> <t t-out=\"object.carrier_tracking_ref or ''\"></t>. "
+"</t> </strong> </t> <br><br> لطفاً برای اطلاعات بیشتر، سفارش تحویل خود را در"
+" پیوست بررسی کنید.<br><br> با تشکر، <t t-if=\"user.signature\"> <br> <t "
+"t-out=\"user.signature or ''\">--<br>میتچل ادمین</t> </t> </p> </div>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
@@ -549,18 +521,12 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Allocation</span>"
-msgstr ""
-"```html\n"
-"<span class=\"o_stat_text\">تخصیص</span>\n"
-"```"
+msgstr "<span class=\"o_stat_text\">تخصیص</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Detailed Operations</span>"
-msgstr ""
-"```html\n"
-"<span class=\"o_stat_text\">عملیات تفصیلی</span>\n"
-"```"
+msgstr "<span class=\"o_stat_text\">عملیات دقیق</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -572,15 +538,12 @@ msgstr "پیش بینی شده"
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">In:</span>"
-msgstr ""
-"```html\n"
-"<span class=\"o_stat_text\">ورود:</span>\n"
-"```"
+msgstr "<span class=\"o_stat_text\">ورود:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "<span class=\"o_stat_text\">Location</span>"
-msgstr "<span class=\"o_stat_text\">مکان</span>"
+msgstr "<span class=\"o_stat_text\">موقعیت</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -598,10 +561,7 @@ msgstr "<span class=\"o_stat_text\">حداکثر:</span>"
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Min:</span>"
-msgstr ""
-"```html\n"
-"<span class=\"o_stat_text\">حداقل:</span>\n"
-"```"
+msgstr "<span class=\"o_stat_text\">حداقل:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -618,52 +578,34 @@ msgstr "<span class=\"o_stat_text\">عملیات</span>"
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Out:</span>"
-msgstr ""
-"```html\n"
-"<span class=\"o_stat_text\">خروج:</span>\n"
-"```"
+msgstr "<span class=\"o_stat_text\">خارج شده:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view
 msgid "<span class=\"o_stat_text\">Product Moves</span>"
-msgstr ""
-"```html\n"
-"<span class=\"o_stat_text\">حرکت‌های محصول</span>\n"
-"```"
+msgstr "<span class=\"o_stat_text\">حرکات محصول</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Putaway Rules</span>"
-msgstr ""
-"```html\n"
-"<span class=\"o_stat_text\">قوانین قرار دادن</span>\n"
-"```"
+msgstr "<span class=\"o_stat_text\">قوانین جانمایی</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "<span class=\"o_stat_text\">Routes</span>"
-msgstr ""
-"```html\n"
-"<span class=\"o_stat_text\">مسیرها</span>\n"
-"```"
+msgstr "<span class=\"o_stat_text\">مسیرها</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Storage Capacities</span>"
-msgstr ""
-"```html\n"
-"<span class=\"o_stat_text\">ظرفیت‌های ذخیره‌سازی</span>\n"
-"```"
+msgstr "<span class=\"o_stat_text\">ظرفیت‌های ذخیره‌سازی</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "<span class=\"o_stat_text\">Traceability</span>"
-msgstr ""
-"```html\n"
-"<span class=\"o_stat_text\">قابلیت ردیابی</span>\n"
-"```"
+msgstr "<span class=\"o_stat_text\">قابلیت ردیابی</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -692,18 +634,12 @@ msgstr "<span><strong>آدرس انبار:</strong></span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "<span>O-BTN.return</span>"
-msgstr ""
-"```html\n"
-"<span>بازگشت</span>\n"
-"```"
+msgstr "<span>O-BTN.بازگشت</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
 msgid "<span>On Hand: </span>"
-msgstr ""
-"```html\n"
-"<span>موجودی: </span>\n"
-"```"
+msgstr "<span>موجودی: </span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -713,10 +649,7 @@ msgstr "<span>نوع بسته‌بندی: </span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_no_package_section_line
 msgid "<span>Products with no package assigned</span>"
-msgstr ""
-"```html\n"
-"<span>محصولاتی که بسته‌ایی به آن‌ها اختصاص داده نشده است</span>\n"
-"```"
+msgstr "<span>محصولاتی که هیچ بسته ای اختصاص داده نشده است</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -726,10 +659,7 @@ msgstr "<span>مقدارهای باقیمانده هنوز تحویل نشده �
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "<span>×</span>"
-msgstr ""
-"```html\n"
-"<span>×</span>\n"
-"```"
+msgstr "<span>×</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_head
@@ -745,10 +675,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Available Quantity</strong>"
-msgstr ""
-"```html\n"
-"<strong>مقدار موجود</strong>\n"
-"```"
+msgstr "<strong>مقدار موجود</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -763,10 +690,7 @@ msgstr "<strong>تحویل شده</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery address</strong>"
-msgstr ""
-"```html\n"
-"<strong>آدرس تحویل</strong>\n"
-"```"
+msgstr "<strong>آدرس تحویل</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -797,10 +721,7 @@ msgstr "<strong>سری ساخت/شماره سریال</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
 msgid "<strong>Max qty:</strong>"
-msgstr ""
-"```html\n"
-"<strong>حداکثر تعداد:</strong>\n"
-"```"
+msgstr "<strong>حداکثر مقدار:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
@@ -859,10 +780,7 @@ msgstr "<strong>مقدار</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Recipient address</strong>"
-msgstr ""
-"```html\n"
-"<strong>آدرس گیرنده</strong>\n"
-"```"
+msgstr "<strong>آدرس گیرنده</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -897,18 +815,12 @@ msgstr "<strong>به</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
 msgid "<strong>Tracked product(s):</strong>"
-msgstr ""
-"```html\n"
-"<strong>محصول(های) پیگیری‌شده:</strong>\n"
-"```"
+msgstr "<strong>محصول(های) ردیابی‌شده:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Warehouse address</strong>"
-msgstr ""
-"```html\n"
-"<strong>آدرس انبار</strong>\n"
-"```"
+msgstr "<strong>آدرس انبار</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -2394,18 +2306,12 @@ msgstr "تاریخ_دمو"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_ORIGIN_DISPLAY_NAME"
-msgstr ""
-"```plaintext\n"
-"نام‌نمایش منشاء_دمو\n"
-"```"
+msgstr "نمایش نام منشاء دمویی"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_PARTNER_NAME"
-msgstr ""
-"```\n"
-"نام_شریک_آزمایشی\n"
-"```"
+msgstr "نام_شریک_آزمایشی"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
@@ -2420,10 +2326,7 @@ msgstr "DEMO_QUANTITY"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_SOURCE_DISPLAY_NAME"
-msgstr ""
-"```plaintext\n"
-"DEMO_SOURCE_DISPLAY_NAME\n"
-"```"
+msgstr "نام_نمایش_منبع_دمو"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
@@ -5953,10 +5856,7 @@ msgstr "سفارش یکجا"
 #: code:addons/stock/static/src/views/stock_orderpoint_list_buttons.xml:0
 #, python-format
 msgid "Order To Max"
-msgstr ""
-"```\n"
-"حداکثر سفارش\n"
-"```"
+msgstr "سفارش به حداکثر"
 
 #. module: stock
 #. odoo-python
@@ -11395,10 +11295,7 @@ msgstr "باید شارژ مجدد شود"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__filter_for_stock_putaway_rule
 msgid "stock.putaway.rule"
-msgstr ""
-"```\n"
-"قانون.محل_استقرار.انبار\n"
-"```"
+msgstr "قانون قرار دادن در انبار تارگت"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__warehouse_id
