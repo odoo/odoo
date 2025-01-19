@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from contextlib import contextmanager
+
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged
@@ -610,3 +612,75 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         })
         payment.action_post()
         self.assertEqual(payment.state, 'paid')
+
+    def test_invoice_paid_hook_called_in_various_scenarios(self):
+        def register_payment(invoice, payment_method_line, amount=None):
+            return self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+                **({'amount': amount} if amount is not None else {}),
+                'payment_method_line_id': payment_method_line.id,
+            })._create_payments()
+
+        def create_statement_line_and_reconcile(amount, payment=None, invoice=None):
+            statement_line = self.env['account.bank.statement.line'].create({
+                'payment_ref': (payment.name if payment else invoice.name),
+                'journal_id': self.company_data['default_journal_bank'].id,
+                'partner_id': self.partner_a.id,
+                'amount': amount,
+            })
+            st_liquidity_lines, st_suspense_lines, _ = statement_line._seek_for_lines()
+            if payment:
+                liquidity_lines, _, _ = payment._seek_for_lines()
+            else:
+                liquidity_lines = invoice.line_ids.filtered(lambda line: line.account_type == 'asset_receivable')
+            st_suspense_lines.account_id = liquidity_lines.account_id
+            (st_suspense_lines + liquidity_lines).reconcile()
+
+        @contextmanager
+        def assert_paid_hook_call(subtest_msg):
+            with self.subTest(subtest_msg), patch.object(self.env.registry['account.move'], '_invoice_paid_hook', autospec=True) as mock_hook:
+                yield mock_hook
+                valid_calls = [call for call in mock_hook.call_args_list if call.args[0]]  # ignore when called on empty recordset
+                self.assertEqual(len(valid_calls), 1, "invoice paid hook should be called once")
+
+        journal = self.company_data['default_journal_bank']
+        payment_method = journal.available_payment_method_ids.filtered(
+            lambda pm: pm.payment_type == "inbound" and pm.code == "manual"
+        )
+        line_with_outstanding = self.env['account.payment.method.line'].create({
+            'payment_method_id': payment_method.id,
+            'journal_id': journal.id,
+            'payment_account_id': self.payment_debit_account_id.id,
+        })
+        line_without_outstanding = self.env['account.payment.method.line'].create({
+            'payment_method_id': payment_method.id,
+            'journal_id': journal.id,
+        })
+
+        with assert_paid_hook_call('with oustanding'):
+            # test 'in_payment' to 'paid' transition (with outstanding account)
+            invoice = self.init_invoice('out_invoice', post=True, amounts=[1000.0], taxes=[])
+            payment = register_payment(invoice, line_with_outstanding)
+            create_statement_line_and_reconcile(payment=payment, amount=invoice.amount_total)
+
+        with assert_paid_hook_call('without oustanding'):
+            if self.env['account.move']._get_invoice_in_payment_state() != 'in_payment':
+                self.skipTest('Accounting not installed')  # there is an implicit outstanding account in this case
+            # Test 'in_payment' to 'paid' transition (without outstanding account)
+            invoice = self.init_invoice('out_invoice', post=True, amounts=[1000.0], taxes=[])
+            payment = register_payment(invoice, line_without_outstanding)
+            create_statement_line_and_reconcile(invoice=invoice, amount=invoice.amount_total)
+
+        with assert_paid_hook_call('without payment'):
+            # test direct reconciliation without payment
+            invoice = self.init_invoice('out_invoice', post=True, amounts=[1000.0], taxes=[])
+            create_statement_line_and_reconcile(invoice=invoice, amount=invoice.amount_total)
+
+        with assert_paid_hook_call('with mixed oustanding'):
+            if self.env['account.move']._get_invoice_in_payment_state() != 'in_payment':
+                self.skipTest('Accounting not installed')  # there is an implicit outstanding account in this case
+            # Test with half payment with and half without outstanding account
+            invoice = self.init_invoice('out_invoice', post=True, amounts=[1000.0], taxes=[])
+            payment = register_payment(invoice, line_with_outstanding, invoice.amount_total / 2)
+            create_statement_line_and_reconcile(payment=payment, amount=invoice.amount_total / 2)
+            payment = register_payment(invoice, line_without_outstanding, invoice.amount_total / 2)
+            create_statement_line_and_reconcile(invoice=invoice, amount=invoice.amount_total / 2)
