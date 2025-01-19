@@ -6,8 +6,8 @@
 # JH CHOI <hwangtog@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Sarah Park, 2024
-# Wil Odoo, 2024
 # Daye Jeong, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-19 11:52+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Daye Jeong, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3943,6 +3943,13 @@ msgstr "매입 전표가 아니면 매입 문서를 생성할 수 없습니다."
 #: code:addons/account/models/account_move.py:0
 msgid "Cannot create a sale document in a non sale journal"
 msgstr "매출 전표가 아니면 매출 문서를 생성할 수 없습니다."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+#, python-format
+msgid "Cannot create an accrual entry with orders in different currencies."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -9964,6 +9971,12 @@ msgstr ""
 "SEPA 자동이체: 협력사 권한으로 SEPA 지역에서 결제가 가능합니다 (account_sepa 모듈 필수).\n"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid "Manually"
+msgstr "수동"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Mapping"
 msgstr "매핑"
@@ -15524,6 +15537,14 @@ msgid ""
 "The selected payment method is not available for this payment, please select"
 " the payment method again."
 msgstr "선택하신 결제 방법은 이 결제에 사용하실 수 없습니다. 다른 결제 수단을 선택해 주세요."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"The sending of invoices is not set up properly, make sure the report used is"
+" set for invoices."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__sequence

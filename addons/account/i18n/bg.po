@@ -32,8 +32,8 @@
 # Toma Tomov, 2024
 # Emil Krastev, 2024
 # Milena Georgieva, 2024
-# Maria Boyadjieva <marabo2000@gmail.com>, 2024
 # Petko Karamotchev, 2025
+# Maria Boyadjieva <marabo2000@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -41,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-19 11:52+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Petko Karamotchev, 2025\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2025\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3939,6 +3939,13 @@ msgstr ""
 msgid "Cannot create a sale document in a non sale journal"
 msgstr ""
 "Не може да се създаде документ за продажба в дневник, който не е за продажби"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+#, python-format
+msgid "Cannot create an accrual entry with orders in different currencies."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -9978,6 +9985,12 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid "Manually"
+msgstr "Механично"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Mapping"
 msgstr "Картографиране"
@@ -15605,6 +15618,14 @@ msgstr ""
 msgid ""
 "The selected payment method is not available for this payment, please select"
 " the payment method again."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"The sending of invoices is not set up properly, make sure the report used is"
+" set for invoices."
 msgstr ""
 
 #. module: account

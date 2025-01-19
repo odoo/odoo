@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Tiffany Chang, 2024
-# Fernanda Alvarez, 2024
-# Wil Odoo, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Fernanda Alvarez, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 07:49+0000\n"
 "PO-Revision-Date: 2024-09-29 00:00+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -161,6 +161,12 @@ msgstr "Agregar un botón"
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Add a code section"
 msgstr "Agregar una sección de código."
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
+msgid "Add a download box"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -311,7 +317,7 @@ msgstr "Bloque básico"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Big section heading"
-msgstr "Encabezado de sección grande."
+msgstr "Texto de sección grande."
 
 #. module: html_editor
 #. odoo-javascript
@@ -515,16 +521,9 @@ msgstr "Dailymotion"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
 #: code:addons/html_editor/static/src/main/media/image_plugin.js:0
 msgid "Default"
 msgstr "Predeterminado"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Default + Rounded"
-msgstr "Predeterminado + Redondeado"
 
 #. module: html_editor
 #. odoo-javascript
@@ -564,15 +563,9 @@ msgstr "Le ofrecemos una amplia gama de imágenes libres de derecho de autor."
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/media_dialog.js:0
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
 msgid "Documents"
 msgstr "Documentos"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/core/file/readonly_file.xml:0
-msgid "Download"
-msgstr "Descargar"
 
 #. module: html_editor
 #. odoo-javascript
@@ -686,12 +679,6 @@ msgstr "Extender al lado más lejano"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/file_plugin/file_plugin.js:0
-msgid "File"
-msgstr "Archivo"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/upload_progress_toast/upload_progress_toast.xml:0
 msgid "File has been uploaded"
 msgstr "Se subió el archivo"
@@ -713,12 +700,6 @@ msgstr "Rellenar + Redondeado"
 #: code:addons/html_editor/static/src/main/font/gradient_picker.xml:0
 msgid "First color %"
 msgstr "% del primer color"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Flat"
-msgstr "Fija"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1230,7 +1211,7 @@ msgstr "Medio"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Medium section heading"
-msgstr "Título de sección mediano"
+msgstr "Texto de sección mediano."
 
 #. module: html_editor
 #. odoo-javascript
@@ -1559,7 +1540,7 @@ msgstr "Buscar un pictograma"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/image_selector.js:0
 msgid "Search an image"
-msgstr "Buscar una imagen"
+msgstr "Busque una imagen"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1643,7 +1624,7 @@ msgstr "Pequeño"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Small section heading"
-msgstr "Encabezado de sección pequeño."
+msgstr "Texto de sección pequeño."
 
 #. module: html_editor
 #. odoo-javascript
@@ -1907,13 +1888,19 @@ msgstr "URL"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Upload File"
+msgstr "Subir archivo"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/document_selector.js:0
 msgid "Upload a document"
 msgstr "Subir un documento"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/file_plugin/file_plugin.js:0
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
 msgid "Upload a file"
 msgstr "Subir archivo"
 
@@ -2097,15 +2084,33 @@ msgstr "grados"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
+msgid "document"
+msgstr "documento"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog.xml:0
 msgid "e.g. https://link.excalidraw.com/..."
 msgstr "Por ejemplo, https://link.excalidraw.com/..."
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
+msgid "file"
+msgstr "archivo "
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
 msgid "media-library"
 msgstr "biblioteca de medios"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "or"
+msgstr "o"
 
 #. module: html_editor
 #. odoo-javascript

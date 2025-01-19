@@ -8,8 +8,9 @@
 # Jiří Podhorecký <jirka.p@volny.cz>, 2024
 # Marta Wacławek, 2024
 # Tomáš Píšek, 2024
-# Wil Odoo, 2024
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
+# Stanislav Kurinec, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-19 11:52+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1250,7 +1251,7 @@ msgstr "<strong>Datum</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Delivery Date</strong>"
-msgstr ""
+msgstr "<strong>Datum dodání</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1260,7 +1261,7 @@ msgstr "<strong>Datum splatnosti:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Due Date</strong>"
-msgstr ""
+msgstr "<strong>Datum splatnosti:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -1280,7 +1281,7 @@ msgstr "<strong>Datum faktury:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Invoice Date</strong>"
-msgstr ""
+msgstr "<strong>Datum faktury:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3860,6 +3861,13 @@ msgstr "Nelze vytvořit nákupní doklad v jiném než nákupním deníku."
 #: code:addons/account/models/account_move.py:0
 msgid "Cannot create a sale document in a non sale journal"
 msgstr "Nelze vytvořit prodejní doklad v jiném než prodejním deníku."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+#, python-format
+msgid "Cannot create an accrual entry with orders in different currencies."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -10011,6 +10019,12 @@ msgstr ""
 "SEPA příkaz k inkasu: V rámci zóny SEPA proběhne platba díky povolení, které vám udělil partner. Je nezbytný modul account_sepa.\n"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid "Manually"
+msgstr "Ručně"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Mapping"
 msgstr ""
@@ -15704,6 +15718,14 @@ msgid ""
 msgstr ""
 "Vybraná platební metoda není pro tuto platbu dostupná, vyberte prosím "
 "platební metodu znovu."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"The sending of invoices is not set up properly, make sure the report used is"
+" set for invoices."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__sequence
