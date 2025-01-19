@@ -17,8 +17,7 @@
 # Abbas Ebadian, 2024
 # Hanna Kheradroosta, 2024
 # Hamed Mohammadi <hamed@dehongi.com>, 2024
-# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
-# Dynamic Business Group, 2024
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -26,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Dynamic Business Group, 2024\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -268,32 +267,25 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"```html\n"
-"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
-"    <table style=\"width:600px;margin:5px auto;\">\n"
-"        <tbody>\n"
-"            <tr><td>\n"
-"                <!-- ما از لوگوی شرکتی که نظرسنجی را ایجاد کرده استفاده می‌کنیم (برای مدیریت چندین شرکت) -->\n"
-"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
-"            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
-"                    گواهینامه: <t t-out=\"object.survey_id.display_name or ''\">فرم بازخورد</t>\n"
-"            </td></tr>\n"
-"        </tbody>\n"
-"    </table>\n"
-"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
-"        <tbody>\n"
-"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
-"                <p>عزیز <span t-out=\"object.partner_id.name or 'participant'\">شرکت‌کننده</span></p>\n"
-"                <p>\n"
-"                    لطفاً گواهینامه شما به ضمیمه پیوست شده است\n"
-"                        <strong t-out=\"object.survey_id.display_name or ''\">ایجاد مبلمان</strong>\n"
-"                </p>\n"
-"                <p>تبریک می‌گوییم برای قبولی در آزمون با نمره <strong t-out=\"object.scoring_percentage\"></strong>%!</p>\n"
-"            </td></tr>\n"
-"        </tbody>\n"
-"    </table>\n"
-"</div>\n"
-"```"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-"
+"family:Arial,Helvetica,sans-serif;font-size:14px;\"> <table "
+"style=\"width:600px;margin:5px auto;\"> <tbody> <tr><td> <!-- ما از لوگوی "
+"شرکتی که نظرسنجی را ایجاد کرده استفاده می‌کنیم (برای مدیریت موارد چند شرکتی)"
+" --> <a href=\"/\"><img t-if=\"not "
+"object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-"
+"src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
+"style=\"vertical-align:baseline;max-width:100px;\"></a> </td><td "
+"style=\"text-align:right;vertical-align:middle;\"> گواهی‌نامه: <t "
+"t-out=\"object.survey_id.display_name or ''\">فرم بازخورد</t> </td></tr> "
+"</tbody> </table> <table style=\"width:600px;margin:0px "
+"auto;background:white;border:1px solid #e1e1e1;\"> <tbody> <tr><td "
+"style=\"padding:15px 20px 10px 20px;\"> <p>عزیز <span "
+"t-out=\"object.partner_id.name or 'participant'\">شرکت‌کننده</span></p> <p> "
+"لطفاً پیوست شده‌تان را بیابید <strong t-out=\"object.survey_id.display_name "
+"or ''\">ایجاد مبلمان</strong> گواهی‌نامه </p> <p>تبریک می‌گوییم به خاطر "
+"قبولی در آزمون با نمره <strong "
+"t-out=\"object.scoring_percentage\"></strong>%!</p> </td></tr> </tbody> "
+"</table> </div>"
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_user_input_invite
@@ -330,46 +322,26 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"```html\n"
-"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        عزیز <t t-out=\"object.partner_id.name or 'participant'\">شرکت‌کننده</t><br><br>\n"
-"        <t t-if=\"object.survey_id.certification\">\n"
-"            شما دعوت شده‌اید تا یک گواهینامه جدید بگیرید.\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"            ما در حال انجام یک نظرسنجی هستیم و پاسخ شما مورد قدردانی قرار می‌گیرد.\n"
-"        </t>\n"
-"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
-"                <t t-if=\"object.survey_id.certification\">\n"
-"                    شروع گواهینامه\n"
-"                </t>\n"
-"                <t t-else=\"\">\n"
-"                    شروع نظرسنجی\n"
-"                </t>\n"
-"            </a>\n"
-"        </div>\n"
-"        <t t-if=\"object.deadline\">\n"
-"            لطفاً پاسخ دهید به نظرسنجی تا <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br><br>\n"
-"        </t>\n"
-"        <t t-if=\"object.survey_id.certification\">\n"
-"            برای شما آرزوی موفقیت داریم!\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"            پیشاپیش از مشارکت شما تشکر می‌کنیم.\n"
-"        </t>\n"
-"    </p>\n"
-"</div>\n"
-"```"
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\"> <p "
+"style=\"margin: 0px; padding: 0px; font-size: 13px;\"> عزیز <t "
+"t-out=\"object.partner_id.name or 'participant'\">شرکت‌کننده</t><br><br> <t "
+"t-if=\"object.survey_id.certification\"> شما به یک گواهی‌نامه جدید دعوت "
+"شده‌اید. </t> <t t-else=\"\"> ما در حال انجام یک نظرسنجی هستیم و از پاسخ شما"
+" سپاسگزاریم. </t> <div style=\"margin: 16px 0px 16px 0px;\"> <a t-att-"
+"href=\"(object.get_start_url())\" style=\"background-color: #875A7B; "
+"padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-"
+"radius: 5px; font-size:13px;\"> <t t-if=\"object.survey_id.certification\"> "
+"شروع گواهی‌نامه </t> <t t-else=\"\"> شروع نظرسنجی </t> </a> </div> <t "
+"t-if=\"object.deadline\"> لطفاً تا تاریخ <t "
+"t-out=\"format_date(object.deadline) or ''\">05/05/2021</t> به نظرسنجی پاسخ "
+"دهید.<br><br> </t> <t t-if=\"object.survey_id.certification\"> برای شما "
+"آرزوی موفقیت داریم! </t> <t t-else=\"\"> پیشاپیش از شرکت شما سپاسگزاریم. "
+"</t> </p> </div>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
 msgid "<i class=\"fa fa-bar-chart me-1\"/>Graph"
-msgstr ""
-"```html\n"
-"<i class=\"fa fa-bar-chart me-1\"/>نمودار\n"
-"```"
+msgstr "<i class=\"fa fa-bar-chart me-1\"/>نمودار"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -379,18 +351,12 @@ msgstr "<i class=\"fa fa-bar-chart\"/> نتایج"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-check-square-o fa-lg me-2\"/>answer"
-msgstr ""
-"```html\n"
-"<i class=\"fa fa-check-square-o fa-lg me-2\"/>پاسخ\n"
-"```"
+msgstr "<i class=\"fa fa-check-square-o fa-lg me-2\"/>پاسخ"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-circle-o  fa-lg me-2\"/>answer"
-msgstr ""
-"```html\n"
-"<i class=\"fa fa-circle-o  fa-lg me-2\"/>پاسخ\n"
-"```"
+msgstr "<i class=\"fa fa-circle-o fa-lg me-2\"/>پاسخ"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -427,7 +393,7 @@ msgid ""
 "pass this assessment because no question is configured to give any points."
 msgstr ""
 "<i class=\"fa fa-exclamation-triangle\"/> در حال حاضر امکان گذراندن این "
-"ارزیابی وجود ندارد زیرا هیچ سوالی برای اختصاص امتیاز تنظیم نشده است."
+"ارزیابی وجود ندارد زیرا هیچ سوالی برای دادن امتیاز پیکربندی نشده است."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -447,18 +413,12 @@ msgstr "<i class=\"fa fa-list-alt me-1\"/>همه داده‌ها"
 #: model_terms:ir.ui.view,arch_db:survey.question_result_choice
 #: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
 msgid "<i class=\"fa fa-list-alt me-1\"/>Data"
-msgstr ""
-"```html\n"
-"<i class=\"fa fa-list-alt me-1\"/>داده‌ها\n"
-"```"
+msgstr "<i class=\"fa fa-list-alt me-1\"/>داده‌ها"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
 msgid "<i class=\"fa fa-list-ol me-1\"/>Most Common"
-msgstr ""
-"```html\n"
-"<i class=\"fa fa-list-ol me-1\"/>متداول‌ترین\n"
-"```"
+msgstr "<i class=\"fa fa-list-ol me-1\"/>رایج‌ترین‌ها"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -485,9 +445,8 @@ msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Avg "
 "</span>"
 msgstr ""
-"```html\n"
-"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">میانگین</span>\n"
-"```"
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">میانگین "
+"</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
@@ -495,9 +454,8 @@ msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Max "
 "</span>"
 msgstr ""
-"```html\n"
-"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">حداکثر </span>\n"
-"```"
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">حداکثر "
+"</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
@@ -505,9 +463,8 @@ msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Min "
 "</span>"
 msgstr ""
-"```html\n"
-"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">حداقل </span>\n"
-"```"
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">حداقل "
+"</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -515,9 +472,8 @@ msgid ""
 "<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\" id=\"enter-"
 "tooltip\"> or press CTRL+Enter</span>"
 msgstr ""
-"```html\n"
-"<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\" id=\"enter-tooltip\"> یا کلیدهای CTRL+Enter را فشار دهید</span>\n"
-"```"
+"<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\" id=\"enter-"
+"tooltip\"> یا CTRL+Enter را فشار دهید</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -526,11 +482,8 @@ msgid ""
 "                            <span id=\"enter-tooltip\">or press Enter</span>\n"
 "                        </span>"
 msgstr ""
-"```html\n"
-"<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\">\n"
-"                            <span id=\"enter-tooltip\">یا دکمه Enter را فشار دهید</span>\n"
-"                        </span>\n"
-"```"
+"<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\"> <span "
+"id=\"enter-tooltip\">یا Enter را فشار دهید</span> </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -539,19 +492,13 @@ msgid ""
 "                    <span id=\"enter-tooltip\">or press CTRL+Enter</span>\n"
 "                </span>"
 msgstr ""
-"```html\n"
-"<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\">\n"
-"                    <span id=\"enter-tooltip\">یا CTRL+Enter را فشار دهید</span>\n"
-"                </span>\n"
-"```"
+"<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\"> <span "
+"id=\"enter-tooltip\">یا CTRL+Enter فشار دهید</span> </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "<span class=\"mx-1\">-</span>"
-msgstr ""
-"```html\n"
-"<span class=\"mx-1\">-</span>\n"
-"```"
+msgstr "<span class=\"mx-1\">-</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.res_partner_view_form
@@ -559,10 +506,9 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"certifications_company_count &lt; 2\">Certifications</span>\n"
 "                        <span class=\"o_stat_text\" invisible=\"certifications_company_count &gt; 1\">Certification</span>"
 msgstr ""
-"```html\n"
-"<span class=\"o_stat_text\" invisible=\"certifications_company_count &lt; 2\">گواهینامه‌ها</span>\n"
-"                        <span class=\"o_stat_text\" invisible=\"certifications_company_count &gt; 1\">گواهینامه</span>\n"
-"```"
+"<span class=\"o_stat_text\" invisible=\"certifications_company_count &lt; "
+"2\">گواهی‌نامه‌ها</span> <span class=\"o_stat_text\" "
+"invisible=\"certifications_company_count &gt; 1\">گواهی‌نامه</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.res_partner_view_form
@@ -570,10 +516,9 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\">Certifications</span>\n"
 "                        <span class=\"o_stat_text\" invisible=\"certifications_count &gt; 1\">Certification</span>"
 msgstr ""
-"```html\n"
-"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\">گواهینامه‌ها</span>\n"
-"                        <span class=\"o_stat_text\" invisible=\"certifications_count &gt; 1\">گواهینامه</span>\n"
-"```"
+"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; "
+"2\">گواهینامه‌ها</span> <span class=\"o_stat_text\" "
+"invisible=\"certifications_count &gt; 1\">گواهینامه</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
@@ -581,9 +526,8 @@ msgid ""
 "<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\">or"
 " press Enter</span>"
 msgstr ""
-"```html\n"
-"<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\">یا Enter را فشار دهید</span>\n"
-"```"
+"<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\">یا"
+" Enter را فشار دهید</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_selection_key
@@ -592,9 +536,9 @@ msgid ""
 "start py-0 ps-2\"><span class=\"text-primary text-center text-center w-100 "
 "position-relative\">Key</span></span>"
 msgstr ""
-"```html\n"
-"<span class=\"o_survey_key text-center position-absolute bg-white rounded-start py-0 ps-2\"><span class=\"text-primary text-center text-center w-100 position-relative\">کلید</span></span>\n"
-"```"
+"<span class=\"o_survey_key text-center position-absolute bg-white rounded-"
+"start py-0 ps-2\"><span class=\"text-primary text-center text-center w-100 "
+"position-relative\">کلید</span></span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -603,22 +547,15 @@ msgid ""
 "                                <i class=\"fa fa-trash me-1\"/>Remove all filters\n"
 "                            </span>"
 msgstr ""
-"```html\n"
-"<span class=\"o_survey_results_topbar_clear_filters text-primary\">\n"
-"                                <i class=\"fa fa-trash me-1\"/>حذف تمام فیلترها\n"
-"                            </span>\n"
-"```"
+"<span class=\"o_survey_results_topbar_clear_filters text-primary\"> <i "
+"class=\"fa fa-trash me-1\"/>حذف همه فیلترها </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 msgid ""
 "<span class=\"o_survey_session_answer_count\">0</span>\n"
 "                                     /"
-msgstr ""
-"```html\n"
-"<span class=\"o_survey_session_answer_count\">۰</span>\n"
-"                                     /\n"
-"```"
+msgstr "<span class=\"o_survey_session_answer_count\">۰</span> /"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_open
@@ -626,10 +563,8 @@ msgid ""
 "<span class=\"o_survey_session_navigation_next_label me-2 fw-bold\">Start</span>\n"
 "                        <i class=\"fw-bold oi oi-chevron-right\"/>"
 msgstr ""
-"```html\n"
-"<span class=\"o_survey_session_navigation_next_label me-2 fw-bold\">شروع</span>\n"
-"                        <i class=\"fw-bold oi oi-chevron-right\"/>\n"
-"```"
+"<span class=\"o_survey_session_navigation_next_label me-2 fw-"
+"bold\">شروع</span> <i class=\"fw-bold oi oi-chevron-right\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -649,10 +584,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "<span class=\"text-muted\">Questions</span>"
-msgstr ""
-"```html\n"
-"<span class=\"text-muted\">سوالات</span>\n"
-"```"
+msgstr "<span class=\"text-muted\">سوالات</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -662,18 +594,12 @@ msgstr "<span class=\"text-muted\">پاسخ داده شده</span>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"text-muted\">Skipped</span>"
-msgstr ""
-"```html\n"
-"<span class=\"text-muted\">رد شده</span>\n"
-"```"
+msgstr "<span class=\"text-muted\">رد شد</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"text-success\">Correct</span>"
-msgstr ""
-"```html\n"
-"<span class=\"text-success\">صحیح</span>\n"
-"```"
+msgstr "<span class=\"text-success\">درست</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -683,51 +609,36 @@ msgstr "<span class=\"text-warning\">جزئی</span>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<span invisible=\"not is_scored_question\">Points</span>"
-msgstr ""
-"```html\n"
-"<span invisible=\"not is_scored_question\">امتیاز</span>\n"
-"```"
+msgstr "<span invisible=\"not is_scored_question\">امتیازها</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<span invisible=\"not is_time_limited\"> seconds</span>"
-msgstr ""
-"```html\n"
-"<span invisible=\"not is_time_limited\"> ثانیه</span>\n"
-"```"
+msgstr "<span invisible=\"not is_time_limited\">ثانیه</span>"
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p3_q1
 msgid ""
 "<span>\"Red\" is not a category, I know what you are trying to do ;)</span>"
 msgstr ""
-"```html\n"
-"<span>\"قرمز\" یک دسته‌بندی نیست، می‌دانم که شما در حال تلاش برای انجام چه کاری هستید ;)</span>\n"
-"```"
+"<span> \"قرمز\" یک دسته نیست، من می‌دانم که شما در حال تلاش برای چه کاری "
+"هستید ;)</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
 msgid "<span>%</span>"
-msgstr ""
-"```html\n"
-"<span>٪</span>\n"
-"```"
+msgstr "<span>٪</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<span>All surveys</span>"
-msgstr ""
-"```html\n"
-"<span>همه نظرسنجی‌ها</span>\n"
-"```"
+msgstr "<span>همه نظرسنجی‌ها</span>"
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p3_q6
 msgid "<span>Best time to do it, is the right time to do it.</span>"
 msgstr ""
-"```html\n"
-"<span>بهترین زمان برای انجام آن، همان زمانی است که باید انجام شود.</span>\n"
-"```"
+"<span>بهترین زمان برای انجام دادن آن، زمان مناسب برای انجام آن است.</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -751,11 +662,9 @@ msgid ""
 "                                    <i class=\"fa fa-2x\" role=\"img\" aria-label=\"Numeric\" title=\"Numeric\">123 </i>\n"
 "                                    <i class=\"fa fa-2x fa-sort\" role=\"img\" aria-label=\"Numeric\"/>"
 msgstr ""
-"```html\n"
-"<span>چند تا ...؟</span><br/>\n"
-"                                    <i class=\"fa fa-2x\" role=\"img\" aria-label=\"عددی\" title=\"عددی\">123 </i>\n"
-"                                    <i class=\"fa fa-2x fa-sort\" role=\"img\" aria-label=\"عددی\"/>\n"
-"```"
+"<span>چند ...؟</span><br/> <i class=\"fa fa-2x\" role=\"img\" aria-"
+"label=\"عددی\" title=\"عددی\">۱۲۳ </i> <i class=\"fa fa-2x fa-sort\" "
+"role=\"img\" aria-label=\"عددی\"/>"
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p5_q1
@@ -772,10 +681,8 @@ msgid ""
 "<span>Name all the animals</span><br/>\n"
 "                                    <i class=\"fa fa-align-justify fa-4x\" role=\"img\" aria-label=\"Multiple lines\" title=\"Multiple Lines\"/>"
 msgstr ""
-"```html\n"
-"        <span>تمام حیوانات را نام ببرید</span><br/>\n"
-"                                    <i class=\"fa fa-align-justify fa-4x\" role=\"img\" aria-label=\"چندین خط\" title=\"چندین خطوط\"/>\n"
-"```"
+"<span>نام تمام حیوانات را ببرید</span><br/> <i class=\"fa fa-align-justify "
+"fa-4x\" role=\"img\" aria-label=\"چند خطی\" title=\"چند خطی\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -783,10 +690,8 @@ msgid ""
 "<span>Name one animal</span><br/>\n"
 "                                    <i class=\"fa fa-minus fa-4x\" role=\"img\" aria-label=\"Single Line\" title=\"Single Line\"/>"
 msgstr ""
-"```html\n"
-"<span>نام یک حیوان را نام ببرید</span><br/>\n"
-"                                    <i class=\"fa fa-minus fa-4x\" role=\"img\" aria-label=\"خط تکی\" title=\"خط تکی\"/>\n"
-"```"
+"<span>نام یک حیوان را بگویید</span><br/> <i class=\"fa fa-minus fa-4x\" "
+"role=\"img\" aria-label=\"یک خط\" title=\"یک خط\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_retake
@@ -802,9 +707,8 @@ msgstr "<span>رهبر معروف ما!</span>"
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p3_q3
 msgid "<span>Our sales people have an advantage, but you can do it!</span>"
 msgstr ""
-"```html\n"
-"<span>فروشندگان ما یک مزیت دارند، اما شما هم می‌توانید انجام دهید!</span>\n"
-"```"
+"<span>فروشندگان ما مزیتی دارند، اما شما هم می‌توانید این کار را انجام "
+"دهید!</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -814,21 +718,14 @@ msgstr "<span>قبول و رد شده</span>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<span>Passed only</span>"
-msgstr ""
-"```html\n"
-"<span>فقط قبول شد</span>\n"
-"```"
+msgstr "<span>تنها قبول شده</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid ""
 "<span>This certificate is presented to</span>\n"
 "                                <br/>"
-msgstr ""
-"```html\n"
-"<span>این گواهی به ارائه می‌شود به</span>\n"
-"                                <br/>\n"
-"```"
+msgstr "<span>این گواهینامه ارائه می‌شود به</span> <br/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
@@ -842,10 +739,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "<span>Try It</span>"
-msgstr ""
-"```html\n"
-"<span>امتحان کنید</span>\n"
-"```"
+msgstr "<span>امتحان کن</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -856,34 +750,22 @@ msgstr "<span> منتظر شرکت کنندگان...</span>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<span>When does ... start?</span><br/>"
-msgstr ""
-"```html\n"
-"<span>چه زمانی ... شروع می‌شود؟</span><br/>\n"
-"```"
+msgstr "<span>کی شروع می‌شود؟ ...</span><br/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<span>When is Christmas?</span><br/>"
-msgstr ""
-"```html\n"
-"<span>کریسمس چه زمانی است؟</span><br/>\n"
-"```"
+msgstr "<span>کریسمس چه زمانی است؟</span><br/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<span>Which are yellow?</span><br/>"
-msgstr ""
-"```html\n"
-"<span>کدام‌ها زرد هستند؟</span><br/>\n"
-"```"
+msgstr "<span>کدام زرد هستند؟</span><br/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<span>Which is yellow?</span><br/>"
-msgstr ""
-"```html\n"
-"<span>کدام زرد است؟</span><br/>\n"
-"```"
+msgstr "<span>کدام زرد است؟</span><br/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
@@ -1891,10 +1773,7 @@ msgstr "لامپ قابل سفارشی‌سازی"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "DEMO_CERTIFIED_NAME"
-msgstr ""
-"```plaintext\n"
-"نام_تایید_شده_دمو\n"
-"```"
+msgstr "plaintext نام_تایید_شده_نسخه_آزمایشی"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__date
@@ -2141,10 +2020,7 @@ msgstr "فرم بازخورد"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q5_row2
 msgid "Ficus"
-msgstr ""
-"```html\n"
-"فیکوس\n"
-"```"
+msgstr "فیکوس"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_choice
@@ -5917,10 +5793,7 @@ msgstr "از"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "of achievement"
-msgstr ""
-"```html\n"
-"از موفقیت\n"
-"```"
+msgstr "موفقیت"
 
 #. module: survey
 #. odoo-javascript

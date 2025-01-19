@@ -20,9 +20,9 @@
 # Abbas Ebadian, 2024
 # Hamed Mohammadi <hamed@dehongi.com>, 2024
 # Hanna Kheradroosta, 2024
-# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # Mohammadamir Heshmatkhah <maheshmatkhah.soft@gmail.com>, 2024
 # Dynamic Business Group, 2024
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Dynamic Business Group, 2024\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,13 +51,9 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
-"```html\n"
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"    هیچ مرحله مهمی یافت نشد. بیایید یکی ایجاد کنیم!\n"
-"</p><p>\n"
-"    نقاط پیشرفت مهمی را پیگیری کنید که باید برای دستیابی به موفقیت به آنها رسید.\n"
-"</p>\n"
-"```"
+"<p class=\"o_view_nocontent_smiling_face\"> هیچ نقطه عطفی یافت نشد. بیایید "
+"یکی ایجاد کنیم! </p><p> پیشرفت‌های اصلی را پیگیری کنید که باید برای رسیدن به"
+" موفقیت به دست آیند. </p>"
 
 #. module: project
 #. odoo-javascript
@@ -301,82 +297,55 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"```html\n"
-"<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"></t>\n"
-"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"></t>\n"
-"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
-"    <tbody>\n"
-"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            <t t-if=\"partner.name\">\n"
-"                سلام <t t-out=\"partner.name or ''\">براندون فریمن</t>,<br><br>\n"
-"            </t>\n"
-"            <t t-else=\"\">\n"
-"                سلام،<br><br>\n"
-"            </t>\n"
-"            لطفاً زمانی را صرف کنید تا خدمات ما را که مربوط به وظیفه <strong t-out=\"object.name or ''\">برنامه‌ریزی و بودجه</strong> است، ارزیابی کنید\n"
-"            <t t-if=\"object._rating_get_operator().name\">\n"
-"                که به <strong t-out=\"object._rating_get_operator().name or ''\">میشل ادمین</strong> اختصاص داده شده است.<br>\n"
-"            </t>\n"
-"            <t t-else=\"\">\n"
-"                .<br>\n"
-"            </t>\n"
-"        </td></tr>\n"
-"        <tr><td style=\"text-align: center;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
-"                <tr><td style=\"font-size: 13px;\">\n"
-"                    <strong>به ما بگویید که از خدمات ما چه احساسی دارید</strong><br>\n"
-"                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(برای انتخاب یکی از این ایموجی‌ها کلیک کنید)</span>\n"
-"                </td></tr>\n"
-"                <tr><td style=\"font-size: 13px;\">\n"
-"                    <table style=\"width:100%;text-align:center;margin-top:2rem;\">\n"
-"                        <tr>\n"
-"                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/5\">\n"
-"                                    <img alt=\"راضی\" src=\"/rating/static/src/img/rating_5.png\" title=\"راضی\">\n"
-"                                </a>\n"
-"                            </td>\n"
-"                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/3\">\n"
-"                                    <img alt=\"خوب\" src=\"/rating/static/src/img/rating_3.png\" title=\"خوب\">\n"
-"                                </a>\n"
-"                            </td>\n"
-"                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/1\">\n"
-"                                    <img alt=\"ناراضی\" src=\"/rating/static/src/img/rating_1.png\" title=\"ناراضی\">\n"
-"                                </a>\n"
-"                            </td>\n"
-"                        </tr>\n"
-"                    </table>\n"
-"                </td></tr>\n"
-"            </table>\n"
-"        </td></tr>\n"
-"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            از بازخورد شما قدردانی می‌کنیم. این به ما کمک می‌کند تا به طور مستمر بهبود یابیم.\n"
-"            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
-"                <br><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">این نظرسنجی رضایت به این دلیل ارسال شده که وظیفه شما به مرحله <b t-out=\"object.stage_id.name or ''\">در حال انجام</b> منتقل شده است</span>\n"
-"            </t>\n"
-"            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
-"                <br><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">این نظرسنجی رضایت <b t-out=\"object.project_id.rating_status_period or ''\">هفتگی</b> ارسال می‌شود مادامی که وظیفه در مرحله <b t-out=\"object.stage_id.name or ''\">در حال انجام</b> باشد.</span>\n"
-"            </t>\n"
-"        </td></tr>\n"
-"        <tr><td><br>با احترام،</td></tr>\n"
-"        <tr><td>\n"
-"           <t t-out=\"object.project_id.company_id.name or ''\">شرکت شما</t>\n"
-"        </td></tr>\n"
-"        <tr><td style=\"opacity: 0.5;\">\n"
-"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-4567</t>\n"
-"            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.email or ''\">info@yourcompany.com</a>\n"
-"            </t>\n"
-"            <t t-if=\"object.project_id.company_id.website\">\n"
-"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.website or ''\">http://www.example.com</a>\n"
-"            </t>\n"
-"        </td></tr>\n"
-"    </tbody>\n"
-"    </table>\n"
-"</div>\n"
-"```"
+"<div> <t t-set=\"access_token\" "
+"t-value=\"object._rating_get_access_token()\"></t> <t t-set=\"partner\" "
+"t-value=\"object._rating_get_partner()\"></t> <table border=\"0\" "
+"cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; "
+"margin:0px auto;\"> <tbody> <tr><td valign=\"top\" style=\"font-size: "
+"13px;\"> <t t-if=\"partner.name\"> سلام <t t-out=\"partner.name or "
+"''\">براندون فریمن</t>,<br><br> </t> <t t-else=\"\"> سلام,<br><br> </t> "
+"لطفاً لحظه‌ای برای ارزیابی خدمات ما در رابطه با <strong t-out=\"object.name "
+"or ''\">برنامه‌ریزی و بودجه</strong> بردارید <t "
+"t-if=\"object._rating_get_operator().name\"> که به <strong "
+"t-out=\"object._rating_get_operator().name or ''\">میتچل ادمین</strong> "
+"اختصاص داده شده است.<br> </t> <t t-else=\"\"> .<br> </t> </td></tr> <tr><td "
+"style=\"text-align: center;\"> <table border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" "
+"style=\"width:100%; margin: 32px 0px 32px 0px;\"> <tr><td style=\"font-size:"
+" 13px;\"> <strong>بگویید که چه احساسی نسبت به خدمات ما دارید</strong><br> "
+"<span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(روی یکی از "
+"این شکلک‌ها کلیک کنید)</span> </td></tr> <tr><td style=\"font-size: 13px;\">"
+" <table style=\"width:100%;text-align:center;margin-top:2rem;\"> <tr> <td> "
+"<a t-attf-href=\"/rate/{{ access_token }}/5\"> <img alt=\"راضی\" "
+"src=\"/rating/static/src/img/rating_5.png\" title=\"راضی\"> </a> </td> <td> "
+"<a t-attf-href=\"/rate/{{ access_token }}/3\"> <img alt=\"متوسط\" "
+"src=\"/rating/static/src/img/rating_3.png\" title=\"متوسط\"> </a> </td> <td>"
+" <a t-attf-href=\"/rate/{{ access_token }}/1\"> <img alt=\"ناراضی\" "
+"src=\"/rating/static/src/img/rating_1.png\" title=\"ناراضی\"> </a> </td> "
+"</tr> </table> </td></tr> </table> </td></tr> <tr><td valign=\"top\" "
+"style=\"font-size: 13px;\"> ما از بازخورد شما قدردانی می‌کنیم. این به ما کمک"
+" می‌کند تا به‌طور مداوم بهبود یابیم. <t "
+"t-if=\"object.project_id.rating_status == 'stage'\"> <br><span "
+"style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">این "
+"پرسشنامه رضایت به دلیل انتقال وظیفه شما به مرحله <b "
+"t-out=\"object.stage_id.name or ''\">در حال انجام</b> ارسال شده است</span> "
+"</t> <t t-if=\"object.project_id.rating_status == 'periodic'\"> <br><span "
+"style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">این "
+"پرسشنامه رضایت <b t-out=\"object.project_id.rating_status_period or "
+"''\">هفتگی</b> ارسال می‌شود تا زمانی که وظیفه در مرحله <b "
+"t-out=\"object.stage_id.name or ''\">در حال انجام</b> باشد.</span> </t> "
+"</td></tr> <tr><td><br>با احترام,</td></tr> <tr><td> <t "
+"t-out=\"object.project_id.company_id.name or ''\">شرکت شما</t> </td></tr> "
+"<tr><td style=\"opacity: 0.5;\"> <t "
+"t-out=\"object.project_id.company_id.phone or ''\">1 650-123-4567</t> <t "
+"t-if=\"object.project_id.company_id.email\"> | <a t-attf-href=\"mailto:{{ "
+"object.project_id.company_id.email }}\" style=\"text-decoration:none; color:"
+" #454748;\" t-out=\"object.project_id.company_id.email or "
+"''\">info@yourcompany.com</a> </t> <t "
+"t-if=\"object.project_id.company_id.website\"> | <a t-attf-href=\"{{ "
+"object.project_id.company_id.website }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.website or "
+"''\">http://www.example.com</a> </t> </td></tr> </tbody> </table> </div>"
 
 #. module: project
 #: model:mail.template,body_html:project.project_done_email_template
@@ -392,17 +361,15 @@ msgid ""
 "<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
-"```html\n"
-"<div>\n"
-"    عزیز <t t-out=\"object.partner_id.name or 'customer'\">براندون فریمن</t>,<br>\n"
-"    خوشحالم به اطلاع شما برسانم که ما با موفقیت پروژه \" <strong t-out=\"object.name or ''\">نوسازی</strong> \" را به پایان رسانده‌ایم.\n"
-"    <t t-if=\"user.signature\">\n"
-"        <br>\n"
-"        <t t-out=\"user.signature or ''\">--<br>میتچل ادمین</t>\n"
-"    </t>\n"
-"</div>\n"
-"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">شما این ایمیل را دریافت می‌کنید زیرا پروژه شما به مرحله <b t-out=\"object.stage_id.name or ''\">انجام شد</b> منتقل شده است.</span>\n"
-"```"
+"<div> <ت t-out=\"object.partner_id.name or 'customer'\">براندون فریمن</ت> "
+"عزیز،<br> با کمال مسرت به اطلاع شما می‌رسانم که ما پروژه \"<strong "
+"t-out=\"object.name or ''\">نوسازی</strong>\" را با موفقیت به اتمام رساندیم."
+" <ت t-if=\"user.signature\"> <br> <ت t-out=\"user.signature or "
+"''\">--<br>میتچل ادمین</ت> </ت> </div> <br><span style=\"margin: 0px 0px 0px"
+" 0px; font-size: 12px; opacity: 0.5; color: #454748;\" "
+"groups=\"project.group_project_stages\">شما این ایمیل را دریافت می‌کنید زیرا"
+" پروژه شما به مرحله <b t-out=\"object.stage_id.name or ''\">انجام شده</b> "
+"منتقل شده است.</span>"
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -420,19 +387,10 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
-"```html\n"
-"<div>\n"
-"    <t t-out=\"object.partner_id.name or 'customer'\">براندون فریمن</t> عزیز,<br>\n"
-"    از درخواست شما متشکریم.<br>\n"
-"    اگر سوالی دارید، لطفاً به ما اطلاع دهید.\n"
-"    <br><br>\n"
-"    با تشکر,\n"
-"    <t t-if=\"user.signature\">\n"
-"        <br>\n"
-"        <t t-out=\"user.signature or ''\">--<br>میچل ادمین</t>\n"
-"    </t>\n"
-"</div>\n"
-"```"
+"<div> عزیز <t t-out=\"object.partner_id.name or 'customer'\">براندون "
+"فریمن</t>,<br> از بابت استعلام شما سپاسگزاریم.<br> اگر سوالی دارید، لطفاً به"
+" ما اطلاع دهید. <br><br> متشکرم, <t t-if=\"user.signature\"> <br> <t "
+"t-out=\"user.signature or ''\">--<br>میتچل ادمین</t> </t> </div>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -441,11 +399,12 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"Okay\"/>\n"
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Dissatisfied\"/>"
 msgstr ""
-"```html\n"
-"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" invisible=\"rating_avg &lt; 3.66\" title=\"راضی\"/>\n"
-"<i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"خوب\"/>\n"
-"<i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"ناراضی\"/>\n"
-"```"
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" "
+"invisible=\"rating_avg &lt; 3.66\" title=\"راضی\"/> <i class=\"fa fa-fw "
+"o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2.33 or "
+"rating_avg &gt;= 3.66\" title=\"خوب\"/> <i class=\"fa fa-fw o_button_icon "
+"fa-frown-o text-danger\" invisible=\"rating_avg &gt;= 2.33\" "
+"title=\"ناراضی\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -455,10 +414,7 @@ msgstr "<i class=\"fa fa-lightbulb-o\"/>&amp;nbsp;"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 msgid "<i class=\"fa fa-lock\"/> Private"
-msgstr ""
-"```html\n"
-"<i class=\"fa fa-lock\"/> خصوصی\n"
-"```"
+msgstr "<i class=\"fa fa-lock\"/> خصوصی"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -472,10 +428,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<i class=\"fa fa-warning\"/>&amp;nbsp;"
-msgstr ""
-"```html\n"
-"<i class=\"fa fa-warning\"/>&amp;nbsp;\n"
-"```"
+msgstr "<i class=\"fa fa-warning\"/>&amp;nbsp;"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -485,26 +438,17 @@ msgstr "<i class=\"oi oi-arrow-right me-1\"/>بازگشت به حالت ویرا
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "<i title=\"Private Task\" class=\"fa fa-lock\"/>"
-msgstr ""
-"```html\n"
-"<i title=\"وظیفه خصوصی\" class=\"fa fa-lock\"/>\n"
-"```"
+msgstr "<i title=\"وظیفه خصوصی\" class=\"fa fa-lock\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-end\">Stage:</small>"
-msgstr ""
-"```html\n"
-"<small class=\"text-end\">مرحله:</small>\n"
-"```"
+msgstr "<small class=\"text-end\">مرحله:</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-muted\">Assignees</small>"
-msgstr ""
-"```html\n"
-"<small class=\"text-muted\">مسئولین</small>\n"
-"```"
+msgstr "<small class=\"text-muted\">تخصیص‌گیرندگان</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -522,14 +466,13 @@ msgid ""
 "<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
-"```html\n"
-"<span class=\"fa fa-envelope-o me-2\" aria-label=\"نام مستعار دامنه\" title=\"نام مستعار دامنه\"/>\n"
-"```"
+"<span class=\"fa fa-envelope-o me-2\" aria-label=\"نام مستعار دامنه\" "
+"title=\"نام مستعار دامنه\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
-msgstr "<span class=\"fa fa-user me-2\" aria-label=\"مخاطب\" title=\"مخاطب\"/>"
+msgstr "<span class=\"fa fa-user me-2\" aria-label=\"شریک\" title=\"شریک\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
@@ -539,18 +482,12 @@ msgstr "<span class=\"fw-normal\"> انجام شد</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"fw-normal\"> Tasks</span>"
-msgstr ""
-"```html\n"
-"<span class=\"fw-normal\"> وظایف</span>\n"
-"```"
+msgstr "<span class=\"fw-normal\"> وظایف</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text order-2\">Closed</span>"
-msgstr ""
-"```html\n"
-"<span class=\"o_stat_text order-2\">بسته</span>\n"
-"```"
+msgstr "<span class=\"o_stat_text order-2\">بسته شده</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -571,24 +508,19 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Last Rating</span>"
-msgstr ""
-"```html\n"
-"<span class=\"o_stat_text\">آخرین امتیاز</span>\n"
-"```"
+msgstr "<span class=\"o_stat_text\">آخرین امتیازدهی</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Parent Task</span>"
-msgstr "<span class=\"o_stat_text\">تسک پدر</span>"
+msgstr "<span class=\"o_stat_text\">وظیفه والد</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<span class=\"text-muted o_row ps-1 pb-3\">Send a rating request:</span>"
 msgstr ""
-"```html\n"
-"<span class=\"text-muted o_row ps-1 pb-3\">ارسال درخواست امتیاز:</span>\n"
-"```"
+"<span class=\"text-muted o_row ps-1 pb-3\">ارسال درخواست رتبه‌بندی:</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -599,13 +531,12 @@ msgid ""
 "                                                    <span invisible=\"rating_status == 'stage'\">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>\n"
 "                                                </span>"
 msgstr ""
-"```html\n"
-"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
-"                                                    <i class=\"fa fa-lightbulb-o pe-2\"/>\n"
-"                                                    <span invisible=\"rating_status == 'periodic'\">درخواست امتیازدهی به محض رسیدن وظیفه به مرحله‌ای که در آن یک قالب ایمیل امتیازدهی تعریف شده است، ارسال خواهد شد.</span>\n"
-"                                                    <span invisible=\"rating_status == 'stage'\">درخواست‌های امتیازدهی تا زمانی که وظیفه در مرحله‌ای که در آن یک قالب ایمیل امتیازدهی تعریف شده است، باقی بماند ارسال خواهند شد.</span>\n"
-"                                                </span>\n"
-"```"
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\"> <i class=\"fa fa-"
+"lightbulb-o pe-2\"/> <span invisible=\"rating_status == 'periodic'\">به محض "
+"اینکه کار به مرحله ای برسد که قالب ایمیل امتیازدهی تعریف شده باشد، درخواست "
+"امتیازدهی ارسال خواهد شد.</span> <span invisible=\"rating_status == "
+"'stage'\">درخواست‌های امتیازدهی تا زمانی که کار در مرحله‌ای باشد که قالب "
+"ایمیل امتیازدهی تعریف شده است، ارسال می‌شوند.</span> </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -630,10 +561,7 @@ msgstr "<strong>موعد نهایی:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Milestone:</strong>"
-msgstr ""
-"```html\n"
-"<strong>مرحله:</strong>\n"
-"```"
+msgstr "<strong>نقطه عطف:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -4126,10 +4054,7 @@ msgstr "رد شده"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__resource_ref
 msgid "Related Document"
-msgstr ""
-"```\n"
-"مستند مرتبط\n"
-"```"
+msgstr "سند مرتبط"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__res_id
@@ -6104,9 +6029,8 @@ msgid ""
 "{{ record.closed_subtask_count.value }} sub-tasks closed out of {{ "
 "record.subtask_count.value }}"
 msgstr ""
-"```\n"
-"{{ record.closed_subtask_count.value }} زیرکار بسته شده از {{ record.subtask_count.value }}\n"
-"```"
+"{{ record.closed_subtask_count.value }} زیرکار بسته شده از {{ "
+"record.subtask_count.value }}"
 
 #. module: project
 #. odoo-javascript

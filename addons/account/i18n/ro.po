@@ -3695,6 +3695,13 @@ msgstr "Nu se poate crea un document de vânzare într-un jurnal fără vânzare
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+#, python-format
+msgid "Cannot create an accrual entry with orders in different currencies."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -11869,7 +11876,7 @@ msgstr "Moneda chitanței"
 #: model:ir.ui.menu,name:account.menu_action_move_in_receipt_type
 #: model:ir.ui.menu,name:account.menu_action_move_out_receipt_type
 msgid "Receipts"
-msgstr "Recepții"
+msgstr "Bonuri"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_receivable
@@ -12509,7 +12516,7 @@ msgstr "Cheltuieli de Vânzare"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_receipt
 msgid "Sales Receipt"
-msgstr "Chitanță vânzări"
+msgstr "Bon vânzări"
 
 #. module: account
 #. odoo-python
@@ -16950,7 +16957,7 @@ msgid ""
 "account set either on the company or the %s payment method in the %s "
 "journal."
 msgstr ""
-"Nu puteți crea o nouă plată fără un cont de plăți/recepții neachitate setat "
+"Nu puteți crea o nouă plată fără un cont de plăți/încasare neachitate setat "
 "fie pe companie sau pe metoda de plată %s în jurnalul %s."
 
 #. module: account

@@ -38,7 +38,8 @@
 # marcescu, 2024
 # Josep Anton Belchi, 2024
 # Eugeni Chafer <eugeni@chafer.cat>, 2024
-# Xavier, 2024
+# Jordi S, 2025
+# Xavier, 2025
 # 
 msgid ""
 msgstr ""
@@ -46,7 +47,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-06 12:08+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Xavier, 2024\n"
+"Last-Translator: Xavier, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -130,7 +131,7 @@ msgstr "%(action)s pel diari %(journal)s"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%(amount)s due %(date)s"
-msgstr "%(amount)s vençut %(date)s"
+msgstr "%(amount)s venç el %(date)s"
 
 #. module: account
 #. odoo-python
@@ -3665,6 +3666,13 @@ msgstr ""
 #, python-format
 msgid "Cannot create a sale document in a non sale journal"
 msgstr "No es pot crear un document de venda en un diari no de venda"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+#, python-format
+msgid "Cannot create an accrual entry with orders in different currencies."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -8064,6 +8072,7 @@ msgstr ""
 msgid ""
 "Internal field to shorten expression_ids creation for the tax_tags engine"
 msgstr ""
+"Camp intern per escurçar la creació d'expression_ids per al motor tax_tags"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -16029,7 +16038,7 @@ msgstr "Unitat de mesura"
 #: code:addons/account/models/template_generic_coa.py:0
 #, python-format
 msgid "United States of America (Generic)"
-msgstr ""
+msgstr "Estats Units d'Amèrica (genèric)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -17090,6 +17099,8 @@ msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
 msgstr ""
+"No podeu restablir l'esborrany d'aquestes assentaments comptables. En el seu"
+" lloc, heu de sol·licitar una cancel·lació."
 
 #. module: account
 #. odoo-python
@@ -17529,6 +17540,8 @@ msgid ""
 "You cannot use the field carryover_target in an expression that does not "
 "have the label starting with _carryover_"
 msgstr ""
+"No podeu utilitzar el camp carryover_target en una expressió que no tingui "
+"l'etiqueta que comenci per _carryover_"
 
 #. module: account
 #. odoo-python
