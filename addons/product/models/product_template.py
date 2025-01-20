@@ -512,6 +512,8 @@ class ProductTemplate(models.Model):
                 'image_128',
                 'can_image_1024_be_zoomed',
             ])
+        if 'uom_ids' in vals:
+            self.product_variant_ids.product_uom_ids._clean_invalids()
         return res
 
     def copy_data(self, default=None):

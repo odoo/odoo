@@ -30,3 +30,10 @@ class ProductUom(models.Model):
             return super()._compute_display_name()
         for record in self:
             record.display_name = f"{record.barcode} for: {record.product_id.display_name}"
+
+    def _clean_invalids(self):
+        product_uoms_to_unlink = set()
+        for product_uom in self:
+            if self.uom_id not in self.product_id.uom_ids:
+                product_uoms_to_unlink.add(product_uom.id)
+        return self.browse(product_uoms_to_unlink).unlink()
