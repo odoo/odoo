@@ -16,12 +16,8 @@ import { RPCError } from "@web/core/network/rpc";
 const mockContextualUtilsService = {
     dependencies: ["pos", "localization"],
     start(env, { pos, localization }) {
-        const formatCurrency = (value, hasSymbol = true) => {
-            return "dummy";
-        };
-        const floatIsZero = (value) => {
-            return value === 0;
-        };
+        const formatCurrency = (value, hasSymbol = true) => "dummy";
+        const floatIsZero = (value) => value === 0;
         env.utils = {
             formatCurrency,
             floatIsZero,
@@ -52,7 +48,11 @@ QUnit.module("Chrome", {
             })
             .add("bus_service", {
                 start() {
-                    return { addChannel: () => {}, subscribe: () => {} };
+                    return {
+                        addChannel: () => {},
+                        subscribe: () => {},
+                        addEventListener: () => {},
+                    };
                 },
             })
             .add("printer", {

@@ -5,7 +5,7 @@ import { markRaw } from "@odoo/owl";
 import { floatIsZero } from "@web/core/utils/numbers";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { deduceUrl, random5Chars, uuidv4, getOnNotified } from "@point_of_sale/utils";
+import { deduceUrl, random5Chars, uuidv4 } from "@point_of_sale/utils";
 import { Reactive } from "@web/core/utils/reactive";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { ConnectionLostError } from "@web/core/network/rpc";
@@ -155,10 +155,8 @@ export class PosStore extends Reactive {
 
     async initServerData() {
         await this.processServerData();
-        this.onNotified = getOnNotified(this.bus, this.config.access_token);
-        this.onNotified("CLOSING_SESSION", this.closingSessionNotification.bind(this));
-        this.onNotified("SYNCHRONISATION", this.recordSynchronisation.bind(this));
-
+        this.data.connectWebSocket("CLOSING_SESSION", this.closingSessionNotification.bind(this));
+        this.data.connectWebSocket("SYNCHRONISATION", this.recordSynchronisation.bind(this));
         return await this.afterProcessServerData();
     }
 
@@ -710,18 +708,14 @@ export class PosStore extends Reactive {
                             this.data.models["product.template.attribute.value"].get(id),
                         ]),
                     custom_attribute_value_ids: Object.entries(payload.attribute_custom_values).map(
-                        ([id, cus]) => {
-                            return [
-                                "create",
-                                {
-                                    custom_product_template_attribute_value_id:
-                                        this.data.models["product.template.attribute.value"].get(
-                                            id
-                                        ),
-                                    custom_value: cus,
-                                },
-                            ];
-                        }
+                        ([id, cus]) => [
+                            "create",
+                            {
+                                custom_product_template_attribute_value_id:
+                                    this.data.models["product.template.attribute.value"].get(id),
+                                custom_value: cus,
+                            },
+                        ]
                     ),
                     price_extra: values.price_extra + payload.price_extra,
                     qty: payload.qty || values.qty,
@@ -777,16 +771,14 @@ export class PosStore extends Reactive {
                     ]),
                     custom_attribute_value_ids: Object.entries(
                         comboLine.attribute_custom_values
-                    ).map(([id, cus]) => {
-                        return [
-                            "create",
-                            {
-                                custom_product_template_attribute_value_id:
-                                    this.data.models["product.template.attribute.value"].get(id),
-                                custom_value: cus,
-                            },
-                        ];
-                    }),
+                    ).map(([id, cus]) => [
+                        "create",
+                        {
+                            custom_product_template_attribute_value_id:
+                                this.data.models["product.template.attribute.value"].get(id),
+                            custom_value: cus,
+                        },
+                    ]),
                 },
             ]);
         }
@@ -997,9 +989,9 @@ export class PosStore extends Reactive {
         );
     }
     createNewOrder(data = {}) {
-        const fiscalPosition = this.models["account.fiscal.position"].find((fp) => {
-            return fp.id === this.config.default_fiscal_position_id?.id;
-        });
+        const fiscalPosition = this.models["account.fiscal.position"].find(
+            (fp) => fp.id === this.config.default_fiscal_position_id?.id
+        );
 
         const uniqId = this.generate_unique_id();
         const order = this.models["pos.order"].create({
