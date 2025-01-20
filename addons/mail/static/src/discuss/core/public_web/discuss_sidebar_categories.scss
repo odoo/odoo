@@ -84,10 +84,10 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .1;
 
 .o-mail-DiscussSidebar-unreadIndicator {
     font-size: 0.35rem;
-    left: 1px;
+    left: 0px;
 
     .o-mail-DiscussSidebarSubchannel &:not(.o-compact) {
-        left: map-get($spacers, 2);
+        left: map-get($spacers, 2) + map-get($spacers, 1) / 2;
     }
 }
 
