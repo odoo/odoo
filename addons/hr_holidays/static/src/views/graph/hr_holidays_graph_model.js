@@ -69,5 +69,6 @@ export class HrHolidaysGraphModel extends GraphModel {
             }
             return processedDataPoints;
         }
+        return super._getProcessedDataPoints();
     }
 }
