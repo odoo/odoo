@@ -136,8 +136,10 @@ class IrUiView(models.Model):
 
     @api.model
     def _copy_field_terms_translations(self, records_from, name_field_from, record_to, name_field_to):
-        """ Copy the terms translation from records/field ``Model1.Field1``
-        to a (possibly) completely different record/field ``Model2.Field2``.
+        """ Copy model terms translations from ``records_from.name_field_from``
+        to ``record_to.name_field_to`` for all activated languages if the term
+        in ``record_to.name_field_to`` is untranslated (the term matches the
+        one in the current language).
 
         For instance, copy the translations of a
         ``product.template.html_description`` field to a ``ir.ui.view.arch_db``
@@ -177,7 +179,12 @@ class IrUiView(models.Model):
                 record_from[name_field_from],
                 {lang: record_from.with_context(prefetch_langs=True, lang=lang)[name_field_from] for lang in langs if lang != lang_env}
             ))
-        existing_translation_dictionary.update(extra_translation_dictionary)
+        for term, extra_translation_values in extra_translation_dictionary.items():
+            existing_translation_values = existing_translation_dictionary.setdefault(term, {})
+            # Update only default translation values that aren't customized by the user.
+            for lang, extra_translation in extra_translation_values.items():
+                if existing_translation_values.get(lang, term) == term:
+                    existing_translation_values[lang] = extra_translation
         translation_dictionary = existing_translation_dictionary
 
         # The `en_US` jsonb value should always be set, even if english is not
