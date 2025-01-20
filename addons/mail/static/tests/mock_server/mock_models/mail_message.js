@@ -218,12 +218,12 @@ export class MailMessage extends models.ServerModel {
             if (message.author_guest_id) {
                 data.author = mailDataHelpers.Store.one(
                     MailGuest.browse(message.author_guest_id),
-                    makeKwArgs({ fields: ["name", "write_date"] })
+                    makeKwArgs({ fields: ["avatar_128", "name"] })
                 );
             } else if (message.author_id) {
                 data.author = mailDataHelpers.Store.one(
                     ResPartner.browse(message.author_id),
-                    makeKwArgs({ fields: ["name", "is_company", "user", "write_date"] })
+                    makeKwArgs({ fields: ["avatar_128", "is_company", "name", "user"] })
                 );
             }
             store.add(this.browse(message.id), data);

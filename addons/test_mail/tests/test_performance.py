@@ -4,6 +4,7 @@ from markupsafe import Markup
 from unittest.mock import patch
 
 from odoo import fields
+from odoo.tools.misc import limited_field_access_token
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
@@ -1443,6 +1444,9 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "name": "Jeannette Testouille",
                                 },
                                 {
+                                    "avatar_128_access_token": limited_field_access_token(
+                                        self.env.user.partner_id, "avatar_128"
+                                    ),
                                     "id": self.env.user.partner_id.id,
                                     "isInternalUser": True,
                                     "is_company": False,
@@ -1546,6 +1550,9 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "name": "Jeannette Testouille",
                                 },
                                 {
+                                    "avatar_128_access_token": limited_field_access_token(
+                                        self.env.user.partner_id, "avatar_128"
+                                    ),
                                     "id": self.env.user.partner_id.id,
                                     "isInternalUser": True,
                                     "is_company": False,

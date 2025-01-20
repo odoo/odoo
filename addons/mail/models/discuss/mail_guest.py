@@ -10,6 +10,7 @@ from odoo import _, api, fields, models
 from odoo.http import request
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
+from odoo.tools.misc import limited_field_access_token
 from odoo.addons.bus.websocket import wsrequest
 from odoo.addons.mail.tools.discuss import Store
 
@@ -97,7 +98,7 @@ class MailGuest(models.Model):
         if len(name) > 512:
             raise UserError(_("Guest's name is too long."))
         self.name = name
-        store = Store(self, ["name", "write_date"])
+        store = Store(self, ["avatar_128", "name"])
         self.channel_ids._bus_send_store(store)
         self._bus_send_store(store)
 
@@ -112,8 +113,18 @@ class MailGuest(models.Model):
         """
         self.env.cr.execute(query, (timezone, self.id))
 
+    def _field_store_repr(self, field_name):
+        if field_name == "avatar_128":
+            return [
+                Store.Attr(
+                    "avatar_128_access_token", lambda g: limited_field_access_token(g, "avatar_128")
+                ),
+                "write_date",
+            ]
+        return [field_name]
+
     def _to_store_defaults(self):
-        return ["im_status", "name", "write_date"]
+        return ["avatar_128", "im_status", "name"]
 
     def _set_auth_cookie(self):
         """Add a cookie to the response to identify the guest. Every route
@@ -138,15 +149,3 @@ class MailGuest(models.Model):
         """
         self.ensure_one()
         return f"{self.id}{self._cookie_separator}{self.access_token}"
-
-    def _can_return_content(self, field_name=None, access_token=None):
-        if field_name == "avatar_128":
-            # access to the avatar is allowed if there is access to a channel
-            if self.env["discuss.channel"].search_count(
-                [("channel_member_ids", "any", [("guest_id", "=", self.id)])], limit=1
-            ):
-                return True
-            # access to the avatar is allowed if there is access to the messages
-            if self.env["mail.message"].search_count([("author_guest_id", "=", self.id)], limit=1):
-                return True
-        return super()._can_return_content(field_name, access_token)

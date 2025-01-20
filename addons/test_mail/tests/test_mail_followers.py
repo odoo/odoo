@@ -7,7 +7,6 @@ from urllib.parse import urlparse
 
 from markupsafe import Markup
 
-from odoo import fields
 from odoo.addons.mail.models.mail_mail import _UNFOLLOW_REGEX
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError

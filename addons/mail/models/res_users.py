@@ -274,13 +274,21 @@ class ResUsers(models.Model):
             store.add_global_values(
                 store_self=Store.One(
                     self.env.user.partner_id,
-                    ["active", "isAdmin", "name", "notification_type", "signature", "user", "write_date"],
+                    [
+                        "active",
+                        "avatar_128",
+                        "isAdmin",
+                        "name",
+                        "notification_type",
+                        "signature",
+                        "user",
+                    ],
                     main_user_by_partner={self.env.user.partner_id: self.env.user},
                 ),
                 settings=settings._res_users_settings_format(),
             )
         elif guest := self.env["mail.guest"]._get_guest_from_context():
-            store.add_global_values(store_self=Store.One(guest, ["name", "write_date"]))
+            store.add_global_values(store_self=Store.One(guest, ["avatar_128", "name"]))
 
     def _init_messaging(self, store: Store):
         self.ensure_one()

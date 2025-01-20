@@ -6,7 +6,7 @@ import json
 from odoo import Command, fields
 from odoo.addons.im_livechat.tests import chatbot_common
 from odoo.tests.common import JsonRpcException, new_test_user, tagged
-from odoo.tools.misc import mute_logger
+from odoo.tools.misc import limited_field_access_token, mute_logger
 from odoo.addons.bus.models.bus import json_dump
 from odoo.addons.mail.tools.discuss import Store
 
@@ -236,6 +236,9 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                 0,
                 {
                     "active": False,
+                    "avatar_128_access_token": limited_field_access_token(
+                        self.chatbot_script.operator_partner_id, "avatar_128"
+                    ),
                     "country": False,
                     "id": self.chatbot_script.operator_partner_id.id,
                     "is_public": False,
@@ -309,6 +312,9 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                             "res.partner": self._filter_partners_fields(
                                 {
                                     "active": True,
+                                    "avatar_128_access_token": limited_field_access_token(
+                                        self.partner_employee, "avatar_128"
+                                    ),
                                     "country": self.env.ref("base.be").id,
                                     "id": self.partner_employee.id,
                                     "is_public": False,
@@ -363,6 +369,9 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                             "res.partner": self._filter_partners_fields(
                                 {
                                     "active": True,
+                                    "avatar_128_access_token": limited_field_access_token(
+                                        self.partner_employee, "avatar_128"
+                                    ),
                                     "country": self.env.ref("base.be").id,
                                     "id": self.partner_employee.id,
                                     "is_public": False,
@@ -415,12 +424,18 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                             "discuss.channel": [
                                 {
                                     "id": discuss_channel.id,
-                                    "livechat_operator_id": {"id": self.partner_employee.id, "type": "partner"},
+                                    "livechat_operator_id": {
+                                        "id": self.partner_employee.id,
+                                        "type": "partner",
+                                    },
                                     "name": "OdooBot Ernest Employee",
                                 },
                             ],
                             "res.partner": self._filter_partners_fields(
                                 {
+                                    "avatar_128_access_token": limited_field_access_token(
+                                        self.partner_employee, "avatar_128"
+                                    ),
                                     "id": self.partner_employee.id,
                                     "name": "Ernest Employee",
                                     "user_livechat_username": False,

@@ -196,7 +196,7 @@ export class ResPartner extends webModels.ResPartner {
         const kwargs = getKwArgs(arguments, "id", "store", "fields");
         fields = kwargs.fields;
         if (!fields) {
-            fields = ["name", "email", "active", "im_status", "is_company", "user", "write_date"];
+            fields = ["avatar_128", "name", "email", "active", "im_status", "is_company", "user"];
         }
 
         /** @type {import("mock_models").ResCountry} */
@@ -210,6 +210,7 @@ export class ResPartner extends webModels.ResPartner {
                 fields.filter(
                     (field) =>
                         ![
+                            "avatar_128",
                             "country",
                             "display_name",
                             "isAdmin",
@@ -219,6 +220,10 @@ export class ResPartner extends webModels.ResPartner {
                 ),
                 false
             );
+            if (fields.includes("avatar_128")) {
+                data.avatar_128_access_token = partner.id;
+                data.write_date = partner.write_date;
+            }
             if (fields.includes("country")) {
                 const [country] = ResCountry.browse(partner.country_id);
                 data.country = country
