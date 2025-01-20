@@ -618,7 +618,7 @@
         <!-- HEADER -->
         <t t-set="header_shape_height" t-value="'230'"/>
         <div t-attf-class="header o_company_#{company.id}_layout {{report_type != 'pdf' and 'h-0'}}">
-            <svg t-attf-class="{{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}} start-0 top-0 w-100" preserveAspectRatio="none" t-att-height="header_shape_height" viewBox="0 0 1000 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg t-attf-class="{{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}} start-0 top-0 w-100 z-n1" preserveAspectRatio="none" t-att-height="header_shape_height" viewBox="0 0 1000 240" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M1000 230.734C937.384 240.621 803.83 250.266 562.185 220.602C311.343 189.809 104.626 201.375 0 211.598V0.5H1000V230.734Z" t-att-fill="company.primary_color" fill-opacity=".1"/>
             </svg>
 
