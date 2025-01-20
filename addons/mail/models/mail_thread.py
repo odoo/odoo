@@ -3529,12 +3529,13 @@ class MailThread(models.AbstractModel):
 
         # compute send user and its related signature; try to use self.env.user instead of browsing
         # user_ids if they are the author will give a sudo user, improving access performances and cache usage.
-        signature = ''
-        email_add_signature = msg_vals.get('email_add_signature') if msg_vals and 'email_add_signature' in msg_vals else message.email_add_signature
-        if email_add_signature:
-            author = message.env['res.partner'].browse(msg_vals.get('author_id')) if 'author_id' in msg_vals else message.author_id
-            author_user = self.env.user if self.env.user.partner_id == author else author.user_ids[0] if author and author.user_ids else False
-            if author_user:
+        author = message.env['res.partner'].browse(msg_vals.get('author_id')) if 'author_id' in msg_vals else message.author_id
+        author_user = self.env.user if self.env.user.partner_id == author else author.user_ids[0] if author and author.user_ids else False
+        signature, email_add_signature = '', False
+
+        if author_user:
+            email_add_signature = msg_vals.get('email_add_signature', message.email_add_signature)
+            if email_add_signature:
                 signature = author_user.signature
 
         if force_email_company:
@@ -3587,6 +3588,7 @@ class MailThread(models.AbstractModel):
             'record_name': record_name,
             'subtitles': [record_name],
             # user / environment
+            'author_user': author_user,  # User who sends the message
             'company': company,
             'email_add_signature': email_add_signature,
             'lang': lang,
@@ -3594,6 +3596,11 @@ class MailThread(models.AbstractModel):
             'website_url': website_url,
             # tools
             'is_html_empty': is_html_empty,
+            # display
+            'email_notification_force_header': self.env.context.get('email_notification_force_header', False),  # force displaying the email header
+            'email_notification_force_footer': self.env.context.get('email_notification_force_footer', False),  # force displaying the email footer
+            'email_notification_allow_header': self.env.context.get('email_notification_allow_header', True),
+            'email_notification_allow_footer': self.env.context.get('email_notification_allow_footer', False),
         }
 
     def _notify_by_email_render_layout(self, message, recipients_group,
