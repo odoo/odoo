@@ -177,8 +177,8 @@
                                             <td name="account_invoice_line_name">
                                                 <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">Bacon Burger</span>
                                             </td>
-                                            <td name="td_quantity" class="text-end text-nowrap">
-                                                <span t-field="line.quantity">3.00</span>
+                                            <td name="td_quantity" class="o_td_quantity text-end">
+                                                <span t-field="line.quantity" class="text-nowrap">3.00</span>
                                                 <span t-field="line.product_uom_id"  groups="uom.group_uom">units</span>
                                                 <span t-if="line.product_uom_id != line.product_id.uom_id" groups="uom.group_uom" class="text-muted small">
                                                     <br/>
