@@ -339,6 +339,10 @@
                             </group>
                         </group>
                         <separator string="Action Details" groups="base.group_no_one" />
+                        <group invisible="state != 'public_method'">
+                            <field name="public_method_selection" invisible="1"/>
+                            <field name="public_method" widget="char_dynamic_selection" options="{'selection_field': 'public_method_selection'}" class="oe_inline" placeholder="A method of the model"/>
+                        </group>
                         <div class="d-flex flex-row flex-wrap gap-2" invisible="state != 'object_write'">
                             <field name="evaluation_type" class="oe_inline"/>
                             <field name="update_path" widget="field_selector" class="oe_inline" options="{'model': 'model_name'}"/>

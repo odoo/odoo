@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from lxml import etree
+import inspect
 import odoo
 from odoo import api, fields, models, tools, _, Command
+from odoo.models import check_method_name
 from odoo.exceptions import MissingError, ValidationError, AccessError, UserError
 from odoo.tools import frozendict
 from odoo.tools.safe_eval import safe_eval, test_python_expr
 from odoo.tools.float_utils import float_compare
 from odoo.http import request
+from odoo.addons.web.controllers.utils import clean_action
 import base64
 from collections import defaultdict
 from functools import partial, reduce
@@ -539,6 +542,7 @@ class IrActionsServer(models.Model):
         ('object_write', 'Update Record'),
         ('object_create', 'Create Record'),
         ('code', 'Execute Code'),
+        ('public_method', 'Execute Button'),
         ('webhook', 'Send Webhook Notification'),
         ('multi', 'Execute Existing Actions')], string='Type',
         default='object_write', required=True, copy=True,
@@ -565,6 +569,8 @@ class IrActionsServer(models.Model):
                        default=DEFAULT_PYTHON_CODE,
                        help="Write Python code that the action will execute. Some variables are "
                             "available for use; help about python expression is given in the help tab.")
+    public_method = fields.Char(string="Public Method")
+    public_method_selection = fields.Char(compute="_compute_public_method_selection")
     # Multi
     child_ids = fields.Many2many('ir.actions.server', 'rel_server_actions', 'server_id', 'action_id',
                                  string='Child Actions', help='Child server actions that will be executed. Note that the last return returned action value will be used as global return value.')
@@ -1075,6 +1081,81 @@ class IrActionsServer(models.Model):
             default['name'] = _('%s (copy)', self.name)
         return super().copy_data(default=default)
 
+    @api.depends("model_name")
+    def _compute_public_method_selection(self):
+        for act in self:
+            act.public_method_selection = json.dumps(list(self._get_model_buttons(act.model_name).items()))
+
+    @api.constrains("public_method")
+    def _validate_method(self):
+        for act in self:
+            self._validate_model_method(act.model_name, act.public_method, raise_if_invalid=True)
+
+    def _validate_model_method(self, model_name, method_name, raise_if_invalid=False):
+        invalid = False, ""
+
+        try:
+            check_method_name(method_name)
+        except ValidationError:
+            invalid = True,  _("Only public methods are authorized")
+
+        if method_name in ("create", "write","unlink"):
+            invalid = True, _("CRUD methods are not authorized")
+        model = self.env[model_name]
+        if not hasattr(model, method_name):
+            invalid = True, _("Method %s.%s doesn't exist", model_name, method_name)
+        method_obj = getattr(model, method_name)
+        arg_spec = inspect.getfullargspec(method_obj).args
+        if len(arg_spec) != 1 or arg_spec[0] != "self":
+            invalid = True, _("Only methods taking only a recordset are allowed")
+        
+        if not invalid[0]:
+            return True
+        if not raise_if_invalid:
+            return False
+        raise ValidationError(invalid[1])
+
+    @api.model
+    def _get_model_buttons(self, model_name):
+        if not model_name:
+            return {}
+
+        ctx = {k: v for k, v in self._context.items() if "_view_ref" not in k}
+        form = self.env[model_name].with_context(ctx).sudo().get_view(view_type="form")["arch"]
+        form = etree.fromstring(form)
+        results = {}
+        def visit_node(node):
+            if node.tag == "field":
+                return
+            if node.tag in ("a", "button") and node.get("type") == "object" and "oe_stat_button" not in node.get("class", ""):
+                method = node.get("name")
+                if self._validate_model_method(model_name, method):
+                    human_string = ""
+                    for string in [node.get("string"), node.get("title"), node.text, method.replace("_", " ").title()]:
+                        string = (string or "").strip()
+                        if string:
+                            human_string = string
+                            break
+                    results[method] = human_string
+                return
+            for child in node:
+                visit_node(child)
+        visit_node(form)
+        return results
+
+    def _run_action_public_method_multi(self, eval_context=None):
+        method_name = self.public_method
+        if not method_name:
+            return
+        check_method_name(method_name)
+        record = self.env[self.model_name]
+        if eval_context:
+            record = eval_context.get("record") or record
+        method = getattr(record, method_name)
+        if method:
+            action = method()
+            if isinstance(action, dict) and action.get('type') != '':
+                return clean_action(action, env=request.env)
 
 class IrActionsTodo(models.Model):
     """
