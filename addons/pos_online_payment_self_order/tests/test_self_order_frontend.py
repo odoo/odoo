@@ -7,7 +7,7 @@ from odoo import Command
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.pos_online_payment.tests.online_payment_common import OnlinePaymentCommon
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
-# from odoo.addons.pos_online_payment.models.pos_payment_method import PosPaymentMethod
+from odoo.addons.pos_restaurant.tests.test_frontend import TestFrontendCommon
 
 
 @odoo.tests.tagged("post_install", "-at_install")
@@ -15,13 +15,7 @@ class TestSelfOrderFrontendMobile(SelfOrderCommonTest):
     pass
 
 @odoo.tests.tagged("post_install", "-at_install")
-class TestUi(OnlinePaymentCommon):
-    def _get_url(self):
-        return f"/pos/ui?config_id={self.pos_config.id}"
-
-    def start_pos_tour(self, tour_name, login="pos_admin", **kwargs):
-        self.start_tour(self._get_url(), tour_name, login=login, **kwargs)
-
+class TestUi(TestFrontendCommon, OnlinePaymentCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -39,29 +33,15 @@ class TestUi(OnlinePaymentCommon):
             'online_payment_provider_ids': [Command.set([cls.payment_provider.id])],
         })
 
-        cls.sales_journal = cls.env['account.journal'].create({
-            'name': 'Sales Journal for POS OP Test',
-            'code': 'POPSJ',
-            'type': 'sale',
-            'company_id': cls.company.id
+        cls.pos_config.write({
+            "module_pos_restaurant": True,
+            "payment_method_ids": [Command.set([cls.online_payment_method.id])],
         })
-        cls.pos_config = cls.env['pos.config'].create({
-            'name': 'POS OP Test Shop',
-            'module_pos_restaurant': True,
-            'invoice_journal_id': cls.sales_journal.id,
-            'journal_id': cls.sales_journal.id,
-            'payment_method_ids': [Command.link(cls.online_payment_method.id)],
-        })
-        cls.pos_admin = mail_new_test_user(
-            cls.env,
-            groups="base.group_user,point_of_sale.group_pos_manager",
-            login="pos_admin",
-            name="POS Admin",
-            tz="Europe/Brussels",
-        )
 
 
 class TestSelfOrderOnlinePayment(TestUi):
     def test_01_online_payment_with_multi_table(self):
+        # No need to check preparation printer in this test.
+        self.env["pos.printer"].search([]).unlink()
         self.pos_config.with_user(self.pos_admin).open_ui()
         self.start_pos_tour('OnlinePaymentWithMultiTables', login="pos_admin")

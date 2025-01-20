@@ -103,7 +103,8 @@ class PosSession(models.Model):
             response[model]['relations'] = {}
 
         for name, params in model_fields.items():
-            if name not in response[model]['fields'] and len(response[model]['fields']) != 0:
+            fields_count = len(response[model]['fields'])
+            if (fields_count and name not in response[model]['fields']) or (params.manual and not fields_count):
                 continue
 
             if params.comodel_name:
@@ -1664,8 +1665,8 @@ class PosSession(models.Model):
         if cash_payment_method_ids:
             self.opening_notes = notes
             difference = cashbox_value - self.cash_register_balance_start
-            self.cash_register_balance_start = cashbox_value
             self._post_cash_details_message('Opening cash', self.cash_register_balance_start, difference, notes)
+            self.cash_register_balance_start = cashbox_value
         elif notes:
             message = _('Opening control message: ')
             message += notes

@@ -1023,7 +1023,7 @@ export class Runner {
                         ...lastResults.errors.map((e) => `\n${e.message}`)
                     );
                 }
-                logger.error(
+                logger.logGlobalError(
                     [`Test ${stringify(test.fullName)} failed:`, ...failReasons].join("\n")
                 );
 
@@ -1092,13 +1092,16 @@ export class Runner {
 
         const { passed, failed, assertions } = this.reporting;
         if (failed > 0) {
-            const link = createUrlFromId(this.state.failedIds, "test");
+            const errorMessage = ["test failed (see above for details)"];
+            if (this.config.headless) {
+                const link = createUrlFromId(this.state.failedIds, "test");
+                errorMessage.push(`Failed tests link: ${link.toString()}`);
+            }
             // Use console.dir for this log to appear on runbot sub-builds page
             logger.logGlobal(
                 `failed ${failed} tests (${passed} passed, total time: ${this.totalTime})`
             );
-            logger.error("test failed (see above for details)");
-            logger.error("failed tests link:", link.toString());
+            logger.logGlobalError(errorMessage.join("\n"));
         } else {
             // Use console.dir for this log to appear on runbot sub-builds page
             logger.logGlobal(
@@ -1233,7 +1236,7 @@ export class Runner {
                 // Falls through
                 case Tag.ONLY:
                     if (!this.dry) {
-                        logger.warn(
+                        logger.logGlobalWarning(
                             `${stringify(job.fullName)} is marked as ${stringify(
                                 tag.name
                             )}. This is not suitable for CI`
@@ -1257,7 +1260,7 @@ export class Runner {
 
         if (shouldSkip) {
             if (ignoreSkip) {
-                logger.warn(
+                logger.logGlobalWarning(
                     `${stringify(
                         job.fullName
                     )} is marked as skipped but explicitly included: "skip" modifier has been ignored`
@@ -1550,7 +1553,7 @@ export class Runner {
             this._handleGlobalWarning(
                 WARNINGS.tagNames + similarities.map((s) => `\n- ${s.map(stringify).join(" / ")}`)
             );
-            logger.warn(WARNINGS.tagNames, similarities);
+            logger.logGlobalWarning(WARNINGS.tagNames, similarities);
         }
 
         this._populateState = true;
@@ -1690,7 +1693,9 @@ export class Runner {
                 (test) => !test.config.skip && !test.config.multi
             );
             if (activeSingleTests.length !== 1) {
-                logger.warn(`disabling debug mode: ${activeSingleTests.length} tests will be run`);
+                logger.logGlobalWarning(
+                    `disabling debug mode: ${activeSingleTests.length} tests will be run`
+                );
                 this.config.debugTest = false;
                 this.debug = false;
             }

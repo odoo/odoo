@@ -7,6 +7,7 @@ import {
     manuallyDispatchProgrammaticEvent,
     press,
     queryAllTexts,
+    scroll,
     waitFor,
 } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
@@ -74,7 +75,7 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>");
         await insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(27);
+        expect(commandNames(el).length).toBe(28);
         await insertText(editor, "head");
         await animationFrame();
         expect(commandNames(el)).toEqual(["Heading 1", "Heading 2", "Heading 3"]);
@@ -84,7 +85,7 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>");
         await insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(27);
+        expect(commandNames(el).length).toBe(28);
         expect(".o-we-category").toHaveCount(8);
         expect(queryAllTexts(".o-we-category")).toEqual([
             "STRUCTURE",
@@ -108,7 +109,7 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>", { props: { iframe: true } });
         await insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(27);
+        expect(commandNames(el).length).toBe(28);
         await insertText(editor, "head");
         await animationFrame();
         expect(commandNames(el)).toEqual(["Heading 1", "Heading 2", "Heading 3"]);
@@ -160,7 +161,7 @@ describe("search", () => {
         await insertText(editor, "/");
         await animationFrame();
         expect(".o-we-powerbox").toHaveCount(1);
-        expect(commandNames(el).length).toBe(27);
+        expect(commandNames(el).length).toBe(28);
 
         await insertText(editor, "headx");
         await animationFrame();
@@ -711,6 +712,27 @@ test("select command with 'mouseenter'", async () => {
 
     await press("enter");
     expect(getContent(el)).toBe("<h3>ab[]</h3>");
+});
+
+test.tags("desktop");
+test("select command with 'mouseenter' after scroll -- doc in iframe", async () => {
+    const { editor } = await setupEditor("<p>ab[]</p>", { props: { iframe: true } });
+
+    // Hoot don't trigger a mousemove event at the start of an hover, if we don't hover
+    // another element before. So we need to do a first hover to set a previous element.
+    await hover("body"); // Hover on main document's body
+
+    await insertText(editor, "/");
+    await animationFrame();
+
+    await hover(".o-we-command-name:eq(1)");
+    await scroll(".o-we-powerbox", { y: 1000 }); // Scroll to bottom
+    await animationFrame();
+    await scroll(".o-we-powerbox", { y: 0 }); // Scroll back to top
+
+    await hover(".o-we-command-name:eq(3)");
+    await animationFrame();
+    expect(".active .o-we-command-name").toHaveText("4 columns");
 });
 
 test("click on a command", async () => {

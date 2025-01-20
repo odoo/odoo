@@ -14,11 +14,12 @@ import {
 } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";
-import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "../_helpers/editor";
 import { cleanLinkArtifacts } from "../_helpers/format";
 import { getContent, setContent, setSelection } from "../_helpers/selection";
 import { insertLineBreak, insertText, splitBlock, undo } from "../_helpers/user_actions";
+import { execCommand } from "../_helpers/userCommands";
 
 const base64Img =
     "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -882,5 +883,93 @@ describe("links with inline image", () => {
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             `<p>ab<a href="#">c</a>]d<img src="${base64Img}">exxf<img src="${base64Img}">g[<a href="#">h</a>i</p>`
         );
+    });
+});
+
+describe("readonly mode", () => {
+    test("popover should not display edit buttons in readonly mode", async () => {
+        await setupEditor('<p><a class="o_link_readonly" href="#">link[]</a></p>');
+        await waitFor(".o-we-linkpopover");
+        // Copy link button should be available
+        expect(".o-we-linkpopover .o_we_copy_link").toHaveCount(1);
+        // Edit and unlink buttons should not be available
+        expect(".o-we-linkpopover .o_we_edit_link").toHaveCount(0);
+        expect(".o-we-linkpopover .o_we_remove_link").toHaveCount(0);
+    });
+});
+
+describe("upload file via link popover", () => {
+    test("should display upload button when url input is empty", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        execCommand(editor, "toggleLinkTools");
+        await waitFor(".o-we-linkpopover");
+        // Upload button should be visible
+        expect("button:contains('Upload File')").toHaveCount(1);
+        await click(".o_we_href_input_link");
+        await press("a");
+        await animationFrame();
+        // Upload button should NOT be visible
+        expect("button:contains('Upload File')").toHaveCount(0);
+        await press("Backspace");
+        await animationFrame();
+        // Upload button should be visible again
+        expect("button:contains('Upload File')").toHaveCount(1);
+    });
+    const patchUpload = (editor) => {
+        const mockedUploadPromise = new Promise((resolve) => {
+            patchWithCleanup(editor.services.uploadLocalFiles, {
+                async upload() {
+                    resolve();
+                    return [{ id: 1, name: "file.txt", public: true, checksum: "123" }];
+                },
+            });
+        });
+        return mockedUploadPromise;
+    };
+    test("can create a link to an uploaded file", async () => {
+        const { editor, el } = await setupEditor("<p>[]<br></p>");
+        const mockedUpload = patchUpload(editor);
+        execCommand(editor, "toggleLinkTools");
+        await waitFor(".o-we-linkpopover");
+        await click("button:contains('Upload File')");
+        await mockedUpload;
+        await animationFrame();
+        // URL input gets filled with the attachments's URL
+        const expectedUrl = "/web/content/1?unique=123&download=true";
+        expect(".o_we_href_input_link").toHaveValue(expectedUrl);
+        // Label input gets filled with the file's name
+        expect(".o_we_label_link").toHaveValue("file.txt");
+        await click(".o_we_apply_link");
+        await animationFrame();
+        // Created link has the correct href and label
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            `<p><a href="${expectedUrl}">file.txt[]</a><br></p>`
+        );
+    });
+
+    test("label input does not get filled on file upload if it is already filled", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        const mockedUpload = patchUpload(editor);
+        execCommand(editor, "toggleLinkTools");
+        await waitFor(".o-we-linkpopover");
+        // Fill label input
+        await contains(".o-we-linkpopover input.o_we_label_link").fill("label");
+        // Upload a file
+        await click("button:contains('Upload File')");
+        await mockedUpload;
+        await animationFrame();
+        // Label remains unchanged
+        expect(".o_we_label_link").toHaveValue("label");
+    });
+
+    test("popover in preview mode should display the file's mimetype as favicon", async () => {
+        onRpc("/web/dataset/call_kw/ir.attachment/read", () => {
+            return [{ name: "file.txt", mimetype: "text/plain" }];
+        });
+        await setupEditor(
+            '<p><a href="/web/content/1?download=true&unique=123">file.txt[]</a></p>'
+        );
+        const favIcon = await waitFor(".o_we_preview_favicon span.o_image");
+        expect(favIcon).toHaveAttribute("data-mimetype", "text/plain");
     });
 });

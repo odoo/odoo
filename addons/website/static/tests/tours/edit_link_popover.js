@@ -6,7 +6,6 @@ import {
 } from "@website/js/tours/tour_utils";
 import { browser } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";
-import { waitFor } from "@odoo/hoot-dom";
 
 const FIRST_PARAGRAPH = ':iframe #wrap .s_text_image p:nth-child(2)';
 
@@ -172,10 +171,17 @@ registerWebsitePreviewTour('edit_link_popover_2', {
     {
         content: "Click 'Home' link in footer",
         trigger: ':iframe footer a[href="/"]',
-        run(helpers) {
-            helpers.click();
-            waitFor(`:iframe .o_edit_menu_popover .o_we_url_link:contains("Home")`, { timeout: 5000 });
+        async run(helpers) {
+            await helpers.click();
+            const el = this.anchor;
+            const sel = el.ownerDocument.getSelection();
+            sel.collapse(el, 0);
+            el.focus();
         }
+    },
+    {
+        content: "Popover should be shown (4)",
+        trigger: ':iframe .o_edit_menu_popover .o_we_url_link:contains("Home")',
     },
     {
         content: "Toolbar should be shown (4)",

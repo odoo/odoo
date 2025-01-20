@@ -88,9 +88,9 @@ patch(PosStore.prototype, {
         }
         return orderIsDeleted;
     },
-    async closingSessionNotification(data) {
+    async closingSessionNotification() {
         await super.closingSessionNotification(...arguments);
-        this.computeTableCount(data);
+        this.computeTableCount();
     },
     computeTableCount() {
         const tables = this.models["restaurant.table"].getAll();
@@ -318,6 +318,7 @@ patch(PosStore.prototype, {
     },
     async transferOrder(orderUuid, destinationTable) {
         const order = this.models["pos.order"].getBy("uuid", orderUuid);
+        const destinationOrder = this.getActiveOrdersOnTable(destinationTable)[0];
         const originalTable = order.table_id;
         this.loadingOrderState = false;
         this.alert.dismiss();
@@ -331,8 +332,6 @@ patch(PosStore.prototype, {
             this.set_order(order);
             this.addPendingOrder([order.id]);
         } else {
-            const destinationOrder = this.getActiveOrdersOnTable(destinationTable)[0];
-            const linesToUpdate = [];
             for (const orphanLine of order.lines) {
                 const adoptingLine = destinationOrder.lines.find((l) =>
                     l.can_be_merged_with(orphanLine)
@@ -340,18 +339,19 @@ patch(PosStore.prototype, {
                 if (adoptingLine) {
                     adoptingLine.merge(orphanLine);
                 } else {
-                    linesToUpdate.push(orphanLine);
+                    const serialized = orphanLine.serialize();
+                    serialized.order_id = destinationOrder.id;
+                    delete serialized.uuid;
+                    delete serialized.id;
+                    this.models["pos.order.line"].create(serialized, false, true);
                 }
             }
-            linesToUpdate.forEach((orderline) => {
-                orderline.update({ order_id: destinationOrder });
-            });
+
             this.set_order(destinationOrder);
-            if (destinationOrder?.id) {
-                this.addPendingOrder([destinationOrder.id]);
-            }
             await this.deleteOrders([order]);
         }
+
+        await this.syncAllOrders({ orders: [destinationOrder || order] });
         await this.setTable(destinationTable);
     },
     getCustomerCount(tableId) {

@@ -165,18 +165,23 @@ export class PaymentVivaWallet extends PaymentInterface {
     waitForPaymentConfirmation() {
         return new Promise((resolve) => {
             const paymentLine = this.pending_viva_wallet_line();
+            const sessionId = paymentLine.sessionId;
             this.paymentLineResolvers[paymentLine.uuid] = resolve;
             const intervalId = setInterval(async () => {
-                if (!this.paymentLineResolvers[paymentLine.uuid]) {
+                const isPaymentStillValid = () =>
+                    this.paymentLineResolvers[paymentLine.uuid] &&
+                    this.pending_viva_wallet_line()?.sessionId === sessionId &&
+                    paymentLine.payment_status === "waitingCard";
+                if (!isPaymentStillValid()) {
                     clearInterval(intervalId);
                     return;
                 }
 
                 const result = await this._call_viva_wallet(
-                    paymentLine.sessionId,
+                    sessionId,
                     "viva_wallet_get_payment_status"
                 );
-                if ("success" in result && this.paymentLineResolvers[paymentLine.uuid]) {
+                if ("success" in result && isPaymentStillValid()) {
                     clearInterval(intervalId);
                     if (this.isPaymentSuccessful(result)) {
                         this.handleSuccessResponse(paymentLine, result);

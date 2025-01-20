@@ -16,6 +16,10 @@
                         </div>
                         <div class="input-group mb-1">
                             <input t-ref="url" class="o_we_href_input_link form-control form-control-sm" t-model="state.url" title="URL" placeholder="Type your URL" t-on-keydown="onKeydownEnter"/>
+                            <span class="ms-1" t-if="props.canUpload and !state.url">
+                                or <button class="btn btn-secondary btn-sm" t-on-click="uploadFile">Upload File</button>
+                            </span>
+
                         </div>
                         <div class="input-group" t-on-change="onChangeClasses">
                             <select name="link_type" class="form-select form-select-sm" t-att-class="{'mb-1': state.type !==  ''}" t-on-change="(ev)=>this.state.type = ev.target.value">
@@ -43,11 +47,11 @@
                                         </t>
                                     </select>
                             </div>
-                            <button class="o_we_apply_link btn btn-sm btn-primary" t-att-class="{'mx-1': state.type ===  ''}" t-on-click="onClickApply">Apply</button>
+                            <button class="o_we_apply_link btn btn-sm btn-primary" t-att-class="{'ms-1': state.type ===  ''}" t-on-click="onClickApply">Apply</button>
                         </div>
                     </div>
 
-                    <div t-if="!this.ui.isSmall" class="col o_link_dialog_preview" style="max-width: 125px;border-left: 1px solid var(--border-color);">
+                    <div t-if="!this.ui.isSmall and state.url" class="col o_link_dialog_preview" style="max-width: 125px;border-left: 1px solid var(--border-color);">
                         <div class="text-center p-2">
                             <label>Preview</label>
                             <div style="max-width: 100px; max-height: 200px;" class="text-truncate">
@@ -62,24 +66,29 @@
             <div t-else="" style="width: 260px;" data-prevent-closing-overlay="true">
                 <div class="d-flex flex-column p-2">
                     <div class="d-flex">
-                        <span class="o_we_preview_favicon" style="width: 16px;">
-                            <i t-if="!state.previewIcon" t-attf-class="fa fa-fw {{state.faIcon}}"></i>
-                            <img t-else="" t-attf-src="{{state.iconSrc}}" class="align-content-center"></img>
+                        <span class="o_we_preview_favicon" style="width: 16px; height: 32px">
+                            <img t-if="state.previewIcon.type === 'imgSrc'" t-att-src="state.previewIcon.value" class="align-content-center"/>
+                            <span t-elif="state.previewIcon.type === 'mimetype'" class="o_image" t-att-data-mimetype="state.previewIcon.value"/>
+                            <i t-else="" t-attf-class="fa fa-fw {{state.previewIcon.value}}"></i>
                         </span>
                         <div class="ms-1 w-100">
                             <div class="d-flex">
                                 <a href="#" target="_blank" t-attf-href="{{state.url}}" class="o_we_url_link fw-bold flex-grow-1 text-truncate" style="max-width: 160px;" t-attf-title="{{state.urlTitle}}">
                                     <t t-esc="state.urlTitle"/>
                                 </a>
-                                <a href="#" class="mx-1 o_we_copy_link text-dark" t-on-click="onClickCopy" title="Copy Link">
-                                    <i class="fa fa-clone"></i>
-                                </a>
-                                <a href="#" class="mx-1 o_we_edit_link text-dark" t-on-click="onClickEdit" title="Edit Link">
-                                    <i class="fa fa-edit"></i>
-                                </a>
-                                <a href="#" class="ms-1 o_we_remove_link text-dark" t-on-click="onClickRemove" title="Remove Link">
-                                    <i class="fa fa-chain-broken"></i>
-                                </a>
+                                <div class="flex-grow-1 d-flex justify-content-end">
+                                    <a href="#" class="mx-1 o_we_copy_link text-dark" t-on-click="onClickCopy" title="Copy Link">
+                                        <i class="fa fa-clone"></i>
+                                    </a>
+                                    <t t-if="props.canEdit">
+                                        <a href="#" class="mx-1 o_we_edit_link text-dark" t-on-click="onClickEdit" title="Edit Link">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a href="#" class="ms-1 o_we_remove_link text-dark" t-on-click="onClickRemove" title="Remove Link">
+                                            <i class="fa fa-chain-broken"></i>
+                                        </a>
+                                    </t>
+                                </div>
                             </div>
                             <div t-if="state.urlTitle and state.url and state.urlTitle !== state.url" class="text-truncate" style="max-width: 200px; font-size: 12px;">
                                 <span t-attf-class="o_we_full_url text-muted o_we_webkit_box" t-attf-title="{{state.url}}">

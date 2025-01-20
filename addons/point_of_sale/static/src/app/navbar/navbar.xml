@@ -66,6 +66,9 @@
                                 <DropdownItem onSelected="() => this.pos.closeSession()">
                                     Close Register
                                 </DropdownItem>
+                                <DropdownItem t-if="this.env.debug" onSelected="() => this.clearCache()">
+                                    Clear Cache
+                                </DropdownItem>
                                 <DropdownItem t-if="this.env.debug" onSelected="() => debug.toggleWidget()">
                                     Debug Window
                                 </DropdownItem>
