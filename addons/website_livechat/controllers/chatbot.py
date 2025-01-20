@@ -34,12 +34,7 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
                         "last_interest_dt": fields.Datetime.now() - timedelta(seconds=30),
                     }
                 ),
-                Command.create(
-                    {
-                        "partner_id": request.env.user.partner_id.id,
-                        "fold_state": "open",
-                    }
-                ),
+                Command.create({"partner_id": request.env.user.partner_id.id}),
             ],
             'livechat_active': True,
             'livechat_operator_id': chatbot_script.operator_partner_id.id,
@@ -55,7 +50,7 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
 
         discuss_channel = request.env['discuss.channel'].create(discuss_channel_values)
         chatbot_script._post_welcome_steps(discuss_channel)
-        store = Store()
+        store = Store(discuss_channel, {"open_chat_window": True})
         request.env["res.users"]._init_store_data(store)
         store.add(chatbot_script)
         return request.render("im_livechat.chatbot_test_script_page", {

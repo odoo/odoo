@@ -187,11 +187,7 @@ test("counter is taking into account non-fetched channels", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_member_ids: [
-            Command.create({
-                fold_state: "closed", // minimized channels are fetched at init
-                message_unread_counter: 1,
-                partner_id: serverState.partnerId,
-            }),
+            Command.create({ message_unread_counter: 1, partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
@@ -217,10 +213,7 @@ test("counter is updated on receiving message on non-fetched channels", async ()
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_member_ids: [
-            Command.create({
-                fold_state: "closed", // minimized channels are fetched at init
-                partner_id: serverState.partnerId,
-            }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });

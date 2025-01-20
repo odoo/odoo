@@ -4601,6 +4601,8 @@ class MailThread(models.AbstractModel):
                     ]
                 )
                 thread._message_followers_to_store(store, filter_recipients=True, reset=True)
+            if request_list and "display_name" in request_list:
+                res["display_name"] = thread.display_name
             if request_list and "scheduledMessages" in request_list:
                 res["scheduledMessages"] = Store.Many(self.env['mail.scheduled.message'].search([
                     ['model', '=', self._name], ['res_id', '=', thread.id]

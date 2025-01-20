@@ -8,7 +8,6 @@ import {
     contains,
     focus,
     insertText,
-    onRpcBefore,
     start,
     startServer,
     triggerHotkey,
@@ -18,6 +17,7 @@ import {
     asyncStep,
     Command,
     mountWithCleanup,
+    onRpc,
     serverState,
     waitForSteps,
     withUser,
@@ -53,9 +53,10 @@ test("new message from operator displays unread counter", async () => {
             livechatUserId: serverState.publicUserId,
         })
     );
-    onRpcBefore("/mail/data", (args) => {
-        if (args.init_messaging) {
-            asyncStep(`/mail/data - ${JSON.stringify(args)}`);
+    onRpc("/mail/data", async (request) => {
+        const { params } = await request.json();
+        if (params.fetch_params.includes("init_messaging")) {
+            asyncStep(`/mail/data - ${JSON.stringify(params)}`);
         }
     });
     const userId = serverState.userId;
@@ -64,12 +65,17 @@ test("new message from operator displays unread counter", async () => {
     });
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            init_messaging: {
-                channel_types: ["livechat"],
+            fetch_params: [
+                "failures", // called because mail/core/web is loaded in qunit bundle
+                "systray_get_activities", // called because mail/core/web is loaded in qunit bundle
+                "init_messaging",
+            ],
+            context: {
+                lang: "en",
+                tz: "taht",
+                uid: serverState.userId,
+                allowed_company_ids: [1],
             },
-            failures: true, // called because mail/core/web is loaded in qunit bundle
-            systray_get_activities: true, // called because mail/core/web is loaded in qunit bundle
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
     // send after init_messaging because bus subscription is done after init_messaging
@@ -87,9 +93,10 @@ test.tags("focus required");
 test("focus on unread livechat marks it as read", async () => {
     const pyEnv = await startServer();
     await loadDefaultEmbedConfig();
-    onRpcBefore("/mail/data", (args) => {
-        if (args.init_messaging) {
-            asyncStep(`/mail/data - ${JSON.stringify(args)}`);
+    onRpc("/mail/data", async (request) => {
+        const { params } = await request.json();
+        if (params.fetch_params.includes("init_messaging")) {
+            asyncStep(`/mail/data - ${JSON.stringify(params)}`);
         }
     });
     const userId = serverState.userId;
@@ -104,12 +111,18 @@ test("focus on unread livechat marks it as read", async () => {
     await contains(".o-mail-Message-content", { text: "Hello World!" });
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            init_messaging: {
-                channel_types: ["livechat"],
+            fetch_params: [
+                "failures", // called because mail/core/web is loaded in qunit bundle
+                "systray_get_activities", // called because mail/core/web is loaded in qunit bundle
+                ["discuss.channel", [1]],
+                "init_messaging",
+            ],
+            context: {
+                lang: "en",
+                tz: "taht",
+                uid: serverState.userId,
+                allowed_company_ids: [1],
             },
-            failures: true, // called because mail/core/web is loaded in qunit bundle
-            systray_get_activities: true, // called because mail/core/web is loaded in qunit bundle
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
     queryFirst(".o-mail-Composer-input").blur();

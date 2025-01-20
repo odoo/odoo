@@ -5,13 +5,13 @@ import { rpc } from "@web/core/network/rpc";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(Thread, {
+/** @type {typeof Thread} */
+const threadStaticPatch = {
     async getOrFetch(data) {
-        let thread = super.get(data);
-        if (data.model !== "discuss.channel" || !data.id) {
-            return thread;
+        if (data.model !== "discuss.channel" || data.id < 1) {
+            return super.get(data);
         }
-        thread = this.insert({ id: data.id, model: data.model });
+        const thread = this.insert({ id: data.id, model: data.model });
         if (thread.fetchChannelInfoState === "fetched") {
             return Promise.resolve(thread);
         }
@@ -21,25 +21,30 @@ patch(Thread, {
         thread.fetchChannelInfoState = "fetching";
         const def = new Deferred();
         thread.fetchChannelInfoDeferred = def;
-        thread.fetchChannelInfo().then(
-            (result) => {
+        this.store.fetchChannel(thread.id).then(
+            () => {
                 if (thread.exists()) {
                     thread.fetchChannelInfoState = "fetched";
                     thread.fetchChannelInfoDeferred = undefined;
+                    def.resolve(thread);
+                } else {
+                    def.resolve();
                 }
-                def.resolve(result);
             },
-            (error) => {
+            () => {
                 if (thread.exists()) {
                     thread.fetchChannelInfoState = "not_fetched";
                     thread.fetchChannelInfoDeferred = undefined;
+                    def.reject(thread);
+                } else {
+                    def.reject();
                 }
-                def.reject(error);
             }
         );
         return def;
     },
-});
+};
+patch(Thread, threadStaticPatch);
 
 /** @type {import("models").Thread} */
 const threadPatch = {

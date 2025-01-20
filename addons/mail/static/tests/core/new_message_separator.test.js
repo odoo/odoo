@@ -8,6 +8,7 @@ import {
     openDiscuss,
     openFormView,
     scroll,
+    setupChatHub,
     start,
     startServer,
     triggerHotkey,
@@ -201,7 +202,6 @@ test("show new message separator when message is received in chat window", async
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({
-                fold_state: "open",
                 unpin_dt: "2021-01-01 12:00:00",
                 last_interest_dt: "2021-01-01 10:00:00",
                 partner_id: serverState.partnerId,
@@ -220,6 +220,7 @@ test("show new message separator when message is received in chat window", async
         ["partner_id", "=", serverState.partnerId],
     ]);
     pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: messageId + 1 });
+    setupChatHub({ opened: [channelId] });
     await start();
     // simulate receiving a message
     withUser(userId, () =>
@@ -244,22 +245,26 @@ test("show new message separator when message is received while chat window is c
     });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId, fold_state: "open" }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
     onRpcBefore("/mail/data", (args) => {
-        if (args.init_messaging) {
+        if (args.fetch_params.includes("init_messaging")) {
             asyncStep(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
+    setupChatHub({ opened: [channelId] });
     await start();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            init_messaging: {},
-            failures: true,
-            systray_get_activities: true,
+            fetch_params: [
+                "failures",
+                "systray_get_activities",
+                ["discuss.channel", [channelId]],
+                "init_messaging",
+            ],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);

@@ -269,7 +269,11 @@ async function discuss_get_or_create_chat(request) {
 
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
-    return DiscussChannel._get_or_create_chat(partners_to);
+    const channel = DiscussChannel._get_or_create_chat(partners_to);
+    return {
+        channel_id: channel.id,
+        data: new mailDataHelpers.Store(DiscussChannel.browse(channel.id)).get_result(),
+    };
 }
 
 registerRoute("/discuss/channel/create_channel", discuss_create_channel);
@@ -292,33 +296,6 @@ async function discuss_create_group(request) {
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
     return DiscussChannel._create_group(partners_to, name);
-}
-
-registerRoute("/discuss/channel/fold", discuss_channel_fold);
-/** @type {RouteCallback} */
-async function discuss_channel_fold(request) {
-    /** @type {import("mock_models").DiscussChannel} */
-    const DiscussChannel = this.env["discuss.channel"];
-    /** @type {import("mock_models").DiscussChannelMember} */
-    const DiscussChannelMember = this.env["discuss.channel.member"];
-
-    const { channel_id, state, state_count } = await parseRequestParams(request);
-    const memberOfCurrentUser = DiscussChannel._find_or_create_member_for_self(channel_id);
-    return DiscussChannelMember._channel_fold(memberOfCurrentUser.id, state, state_count);
-}
-
-registerRoute("/discuss/channel/info", discuss_channel_info);
-/** @type {RouteCallback} */
-async function discuss_channel_info(request) {
-    /** @type {import("mock_models").DiscussChannel} */
-    const DiscussChannel = this.env["discuss.channel"];
-
-    const { channel_id } = await parseRequestParams(request);
-    const channel = DiscussChannel.search([["id", "=", channel_id]]);
-    if (!channel.length) {
-        return;
-    }
-    return new mailDataHelpers.Store(channel).get_result();
 }
 
 registerRoute("/discuss/channel/members", discuss_channel_members);
@@ -871,25 +848,6 @@ async function discuss_starred_messages(request) {
     };
 }
 
-registerRoute("/mail/thread/data", mail_thread_data);
-/** @type {RouteCallback} */
-export async function mail_thread_data(request) {
-    const { request_list, thread_model, thread_id } = await parseRequestParams(request);
-    const [thread] = this.env[thread_model].browse(thread_id);
-    if (!thread) {
-        return new mailDataHelpers.Store("mail.thread", {
-            hasReadAccess: false,
-            hasWriteAccess: false,
-            id: thread_id,
-            model: thread_model,
-        }).get_result();
-    }
-    return new mailDataHelpers.Store(
-        this.env[thread_model].browse(thread_id),
-        makeKwArgs({ as_thread: true, request_list })
-    ).get_result();
-}
-
 registerRoute("/mail/thread/messages", mail_thread_messages);
 /** @type {RouteCallback} */
 async function mail_thread_messages(request) {
@@ -919,13 +877,13 @@ async function mail_thread_messages(request) {
 registerRoute("/mail/action", mail_action);
 /** @type {RouteCallback} */
 async function mail_action(request) {
-    return (await mailDataHelpers.processRequest.call(this, request)).get_result();
+    return (await processRequest.call(this, request)).get_result();
 }
 
 registerRoute("/mail/data", mail_data);
 /** @type {RouteCallback} */
-async function mail_data(request) {
-    return (await mailDataHelpers.processRequest.call(this, request)).get_result();
+export async function mail_data(request) {
+    return (await processRequest.call(this, request)).get_result();
 }
 
 registerRoute("/discuss/search", search);
@@ -984,48 +942,90 @@ async function processRequest(request) {
 
     const store = new mailDataHelpers.Store();
     const args = await parseRequestParams(request);
-    if ("init_messaging" in args) {
-        if (!MailGuest._get_guest_from_context() || !ResUsers._is_public(this.env.uid)) {
-            ResUsers._init_messaging([this.env.uid], store, args.context);
-        }
-        const guest = ResUsers._is_public(this.env.uid) && MailGuest._get_guest_from_context();
-        const members = DiscussChannelMember._filter([
-            guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", this.env.user.partner_id],
-            "|",
-            ["fold_state", "in", ["open", "folded"]],
-            ["rtc_inviting_session_id", "!=", false],
-        ]);
-        const channelsDomain = [["id", "in", members.map((m) => m.channel_id)]];
-        const { channelTypes } = args.init_messaging;
-        if (channelTypes) {
-            channelsDomain.push(["channel_type", "in", channelTypes]);
-        }
-        store.add(DiscussChannel.search(channelsDomain));
-    }
-    if (args.failures && this.env.user?.partner_id) {
-        const [partner] = ResPartner.browse(this.env.user.partner_id);
-        const messages = MailMessage._filter([
-            ["author_id", "=", partner.id],
-            ["res_id", "!=", 0],
-            ["model", "!=", false],
-            ["message_type", "!=", "user_notification"],
-        ]).filter((message) => {
-            // Purpose is to simulate the following domain on mail.message:
-            // ['notification_ids.notification_status', 'in', ['bounce', 'exception']],
-            // But it's not supported by getRecords domain to follow a relation.
-            const notifications = MailNotification._filter([
-                ["mail_message_id", "=", message.id],
-                ["notification_status", "in", ["bounce", "exception"]],
+    for (const fetchParam of args.fetch_params) {
+        const [name, params] =
+            typeof fetchParam === "string" || fetchParam instanceof String
+                ? [fetchParam, undefined]
+                : fetchParam;
+        if (name === "init_messaging") {
+            if (!MailGuest._get_guest_from_context() || !ResUsers._is_public(this.env.uid)) {
+                ResUsers._init_messaging([this.env.uid], store, args.context);
+            }
+            const guest = ResUsers._is_public(this.env.uid) && MailGuest._get_guest_from_context();
+            const members = DiscussChannelMember._filter([
+                guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", this.env.user.partner_id],
+                ["rtc_inviting_session_id", "!=", false],
             ]);
-            return notifications.length > 0;
-        });
-        messages.length = Math.min(messages.length, 100);
-        MailMessage._message_notifications_to_store(
-            messages.map((message) => message.id),
-            store
-        );
+            const channelsDomain = [["id", "in", members.map((m) => m.channel_id)]];
+            store.add(DiscussChannel.search(channelsDomain));
+        }
+        if (name === "failures" && this.env.user?.partner_id) {
+            const [partner] = ResPartner.browse(this.env.user.partner_id);
+            const messages = MailMessage._filter([
+                ["author_id", "=", partner.id],
+                ["res_id", "!=", 0],
+                ["model", "!=", false],
+                ["message_type", "!=", "user_notification"],
+            ]).filter((message) => {
+                // Purpose is to simulate the following domain on mail.message:
+                // ['notification_ids.notification_status', 'in', ['bounce', 'exception']],
+                // But it's not supported by getRecords domain to follow a relation.
+                const notifications = MailNotification._filter([
+                    ["mail_message_id", "=", message.id],
+                    ["notification_status", "in", ["bounce", "exception"]],
+                ]);
+                return notifications.length > 0;
+            });
+            messages.length = Math.min(messages.length, 100);
+            MailMessage._message_notifications_to_store(
+                messages.map((message) => message.id),
+                store
+            );
+        }
+        if (name === "channels_as_member") {
+            const channels = DiscussChannel._get_channels_as_member();
+            store.add(
+                MailMessage.browse(
+                    channels
+                        .map(
+                            (channel) =>
+                                MailMessage._filter([
+                                    ["model", "=", "discuss.channel"],
+                                    ["res_id", "=", channel.id],
+                                ]).sort((a, b) => b.id - a.id)[0]
+                        )
+                        .filter((lastMessage) => lastMessage)
+                        .map((message) => message.id)
+                ),
+                makeKwArgs({ for_current_user: true })
+            );
+            store.add(channels.map((channel) => channel.id));
+        }
+        if (name === "mail.thread") {
+            store.add(
+                this.env[params.thread_model].browse(params.thread_id),
+                makeKwArgs({ as_thread: true, request_list: params.request_list })
+            );
+        }
+        if (name === "discuss.channel") {
+            const channels = DiscussChannel.search([["id", "=", params]]);
+            store.add(channels);
+            for (const channelId of params.filter((id) => !channels.includes(id))) {
+                const channel = DiscussChannel.browse();
+                // limitation of mock server: cannot browse non-existing record
+                channel.push({ id: channelId });
+                store.add(channel, makeKwArgs({ delete: true }));
+            }
+        }
+        mailDataHelpers._process_request_for_internal_user.call(this, store, name, params);
     }
-    if (args.systray_get_activities && this.env.user?.partner_id) {
+    return store;
+}
+
+function _process_request_for_internal_user(store, name, params) {
+    /** @type {import("mock_models").ResUsers} */
+    const ResUsers = this.env["res.users"];
+    if (name === "systray_get_activities" && this.env.user?.partner_id) {
         const bus_last_id = this.env["bus.bus"].lastBusNotificationId;
         const groups = ResUsers._get_activity_groups();
         store.add({
@@ -1037,26 +1037,7 @@ async function processRequest(request) {
             activityGroups: groups,
         });
     }
-    if (args.channels_as_member) {
-        const channels = DiscussChannel._get_channels_as_member();
-        store.add(
-            MailMessage.browse(
-                channels
-                    .map(
-                        (channel) =>
-                            MailMessage._filter([
-                                ["model", "=", "discuss.channel"],
-                                ["res_id", "=", channel.id],
-                            ]).sort((a, b) => b.id - a.id)[0]
-                    )
-                    .filter((lastMessage) => lastMessage)
-                    .map((message) => message.id)
-            ),
-            makeKwArgs({ for_current_user: true })
-        );
-        store.add(channels.map((channel) => channel.id));
-    }
-    if (args.canned_responses) {
+    if (name === "mail.canned.response") {
         const domain = [
             "|",
             ["create_uid", "=", this.env.user.id],
@@ -1064,7 +1045,6 @@ async function processRequest(request) {
         ];
         store.add(this.env["mail.canned.response"].search(domain));
     }
-    return store;
 }
 
 const ids_by_model = {
@@ -1377,6 +1357,6 @@ class Store {
 }
 
 export const mailDataHelpers = {
-    processRequest,
+    _process_request_for_internal_user,
     Store,
 };

@@ -298,7 +298,7 @@ class DiscussChannel(models.Model):
                 if cmd[0] != 0:
                     raise ValidationError(_('Invalid value when creating a channel with memberships, only 0 is allowed.'))
                 for field_name in cmd[2]:
-                    if field_name not in ["partner_id", "guest_id", "unpin_dt", "last_interest_dt", "fold_state"]:
+                    if field_name not in ["partner_id", "guest_id", "unpin_dt", "last_interest_dt"]:
                         raise ValidationError(
                             _(
                                 "Invalid field “%(field_name)s” when creating a channel with members.",
@@ -1025,11 +1025,6 @@ class DiscussChannel(models.Model):
                     ],
                     only_data=True,
                 ),
-                Store.Attr(
-                    "state",
-                    lambda c: c.self_member_id.fold_state or "closed",
-                    predicate=lambda c: c.self_member_id,
-                ),
             ]
         return res
 
@@ -1039,13 +1034,12 @@ class DiscussChannel(models.Model):
     # User methods
 
     @api.model
-    def _get_or_create_chat(self, partners_to, pin=True, force_open=False):
+    def _get_or_create_chat(self, partners_to, pin=True):
         """ Get the canonical private channel between some partners, create it if needed.
             To reuse an old channel (conversation), this one must be private, and contains
             only the given partners.
             :param partners_to : list of res.partner ids to add to the conversation
             :param pin : True if getting the channel should pin it for the current user
-            :param force_open : True if getting the channel should open it for the current user
             :returns: channel_info of the created or existing channel
             :rtype: dict
         """
@@ -1077,13 +1071,11 @@ class DiscussChannel(models.Model):
             # get the existing channel between the given partners
             channel = self.browse(result[0].get('channel_id'))
             # pin or open the channel for the current partner
-            if pin or force_open:
+            if pin:
                 member = self.env['discuss.channel.member'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', channel.id)])
                 vals = {'last_interest_dt': fields.Datetime.now()}
                 if pin:
                     vals['unpin_dt'] = False
-                if force_open:
-                    vals['fold_state'] = "open"
                 member.write(vals)
             channel._broadcast(self.env.user.partner_id.ids)
         else:
