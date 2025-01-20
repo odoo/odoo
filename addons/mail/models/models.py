@@ -287,13 +287,13 @@ class Base(models.AbstractModel):
             }
         return res
 
-    def _notify_get_reply_to(self, default=None):
+    def _notify_get_reply_to(self, default=None, author_id=False):
         """ Returns the preferred reply-to email address when replying to a thread
         on documents. This method is a generic implementation available for
         all models as we could send an email through mail templates on models
         not inheriting from mail.thread.
 
-        Reply-to is formatted like "MyCompany MyDocument <reply.to@domain>".
+        Reply-to is formatted like '"Author Name" <reply.to@domain>".
         Heuristic it the following:
          * search for specific aliases as they always have priority; it is limited
            to aliases linked to documents (like project alias for task for example);
@@ -302,20 +302,41 @@ class Base(models.AbstractModel):
 
         This method can be used as a generic tools if self is a void recordset.
 
-        Override this method on a specific model to implement model-specific
-        behavior. Also consider inheriting from ``mail.thread``.
-        An example would be tasks taking their reply-to alias from their project.
-
         :param default: default email if no alias or catchall is found;
+        :param author_id: author to use in name part of formatted email;
+
         :return result: dictionary. Keys are record IDs and value is formatted
-          like an email "Company_name Document_name <reply_to@email>"/
+          like an email "Company_name Document_name <reply_to@email>"
+        """
+        return self._notify_get_reply_to_batch(
+            defaults={res_id: default for res_id in (self.ids or [False])},
+            author_ids={res_id: author_id for res_id in (self.ids or [False])},
+        )
+
+    def _notify_get_reply_to_batch(self, defaults=None, author_ids=None):
+        """ Batch-enabled version of '_notify_get_reply_to' where default and
+        author_id may be different / record. This one exist mainly for batch
+        intensive computation like composer in mass mode, where email configuration
+        is different / record due to dynamic rendering.
+
+        :param dict defaults: default / record ID;
+        :param dict author_ids: author ID / record ID;
         """
         _records = self
         model = _records._name if _records and _records._name != 'mail.thread' else False
         res_ids = _records.ids if _records and model else []
         _res_ids = res_ids or [False]  # always have a default value located in False
         _records_sudo = _records.sudo()
-        doc_names = {rec.id: rec.display_name for rec in _records_sudo} if res_ids else {}
+        if defaults is None:
+            defaults = dict.fromkeys(_res_ids, False)
+        if author_ids is None:
+            author_ids = dict.fromkeys(_res_ids, False)
+
+        # sanity check
+        if set(defaults.keys()) != set(_res_ids):
+            raise ValueError(f'Invalid defaults, keys {defaults.keys()} does not match recordset IDs {_res_ids}')
+        if set(author_ids.keys()) != set(_res_ids):
+            raise ValueError(f'Invalid author_ids, keys {author_ids.keys()} does not match recordset IDs {_res_ids}')
 
         # group ids per company
         if res_ids:
@@ -351,15 +372,16 @@ class Base(models.AbstractModel):
                         reply_to_email.update({rec_id: company.catchall_email for rec_id in left_ids})
 
         # compute name of reply-to ("Company Document" <alias@domain>)
-        reply_to_formatted = dict.fromkeys(_res_ids, default)
+        reply_to_formatted = dict(defaults)
         for res_id, record_reply_to in reply_to_email.items():
             reply_to_formatted[res_id] = self._notify_get_reply_to_formatted_email(
-                record_reply_to, doc_names.get(res_id) or '', company=record_ids_to_company[res_id],
+                record_reply_to,
+                author_id=author_ids[res_id],
             )
 
         return reply_to_formatted
 
-    def _notify_get_reply_to_formatted_email(self, record_email, record_name, company=False):
+    def _notify_get_reply_to_formatted_email(self, record_email, author_id=False):
         """ Compute formatted email for reply_to and try to avoid refold issue
         with python that splits the reply-to over multiple lines. It is due to
         a bad management of quotes (missing quotes after refold). This appears
@@ -386,22 +408,18 @@ class Base(models.AbstractModel):
             _logger.warning('Notification email address for reply-to is longer than 68 characters. '
                 'This might create non-compliant folding in the email header in certain DKIM '
                 'verification tech stacks. It is advised to shorten it if possible. '
-                'Record name (if set): %s '
-                'Reply-To: %s ', record_name, record_email)
+                'Reply-To: %s ', record_email)
             return record_email
 
-        if not company:
-            if len(self) == 1:
-                company = self.sudo()._mail_get_companies(default=self.env.company)
-            else:
-                company = self.env.company
+        if author_id:
+            author_name = self.env['res.partner'].browse(author_id).name
+        else:
+            author_name = self.env.user.name
 
-        # try company.name + record_name, or record_name alone (or company.name alone)
-        name = f"{company.name} {record_name}" if record_name else company.name
-
-        formatted_email = tools.formataddr((name, record_email))
+        # try user.name alone, then company.name alone
+        formatted_email = tools.formataddr((author_name, record_email))
         if len(formatted_email) > length_limit:
-            formatted_email = tools.formataddr((record_name or company.name, record_email))
+            formatted_email = tools.formataddr((self.env.user.name, record_email))
         if len(formatted_email) > length_limit:
             formatted_email = record_email
         return formatted_email

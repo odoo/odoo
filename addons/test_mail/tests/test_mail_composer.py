@@ -1041,6 +1041,7 @@ class TestComposerInternals(TestMailComposer):
                                                     'test.cc.2@test.example.com'])
                     ])
                 )
+                self.assertEqual(self.test_record.message_partner_ids, self.partner_employee_2)
 
                 batch = bool(batch_mode)
                 test_records = self.test_records if batch else self.test_record
@@ -1062,6 +1063,10 @@ class TestComposerInternals(TestMailComposer):
                 })
 
                 # creation values are taken
+                if composition_mode == 'comment' and not batch_mode:
+                    self.assertEqual(composer.notified_bcc, self.partner_employee_2.name)
+                else:
+                    self.assertFalse(composer.notified_bcc)
                 self.assertEqual(composer.partner_ids, base_recipients)
                 self.assertEqual(composer.reply_to, 'my_reply_to@test.example.com')
                 self.assertFalse(composer.reply_to_force_new)
@@ -1677,10 +1682,10 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                     'subtype_id': self.env.ref('mail.mt_comment').id,
                 })
                 _mail, message = composer._action_send_mail()
-                if option == 'reply_all':
+                if option == 'forward':
                     self.assertEqual(
                         message.notified_partner_ids, self.partner_admin,
-                        'Either reply_all is broken, either notify_skip_followers parameter is broken')
+                        'Either forward is broken, either notify_skip_followers parameter is broken')
                 else:
                     self.assertEqual(message.notified_partner_ids, self.partner_employee_2 + self.partner_admin,
                                         'classic notify: followers + recipients - author')
@@ -2907,7 +2912,7 @@ class TestComposerResultsMass(TestMailComposer):
                 composer = composer_form.save()
 
                 # ensure some parameters used afterwards
-                author = self.env.user.partner_id
+                author = self.partner_employee
                 self.assertEqual(composer.author_id, author,
                                  'Author is not synchronized, as template email_from does not match existing partner')
                 self.assertEqual(composer.email_from, self.template.email_from)
@@ -2975,7 +2980,7 @@ class TestComposerResultsMass(TestMailComposer):
                                             'email_from': self.partner_employee_2.email_formatted,
                                             'mail_server_id': self.mail_server_domain,
                                             'reply_to': formataddr((
-                                                f'{self.env.user.company_id.name} {record.name}',
+                                                author.name,
                                                 f'{self.alias_catchall}@{self.alias_domain}'
                                             )),
                                             'subject': exp_subject,
@@ -3393,7 +3398,7 @@ class TestComposerResultsMass(TestMailComposer):
                     # single email event if email field is multi-email
                     'email_from': formataddr((self.user_employee.name, 'email.from.1@test.mycompany.com')),
                     'reply_to': formataddr((
-                        f'{self.env.user.company_id.name} {record.name}',
+                        self.partner_employee.name,
                         f'{self.alias_catchall}@{self.alias_domain}'
                     )),
                     'subject': f'TemplateSubject {record.name}',
@@ -3402,7 +3407,7 @@ class TestComposerResultsMass(TestMailComposer):
                     # currently holding multi-email 'email_from'
                     'email_from': self.partner_employee.email_formatted,
                     'reply_to': formataddr((
-                        f'{self.env.user.company_id.name} {record.name}',
+                        self.partner_employee.name,
                         f'{self.alias_catchall}@{self.alias_domain}'
                     )),
                 },

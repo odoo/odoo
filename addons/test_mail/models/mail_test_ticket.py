@@ -148,13 +148,13 @@ class MailTestTicketMc(models.Model):
                 values['company_id'] = ticket.company_id.id
         return email_keys_to_values
 
-    def _notify_get_reply_to(self, default=None):
+    def _notify_get_reply_to(self, default=None, author_id=False):
         # Override to use alias of the parent container
-        aliases = self.sudo().mapped('container_id')._notify_get_reply_to(default=default)
+        aliases = self.sudo().mapped('container_id')._notify_get_reply_to(default=default, author_id=author_id)
         res = {ticket.id: aliases.get(ticket.container_id.id) for ticket in self}
         leftover = self.filtered(lambda rec: not rec.container_id)
         if leftover:
-            res.update(super()._notify_get_reply_to(default=default))
+            res.update(super()._notify_get_reply_to(default=default, author_id=author_id))
         return res
 
 
