@@ -358,7 +358,7 @@ export function useClickableBuilderComponent() {
         getActions: getAllActions,
     };
 }
-export function useInputBuilderComponent() {
+export function useInputBuilderComponent({ defaultValue } = {}) {
     const comp = useComponent();
     const { getAllActions, callOperation } = getAllActionsAndOperations(comp);
     const getAction = comp.env.editor.shared.builderActions.getAction;
@@ -394,6 +394,7 @@ export function useInputBuilderComponent() {
     }
 
     function onChange(e) {
+        e.target.value ||= defaultValue;
         const userValueInput = e.target.value;
         callOperation(applyOperation.commit, { userValueInput: userValueInput });
     }

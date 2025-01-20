@@ -8,6 +8,7 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "../../helpers";
+import { delay } from "@web/core/utils/concurrency";
 
 defineWebsiteModels();
 
@@ -32,6 +33,33 @@ test("should get the initial value of the input", async () => {
     const input = queryFirst(".options-container input");
     expect(input).toHaveValue("10");
 });
+test("should use the default value when there is no value onChange", async () => {
+    addActionOption({
+        customAction: {
+            getValue: ({ editingElement }) => editingElement.innerHTML,
+            apply: ({ value }) => {
+                expect.step(`customAction ${value}`);
+            },
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderNumberInput action="'customAction'" default="20"/>`,
+    });
+    await setupWebsiteBuilder(`
+        <div class="test-options-target">10</div>
+    `);
+    await contains(":iframe .test-options-target").click();
+    const input = queryFirst(".options-container input");
+    input.value = "";
+    input.dispatchEvent(new Event("input"));
+    await delay();
+    input.dispatchEvent(new Event("change"));
+    await delay();
+    expect.verifySteps(["customAction ", "customAction 20"]);
+    expect(input).toHaveValue("20");
+});
+
 test("should preview changes", async () => {
     addActionOption({
         customAction: {
