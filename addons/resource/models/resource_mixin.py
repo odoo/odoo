@@ -146,8 +146,9 @@ class ResourceMixin(models.AbstractModel):
         to_datetime = timezone_datetime(to_datetime)
 
         mapped_resources = defaultdict(lambda: self.env['resource.resource'])
+        resource_calendars = self._get_calendars(from_datetime)
         for record in self:
-            mapped_resources[calendar or record.resource_calendar_id] |= record.resource_id
+            mapped_resources[calendar or resource_calendars[record.id]] |= record.resource_id
 
         for calendar, calendar_resources in mapped_resources.items():
             # compute actual hours per day
