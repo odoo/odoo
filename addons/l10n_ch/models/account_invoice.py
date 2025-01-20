@@ -40,8 +40,23 @@ class AccountMove(models.Model):
     @api.depends('partner_id', 'currency_id')
     def _compute_l10n_ch_qr_is_valid(self):
         for move in self:
-            move.l10n_ch_is_qr_valid = move.move_type == 'out_invoice' \
-                                       and move.partner_bank_id._eligible_for_qr_code('ch_qr', move.partner_id, move.currency_id, raises_error=False)
+            company_eligible = True
+
+            if(move.company_id.account_fiscal_country_id.code != 'CH'):
+                company_eligible = False
+
+                if move.partner_bank_id.acc_number and move.partner_bank_id.acc_type == 'iban':
+                    iban = move.partner_bank_id.acc_number.replace(' ', '')
+                    if iban.startswith('CH') and len(iban) >= 9:
+                        bank_code = iban[4:9]
+                        if bank_code.isdigit() and 30000 <= int(bank_code) <= 31999:
+                            company_eligible = True
+
+            move.l10n_ch_is_qr_valid = (
+                move.move_type == 'out_invoice'
+                and move.partner_bank_id._eligible_for_qr_code('ch_qr', move.partner_id, move.currency_id, raises_error=False)
+                and company_eligible
+            )
 
     @api.depends('partner_bank_id.l10n_ch_isr_subscription_eur', 'partner_bank_id.l10n_ch_isr_subscription_chf')
     def _compute_l10n_ch_isr_subscription(self):
