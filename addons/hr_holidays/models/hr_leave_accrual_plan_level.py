@@ -310,3 +310,11 @@ class AccrualPlanLevel(models.Model):
                 return last_call + relativedelta(years=-1, month=month, day=self.yearly_day)
         else:
             return False
+
+    def _get_level_transition_date(self, allocation_start):
+        if self.start_type == 'day':
+            return allocation_start + relativedelta(days=self.start_count)
+        if self.start_type == 'month':
+            return allocation_start + relativedelta(months=self.start_count)
+        if self.start_type == 'year':
+            return allocation_start + relativedelta(years=self.start_count)
