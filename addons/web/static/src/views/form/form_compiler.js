@@ -521,8 +521,6 @@ export class FormCompiler extends ViewCompiler {
     compileNotebook(el, params) {
         const noteBookId = this.noteBookId++;
         const noteBook = createElement("Notebook");
-        const pageAnchors = [];
-        const noteBookAnchors = {};
 
         if (el.hasAttribute("class")) {
             noteBook.setAttribute("className", toStringExpression(el.getAttribute("class")));
@@ -570,17 +568,6 @@ export class FormCompiler extends ViewCompiler {
                 );
             }
 
-            for (const anchor of child.querySelectorAll("[href^=\\#]")) {
-                const anchorValue = CSS.escape(anchor.getAttribute("href").substring(1));
-                if (!anchorValue.length) {
-                    continue;
-                }
-                pageAnchors.push(anchorValue);
-                noteBookAnchors[anchorValue] = {
-                    origin: `'${pageId}'`,
-                };
-            }
-
             let isVisibleExpr;
             if (!invisible || invisible === "False" || invisible === "0") {
                 isVisibleExpr = "true";
@@ -596,24 +583,6 @@ export class FormCompiler extends ViewCompiler {
             for (const contents of child.children) {
                 append(pageSlot, this.compileNode(contents, { ...params, currentSlot: pageSlot }));
             }
-        }
-
-        if (pageAnchors.length) {
-            // If anchors from the page are targetting an element
-            // present in the notebook, it must be aware of the
-            // page that contains the corresponding element
-            for (const anchor of pageAnchors) {
-                let pageId = 1;
-                for (const child of el.children) {
-                    if (child.querySelector(`#${anchor}`)) {
-                        noteBookAnchors[anchor].target = `'page_${pageId}'`;
-                        noteBookAnchors[anchor] = objectToString(noteBookAnchors[anchor]);
-                        break;
-                    }
-                    pageId++;
-                }
-            }
-            noteBook.setAttribute("anchors", objectToString(noteBookAnchors));
         }
 
         return noteBook;

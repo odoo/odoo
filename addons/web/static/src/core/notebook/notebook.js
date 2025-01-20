@@ -1,14 +1,4 @@
-import { scrollTo } from "@web/core/utils/scrolling";
-
-import {
-    Component,
-    onWillUpdateProps,
-    useEffect,
-    useExternalListener,
-    useRef,
-    useState,
-} from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
+import { Component, onWillUpdateProps, useEffect, useRef, useState } from "@odoo/owl";
 
 /**
  * A notebook component that will render only the current page and allow
@@ -71,7 +61,6 @@ export class Notebook extends Component {
         pages: { type: Object, optional: true },
         class: { optional: true },
         className: { type: String, optional: true },
-        anchors: { type: Object, optional: true },
         defaultPage: { type: String, optional: true },
         orientation: { type: String, optional: true },
         icons: { type: Object, optional: true },
@@ -80,19 +69,12 @@ export class Notebook extends Component {
 
     setup() {
         this.activePane = useRef("activePane");
-        this.anchorTarget = null;
         this.pages = this.computePages(this.props);
         this.state = useState({ currentPage: null });
         this.state.currentPage = this.computeActivePage(this.props.defaultPage, true);
-        useExternalListener(browser, "click", this.onAnchorClicked);
         useEffect(
             () => {
                 this.props.onPageUpdate(this.state.currentPage);
-                if (this.anchorTarget) {
-                    const matchingEl = this.activePane.el.querySelector(`#${this.anchorTarget}`);
-                    scrollTo(matchingEl, { isAnchor: true });
-                    this.anchorTarget = null;
-                }
                 this.activePane.el?.classList.add("show");
             },
             () => [this.state.currentPage]
@@ -112,24 +94,6 @@ export class Notebook extends Component {
     get page() {
         const page = this.pages.find((e) => e[0] === this.state.currentPage)[1];
         return page.Component && page;
-    }
-
-    onAnchorClicked(ev) {
-        if (!this.props.anchors) {
-            return;
-        }
-        const href = ev.target.closest("a")?.getAttribute("href");
-        if (!href) {
-            return;
-        }
-        const id = href.substring(1);
-        if (this.props.anchors[id]) {
-            if (this.state.currentPage !== this.props.anchors[id].target) {
-                ev.preventDefault();
-                this.anchorTarget = id;
-                this.state.currentPage = this.props.anchors[id].target;
-            }
-        }
     }
 
     activatePage(pageIndex) {
