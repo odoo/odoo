@@ -70,7 +70,7 @@
             <div class="o-mail-DiscussSidebarCategory-actions" t-att-class="{ 'd-flex flex-column align-items-start pt-1': store.discuss.isSidebarCompact, 'btn-group btn-group-sm mx-1 o-gap-0_5': !store.discuss.isSidebarCompact }">
                 <t name="action-group">
                     <t t-foreach="actions" t-as="action" t-key="action_index">
-                        <button class="btn w-100 opacity-50 opacity-100-hover" t-on-click="() => action.onSelect()" t-att-class="{ 'd-flex align-items-center px-1 py-0 gap-1 text-start smaller btn-secondary': store.discuss.isSidebarCompact, 'btn-light bg-transparent rounded-3 p-0': !store.discuss.isSidebarCompact }" t-attf-class="#{action.class}" t-att-title="store.discuss.isSidebarCompact ? '' : action.label" t-att-data-hotkey="action.hotkey">
+                        <button class="btn w-100 o-opacity-35 opacity-100-hover" t-on-click="() => action.onSelect()" t-att-class="{ 'd-flex align-items-center px-1 py-0 gap-1 text-start smaller btn-secondary': store.discuss.isSidebarCompact, 'btn-light bg-transparent rounded-3 p-0 border-transparent': !store.discuss.isSidebarCompact }" t-attf-class="#{action.class}" t-att-title="store.discuss.isSidebarCompact ? '' : action.label" t-att-data-hotkey="action.hotkey">
                             <i role="img" class="fa-fw" t-att-class="action.icon"/>
                             <span t-if="store.discuss.isSidebarCompact" class="text-muted" t-esc="action.label"/>
                         </button>
@@ -188,7 +188,7 @@
         }">
             <div t-att-class="{ 'd-flex flex-column align-items-start ps-1 pt-1': store.discuss.isSidebarCompact, 'btn-group btn-group-sm o-gap-0_5': !store.discuss.isSidebarCompact }">
                 <t t-foreach="sortedCommands" t-as="command" t-key="command_index">
-                    <button class="btn opacity-50 opacity-100-hover" t-att-class="{ 'd-flex align-items-center px-1 py-0 gap-1 text-start smaller btn-secondary': store.discuss.isSidebarCompact, 'btn-light rounded-3 p-0': !store.discuss.isSidebarCompact }" t-on-click.stop="() => command.onSelect()" t-att-title="store.discuss.isSidebarCompact ? '' : command.label">
+                    <button class="btn o-opacity-35 opacity-100-hover" t-att-class="{ 'd-flex align-items-center px-1 py-0 gap-1 text-start smaller btn-secondary': store.discuss.isSidebarCompact, 'btn-light rounded-3 p-0 border-transparent': !store.discuss.isSidebarCompact }" t-on-click.stop="() => command.onSelect()" t-att-title="store.discuss.isSidebarCompact ? '' : command.label">
                         <i role="img" class="fa-fw" t-att-class="command.icon"/>
                         <span t-if="store.discuss.isSidebarCompact" t-esc="command.label"/>
                     </button>
