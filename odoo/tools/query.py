@@ -69,6 +69,7 @@ class Query:
 
         # groupby, having, order, limit, offset
         self.groupby: SQL | None = None
+        self._order_groupby: list[SQL] = []
         self.having: SQL | None = None
         self._order: SQL | None = None
         self.limit: int | None = None

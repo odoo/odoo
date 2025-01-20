@@ -624,17 +624,19 @@ export class OdooPivotModel extends PivotModel {
     /**
      * @override to add the order by clause to the read_group kwargs
      */
-    _getSubGroups(groupBys, params) {
+    async _getGroupsSubdivision(params, groupInfo) {
         const { columns, rows } = this.getDefinition();
+        const allGroupBys = params.groupingSets.flat();
         const order = columns
             .concat(rows)
             .filter(
-                (dimension) => dimension.order && groupBys.includes(dimension.nameWithGranularity)
+                (dimension) =>
+                    dimension.order && allGroupBys.includes(dimension.nameWithGranularity)
             )
             .map((dimension) => `${dimension.nameWithGranularity} ${dimension.order}`)
             .join(",");
         params.kwargs.order = order;
-        return super._getSubGroups(groupBys, params);
+        return super._getGroupsSubdivision(params, groupInfo);
     }
 
     /**
