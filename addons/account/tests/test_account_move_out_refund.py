@@ -1027,6 +1027,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
         # make payment
         self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
             'payment_date': invoice.date,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
         # check caba move
         partial_rec = invoice.mapped('line_ids.matched_debit_ids')
@@ -1159,8 +1160,12 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
         })
         invoice.action_post()
         # make payment
-        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+        self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids
+        ).create({
             'payment_date': invoice.date,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
         # check caba move
         partial_rec = invoice.mapped('line_ids.matched_debit_ids')

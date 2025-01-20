@@ -46,10 +46,10 @@ class AccountJournal(models.Model):
     _rec_names_search = ['name', 'code']
 
     def _default_inbound_payment_methods(self):
-        return self.env.ref('account.account_payment_method_manual_in')
+        return self.env['account.payment.method']
 
     def _default_outbound_payment_methods(self):
-        return self.env.ref('account.account_payment_method_manual_out')
+        return self.env['account.payment.method']
 
     def __get_bank_statements_available_sources(self):
         return [('undefined', _('Undefined Yet'))]

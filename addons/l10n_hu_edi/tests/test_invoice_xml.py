@@ -85,7 +85,12 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
 
         # Pay advance invoice on 2024-01-15.
         with freeze_time('2024-01-15'):
-            self.env['account.payment.register'].with_context(active_ids=advance_invoice.ids, active_model='account.move').create({})._create_payments()
+            self.env['account.payment.register'].with_context(
+                active_ids=advance_invoice.ids,
+                active_model='account.move'
+            ).create({
+                'payment_method_line_id': self.inbound_payment_method_line.id
+            })._create_payments()
 
         # Issue final invoice on 2024-02-01. The XML should report 2024-01-15 as the date of advance payment.
         with freeze_time('2024-02-01'):

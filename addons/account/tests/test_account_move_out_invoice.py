@@ -3466,8 +3466,12 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         invoice = move_form.save()
         invoice.action_post()
         # make payment
-        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+        self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids,
+        ).create({
             'payment_date': invoice.date,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
         # check caba move
         partial_rec = invoice.mapped('line_ids.matched_credit_ids')
@@ -3600,8 +3604,12 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         })
         invoice.action_post()
         # make payment
-        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+        self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids,
+        ).create({
             'payment_date': invoice.date,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
         # check caba move
         partial_rec = invoice.mapped('line_ids.matched_credit_ids')
@@ -4006,8 +4014,12 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
                 self.env.company.currency_exchange_journal_id = new_exchange_journal
 
-                self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+                self.env['account.payment.register'].with_context(
+                    active_model='account.move',
+                    active_ids=invoice.ids,
+                ).create({
                     'payment_date': '2017-01-20',
+                    'payment_method_line_id': self.inbound_payment_method_line.id,
                 })._create_payments()
 
                 line_receivable = invoice.line_ids.filtered(lambda l: l.account_id.account_type == 'asset_receivable')

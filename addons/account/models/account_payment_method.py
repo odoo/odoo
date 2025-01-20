@@ -133,10 +133,13 @@ class AccountPaymentMethodLine(models.Model):
     @api.depends('journal_id')
     @api.depends_context('hide_payment_journal_id')
     def _compute_display_name(self):
+        if self.env.context.get('hide_payment_journal_id'):
+            return super()._compute_display_name()
         for method in self:
-            if self.env.context.get('hide_payment_journal_id'):
-                return super()._compute_display_name()
-            method.display_name = f"{method.name} ({method.journal_id.name})"
+            if method.journal_id.name:
+                method.display_name = f"{method.name} ({method.journal_id.name})"
+            else:
+                method.display_name = f"{method.name}"
 
     @api.depends('payment_method_id.name')
     def _compute_name(self):
@@ -186,3 +189,21 @@ class AccountPaymentMethodLine(models.Model):
         if vals.get('payment_account_id'):
             self._auto_toggle_account_to_reconcile(vals['payment_account_id'])
         return super().write(vals)
+
+    def _get_available(self, payment_type=None, journal_id=None):
+        manual_inbound_payment_method = self.env.ref('account.account_payment_method_line_manual_in')
+        manual_outbound_payment_method = self.env.ref('account.account_payment_method_line_manual_out')
+        if payment_type == 'inbound':
+            manual_lines = manual_inbound_payment_method
+        elif payment_type == 'outbound':
+            manual_lines = manual_outbound_payment_method
+        else:
+            manual_lines = manual_inbound_payment_method | manual_outbound_payment_method
+        return manual_lines | self.search([
+            ('journal_id', 'any', [
+                '|',
+                ('company_id', 'parent_of', self.env.company.id),
+                ('company_id', 'child_of', self.env.company.id),
+                ('type', 'in', ('bank', 'cash', 'credit')),
+            ] + ([('id', '=', journal_id)] if journal_id else [])),
+        ] + [('payment_type', '=', payment_type)] if payment_type else [])
