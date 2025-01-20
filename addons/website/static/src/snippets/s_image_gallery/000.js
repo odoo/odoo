@@ -113,31 +113,32 @@ const GallerySliderWidget = publicWidget.Widget.extend({
     start: function () {
         var self = this;
         this.$carousel = this.$el.is('.carousel') ? this.$el : this.$('.carousel');
-        this.$indicator = this.$carousel.find('.carousel-indicators');
-        this.$prev = this.$indicator.find('li.o_indicators_left').css('visibility', ''); // force visibility as some databases have it hidden
-        this.$next = this.$indicator.find('li.o_indicators_right').css('visibility', '');
-        var $lis = this.$indicator.find('li[data-bs-slide-to]');
+        this.$controllers = this.$carousel.find('.o_carousel_controllers');
+        this.$indicator = this.$controllers.find('.carousel-indicators');
+        this.$prev = this.$controllers.find('.carousel-control-prev').css('visibility', ''); // Ensure visibility
+        this.$next = this.$controllers.find('.carousel-control-next').css('visibility', '');
+        var $buttons = this.$indicator.find('button[data-bs-slide-to]');
         let indicatorWidth = this.$indicator.width();
         if (indicatorWidth === 0) {
             // An ancestor may be hidden so we try to find it and make it
             // visible just to take the correct width.
             const $indicatorParent = this.$indicator.parents().not(':visible').last();
-            if (!$indicatorParent[0].style.display) {
+            if ($indicatorParent.length && !$indicatorParent[0].style.display) {
                 $indicatorParent[0].style.display = 'block';
                 indicatorWidth = this.$indicator.width();
                 $indicatorParent[0].style.display = '';
             }
         }
-        let nbPerPage = Math.floor(indicatorWidth / $lis.first().outerWidth(true)) - 3; // - navigator - 1 to leave some space
+        let nbPerPage = Math.floor(indicatorWidth / $buttons.first().outerWidth(true)) - 3; // - navigator - 1 to leave some space
         var realNbPerPage = nbPerPage || 1;
-        var nbPages = Math.ceil($lis.length / realNbPerPage);
+        var nbPages = Math.ceil($buttons.length / realNbPerPage);
 
         var index;
         var page;
         update();
 
         function hide() {
-            $lis.each(function (i) {
+            $buttons.each(function (i) {
                 $(this).toggleClass('d-none', i < page * nbPerPage || i >= (page + 1) * nbPerPage);
             });
             if (page <= 0) {
@@ -155,8 +156,8 @@ const GallerySliderWidget = publicWidget.Widget.extend({
         }
 
         function update() {
-            const active = $lis.filter('.active');
-            index = active.length ? $lis.index(active) : 0;
+            const active = $buttons.filter('.active');
+            index = active.length ? $buttons.index(active) : 0;
             page = Math.floor(index / realNbPerPage);
             hide();
         }
@@ -165,13 +166,13 @@ const GallerySliderWidget = publicWidget.Widget.extend({
             setTimeout(function () {
                 var $item = self.$carousel.find('.carousel-inner .carousel-item-prev, .carousel-inner .carousel-item-next');
                 var index = $item.index();
-                $lis.removeClass('active')
+                $buttons.removeClass('active')
                     .filter('[data-bs-slide-to="' + index + '"]')
                     .addClass('active');
             }, 0);
         });
-        this.$indicator.on('click.gallery_slider', '> li:not([data-bs-slide-to])', function () {
-            page += ($(this).hasClass('o_indicators_left') ? -1 : 1);
+        this.$indicator.on('click.gallery_slider', '> button:not([data-bs-slide-to])', function () {
+            page += ($(this).hasClass('carousel-control-prev') ? -1 : 1);
             page = Math.max(0, Math.min(nbPages - 1, page)); // should not be necessary
             self.$carousel.carousel(page * realNbPerPage);
             // We dont use hide() before the slide animation in the editor because there is a traceback
@@ -194,8 +195,8 @@ const GallerySliderWidget = publicWidget.Widget.extend({
             return;
         }
 
-        this.$prev.prependTo(this.$indicator);
-        this.$next.appendTo(this.$indicator);
+        this.$prev.css('visibility', '');
+        this.$next.css('visibility', '');
         this.$carousel.off('.gallery_slider');
         this.$indicator.off('.gallery_slider');
     },
