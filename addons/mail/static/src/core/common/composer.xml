@@ -31,9 +31,8 @@
                 <i class="fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Stop replying" t-on-click="() => props.messageToReplyTo.cancel()"/>
             </div>
             <div class="o-mail-Composer-coreMain d-flex flex-nowrap align-items-start flex-grow-1" t-att-class="{ 'flex-column' : extended }">
-                <div class="d-flex o-mail-Composer-bg flex-grow-1 border border-secondary rounded-3"
+                <div class="d-flex o-mail-Composer-bg m-1 shadow-sm flex-grow-1 border border-secondary rounded-3"
                     t-att-class="{
-                        'o-mail-Composer-compactContainer m-1 shadow-sm': compact and !props.composer.message,
                         'o-iosPwa': isIosPwa,
                         'align-self-stretch' : extended,
                     }"
@@ -125,7 +124,7 @@
             'mx-1': compact and !ui.isSmall,
             'mx-2': extended,
             'ms-3': normal,
-            'rounded': !props.composer.message,
+            'rounded-3': !props.composer.message,
             'o-mail-Composer-bg': !extended and !props.composer.message,
         }"
     >
