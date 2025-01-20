@@ -1896,7 +1896,7 @@ exports.Orderline = Backbone.Model.extend({
         }
         this.product = options.product;
         this.set_product_lot(this.product);
-        this.set_quantity(1);
+        this.set_quantity(options.quantity || 1);
         this.discount = 0;
         this.discountStr = '0';
         this.selected = false;
@@ -3072,7 +3072,7 @@ exports.Order = Backbone.Model.extend({
         }
         this.assert_editable();
         options = options || {};
-        var line = new exports.Orderline({}, {pos: this.pos, order: this, product: product});
+        var line = new exports.Orderline({}, {pos: this.pos, order: this, product: product, quantity: options.quantity || null});
         this.fix_tax_included_price(line);
 
         if(options.quantity !== undefined){
