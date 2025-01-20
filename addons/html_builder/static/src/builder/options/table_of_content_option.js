@@ -23,6 +23,10 @@ class TableOfContentOptionPlugin extends Plugin {
             {
                 template: "html_builder.TableOfContentOption",
                 selector: ".s_table_of_content",
+                cleanForSave: (editingElement) => {
+                    const navbarEl = editingElement.querySelector(".s_table_of_content_navbar");
+                    navbarEl.removeAttribute("contenteditable");
+                },
             },
             {
                 template: "html_builder.TableOfContentNavbarOption",
@@ -31,11 +35,6 @@ class TableOfContentOptionPlugin extends Plugin {
         ],
         builder_actions: this.getActions(),
         normalize_handlers: this.normalize.bind(this),
-        clean_for_save_handlers: ({ root }) => {
-            for (const element of root.querySelectorAll(".s_table_of_content_navbar")) {
-                element.removeAttribute("contenteditable");
-            }
-        },
     };
 
     getActions() {

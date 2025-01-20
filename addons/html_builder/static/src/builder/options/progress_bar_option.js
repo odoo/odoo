@@ -8,9 +8,9 @@ class ProgressBarOptionPlugin extends Plugin {
         builder_options: {
             template: "html_builder.ProgressBarOption",
             selector: this.selector,
+            cleanForSave: this.cleanForSave.bind(this),
         },
         builder_actions: this.getActions(),
-        clean_for_save_handlers_options: this.cleanForSave,
     };
 
     cleanForSave(editingEl) {

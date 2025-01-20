@@ -6,7 +6,7 @@ export const device_visibility_option_selector = "section .row > div";
 
 class DeviceVisibilityOptionPlugin extends Plugin {
     static id = "DeviceVisibilityOption";
-    static dependencies = ["builder-options"];
+    static dependencies = ["builder-options", "visibilityPlugin"];
     websiteService = this.services.website;
     selector = "section .row > div";
     resources = {
@@ -14,13 +14,15 @@ class DeviceVisibilityOptionPlugin extends Plugin {
             template: "html_builder.DeviceVisibilityOption",
             selector: this.selector,
             exclude: ".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize",
-            clean_for_save_handlers_options: this.cleanForSave,
+            cleanForSave: this.cleanForSave.bind(this),
         },
         builder_actions: this.getActions(),
         target_show: this.onTargetShow.bind(this),
         target_hide: this.onTargetHide.bind(this),
     };
+
     cleanForSave(editingEl) {
+        this.dependencies.visibilityPlugin.cleanForSaveVisibility(editingEl);
         editingEl.classList.remove("o_snippet_override_invisible");
     }
     getActions() {

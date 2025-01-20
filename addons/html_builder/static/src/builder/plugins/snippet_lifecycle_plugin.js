@@ -2,7 +2,6 @@ import { Plugin } from "@html_editor/plugin";
 
 export class SnippetLifecyclePlugin extends Plugin {
     static id = "snippetLifecyclePlugin";
-    static dependencies = ["visibilityPlugin"];
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
     };
@@ -13,17 +12,19 @@ export class SnippetLifecyclePlugin extends Plugin {
 
     cleanForSave({ root }) {
         for (const option of this.builderOptions) {
-            const { selector, exclude, clean_for_save_handlers_options } = option;
+            const { selector, exclude, cleanForSave } = option;
+            if (!cleanForSave) {
+                continue;
+            }
+
             let editingEls = [...root.querySelectorAll(selector)];
+            if (root.matches(selector)) {
+                editingEls.unshift(root);
+            }
             if (exclude) {
                 editingEls = editingEls.filter((editingEl) => !editingEl.matches(exclude));
             }
-            editingEls.forEach((editingEl) => {
-                this.dependencies.visibilityPlugin.cleanForSaveVisibility(editingEl);
-                if (clean_for_save_handlers_options) {
-                    clean_for_save_handlers_options(editingEl);
-                }
-            });
+            editingEls.forEach((editingEl) => cleanForSave(editingEl));
         }
     }
 }
