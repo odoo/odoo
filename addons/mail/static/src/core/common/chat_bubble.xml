@@ -24,7 +24,7 @@
     </t>
 
     <t t-name="mail.ChatBubble.preview">
-        <div class="o-mail-ChatBubble-preview o-mail-ChatBubble-menu px-0 py-1 shadow-sm border rounded" t-ref="preview">
+        <div class="o-mail-ChatBubble-preview o-mail-ChatBubble-menu px-0 py-1 shadow-sm border border-secondary rounded bg-100" t-ref="preview">
             <div class="text-truncate fw-bolder mb-0 mx-2" t-esc="props.chatWindow.displayName"/>
             <div t-if="previewContent" class="text-truncate small mx-2 text-muted">
                 <t t-call="mail.message_preview_prefix">

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="mail.DiscussSidebarCategories">
         <t t-if="hasQuickSearch">
-            <Dropdown t-if="store.discuss.isSidebarCompact" state="quickSearchFloating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-view border mx-2 my-0 min-w-0 p-0 shadow-sm'" manual="true">
+            <Dropdown t-if="store.discuss.isSidebarCompact" state="quickSearchFloating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-100 border border-secondary mx-2 my-0 min-w-0 p-0 shadow-sm'" manual="true">
                 <button class="o-mail-DiscussSidebarCategories-quickSearchBtn btn btn-secondary d-flex align-items-center justify-content-center px-1 mx-2 bg-inherit" t-att-class="{ 'o-active': state.quickSearchVal.length, 'opacity-50 opacity-100-hover': store.discuss.isSidebarCompact }" t-on-click="() => state.floatingQuickSearchOpen = true" t-ref="quick-search-btn"><i class="fa fa-search"/></button>
                 <t t-set-slot="content">
                     <div t-att-class="{ 'p-2': !state.floatingQuickSearchOpen }" t-ref="quick-search-floating">
@@ -37,7 +37,7 @@
     </t>
 
     <t t-name="mail.DiscussSidebarCategory">
-        <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-view border p-2 mx-2 my-0 min-w-0 shadow-sm'" manual="true">
+        <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-100 border border-secondary p-2 mx-2 my-0 min-w-0 shadow-sm'" manual="true">
             <t t-call="mail.DiscussSidebarCategory.main"/>
             <t t-set-slot="content">
                 <div class="overflow-hidden" t-ref="floating">
@@ -90,7 +90,7 @@
     <t t-name="mail.DiscussSidebarChannel">
         <div class="o-mail-DiscussSidebarChannel-container d-flex flex-column mx-2 bg-inherit" t-att-class="attClassContainer">
             <t name="root">
-                <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-view border p-2 mx-2 my-0 min-w-0 shadow-sm'" manual="true">
+                <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-100 border border-secondary p-2 mx-2 my-0 min-w-0 shadow-sm'" manual="true">
                     <t t-call="mail.DiscussSidebarChannel.main"/>
                     <t t-set-slot="content">
                         <div class="overflow-hidden" t-ref="floating">
@@ -112,7 +112,7 @@
     </t>
 
     <t t-name="mail.DiscussSidebarSubchannel">
-        <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-view border p-2 mx-2 my-0 min-w-0 shadow-sm'" manual="true">
+        <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-100 border border-secondary p-2 mx-2 my-0 min-w-0 shadow-sm'" manual="true">
             <t t-call="mail.DiscussSidebarSubchannel.main"/>
             <t t-set-slot="content">
                 <div class="overflow-hidden user-select-none" t-ref="floating" t-esc="thread.displayName"/>
