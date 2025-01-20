@@ -35,12 +35,12 @@
                                         <td><span t-field="line.product_id">Laptop</span></td>
                                         <td groups="stock.group_production_lot"><span t-field="line.lot_id"/></td>
                                         <td groups="stock.group_tracking_lot"><span t-field="line.package_id"/></td>
-                                        <td class="text-end"><span t-field="line.available_quantity">2</span> <span t-field="line.product_uom_id" groups="uom.group_uom">Units</span></td>
-                                        <td class="text-end"><span t-field="line.quantity">5</span> <span t-field="line.product_uom_id" groups="uom.group_uom">Units</span></td>
-                                        <td class="text-end">
+                                        <td class="o_td_quantity text-end"><span t-field="line.available_quantity" class="text-nowrap">2</span> <span t-field="line.product_uom_id" groups="uom.group_uom">Units</span></td>
+                                        <td class="o_td_quantity text-end"><span t-field="line.quantity" class="text-nowrap">5</span> <span t-field="line.product_uom_id" groups="uom.group_uom">Units</span></td>
+                                        <td class="o_td_quantity text-end">
                                             <!-- If 0, then leave blank so users have space to write a number -->
                                             <t t-if="line.inventory_quantity == 0"><span></span></t>
-                                            <t t-else=""><span t-field="line.inventory_quantity">7</span></t>
+                                            <t t-else=""><span t-field="line.inventory_quantity" class="text-nowrap">7</span></t>
                                             <span t-field="line.product_uom_id" groups="uom.group_uom">Units</span>
                                         </td>
                                     </tr>
