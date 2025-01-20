@@ -157,12 +157,18 @@ export class DomPlugin extends Plugin {
         const block = closestBlock(selection.anchorNode);
 
         const shouldUnwrap = (node) =>
-            (isParagraphRelatedElement(node) || isListItemElement(node)) &&
+            (isParagraphRelatedElement(node) ||
+                isListItemElement(node) ||
+                // TODO remove: PRE should be a paragraphRelatedElement
+                node.nodeName === "PRE") &&
             !isEmptyBlock(block) &&
             !isEmptyBlock(node) &&
             (isContentEditable(node) ||
                 (!node.isConnected && !closestElement(node, "[contenteditable]"))) &&
             !this.dependencies.split.isUnsplittable(node) &&
+            // TODO add: when PRE is considered as a paragraphRelatedElement
+            // again, consider unwrapping in PRE by adding in the following
+            // Array.
             [node.nodeName, "DIV"].includes(block.nodeName) &&
             // If the selection anchorNode is the editable itself, the content
             // should not be unwrapped.
@@ -537,7 +543,11 @@ export class DomPlugin extends Plugin {
                 block.isContentEditable
         );
         for (const block of deepestSelectedBlocks) {
-            if (isParagraphRelatedElement(block) || isListItemElement(block)) {
+            if (
+                isParagraphRelatedElement(block) ||
+                block.nodeName === "PRE" || // TODO remove: PRE should be a paragraphRelatedElement
+                isListItemElement(block)
+            ) {
                 if (tagName === "P" && isListItemElement(block)) {
                     continue;
                 }
