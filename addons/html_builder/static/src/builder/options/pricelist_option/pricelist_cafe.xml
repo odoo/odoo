@@ -14,12 +14,7 @@
             action="'togglePriceListDescription'"
             actionParam="{ itemClass:'s_pricelist_cafe_item', descriptionClass: 's_pricelist_cafe_item_description' }"/>
     </BuilderRow>
-    <!-- TODO convert snippet_options_border_line_widgets
-            <t t-call="website.snippet_options_border_line_widgets">
-        <t t-set="label">Separator</t>
-        <t t-set="direction" t-value="'top'"/>
-        <t t-set="apply_to" t-value="'.s_pricelist_cafe_item_line'"/>
-    </t> -->
+    <BorderConfigurator label.translate="Separator" direction="'top'" applyTo="'.s_pricelist_cafe_item_line'"/>
 </t>
 
 </templates>

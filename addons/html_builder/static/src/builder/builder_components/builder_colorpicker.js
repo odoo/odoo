@@ -27,22 +27,27 @@ export class BuilderColorPicker extends Component {
         }));
         this.colorButton = useRef("colorButton");
         onMounted(this.updateColorButton.bind(this));
-        this.applyColor = this.env.editor.shared.history.makePreviewableOperation(
-            ({ color, mode }) => {
-                for (const element of this.env.getEditingElements()) {
-                    this.env.editor.shared.color.colorElement(
-                        element,
-                        color,
-                        this.props.styleAction
-                    );
-                }
+        this.applyColor = this.env.editor.shared.history.makePreviewableOperation(({ color }) => {
+            const styleAction = this.props.styleAction;
+            const applyColor =
+                styleAction === "color" || styleAction === "backgroundColor"
+                    ? (element) => {
+                          this.env.editor.shared.color.colorElement(element, color, styleAction);
+                      }
+                    : (element) => {
+                          element.style.setProperty(styleAction, color, "important");
+                      };
 
-                this.updateColorButton();
+            for (const element of this.env.getEditingElements()) {
+                applyColor(element);
             }
-        );
+
+            this.updateColorButton();
+        });
     }
 
     get colorType() {
+        // TODO need to ref colorSelector to make it more generic
         return this.props.styleAction === "color" ? "foreground" : "background";
     }
 

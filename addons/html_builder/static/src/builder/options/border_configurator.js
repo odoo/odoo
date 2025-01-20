@@ -3,7 +3,7 @@ import { defaultBuilderComponents } from "../builder_components/default_builder_
 import { useDomState } from "../builder_components/utils";
 
 export class BorderConfigurator extends Component {
-    static template = "html_builder.snippet_options_border_line";
+    static template = "html_builder.BorderConfigurator";
     static components = { ...defaultBuilderComponents };
     static props = {
         label: { type: String },

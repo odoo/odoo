@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="html_builder.snippet_options_border_line">
+<t t-name="html_builder.BorderConfigurator">
     <BuilderRow label="props.label" applyTo="props.applyTo">
         <BuilderNumberInput styleAction="getStyleActionParam('width')" unit="'px'"></BuilderNumberInput>
         <BuilderSelect styleAction="getStyleActionParam('style')" t-if="state.hasBorder">
@@ -11,6 +11,6 @@
             <BuilderSelectItem title="'Double'" styleActionValue="'double'"><div class="o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/></BuilderSelectItem>
         </BuilderSelect>
         <BuilderColorPicker styleAction="getStyleActionParam('color')" t-if="state.hasBorder"/>
-        </BuilderRow>
+    </BuilderRow>
 </t>
 </templates>
