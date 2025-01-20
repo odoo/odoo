@@ -138,7 +138,7 @@ export async function freezeOdooData(model) {
                 figure.tag === "chart" &&
                 (figure.data.type.startsWith("odoo_") || figure.data.type === "geo")
             ) {
-                await loadBundle("spreadsheet.dependencies");
+                await loadBundle("web.chartjs_lib");
                 const img = odooChartToImage(model, figure);
                 figure.tag = "image";
                 figure.data = {
