@@ -259,7 +259,7 @@ class DiscussChannelMember(models.Model):
 
     def _to_store_persona(self, fields=None):
         if fields == "avatar_card":
-            fields = ["im_status", "name", "write_date"]
+            fields = ["avatar_128", "im_status", "name"]
         return [
             # sudo: res.partner - reading partner related to a member is considered acceptable
             Store.Attr(

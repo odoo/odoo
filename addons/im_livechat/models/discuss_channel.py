@@ -45,8 +45,12 @@ class DiscussChannel(models.Model):
 
     def _field_store_repr(self, field_name):
         if field_name == "livechat_operator_id":
-            # sudo - res.partner: accessing livechat operator is allowed
-            return Store.One("livechat_operator_id", ["user_livechat_username", "write_date"], sudo=True)
+            return [
+                # sudo - res.partner: accessing livechat operator is allowed
+                Store.One(
+                    "livechat_operator_id", ["avatar_128", "user_livechat_username"], sudo=True
+                )
+            ]
         return super()._field_store_repr(field_name)
 
     def _to_store_defaults(self, for_current_user=True):
@@ -55,7 +59,7 @@ class DiscussChannel(models.Model):
             "chatbot_current_step",
             "livechat_active",
             Store.One("country_id", ["code", "name"], rename="anonymous_country"),
-            self._field_store_repr("livechat_operator_id"),
+            "livechat_operator_id",
         ]
         if self.env.user._is_internal():
             fields.append(Store.One("livechat_channel_id", ["name"], rename="livechatChannel"))
