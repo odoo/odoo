@@ -88,6 +88,18 @@
             --btn-hover-color: var(--btn-disabled-color);
             opacity: var(--btn-disabled-opacity);
         }
+        &.o-mail-Composer-send.btn-link:not(:disabled) {
+            background-color: rgba($o-action, .75);
+            opacity: 100% !important;
+            &:focus-visible {
+                outline: darken($o-action, 15%) solid 1px;
+            }
+            i.fa-paper-plane-o {
+                color: #FFF;
+                transform: translate(-1px);
+                scale: .85;
+            }
+        }
     }
 }
 
