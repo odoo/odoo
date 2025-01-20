@@ -13,7 +13,6 @@
         'views/hr_applicant_views.xml',
         'views/hr_candidate_views.xml',
         'views/hr_candidate_skill_views.xml',
-        'views/hr_job_views.xml',
         'security/ir.model.access.csv',
     ],
     'assets': {
