@@ -903,9 +903,10 @@ class MrpProduction(models.Model):
 
         date_start_map = dict()
         if 'date_start' in vals:
+            date_start = fields.Datetime.to_datetime(vals['date_start'])
             date_start_map = {
-                prod: vals['date_start'] - datetime.timedelta(days=prod.bom_id.produce_delay)
-                if prod.bom_id else vals['date_start']
+                prod: date_start - datetime.timedelta(days=prod.bom_id.produce_delay)
+                if prod.bom_id else date_start
                 for prod in self
             }
             res = True
@@ -937,7 +938,7 @@ class MrpProduction(models.Model):
                 if 'qty_producing' in vals:
                     finished_move.quantity = vals.get('qty_producing')
             if self._has_workorders() and not production.workorder_ids.operation_id and vals.get('date_start') and not vals.get('date_finished'):
-                new_date_start = fields.Datetime.to_datetime(production.date_start)
+                new_date_start = production.date_start
                 if not production.date_finished or new_date_start >= production.date_finished:
                     production.date_finished = new_date_start + datetime.timedelta(hours=1)
         return res
