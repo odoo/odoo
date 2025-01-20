@@ -66,11 +66,11 @@
             <div class="bg-inherit position-relative d-flex flex-shrink-0" style="width:24px;height:24px;padding:1px">
                 <img class="o-mail-DiscussSidebarCallParticipants-avatar w-100 h-100 rounded-circle o_object_fit_cover" t-att-src="session.channel_member_id.persona.avatarUrl" t-att-class="{'o-isTalking shadow': !session.isMute and session.isTalking}" alt="Participant avatar" t-att-title="session.channel_member_id.persona.name"/>
             </div>
-            <span t-if="!isCompact" class="o-mail-DiscussSidebarCallParticipants-name mx-1 text-truncate fw-bolder smaller user-select-none" t-att-title="session.channel_member_id.persona.name" t-att-class="{ 'o-isTalking': !session.isMute and session.isTalking }">
+            <span t-if="!isCompact" class="o-mail-DiscussSidebarCallParticipants-name mx-1 text-truncate fw-bold smaller user-select-none" t-att-title="session.channel_member_id.persona.name" t-att-class="{ 'o-isTalking': !session.isMute and session.isTalking }">
                 <t t-esc="session.channel_member_id.persona.name"/>
             </span>
             <div t-if="!isCompact" class="flex-grow-1"/>
-            <div class="o-mail-DiscussSidebarCallParticipants-status small" t-att-class="{ 'position-absolute bottom-0 end-0 bg-inherit p-0 rounded-circle o-compact d-flex o-xsmaller text-start': isCompact, 'ms-1 d-flex align-items-center justify-content-center': !isCompact }">
+            <div class="o-mail-DiscussSidebarCallParticipants-status small opacity-75" t-att-class="{ 'position-absolute bottom-0 end-0 bg-inherit p-0 rounded-circle o-compact d-flex o-xsmaller text-start': isCompact, 'ms-1 d-flex align-items-center justify-content-center': !isCompact }">
                 <t t-if="isCompact" t-call="mail.DiscussSidebarCallParticipants.participantShortStatus">
                     <t t-set="session" t-value="session"/>
                 </t>

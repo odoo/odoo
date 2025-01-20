@@ -1,5 +1,5 @@
 .o-mail-DiscussSidebarChannel-container.o-bordered.o-selfInCall {
-    @include o-mail-call-bordered;
+    @include o-mail-call-bordered(var(--o-mail-DiscussSidebarChannel-inCallBorderOpacity, .25));
 
     .o-mail-DiscussSidebar-item {
         &.o-active, &:hover {
