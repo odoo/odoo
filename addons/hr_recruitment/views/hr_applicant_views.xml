@@ -666,6 +666,7 @@
     <record id="action_applicant_send_mail" model="ir.actions.server">
         <field name="name">Send Email</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="sequence">1</field>
         <field name="binding_model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="binding_view_types">list,kanban</field>
         <field name="state">code</field>
