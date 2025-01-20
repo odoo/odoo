@@ -58,7 +58,7 @@ class Base(models.AbstractModel):
             }
         current_length = len(records) + offset
         limit_reached = len(records) == limit
-        force_search_count = self._context.get('force_search_count')
+        force_search_count = self.env.context.get('force_search_count')
         count_limit_reached = count_limit and count_limit <= current_length
         if limit and ((limit_reached and not count_limit_reached) or force_search_count):
             length = self.search_count(domain, limit=count_limit)

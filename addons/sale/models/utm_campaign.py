@@ -36,8 +36,8 @@ class UtmCampaign(models.Model):
                     GROUP BY move.campaign_id
                     """
 
-        self._cr.execute(query, [tuple(self.ids)])
-        query_res = self._cr.dictfetchall()
+        self.env.cr.execute(query, [tuple(self.ids)])
+        query_res = self.env.cr.dictfetchall()
 
         campaigns = self.browse()
         for datum in query_res:

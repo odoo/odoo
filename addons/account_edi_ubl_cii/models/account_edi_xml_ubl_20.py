@@ -229,7 +229,7 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
                     epd_accounted_tax_amount += amounts['tax_amount_currency']
 
         for grouping_key, vals in taxes_vals['tax_details'].items():
-            if grouping_key['tax_amount_type'] != 'fixed' or not self._context.get('convert_fixed_taxes'):
+            if grouping_key['tax_amount_type'] != 'fixed' or not self.env.context.get('convert_fixed_taxes'):
                 subtotal = {
                     'currency': invoice.currency_id,
                     'currency_dp': self._get_currency_decimal_places(invoice.currency_id),
@@ -275,7 +275,7 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         """
         product = line.product_id
         taxes = line.tax_ids.flatten_taxes_hierarchy()
-        if self._context.get('convert_fixed_taxes'):
+        if self.env.context.get('convert_fixed_taxes'):
             taxes = taxes.filtered(lambda t: t.amount_type != 'fixed')
         customer = line.move_id.commercial_partner_id
         supplier = line.move_id.company_id.partner_id.commercial_partner_id
@@ -342,7 +342,7 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         :param line:    An invoice line.
         :return:        A list of python dictionaries.
         """
-        if self._context.get('convert_fixed_taxes'):
+        if self.env.context.get('convert_fixed_taxes'):
             fixed_tax_charge_vals_list = []
             for grouping_key, tax_details in tax_values_list['tax_details'].items():
                 if grouping_key['tax_amount_type'] == 'fixed':
@@ -529,7 +529,7 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         # Fixed taxes are not supposed to be taxes in real live. However, this is the way in Odoo to manage recupel
         # taxes in Belgium. Since only one tax is allowed, the fixed tax is removed from totals of lines but added
         # as an extra charge/allowance.
-        if self._context.get('convert_fixed_taxes'):
+        if self.env.context.get('convert_fixed_taxes'):
             fixed_taxes_keys = [k for k in taxes_vals['tax_details'] if k['tax_amount_type'] == 'fixed']
             for key in fixed_taxes_keys:
                 fixed_tax_details = taxes_vals['tax_details'].pop(key)

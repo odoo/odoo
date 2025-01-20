@@ -126,14 +126,14 @@ class ProjectTask(models.Model):
 
     @api.model
     def _default_company_id(self):
-        if self._context.get('default_project_id'):
-            return self.env['project.project'].browse(self._context['default_project_id']).company_id
+        if self.env.context.get('default_project_id'):
+            return self.env['project.project'].browse(self.env.context['default_project_id']).company_id
         return False
 
     @api.model
     def _read_group_stage_ids(self, stages, domain):
         search_domain = [('id', 'in', stages.ids)]
-        if 'default_project_id' in self.env.context and not self._context.get('subtask_action') and 'project_kanban' in self.env.context:
+        if 'default_project_id' in self.env.context and not self.env.context.get('subtask_action') and 'project_kanban' in self.env.context:
             search_domain = ['|', ('project_ids', '=', self.env.context['default_project_id'])] + search_domain
 
         stage_ids = stages.sudo()._search(search_domain, order=stages._order)
@@ -1744,7 +1744,7 @@ class ProjectTask(models.Model):
                 """,
                 {
                     "ancestor_ids": tuple(self.ids),
-                    "active": self._context.get('active_test', True),
+                    "active": self.env.context.get('active_test', True),
                 }
             )
             res.update(dict(self.env.cr.fetchall()))
@@ -1768,7 +1768,7 @@ class ProjectTask(models.Model):
             'res_model': 'project.task',
             'res_id': self.parent_id.id,
             'type': 'ir.actions.act_window',
-            'context': self._context
+            'context': self.env.context
         }
 
     def action_project_sharing_view_parent_task(self):
@@ -1804,7 +1804,7 @@ class ProjectTask(models.Model):
             'res_model': 'project.task',
             'res_id': self.id,
             'type': 'ir.actions.act_window',
-            'context': self._context
+            'context': self.env.context
         }
 
     def action_project_sharing_open_task(self):
@@ -1843,7 +1843,7 @@ class ProjectTask(models.Model):
         return {
             'res_model': 'project.task',
             'type': 'ir.actions.act_window',
-            'context': {**self._context, 'default_depend_on_ids': [Command.link(self.id)], 'show_project_update': False, 'search_default_open_tasks': True},
+            'context': {**self.env.context, 'default_depend_on_ids': [Command.link(self.id)], 'show_project_update': False, 'search_default_open_tasks': True},
             'domain': [('depend_on_ids', '=', self.id)],
             'name': _('Dependent Tasks'),
             'view_mode': 'list,form,kanban,calendar,pivot,graph,activity',

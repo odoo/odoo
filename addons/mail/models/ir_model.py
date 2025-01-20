@@ -82,10 +82,10 @@ class IrModel(models.Model):
             res = super(IrModel, self).write(vals)
             self.env.flush_all()
             # setup models; this reloads custom models in registry
-            self.pool.setup_models(self._cr)
+            self.pool.setup_models(self.env.cr)
             # update database schema of models
             models = self.pool.descendants(self.mapped('model'), '_inherits')
-            self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
+            self.pool.init_models(self.env.cr, models, dict(self.env.context, update_custom_fields=True))
         else:
             res = super(IrModel, self).write(vals)
         return res

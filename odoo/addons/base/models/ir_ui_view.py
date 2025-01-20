@@ -218,7 +218,7 @@ actual arch.
         field_arch_db = self._fields['arch_db']
         for view in self:
             arch_fs = None
-            read_file = self._context.get('read_arch_from_file') or \
+            read_file = self.env.context.get('read_arch_from_file') or \
                 ('xml' in config['dev_mode'] and not view.arch_updated)
             if read_file and view.arch_fs and (view.xml_id or view.key):
                 xml_id = view.xml_id or view.key
@@ -246,10 +246,10 @@ actual arch.
     def _inverse_arch(self):
         for view in self:
             data = dict(arch_db=view.arch)
-            if 'install_filename' in self._context:
+            if 'install_filename' in self.env.context:
                 # we store the relative path to the resource instead of the absolute path, if found
                 # (it will be missing e.g. when importing data-only modules using base_import_module)
-                path_info = get_resource_from_path(self._context['install_filename'])
+                path_info = get_resource_from_path(self.env.context['install_filename'])
                 if path_info:
                     data['arch_fs'] = '/'.join(path_info[0:2])
                     data['arch_updated'] = False
@@ -495,10 +495,10 @@ actual arch.
             # write on arch: bypass _inverse_arch()
             if 'arch' in values:
                 values['arch_db'] = values.pop('arch')
-                if 'install_filename' in self._context:
+                if 'install_filename' in self.env.context:
                     # we store the relative path to the resource instead of the absolute path, if found
                     # (it will be missing e.g. when importing data-only modules using base_import_module)
-                    path_info = get_resource_from_path(self._context['install_filename'])
+                    path_info = get_resource_from_path(self.env.context['install_filename'])
                     if path_info:
                         values['arch_fs'] = '/'.join(path_info[0:2])
                         values['arch_updated'] = False
@@ -512,7 +512,7 @@ actual arch.
     def write(self, vals):
         # Keep track if view was modified. That will be useful for the --dev mode
         # to prefer modified arch over file arch.
-        if 'arch_updated' not in vals and ('arch' in vals or 'arch_base' in vals) and 'install_filename' not in self._context:
+        if 'arch_updated' not in vals and ('arch' in vals or 'arch_base' in vals) and 'install_filename' not in self.env.context:
             vals['arch_updated'] = True
 
         # drop the corresponding view customizations (used for dashboards for example), otherwise
@@ -631,7 +631,7 @@ actual arch.
 
         # During an upgrade, we can only use the views that have been
         # fully upgraded already.
-        if self.pool._init and not self._context.get('load_all_views'):
+        if self.pool._init and not self.env.context.get('load_all_views'):
             views = views._filter_loaded_views()
 
         return views
@@ -650,7 +650,7 @@ actual arch.
         ids_to_check = [vid for vid in self.ids if vid not in check_view_ids]
         if not ids_to_check:
             return self
-        loaded_modules = tuple(self.pool._init_modules) + (self._context.get('install_module'),)
+        loaded_modules = tuple(self.pool._init_modules) + (self.env.context.get('install_module'),)
         query = self._get_filter_xmlid_query()
         sql = SQL(query, res_ids=tuple(ids_to_check), modules=loaded_modules)
         valid_view_ids = {id_ for id_, in self.env.execute_query(sql)} | check_view_ids
@@ -816,7 +816,7 @@ actual arch.
         try:
             source = apply_inheritance_specs(
                 source, specs_tree,
-                inherit_branding=self._context.get('inherit_branding'),
+                inherit_branding=self.env.context.get('inherit_branding'),
                 pre_locate=pre_locate,
             )
         except ValueError as e:
@@ -2282,8 +2282,8 @@ class ResetViewArchWizard(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-        view_ids = (self._context.get('active_model') == 'ir.ui.view' and
-                    self._context.get('active_ids') or [])
+        view_ids = (self.env.context.get('active_model') == 'ir.ui.view' and
+                    self.env.context.get('active_ids') or [])
         if len(view_ids) > 2:
             raise ValidationError(_("Can't compare more than two views."))
 
@@ -2613,7 +2613,7 @@ class Base(models.AbstractModel):
         if not view_id:
             # <view_type>_view_ref in context can be used to override the default view
             view_ref_key = view_type + '_view_ref'
-            view_ref = self._context.get(view_ref_key)
+            view_ref = self.env.context.get(view_ref_key)
             if view_ref:
                 if '.' in view_ref:
                     module, view_ref = view_ref.split('.', 1)
@@ -2810,7 +2810,7 @@ class Base(models.AbstractModel):
             'views': [(view_id, 'form')],
             'target': 'current',
             'res_id': self.id,
-            'context': dict(self._context),
+            'context': dict(self.env.context),
         }
 
     def _get_records_action(self, **kwargs):
@@ -2831,7 +2831,7 @@ class Base(models.AbstractModel):
             'type': 'ir.actions.act_window',
             'res_model': self._name,
             'target': 'current',
-            'context': dict(self._context),
+            'context': dict(self.env.context),
             **length_dependent,
             **kwargs
         }

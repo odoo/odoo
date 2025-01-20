@@ -98,13 +98,13 @@ class IrCron(models.Model):
         for vals in vals_list:
             vals['usage'] = 'ir_cron'
         if os.getenv('ODOO_NOTIFY_CRON_CHANGES'):
-            self._cr.postcommit.add(self._notifydb)
+            self.env.cr.postcommit.add(self._notifydb)
         return super().create(vals_list)
 
     @api.model
     def default_get(self, fields_list):
         # only 'code' state is supported for cron job so set it as default
-        if not self._context.get('default_state'):
+        if not self.env.context.get('default_state'):
             self = self.with_context(default_state='code')
         return super().default_get(fields_list)
 
@@ -555,7 +555,7 @@ class IrCron(models.Model):
             _logger.debug(
                 "cron.object.execute(%r, %d, '*', %r, %d)",
                 self.env.cr.dbname,
-                self._uid,
+                self.env.uid,
                 cron_name,
                 server_action_id,
             )
@@ -588,14 +588,14 @@ class IrCron(models.Model):
             return
         row_level_lock = "UPDATE" if lockfk else "NO KEY UPDATE"
         try:
-            self._cr.execute(f"""
+            self.env.cr.execute(f"""
                 SELECT id
                 FROM "{self._table}"
                 WHERE id IN %s
                 FOR {row_level_lock} NOWAIT
             """, [tuple(self.ids)], log_exceptions=False)
         except psycopg2.OperationalError:
-            self._cr.rollback()  # early rollback to allow translations to work for the user feedback
+            self.env.cr.rollback()  # early rollback to allow translations to work for the user feedback
             raise UserError(_("Record cannot be modified right now: "
                               "This cron task is currently being executed and may not be modified "
                               "Please try again in a few minutes"))
@@ -603,7 +603,7 @@ class IrCron(models.Model):
     def write(self, vals):
         self._try_lock()
         if ('nextcall' in vals or vals.get('active')) and os.getenv('ODOO_NOTIFY_CRON_CHANGES'):
-            self._cr.postcommit.add(self._notifydb)
+            self.env.cr.postcommit.add(self._notifydb)
         return super().write(vals)
 
     def unlink(self):
@@ -612,8 +612,8 @@ class IrCron(models.Model):
 
     def try_write(self, values):
         try:
-            with self._cr.savepoint():
-                self._cr.execute(f"""
+            with self.env.cr.savepoint():
+                self.env.cr.execute(f"""
                     SELECT id
                     FROM "{self._table}"
                     WHERE id IN %s
@@ -693,7 +693,7 @@ class IrCron(models.Model):
             _logger.debug('Job %r (%s) will execute at %s', self.sudo().name, self.id, ats)
 
         if min(at_list) <= now or os.getenv('ODOO_NOTIFY_CRON_CHANGES'):
-            self._cr.postcommit.add(self._notifydb)
+            self.env.cr.postcommit.add(self._notifydb)
         return triggers
 
     def _notifydb(self):

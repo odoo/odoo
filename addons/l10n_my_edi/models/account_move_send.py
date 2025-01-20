@@ -135,7 +135,7 @@ class AccountMoveSend(models.AbstractModel):
             # Whatever happened, we need to commit once at this point, because another api call is done later on
             # And in case of single invoice, a request error could raise => We would lose the uuid etc.
             if self._can_commit():
-                self._cr.commit()
+                self.env.cr.commit()
 
     def _call_web_service_after_invoice_pdf_render(self, invoices_data):
         """
@@ -182,7 +182,7 @@ class AccountMoveSend(models.AbstractModel):
 
             # We commit again if possible, to ensure that the invoice status is set in the database in case of errors later.
             if self._can_commit():
-                self._cr.commit()
+                self.env.cr.commit()
 
     @api.model
     def _link_invoice_documents(self, invoices_data):

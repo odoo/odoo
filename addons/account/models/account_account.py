@@ -197,14 +197,14 @@ class AccountAccount(models.Model):
     def _constrains_allowed_journal_ids(self):
         self.env['account.move.line'].flush_model(['account_id', 'journal_id'])
         self.flush_recordset(['allowed_journal_ids'])
-        self._cr.execute("""
+        self.env.cr.execute("""
             SELECT aml.id
             FROM account_move_line aml
             WHERE aml.account_id in %s
             AND EXISTS (SELECT 1 FROM account_account_account_journal_rel WHERE account_account_id = aml.account_id)
             AND NOT EXISTS (SELECT 1 FROM account_account_account_journal_rel WHERE account_account_id = aml.account_id AND account_journal_id = aml.journal_id)
         """, [tuple(self.ids)])
-        ids = self._cr.fetchall()
+        ids = self.env.cr.fetchall()
         if ids:
             raise ValidationError(_('Some journal items already exist with this account but in other journals than the allowed ones.'))
 
@@ -225,7 +225,7 @@ class AccountAccount(models.Model):
         self.env['account.payment.method'].flush_model(['payment_type'])
         self.env['account.payment.method.line'].flush_model(['payment_method_id', 'payment_account_id'])
 
-        self._cr.execute('''
+        self.env.cr.execute('''
             SELECT
                 account.id,
                 journal.id
@@ -271,7 +271,7 @@ class AccountAccount(models.Model):
         ''', {
             'accounts': tuple(self.ids)
         })
-        res = self._cr.fetchone()
+        res = self.env.cr.fetchone()
         if res:
             account = self.env['account.account'].browse(res[0])
             journal = self.env['account.journal'].browse(res[1])
@@ -307,7 +307,7 @@ class AccountAccount(models.Model):
 
         self.env['account.account'].flush_model(['account_type'])
         self.env['account.journal'].flush_model(['type', 'default_account_id'])
-        self._cr.execute('''
+        self.env.cr.execute('''
             SELECT account.id
             FROM account_account account
             JOIN account_journal journal ON journal.default_account_id = account.id
@@ -317,7 +317,7 @@ class AccountAccount(models.Model):
             LIMIT 1;
         ''', [tuple(self.ids)])
 
-        if self._cr.fetchone():
+        if self.env.cr.fetchone():
             raise ValidationError(_("The account is already in use in a 'sale' or 'purchase' journal. This means that the account's type couldn't be 'receivable' or 'payable'."))
 
     @api.constrains('reconcile')
@@ -329,7 +329,7 @@ class AccountAccount(models.Model):
         self.env['account.journal'].flush_model(['company_id', 'default_account_id'])
         self.env['account.payment.method.line'].flush_model(['journal_id', 'payment_account_id'])
 
-        self._cr.execute('''
+        self.env.cr.execute('''
             SELECT journal.id
             FROM account_journal journal
             JOIN res_company company on journal.company_id = company.id
@@ -342,7 +342,7 @@ class AccountAccount(models.Model):
             'accounts': tuple(accounts.ids),
         })
 
-        rows = self._cr.fetchall()
+        rows = self.env.cr.fetchall()
         if rows:
             journals = self.env['account.journal'].browse([r[0] for r in rows])
             raise ValidationError(_(
@@ -363,7 +363,7 @@ class AccountAccount(models.Model):
     def _check_account_is_bank_journal_bank_account(self):
         self.env['account.account'].flush_model(['account_type'])
         self.env['account.journal'].flush_model(['type', 'default_account_id'])
-        self._cr.execute('''
+        self.env.cr.execute('''
             SELECT journal.id
               FROM account_journal journal
               JOIN account_account account ON journal.default_account_id = account.id
@@ -372,7 +372,7 @@ class AccountAccount(models.Model):
              LIMIT 1;
         ''', [tuple(self.ids)])
 
-        if self._cr.fetchone():
+        if self.env.cr.fetchone():
             raise ValidationError(_("You cannot change the type of an account set as Bank Account on a journal to Receivable or Payable."))
 
     @api.depends_context('company')
@@ -476,11 +476,11 @@ class AccountAccount(models.Model):
             raise UserError(_('Operation not supported'))
         if operator != '=':
             value = not value
-        self._cr.execute("""
+        self.env.cr.execute("""
             SELECT id FROM account_account account
             WHERE EXISTS (SELECT 1 FROM account_move_line aml WHERE aml.account_id = account.id LIMIT 1)
         """)
-        return [('id', 'in' if value else 'not in', [r[0] for r in self._cr.fetchall()])]
+        return [('id', 'in' if value else 'not in', [r[0] for r in self.env.cr.fetchall()])]
 
     def _compute_used(self):
         ids = set(self._search_used('=', True)[0][2])
@@ -712,11 +712,11 @@ class AccountAccount(models.Model):
         got assigned.
         """
         self.ensure_one()
-        if 'import_account_opening_balance' not in self._cr.precommit.data:
-            data = self._cr.precommit.data['import_account_opening_balance'] = {}
-            self._cr.precommit.add(self._load_precommit_update_opening_move)
+        if 'import_account_opening_balance' not in self.env.cr.precommit.data:
+            data = self.env.cr.precommit.data['import_account_opening_balance'] = {}
+            self.env.cr.precommit.add(self._load_precommit_update_opening_move)
         else:
-            data = self._cr.precommit.data['import_account_opening_balance']
+            data = self.env.cr.precommit.data['import_account_opening_balance']
         data.setdefault(self.env.company.id, {}).setdefault(self.id, [None, None])
         index = 0 if field == 'debit' else 1
         data[self.env.company.id][self.id][index] = amount
@@ -804,7 +804,7 @@ class AccountAccount(models.Model):
         if (
             not name
             and (partner := self.env.context.get('partner_id'))
-            and (move_type := self._context.get('move_type'))
+            and (move_type := self.env.context.get('move_type'))
         ):
             ids = self._order_accounts_by_frequency_for_partner(
                 self.env.company.id, partner, move_type)
@@ -889,7 +889,7 @@ class AccountAccount(models.Model):
         Instead, the opening balances are collected and this method is called once at the end
         to update the opening move accordingly.
         """
-        data = self._cr.precommit.data.pop('import_account_opening_balance', {})
+        data = self.env.cr.precommit.data.pop('import_account_opening_balance', {})
 
         for company_id, account_values in data.items():
             self.env['res.company'].browse(company_id)._update_opening_move({

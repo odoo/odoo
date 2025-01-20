@@ -393,7 +393,7 @@ class IrHttp(models.AbstractModel):
         if not modules:
             modules = self.pool._init_modules
         if not lang:
-            lang = self._context.get("lang")
+            lang = self.env.context.get("lang")
         lang_data = self.env['res.lang']._get_data(code=lang)
         lang_params = {
             "name": lang_data.name,

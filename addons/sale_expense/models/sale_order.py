@@ -20,7 +20,7 @@ class SaleOrder(models.Model):
     def _search_display_name(self, operator, value):
         """ For expense, we want to show all sales order but only their display_name (no ir.rule applied), this is the only way to do it. """
         if (
-            self._context.get('sale_expense_all_order')
+            self.env.context.get('sale_expense_all_order')
             and self.env.user.has_group('sales_team.group_sale_salesman')
             and not self.env.user.has_group('sales_team.group_sale_salesman_all_leads')
         ):

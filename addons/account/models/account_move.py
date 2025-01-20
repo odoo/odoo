@@ -838,7 +838,7 @@ class AccountMove(models.Model):
         # the currency is not a hard dependence, it triggers via manual add_to_compute
         # avoid computing the currency before all it's dependences are set (like the journal...)
         if self.env.cache.contains(self, self._fields['currency_id']):
-            currency_id = self.currency_id.id or self._context.get('default_currency_id')
+            currency_id = self.currency_id.id or self.env.context.get('default_currency_id')
             if currency_id and currency_id != company.currency_id.id:
                 currency_domain = domain + [('currency_id', '=', currency_id)]
                 journal = self.env['account.journal'].search(currency_domain, limit=1)
@@ -2547,7 +2547,7 @@ class AccountMove(models.Model):
 
         :param changed_fields: A set containing all modified fields on account.move.
         '''
-        if self._context.get('skip_account_move_synchronization'):
+        if self.env.context.get('skip_account_move_synchronization'):
             return
 
         self_sudo = self.sudo()
@@ -3232,7 +3232,7 @@ class AccountMove(models.Model):
                 'invoice_line_ids', 'line_ids', 'invoice_date', 'date', 'partner_id', 'partner_bank_id',
                 'invoice_payment_term_id', 'currency_id', 'fiscal_position_id', 'invoice_cash_rounding_id')
             readonly_fields = [val for val in vals if val in unmodifiable_fields]
-            if not self._context.get('skip_readonly_check') and move_state == "posted" and readonly_fields:
+            if not self.env.context.get('skip_readonly_check') and move_state == "posted" and readonly_fields:
                 raise UserError(_("You cannot modify the following readonly fields on a posted move: %s", ', '.join(readonly_fields)))
 
             if move.journal_id.sequence_override_regex and vals.get('name') and vals['name'] != '/' and not re.match(move.journal_id.sequence_override_regex, vals['name']):
@@ -3288,7 +3288,7 @@ class AccountMove(models.Model):
     def _get_unlink_logger_message(self):
         """ Before unlink, get a log message for audit trail if it's enabled.
         Logger is added here because in api ondelete, account.move.line is deleted, and we can't get total amount """
-        if not self._context.get('force_delete'):
+        if not self.env.context.get('force_delete'):
             pass
 
         moves_details = []
@@ -3322,7 +3322,7 @@ class AccountMove(models.Model):
         if not (
             self.env.user.has_group('account.group_account_manager')
             or any(self.company_id.mapped('quick_edit_mode'))
-            or self._context.get('force_delete')
+            or self.env.context.get('force_delete')
             or self.check_move_sequence_chain()
         ):
             raise UserError(_(
@@ -3332,7 +3332,7 @@ class AccountMove(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_account_audit_trail_except_once_post(self):
-        if not self._context.get('force_delete') and any(
+        if not self.env.context.get('force_delete') and any(
                 move.posted_before and move.company_id.check_account_audit_trail
                 for move in self
         ):
@@ -3822,7 +3822,7 @@ class AccountMove(models.Model):
 
     def _get_integrity_hash_fields(self):
         # Use the latest hash version by default, but keep the old one for backward compatibility when generating the integrity report.
-        hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
+        hash_version = self.env.context.get('hash_version', MAX_HASH_VERSION)
         if hash_version == 1:
             return ['date', 'journal_id', 'company_id']
         elif hash_version in (2, 3, 4):
@@ -3975,7 +3975,7 @@ class AccountMove(models.Model):
         """
         :return: dict of move_id: hash
         """
-        hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
+        hash_version = self.env.context.get('hash_version', MAX_HASH_VERSION)
 
         def _getattrstring(obj, field_name):
             field_value = obj[field_name]
@@ -4130,7 +4130,7 @@ class AccountMove(models.Model):
             # Rogue binaries from mail alias are skipped and unlinked.
             if (
                 file_data['type'] == 'binary'
-                and self._context.get('from_alias')
+                and self.env.context.get('from_alias')
                 and not attachments_by_invoice.get(file_data['attachment'])
                 and file_data['attachment'].mimetype not in ALLOWED_MIMETYPES
             ):
@@ -4879,7 +4879,7 @@ class AccountMove(models.Model):
                     move.currency_id.name
                 ))
 
-            if move.line_ids.account_id.filtered(lambda account: account.deprecated) and not self._context.get('skip_account_deprecation_check'):
+            if move.line_ids.account_id.filtered(lambda account: account.deprecated) and not self.env.context.get('skip_account_deprecation_check'):
                 validation_msgs.add(_("A line of this move is using a deprecated account, you cannot post it."))
 
             # If the field autocheck_on_post is set, we want the checked field on the move to be checked
@@ -4930,7 +4930,7 @@ class AccountMove(models.Model):
             'posted_before': True,
         })
 
-        draft_reverse_moves.reversed_entry_id._reconcile_reversed_moves(draft_reverse_moves, self._context.get('move_reverse_cancel', False))
+        draft_reverse_moves.reversed_entry_id._reconcile_reversed_moves(draft_reverse_moves, self.env.context.get('move_reverse_cancel', False))
         to_post.line_ids._reconcile_marked()
 
         for invoice in to_post:
@@ -6069,7 +6069,7 @@ class AccountMove(models.Model):
 
         # As we are coming from the mail, we assume that ONE of the attachments
         # will enhance the invoice thanks to EDI / OCR / .. capabilities
-        move_per_decodable_attachment = self._extend_with_attachments(attachments, new=bool(self._context.get('from_alias')))
+        move_per_decodable_attachment = self._extend_with_attachments(attachments, new=bool(self.env.context.get('from_alias')))
         if self.invoice_line_ids and not move_per_decodable_attachment:
             self.with_user(SUPERUSER_ID).message_post(
                 body=_('The invoice already contains lines, it was not updated from the attachment.'),
@@ -6080,7 +6080,7 @@ class AccountMove(models.Model):
         for attachment in move_per_decodable_attachment:
             attachments_in_invoices += attachment
         # Unlink the unused attachments (prevents storing marketing images sent with emails)
-        if self._context.get('from_alias'):
+        if self.env.context.get('from_alias'):
             (attachments - attachments_in_invoices).unlink()
         return move_per_decodable_attachment
 

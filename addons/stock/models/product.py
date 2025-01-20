@@ -124,7 +124,7 @@ class ProductProduct(models.Model):
     )
     def _compute_quantities(self):
         products = self.with_context(prefetch_fields=False).filtered(lambda p: p.type != 'service').with_context(prefetch_fields=True)
-        res = products._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
+        res = products._compute_quantities_dict(self.env.context.get('lot_id'), self.env.context.get('owner_id'), self.env.context.get('package_id'), self.env.context.get('from_date'), self.env.context.get('to_date'))
         for product in products:
             product.update(res[product.id])
         # Services need to be set with 0.0 for all quantities
@@ -443,18 +443,18 @@ class ProductProduct(models.Model):
     @api.model
     def view_header_get(self, view_id, view_type):
         res = super().view_header_get(view_id, view_type)
-        if not res and self._context.get('active_id') and self._context.get('active_model') == 'stock.location':
+        if not res and self.env.context.get('active_id') and self.env.context.get('active_model') == 'stock.location':
             return _(
                 'Products: %(location)s',
-                location=self.env['stock.location'].browse(self._context['active_id']).name,
+                location=self.env['stock.location'].browse(self.env.context['active_id']).name,
             )
         return res
 
     @api.model
     def fields_get(self, allfields=None, attributes=None):
         res = super().fields_get(allfields, attributes)
-        if self._context.get('location') and isinstance(self._context['location'], int):
-            location = self.env['stock.location'].browse(self._context['location'])
+        if self.env.context.get('location') and isinstance(self.env.context['location'], int):
+            location = self.env['stock.location'].browse(self.env.context['location'])
             if location.usage == 'supplier':
                 if res.get('virtual_available'):
                     res['virtual_available']['string'] = _('Future Receipts')
@@ -532,7 +532,7 @@ class ProductProduct(models.Model):
         action['domain'] = [
             ('product_id', '=', self.id),
             '|', ('location_id', '=', False),
-                 ('location_id', 'any', self.env['stock.location']._check_company_domain(self._context['allowed_company_ids']))
+                 ('location_id', 'any', self.env['stock.location']._check_company_domain(self.env.context['allowed_company_ids']))
         ]
         action['context'] = {
             'default_product_id': self.id,
@@ -1010,7 +1010,7 @@ class ProductTemplate(models.Model):
         action['domain'] = [
             ('product_id.product_tmpl_id', '=', self.id),
             '|', ('location_id', '=', False),
-                 ('location_id', 'any', self.env['stock.location']._check_company_domain(self._context['allowed_company_ids']))
+                 ('location_id', 'any', self.env['stock.location']._check_company_domain(self.env.context['allowed_company_ids']))
         ]
         action['context'] = {
             'default_product_tmpl_id': self.id,

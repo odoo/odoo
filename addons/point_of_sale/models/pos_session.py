@@ -1856,10 +1856,10 @@ class PosSession(models.Model):
             }
 
         domain = [('barcode', 'not in', ['', False])]
-        loaded_data = self._context.get('loaded_data')
+        loaded_data = self.env.context.get('loaded_data')
         if loaded_data:
             loaded_product_ids = [x['id'] for x in loaded_data['product.product']]
-            domain = AND([domain, [('product_id', 'in', [x['id'] for x in self._context.get('loaded_data')['product.product']])]]) if self._context.get('loaded_data') else []
+            domain = AND([domain, [('product_id', 'in', [x['id'] for x in self.env.context.get('loaded_data')['product.product']])]]) if self.env.context.get('loaded_data') else []
             domain = AND([domain, [('product_id', 'in', loaded_product_ids)]])
         packaging_params = {
             'search_params': {

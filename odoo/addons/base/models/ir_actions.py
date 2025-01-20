@@ -137,7 +137,7 @@ class IrActionsActions(models.Model):
     def _get_eval_context(self, action=None):
         """ evaluation context to pass to safe_eval """
         return {
-            'uid': self._uid,
+            'uid': self.env.uid,
             'user': self.env.user,
             'time': tools.safe_eval.time,
             'datetime': tools.safe_eval.datetime,
@@ -370,8 +370,8 @@ class IrActionsAct_Window(models.Model):
     @api.model
     @tools.ormcache()
     def _existing(self):
-        self._cr.execute("SELECT id FROM %s" % self._table)
-        return set(row[0] for row in self._cr.fetchall())
+        self.env.cr.execute("SELECT id FROM %s" % self._table)
+        return set(row[0] for row in self.env.cr.fetchall())
 
 
     def _get_readable_fields(self):
@@ -834,18 +834,18 @@ class IrActionsServer(models.Model):
         vals = self._eval_value(eval_context=eval_context)
         res = {action.update_field_id.name: vals[action.id] for action in self}
 
-        if self._context.get('onchange_self'):
-            record_cached = self._context['onchange_self']
+        if self.env.context.get('onchange_self'):
+            record_cached = self.env.context['onchange_self']
             for field, new_value in res.items():
                 record_cached[field] = new_value
         else:
-            starting_record = self.env[self.model_id.model].browse(self._context.get('active_id'))
+            starting_record = self.env[self.model_id.model].browse(self.env.context.get('active_id'))
             _, _, target_records = self._traverse_path(record=starting_record)
             target_records.write(res)
 
     def _run_action_webhook(self, eval_context=None):
         """Send a post request with a read of the selected field on active_id."""
-        record = self.env[self.model_id.model].browse(self._context.get('active_id'))
+        record = self.env[self.model_id.model].browse(self.env.context.get('active_id'))
         url = self.webhook_url
         if not record:
             return
@@ -887,7 +887,7 @@ class IrActionsServer(models.Model):
         res_id, _res_name = self.env[self.crud_model_id.model].name_create(self.value)
 
         if self.link_field_id:
-            record = self.env[self.model_id.model].browse(self._context.get('active_id'))
+            record = self.env[self.model_id.model].browse(self.env.context.get('active_id'))
             if self.link_field_id.ttype in ['one2many', 'many2many']:
                 record.write({self.link_field_id.name: [Command.link(res_id)]})
             else:
@@ -905,19 +905,19 @@ class IrActionsServer(models.Model):
                 cr.execute("""
                     INSERT INTO ir_logging(create_date, create_uid, type, dbname, name, level, message, path, line, func)
                     VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                """, (self.env.uid, 'server', self._cr.dbname, __name__, level, message, "action", action.id, action.name))
+                """, (self.env.uid, 'server', self.env.cr.dbname, __name__, level, message, "action", action.id, action.name))
 
         eval_context = super(IrActionsServer, self)._get_eval_context(action=action)
         model_name = action.model_id.sudo().model
         model = self.env[model_name]
         record = None
         records = None
-        if self._context.get('active_model') == model_name and self._context.get('active_id'):
-            record = model.browse(self._context['active_id'])
-        if self._context.get('active_model') == model_name and self._context.get('active_ids'):
-            records = model.browse(self._context['active_ids'])
-        if self._context.get('onchange_self'):
-            record = self._context['onchange_self']
+        if self.env.context.get('active_model') == model_name and self.env.context.get('active_id'):
+            record = model.browse(self.env.context['active_id'])
+        if self.env.context.get('active_model') == model_name and self.env.context.get('active_ids'):
+            records = model.browse(self.env.context['active_ids'])
+        if self.env.context.get('onchange_self'):
+            record = self.env.context['onchange_self']
         eval_context.update({
             # orm
             'env': self.env,
@@ -990,16 +990,16 @@ class IrActionsServer(models.Model):
                 run_self = action.with_context(eval_context['env'].context)
                 res = runner(run_self, eval_context=eval_context)
             elif runner:
-                active_id = self._context.get('active_id')
-                if not active_id and self._context.get('onchange_self'):
-                    active_id = self._context['onchange_self']._origin.id
+                active_id = self.env.context.get('active_id')
+                if not active_id and self.env.context.get('onchange_self'):
+                    active_id = self.env.context['onchange_self']._origin.id
                     if not active_id:  # onchange on new record
                         res = runner(action, eval_context=eval_context)
-                active_ids = self._context.get('active_ids', [active_id] if active_id else [])
+                active_ids = self.env.context.get('active_ids', [active_id] if active_id else [])
                 for active_id in active_ids:
                     # run context dedicated to a particular active_id
                     run_self = action.with_context(active_ids=[active_id], active_id=active_id)
-                    eval_context["env"].context = run_self._context
+                    eval_context['env'] = eval_context['env'](context=run_self.env.context)
                     res = runner(run_self, eval_context=eval_context)
             else:
                 _logger.warning(
@@ -1181,7 +1181,7 @@ class IrActionsClient(models.Model):
     def _compute_params(self):
         self_bin = self.with_context(bin_size=False, bin_size_params_store=False)
         for record, record_bin in zip(self, self_bin):
-            record.params = record_bin.params_store and safe_eval(record_bin.params_store, {'uid': self._uid})
+            record.params = record_bin.params_store and safe_eval(record_bin.params_store, {'uid': self.env.uid})
 
     def _inverse_params(self):
         for record in self:

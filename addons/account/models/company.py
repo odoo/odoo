@@ -1029,8 +1029,8 @@ class ResCompany(models.Model):
         """
         if not records.ids:
             return
-        self._cr.execute(f'SELECT * FROM {records._table} WHERE id IN %s FOR UPDATE SKIP LOCKED', [tuple(records.ids)])
-        available_ids = {r[0] for r in self._cr.fetchall()}
+        self.env.cr.execute(f'SELECT * FROM {records._table} WHERE id IN %s FOR UPDATE SKIP LOCKED', [tuple(records.ids)])
+        available_ids = {r[0] for r in self.env.cr.fetchall()}
         all_locked = available_ids == set(records.ids)
         if not all_locked and allow_raising:
             raise UserError(_("Some documents are being sent by another process already."))

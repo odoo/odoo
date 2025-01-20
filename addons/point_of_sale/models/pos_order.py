@@ -731,7 +731,7 @@ class PosOrder(models.Model):
 
     def _prepare_invoice_vals(self):
         self.ensure_one()
-        timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+        timezone = pytz.timezone(self.env.context.get('tz') or self.env.user.tz or 'UTC')
         invoice_date = fields.Datetime.now() if self.session_id.state == 'closed' else self.date_order
         pos_refunded_invoice_ids = []
         for orderline in self.lines:
@@ -1002,7 +1002,7 @@ class PosOrder(models.Model):
         if receivable_account.reconcile:
             invoice_receivables = self.account_move.line_ids.filtered(lambda line: line.account_id == receivable_account and not line.reconciled)
             if invoice_receivables:
-                credit_line_ids = payment_moves._context.get('credit_line_ids', None)
+                credit_line_ids = payment_moves.env.context.get('credit_line_ids', None)
                 payment_receivables = payment_moves.mapped('line_ids').filtered(
                     lambda line: (
                         (credit_line_ids and line.id in credit_line_ids) or
@@ -1495,7 +1495,7 @@ class PosOrderLine(models.Model):
             # get timezone from user
             # and convert to UTC to avoid any timezone issue
             # because shipping_date is date and date_planned is datetime
-            from_zone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+            from_zone = pytz.timezone(self.env.context.get('tz') or self.env.user.tz or 'UTC')
             shipping_date = fields.Datetime.to_datetime(self.order_id.shipping_date)
             shipping_date = from_zone.localize(shipping_date)
             date_deadline = shipping_date.astimezone(pytz.UTC).replace(tzinfo=None)

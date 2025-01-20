@@ -13,7 +13,7 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             if line.display_type or line.analytic_distribution:
                 continue
-            project_id = line._context.get('project_id')
+            project_id = line.env.context.get('project_id')
             project = ProjectProject.browse(project_id) if project_id else line.order_id.project_id
             if project:
                 line.analytic_distribution = project._get_analytic_distribution()

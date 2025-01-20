@@ -308,7 +308,7 @@ class HrEmployee(models.Model):
             'view_mode': 'form',
             'view_id': self.env.ref('hr.view_users_simple_form').id,
             'target': 'new',
-            'context': dict(self._context, **{
+            'context': dict(self.env.context, **{
                 'default_create_employee_id': self.id,
                 'default_name': self.name,
                 'default_phone': self.work_phone,

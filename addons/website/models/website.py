@@ -1128,7 +1128,7 @@ class Website(models.Model):
             for section in html.fromstring(f'<wrap>{sections_arch}</wrap>'):
                 wrap.append(section)
             arch = etree.tostring(tree, encoding="unicode")
-        website_id = self._context.get('website_id')
+        website_id = self.env.context.get('website_id')
         key = self.get_unique_key(page_key, template_module)
         view = template_record.copy({'website_id': website_id, 'key': key})
 
@@ -1427,8 +1427,8 @@ class Website(models.Model):
         View = self.env['ir.ui.view'].sudo()
         view = View
         if isinstance(view_id, str):
-            if 'website_id' in self._context:
-                domain = [('key', '=', view_id)] + self.env['website'].website_domain(self._context.get('website_id'))
+            if 'website_id' in self.env.context:
+                domain = [('key', '=', view_id)] + self.env['website'].website_domain(self.env.context.get('website_id'))
                 order = 'website_id'
             else:
                 domain = [('key', '=', view_id)]
@@ -1453,7 +1453,7 @@ class Website(models.Model):
         return view
 
     @api.model
-    @tools.ormcache('key', 'self._context.get("website_id")', cache='templates')
+    @tools.ormcache('key', 'self.env.context.get("website_id")', cache='templates')
     def is_view_active(self, key):
         """
             Return True if active, False if not active, None if not found

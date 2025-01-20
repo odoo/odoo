@@ -84,9 +84,9 @@ class CrmTeam(models.Model):
         '''
         today = fields.Date.today()
         params = [tuple(self.ids), fields.Date.to_string(today.replace(day=1)), fields.Date.to_string(today)]
-        self._cr.execute(query, params)
+        self.env.cr.execute(query, params)
 
-        data_map = dict((v[0], v[1]) for v in self._cr.fetchall())
+        data_map = dict((v[0], v[1]) for v in self.env.cr.fetchall())
         for team in self:
             team.invoiced = data_map.get(team.id, 0.0)
 

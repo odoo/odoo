@@ -1421,7 +1421,7 @@ class Base_ImportImport(models.TransientModel):
         :rtype: dict(ids: list(int), messages: list({type, message, record}))
         """
         self.ensure_one()
-        self._cr.execute('SAVEPOINT import')
+        self.env.cr.execute('SAVEPOINT import')
 
         try:
             input_file_data, import_fields = self._convert_import_data(fields, options)
@@ -1459,14 +1459,14 @@ class Base_ImportImport(models.TransientModel):
         #       error in the results.
         try:
             if dryrun:
-                self._cr.execute('ROLLBACK TO SAVEPOINT import')
+                self.env.cr.execute('ROLLBACK TO SAVEPOINT import')
                 # cancel all changes done to the registry/ormcache
                 # we need to clear the cache in case any created id was added to an ormcache and would be missing afterward
                 self.pool.clear_all_caches()
                 # don't propagate to other workers since it was rollbacked
                 self.pool.reset_changes()
             else:
-                self._cr.execute('RELEASE SAVEPOINT import')
+                self.env.cr.execute('RELEASE SAVEPOINT import')
         except psycopg2.InternalError:
             pass
 

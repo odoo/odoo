@@ -223,12 +223,12 @@ class AccountEdiDocument(models.Model):
             attachments_potential_unlink = documents.sudo().attachment_id.filtered(lambda a: not a.res_model and not a.res_id)
             try:
                 with self.env.cr.savepoint(flush=False):
-                    self._cr.execute('SELECT * FROM account_edi_document WHERE id IN %s FOR UPDATE NOWAIT', [tuple(documents.ids)])
-                    self._cr.execute('SELECT * FROM account_move WHERE id IN %s FOR UPDATE NOWAIT', [tuple(move_to_lock.ids)])
+                    self.env.cr.execute('SELECT * FROM account_edi_document WHERE id IN %s FOR UPDATE NOWAIT', [tuple(documents.ids)])
+                    self.env.cr.execute('SELECT * FROM account_move WHERE id IN %s FOR UPDATE NOWAIT', [tuple(move_to_lock.ids)])
 
                     # Locks the attachments that might be unlinked
                     if attachments_potential_unlink:
-                        self._cr.execute('SELECT * FROM ir_attachment WHERE id IN %s FOR UPDATE NOWAIT', [tuple(attachments_potential_unlink.ids)])
+                        self.env.cr.execute('SELECT * FROM ir_attachment WHERE id IN %s FOR UPDATE NOWAIT', [tuple(attachments_potential_unlink.ids)])
 
             except psycopg2.errors.LockNotAvailable:
                 _logger.debug('Another transaction already locked documents rows. Cannot process documents.')
@@ -278,7 +278,7 @@ class AccountEdiDocument(models.Model):
         if not (attachment_sudo.res_model and attachment_sudo.res_id):
             # do not return system attachment not linked to a record
             return {}
-        if len(self._context.get('active_ids', [])) > 1:
+        if len(self.env.context.get('active_ids', [])) > 1:
             # In mass mail mode 'attachments_ids' is removed from template values
             # as they should not be rendered
             return {'attachments': [(attachment_sudo.name, attachment_sudo.datas)]}

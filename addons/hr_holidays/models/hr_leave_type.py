@@ -125,9 +125,9 @@ class HrLeaveType(models.Model):
             return [('id', domain_operator, [x['id'] for x in res])]
         """
 
-        if {'default_date_from', 'default_date_to', 'tz'} <= set(self._context):
-            default_date_from_dt = fields.Datetime.to_datetime(self._context.get('default_date_from'))
-            default_date_to_dt = fields.Datetime.to_datetime(self._context.get('default_date_to'))
+        if {'default_date_from', 'default_date_to', 'tz'} <= set(self.env.context):
+            default_date_from_dt = fields.Datetime.to_datetime(self.env.context.get('default_date_from'))
+            default_date_to_dt = fields.Datetime.to_datetime(self.env.context.get('default_date_to'))
 
             # Cast: Datetime -> Date using user's tz
             date_from = fields.Date.context_today(self, default_date_from_dt)
@@ -137,7 +137,7 @@ class HrLeaveType(models.Model):
             date_from = fields.Date.today().strftime('%Y-1-1')
             date_to = fields.Date.today().strftime('%Y-12-31')
 
-        employee_id = self._context.get('default_employee_id', self._context.get('employee_id')) or self.env.user.employee_id.id
+        employee_id = self.env.context.get('default_employee_id', self.env.context.get('employee_id')) or self.env.user.employee_id.id
 
         if not isinstance(value, bool):
             raise ValueError('Invalid value: %s' % (value))
@@ -195,9 +195,9 @@ class HrLeaveType(models.Model):
 
     @api.depends('requires_allocation', 'max_leaves', 'virtual_remaining_leaves')
     def _compute_valid(self):
-        date_from = self._context.get('default_date_from', fields.Datetime.today())
-        date_to = self._context.get('default_date_to', fields.Datetime.today())
-        employee_id = self._context.get('default_employee_id', self._context.get('employee_id', self.env.user.employee_id.id))
+        date_from = self.env.context.get('default_date_from', fields.Datetime.today())
+        date_to = self.env.context.get('default_date_to', fields.Datetime.today())
+        employee_id = self.env.context.get('default_employee_id', self.env.context.get('employee_id', self.env.user.employee_id.id))
         for leave_type in self:
             if leave_type.requires_allocation == 'yes':
                 allocations = self.env['hr.leave.allocation'].search([
@@ -290,13 +290,13 @@ class HrLeaveType(models.Model):
     @api.depends_context('employee_id', 'default_employee_id', 'default_date_from')
     def _compute_leaves(self):
         employee = self.env['hr.employee']._get_contextual_employee()
-        target_date = self._context['default_date_from'] if 'default_date_from' in self._context else None
+        target_date = self.env.context['default_date_from'] if 'default_date_from' in self.env.context else None
         # This is a workaround to save the date value in context for next triggers
         # when context gets cleaned and 'default_' context keys gets removed
         if target_date:
-            self.env.context = frozendict(self.env.context, leave_date_from=self._context['default_date_from'])
+            self.env.context = frozendict(self.env.context, leave_date_from=self.env.context['default_date_from'])
         else:
-            target_date = self._context.get('leave_date_from', None)
+            target_date = self.env.context.get('leave_date_from', None)
         data_days = self.get_allocation_data(employee, target_date)[employee]
         for holiday_status in self:
             result = [item for item in data_days if item[0] == holiday_status.name]
@@ -383,7 +383,7 @@ class HrLeaveType(models.Model):
                 leave_type.allocation_validation_type = 'hr'
 
     def requested_display_name(self):
-        return self._context.get('holiday_status_display_name', True) and self._context.get('employee_id')
+        return self.env.context.get('holiday_status_display_name', True) and self.env.context.get('employee_id')
 
     @api.depends('requires_allocation', 'virtual_remaining_leaves', 'max_leaves', 'request_unit')
     @api.depends_context('holiday_status_display_name', 'employee_id', 'from_manager_leave_form')
@@ -393,7 +393,7 @@ class HrLeaveType(models.Model):
             return super()._compute_display_name()
         for record in self:
             name = record.name
-            if record.requires_allocation == "yes" and not self._context.get("from_manager_leave_form"):
+            if record.requires_allocation == "yes" and not self.env.context.get("from_manager_leave_form"):
                 remaining_time = float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0
                 maximum = float_round(record.max_leaves, precision_digits=2) or 0.0
 

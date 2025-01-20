@@ -16,10 +16,10 @@ class HrLeaveType(models.Model):
     @api.depends_context('request_type', 'leave', 'holiday_status_display_name', 'employee_id')
     def _compute_display_name(self):
         # Exclude hours available in allocation contexts, it might be confusing otherwise
-        if not self.requested_display_name() or self._context.get('request_type', 'leave') == 'allocation':
+        if not self.requested_display_name() or self.env.context.get('request_type', 'leave') == 'allocation':
             return super()._compute_display_name()
 
-        employee = self.env['hr.employee'].browse(self._context.get('employee_id')).sudo()
+        employee = self.env['hr.employee'].browse(self.env.context.get('employee_id')).sudo()
         if employee.total_overtime <= 0:
             return super()._compute_display_name()
 

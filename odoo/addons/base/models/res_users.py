@@ -308,14 +308,14 @@ class ResUsersLog(models.Model):
 
     @api.autovacuum
     def _gc_user_logs(self):
-        self._cr.execute("""
+        self.env.cr.execute("""
             DELETE FROM res_users_log log1 WHERE EXISTS (
                 SELECT 1 FROM res_users_log log2
                 WHERE log1.create_uid = log2.create_uid
                 AND log1.create_date < log2.create_date
             )
         """)
-        _logger.info("GC'd %d user log entries", self._cr.rowcount)
+        _logger.info("GC'd %d user log entries", self.env.cr.rowcount)
 
 
 class ResUsers(models.Model):
@@ -727,7 +727,7 @@ class ResUsers(models.Model):
     def write(self, values):
         if values.get('active') and SUPERUSER_ID in self._ids:
             raise UserError(_("You cannot activate the superuser."))
-        if values.get('active') == False and self._uid in self._ids:
+        if values.get('active') == False and self.env.uid in self._ids:
             raise UserError(_("You cannot deactivate the user you're currently logged in as."))
 
         if values.get('active'):
@@ -851,7 +851,7 @@ class ResUsers(models.Model):
         return vals_list
 
     @api.model
-    @tools.ormcache('self._uid')
+    @tools.ormcache('self.env.uid')
     def context_get(self):
         # use read() to not read other fields: this must work while modifying
         # the schema of models res.users or res.partner
@@ -1497,7 +1497,7 @@ class ResGroups(models.Model):  # noqa: F811
             updated_group_ids = OrderedSet()
             updated_user_ids = OrderedSet()
             for group in self:
-                self._cr.execute("""
+                self.env.cr.execute("""
                     WITH RECURSIVE group_imply(gid, hid) AS (
                         SELECT gid, hid
                           FROM res_groups_implied_rel
@@ -1668,7 +1668,7 @@ class ResGroups(models.Model):  # noqa: F811
         if not (view and view._name == 'ir.ui.view'):
             return
 
-        if self._context.get('install_filename') or self._context.get(MODULE_UNINSTALL_FLAG):
+        if self.env.context.get('install_filename') or self.env.context.get(MODULE_UNINSTALL_FLAG):
             # use a dummy view during install/upgrade/uninstall
             xml = E.field(name="groups_id", position="after")
 
@@ -1783,7 +1783,7 @@ class ResGroups(models.Model):  # noqa: F811
         # serialize and update the view
         xml_content = etree.tostring(xml, pretty_print=True, encoding="unicode")
         if xml_content != view.arch:  # avoid useless xml validation if no change
-            new_context = dict(view._context)
+            new_context = dict(view.env.context)
             new_context.pop('install_filename', None)  # don't set arch_fs for this computed view
             new_context['lang'] = None
             view.with_context(new_context).write({'arch': xml_content})
@@ -1864,7 +1864,7 @@ class UsersView(models.Model):
     @api.depends_context('show_user_group_warning')
     def _compute_user_group_warning(self):
         self.user_group_warning = False
-        if self._context.get('show_user_group_warning'):
+        if self.env.context.get('show_user_group_warning'):
             for user in self.filtered_domain([('share', '=', False)]):
                 group_inheritance_warnings = self._prepare_warning_for_group_inheritance(user)
                 if group_inheritance_warnings:
@@ -2178,7 +2178,7 @@ class ChangePasswordWizard(models.TransientModel):
     _transient_max_hours = 0.2
 
     def _default_user_ids(self):
-        user_ids = self._context.get('active_model') == 'res.users' and self._context.get('active_ids') or []
+        user_ids = self.env.context.get('active_model') == 'res.users' and self.env.context.get('active_ids') or []
         return [
             Command.create({'user_id': user.id, 'user_login': user.login})
             for user in self.env['res.users'].browse(user_ids)

@@ -259,8 +259,8 @@ class ProductProduct(models.Model):
     @api.onchange('lst_price')
     def _set_product_lst_price(self):
         for product in self:
-            if self._context.get('uom'):
-                value = self.env['uom.uom'].browse(self._context['uom'])._compute_price(product.lst_price, product.uom_id)
+            if self.env.context.get('uom'):
+                value = self.env['uom.uom'].browse(self.env.context['uom'])._compute_price(product.lst_price, product.uom_id)
             else:
                 value = product.lst_price
             value -= product.price_extra
@@ -275,8 +275,8 @@ class ProductProduct(models.Model):
     @api.depends_context('uom')
     def _compute_product_lst_price(self):
         to_uom = None
-        if 'uom' in self._context:
-            to_uom = self.env['uom.uom'].browse(self._context['uom'])
+        if 'uom' in self.env.context:
+            to_uom = self.env['uom.uom'].browse(self.env.context['uom'])
 
         for product in self:
             if to_uom:
@@ -291,7 +291,7 @@ class ProductProduct(models.Model):
             product.code = product.default_code
             if self.env['ir.model.access'].check('product.supplierinfo', 'read', False):
                 for supplier_info in product.seller_ids:
-                    if supplier_info.partner_id.id == product._context.get('partner_id'):
+                    if supplier_info.partner_id.id == product.env.context.get('partner_id'):
                         product.code = supplier_info.product_code or product.default_code
                         break
 
@@ -299,7 +299,7 @@ class ProductProduct(models.Model):
     def _compute_partner_ref(self):
         for product in self:
             for supplier_info in product.seller_ids:
-                if supplier_info.partner_id.id == product._context.get('partner_id'):
+                if supplier_info.partner_id.id == product.env.context.get('partner_id'):
                     product_name = supplier_info.product_name or product.default_code or product.name
                     product.partner_ref = '%s%s' % (product.code and '[%s] ' % product.code or '', product_name)
                     break
@@ -479,9 +479,9 @@ class ProductProduct(models.Model):
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None):
         # TDE FIXME: strange
-        if self._context.get('search_default_categ_id'):
+        if self.env.context.get('search_default_categ_id'):
             domain = list(domain)
-            domain.append((('categ_id', 'child_of', self._context['search_default_categ_id'])))
+            domain.append((('categ_id', 'child_of', self.env.context['search_default_categ_id'])))
         return super()._search(domain, offset, limit, order)
 
     @api.depends('name', 'default_code', 'product_tmpl_id')
@@ -489,11 +489,11 @@ class ProductProduct(models.Model):
     def _compute_display_name(self):
 
         def get_display_name(name, code):
-            if self._context.get('display_default_code', True) and code:
+            if self.env.context.get('display_default_code', True) and code:
                 return f'[{code}] {name}'
             return name
 
-        partner_id = self._context.get('partner_id')
+        partner_id = self.env.context.get('partner_id')
         if partner_id:
             partner_ids = [partner_id, self.env['res.partner'].browse(partner_id).commercial_partner_id.id]
         else:
@@ -613,7 +613,7 @@ class ProductProduct(models.Model):
 
     @api.model
     def view_header_get(self, view_id, view_type):
-        if self._context.get('categ_id'):
+        if self.env.context.get('categ_id'):
             return _(
                 'Products: %(category)s',
                 category=self.env['product.category'].browse(self.env.context['categ_id']).name,

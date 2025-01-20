@@ -11,7 +11,7 @@ class ResUsers(models.Model):
     def name_search(self, name='', args=None, operator='ilike', limit=100):
         # if we have a search with a limit, move current user as the first result
         user_list = super().name_search(name, args, operator, limit)
-        uid = self._uid
+        uid = self.env.uid
         # index 0 is correct not Falsy in this case, use None to avoid ignoring it
         if (index := next((i for i, (user_id, _name) in enumerate(user_list) if user_id == uid), None)) is not None:
             # move found user first

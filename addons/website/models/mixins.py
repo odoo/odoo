@@ -256,7 +256,7 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
     @api.depends('is_published', 'website_id')
     @api.depends_context('website_id')
     def _compute_website_published(self):
-        current_website_id = self._context.get('website_id')
+        current_website_id = self.env.context.get('website_id')
         for record in self:
             if current_website_id:
                 record.website_published = record.is_published and (not record.website_id or record.website_id.id == current_website_id)
@@ -275,7 +275,7 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
         if operator in expression.NEGATIVE_TERM_OPERATORS:
             value = not value
 
-        current_website_id = self._context.get('website_id')
+        current_website_id = self.env.context.get('website_id')
         is_published = [('is_published', '=', value)]
         if current_website_id:
             on_current_website = self.env['website'].website_domain(current_website_id)

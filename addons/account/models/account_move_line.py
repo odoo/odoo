@@ -704,7 +704,7 @@ class AccountMoveLine(models.Model):
             self.env['res.currency'].flush_model(['decimal_places'])
 
             aml_ids = tuple(stored_lines.ids)
-            self._cr.execute('''
+            self.env.cr.execute('''
                 SELECT
                     part.debit_move_id AS line_id,
                     'debit' AS flag,
@@ -1579,7 +1579,7 @@ class AccountMoveLine(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_posted(self):
         # Prevent deleting lines on posted entries
-        if not self._context.get('force_delete') and any(m.state == 'posted' for m in self.move_id):
+        if not self.env.context.get('force_delete') and any(m.state == 'posted' for m in self.move_id):
             raise UserError(_("You can't delete a posted journal item. Don’t play games with your accounting records; reset the journal entry to draft before deleting it."))
 
     @api.ondelete(at_uninstall=False)
@@ -1665,7 +1665,7 @@ class AccountMoveLine(models.Model):
             # Will be recomputed from the price_unit
             if line.display_type == 'product' and line.move_id.is_invoice(True):
                 del vals['balance']
-            if self._context.get('include_business_fields'):
+            if self.env.context.get('include_business_fields'):
                 line._copy_data_extend_business_fields(vals)
         return vals_list
 
@@ -1748,7 +1748,7 @@ class AccountMoveLine(models.Model):
             return aml.move_id.origin_payment_id or aml.move_id.statement_line_id
 
         def get_odoo_rate(aml, other_aml, currency):
-            if forced_rate := self._context.get('forced_rate_from_register_payment'):
+            if forced_rate := self.env.context.get('forced_rate_from_register_payment'):
                 return forced_rate
             if other_aml and not is_payment(aml) and is_payment(other_aml):
                 return get_accounting_rate(other_aml, currency)
@@ -1759,7 +1759,7 @@ class AccountMoveLine(models.Model):
             return currency._get_conversion_rate(aml.company_currency_id, currency, aml.company_id, exchange_rate_date)
 
         def get_accounting_rate(aml, currency):
-            if forced_rate := self._context.get('forced_rate_from_register_payment'):
+            if forced_rate := self.env.context.get('forced_rate_from_register_payment'):
                 return forced_rate
             balance = aml._get_reconciliation_aml_field_value('balance', shadowed_aml_values)
             amount_currency = aml._get_reconciliation_aml_field_value('amount_currency', shadowed_aml_values)
@@ -1964,7 +1964,7 @@ class AccountMoveLine(models.Model):
 
         # Computation of the partial exchange difference. You can skip this part using the
         # `no_exchange_difference` context key (when reconciling an exchange difference for example).
-        if not self._context.get('no_exchange_difference'):
+        if not self.env.context.get('no_exchange_difference'):
             exchange_lines_to_fix = self.env['account.move.line']
             amounts_list = []
             if recon_currency == company_currency:
@@ -2220,7 +2220,7 @@ class AccountMoveLine(models.Model):
         """
 
         def process_amls(amls):
-            if self._context.get('reduced_line_sorting'):
+            if self.env.context.get('reduced_line_sorting'):
                 sorted_amls = amls.sorted(key=lambda aml: (
                     aml._get_reconciliation_aml_field_value('date_maturity', shadowed_aml_values)
                         or aml._get_reconciliation_aml_field_value('date', shadowed_aml_values),
@@ -2363,7 +2363,7 @@ class AccountMoveLine(models.Model):
         partial_index = 0
         for plan in plan_list:
             plan_results = self\
-                .with_context(no_exchange_difference=self._context.get('no_exchange_difference') or disable_partial_exchange_diff)\
+                .with_context(no_exchange_difference=self.env.context.get('no_exchange_difference') or disable_partial_exchange_diff)\
                 ._prepare_reconciliation_plan(plan, aml_values_map)
             all_plan_results.append(plan_results)
             for results in plan_results:
@@ -2392,7 +2392,7 @@ class AccountMoveLine(models.Model):
             return any(amls.company_id.mapped('tax_exigibility')) \
                 and amls.account_id.account_type in ('asset_receivable', 'liability_payable')
 
-        if not self._context.get('move_reverse_cancel') and not self._context.get('no_cash_basis'):
+        if not self.env.context.get('move_reverse_cancel') and not self.env.context.get('no_cash_basis'):
             for plan in plan_list:
                 if is_cash_basis_needed(plan['amls']):
                     plan['partials']._create_tax_cash_basis_moves()
@@ -2450,7 +2450,7 @@ class AccountMoveLine(models.Model):
 
         exchange_diff_values_list = []
         exchange_diff_full_batch_index = []
-        if not self._context.get('no_exchange_difference'):
+        if not self.env.context.get('no_exchange_difference'):
             for full_batch_index, full_batch in enumerate(full_batches):
                 involved_amls = full_batch['amls']
                 if not full_batch['is_fully_reconciled']:
@@ -2482,7 +2482,7 @@ class AccountMoveLine(models.Model):
                 # If we are fully reversing the entry, no need to fix anything since the journal entry
                 # is exactly the mirror of the source journal entry.
                 caba_lines_to_reconcile = None
-                if is_cash_basis_needed(involved_amls) and not self._context.get('move_reverse_cancel') and not self._context.get('no_cash_basis'):
+                if is_cash_basis_needed(involved_amls) and not self.env.context.get('move_reverse_cancel') and not self.env.context.get('no_cash_basis'):
                     caba_lines_to_reconcile = involved_amls._add_exchange_difference_cash_basis_vals(exchange_diff_values)
 
                 # Prepare the exchange difference.
@@ -2903,7 +2903,7 @@ class AccountMoveLine(models.Model):
 
     def action_unreconcile_match_entries(self):
         """ This method will do the unreconcile action in the list view of the moves """
-        active_ids = self._context.get('active_ids')
+        active_ids = self.env.context.get('active_ids')
         if active_ids:
             move_lines = self.env['account.move.line'].browse(active_ids)._all_reconciled_lines()
             move_lines.remove_move_reconcile()
@@ -2998,7 +2998,7 @@ class AccountMoveLine(models.Model):
             'general_account_id': self.account_id.id,
             'ref': self.ref,
             'move_line_id': self.id,
-            'user_id': self.move_id.invoice_user_id.id or self._uid,
+            'user_id': self.move_id.invoice_user_id.id or self.env.uid,
             'company_id': self.company_id.id or self.env.company.id,
             'category': 'invoice' if self.move_id.is_sale_document() else 'vendor_bill' if self.move_id.is_purchase_document() else 'other',
         }
@@ -3076,7 +3076,7 @@ class AccountMoveLine(models.Model):
 
     def _get_integrity_hash_fields(self):
         # Use the new hash version by default, but keep the old one for backward compatibility when generating the integrity report.
-        hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
+        hash_version = self.env.context.get('hash_version', MAX_HASH_VERSION)
         if hash_version == 1:
             return ['debit', 'credit', 'account_id', 'partner_id']
         elif hash_version in (2, 3, 4):

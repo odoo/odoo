@@ -690,7 +690,7 @@ class ProcurementGroup(models.Model):
         domain = self._get_orderpoint_domain(company_id=company_id)
         orderpoints = self.env['stock.warehouse.orderpoint'].search(domain)
         if use_new_cursor:
-            self._cr.commit()
+            self.env.cr.commit()
         orderpoints.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id, raise_user_error=False)
 
         # Search all confirmed stock_moves and try to assign them
@@ -700,14 +700,14 @@ class ProcurementGroup(models.Model):
         for moves_chunk in split_every(1000, moves_to_assign.ids):
             self.env['stock.move'].browse(moves_chunk).sudo()._action_assign()
             if use_new_cursor:
-                self._cr.commit()
+                self.env.cr.commit()
                 _logger.info("A batch of %d moves are assigned and committed", len(moves_chunk))
 
         # Merge duplicated quants
         self.env['stock.quant']._quant_tasks()
 
         if use_new_cursor:
-            self._cr.commit()
+            self.env.cr.commit()
             _logger.info("_run_scheduler_tasks is finished and committed")
 
     @api.model
@@ -717,8 +717,8 @@ class ProcurementGroup(models.Model):
         we run functions as SUPERUSER to avoid intercompanies and access rights issues. """
         try:
             if use_new_cursor:
-                assert isinstance(self._cr, BaseCursor)
-                cr = Registry(self._cr.dbname).cursor()
+                assert isinstance(self.env.cr, BaseCursor)
+                cr = Registry(self.env.cr.dbname).cursor()
                 self = self.with_env(self.env(cr=cr))  # TDE FIXME
 
             self._run_scheduler_tasks(use_new_cursor=use_new_cursor, company_id=company_id)
@@ -728,7 +728,7 @@ class ProcurementGroup(models.Model):
         finally:
             if use_new_cursor:
                 try:
-                    self._cr.close()
+                    self.env.cr.close()
                 except Exception:
                     pass
         return {}

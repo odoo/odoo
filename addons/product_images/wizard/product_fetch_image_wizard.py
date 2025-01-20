@@ -52,13 +52,13 @@ class ProductFetchImageWizard(models.TransientModel):
             ))
 
         # Compute default values
-        if self._context.get('active_model') == 'product.template':
+        if self.env.context.get('active_model') == 'product.template':
             product_ids = self.env['product.template'].browse(
-                self._context.get('active_ids')
+                self.env.context.get('active_ids')
             ).product_variant_ids
         else:
             product_ids = self.env['product.product'].browse(
-                self._context.get('active_ids')
+                self.env.context.get('active_ids')
             )
         nb_products_selected = len(product_ids)
         products_to_process = product_ids.filtered(lambda p: not p.image_1920 and p.barcode)

@@ -336,7 +336,7 @@ class AccountChartTemplate(models.AbstractModel):
                 elif model_name == 'account.tax':
                     # Only update the tags of existing taxes
                     if xmlid not in xmlid2tax or tax_template_changed(xmlid2tax[xmlid], values):
-                        if self._context.get('force_new_tax_active'):
+                        if self.env.context.get('force_new_tax_active'):
                             values['active'] = True
                         if xmlid in xmlid2tax:
                             obsolete_xmlid.add(xmlid)
@@ -1333,8 +1333,8 @@ class AccountChartTemplate(models.AbstractModel):
         # the queried models have been flushed already as part of the loop building the queries per model
         self.env['ir.model.data'].flush_model(['res_id', 'model', 'name'])
 
-        self._cr.execute(query)
-        return self._cr.fetchall()
+        self.env.cr.execute(query)
+        return self.env.cr.fetchall()
 
     def _get_field_translation(self, record, fname, lang):
         """Return the value for language lang for field with fname from record (or None if none exists).

@@ -1170,13 +1170,13 @@ class BaseModel(metaclass=MetaModel):
         self.env.flush_all()
 
         # determine values of mode, current_module and noupdate
-        mode = self._context.get('mode', 'init')
-        current_module = self._context.get('module', '__import__')
-        noupdate = self._context.get('noupdate', False)
+        mode = self.env.context.get('mode', 'init')
+        current_module = self.env.context.get('module', '__import__')
+        noupdate = self.env.context.get('noupdate', False)
         # add current module in context for the conversion of xml ids
         self = self.with_context(_import_current_module=current_module)
 
-        cr = self._cr
+        cr = self.env.cr
         sp = cr.savepoint(flush=False)
 
         fields = [fix_import_export_id_paths(f) for f in fields]
@@ -1291,7 +1291,7 @@ class BaseModel(metaclass=MetaModel):
         flush_recordset = self.with_context(import_flush=flush, import_cache=LRU(1024))
 
         # TODO: break load's API instead of smuggling via context?
-        limit = self._context.get('_import_limit')
+        limit = self.env.context.get('_import_limit')
         if limit is None:
             limit = float('inf')
         extracted = flush_recordset._extract_records(fields, data, log=messages.append, limit=limit)
@@ -1545,8 +1545,8 @@ class BaseModel(metaclass=MetaModel):
         for name in fields_list:
             # 1. look up context
             key = 'default_' + name
-            if key in self._context:
-                defaults[name] = self._context[key]
+            if key in self.env.context:
+                defaults[name] = self.env.context[key]
                 continue
 
             field = self._fields.get(name)
@@ -2367,8 +2367,8 @@ class BaseModel(metaclass=MetaModel):
             days_offset = first_week_day and 7 - first_week_day
         interval = READ_GROUP_TIME_GRANULARITY[granularity]
         tz = False
-        if field.type == 'datetime' and self._context.get('tz') in pytz.all_timezones_set:
-            tz = pytz.timezone(self._context['tz'])
+        if field.type == 'datetime' and self.env.context.get('tz') in pytz.all_timezones_set:
+            tz = pytz.timezone(self.env.context['tz'])
 
         # TODO: refactor remaing lines here
 
@@ -2477,8 +2477,8 @@ class BaseModel(metaclass=MetaModel):
                         range_end = value + interval
                         if field.type == 'datetime':
                             tzinfo = None
-                            if self._context.get('tz') in pytz.all_timezones_set:
-                                tzinfo = pytz.timezone(self._context['tz'])
+                            if self.env.context.get('tz') in pytz.all_timezones_set:
+                                tzinfo = pytz.timezone(self.env.context['tz'])
                                 range_start = tzinfo.localize(range_start).astimezone(pytz.utc)
                                 # take into account possible hour change between start and end
                                 range_end = tzinfo.localize(range_end).astimezone(pytz.utc)
@@ -3029,7 +3029,7 @@ class BaseModel(metaclass=MetaModel):
         # iterate on the database columns to drop the NOT NULL constraints of
         # fields which were required but have been removed (or will be added by
         # another module)
-        cr = self._cr
+        cr = self.env.cr
         cols = [name for name, field in self._fields.items()
                      if field.store and field.column_type]
         cr.execute(SQL(
@@ -3068,7 +3068,7 @@ class BaseModel(metaclass=MetaModel):
         if necessary:
             _logger.debug("Table '%s': setting default value of new column %s to %r",
                           self._table, column_name, value)
-            self._cr.execute(SQL(
+            self.env.cr.execute(SQL(
                 "UPDATE %(table)s SET %(field)s = %(value)s WHERE %(field)s IS NULL",
                 table=SQL.identifier(self._table),
                 field=SQL.identifier(column_name),
@@ -3107,8 +3107,8 @@ class BaseModel(metaclass=MetaModel):
         # has not been added in database yet!
         self = self.with_context(prefetch_fields=False)
 
-        cr = self._cr
-        update_custom_fields = self._context.get('update_custom_fields', False)
+        cr = self.env.cr
+        update_custom_fields = self.env.context.get('update_custom_fields', False)
         must_create_table = not sql.table_exists(cr, self._table)
         parent_path_compute = False
 
@@ -3125,7 +3125,7 @@ class BaseModel(metaclass=MetaModel):
 
             if self._parent_store:
                 if not sql.column_exists(cr, self._table, 'parent_path'):
-                    sql.create_column(self._cr, self._table, 'parent_path', 'VARCHAR')
+                    sql.create_column(self.env.cr, self._table, 'parent_path', 'VARCHAR')
                     parent_path_compute = True
                 self._check_parent_path()
 
@@ -3691,7 +3691,7 @@ class BaseModel(metaclass=MetaModel):
                 else translations[self.env.lang] if translations.get(self.env.lang) is not None \
                 else next((v for v in translations.values() if v is not None), None)
             self.invalidate_recordset([field_name])
-            self._cr.execute(SQL(
+            self.env.cr.execute(SQL(
                 """ UPDATE %(table)s
                     SET %(field)s = NULLIF(
                         jsonb_strip_nulls(%(fallback)s || COALESCE(%(field)s, '{}'::jsonb) || %(value)s),
@@ -3852,7 +3852,7 @@ class BaseModel(metaclass=MetaModel):
         """
         self._check_field_access(field, 'read')
         # determine which fields can be prefetched
-        if self._context.get('prefetch_fields', True) and field.prefetch:
+        if self.env.context.get('prefetch_fields', True) and field.prefetch:
             fnames = [
                 name
                 for name, f in self._fields.items()
@@ -4300,7 +4300,7 @@ class BaseModel(metaclass=MetaModel):
         from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
         for func in self._ondelete_methods:
             # func._ondelete is True if it should be called during uninstallation
-            if func._ondelete or not self._context.get(MODULE_UNINSTALL_FLAG):
+            if func._ondelete or not self.env.context.get(MODULE_UNINSTALL_FLAG):
                 func(self)
 
         # TOFIX: this avoids an infinite loop when trying to recompute a
@@ -4312,7 +4312,7 @@ class BaseModel(metaclass=MetaModel):
 
         self.env.flush_all()
 
-        cr = self._cr
+        cr = self.env.cr
         Data = self.env['ir.model.data'].sudo().with_context({})
         Defaults = self.env['ir.default'].sudo()
         Attachment = self.env['ir.attachment'].sudo()
@@ -4354,7 +4354,7 @@ class BaseModel(metaclass=MetaModel):
 
             # don't allow fallback value in ir.default for many2one company dependent fields to be deleted
             # Exception: when MODULE_UNINSTALL_FLAG, these fallbacks can be deleted by Defaults.discard_records(records)
-            if (many2one_fields := self.env.registry.many2one_company_dependents[self._name]) and not self._context.get(MODULE_UNINSTALL_FLAG):
+            if (many2one_fields := self.env.registry.many2one_company_dependents[self._name]) and not self.env.context.get(MODULE_UNINSTALL_FLAG):
                 IrModelFields = self.env["ir.model.fields"]
                 field_ids = tuple(IrModelFields._get_ids(field.model_name).get(field.name) for field in many2one_fields)
                 sub_ids_json_text = tuple(json.dumps(id_) for id_ in sub_ids)
@@ -4367,7 +4367,7 @@ class BaseModel(metaclass=MetaModel):
             # on delete set null/restrict for jsonb company dependent many2one
             for field in many2one_fields:
                 model = self.env[field.model_name]
-                if field.ondelete == 'restrict' and not self._context.get(MODULE_UNINSTALL_FLAG):
+                if field.ondelete == 'restrict' and not self.env.context.get(MODULE_UNINSTALL_FLAG):
                     if res := self.env.execute_query(SQL(
                         """
                         SELECT id, %(field)s
@@ -4422,7 +4422,7 @@ class BaseModel(metaclass=MetaModel):
             ir_attachment_unlink.unlink()
 
         # auditing: deletions are infrequent and leave no trace in the database
-        _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, self._name, self.ids)
+        _unlink.info('User #%s deleted %s records with IDs: %r', self.env.uid, self._name, self.ids)
 
         return True
 
@@ -5031,7 +5031,7 @@ class BaseModel(metaclass=MetaModel):
 
             if other_fields:
                 # discard default values from context for other fields
-                others = records.with_context(clean_context(self._context))
+                others = records.with_context(clean_context(self.env.context))
                 for field in sorted(other_fields, key=attrgetter('_sequence')):
                     field.create([
                         (other, data['stored'][field.name])
@@ -5065,7 +5065,7 @@ class BaseModel(metaclass=MetaModel):
         if not self._parent_store:
             return
 
-        self._cr.execute(SQL(
+        updated = dict(self.env.execute_query(SQL(
             """ UPDATE %(table)s node
                 SET parent_path=concat((
                         SELECT parent.parent_path
@@ -5077,10 +5077,9 @@ class BaseModel(metaclass=MetaModel):
             table=SQL.identifier(self._table),
             parent=SQL.identifier(self._parent_name),
             ids=tuple(self.ids),
-        ))
+        )))
 
         # update the cache of updated nodes, and determine what to recompute
-        updated = dict(self._cr.fetchall())
         records = self.browse(updated)
         self.env.cache.update(records, self._fields['parent_path'], updated.values())
 
@@ -5525,7 +5524,7 @@ class BaseModel(metaclass=MetaModel):
         vals_list = []
         default = dict(default or {})
         # avoid recursion through already copied records in case of circular relationship
-        if '__copy_data_seen' not in self._context:
+        if '__copy_data_seen' not in self.env.context:
             self = self.with_context(__copy_data_seen=defaultdict(set))
 
         # build a black list of fields that should not be copied
@@ -5550,7 +5549,7 @@ class BaseModel(metaclass=MetaModel):
                           if field.copy and name not in default and name not in blacklist}
 
         for record in self:
-            seen_map = self._context['__copy_data_seen']
+            seen_map = self.env.context['__copy_data_seen']
             if record.id in seen_map[record._name]:
                 vals_list.append(None)
                 continue
@@ -5582,9 +5581,9 @@ class BaseModel(metaclass=MetaModel):
         """
         old = self
         # avoid recursion through already copied records in case of circular relationship
-        if '__copy_translations_seen' not in old._context:
+        if '__copy_translations_seen' not in old.env.context:
             old = old.with_context(__copy_translations_seen=defaultdict(set))
-        seen_map = old._context['__copy_translations_seen']
+        seen_map = old.env.context['__copy_translations_seen']
         if old.id in seen_map[old._name]:
             return
         seen_map[old._name].add(old.id)
@@ -5670,8 +5669,9 @@ class BaseModel(metaclass=MetaModel):
             return self
         query = Query(self.env, self._table, self._table_sql)
         query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(ids)))
-        self.env.cr.execute(query.select())
-        valid_ids = set([r[0] for r in self._cr.fetchall()] + new_ids)
+        rows = self.env.execute_query(query.select())
+        valid_ids = {r[0] for r in rows}
+        valid_ids.update(new_ids)
         return self.browse(i for i in self._ids if i in valid_ids)
 
     def _has_cycle(self, field_name=None) -> bool:
@@ -5714,7 +5714,7 @@ class BaseModel(metaclass=MetaModel):
             relation = self._table
             column1 = 'id'
             column2 = field_name
-        cr = self._cr
+        cr = self.env.cr
         cr.execute(SQL(
             """
             WITH RECURSIVE __reachability AS (
@@ -5825,8 +5825,8 @@ class BaseModel(metaclass=MetaModel):
         # to any downstream search call(e.g. for x2m or computed fields), and
         # this is not the desired behavior. The flag was presumably only meant
         # for the main search().
-        if 'active_test' in self._context:
-            context = dict(self._context)
+        if 'active_test' in self.env.context:
+            context = dict(self.env.context)
             del context['active_test']
             records = records.with_context(context)
 
@@ -5957,10 +5957,20 @@ class BaseModel(metaclass=MetaModel):
         """ Return the list of actual record ids corresponding to ``self``. """
         return list(origin_ids(self._ids))
 
-    # backward-compatibility with former browse records
-    _cr = property(lambda self: self.env.cr)
-    _uid = property(lambda self: self.env.uid)
-    _context = property(lambda self: self.env.context)
+    @property
+    def _cr(self):
+        warnings.warn("Deprecated since 19.0, use self.env.cr directly", DeprecationWarning)
+        return self.env.cr
+
+    @property
+    def _uid(self):
+        warnings.warn("Deprecated since 19.0, use self.env.uid directly", DeprecationWarning)
+        return self.env.uid
+
+    @property
+    def _context(self):
+        warnings.warn("Deprecated since 19.0, use self.env.context directly", DeprecationWarning)
+        return self.env.context
 
     #
     # Conversion methods
@@ -6075,9 +6085,9 @@ class BaseModel(metaclass=MetaModel):
 
             # current context is {'key1': True}
             r2 = records.with_context({}, key2=True)
-            # -> r2._context is {'key2': True}
+            # -> r2.env.context is {'key2': True}
             r2 = records.with_context(key2=True)
-            # -> r2._context is {'key1': True, 'key2': True}
+            # -> r2.env.context is {'key1': True, 'key2': True}
 
         .. note:
 
@@ -6095,11 +6105,11 @@ class BaseModel(metaclass=MetaModel):
                 "of its special meaning in @depends_context.",
                 stack_info=True,
             )
-        context = dict(args[0] if args else self._context, **kwargs)
-        if 'allowed_company_ids' not in context and 'allowed_company_ids' in self._context:
+        context = dict(args[0] if args else self.env.context, **kwargs)
+        if 'allowed_company_ids' not in context and 'allowed_company_ids' in self.env.context:
             # Force 'allowed_company_ids' to be kept when context is overridden
             # without 'allowed_company_ids'
-            context['allowed_company_ids'] = self._context['allowed_company_ids']
+            context['allowed_company_ids'] = self.env.context['allowed_company_ids']
         return self.with_env(self.env(context=context))
 
     def with_prefetch(self, prefetch_ids=None) -> Self:
@@ -7204,22 +7214,21 @@ class TransientModel(Model):
 
     def _transient_clean_old_rows(self, max_count):
         # Check how many rows we have in the table
-        self._cr.execute(SQL("SELECT count(*) FROM %s", SQL.identifier(self._table)))
-        [count] = self._cr.fetchone()
+        [[count]] = self.env.execute_query(SQL("SELECT count(*) FROM %s", SQL.identifier(self._table)))
         if count > max_count:
             self._transient_clean_rows_older_than(300)
 
     def _transient_clean_rows_older_than(self, seconds):
         # Never delete rows used in last 5 minutes
         seconds = max(seconds, 300)
-        self._cr.execute(SQL(
+        rows = self.env.execute_query(SQL(
             "SELECT id FROM %s WHERE %s < %s %s",
             SQL.identifier(self._table),
             SQL("COALESCE(write_date, create_date, (now() AT TIME ZONE 'UTC'))::timestamp"),
             SQL("(now() AT TIME ZONE 'UTC') - interval %s", f"{seconds} seconds"),
             SQL(f"LIMIT { GC_UNLINK_LIMIT }"),
         ))
-        ids = [x[0] for x in self._cr.fetchall()]
+        ids = [r[0] for r in rows]
         self.sudo().browse(ids).unlink()
         if len(ids) >= GC_UNLINK_LIMIT:
             self.env.ref('base.autovacuum_job')._trigger()

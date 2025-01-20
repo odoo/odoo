@@ -35,10 +35,10 @@ class MailMail(models.Model):
     def default_get(self, fields):
         # protection for `default_type` values leaking from menu action context (e.g. for invoices)
         # To remove when automatic context propagation is removed in web client
-        if self._context.get('default_type') not in self._fields['message_type'].base_field.selection:
-            self = self.with_context(dict(self._context, default_type=None))
-        if self._context.get('default_state') not in self._fields['state'].base_field.selection:
-            self = self.with_context(dict(self._context, default_state='outgoing'))
+        if self.env.context.get('default_type') not in self._fields['message_type'].base_field.selection:
+            self = self.with_context(dict(self.env.context, default_type=None))
+        if self.env.context.get('default_state') not in self._fields['state'].base_field.selection:
+            self = self.with_context(dict(self.env.context, default_state='outgoing'))
         return super(MailMail, self).default_get(fields)
 
     # content
@@ -224,8 +224,8 @@ class MailMail(models.Model):
                    ('scheduled_date', '=', False),
                    ('scheduled_date', '<=', datetime.datetime.utcnow()),
         ]
-        if 'filters' in self._context:
-            domain.extend(self._context['filters'])
+        if 'filters' in self.env.context:
+            domain.extend(self.env.context['filters'])
         batch_size = int(self.env['ir.config_parameter'].sudo().get_param('mail.mail.queue.batch.size', batch_size)) or batch_size
         send_ids = self.search(domain, limit=batch_size if not ids else batch_size * 10).ids
         if not ids:
@@ -834,7 +834,7 @@ class MailMail(models.Model):
             if auto_commit is True:
                 if post_send_callback:
                     post_send_callback([mail_id])
-                self._cr.commit()
+                self.env.cr.commit()
         if post_send_callback:
             post_send_callback(self.ids)
         return True

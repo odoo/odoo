@@ -81,14 +81,14 @@ class IrUiView(models.Model):
     @api.depends('website_id', 'key')
     @api.depends_context('display_key', 'display_website')
     def _compute_display_name(self):
-        if not (self._context.get('display_key') or self._context.get('display_website')):
+        if not (self.env.context.get('display_key') or self.env.context.get('display_website')):
             return super()._compute_display_name()
 
         for view in self:
             view_name = view.name
-            if self._context.get('display_key'):
+            if self.env.context.get('display_key'):
                 view_name += ' <%s>' % view.key
-            if self._context.get('display_website') and view.website_id:
+            if self.env.context.get('display_website') and view.website_id:
                 view_name += ' [%s]' % view.website_id.name
             view.display_name = view_name
 
@@ -217,9 +217,9 @@ class IrUiView(models.Model):
         website-specific pages will be created so only the current
         website is affected.
         '''
-        current_website_id = self._context.get('website_id')
+        current_website_id = self.env.context.get('website_id')
 
-        if current_website_id and not self._context.get('no_cow'):
+        if current_website_id and not self.env.context.get('no_cow'):
             for view in self.filtered(lambda view: not view.website_id):
                 for w in self.env['website'].search([('id', '!=', current_website_id)]):
                     # reuse the COW mechanism to create
@@ -289,7 +289,7 @@ class IrUiView(models.Model):
               * In non website context, every view with a website will be removed
               * In a website context, every view from another website
         """
-        current_website_id = self._context.get('website_id')
+        current_website_id = self.env.context.get('website_id')
         most_specific_views = self.env['ir.ui.view']
         if not current_website_id:
             return self.filtered(lambda view: not view.website_id)
@@ -329,7 +329,7 @@ class IrUiView(models.Model):
     @api.model
     def _get_inheriting_views_domain(self):
         domain = super()._get_inheriting_views_domain()
-        current_website = self.env['website'].browse(self._context.get('website_id'))
+        current_website = self.env['website'].browse(self.env.context.get('website_id'))
         website_views_domain = current_website.website_domain()
         # when rendering for the website we have to include inactive views
         # we will prefer inactive website-specific views over active generic ones
@@ -339,7 +339,7 @@ class IrUiView(models.Model):
 
     @api.model
     def _get_inheriting_views(self):
-        if not self._context.get('website_id'):
+        if not self.env.context.get('website_id'):
             return super()._get_inheriting_views()
 
         views = super(IrUiView, self.with_context(active_test=False))._get_inheriting_views()
@@ -350,7 +350,7 @@ class IrUiView(models.Model):
     def _get_filter_xmlid_query(self):
         """This method add some specific view that do not have XML ID
         """
-        if not self._context.get('website_id'):
+        if not self.env.context.get('website_id'):
             return super()._get_filter_xmlid_query()
         else:
             return """SELECT res_id
@@ -372,7 +372,7 @@ class IrUiView(models.Model):
                     """
 
     @api.model
-    @tools.ormcache('self.env.uid', 'self.env.su', 'xml_id', 'self._context.get("website_id")', cache='templates')
+    @tools.ormcache('self.env.uid', 'self.env.su', 'xml_id', 'self.env.context.get("website_id")', cache='templates')
     def _get_view_id(self, xml_id):
         """If a website_id is in the context and the given xml_id is not an int
         then try to get the id of the specific view for that website, but
@@ -385,7 +385,7 @@ class IrUiView(models.Model):
         Archived views are ignored (unless the active_test context is set, but
         then the ormcache will not work as expected).
         """
-        website_id = self._context.get('website_id')
+        website_id = self.env.context.get('website_id')
         if website_id and not isinstance(xml_id, int):
             current_website = self.env['website'].browse(int(website_id))
             domain = ['&', ('key', '=', xml_id)] + current_website.website_domain()
@@ -393,7 +393,7 @@ class IrUiView(models.Model):
             view = self.sudo().search(domain, order='website_id', limit=1)
             if not view:
                 _logger.warning("Could not find view object with xml_id '%s'", xml_id)
-                raise ValueError('View %r in website %r not found' % (xml_id, self._context['website_id']))
+                raise ValueError('View %r in website %r not found' % (xml_id, self.env.context['website_id']))
             return view.id
         return super(IrUiView, self.sudo())._get_view_id(xml_id)
 
@@ -472,7 +472,7 @@ class IrUiView(models.Model):
         actually write on the specific view (or create it if not exist yet).
         In that case, we don't want to flag the generic view as noupdate.
         '''
-        if not self._context.get('website_id'):
+        if not self.env.context.get('website_id'):
             super()._set_noupdate()
 
     def save(self, value, xpath=None):

@@ -338,7 +338,7 @@ class PosConfig(models.Model):
             session.set_opening_control(0, "")
             self._notify('STATUS', {'status': 'open'})
 
-        ctx = dict(self._context, app_id='pos_self_order', footer=False)
+        ctx = dict(self.env.context, app_id='pos_self_order', footer=False)
 
         return {
             'res_model': 'pos.config',

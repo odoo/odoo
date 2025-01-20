@@ -111,7 +111,7 @@ class SmsSms(models.Model):
             self.browse(batch_ids)._send(unlink_failed=unlink_failed, unlink_sent=unlink_sent, raise_exception=raise_exception)
             # auto-commit if asked except in testing mode
             if auto_commit is True and not getattr(threading.current_thread(), 'testing', False):
-                self._cr.commit()
+                self.env.cr.commit()
 
     def resend_failed(self):
         sms_to_send = self.filtered(lambda sms: sms.state == 'error' and not sms.to_delete)
@@ -216,5 +216,5 @@ class SmsSms(models.Model):
 
     @api.autovacuum
     def _gc_device(self):
-        self._cr.execute("DELETE FROM sms_sms WHERE to_delete = TRUE")
-        _logger.info("GC'd %d sms marked for deletion", self._cr.rowcount)
+        self.env.cr.execute("DELETE FROM sms_sms WHERE to_delete = TRUE")
+        _logger.info("GC'd %d sms marked for deletion", self.env.cr.rowcount)

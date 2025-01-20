@@ -201,4 +201,4 @@ class AccountMoveSend(models.AbstractModel):
                 invoices._message_log_batch(bodies={invoice.id: log_message for invoice in invoices})
 
         if self._can_commit():
-            self._cr.commit()
+            self.env.cr.commit()

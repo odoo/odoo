@@ -517,7 +517,7 @@ class BaseAutomation(models.Model):
         defaults = {
             'name': _("Webhook Log"),
             'type': 'server',
-            'dbname': self._cr.dbname,
+            'dbname': self.env.cr.dbname,
             'level': 'INFO',
             'path': "base_automation(%s)" % self.id,
             'func': '',
@@ -600,7 +600,7 @@ class BaseAutomation(models.Model):
         """
         # Note: we keep the old action naming for the method and context variable
         # to avoid breaking existing code/downstream modules
-        if '__action_done' not in self._context:
+        if '__action_done' not in self.env.context:
             self = self.with_context(__action_done={})
         domain = [('model_name', '=', records._name), ('trigger', 'in', triggers)]
         automations = self.with_context(active_test=True).sudo().search(domain)
@@ -682,7 +682,7 @@ class BaseAutomation(models.Model):
     def _process(self, records, domain_post=None):
         """ Process automation ``self`` on the ``records`` that have not been done yet. """
         # filter out the records on which self has already been done
-        automation_done = self._context.get('__action_done', {})
+        automation_done = self.env.context.get('__action_done', {})
         records_done = automation_done.get(self, records.browse())
         records -= records_done
         if not records:
@@ -735,12 +735,12 @@ class BaseAutomation(models.Model):
             # all fields are implicit triggers
             return True
 
-        if self._context.get('old_values') is None:
+        if self.env.context.get('old_values') is None:
             # this is a create: all fields are considered modified
             return True
 
         # note: old_vals are in the record format
-        old_vals = self._context['old_values'].get(record.id, {})
+        old_vals = self.env.context['old_values'].get(record.id, {})
 
         def differ(name):
             return name in old_vals and record[name] != old_vals[name]
@@ -962,7 +962,7 @@ class BaseAutomation(models.Model):
     @api.model
     def _check(self, automatic=False, use_new_cursor=False):
         """ This Function is called by scheduler. """
-        if '__action_done' not in self._context:
+        if '__action_done' not in self.env.context:
             self = self.with_context(__action_done={})
 
         # retrieve all the automation rules to run based on a timed condition
@@ -973,7 +973,7 @@ class BaseAutomation(models.Model):
 
             # retrieve all the records that satisfy the automation's condition
             domain = []
-            context = dict(self._context)
+            context = dict(self.env.context)
             if automation.filter_domain:
                 domain = safe_eval.safe_eval(automation.filter_domain, eval_context)
             records = self.env[automation.model_name].with_context(context).search(domain)
@@ -1024,4 +1024,4 @@ class BaseAutomation(models.Model):
 
             if automatic:
                 # auto-commit for batch processing
-                self._cr.commit()
+                self.env.cr.commit()

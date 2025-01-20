@@ -269,7 +269,7 @@ class ResUsers(models.Model):
 
         # For sending mail to all the invitors about their invited users
         for user in invited_users:
-            template = email_template.with_context(dbname=self._cr.dbname, invited_users=invited_users[user])
+            template = email_template.with_context(dbname=self.env.cr.dbname, invited_users=invited_users[user])
             template.send_mail(user, email_layout_xmlid='mail.mail_notification_light', force_send=False)
 
         done = len(res_users_with_details)

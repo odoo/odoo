@@ -304,7 +304,7 @@ class AccountJournal(models.Model):
                 fnames.append('payment_provider_id')
             self.env['account.payment.method.line'].flush_model(fnames=fnames)
 
-            self._cr.execute(
+            self.env.cr.execute(
                 f'''
                     SELECT
                         apm.id,
@@ -318,7 +318,7 @@ class AccountJournal(models.Model):
                 ''',
                 [tuple(unique_electronic_ids)],
             )
-            for pay_method_id, company_id, journal_id, provider_id in self._cr.fetchall():
+            for pay_method_id, company_id, journal_id, provider_id in self.env.cr.fetchall():
                 values = method_information_mapping[pay_method_id]
                 is_electronic = manage_providers and values['mode'] == 'electronic'
                 if is_electronic:
@@ -473,7 +473,7 @@ class AccountJournal(models.Model):
     def _constrains_account_control_ids(self):
         self.env['account.move.line'].flush_model(['account_id', 'journal_id', 'display_type'])
         self.flush_recordset(['account_control_ids'])
-        self._cr.execute("""
+        self.env.cr.execute("""
             SELECT aml.id
             FROM account_move_line aml
             WHERE aml.journal_id in %s
@@ -481,7 +481,7 @@ class AccountJournal(models.Model):
             AND NOT EXISTS (SELECT 1 FROM journal_account_control_rel rel WHERE rel.account_id = aml.account_id AND rel.journal_id = aml.journal_id)
             AND aml.display_type NOT IN ('line_section', 'line_note')
         """, [tuple(self.ids)])
-        if self._cr.fetchone():
+        if self.env.cr.fetchone():
             raise ValidationError(_('Some journal items already exist in this journal but with other accounts than the allowed ones.'))
 
     @api.constrains('type', 'bank_account_id')
@@ -681,7 +681,7 @@ class AccountJournal(models.Model):
         result = super(AccountJournal, self).write(vals)
 
         # Ensure alias coherency when changing type
-        if 'type' in vals and not self._context.get('account_journal_skip_alias_sync'):
+        if 'type' in vals and not self.env.context.get('account_journal_skip_alias_sync'):
             for journal in self:
                 alias_vals = journal._alias_get_creation_values()
                 alias_vals = {
@@ -948,8 +948,8 @@ class AccountJournal(models.Model):
     def _create_document_from_attachment(self, attachment_ids):
         """ Create the invoices from files."""
         if not self:
-            self = self.env['account.journal'].browse(self._context.get("default_journal_id"))
-        move_type = self._context.get("default_move_type", "entry")
+            self = self.env['account.journal'].browse(self.env.context.get("default_journal_id"))
+        move_type = self.env.context.get("default_move_type", "entry")
         if not self:
             if move_type in self.env['account.move'].get_sale_types(include_receipts=True):
                 journal_type = "sale"
@@ -1002,7 +1002,7 @@ class AccountJournal(models.Model):
             'domain': [('id', 'in', invoices.ids)],
             'res_model': 'account.move',
             'type': 'ir.actions.act_window',
-            'context': self._context
+            'context': self.env.context
         }
         if len(invoices) == 1:
             action_vals.update({

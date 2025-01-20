@@ -302,7 +302,7 @@ class DeliveryCarrier(models.Model):
 
         if self.debug_logging:
             self.env.flush_all()
-            db_name = self._cr.dbname
+            db_name = self.env.cr.dbname
 
             # Use a new cursor to avoid rollback that could be caused by an upper method
             try:

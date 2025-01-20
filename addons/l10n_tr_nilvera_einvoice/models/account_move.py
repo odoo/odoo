@@ -177,7 +177,7 @@ class AccountMove(models.Model):
                     continue
                 move = self._l10n_tr_nilvera_get_invoice_from_uuid(client, journal, document_uuid)
                 self._l10n_tr_nilvera_add_pdf_to_invoice(client, move, document_uuid)
-                self._cr.commit()
+                self.env.cr.commit()
 
     def _l10n_tr_nilvera_get_invoice_from_uuid(self, client, journal, document_uuid):
         response = client.request(

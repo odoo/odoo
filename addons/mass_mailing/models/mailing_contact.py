@@ -67,8 +67,8 @@ class MailingContact(models.Model):
             else:
                 raise NotImplementedError()
 
-        if 'default_list_ids' in self._context and isinstance(self._context['default_list_ids'], (list, tuple)) and len(self._context['default_list_ids']) == 1:
-            [active_list_id] = self._context['default_list_ids']
+        if 'default_list_ids' in self.env.context and isinstance(self.env.context['default_list_ids'], (list, tuple)) and len(self.env.context['default_list_ids']) == 1:
+            [active_list_id] = self.env.context['default_list_ids']
             contacts = self.env['mailing.subscription'].search([('list_id', '=', active_list_id)])
             return [('id', 'in', [record.contact_id.id for record in contacts if record.opt_out == value])]
         return expression.FALSE_DOMAIN if value else expression.TRUE_DOMAIN
@@ -82,8 +82,8 @@ class MailingContact(models.Model):
     @api.depends('subscription_ids')
     @api.depends_context('default_list_ids')
     def _compute_opt_out(self):
-        if 'default_list_ids' in self._context and isinstance(self._context['default_list_ids'], (list, tuple)) and len(self._context['default_list_ids']) == 1:
-            [active_list_id] = self._context['default_list_ids']
+        if 'default_list_ids' in self.env.context and isinstance(self.env.context['default_list_ids'], (list, tuple)) and len(self.env.context['default_list_ids']) == 1:
+            [active_list_id] = self.env.context['default_list_ids']
             for record in self:
                 active_subscription_list = record.subscription_ids.filtered(lambda l: l.list_id.id == active_list_id)
                 record.opt_out = active_subscription_list.opt_out
@@ -104,7 +104,7 @@ class MailingContact(models.Model):
         This is a bit hackish but is due to default_list_ids key being
         used to compute oupt_out field. This should be cleaned in master but here
         we simply try to limit issues while keeping current behavior. """
-        default_list_ids = self._context.get('default_list_ids')
+        default_list_ids = self.env.context.get('default_list_ids')
         default_list_ids = default_list_ids if isinstance(default_list_ids, (list, tuple)) else []
 
         for vals in vals_list:

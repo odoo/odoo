@@ -122,7 +122,7 @@ class MailThreadPhone(models.AbstractModel):
             term = re.sub(PHONE_REGEX_PATTERN, '', value[1 if value.startswith('+') else 2:])
             if operator not in ('=', '!='):  # for like operators
                 term = f'{term}%'
-            self._cr.execute(
+            self.env.cr.execute(
                 query, (PHONE_REGEX_PATTERN, '00' + term, PHONE_REGEX_PATTERN, '+' + term) * len(phone_fields)
             )
         else:
@@ -140,8 +140,8 @@ class MailThreadPhone(models.AbstractModel):
             term = re.sub(PHONE_REGEX_PATTERN, '', value)
             if operator not in ('=', '!='):  # for like operators
                 term = f'%{term}%'
-            self._cr.execute(query, (PHONE_REGEX_PATTERN, term) * len(phone_fields))
-        res = self._cr.fetchall()
+            self.env.cr.execute(query, (PHONE_REGEX_PATTERN, term) * len(phone_fields))
+        res = self.env.cr.fetchall()
         if not res:
             return [(0, '=', 1)]
         return [('id', 'in', [r[0] for r in res])]
@@ -204,8 +204,8 @@ class MailThreadPhone(models.AbstractModel):
                     ON m.phone_sanitized = bl.number AND bl.active
                     WHERE bl.id IS NULL
             """
-        self._cr.execute(query % self._table)
-        res = self._cr.fetchall()
+        self.env.cr.execute(query % self._table)
+        res = self.env.cr.fetchall()
         if not res:
             return [(0, '=', 1)]
         return [('id', 'in', [r[0] for r in res])]
