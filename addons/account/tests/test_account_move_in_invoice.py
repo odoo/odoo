@@ -1570,7 +1570,9 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         })
         action_register_payment = move.action_force_register_payment()  # should not raise an error on non-posted move
         self.assertTrue(action_register_payment)
-        wizard = self.env[action_register_payment['res_model']].with_context(action_register_payment['context']).create({})
+        wizard = self.env[action_register_payment['res_model']].with_context(action_register_payment['context']).create({
+            'payment_method_line_id': self.outbound_payment_method_line.id,
+        })
 
         action_create_payment = wizard.action_create_payments()
         payment = self.env[action_create_payment['res_model']].browse(action_create_payment['res_id'])
@@ -2044,6 +2046,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         # make payment
         self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
             'payment_date': invoice.date,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
         # check caba move
         partial_rec = invoice.mapped('line_ids.matched_debit_ids')
@@ -2178,6 +2181,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         # make payment
         self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
             'payment_date': invoice.date,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
         # check caba move
         partial_rec = invoice.mapped('line_ids.matched_debit_ids')
@@ -2345,12 +2349,13 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             return move
 
         def create_payment(move, amount):
-            self.env['account.payment.register']\
-                .with_context(active_ids=move.ids, active_model='account.move')\
-                .create({
-                    'amount': amount,
-                })\
-                ._create_payments()
+            self.env['account.payment.register'].with_context(
+                active_ids=move.ids,
+                active_model='account.move',
+            ).create({
+                'amount': amount,
+                'payment_method_line_id': self.inbound_payment_method_line.id,
+            })._create_payments()
 
         def create_reverse(move, amount):
             move_reversal = self.env['account.move.reversal']\

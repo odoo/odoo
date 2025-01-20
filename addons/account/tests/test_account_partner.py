@@ -21,6 +21,7 @@ class TestAccountPartner(AccountTestInvoicingCommon):
             'partner_id': partner.id,
             'payment_type': 'inbound',
             'partner_type': 'customer',
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
         self.env.invalidate_all()
         self.assertEqual(partner.days_sales_outstanding, 0.0)

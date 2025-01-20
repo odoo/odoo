@@ -124,7 +124,7 @@ class TestExpenses(TestExpenseCommon):
         default_account_payable_id = self.company_data['default_account_payable'].id
         product_b_account_id = self.product_b.property_account_expense_id.id
         product_c_account_id = self.product_c.property_account_expense_id.id
-        company_payment_account_id = self.outbound_payment_method_line.payment_account_id.id
+        company_payment_account_id = self.expense_outstanding_account.id
         # One payment per expense
         self.assertRecordValues(all_expenses.account_move_id.line_ids.sorted(lambda line: (line.move_id, line)), [
             # own_account expense 1 move

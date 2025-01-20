@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_payment_method_line_manual_in" model="account.payment.method.line">
+        <field name="name">Manual</field>
+        <field name="sequence">1</field>
+        <field name="payment_method_id" ref="account.account_payment_method_manual_in"/>
+    </record>
+    <record id="account_payment_method_line_manual_out" model="account.payment.method.line">
+        <field name="name">Manual</field>
+        <field name="sequence">1</field>
+        <field name="payment_method_id" ref="account.account_payment_method_manual_out"/>
+    </record>
+</odoo>

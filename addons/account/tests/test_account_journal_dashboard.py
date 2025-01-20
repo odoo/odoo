@@ -72,6 +72,7 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
             'payment_type': 'inbound',
             'partner_type': 'customer',
             'partner_id': self.partner_a.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })
         partial_payment.action_post()
 
@@ -100,6 +101,7 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
             'payment_type': 'outbound',
             'partner_type': 'customer',
             'partner_id': self.partner_a.id,
+            'payment_method_line_id': self.outbound_payment_method_line.id,
         })
         payment.action_post()
 
@@ -151,12 +153,28 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
             [            1,       100,              1,          55,            1,      55, company_currency],
         ]
 
+        manual_payment_method = self.env.ref('account.account_payment_method_manual_out')
         for (purchase_journal, bill_currency), expected_vals in zip(setup_values, expected_vals_list):
             with self.subTest(purchase_journal_currency=purchase_journal.currency_id, bill_currency=bill_currency, expected_vals=expected_vals):
                 bill = self.init_invoice('in_invoice', invoice_date='2017-01-01', post=True, amounts=[200], currency=bill_currency, journal=purchase_journal)
                 _draft_bill = self.init_invoice('in_invoice', invoice_date='2017-01-01', post=False, amounts=[200], currency=bill_currency, journal=purchase_journal)
 
-                payment = self.init_payment(-90, post=True, date='2017-01-01', currency=bill_currency)
+                outbound_payment_method_line = self.env['account.payment.method.line'].create({
+                    'payment_method_id': manual_payment_method.id,
+                    'journal_id': purchase_journal.id,
+                    'payment_account_id': self.out_outstanding_account.id,
+                })
+
+                payment = self.env['account.payment'].create({
+                    'amount': 90,
+                    'date': '2017-01-01',
+                    'payment_type': 'outbound',
+                    'partner_type': 'supplier',
+                    'partner_id': self.partner_a.id,
+                    'currency_id': bill_currency.id,
+                    'payment_method_line_id': outbound_payment_method_line.id,
+                })
+                payment.action_post()
                 (bill + payment.move_id).line_ids.filtered_domain([
                     ('account_id', '=', self.company_data['default_account_payable'].id)
                 ]).reconcile()
@@ -267,7 +285,7 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
             'amount': 100,
             'payment_type': 'inbound',
             'partner_type': 'customer',
-            'journal_id': bank_journal.id,
+            'payment_method_line_id': bank_journal.inbound_payment_method_line_ids[0].id,
         })
         payment.action_post()
 
