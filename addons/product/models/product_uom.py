@@ -13,7 +13,7 @@ class ProductUom(models.Model):
     uom_id = fields.Many2one('uom.uom', 'Unit', required=True, ondelete='cascade')
     product_id = fields.Many2one('product.product', 'Product', required=True, ondelete='cascade')
     barcode = fields.Char(index='btree_not_null', required=True)
-    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', 'Company')
 
     _barcode_uniq = models.Constraint('unique(barcode)', 'A barcode can only be assigned to one packaging.')
 
