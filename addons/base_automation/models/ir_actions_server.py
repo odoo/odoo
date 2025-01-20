@@ -44,8 +44,11 @@ class IrActionsServer(models.Model):
         for action in to_update:
             match action.state:
                 case 'object_write':
-                    action_type = _("Update") if action.evaluation_type == 'value' else _("Compute")
-                    action.name = f"{action_type} {action._stringify_path()}"
+                    _field_chain, field_chain_str = action._get_relation_chain("update_path")
+                    if action.evaluation_type == 'value':
+                        action.name = _("Update %(field_chain_str)s", field_chain_str=field_chain_str)
+                    else:
+                        action.name = _("Compute %(field_chain_str)s", field_chain_str=field_chain_str)
                 case 'object_create':
                     action.name = _(
                     "Create %(model_name)s with name %(value)s",
@@ -66,9 +69,10 @@ class IrActionsServer(models.Model):
                     )
                 case 'followers':
                     if action.followers_type == 'generic':
+                        _field_chain, field_chain_str = action._get_relation_chain("followers_partner_field_name")
                         action.name = _(
-                            'Add followers based on field: %(field_name)s',
-                            field_name=action.followers_partner_field_name
+                            'Add followers based on field: %(field_chain_str)s',
+                            field_chain_str=field_chain_str
                         )
                     else:
                         action.name = _(
@@ -77,9 +81,10 @@ class IrActionsServer(models.Model):
                         )
                 case 'remove_followers':
                     if action.followers_type == 'generic':
+                        _field_chain, field_chain_str = action._get_relation_chain("followers_partner_field_name")
                         action.name = _(
-                            'Remove followers based on field: %(field_name)s',
-                            field_name=action.followers_partner_field_name
+                            'Remove followers based on field: %(field_chain_str)s',
+                            field_chain_str=field_chain_str
                         )
                     else:
                         action.name = _(
