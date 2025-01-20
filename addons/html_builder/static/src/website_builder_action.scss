@@ -1,7 +1,11 @@
-
 .o-website-builder_sidebar {
+    width: 0px;
+    background-color: $o-we-sidebar-bg;
     transition: width ease 400ms;
-    background-color: #191922;
+
+    &.o_builder_sidebar_open {
+        width: $o-we-sidebar-width;
+    }
 }
 
 .o_main_navbar {
@@ -53,4 +57,8 @@
             }
         }
     }
+}
+
+body:has(.o_builder_sidebar_open) .o_notification_manager {
+    @include o-position-absolute($top: map-get($spacers, 2), $right: calc(#{$o-we-sidebar-width} + 0.5rem));
 }
