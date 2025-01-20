@@ -180,6 +180,20 @@ describe("Selection collapsed", () => {
                 contentAfter: "<pre><p>abc</p><p>def</p></pre><p>[]<br></p>",
             });
         });
+        test("should insert a new paragraph after a pre tag with rtl direction", async () => {
+            await testEditor({
+                contentBefore: `<pre dir="rtl">ab[]</pre>`,
+                stepFunction: splitBlock,
+                contentAfter: `<pre dir="rtl">ab</pre><p dir="rtl">[]<br></p>`,
+            });
+        });
+        test("should insert a new paragraph after a pre tag with rtl direction (2)", async () => {
+            await testEditor({
+                contentBefore: `<pre><p dir="rtl">abc</p><p dir="rtl">[]<br></p></pre>`,
+                stepFunction: splitBlock,
+                contentAfter: `<pre><p dir="rtl">abc</p></pre><p dir="rtl">[]<br></p>`,
+            });
+        });
     });
 
     describe("Blockquote", () => {
@@ -216,6 +230,20 @@ describe("Selection collapsed", () => {
                 contentBefore: "<blockquote><p>abc</p><p>def</p><p>[]<br></p></blockquote>",
                 stepFunction: splitBlock,
                 contentAfter: "<blockquote><p>abc</p><p>def</p></blockquote><p>[]<br></p>",
+            });
+        });
+        test("should insert a new paragraph after a blockquote tag with rtl direction", async () => {
+            await testEditor({
+                contentBefore: `<blockquote dir="rtl">ab[]</blockquote>`,
+                stepFunction: splitBlock,
+                contentAfter: `<blockquote dir="rtl">ab</blockquote><p dir="rtl">[]<br></p>`,
+            });
+        });
+        test("should insert a new paragraph after a blockquote tag with rtl direction (2)", async () => {
+            await testEditor({
+                contentBefore: `<blockquote><p dir="rtl">abc</p><p dir="rtl">[]<br></p></blockquote>`,
+                stepFunction: splitBlock,
+                contentAfter: `<blockquote><p dir="rtl">abc</p></blockquote><p dir="rtl">[]<br></p>`,
             });
         });
     });
@@ -563,6 +591,13 @@ describe("Selection collapsed", () => {
                 contentBefore: `<h1 style="color: red">ab[]</h1>`,
                 stepFunction: splitBlock,
                 contentAfter: `<h1 style="color: red">ab</h1><p>[]<br></p>`,
+            });
+        });
+        test("should insert a new paragraph after a heading tag with rtl direction", async () => {
+            await testEditor({
+                contentBefore: `<h1 dir="rtl">ab[]</h1>`,
+                stepFunction: splitBlock,
+                contentAfter: `<h1 dir="rtl">ab</h1><p dir="rtl">[]<br></p>`,
             });
         });
     });

@@ -340,6 +340,10 @@ export class FontPlugin extends Plugin {
                 closestBlockNode.remove();
             }
             const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+            const dir = closestBlockNode.getAttribute("dir") || closestPre.getAttribute("dir");
+            if (dir) {
+                baseContainer.setAttribute("dir", dir);
+            }
             closestPre.after(baseContainer);
             fillEmpty(baseContainer);
             this.dependencies.selection.setCursorStart(baseContainer);
@@ -377,6 +381,10 @@ export class FontPlugin extends Plugin {
                 closestBlockNode.remove();
             }
             const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+            const dir = closestBlockNode.getAttribute("dir") || closestQuote.getAttribute("dir");
+            if (dir) {
+                baseContainer.setAttribute("dir", dir);
+            }
             closestQuote.after(baseContainer);
             fillEmpty(baseContainer);
             this.dependencies.selection.setCursorStart(baseContainer);
@@ -405,6 +413,10 @@ export class FontPlugin extends Plugin {
                 !descendants(newElement).some(isVisibleTextNode)
             ) {
                 const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                const dir = newElement.getAttribute("dir");
+                if (dir) {
+                    baseContainer.setAttribute("dir", dir);
+                }
                 newElement.replaceWith(baseContainer);
                 baseContainer.replaceChildren(this.document.createElement("br"));
                 this.dependencies.selection.setCursorStart(baseContainer);
