@@ -177,7 +177,6 @@
             'web/static/src/webclient/**/*',
             ('remove', 'web/static/src/webclient/clickbot/clickbot.js'), # lazy loaded
             ('remove', 'web/static/src/views/form/button_box/*.scss'),
-            ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
 
             # remove the report code and whitelist only what's needed
             ('remove', 'web/static/src/webclient/actions/reports/**/*'),

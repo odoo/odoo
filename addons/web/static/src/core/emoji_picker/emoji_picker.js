@@ -1,4 +1,5 @@
 import { markEventHandled } from "@web/core/utils/misc";
+import { rpc } from "@web/core/network/rpc";
 
 import {
     App,
@@ -16,7 +17,6 @@ import {
     xml,
 } from "@odoo/owl";
 
-import { loadBundle } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { fuzzyLookup } from "@web/core/utils/search";
@@ -33,7 +33,7 @@ export function useEmojiPicker(...args) {
 const loadingListeners = [];
 
 export const loader = {
-    loadEmoji: () => loadBundle("web.assets_emoji"),
+    loadEmoji: async () => await loadEmoji(),
     /** @type {{ emojiValueToShortcode: Object<string, string> }} */
     loaded: undefined,
     onEmojiLoaded(cb) {
@@ -41,16 +41,54 @@ export const loader = {
     },
 };
 
+async function loadEmojis() {
+    try {
+        const globalResponse = await fetch(`/web/static/src/core/emoji_picker/emoji_data/global.json`);
+        let globalData = await globalResponse.json();
+        if ('result' in globalData) {
+            globalData = globalData.result;
+        }
+        const categoriesResponse = await fetch(`/web/static/src/core/emoji_picker/emoji_data/emojiCategories.json`);
+        let categories = await categoriesResponse.json();
+        if ('result' in categories) {
+            categories = categories.result;
+        }
+
+        const emojisPath = (await rpc('/load_emoji_bundle')).path;
+        const emojisResponse = await fetch(emojisPath);
+        let emojis = await emojisResponse.json();
+        if ('result' in emojis) {
+            emojis = emojis.result;
+        }
+
+        const mergedEmojis = Object.keys(globalData).map((codepoint) => {
+            const globalEntry = globalData[codepoint] || {};
+            const langEntry = emojis[codepoint] || {};
+
+            return {
+                codepoints: codepoint,
+                category: globalEntry.category || null,
+                shortcodes: globalEntry.shortcodes || [],
+                emoticons: globalEntry.emoticons || [],
+                keywords: langEntry.keywords || [],
+                name: langEntry.name || "",
+            };
+        });
+
+        return [mergedEmojis, categories];
+    } catch (error) {
+        console.error("Error loading emoji data:", error);
+        return [];
+    }
+}
+
 /** @returns {Promise<{ categories: Object[], emojis: Object[] }>")} */
 export async function loadEmoji() {
     const res = { categories: [], emojis: [] };
     try {
-        await loader.loadEmoji();
-        const { getCategories, getEmojis } = odoo.loader.modules.get(
-            "@web/core/emoji_picker/emoji_data"
-        );
-        res.categories = getCategories();
-        res.emojis = getEmojis();
+        const [emojis, categories] = await loadEmojis();
+        res.categories = categories;
+        res.emojis = emojis;
         return res;
     } catch {
         // Could be intentional (tour ended successfully while emoji still loading)
@@ -104,7 +142,7 @@ export class EmojiPicker extends Component {
         this.frequentEmojiService = useService("web.frequent.emoji");
         useAutofocus();
         onWillStart(async () => {
-            const { categories, emojis } = await loadEmoji();
+            const { categories, emojis } = await loader.loadEmoji();
             this.categories = categories;
             this.emojis = emojis;
             this.emojiByCodepoints = Object.fromEntries(

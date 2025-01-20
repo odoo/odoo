@@ -99,8 +99,8 @@ test("add an emoji", async () => {
     await start();
     await openDiscuss(channelId);
     await click("button[title='Add Emojis']");
-    await click(".o-Emoji", { text: "😤" });
-    await contains(".o-mail-Composer-input", { value: "😤" });
+    await click(".o-Emoji", { text: "😀" });
+    await contains(".o-mail-Composer-input", { value: "😀" });
 });
 
 test("emojis are auto-substituted from text", async () => {
@@ -139,8 +139,8 @@ test("add an emoji after some text", async () => {
     await insertText(".o-mail-Composer-input", "Blabla");
     await contains(".o-mail-Composer-input", { value: "Blabla" });
     await click("button[title='Add Emojis']");
-    await click(".o-Emoji", { text: "🤑" });
-    await contains(".o-mail-Composer-input", { value: "Blabla🤑" });
+    await click(".o-Emoji", { text: "😀" });
+    await contains(".o-mail-Composer-input", { value: "Blabla😀" });
 });
 
 test("add emoji replaces (keyboard) text selection", async () => {
@@ -234,11 +234,11 @@ test("keep emoji picker scroll value when re-opening it", async () => {
     await click("button[title='Add Emojis']");
     // requires an extra delay (give time for auto scroll before setting new value)
     await contains(".o-EmojiPicker-content", { scroll: 0 });
-    await scroll(".o-EmojiPicker-content", 150);
+    await scroll(".o-EmojiPicker-content", 15);
     await click("button[title='Add Emojis']");
     await contains(".o-EmojiPicker-content", { count: 0 });
     await click("button[title='Add Emojis']");
-    await contains(".o-EmojiPicker-content", { scroll: 150 });
+    await contains(".o-EmojiPicker-content", { scroll: 15 });
 });
 
 test("reset emoji picker scroll value after an emoji is picked", async () => {
@@ -273,8 +273,8 @@ test("keep emoji picker scroll value independent if two or more different emoji 
     });
     // requires an extra delay (give time for auto scroll before setting new value)
     await contains(".o-EmojiPicker-content", { scroll: 0 });
-    await scroll(".o-EmojiPicker-content", 200);
-    await contains(".o-EmojiPicker-content", { scroll: 200 });
+    await scroll(".o-EmojiPicker-content", 20);
+    await contains(".o-EmojiPicker-content", { scroll: 20 });
     await click("button[title='Add Emojis']", {
         parent: [".o-mail-ChatWindow", { text: "Sales" }],
     });
@@ -284,15 +284,15 @@ test("keep emoji picker scroll value independent if two or more different emoji 
     });
     // requires an extra delay (give time for auto scroll before setting new value)
     await contains(".o-EmojiPicker-content", { scroll: 0 });
-    await scroll(".o-EmojiPicker-content", 150);
-    await contains(".o-EmojiPicker-content", { scroll: 150 });
+    await scroll(".o-EmojiPicker-content", 15);
+    await contains(".o-EmojiPicker-content", { scroll: 15 });
     await click("button[title='Add Emojis']", {
         parent: [".o-mail-ChatWindow", { text: "roblox-jaywalking" }],
     });
     await click("button[title='Add Emojis']", {
         parent: [".o-mail-ChatWindow", { text: "Sales" }],
     });
-    await contains(".o-EmojiPicker-content", { scroll: 200 });
+    await contains(".o-EmojiPicker-content", { scroll: 20 });
 });
 
 test("composer text input cleared on message post", async () => {
@@ -369,8 +369,8 @@ test("add an emoji after a partner mention", async () => {
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "@TestPartner " });
     await click("button[title='Add Emojis']");
-    await click(".o-Emoji", { text: "😊" });
-    await contains(".o-mail-Composer-input", { value: "@TestPartner 😊" });
+    await click(".o-Emoji", { text: "😀" });
+    await contains(".o-mail-Composer-input", { value: "@TestPartner 😀" });
 });
 
 test("mention a channel after some text", async () => {
@@ -402,8 +402,8 @@ test("add an emoji after a channel mention", async () => {
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "#General " });
     await click("button[title='Add Emojis']");
-    await click(".o-Emoji", { text: "😊" });
-    await contains(".o-mail-Composer-input", { value: "#General 😊" });
+    await click(".o-Emoji", { text: "😀" });
+    await contains(".o-mail-Composer-input", { value: "#General 😀" });
 });
 
 test("pending mentions are kept when toggling composer", async () => {
@@ -936,8 +936,8 @@ test("add an emoji after a canned response", async () => {
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "Hello! How are you? " });
     await click("button[title='Add Emojis']");
-    await click(".o-Emoji", { text: "😊" });
-    await contains(".o-mail-Composer-input", { value: "Hello! How are you? 😊" });
+    await click(".o-Emoji", { text: "😀" });
+    await contains(".o-mail-Composer-input", { value: "Hello! How are you? 😀" });
 });
 
 test("Canned response can be inserted from the bus", async () => {

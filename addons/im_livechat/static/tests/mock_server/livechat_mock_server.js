@@ -4,8 +4,6 @@ import {
     registerRoute,
 } from "@mail/../tests/mock_server/mail_mock_server";
 import { patch } from "@web/core/utils/patch";
-import { MockResponse } from "@web/../lib/hoot/mock/network";
-import { loadBundle } from "@web/core/assets";
 import { makeKwArgs, serverState } from "@web/../tests/web_test_helpers";
 
 /**
@@ -155,13 +153,6 @@ registerRoute("/im_livechat/email_livechat_transcript", email_livechat_transcrip
 /** @type {RouteCallback} */
 async function email_livechat_transcript(request) {
     return true;
-}
-
-registerRoute("/im_livechat/emoji_bundle", get_emoji_bundle);
-/** @type {RouteCallback} */
-async function get_emoji_bundle(request) {
-    await loadBundle("web.assets_emoji");
-    return new MockResponse();
 }
 
 patch(mailDataHelpers, {

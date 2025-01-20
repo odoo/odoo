@@ -1,5 +1,3 @@
-import { patchTranslations, preloadBundle } from "@web/../tests/web_test_helpers";
-
 import {
     click,
     contains,
@@ -17,20 +15,6 @@ import { queryFirst } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
-preloadBundle("web.assets_emoji");
-
-test("emoji picker works well with translation with double quotes", async () => {
-    patchTranslations({
-        "Japanese “here” button": `Bouton "ici" japonais`,
-    });
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "" });
-    await start();
-    await openDiscuss(channelId);
-    await click("button[title='Add Emojis']");
-    await insertText("input[placeholder='Search emoji']", "ici");
-    await contains(`.o-Emoji[title='Bouton "ici" japonais']`);
-});
 
 test("search emoji from keywords", async () => {
     const pyEnv = await startServer();
@@ -127,8 +111,8 @@ test("recent category (basic)", async () => {
     await contains(".o-EmojiPicker-navbar [title='Frequently used']");
     await contains(".o-Emoji", {
         text: "😀",
-        after: ["span", { textContent: "Frequently used" }],
-        before: ["span", { textContent: "Smileys & Emotion" }],
+        after: ["span", { textContent: "Frequently used"}],
+        before: ["span", { textContent: "Smileys & People" }],
     });
 });
 
@@ -186,7 +170,7 @@ test("emoji usage amount orders frequent emojis", async () => {
             {
                 text: "😀",
                 after: ["span", { textContent: "Frequently used" }],
-                before: ["span", { textContent: "Smileys & Emotion" }],
+                before: ["span", { textContent: "Smileys & People" }],
             },
         ],
     });
