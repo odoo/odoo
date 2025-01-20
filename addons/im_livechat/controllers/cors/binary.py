@@ -34,9 +34,13 @@ class LivechatBinaryController(BinaryController):
 
     @route(["/im_livechat/cors/web/image"], type='http', auth="public", cors="*")
     # pylint: disable=redefined-builtin,invalid-name
-    def livechat_content_image(self, model, id, field, unique=False, guest_token=None):
+    def livechat_content_image(
+        self, model, id, field, unique=False, guest_token=None, access_token=None
+    ):
         if guest_token:
             force_guest_env(guest_token)
         else:
             downgrade_to_public_user()
-        return self.content_image(model=model, id=id, field=field, unique=unique)
+        return self.content_image(
+            model=model, id=id, field=field, unique=unique, access_token=access_token
+        )
