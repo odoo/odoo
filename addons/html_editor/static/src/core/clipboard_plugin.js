@@ -423,6 +423,8 @@ export class ClipboardPlugin extends Plugin {
                 const block = closestBlock(br);
                 if (
                     isParagraphRelatedElement(block) &&
+                    // TODO specific exception for "PRE" to keep everything inside one PRE.
+                    // Consider removing this if PRE is to be used as a paragraph.
                     block.nodeName !== "PRE" &&
                     !block.closest("li")
                 ) {
