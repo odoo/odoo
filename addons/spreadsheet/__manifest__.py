@@ -13,10 +13,11 @@
         'views/public_readonly_spreadsheet_templates.xml',
     ],
     'assets': {
-        'spreadsheet.dependencies': [
-            'web/static/lib/Chart/Chart.js',
-            'web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js',
+        'web.chartjs_lib' : [
             'spreadsheet/static/lib/chartjs-chart-geo/chartjs-chart-geo.js',
+        ],
+        'spreadsheet.dependencies': [
+            ('include', 'web.chartjs_lib'),
         ],
         'spreadsheet.o_spreadsheet': [
             'web/static/src/views/graph/graph_model.js',
