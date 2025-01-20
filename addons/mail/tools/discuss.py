@@ -72,7 +72,7 @@ class Store:
                 fields = []
             else:
                 fields = records._to_store_defaults() if hasattr(records, "_to_store_defaults") else []
-        fields = self._format_fields(fields) + self._format_fields(extra_fields)
+        fields = self._format_fields(records, fields) + self._format_fields(records, extra_fields)
         if as_thread:
             if hasattr(records, "_thread_to_store"):
                 records._thread_to_store(self, fields, **kwargs)
@@ -123,7 +123,7 @@ class Store:
         assert isinstance(records, models.Model)
         if not fields:
             return self
-        fields = self._format_fields(fields)
+        fields = self._format_fields(records, fields)
         for record, record_data in zip(records, self._get_records_data(records, fields)):
             if as_thread:
                 self.add_model_values(
@@ -157,6 +157,7 @@ class Store:
             )
             index = self._get_record_index(model_name, values)
             self._ensure_record_at_index(model_name, index)
+            self._add_values(values, model_name, index)
             self.data[model_name][index]["_DELETE"] = True
         return self
 
@@ -190,13 +191,15 @@ class Store:
         if index not in self.data[model_name]:
             self.data[model_name][index] = {}
 
-    def _format_fields(self, fields):
+    def _format_fields(self, records, fields):
         if fields is None:
             return []
         if isinstance(fields, dict):
             fields = list(Store.Attr(key, value) for key, value in fields.items())
         if not isinstance(fields, list):
             fields = [fields]
+        if hasattr(records, "_field_store_repr"):
+            return [f for field in fields for f in records._field_store_repr(field)]
         return fields
 
     def _get_records_data(self, records, fields):

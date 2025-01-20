@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
@@ -6,6 +5,7 @@ import re
 import odoo
 from odoo import _, api, fields, models, tools
 from odoo.osv import expression
+from odoo.tools.misc import limited_field_access_token
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -229,8 +229,18 @@ class ResPartner(models.Model):
     # DISCUSS
     # ------------------------------------------------------------
 
+    def _field_store_repr(self, field_name):
+        if field_name == "avatar_128":
+            return [
+                Store.Attr(
+                    "avatar_128_access_token", lambda p: limited_field_access_token(p, "avatar_128")
+                ),
+                "write_date",
+            ]
+        return [field_name]
+
     def _to_store_defaults(self):
-        return ["active", "email", "im_status", "is_company", "name", "user", "write_date"]
+        return ["active", "avatar_128", "email", "im_status", "is_company", "name", "user"]
 
     def _to_store(self, store: Store, fields, *, main_user_by_partner=None):
         if not self.env.user._is_internal() and "email" in fields:
@@ -312,11 +322,3 @@ class ResPartner(models.Model):
         if not self.env.user or self.env.user._is_public():
             return (self.env["res.partner"], self.env["mail.guest"]._get_guest_from_context())
         return (self.env.user.partner_id, self.env["mail.guest"])
-
-    def _can_return_content(self, field_name=None, access_token=None):
-        # access to the avatar is allowed if there is access to the messages
-        if field_name == "avatar_128" and self.env["mail.message"].search_count(
-            [("author_id", "=", self.id)], limit=1
-        ):
-            return True
-        return super()._can_return_content(field_name, access_token)

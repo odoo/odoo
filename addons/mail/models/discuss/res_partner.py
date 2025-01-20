@@ -108,12 +108,3 @@ class ResPartner(models.Model):
                 "groups_id": [("ADD", next((group.id for group in p.user_ids.groups_id if group.id == channel.group_public_id.id), None))]
             })
         return store.get_result()
-
-    def _can_return_content(self, field_name=None, access_token=None):
-        if field_name == "avatar_128":
-            # access to the avatar is allowed if there is access to a channel
-            if self.env["discuss.channel"].search_count(
-                [("channel_member_ids", "any", [("partner_id", "=", self.id)])], limit=1
-            ):
-                return True
-        return super()._can_return_content(field_name, access_token)
