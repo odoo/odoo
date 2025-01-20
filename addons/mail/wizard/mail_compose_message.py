@@ -1125,7 +1125,10 @@ class MailComposeMessage(models.TransientModel):
         # is coming from reply_to field to render.
         if not self.reply_to_force_new:
             # compute alias-based reply-to in batch
-            reply_to_values = RecordsModel.browse(res_ids)._notify_get_reply_to(default=False)
+            reply_to_values = RecordsModel.browse(res_ids)._notify_get_reply_to_batch(
+                defaults=emails_from,
+                author_ids={res_id: self.author_id.id for res_id in res_ids},
+            )
         if self.reply_to_force_new:
             reply_to_values = self._render_field('reply_to', res_ids)
 
