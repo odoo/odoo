@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:30+0000\n"
-"PO-Revision-Date: 2024-12-24 15:30+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
+"PO-Revision-Date: 2025-01-20 08:40+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -77,16 +77,16 @@ msgid "All Sales"
 msgstr ""
 
 #. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
-msgid "Archived"
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__allowed_uom_ids
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__allowed_uom_ids
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__allowed_uom_ids
+msgid "Allowed Uom"
 msgstr ""
 
 #. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__product_uom_category_id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_category_id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__product_uom_category_id
-msgid "Category"
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
+msgid "Archived"
 msgstr ""
 
 #. module: sale_management
@@ -110,15 +110,6 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__mail_template_id
 msgid "Confirmation Mail"
-msgstr ""
-
-#. module: sale_management
-#: model:ir.model.fields,help:sale_management.field_sale_order_option__product_uom_category_id
-#: model:ir.model.fields,help:sale_management.field_sale_order_template_line__product_uom_category_id
-#: model:ir.model.fields,help:sale_management.field_sale_order_template_option__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
 msgstr ""
 
 #. module: sale_management
@@ -562,6 +553,13 @@ msgid "Tip: Sell or buy products in bulk with matrixes"
 msgstr ""
 
 #. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__uom_id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__uom_id
+msgid "Unit"
+msgstr ""
+
+#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -571,18 +569,6 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 msgid "Unit Price:"
-msgstr ""
-
-#. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__uom_id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__uom_id
-msgid "Unit of Measure"
-msgstr ""
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
-msgid "UoM"
 msgstr ""
 
 #. module: sale_management
