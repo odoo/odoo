@@ -359,6 +359,7 @@ class IrCron(models.Model):
         env = api.Environment(cron_cr, job['user_id'], {})
         ir_cron = env[cls._name]
 
+        ir_cron._clear_schedule(job)
         failed_by_timeout = (
             job['timed_out_counter'] >= CONSECUTIVE_TIMEOUT_FOR_FAILURE
             and not job['done']
@@ -519,6 +520,14 @@ class IrCron(models.Model):
             job['id'],
         ])
 
+    def _clear_schedule(self, job):
+        """Remove triggers for the given job."""
+        self.env.cr.execute("""
+            DELETE FROM ir_cron_trigger
+            WHERE cron_id = %s
+              AND call_at <= (now() at time zone 'UTC')
+        """, [job['id']])
+
     def _reschedule_later(self, job):
         """
         Reschedule the job to be executed later, after its regular
@@ -543,12 +552,6 @@ class IrCron(models.Model):
             fields.Datetime.to_string(now.astimezone(pytz.UTC)),
             job['id'],
         ])
-
-        self.env.cr.execute("""
-            DELETE FROM ir_cron_trigger
-            WHERE cron_id = %s
-              AND call_at < (now() at time zone 'UTC')
-        """, [job['id']])
 
     def _reschedule_asap(self, job):
         """
