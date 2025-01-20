@@ -1406,6 +1406,8 @@ class ChromeBrowser:
             message += '\n' + stack
 
         log_type = type
+        if self._result.done() and ("assetsloadingerror" in message.lower() or "failed to fetch" in message.lower()) :
+            return
         _logger = self._logger.getChild('browser')
         _logger.log(
             self._TO_LEVEL.get(log_type, logging.INFO),
