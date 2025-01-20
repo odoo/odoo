@@ -308,12 +308,35 @@ class Base(models.AbstractModel):
         :return result: dictionary. Keys are record IDs and value is formatted
           like an email "Company_name Document_name <reply_to@email>"
         """
+        return self._notify_get_reply_to_batch(
+            defaults={res_id: default for res_id in (self.ids or [False])},
+            author_ids={res_id: author_id for res_id in (self.ids or [False])},
+        )
+
+    def _notify_get_reply_to_batch(self, defaults=None, author_ids=None):
+        """ Batch-enabled version of '_notify_get_reply_to' where default and
+        author_id may be different / record. This one exist mainly for batch
+        intensive computation like composer in mass mode, where email configuration
+        is different / record due to dynamic rendering.
+
+        :param dict defaults: default / record ID;
+        :param dict author_ids: author ID / record ID;
+        """
         _records = self
         model = _records._name if _records and _records._name != 'mail.thread' else False
         res_ids = _records.ids if _records and model else []
         _res_ids = res_ids or [False]  # always have a default value located in False
         _records_sudo = _records.sudo()
-        doc_names = {rec.id: rec.display_name for rec in _records_sudo} if res_ids else {}
+        if defaults is None:
+            defaults = dict.fromkeys(_res_ids, False)
+        if author_ids is None:
+            author_ids = dict.fromkeys(_res_ids, False)
+
+        # sanity check
+        if set(defaults.keys()) != set(_res_ids):
+            raise ValueError(f'Invalid defaults, keys {defaults.keys()} does not match recordset IDs {_res_ids}')
+        if set(author_ids.keys()) != set(_res_ids):
+            raise ValueError(f'Invalid author_ids, keys {author_ids.keys()} does not match recordset IDs {_res_ids}')
 
         # group ids per company
         if res_ids:
@@ -349,16 +372,16 @@ class Base(models.AbstractModel):
                         reply_to_email.update({rec_id: company.catchall_email for rec_id in left_ids})
 
         # compute name of reply-to ("Company Document" <alias@domain>)
-        reply_to_formatted = dict.fromkeys(_res_ids, default)
+        reply_to_formatted = dict(defaults)
         for res_id, record_reply_to in reply_to_email.items():
             reply_to_formatted[res_id] = self._notify_get_reply_to_formatted_email(
-                record_reply_to, doc_names.get(res_id) or '',
-                author_id=author_id,
+                record_reply_to,
+                author_id=author_ids[res_id],
             )
 
         return reply_to_formatted
 
-    def _notify_get_reply_to_formatted_email(self, record_email, record_name, author_id=False):
+    def _notify_get_reply_to_formatted_email(self, record_email, author_id=False):
         """ Compute formatted email for reply_to and try to avoid refold issue
         with python that splits the reply-to over multiple lines. It is due to
         a bad management of quotes (missing quotes after refold). This appears
