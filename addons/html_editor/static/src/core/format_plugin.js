@@ -373,6 +373,9 @@ export class FormatPlugin extends Plugin {
             this.dependencies.selection.setSelection(newSelection, { normalize: false });
             return true;
         }
+        if (selectedFieldNodes.size > 0) {
+            return true;
+        }
     }
 
     normalize(root) {

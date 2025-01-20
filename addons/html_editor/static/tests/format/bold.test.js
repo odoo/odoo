@@ -55,7 +55,7 @@ test("should make qweb tag bold", async () => {
     });
 });
 
-test("should make qweb tag bold even with partial selection", async () => {
+test("should make qweb tag bold and create a step even with partial selection inside contenteditable false", async () => {
     const { editor, el } = await setupEditor(
         `<div><p t-esc="'Test'" contenteditable="false">T[e]st</p></div>`
     );
@@ -64,6 +64,13 @@ test("should make qweb tag bold even with partial selection", async () => {
         `<div>[<p t-esc="'Test'" contenteditable="false" style="font-weight: bolder;">Test</p>]</div>`
     );
     expect(queryOne(`p[contenteditable="false"]`).childNodes.length).toBe(1);
+    const historySteps = editor.shared.history.getHistorySteps();
+    expect(historySteps.length).toBe(2);
+    const lastStep = historySteps.at(-1);
+    expect(lastStep.mutations.length).toBe(1);
+    expect(lastStep.mutations[0].type).toBe("attributes");
+    expect(lastStep.mutations[0].attributeName).toBe("style");
+    expect(lastStep.mutations[0].value).toBe("font-weight: bolder;");
 });
 
 test("should make a whole heading bold after a triple click", async () => {
