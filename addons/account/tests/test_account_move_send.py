@@ -195,7 +195,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                         'email_from': self.user_account_other.email_formatted,
                         'subject': _exp_subject,
                         'reply_to': formataddr((
-                            f'{move.company_id.name} {_exp_move_name}',
+                            self.user_account_other.name,
                             f'{self.alias_catchall}@{self.alias_domain}'
                         )),
                     },
@@ -206,7 +206,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                         'mail_server_id': self.mail_server_default,
                         'subject': _exp_subject,
                         'reply_to': formataddr((
-                            f'{move.company_id.name} {_exp_move_name}',
+                            self.user_account_other.name,
                             f'{self.alias_catchall}@{self.alias_domain}'
                         )),
                     },
@@ -276,7 +276,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                 'email_from': self.user_account_other.email_formatted,
                 'subject': f'{self.env.user.company_id.name} Invoice (Ref {test_move.name})',
                 'reply_to': formataddr((
-                    f'{test_move.company_id.name} {test_move.display_name}',
+                    self.user_account_other.name,
                     f'{self.alias_catchall}@{self.alias_domain}'
                 )),
             },
@@ -287,7 +287,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                 'mail_server_id': self.mail_server_default,
                 'subject': f'{self.env.user.company_id.name} Invoice (Ref {test_move.name})',
                 'reply_to': formataddr((
-                    f'{test_move.company_id.name} {test_move.display_name}',
+                    self.user_account_other.name,
                     f'{self.alias_catchall}@{self.alias_domain}'
                 )),
             },
@@ -363,7 +363,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                 'email_from': self.user_account_other.email_formatted,
                 'subject': f'SpanishSubject for {test_move.name}',  # translated version
                 'reply_to': formataddr((
-                    f'{test_move.company_id.name} {test_move.display_name}',
+                    self.user_account_other.name,
                     f'{self.alias_catchall}@{self.alias_domain}'
                 )),
             },
@@ -374,7 +374,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                 'mail_server_id': self.mail_server_default,
                 'subject': f'SpanishSubject for {test_move.name}',  # translated version
                 'reply_to': formataddr((
-                    f'{test_move.company_id.name} {test_move.display_name}',
+                    self.user_account_other.name,
                     f'{self.alias_catchall}@{self.alias_domain}'
                 )),
             },
@@ -435,7 +435,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                 'email_from': self.user_account_other.email_formatted,
                 'subject': f'{self.env.user.company_id.name} Invoice (Ref {test_move.name})',
                 'reply_to': formataddr((
-                    f'{test_move.company_id.name} {test_move.display_name}',
+                    self.user_account_other.name,
                     f'{self.alias_catchall}@{self.alias_domain}'
                 )),
             },
@@ -446,7 +446,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                 'mail_server_id': self.mail_server_default,
                 'subject': f'{self.env.user.company_id.name} Invoice (Ref {test_move.name})',
                 'reply_to': formataddr((
-                    f'{test_move.company_id.name} {test_move.display_name}',
+                    self.user_account_other.name,
                     f'{self.alias_catchall}@{self.alias_domain}'
                 )),
             },

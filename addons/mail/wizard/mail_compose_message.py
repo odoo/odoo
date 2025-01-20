@@ -166,6 +166,7 @@ class MailComposeMessage(models.TransientModel):
         'res.partner', 'mail_compose_message_res_partner_rel',
         'wizard_id', 'partner_id', 'Additional Contacts',
         compute='_compute_partner_ids', readonly=False, store=True)
+    notified_bcc = fields.Char('Bcc', compute='_compute_notified_bcc', readonly=True, store=False)
     # sending
     auto_delete = fields.Boolean(
         'Delete Emails',
@@ -539,6 +540,31 @@ class MailComposeMessage(models.TransientModel):
             elif not composer.template_id:
                 composer.partner_ids = False
 
+    @api.depends('composition_batch', 'composition_mode', 'message_type',
+                 'model', 'partner_ids', 'res_ids', 'subtype_id')
+    def _compute_notified_bcc(self):
+        """ When being in monorecord comment mode, compute 'bcc' which are
+        followers that are going to be 'silently' notified by the message. """
+        post_composers = self.filtered(
+            lambda comp: comp.model and comp.composition_mode == 'comment' and not comp.composition_batch
+        )
+        (self - post_composers).notified_bcc = False
+        for composer in post_composers:
+            record = self.env[composer.model].browse(
+                composer._evaluate_res_ids()[:1]
+            )
+            recipients_data = self.env['mail.followers']._get_recipient_data(
+                record, composer.message_type, composer.subtype_id.id
+            )[record.id]
+            bcc = [
+                f'{pdata["name"]}'
+                for pid, pdata in recipients_data.items()
+                if (pid and pdata['active']
+                    and pid != self.env.user.partner_id.id
+                    and pdata['id'] not in composer.partner_ids.ids)
+            ]
+            composer.notified_bcc = ', '.join(bcc[:5])
+
     @api.depends('composition_mode', 'template_id')
     def _compute_auto_delete(self):
         """ Computation is coming either from template, either from composition
@@ -611,7 +637,7 @@ class MailComposeMessage(models.TransientModel):
         parameter. 'Reply-All' behavior triggers skipping followers. """
         self.filtered(lambda c: c.composition_mode != 'comment').notify_skip_followers = False
         self.filtered(
-            lambda c: c.composition_mode == 'comment' and c.composition_comment_option == 'reply_all'
+            lambda c: c.composition_mode == 'comment' and c.composition_comment_option == 'forward'
         ).notify_skip_followers = True
 
     @api.depends('composition_mode', 'model', 'res_ids', 'template_id')
@@ -1099,7 +1125,10 @@ class MailComposeMessage(models.TransientModel):
         # is coming from reply_to field to render.
         if not self.reply_to_force_new:
             # compute alias-based reply-to in batch
-            reply_to_values = RecordsModel.browse(res_ids)._notify_get_reply_to(default=False)
+            reply_to_values = RecordsModel.browse(res_ids)._notify_get_reply_to_batch(
+                defaults=emails_from,
+                author_ids={res_id: self.author_id.id for res_id in res_ids},
+            )
         if self.reply_to_force_new:
             reply_to_values = self._render_field('reply_to', res_ids)
 
