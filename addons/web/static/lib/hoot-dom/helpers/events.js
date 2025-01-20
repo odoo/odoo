@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { HootDomError, getTag, isFirefox, isIterable } from "../hoot_dom_utils";
+import { getTimeOffset } from "./time";
 import {
     getActiveElement,
     getDocument,
@@ -1405,6 +1406,7 @@ const _pointerDown = async (target, options) => {
     }
 
     runTime.touchStartPosition = { ...runTime.position };
+    runTime.touchStartTimeOffset = getTimeOffset();
     const prevented = await dispatchPointerEvent(pointerDownTarget, "pointerdown", eventInit, {
         mouse: !pointerDownTarget.disabled && [
             "mousedown",
@@ -1438,6 +1440,7 @@ const _pointerDown = async (target, options) => {
  * @param {PointerOptions} options
  */
 const _pointerUp = async (target, options) => {
+    const isLongTap = (getTimeOffset() - runTime.touchStartTimeOffset) > LONG_TAP_DELAY;
     const pointerDownTarget = runTime.pointerDownTarget;
     const eventInit = {
         ...runTime.position,
@@ -1474,9 +1477,10 @@ const _pointerUp = async (target, options) => {
     const touchStartPosition = runTime.touchStartPosition;
     runTime.touchStartPosition = {};
 
-    if (hasTouch() && isDifferentPosition(touchStartPosition)) {
-        // No further event is trigger: there was a swiping motion since the "touchstart"
-        // event.
+    if (hasTouch() && (isDifferentPosition(touchStartPosition) || isLongTap)) {
+        // No further event is trigger:
+        // there was a swiping motion since the "touchstart" event
+        // or a long press was detected.
         return;
     }
 
@@ -1590,6 +1594,7 @@ const LOG_COLORS = {
     lightBlue: "#9bbbdc",
     reset: "inherit",
 };
+const LONG_TAP_DELAY = 500;
 
 /** @type {Record<string, Event[]>} */
 const currentEvents = {};
