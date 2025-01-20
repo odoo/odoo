@@ -1997,6 +1997,45 @@ export class Model extends Array {
         return readGroupResult;
     }
 
+    formatted_read_grouping_sets(domain, grouping_sets, aggregates, having, order) {
+        const kwargs = getKwArgs(
+            arguments,
+            "domain",
+            "grouping_sets",
+            "aggregates",
+            "having",
+            "order"
+        );
+        ({ domain, grouping_sets, aggregates, having, order } = kwargs);
+        const result = [];
+        for (const groupby of grouping_sets) {
+            let current_order = order;
+            if (order) {
+                const parts = [];
+                // Remove parts of order coming from other groupby spec from grouping_sets
+                for (const order_part of order.split(",")) {
+                    const fname = order_part.split(" ", 1)[0];
+                    if (groupby.includes(fname) || aggregates.includes(fname)) {
+                        parts.push(order_part);
+                    }
+                }
+                current_order = parts.join(",");
+            }
+            result.push(
+                this.formatted_read_group(
+                    domain,
+                    groupby,
+                    aggregates,
+                    having,
+                    null,
+                    null,
+                    current_order
+                )
+            );
+        }
+        return result;
+    }
+
     /**
      * @param {[number | false, string][]} views
      * @param {{ load_filters?: boolean }} [options]

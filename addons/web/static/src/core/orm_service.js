@@ -199,6 +199,33 @@ export class ORM {
     /**
      * @param {string} model
      * @param {import("@web/core/domain").DomainListRepr} domain
+     * @param {string[]} fields
+     * @param {string[][]} grouping_sets
+     * @param {any} [kwargs={}]
+     * @returns {Promise<any[]>}
+     */
+    formattedReadGroupingSets(model, domain, grouping_sets, aggregates, kwargs = {}) {
+        validateArray("domain", domain);
+        validateArray("groupby", grouping_sets);
+        validatePrimitiveList("aggregates", "string", aggregates);
+        return this.call(model, "formatted_read_grouping_sets", [], {
+            domain,
+            grouping_sets,
+            aggregates,
+            ...kwargs,
+        }).then((res) => {
+            for (const groups of res) {
+                for (const group of groups) {
+                    group["__domain"] = Domain.and([domain, group["__extra_domain"]]).toList();
+                }
+            }
+            return res;
+        });
+    }
+
+    /**
+     * @param {string} model
+     * @param {import("@web/core/domain").DomainListRepr} domain
      * @param {any} [kwargs={}]
      * @returns {Promise<any[]>}
      */

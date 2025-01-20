@@ -437,6 +437,15 @@ class TestGroupExpand(common.TransactionCase):
                 ],
             )
 
+        # Same result for formatted_grouping_sets
+        self.assertEqual(
+            Line.formatted_read_grouping_sets([], [["order_expand_id"], []], ["value:sum"]),
+            [
+                Line.formatted_read_group([], ["order_expand_id"], ["value:sum"]),
+                Line.formatted_read_group([], [], ["value:sum"]),
+            ],
+        )
+
         # Modify the data so that each record has the same order,
         # and test that the _compute_display_name is called once with the correct recordset.
         all_lines.order_expand_id = order_1.id

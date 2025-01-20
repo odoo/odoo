@@ -152,7 +152,16 @@ class Test_Read_GroupTask(models.Model):
         'user_id',
         string="Collaborators",
     )
+    customer_ids = fields.Many2many(
+        'test_read_group.user',
+        'test_read_group_task_user_rel_2',
+        'task_id',
+        'user_id',
+        string="Customers",
+    )
     date = fields.Date()
+    integer = fields.Integer()
+    key = fields.Char()
 
 
 class ResPartner(models.Model):
