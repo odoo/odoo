@@ -18,6 +18,7 @@ class LinkTracker(models.Model):
         }
 
     def _compute_short_url_host(self):
+        current_website = self.env['website'].get_current_website()
+        base_url = current_website.get_base_url() if current_website == self.env.company.website_id else self.env.company.get_base_url()
         for tracker in self:
-            base_url = self.env['website'].get_current_website().get_base_url()
             tracker.short_url_host = urls.url_join(base_url, '/r/')
