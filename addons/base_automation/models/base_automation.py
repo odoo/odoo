@@ -327,7 +327,7 @@ class BaseAutomation(models.Model):
         for automation in self:
             field = (
                 automation._get_trigger_specific_field()
-                if automation.trigger not in TIME_TRIGGERS
+                if automation.trigger not in ["on_create_or_write", *TIME_TRIGGERS]
                 else False
             )
             if not field:
@@ -487,6 +487,8 @@ class BaseAutomation(models.Model):
     def _get_trigger_specific_field(self):
         self.ensure_one()
         match self.trigger:
+            case 'on_create_or_write':
+                return self._get_filter_domain_fields()
             case 'on_stage_set':
                 domain = [('ttype', '=', 'many2one'), ('name', 'in', ['stage_id', 'x_studio_stage_id'])]
             case 'on_tag_set':

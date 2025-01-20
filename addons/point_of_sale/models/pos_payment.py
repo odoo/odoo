@@ -72,7 +72,9 @@ class PosPayment(models.Model):
     def _create_payment_moves(self, is_reverse=False):
         result = self.env['account.move']
         credit_line_ids = []
-        for payment in self:
+        change_payment = self.filtered(lambda p: p.is_change and p.payment_method_id.type == 'cash')
+        payment_to_change = self.filtered(lambda p: not p.is_change and p.payment_method_id.type == 'cash')[:1]
+        for payment in self - change_payment:
             order = payment.pos_order_id
             payment_method = payment.payment_method_id
             if payment_method.type == 'pay_later' or float_is_zero(payment.amount, precision_rounding=order.currency_id.rounding):
@@ -80,15 +82,21 @@ class PosPayment(models.Model):
             accounting_partner = self.env["res.partner"]._find_accounting_partner(payment.partner_id)
             pos_session = order.session_id
             journal = pos_session.config_id.journal_id
+            if change_payment and payment == payment_to_change:
+                pos_payment_ids = payment.ids + change_payment.ids
+                payment_amount = payment.amount + change_payment.amount
+            else:
+                pos_payment_ids = payment.ids
+                payment_amount = payment.amount
             payment_move = self.env['account.move'].with_context(default_journal_id=journal.id).create({
                 'journal_id': journal.id,
                 'date': fields.Date.context_today(order, order.date_order),
                 'ref': _('Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s', order=order.name, account_move=order.account_move.name, payment_method=payment_method.name),
-                'pos_payment_ids': payment.ids,
+                'pos_payment_ids': pos_payment_ids,
             })
             result |= payment_move
             payment.write({'account_move_id': payment_move.id})
-            amounts = pos_session._update_amounts({'amount': 0, 'amount_converted': 0}, {'amount': payment.amount}, payment.payment_date)
+            amounts = pos_session._update_amounts({'amount': 0, 'amount_converted': 0}, {'amount': payment_amount}, payment.payment_date)
             credit_line_vals = pos_session._credit_amounts({
                 'account_id': accounting_partner.with_company(order.company_id).property_account_receivable_id.id,  # The field being company dependant, we need to make sure the right value is received.
                 'partner_id': accounting_partner.id,
