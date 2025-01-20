@@ -1,6 +1,7 @@
 #-----------------------------------------------------------
 # Threaded, Gevent and Prefork Servers
 #-----------------------------------------------------------
+import contextlib
 import datetime
 import errno
 import logging
@@ -464,7 +465,13 @@ class ThreadedServer(CommonServer):
             while config['limit_time_worker_cron'] <= 0 or (time.monotonic() - alive_time) <= config['limit_time_worker_cron']:
                 select.select([pg_conn], [], [], SLEEP_INTERVAL + number)
                 time.sleep(number / 100)
-                pg_conn.poll()
+                try:
+                    pg_conn.poll()
+                except Exception:
+                    if pg_conn.closed:
+                        # connection closed, just exit the loop
+                        return
+                    raise
 
                 registries = odoo.modules.registry.Registry.registries
                 _logger.debug('cron%d polling for jobs', number)
@@ -479,7 +486,7 @@ class ThreadedServer(CommonServer):
                         thread.start_time = None
         while True:
             conn = odoo.sql_db.db_connect('postgres')
-            with conn.cursor() as cr:
+            with contextlib.closing(conn.cursor()) as cr:
                 _run_cron(cr)
             _logger.info('cron%d max age (%ss) reached, releasing connection.', number, config['limit_time_worker_cron'])
 
