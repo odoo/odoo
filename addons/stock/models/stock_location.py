@@ -224,6 +224,12 @@ class Location(models.Model):
                     super(Location, children_location - self).with_context(do_not_check_quant=True).write({
                         'active': values['active'],
                     })
+                # If a location is unarchived, unarchive all its parent path
+                if values['active']:
+                    parent_locations = self.env['stock.location'].browse({ int(id) for loc in self for id in loc.parent_path.strip('/').split('/') })
+                    super(Location, parent_locations - self).with_context(do_not_check_quant=True).write({
+                        'active': True,
+                    })
 
         res = super(Location, self).write(values)
         self.invalidate_model(['warehouse_id'])

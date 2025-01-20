@@ -673,3 +673,30 @@ class TestWarehouse(TestStockCommon):
         test_warehouse.sequence = 100
         location._compute_warehouse_id()
         self.assertEqual(location.warehouse_id, test_warehouse)
+
+    def test_toggle_active_location_path(self):
+        """
+        Test that archiving a location arvhives all its children and that
+        unarchiving a location unarchive its entire parent path.
+        """
+        parent_location = self.location_1
+        child_locations = self.env['stock.location'].create([
+            {
+                'name': f'Child location {i + 1}',
+                'usage': 'internal',
+                'location_id': self.location_1.id,
+            } for i in range(2)
+        ])
+        grand_child_locations = self.env['stock.location'].create([
+            {
+                'name': f'Grand child location {i + 1}',
+                'usage': 'internal',
+                'location_id': child_locations[i%2].id,
+            } for i in range(4)
+        ])
+        locations = parent_location | child_locations | grand_child_locations
+        self.assertTrue(all(locations.mapped("active")))
+        parent_location.toggle_active()
+        self.assertFalse(any(locations.mapped("active")))
+        child_locations[1].toggle_active()
+        self.assertEqual(locations.filtered("active"), parent_location | child_locations[1] | grand_child_locations[1] | grand_child_locations[3])
