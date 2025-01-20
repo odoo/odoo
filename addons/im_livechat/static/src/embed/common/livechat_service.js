@@ -13,7 +13,7 @@ import { user } from "@web/core/user";
  * @typedef LivechatRule
  * @property {"auto_popup"|"display_button_and_text"|undefined} [action]
  * @property {number?} [auto_popup_timer]
- * @property {import("@im_livechat/embed/common/chatbot/chatbot_model").IChatbot} [chatbot]
+ * @property {import("@im_livechat/core/common/chatbot_model").IChatbot} [chatbot]
  */
 
 export const RATING = Object.freeze({
