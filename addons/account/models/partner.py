@@ -404,7 +404,7 @@ class ResPartner(models.Model):
         all_partner_ids = []
         for partner in self.filtered('id'):
             # price_total is in the company currency
-            all_partners_and_children[partner] = self.with_context(active_test=False).search([('id', 'child_of', partner.id)]).ids
+            all_partners_and_children[partner] = set(self.with_context(active_test=False).search([('id', 'child_of', partner.id)]).ids)
             all_partner_ids += all_partners_and_children[partner]
 
         domain = [
