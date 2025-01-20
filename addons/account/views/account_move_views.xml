@@ -474,7 +474,7 @@
                     <field name="made_sequence_gap" column_invisible="True"/>
                     <field name="invoice_date" string="Invoice Date" optional="hide" readonly="state != 'draft'"/>
                     <field name="date" readonly="state in ['cancel', 'posted']"/>
-                    <field name="name" decoration-danger="made_sequence_gap and state == 'posted'"/>
+                    <field name="name" decoration-danger="made_sequence_gap and state == 'posted'" widget="char_with_placeholder_field" placeholder="/"/>
                     <field name="partner_id" optional="show" readonly="state != 'draft'"/>
                     <field name="ref" optional="show"/>
                     <field name="journal_id"/>
