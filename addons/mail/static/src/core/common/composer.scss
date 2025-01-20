@@ -39,10 +39,10 @@
 .o-mail-Composer-actions {
 
     button {
-        opacity: 75%;
+        opacity: 65%;
         @media (hover: hover) {
             &:hover {
-                background-color: $gray-200;
+                background-color: mix($gray-100, $gray-200);
                 opacity: 100%;
 
                 .o-mail-Message.o-editing & {
@@ -54,6 +54,18 @@
             --btn-active-color: var(--btn-disabled-color);
             --btn-hover-color: var(--btn-disabled-color);
             opacity: var(--btn-disabled-opacity);
+        }
+        &.o-mail-Composer-send.btn-link:not(:disabled) {
+            background-color: rgba($o-action, .75);
+            opacity: 100% !important;
+            &:focus-visible {
+                outline: darken($o-action, 15%) solid 1px;
+            }
+            i.fa-paper-plane-o {
+                color: #FFF;
+                transform: translate(-1px);
+                scale: .85;
+            }
         }
     }
 }
