@@ -1,4 +1,4 @@
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, new_test_user
 from odoo.tests import tagged
 
 
@@ -56,3 +56,34 @@ class TestHrApplicant(TransactionCase):
         self.applicant.candidate_id = self.candidate_0.id
         # Applicant tags: 1, 2, 3
         self.assertCountEqual(self.applicant.categ_ids.ids, [self.category_1.id, self.category_2.id, self.category_3.id])
+
+    def test_update_interviewer_for_multiple_applicants(self):
+        """
+            Test that assigning interviewer to multiple applicants.
+        """
+        interviewer_user_1 = new_test_user(self.env, 'sma',
+            groups='base.group_user,hr_recruitment.group_hr_recruitment_interviewer',
+            name='Recruitment Interviewer', email='sma@example.com')
+
+        interviewer_user_2 = new_test_user(self.env, 'jab',
+            groups='base.group_user,hr_recruitment.group_hr_recruitment_interviewer',
+            name='Recruitment Interviewer', email='jab@example.com')
+
+        interviewer_user_3 = new_test_user(self.env, 'aad',
+            groups='base.group_user,hr_recruitment.group_hr_recruitment_interviewer',
+            name='Recruitment Interviewer', email='aad@example.com')
+
+        applicant = self.applicant
+        applicant.write({'interviewer_ids': [(6, 0, [interviewer_user_1.id])]})
+        applicants = applicant + applicant.copy({'interviewer_ids': [(6, 0, [interviewer_user_2.id])]})
+        # update interviewer to multiple applicants.
+        applicants.write({'interviewer_ids': [(4, interviewer_user_3.id)]})
+
+        # Ensure all interviewers are assigned
+        self.assertCountEqual(
+            applicants.interviewer_ids.ids, [interviewer_user_1.id, interviewer_user_2.id, interviewer_user_3.id]
+        )
+
+        # Checked that notification message is created
+        message = self.env['mail.message'].search([('res_id', '=', applicant.id)], limit=1)
+        self.assertEqual(message.subject, f"You have been assigned as an interviewer for {applicant.display_name}")
