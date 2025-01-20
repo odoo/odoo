@@ -48,6 +48,7 @@ class ProductTemplate(models.Model):
             product['_archived_combinations'] = []
             for product_product in self.env['product.product'].with_context(active_test=False).search([('product_tmpl_id', '=', product['id']), ('active', '=', False)]):
                 product['_archived_combinations'].append(product_product.product_template_attribute_value_ids.ids)
+            product['image_128'] = bool(product['image_128'])
 
     @api.model
     def _load_pos_data_fields(self, config_id):
