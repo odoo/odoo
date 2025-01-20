@@ -5,5 +5,5 @@ import { loadBundle } from "@web/core/assets";
  * @returns {Promise<void>}
  */
 export async function loadSpreadsheetDependencies() {
-    await loadBundle("spreadsheet.dependencies");
+    await loadBundle("web.chartjs_lib");
 }
