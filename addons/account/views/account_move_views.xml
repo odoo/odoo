@@ -541,6 +541,7 @@
                     <field name="status_in_payment"
                            string="Status"
                            widget="badge"
+                           decoration-info="state == 'draft'"
                            decoration-danger="payment_state == 'not_paid' and invoice_date_due &lt; context_today().strftime('%Y-%m-%d')"
                            decoration-warning="payment_state in ('partial', 'in_payment')"
                            decoration-success="payment_state in ('paid', 'reversed')"
