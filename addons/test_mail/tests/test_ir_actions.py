@@ -92,7 +92,7 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
                               'mail_mail_values': {
                                 'author_id': self.env.user.partner_id,
                               },
-                              'message_type': 'notification',
+                              'message_type': 'auto_comment',
                               'subtype': 'mail.mt_comment',
                              }
             ):
@@ -109,7 +109,7 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
         with self.assertSinglePostNotifications(
                 [{'partner': self.test_partner, 'type': 'email', 'status': 'ready'}],
                 message_info={'content': 'Hello %s' % self.test_partner.name,
-                              'message_type': 'notification',
+                              'message_type': 'auto_comment',
                               'subtype': 'mail.mt_note',
                              }
             ):
