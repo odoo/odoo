@@ -123,7 +123,7 @@ registry.category("web_tour.tours").add('project_tour', {
     trigger: ".o_form_project_tasks",
 },
 {
-    trigger: ".o-mail-Chatter-topbar button:contains(Send message)",
+    trigger: ".o-mail-Chatter-topbar button.o-mail-Chatter-sendMessage",
     content: markup(_t("Use the chatter to <b>send emails</b> and communicate efficiently with your customers. Add new people to the followers' list to make them aware of the main changes about this task.")),
     position: "bottom",
     run: "click",
@@ -133,7 +133,7 @@ registry.category("web_tour.tours").add('project_tour', {
     trigger: ".o_form_project_tasks",
 },
 {
-    trigger: "button:contains(Log note)",
+    trigger: "button.o-mail-Chatter-logNote",
     content: markup(_t("<b>Log notes</b> for internal communications <i>(the people following this task won't be notified of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # <b>mentions</b> to reach an entire team.")),
     position: "bottom",
     run: "click",
@@ -143,7 +143,7 @@ registry.category("web_tour.tours").add('project_tour', {
     trigger: ".o_form_project_tasks",
 },
 {
-    trigger: ".o-mail-Chatter-topbar button:contains(Activities)",
+    trigger: ".o-mail-Chatter-topbar button.o-mail-Chatter-activity",
     content: markup(_t("Create <b>activities</b> to set yourself to-dos or to schedule meetings.")),
     position: "bottom",
     run: "click",
