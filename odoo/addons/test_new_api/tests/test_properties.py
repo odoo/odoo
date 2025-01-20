@@ -1722,13 +1722,11 @@ class PropertiesCase(TestPropertiesMixin):
             'model_name': 'test_new_api.emailmessage',
             'state': 'object_write',
         })
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(ValidationError) as ve:
             action.update_path = 'attributes.discussion_color_code'
-            # call _stringify_path directly because it's only called for
-            # server action linked to a base_automation
-            self.assertEqual(action._stringify_path(),
-                'Properties > discussion_color_code'
-            )
+        self.assertEqual(ve.exception.args[0],
+            "The path contained by the field 'Field to Update Path' contains a non-relational field (Properties) that is not the last field in the path. You can't traverse non-relational fields (even in the quantum realm). Make sure only the last field in the path is non-relational."
+        )
 
 
 class PropertiesSearchCase(TestPropertiesMixin):

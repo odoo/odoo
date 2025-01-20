@@ -671,7 +671,7 @@ class IrActionsServer(models.Model):
                 elif action.state == 'object_write':
                     if action.update_path:
                         # we need to traverse relations to find the target model and field
-                        model, field, _ = action._traverse_path()
+                        model, field = action._traverse_path()
                         action.crud_model_id = model
                         action.update_field_id = field
                         need_update_model = action.evaluation_type == 'value' and action.update_field_id and action.update_field_id.relation
@@ -684,59 +684,42 @@ class IrActionsServer(models.Model):
                 action.update_field_id = False
                 action.update_path = False
 
-    def _traverse_path(self, record=None):
-        """ Traverse the update_path to find the target model and field, and optionally
-        the target record of an action of type 'object_write'.
+    def _traverse_path(self):
+        """ Traverse the update_path to find the target model and field.
 
-        :param record: optional record to use as starting point for the path traversal
-        :return: a tuple (model, field, records) where model is the target model and field is the
-                 target field; if no record was provided, records is None, otherwise it is the
-                    recordset at the end of the path starting from the provided record
+        :return: a tuple (model, field) where model is the target model and field is the target field
         """
         self.ensure_one()
-        path = self.update_path.split('.')
-        Model = self.env[self.model_id.model]
-        # sanity check: we're starting from a record that belongs to the model
-        if record and record._name != Model._name:
-            raise ValidationError(_("I have no idea how you *did that*, but you're trying to use a gibberish configuration: the model of the record on which the action is triggered is not the same as the model of the action."))
+        field_chain, _field_chain_str = self._get_relation_chain("update_path")
+        last_field = field_chain[-1]
+        if isinstance(last_field, fields.Json):
+            raise ValidationError(_("I'm sorry to say that JSON fields (such as '%s') are currently not supported.", last_field.string))
+        model_id = self.env['ir.model']._get(last_field.model_name)
+        field_id = self.env['ir.model.fields']._get(last_field.model_name, last_field.name)
+        return model_id, field_id
+
+    def _get_relation_chain(self, searched_field_name):
+        self.ensure_one()
+        if not searched_field_name or not searched_field_name in self._fields or not self[searched_field_name]:
+            return [], ""
+        path = self[searched_field_name].split('.')
+        if not path:
+            return [], ""
+        model = self.env[self.model_id.model]
+        chain = []
         for field_name in path:
             is_last_field = field_name == path[-1]
-            field = Model._fields[field_name]
-            if field.relational and not is_last_field:
-                Model = self.env[field.comodel_name]
-            elif not field.relational:
-                # sanity check: this should be the last field in the path
-                if not is_last_field:
-                    raise ValidationError(_("The path to the field to update contains a non-relational field (%s) that is not the last field in the path. You can't traverse non-relational fields (even in the quantum realm). Make sure only the last field in the path is non-relational.", field_name))
-                if isinstance(field, fields.Json):
-                    raise ValidationError(_("I'm sorry to say that JSON fields (such as %s) are currently not supported.", field_name))
-        target_records = None
-        if record is not None:
-            target_records = reduce(getitem, path[:-1], record)
-        model_id = self.env['ir.model']._get(Model._name)
-        field_id = self.env['ir.model.fields']._get(Model._name, field_name)
-        return model_id, field_id, target_records
-
-    def _stringify_path(self):
-        """ Returns a string representation of the update_path, with the field names
-        separated by the `>` symbol."""
-        self.ensure_one()
-        path = self.update_path
-        if not path:
-            return ''
-        model = self.env[self.model_id.model]
-        pretty_path = []
-        field = None
-        for field_name in path.split('.'):
-            if field and field.type == 'properties':
-                pretty_path.append(field_name)
-                continue
             field = model._fields[field_name]
-            field_id = self.env['ir.model.fields']._get(model._name, field_name)
-            if field.relational:
+            if not is_last_field:
+                if not field.relational:
+                    # sanity check: this should be the last field in the path
+                    current_field = field.get_description(self.env)["string"]
+                    searched_field = self._fields[searched_field_name].get_description(self.env)["string"]
+                    raise ValidationError(_("The path contained by the field '%(searched_field)s' contains a non-relational field (%(current_field)s) that is not the last field in the path. You can't traverse non-relational fields (even in the quantum realm). Make sure only the last field in the path is non-relational.", searched_field=searched_field, current_field=current_field))
                 model = self.env[field.comodel_name]
-            pretty_path.append(field_id.field_description)
-        return ' > '.join(pretty_path)
+            chain.append(field)
+        stringified_path = ' > '.join([field.get_description(self.env)["string"] for field in chain])
+        return chain, stringified_path
 
     @api.depends('state', 'model_id', 'webhook_field_ids', 'name')
     def _compute_webhook_sample_payload(self):
@@ -840,7 +823,8 @@ class IrActionsServer(models.Model):
                 record_cached[field] = new_value
         else:
             starting_record = self.env[self.model_id.model].browse(self._context.get('active_id'))
-            _, _, target_records = self._traverse_path(record=starting_record)
+            path = self.update_path.split('.')
+            target_records = reduce(getitem, path[:-1], starting_record)
             target_records.write(res)
 
     def _run_action_webhook(self, eval_context=None):
