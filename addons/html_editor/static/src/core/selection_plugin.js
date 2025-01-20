@@ -246,7 +246,15 @@ export class SelectionPlugin extends Plugin {
             if (anchorNode === focusNode && focusOffset < anchorOffset) {
                 direction = !direction;
             }
-
+            if (
+                this.activeSelection &&
+                (isProtecting(anchorNode) ||
+                    (isProtected(anchorNode) && !isUnprotecting(anchorNode)))
+            ) {
+                // Keep the previous activeSelection in case of user interactions
+                // inside a protected zone.
+                return this.activeSelection;
+            }
             [anchorNode, anchorOffset] = normalizeCursorPosition(
                 anchorNode,
                 anchorOffset,

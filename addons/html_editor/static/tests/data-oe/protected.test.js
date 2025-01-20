@@ -53,6 +53,24 @@ test("should not ignore unprotected elements children mutations (false)", async 
     });
 });
 
+test("should not update activeSelection when clicking inside a protected node", async () => {
+    const { el, editor } = await setupEditor(`<p><span data-oe-protected="true"></span>[]</p>`);
+    const span = el.querySelector("span");
+    let editableSelection = editor.shared.selection.getEditableSelection();
+    const documentSelection = editor.document.getSelection();
+    documentSelection.removeAllRanges();
+    const range = editor.document.createRange();
+    range.selectNodeContents(span);
+    // Set document range inside the protected zone
+    documentSelection.addRange(range);
+    editableSelection = editor.shared.selection.getEditableSelection();
+    // Ensure that the editable selection stayed unchanged
+    setSelection(editableSelection);
+    expect(getContent(el)).toBe(
+        `<p><span data-oe-protected="true" contenteditable="false"></span>[]</p>`
+    );
+});
+
 test("should not normalize protected elements children (true)", async () => {
     await testEditor({
         contentBefore: unformat(`
