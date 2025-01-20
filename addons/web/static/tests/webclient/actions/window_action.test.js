@@ -2407,8 +2407,8 @@ test("debugManager is active for views", async () => {
 
 test.tags("desktop");
 test("reload a view via the view switcher keep state", async () => {
-    onRpc("formatted_read_group", () => {
-        expect.step("formatted_read_group");
+    onRpc("formatted_read_grouping_sets", () => {
+        expect.step("formatted_read_grouping_sets");
     });
 
     await mountWithCleanup(WebClient);
@@ -2430,8 +2430,8 @@ test("reload a view via the view switcher keep state", async () => {
     await switchView("pivot");
     expect(".o_pivot_measure_row").toHaveClass("o_pivot_sort_order_asc");
     expect.verifySteps([
-        "formatted_read_group", // initial formatted_read_group
-        "formatted_read_group", // formatted_read_group at reload after switch view
+        "formatted_read_grouping_sets", // initial formatted_read_grouping_sets
+        "formatted_read_grouping_sets", // formatted_read_grouping_sets at reload after switch view
     ]);
 });
 

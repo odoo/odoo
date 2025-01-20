@@ -60,6 +60,16 @@ class TestFillTemporal(common.TransactionCase):
 
         self.assertEqual(groups, expected)
 
+        Model = self.Model.with_context(fill_temporal=True)
+        # Same result for formatted_grouping_sets
+        self.assertEqual(
+            Model.formatted_read_grouping_sets([], [['date:month'], []], ['__count', 'value:sum']),
+            [
+                Model.formatted_read_group([], ['date:month'], ['__count', 'value:sum']),
+                Model.formatted_read_group([], [], ['__count', 'value:sum']),
+            ],
+        )
+
     def test_date_range_with_context_timezone(self):
         """Test if date are date_trunced correctly by pgres.
 

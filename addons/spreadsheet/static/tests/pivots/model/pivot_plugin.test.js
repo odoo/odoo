@@ -189,18 +189,13 @@ test("Renaming a pivot does not retrigger RPCs", async () => {
     const { model, pivotId } = await createSpreadsheetWithPivot({
         mockRPC: function (route, { model, method, kwargs }) {
             switch (method) {
-                case "formatted_read_group":
-                    expect.step("formatted_read_group");
+                case "formatted_read_grouping_sets":
+                    expect.step("formatted_read_grouping_sets");
                     break;
             }
         },
     });
-    expect.verifySteps([
-        "formatted_read_group",
-        "formatted_read_group",
-        "formatted_read_group",
-        "formatted_read_group",
-    ]);
+    expect.verifySteps(["formatted_read_grouping_sets"]);
     updatePivot(model, pivotId, { name: "name" });
     await animationFrame();
     expect.verifySteps([]);
@@ -210,18 +205,13 @@ test("Renaming a pivot with a matching global filter does not retrigger RPCs", a
     const { model, pivotId } = await createSpreadsheetWithPivot({
         mockRPC: function (route, { model, method, kwargs }) {
             switch (method) {
-                case "formatted_read_group":
-                    expect.step("formatted_read_group");
+                case "formatted_read_grouping_sets":
+                    expect.step("formatted_read_grouping_sets");
                     break;
             }
         },
     });
-    expect.verifySteps([
-        "formatted_read_group",
-        "formatted_read_group",
-        "formatted_read_group",
-        "formatted_read_group",
-    ]);
+    expect.verifySteps(["formatted_read_grouping_sets"]);
     await addGlobalFilter(
         model,
         {
@@ -235,12 +225,7 @@ test("Renaming a pivot with a matching global filter does not retrigger RPCs", a
             pivot: { [pivotId]: { chain: "product_id", type: "many2one" } },
         }
     );
-    expect.verifySteps([
-        "formatted_read_group",
-        "formatted_read_group",
-        "formatted_read_group",
-        "formatted_read_group",
-    ]);
+    expect.verifySteps(["formatted_read_grouping_sets"]);
     updatePivot(model, pivotId, { name: "name" });
     await animationFrame();
     expect.verifySteps([]);
@@ -377,22 +362,17 @@ test("user context is combined with pivot context to fetch data", async function
                 return;
             }
             switch (method) {
-                case "formatted_read_group":
-                    expect.step("formatted_read_group");
+                case "formatted_read_grouping_sets":
+                    expect.step("formatted_read_grouping_sets");
                     expect(kwargs.context).toEqual(expectedFetchContext, {
-                        message: "formatted_read_group",
+                        message: "formatted_read_grouping_sets",
                     });
                     break;
             }
         },
     });
     await waitForDataLoaded(model);
-    expect.verifySteps([
-        "formatted_read_group",
-        "formatted_read_group",
-        "formatted_read_group",
-        "formatted_read_group",
-    ]);
+    expect.verifySteps(["formatted_read_grouping_sets"]);
 });
 
 test("Context is purged from PivotView related keys", async function (assert) {
@@ -427,7 +407,7 @@ test("Context is purged from PivotView related keys", async function (assert) {
     const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, { model, method, kwargs }) {
-            if (model === "partner" && method === "formatted_read_group") {
+            if (model === "partner" && method === "formatted_read_grouping_sets") {
                 expect.step(`pop`);
                 const hasBadKeys = [
                     "pivot_measures",
@@ -439,7 +419,7 @@ test("Context is purged from PivotView related keys", async function (assert) {
         },
     });
     await waitForDataLoaded(model);
-    expect.verifySteps(["pop", "pop", "pop", "pop"]);
+    expect.verifySteps(["pop"]);
 });
 
 test("fetch metadata only once per model", async function () {
@@ -536,13 +516,7 @@ test("don't fetch pivot data if no formula use it", async function () {
     setCellContent(model, "A1", `=PIVOT.VALUE("1", "probability:sum")`);
     expect(getCellValue(model, "A1")).toBe("Loading...");
     await animationFrame();
-    expect.verifySteps([
-        "partner/fields_get",
-        "partner/formatted_read_group",
-        "partner/formatted_read_group",
-        "partner/formatted_read_group",
-        "partner/formatted_read_group",
-    ]);
+    expect.verifySteps(["partner/fields_get", "partner/formatted_read_grouping_sets"]);
     expect(getCellValue(model, "A1")).toBe(131);
 });
 
@@ -656,11 +630,9 @@ test("display loading while data is not fully available", async function () {
         expect.step(`${model}/${method}`);
         await metadataPromise;
     });
-    onRpc("partner", "formatted_read_group", async ({ kwargs, method, model }) => {
-        if (kwargs.groupby[0] === "product_id") {
-            expect.step(`${model}/${method}`);
-            await dataPromise;
-        }
+    onRpc("partner", "formatted_read_grouping_sets", async ({ kwargs, method, model }) => {
+        expect.step(`${model}/${method}`);
+        await dataPromise;
     });
     onRpc("product", "read", () => {
         throw new Error("should not be called because data is put in cache");
@@ -681,7 +653,7 @@ test("display loading while data is not fully available", async function () {
     expect(getCellValue(model, "A1")).toBe("Probability");
     expect(getCellValue(model, "A2")).toBe("xphone");
     expect(getCellValue(model, "A3")).toBe(131);
-    expect.verifySteps(["partner/fields_get", "partner/formatted_read_group"]);
+    expect.verifySteps(["partner/fields_get", "partner/formatted_read_grouping_sets"]);
 });
 
 test("pivot grouped by char field which represents numbers", async function () {
@@ -876,9 +848,9 @@ test("can import (export) contextual domain", async () => {
     const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, args) {
-            if (args.method === "formatted_read_group") {
+            if (args.method === "formatted_read_grouping_sets") {
                 expect(args.kwargs.domain).toEqual([["foo", "=", uid]]);
-                expect.step("formatted_read_group");
+                expect.step("formatted_read_grouping_sets");
             }
         },
     });
@@ -887,7 +859,7 @@ test("can import (export) contextual domain", async () => {
     expect(model.exportData().pivots[1].domain).toBe('[("foo", "=", uid)]', {
         message: "the domain is exported with the dynamic parts",
     });
-    expect.verifySteps(["formatted_read_group"]);
+    expect.verifySteps(["formatted_read_grouping_sets"]);
 });
 
 test("Adding a measure should trigger a reload", async () => {
@@ -906,15 +878,15 @@ test("Adding a measure should trigger a reload", async () => {
     const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, args) {
-            if (args.method === "formatted_read_group") {
+            if (args.method === "formatted_read_grouping_sets") {
                 expect.step(args.kwargs.aggregates);
-                expect.step("formatted_read_group");
+                expect.step("formatted_read_grouping_sets");
             }
         },
     });
     setCellContent(model, "A1", '=PIVOT.VALUE(1, "probability:sum")');
     await animationFrame();
-    expect.verifySteps([["probability:sum", "__count"], "formatted_read_group"]);
+    expect.verifySteps([["probability:sum", "__count"], "formatted_read_grouping_sets"]);
     updatePivot(model, 1, {
         measures: [
             { id: "probability:sum", fieldName: "probability", aggregator: "sum" },
@@ -922,7 +894,10 @@ test("Adding a measure should trigger a reload", async () => {
         ],
     });
     await animationFrame();
-    expect.verifySteps([["probability:sum", "probability:avg", "__count"], "formatted_read_group"]);
+    expect.verifySteps([
+        ["probability:sum", "probability:avg", "__count"],
+        "formatted_read_grouping_sets",
+    ]);
     updatePivot(model, 1, {
         measures: [
             { id: "probability:sum", fieldName: "probability", aggregator: "sum" },
@@ -931,7 +906,10 @@ test("Adding a measure should trigger a reload", async () => {
         ],
     });
     await animationFrame();
-    expect.verifySteps([["probability:sum", "probability:avg", "__count"], "formatted_read_group"]);
+    expect.verifySteps([
+        ["probability:sum", "probability:avg", "__count"],
+        "formatted_read_grouping_sets",
+    ]);
 });
 
 test("Updating dimensions with undefined values does not trigger a new rpc", async () => {
@@ -950,14 +928,14 @@ test("Updating dimensions with undefined values does not trigger a new rpc", asy
     const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, args) {
-            if (args.method === "formatted_read_group") {
-                expect.step("formatted_read_group");
+            if (args.method === "formatted_read_grouping_sets") {
+                expect.step("formatted_read_grouping_sets");
             }
         },
     });
     setCellContent(model, "A1", '=PIVOT.VALUE(1, "probability:sum")');
     await animationFrame();
-    expect.verifySteps(["formatted_read_group", "formatted_read_group"]);
+    expect.verifySteps(["formatted_read_grouping_sets"]);
     updatePivot(model, 1, {
         columns: [{ fieldName: "date", granularity: undefined, order: undefined }],
     });
@@ -1127,14 +1105,17 @@ test("PIVOT day_of_week with same user and spreadsheet week start", async functi
                 <field name="probability" type="measure"/>
             </pivot>`,
         mockRPC: function (route, { method, kwargs }) {
-            if (method === "formatted_read_group" && kwargs.groupby?.includes("date:day_of_week")) {
+            if (method === "formatted_read_grouping_sets") {
                 return [
-                    {
-                        "date:day_of_week": 3, // Wednesday
-                        __domain: [["date.day_of_week", "=", 3]],
-                        __count: 1,
-                        "probability:avg": 11,
-                    },
+                    [{ __count: 1, "probability:avg": 11, __extra_domain: [] }],
+                    [
+                        {
+                            "date:day_of_week": 3, // Wednesday
+                            __extra_domain: [["date.day_of_week", "=", 3]],
+                            __count: 1,
+                            "probability:avg": 11,
+                        },
+                    ],
                 ];
             }
         },
@@ -1166,7 +1147,10 @@ test("PIVOT day_of_week with user week start and spreadsheet week start differen
                 <field name="probability" type="measure"/>
             </pivot>`,
         mockRPC: function (route, { method, kwargs }) {
-            if (method === "formatted_read_group" && kwargs.groupby?.includes("date:day_of_week")) {
+            if (
+                method === "formatted_read_grouping_sets" &&
+                kwargs.groupby?.includes("date:day_of_week")
+            ) {
                 return [
                     {
                         "date:day_of_week": 3, // Wednesday
@@ -1527,7 +1511,7 @@ test("Load pivot spreadsheet with models that cannot be accessed", async functio
         mockRPC: async function (route, args) {
             if (
                 args.model === "partner" &&
-                args.method === "formatted_read_group" &&
+                args.method === "formatted_read_grouping_sets" &&
                 !hasAccessRights
             ) {
                 throw makeServerError({ description: "ya done!" });
@@ -1563,14 +1547,14 @@ test("can add a calculated measure", async function () {
             </pivot>
         `,
         mockRPC: async function (route, { model, method, kwargs }) {
-            if (model === "partner" && method === "formatted_read_group") {
-                expect.step("formatted_read_group");
+            if (model === "partner" && method === "formatted_read_grouping_sets") {
+                expect.step("formatted_read_grouping_sets");
                 expect(kwargs.aggregates).toEqual(["probability:avg", "__count"]);
             }
         },
     });
     const sheetId = model.getters.getActiveSheetId();
-    expect.verifySteps(["formatted_read_group"]);
+    expect.verifySteps(["formatted_read_grouping_sets"]);
     updatePivot(model, pivotId, {
         measures: [
             { id: "probability", fieldName: "probability", aggregator: "avg" },
@@ -1587,7 +1571,7 @@ test("can add a calculated measure", async function () {
     setCellContent(model, "A2", '=PIVOT.VALUE(1,"probability*2")');
     expect(getEvaluatedCell(model, "A1").value).toBe(131);
     expect(getEvaluatedCell(model, "A2").value).toBe(262);
-    expect.verifySteps(["formatted_read_group"]);
+    expect.verifySteps(["formatted_read_grouping_sets"]);
 });
 
 test("can aggregate a calculated measure grouped by relational field", async function () {
@@ -1677,8 +1661,8 @@ test("can import a pivot with a calculated field", async function () {
     const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, { model, method, kwargs }) {
-            if (model === "partner" && method === "formatted_read_group") {
-                expect.step("formatted_read_group");
+            if (model === "partner" && method === "formatted_read_grouping_sets") {
+                expect.step("formatted_read_grouping_sets");
                 expect(kwargs.aggregates).toEqual(["probability:avg", "__count"]);
             }
         },
@@ -1686,7 +1670,7 @@ test("can import a pivot with a calculated field", async function () {
     await waitForDataLoaded(model);
     expect(getEvaluatedCell(model, "A1").value).toBe(131);
     expect(getEvaluatedCell(model, "A2").value).toBe(262);
-    expect.verifySteps(["formatted_read_group"]);
+    expect.verifySteps(["formatted_read_grouping_sets"]);
 });
 
 test("Can duplicate a pivot", async () => {
@@ -1775,13 +1759,13 @@ test("Data are fetched with the correct aggregator", async () => {
                     <field name="probability" type="measure"/>
                 </pivot>`,
         mockRPC: async function (route, args) {
-            if (args.method === "formatted_read_group") {
+            if (args.method === "formatted_read_grouping_sets") {
                 expect(args.kwargs.aggregates).toEqual(["probability:avg", "__count"]);
-                expect.step("formatted_read_group");
+                expect.step("formatted_read_grouping_sets");
             }
         },
     });
-    expect.verifySteps(["formatted_read_group"]);
+    expect.verifySteps(["formatted_read_grouping_sets"]);
 });
 
 test("changing measure aggregates", async () => {
@@ -1791,7 +1775,7 @@ test("changing measure aggregates", async () => {
                     <field name="probability" type="measure"/>
                 </pivot>`,
         mockRPC: async function (route, args) {
-            if (args.method === "formatted_read_group") {
+            if (args.method === "formatted_read_grouping_sets") {
                 expect.step(args.kwargs.aggregates);
             }
         },
@@ -1824,7 +1808,7 @@ test("Manipulating a computed measure does not trigger a RPC", async () => {
                     <field name="probability" type="measure"/>
                 </pivot>`,
         mockRPC: async function (route, args) {
-            if (args.method === "formatted_read_group") {
+            if (args.method === "formatted_read_grouping_sets") {
                 expect.step(args.kwargs.aggregates);
             }
         },
@@ -1866,7 +1850,7 @@ test("many2one measures are aggregated with count_distinct by default", async ()
                     <field name="probability" type="measure"/>
                 </pivot>`,
         mockRPC: async function (route, args) {
-            if (args.method === "formatted_read_group") {
+            if (args.method === "formatted_read_grouping_sets") {
                 expect.step(args.kwargs.aggregates);
             }
         },
@@ -1919,12 +1903,12 @@ test("changing order of group by", async () => {
                     <field name="probability" type="measure"/>
                 </pivot>`,
         mockRPC: async function (route, args) {
-            if (args.method === "formatted_read_group") {
+            if (args.method === "formatted_read_grouping_sets") {
                 expect.step(args.kwargs.order || "NO_ORDER");
             }
         },
     });
-    expect.verifySteps(["NO_ORDER", "NO_ORDER"]);
+    expect.verifySteps(["NO_ORDER"]);
     model.dispatch("UPDATE_PIVOT", {
         pivotId,
         pivot: {
@@ -1936,7 +1920,7 @@ test("changing order of group by", async () => {
         { fieldName: "foo", order: "asc" },
     ]);
     await animationFrame();
-    expect.verifySteps(["NO_ORDER", "foo asc"]);
+    expect.verifySteps(["foo asc"]);
     model.dispatch("UPDATE_PIVOT", {
         pivotId,
         pivot: {
@@ -1945,7 +1929,7 @@ test("changing order of group by", async () => {
         },
     });
     await animationFrame();
-    expect.verifySteps(["NO_ORDER", "NO_ORDER"]);
+    expect.verifySteps(["NO_ORDER"]);
 });
 
 test("change date order", async () => {
@@ -1955,7 +1939,7 @@ test("change date order", async () => {
                     <field name="probability" type="measure"/>
                 </pivot>`,
         mockRPC: async function (route, args) {
-            if (args.method === "formatted_read_group") {
+            if (args.method === "formatted_read_grouping_sets") {
                 expect.step(args.kwargs.order || "NO_ORDER");
             }
         },
@@ -1972,7 +1956,7 @@ test("change date order", async () => {
         },
     });
     await animationFrame();
-    expect.verifySteps(["NO_ORDER", "date:year asc", "date:year asc,date:month desc"]);
+    expect.verifySteps(["date:year asc,date:month desc"]);
 });
 
 test("duplicated dimension on col and row with different granularity", async () => {
@@ -2006,11 +1990,9 @@ test("changing granularity of group by", async () => {
                     <field name="probability" type="measure"/>
                 </pivot>`,
         mockRPC: async function (route, args) {
-            if (args.method === "formatted_read_group") {
-                const groupBys = args.kwargs.groupby;
-                if (groupBys.length) {
-                    expect.step(args.kwargs.groupby.join(","));
-                }
+            if (args.method === "formatted_read_grouping_sets") {
+                const groupBys = args.kwargs.grouping_sets.flat();
+                expect.step(groupBys.join(","));
             }
         },
     });
@@ -2114,18 +2096,19 @@ test("can group by property", async () => {
         type: "char",
         string: "prop 1",
     }));
-    onRpc("partner", "formatted_read_group", ({ kwargs }) => {
+    onRpc("partner", "formatted_read_grouping_sets", ({ kwargs }) =>
         // the generic mock server doesn't support group by properties
-        if (kwargs.groupby?.includes("partner_properties.dbfc")) {
-            return [
+        [
+            [{ __count: 1, __extra_domain: [] }],
+            [
                 {
                     "partner_properties.dbfc": "hello",
                     __extra_domain: [["partner_properties.dbfc", "=", "hello"]],
                     __count: 1,
                 },
-            ];
-        }
-    });
+            ],
+        ]
+    );
     const { model } = await createSpreadsheetWithPivot();
     const pivotId = model.getters.getPivotIds()[0];
     updatePivot(model, pivotId, {

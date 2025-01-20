@@ -988,26 +988,17 @@ export class PivotModel extends Model {
             return this._sanitizeLabel(group[groupBy], groupBy, config);
         });
     }
-    /**
-     * Returns a promise that returns the annotated read_group results
-     * corresponding to a partition of the given group obtained using the given
-     * rowGroupBy and colGroupBy.
-     *
-     * @protected
-     * @param {Object} group
-     * @param {string[]} rowGroupBy
-     * @param {string[]} colGroupBy
-     * @param {Object} params
-     */
-    async _getGroupSubdivision(group, rowGroupBy, colGroupBy, params) {
-        const groupBy = this._getGroupBySpecs(rowGroupBy, colGroupBy);
-        const subGroups = await this._getSubGroups(groupBy, params);
-        return {
-            group,
-            subGroups,
-            rowGroupBy: rowGroupBy,
-            colGroupBy: colGroupBy,
-        };
+
+    async _getGroupsSubdivision(params, groupInfo) {
+        const { resModel, groupDomain, groupingSets, measureSpecs, kwargs } = params;
+        const result = await this.orm.formattedReadGroupingSets(
+            resModel,
+            groupDomain,
+            groupingSets,
+            measureSpecs,
+            kwargs
+        );
+        return groupInfo.map((info, index) => ({ ...info, subGroups: result[index] }));
     }
 
     /**
@@ -1237,26 +1228,6 @@ export class PivotModel extends Model {
         return originRow;
     }
     /**
-     * @protected
-     * @param {string[]} groupBy
-     * @param {Object} params
-     * @returns {Promise<Object[]>}
-     */
-    async _getSubGroups(groupBy, params) {
-        const { resModel, groupDomain, measureSpecs, kwargs, mapping } = params;
-        const key = JSON.stringify(groupBy);
-        if (!mapping[key]) {
-            mapping[key] = this.orm.formattedReadGroup(
-                resModel,
-                groupDomain,
-                groupBy,
-                measureSpecs,
-                kwargs
-            );
-        }
-        return mapping[key];
-    }
-    /**
      * Returns the list of header rows of the pivot table: the col group rows
      * (depending on the col groupbys), the measures row and optionnaly the
      * origins row (if there are more than one origins).
@@ -1456,8 +1427,7 @@ export class PivotModel extends Model {
         const rightDivisors = sections(metaData.fullColGroupBys);
         const divisors = cartesian(leftDivisors, rightDivisors);
 
-        await this._subdivideGroup(group, divisors.slice(0, 1), config);
-        await this._subdivideGroup(group, divisors.slice(1), config);
+        await this._subdivideGroup(group, divisors, config);
 
         // keep folded groups folded after the reload if the structure of the table is the same
         if (prune && this._hasData(data) && this._hasData(this.data)) {
@@ -1690,21 +1660,36 @@ export class PivotModel extends Model {
                 const resModel = config.metaData.resModel;
                 const kwargs = { context: this.searchParams.context };
                 const mapping = {};
+                const groupingSets = [];
+                const groupInfo = [];
                 divisors.forEach((divisor) => {
-                    acc.push(
-                        this._getGroupSubdivision(subGroup, divisor[0], divisor[1], {
-                            resModel,
-                            groupDomain,
-                            measureSpecs,
-                            kwargs,
-                            mapping,
-                        })
-                    );
+                    const groupBy = this._getGroupBySpecs(divisor[0], divisor[1]);
+                    const key = JSON.stringify(groupBy);
+                    if (!mapping[key]) {
+                        groupingSets.push(groupBy);
+                        groupInfo.push({
+                            group: subGroup,
+                            rowGroupBy: divisor[0],
+                            colGroupBy: divisor[1],
+                            originIndex,
+                        });
+                    }
                 });
+
+                const params = {
+                    resModel,
+                    groupDomain,
+                    measureSpecs,
+                    kwargs,
+                    mapping,
+                    groupingSets,
+                };
+                acc.push(this._getGroupsSubdivision(params, groupInfo));
             }
             return acc;
         }, []);
-        const groupSubdivisions = await this.keepLast.add(Promise.all(proms));
+        const groupSubdivisionsArray = await this.keepLast.add(Promise.all(proms));
+        const groupSubdivisions = groupSubdivisionsArray.flat();
         if (groupSubdivisions.length) {
             this._prepareData(group, groupSubdivisions, config);
         }
