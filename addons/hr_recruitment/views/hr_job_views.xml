@@ -255,15 +255,12 @@
                     invisible="documents_count == 0">
                     <field name="documents_count" widget="statinfo" string="Documents"/>
                 </button>
-                <button class="oe_stat_button" type="action"
-                    name="%(action_hr_job_sources)d" icon="fa-bar-chart-o"
-                    context="{'default_job_id': id}">
-                    <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_text">Trackers</span>
-                    </div>
-                </button>
             </div>
-
+            <xpath expr="//page[@name='job_description_page']" position="after">
+                <page string="Trackers" name="trackers_page">
+                    <field name="job_source_ids"></field>    
+                </page>
+            </xpath>
             <xpath expr="//sheet" position="after">
                 <chatter open_attachments="True"/>
             </xpath>

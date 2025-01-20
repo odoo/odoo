@@ -74,6 +74,8 @@ class HrJob(models.Model):
         help='Number of hired employees for this job position during recruitment phase.',
         store=True)
 
+    job_source_ids = fields.One2many('hr.recruitment.source', 'job_id')
+
     @api.depends('application_ids.date_closed')
     def _compute_no_of_hired_employee(self):
         counts = dict(self.env['hr.applicant']._read_group(
