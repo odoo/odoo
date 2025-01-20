@@ -492,14 +492,16 @@ class MailComposeMessage(models.TransientModel):
             else:
                 composer.reply_to = False
 
-    @api.depends('model')
+    @api.depends('model', 'reply_to')
     def _compute_reply_to_force_new(self):
         """ If model does not inherit from MailThread, avoid replies to be
         considered as thread updates, they will instead follow the routing
         rules (alias, ...). """
-        self.filtered(
-            lambda composer: not composer.model or not composer.model_is_thread
-        ).reply_to_force_new = True
+        for composer in self:
+            if not composer.model or not composer.model_is_thread or composer.reply_to:
+                composer.reply_to_force_new = True
+            else:
+                composer.reply_to_force_new = False
 
     @api.depends('reply_to_force_new')
     def _compute_reply_to_mode(self):
@@ -509,6 +511,8 @@ class MailComposeMessage(models.TransientModel):
     def _inverse_reply_to_mode(self):
         for composer in self:
             composer.reply_to_force_new = composer.reply_to_mode == 'new'
+            if composer.reply_to_mode != 'new':
+                composer.reply_to = False
 
     @api.depends('composition_mode', 'model', 'parent_id', 'res_domain',
                  'res_ids', 'template_id')
@@ -1223,6 +1227,7 @@ class MailComposeMessage(models.TransientModel):
                 'attachment_ids': [attach.id for attach in self.attachment_ids],
                 'body': self.body or '',
                 'email_from': self.email_from,
+                'reply_to': self.reply_to,
                 'partner_ids': self.partner_ids.ids,
                 'scheduled_date': self.scheduled_date,
                 'subject': self.subject or '',

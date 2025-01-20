@@ -2410,7 +2410,8 @@ class MailThread(models.AbstractModel):
             msg_values['record_alias_domain_id'] = self.sudo()._mail_get_alias_domains(default_company=self.env.company)[self.id].id
         if 'record_company_id' not in msg_values:
             msg_values['record_company_id'] = self._mail_get_companies(default=self.env.company)[self.id].id
-        if 'reply_to' not in msg_values:
+        # check value of reply_to is not False
+        if not msg_values.get('reply_to', False):
             msg_values['reply_to'] = self._notify_get_reply_to(default=email_from)[self.id]
 
         msg_values.update(
