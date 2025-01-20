@@ -16,7 +16,7 @@ class MailActivitySchedule(models.TransientModel):
     def _compute_plan_available_ids(self):
         todo = self.filtered(lambda s: s.plan_department_filterable)
         for scheduler in todo:
-            base_domain = self._get_plan_available_base_domain()
+            base_domain = scheduler._get_plan_available_base_domain()
             if not scheduler.department_id:
                 final_domain = expression.AND([base_domain, [('department_id', '=', False)]])
             else:
