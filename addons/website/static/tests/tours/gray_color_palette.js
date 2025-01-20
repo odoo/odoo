@@ -32,12 +32,8 @@ registerWebsitePreviewTour('website_gray_color_palette', {
     },
     {
         content: "Drag the hue slider",
-        trigger: '.o_we_slider_tint[data-param="gray-hue"]',
-        run() {
-            const slider = document.querySelector('.o_we_slider_tint[data-param="gray-hue"] input');
-            slider.value = 100;
-            slider.dispatchEvent(new InputEvent('change', {bubbles: true}));
-        },
+        trigger: '.o_we_slider_tint[data-param="gray-hue"] input',
+        run: "edit 100",
     },
     {
         content: "Check the preview of the gray 900 after hue change",
@@ -46,12 +42,8 @@ registerWebsitePreviewTour('website_gray_color_palette', {
     ...waitForCSSReload(),
     {
         content: "Drag the saturation slider",
-        trigger: '.o_we_user_value_widget[data-param="gray-extra-saturation"]',
-        run() {
-            const slider = document.querySelector('.o_we_user_value_widget[data-param="gray-extra-saturation"] input');
-            slider.value = 15;
-            slider.dispatchEvent(new InputEvent('change', {bubbles: true}));
-        }
+        trigger: ".o_we_user_value_widget[data-param='gray-extra-saturation'] input",
+        run: "edit 15",
     },
     {
         content: "Check the preview of the gray 900 after saturation change",

@@ -159,7 +159,7 @@ registry.category("web_tour.tours").add("course_member", {
             run: "edit This is a great course. Top !",
         },
         {
-            trigger: ".modal button:contains(review)",
+            trigger: ".modal.modal_shown.show button:contains(review)",
             run: "click",
         },
         {

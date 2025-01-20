@@ -50,6 +50,7 @@ registerWebsitePreviewTour("carousel_content_removal", {
 }]);
 
 registerWebsitePreviewTour("snippet_carousel", {
+    checkDelay: 300,
     url: "/",
     edition: true,
 }, () => [
@@ -94,6 +95,7 @@ registerWebsitePreviewTour("snippet_carousel", {
     {
         content: "Check if there are three slides and if the first one is active",
         trigger: `${carouselInnerSelector}:has(div:nth-child(3)) > div.active:nth-child(1)`,
+        pause: true,
     },
     // Slide to the left.
     changeOption("CarouselItem", 'we-button[data-switch-to-slide="left"]'),

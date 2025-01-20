@@ -3,7 +3,7 @@ import * as wsTourUtils from '@website_sale/js/tours/tour_utils';
 
 const closeModal = {
     content: "Close the ticket picking modal",
-    trigger: `.modal-content button:contains("Close")`,
+    trigger: ".modal.modal_shown.show button:contains(Close)",
     run: "click",
 };
 
