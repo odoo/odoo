@@ -11,12 +11,12 @@ patch(ChatWindow.prototype, {
             thread.channel_type === "livechat" &&
             thread.livechatVisitorMember?.persona?.notEq(this.store.self)
         ) {
+            if (param1.notifyState) {
+                thread.leaveChannel({ force: true });
+            }
             param1.notifyState = false;
             super._onClose(param1, ...args);
             this.delete();
-            if (!param1.noLeaveChannel) {
-                thread.leaveChannel({ force: true });
-            }
             return;
         }
         return super._onClose(param1, ...args);

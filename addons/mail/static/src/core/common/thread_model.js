@@ -708,9 +708,9 @@ export class Thread extends Record {
         return cw;
     }
 
-    closeChatWindow({ noLeaveChannel = false, force = false } = {}) {
+    closeChatWindow(options = {}) {
         const chatWindow = this.store.ChatWindow.get({ thread: this });
-        chatWindow?.close({ notifyState: false, noLeaveChannel, force });
+        chatWindow?.close({ notifyState: false, ...options });
     }
 
     pin() {

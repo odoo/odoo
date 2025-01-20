@@ -17,9 +17,6 @@ patch(ChatWindow.prototype, {
         if (this.thread?.channel_type !== "livechat") {
             return super.close(...arguments);
         }
-        if (options.force) {
-            this.livechatStep = CW_LIVECHAT_STEP.CONFIRM_CLOSE;
-        }
         const isSelfVisitor = this.thread.livechatVisitorMember?.persona?.eq(this.store.self);
         switch (this.livechatStep) {
             case CW_LIVECHAT_STEP.NONE: {
@@ -39,7 +36,7 @@ patch(ChatWindow.prototype, {
                 }
                 this.actionsDisabled = true;
                 this.livechatStep = CW_LIVECHAT_STEP.CONFIRM_CLOSE;
-                if (!this.hubAsOpened && !options.noLeaveChannel) {
+                if (!this.hubAsOpened) {
                     this.open();
                 }
                 break;
