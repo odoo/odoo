@@ -106,8 +106,8 @@
                         >
                             <t t-if="not line.display_type and line.product_type != 'combo'">
                                 <td name="td_name"><span t-field="line.name">Bacon Burger</span></td>
-                                <td name="td_quantity" t-attf-class="text-end {{ 'text-nowrap' if (not line.product_packaging_id or len(line.product_packaging_id.name) &lt; 10) else '' }}">
-                                    <span t-field="line.product_uom_qty">3</span>
+                                <td name="td_quantity" class="o_td_quantity text-end">
+                                    <span t-field="line.product_uom_qty" class="text-nowrap">3</span>
                                     <span t-field="line.product_uom">units</span>
                                     <span t-if="line.product_packaging_id">
                                         (<span t-field="line.product_packaging_qty" t-options='{"widget": "integer"}'/> <span t-field="line.product_packaging_id"/>)
