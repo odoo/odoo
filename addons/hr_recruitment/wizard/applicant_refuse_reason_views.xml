@@ -8,29 +8,42 @@
                     <group col="1">
                         <field name="refuse_reason_id" string="Reason" widget="selection_badge" options="{'horizontal': true, 'no_create': True, 'no_open': True}"/>
                         <group invisible="not refuse_reason_id">
-                            <label for="send_mail" class="me-2" invisible="not refuse_reason_id"/>
-                            <div class="d-flex">
-                                <field name="send_mail" readonly="applicant_ids.length > 1 and applicant_without_email"/>
-                                <span class="mx-2" style="padding-top: 1px; padding-bottom: 1px;">to</span>
-                                <field name="applicant_emails" invisible="applicant_ids.length == 1"/>
-                                <field
-                                    name="single_applicant_email"
-                                    placeholder="Provide an email"
-                                    invisible="applicant_ids.length != 1"
-                                    required="applicant_ids.length == 1 and send_mail"/>
-                            </div>
-                            <field name="template_id" invisible="not send_mail" required="send_mail"/>
+                            <field name="send_mail" widget="boolean_toggle"/>
                             <label for="duplicates" invisible="duplicates_count == 0"/>
                             <div class="d-flex" invisible="duplicates_count == 0">
                                 <field name="duplicates" nolabel="1"/>
                                 <span>Refuse the<field name="duplicates_count" class="oe_inline mx-1"/>other application(s)</span>
                             </div>
                         </group>
+                        <group col="1" invisible="not send_mail">
+                            <group col="2">
+                                <field name="applicant_ids"
+                                    widget="many2many_tags"
+                                    placeholder="Specify Refused Applicants..."
+                                    required="send_mail"
+                                    options="{'no_create': True}"/>
+                            </group>
+                            <group col="2">
+                                <field name="lang" invisible="1"/>
+                                <field name="render_model" invisible="1"/>
+                                <field name="subject" required="send_mail" placeholder="Subject..."/>
+                            </group>
+                            <field name="can_edit_body" invisible="1"/>
+                            <field name="body" class="oe-bordered-editor" widget="html_mail" readonly="not can_edit_body" force_save="1"/>
+                            <group>
+                                <group>
+                                    <field name="attachment_ids" widget="many2many_binary"/>
+                                </group>
+                                <group>
+                                    <field name="template_id" label="Use template"/>
+                                </group>
+                            </group>
+                        </group>
                     </group>
                     <div
                         class="alert alert-danger"
                         role="alert"
-                        invisible="applicant_ids.length == 1 or not applicant_without_email or not refuse_reason_id">
+                        invisible="not applicant_without_email or not send_mail">
                         <field name="applicant_without_email" class="mr4"/>
                     </div>
                     <footer>
