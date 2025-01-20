@@ -7,12 +7,7 @@
             action="'togglePriceListDescription'"
             actionParam="{ itemClass:'s_product_catalog_dish', descriptionClass: 's_product_catalog_dish_description' }"/>
     </BuilderRow>
-    <!-- TODO convert snippet_options_border_line_widgets
-       <t t-call="website.snippet_options_border_line_widgets">
-                <t t-set="label">Separator</t>
-                <t t-set="direction" t-value="'top'"/>
-                <t t-set="apply_to" t-value="'.s_product_catalog_dish_dot_leaders'"/>
-            </t> -->
+    <BorderConfigurator label.translate="Separator" direction="'top'" applyTo="'.s_product_catalog_dish_dot_leaders'"/>
 </t>
 
 </templates>
