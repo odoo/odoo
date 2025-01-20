@@ -119,8 +119,8 @@
                                     <td>
                                         <span t-field="move.product_id"/>
                                     </td>
-                                    <td>
-                                        <span t-field="move.quantity"/>
+                                    <td class="o_td_quantity">
+                                        <span t-field="move.quantity" class="text-nowrap"/>
                                         <span t-field="move.product_uom" groups="uom.group_uom"/>
                                     </td>
                                     <td t-if="display_discount">
