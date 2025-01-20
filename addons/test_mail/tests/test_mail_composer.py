@@ -1682,10 +1682,10 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                     'subtype_id': self.env.ref('mail.mt_comment').id,
                 })
                 _mail, message = composer._action_send_mail()
-                if option == 'reply_all':
+                if option == 'forward':
                     self.assertEqual(
                         message.notified_partner_ids, self.partner_admin,
-                        'Either reply_all is broken, either notify_skip_followers parameter is broken')
+                        'Either forward is broken, either notify_skip_followers parameter is broken')
                 else:
                     self.assertEqual(message.notified_partner_ids, self.partner_employee_2 + self.partner_admin,
                                         'classic notify: followers + recipients - author')
