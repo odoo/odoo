@@ -18,6 +18,8 @@ import {
     serverState,
     webModels,
 } from "@web/../tests/web_test_helpers";
+
+import { CHAT_HUB_KEY } from "@mail/core/common/chat_hub_model";
 import { contains } from "./mail_test_helpers_contains";
 
 import { busService } from "@bus/services/bus_service";
@@ -663,4 +665,23 @@ export async function isInViewportOf(childSelector, parentSelector) {
 export async function hover(selector) {
     await contains(selector);
     await hootHover(selector);
+}
+
+function toChatHubData(opened, folded) {
+    return JSON.stringify({
+        opened: opened.map((data) => convertChatHubParam(data)),
+        folded: folded.map((data) => convertChatHubParam(data)),
+    });
+}
+
+function convertChatHubParam(param) {
+    return typeof param === "number" ? { id: param, model: "discuss.channel" } : param;
+}
+
+export function setupChatHub({ opened = [], folded = [] } = {}) {
+    browser.localStorage.setItem(CHAT_HUB_KEY, toChatHubData(opened, folded));
+}
+
+export function assertChatHub({ opened = [], folded = [] }) {
+    expect(browser.localStorage.getItem(CHAT_HUB_KEY)).toEqual(toChatHubData(opened, folded));
 }

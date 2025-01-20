@@ -1,6 +1,6 @@
-import { cleanTerm, prettifyMessageContent } from "@mail/utils/common/format";
 import { Store as BaseStore, makeStore, Record } from "@mail/core/common/record";
 import { threadCompareRegistry } from "@mail/core/common/thread_compare";
+import { cleanTerm, prettifyMessageContent } from "@mail/utils/common/format";
 
 import { reactive } from "@odoo/owl";
 
@@ -113,11 +113,12 @@ export class Store extends BaseStore {
     openInviteThread = Record.one("Thread");
 
     fetchDeferred = new Deferred();
-    fetchParams = {};
+    /** @type {[string | [string, any]]} */
+    fetchParams = [];
     fetchReadonly = true;
     fetchSilent = true;
 
-    cannedReponses = this.makeCachedFetchData({ canned_responses: true });
+    cannedReponses = this.makeCachedFetchData("mail.canned.response");
 
     specialMentions = [
         {
@@ -128,12 +129,6 @@ export class Store extends BaseStore {
             description: _t("Notify everyone"),
         },
     ];
-
-    get initMessagingParams() {
-        return {
-            init_messaging: {},
-        };
-    }
 
     isNotificationPermissionDismissed = Record.attr(false, {
         compute() {
@@ -222,36 +217,40 @@ export class Store extends BaseStore {
     }
 
     /**
+     * @param {string} name
+     * @param {any} params
      * @returns {Deferred}
      */
-    async fetchData(params, { readonly = true, silent = true } = {}) {
-        Object.assign(this.fetchParams, params);
+    async fetchStoreData(name, params, { readonly = true, silent = true } = {}) {
+        this.fetchParams.push(params ? [name, params] : name);
         this.fetchReadonly = this.fetchReadonly && readonly;
         this.fetchSilent = this.fetchSilent && silent;
         const fetchDeferred = this.fetchDeferred;
-        this._fetchDataDebounced();
+        this._fetchStoreDataDebounced();
         return fetchDeferred;
     }
 
     /** Import data received from init_messaging */
     async initialize() {
-        await this.fetchData(this.initMessagingParams);
+        this.chatHub.init();
+        await this.fetchStoreData("init_messaging");
         this.isReady.resolve();
     }
 
     /**
-     * Create a cacheable version of the `fetchData` method. The result of the
+     * Create a cacheable version of the `fetchStoreData` method. The result of the
      * request is cached once acquired. In case of failure, the deferred is
      * rejected and the cache is reset allowing to retry the request when
      * calling the function again.
      *
-     * @param {{[key: string]: boolean}} params Parameters to pass to the `fetchData` method.
+     * @param {string} name
+     * @param {*} params Parameters to pass to the `fetchStoreData` method.
      * @returns {{
-     *      fetch: () => ReturnType<Store["fetchData"]>,
+     *      fetch: () => ReturnType<Store["fetchStoreData"]>,
      *      status: "not_fetched"|"fetching"|"fetched"
      * }}
      */
-    makeCachedFetchData(params) {
+    makeCachedFetchData(name, params) {
         let def = null;
         const r = reactive({
             status: "not_fetched",
@@ -261,7 +260,7 @@ export class Store extends BaseStore {
                 }
                 r.status = "fetching";
                 def = new Deferred();
-                this.fetchData(params).then(
+                this.fetchStoreData(name, params).then(
                     (result) => {
                         r.status = "fetched";
                         def.resolve(result);
@@ -277,15 +276,15 @@ export class Store extends BaseStore {
         return r;
     }
 
-    async _fetchDataDebounced() {
+    _fetchStoreDataDebounced() {
         const fetchDeferred = this.fetchDeferred;
-        this.fetchParams.context = {
-            ...user.context,
-            ...this.fetchParams.context,
-        };
-        rpc(this.fetchReadonly ? "/mail/data" : "/mail/action", this.fetchParams, {
-            silent: this.fetchSilent,
-        }).then(
+        rpc(
+            this.fetchReadonly ? "/mail/data" : "/mail/action",
+            { fetch_params: this.fetchParams, context: user.context },
+            {
+                silent: this.fetchSilent,
+            }
+        ).then(
             (data) => {
                 const recordsByModel = this.insert(data, { html: true });
                 fetchDeferred.resolve(recordsByModel);
@@ -293,7 +292,7 @@ export class Store extends BaseStore {
             (error) => fetchDeferred.reject(error)
         );
         this.fetchDeferred = new Deferred();
-        this.fetchParams = {};
+        this.fetchParams = [];
         this.fetchReadonly = true;
         this.fetchSilent = true;
     }
@@ -390,8 +389,8 @@ export class Store extends BaseStore {
 
     setup() {
         super.setup();
-        this._fetchDataDebounced = debounce(
-            this._fetchDataDebounced,
+        this._fetchStoreDataDebounced = debounce(
+            this._fetchStoreDataDebounced,
             Store.FETCH_DATA_DEBOUNCE_DELAY
         );
     }
@@ -408,9 +407,12 @@ export class Store extends BaseStore {
      */
     async getChat({ userId, partnerId }) {
         const partner = await this.getPartner({ userId, partnerId });
-        let chat = partner?.searchChat();
+        if (!partner) {
+            return;
+        }
+        let chat = partner.searchChat();
         if (!chat || !chat.is_pinned) {
-            chat = await this.joinChat(partnerId || partner?.id);
+            chat = await this.joinChat(partner.id);
         }
         if (!chat) {
             this.env.services.notification.add(
@@ -588,12 +590,15 @@ export class Store extends BaseStore {
     }
 
     async joinChat(id, forceOpen = false) {
-        const data = await rpc("/discuss/channel/get_or_create_chat", {
+        const { channel_id, data } = await rpc("/discuss/channel/get_or_create_chat", {
             partners_to: [id],
-            force_open: forceOpen,
         });
-        const { Thread } = this.store.insert(data);
-        return Thread[0];
+        this.store.insert(data);
+        const thread = this.store.Thread.get({ id: channel_id, model: "discuss.channel" });
+        if (forceOpen) {
+            thread.openChatWindow();
+        }
+        return thread;
     }
 
     async openChat(person) {

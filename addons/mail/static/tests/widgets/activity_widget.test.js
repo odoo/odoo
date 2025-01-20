@@ -27,9 +27,7 @@ test("list activity widget with no activity", async () => {
         const companyService = getService("company");
         const { params } = await request.json();
         expect(params).toEqual({
-            init_messaging: {},
-            failures: true,
-            systray_get_activities: true,
+            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
             context: {
                 lang: "en",
                 tz: "taht",

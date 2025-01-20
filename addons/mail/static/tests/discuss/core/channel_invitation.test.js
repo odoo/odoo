@@ -4,6 +4,7 @@ import {
     defineMailModels,
     insertText,
     openDiscuss,
+    setupChatHub,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
@@ -41,13 +42,11 @@ test("can invite users in channel from chat window", async () => {
         name: "TestPartner",
     });
     pyEnv["res.users"].create({ partner_id: partnerId });
-    pyEnv["discuss.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "TestChannel",
-        channel_member_ids: [
-            Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
-        ],
         channel_type: "channel",
     });
+    setupChatHub({ opened: [channelId] });
     await start();
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
@@ -101,7 +100,6 @@ test("Invitation form should display channel group restriction", async () => {
     });
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChannel",
-        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
         channel_type: "channel",
         group_public_id: groupId,
     });

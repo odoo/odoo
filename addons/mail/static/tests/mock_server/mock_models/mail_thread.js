@@ -632,6 +632,9 @@ export class MailThread extends models.ServerModel {
                 );
             }
         }
+        if (request_list && request_list.includes("display_name")) {
+            res.display_name = thread.display_name;
+        }
         if (fields.includes("display_name")) {
             res.name = thread.display_name ?? thread.name;
         }

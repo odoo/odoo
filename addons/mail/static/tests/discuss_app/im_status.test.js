@@ -61,10 +61,7 @@ test("initially away", async () => {
 test("change icon on change partner im_status", async () => {
     patchWithCleanup(Persona, { IM_STATUS_DEBOUNCE_DELAY: 0 });
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
-        channel_type: "chat",
-    });
+    const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     pyEnv["res.partner"].write([serverState.partnerId], { im_status: "online" });
     await start();
     await openDiscuss(channelId);

@@ -20,10 +20,10 @@ const threadPatch = {
     },
 
     /** @param {string[]} requestList */
-    async fetchData(requestList) {
+    async fetchThreadData(requestList) {
         this.isLoadingAttachments =
             this.isLoadingAttachments || requestList.includes("attachments");
-        await super.fetchData(requestList);
+        await super.fetchThreadData(requestList);
         if (!this.mainAttachment && this.attachmentsInWebClientView.length > 0) {
             this.setMainAttachmentFromIndex(0);
         }
