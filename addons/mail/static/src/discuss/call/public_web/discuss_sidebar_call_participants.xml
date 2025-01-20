@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="mail.DiscussSidebarCallParticipants">
         <t t-if="sessions.length gt 0">
-            <Dropdown t-if="compact" state="floating" position="'right-middle'" manual="true" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-view py-0'">
+            <Dropdown t-if="compact" state="floating" position="'right-middle'" manual="true" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-100 border border-secondary py-0'">
                 <t t-call="mail.DiscussSidebarCallParticipants.main"/>
                 <t t-set-slot="content">
                     <div t-ref="floating">
