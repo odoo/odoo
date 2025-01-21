@@ -93,12 +93,14 @@ list of filtered posts (by date or tag).
 <template id="opt_blog_cover_post" name="Top banner - Name / Latest Post" inherit_id="website_blog.blog_post_short" active="True" priority="17">
     <xpath expr="//div[@id='o_wblog_blog_top_droppable']" position="replace">
         <div class="container">
-            <div class="row py-4">
-                <t t-if="blog">
+            <t t-if="blog">
+                <div class="row py-4">
                     <div t-attf-class="mb-3 mb-md-0 #{'col-md-5' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'}">
                         <t t-call="website.record_cover">
                             <t t-set="_record" t-value="blog"/>
+                            <t t-set="_bg" t-value="blog._get_background(height=_resize_height, width=_resize_width)"/>
                             <t t-set="additionnal_classes" t-value="'h-100 py-5 py-md-0 overflow-hidden rounded shadow'"/>
+                            <t t-set="additionnal_classes" t-value="additionnal_classes + (' css_non_editable_mode_hidden' if (_bg == 'none') else '')"/>
                         </t>
                     </div>
                     <div t-att-class="'col-md-7' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'">
@@ -109,12 +111,9 @@ list of filtered posts (by date or tag).
                             </div>
                         </div>
                     </div>
-                </t>
-                <t t-else="">
-                    <div class="h1 o_not_editable" style="text-align:center;">Our Latest Posts</div>
-                </t>
-                <div class="col-12 mt-3"> <hr/> </div>
-            </div>
+                </div> 
+            </t>
+            <t t-else="" t-call="website_blog.opt_general_blog_cover"/>
         </div>
     </xpath>
 </template>
@@ -126,7 +125,7 @@ list of filtered posts (by date or tag).
             <t t-set="_record" t-value="blog"/>
             <t t-set="use_filters" t-value="True"/>
             <t t-set="use_text_align" t-value="True"/>
-            <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_record_has_cover cover_auto'"/>
+            <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_record_has_cover cover_auto h-100'"/>
             <div class="container position-relative h-100 d-flex flex-column justify-content-around" t-cache="_record">
                 <div t-attf-class="o_wblog_post_title">
                     <span t-att-title="blog.name" class="text-white text-decoration-none">
@@ -136,12 +135,19 @@ list of filtered posts (by date or tag).
                 </div>
             </div>
         </t>
-        <t t-else="">
-            <div class="h1 my-4 o_not_editable" style="text-align:center;">Our Latest Posts</div>
-        </t>
+        <t t-else="" t-call="website_blog.opt_general_blog_cover"/>
     </xpath>
 </template>
 
+<!-- (Option) Blog: Show latest-post as top banner : 'Regular' design -->
+<template id="opt_general_blog_cover" name="General Blog Cover">
+    <section class="d-flex justify-content-center align-items-center py-5">
+        <div class="text-center">
+            <h1>Our latest post</h1>
+            <h2 class="h5-fs">Check out our latest posts</h2>
+        </div>
+    </section>
+</template>
 
 <!-- (Option) Blog: Sidebar : Show -->
 <template id="opt_blog_sidebar_show" name="Show Sidebar" inherit_id="website_blog.blog_post_short" active="False">
@@ -188,7 +194,7 @@ list of filtered posts (by date or tag).
                     <t t-set="use_filters" t-value="True"/>
                     <t t-set="use_size" t-value="True"/>
                     <t t-set="display_opt_name">Blog Post Cover</t>
-                    <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover'"/>
+                    <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover h-100'"/>
 
                     <div class="container text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
                         <div t-attf-class="o_wblog_post_title">
@@ -307,7 +313,7 @@ list of filtered posts (by date or tag).
 
                 <t t-call="website.record_cover">
                     <t t-set="_record" t-value="blog_post"/>
-                    <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_wblog_post_page_cover_regular rounded shadow overflow-hidden'"/>
+                    <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_wblog_post_page_cover_regular rounded shadow overflow-hidden h-100'"/>
                     <t t-set="use_size" t-value="True"/>
                 </t>
             </div>
@@ -380,7 +386,7 @@ list of filtered posts (by date or tag).
                         <t t-set="_record" t-value="next_post"/>
                         <t t-set="_cp" t-value="json.loads(_record.cover_properties)"/>
                         <t t-set="use_filters" t-value="True"/>
-                        <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_wblog_post_page_cover_footer o_record_has_cover'"/>
+                        <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_wblog_post_page_cover_footer o_record_has_cover h-100'"/>
 
                         <a id="o_wblog_next_post_info" class="d-none"
                            t-att-data-size="_cp.get('resize_class')"

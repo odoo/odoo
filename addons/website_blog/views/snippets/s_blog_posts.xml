@@ -145,6 +145,14 @@
 
 <template id="s_dynamic_snippet_options_template" inherit_id="website.s_dynamic_snippet_options_template">
     <xpath expr="//we-select[@data-name='filter_opt']" position="after">
+        <we-many2many string="Tags"
+            data-no-preview="true"
+            data-model="blog.post"
+            data-set-tags=""
+            data-m2o-field="tag_ids"
+            data-attribute-name="filterByTagIds"/>
+    </xpath>
+    <xpath expr="//we-select[@data-name='filter_opt']" position="after">
         <we-select t-if="snippet_name == 'dynamic_snippet_blog_posts'"
             string="Blog"
             data-no-preview="true"
