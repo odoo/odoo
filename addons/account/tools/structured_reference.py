@@ -43,7 +43,7 @@ def is_valid_structured_reference_be(reference):
     :param reference: the reference to check
     """
     ref = sanitize_structured_reference(reference)
-    be_ref = re.match(r'(\d{10})(\d{2})', ref)
+    be_ref = re.fullmatch(r'(\d{10})(\d{2})', ref)
     return be_ref and int(be_ref.group(1)) % 97 == int(be_ref.group(2)) % 97
 
 def is_valid_structured_reference_fi(reference):
@@ -52,7 +52,7 @@ def is_valid_structured_reference_fi(reference):
     :param reference: the reference to check
     """
     ref = sanitize_structured_reference(reference)
-    fi_ref = re.match(r'(\d{1,19})(\d)', ref)
+    fi_ref = re.fullmatch(r'(\d{1,19})(\d)', ref)
     if not fi_ref:
         return False
     total = sum((7, 3, 1)[idx % 3] * int(val) for idx, val in enumerate(fi_ref.group(1)[::-1]))
@@ -65,5 +65,5 @@ def is_valid_structured_reference_no_se(reference):
     :param reference: the reference to check
     """
     ref = sanitize_structured_reference(reference)
-    no_se_ref = re.match(r'\d+', ref)
+    no_se_ref = re.fullmatch(r'\d+', ref)
     return no_se_ref and luhn.is_valid(ref)
