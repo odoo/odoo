@@ -77,6 +77,9 @@ class WebsiteSnippetFilter(models.Model):
         ))
         return [etree.tostring(el, encoding='unicode', method='html') for el in html.fromstring('<root>%s</root>' % str(content)).getchildren()]
 
+    def _get_applicable_domain_for_published(self, model):
+        return [('is_published', '=', True)]
+
     def _prepare_values(self, limit=None, search_domain=None):
         """Gets the data and returns it the right format for render."""
         self.ensure_one()
@@ -96,7 +99,7 @@ class WebsiteSnippetFilter(models.Model):
                 website = self.env['website'].get_current_website()
                 domain = expression.AND([domain, [('company_id', 'in', [False, website.company_id.id])]])
             if 'is_published' in self.env[filter_sudo.model_id]:
-                domain = expression.AND([domain, [('is_published', '=', True)]])
+                domain = expression.AND([domain, self._get_applicable_domain_for_published(filter_sudo.model_id)])
             if search_domain:
                 domain = expression.AND([domain, search_domain])
             try:
