@@ -1131,6 +1131,37 @@ export class PosStore extends Reactive {
     cashierHasPriceControlRights() {
         return !this.config.restrict_price_control || this.get_cashier()._role == "manager";
     }
+    get currentSequenceNumber() {
+        return this._sequenceNumber || 1;
+    }
+    getNextSequenceNumber() {
+        const sessionId = this.session.id;
+        const configId = this.config.id;
+        const storedData = localStorage.getItem("pos.sequenceNumbers") || "{}";
+        const cache = JSON.parse(storedData);
+
+        if (!cache[configId]) {
+            cache[configId] = {};
+        }
+        // Cleanup: Remove sequence numbers for previous sessions under the same configId
+        // If we used only sessionId, we wouldn't be able to remove outdated session data properly,
+        // because some session IDs might belong to a different configuration, which we must preserve.
+        for (const sid in cache[configId]) {
+            if (sid !== String(sessionId)) {
+                delete cache[configId][sid];
+            }
+        }
+
+        if (!cache[configId][sessionId]) {
+            cache[configId][sessionId] = 0;
+        }
+
+        cache[configId][sessionId] += 1;
+        this._sequenceNumber = cache[configId][sessionId];
+        localStorage.setItem("pos.sequenceNumbers", JSON.stringify(cache));
+
+        return this._sequenceNumber;
+    }
     generate_unique_id() {
         // Generates a public identification number for the order.
         // The generated number must be unique and sequential. They are made 12 digit long
@@ -1148,7 +1179,7 @@ export class PosStore extends Reactive {
             "-" +
             zero_pad(this.session.login_number, 3) +
             "-" +
-            zero_pad(this.session.sequence_number, 4)
+            zero_pad(this.getNextSequenceNumber(), 4)
         );
     }
     createNewOrder(data = {}) {
@@ -1163,7 +1194,7 @@ export class PosStore extends Reactive {
             config_id: this.config,
             picking_type_id: this.pickingType,
             user_id: this.user,
-            sequence_number: this.session.sequence_number,
+            sequence_number: this.currentSequenceNumber,
             access_token: uuidv4(),
             ticket_code: random5Chars(),
             fiscal_position_id: fiscalPosition,
@@ -1172,7 +1203,6 @@ export class PosStore extends Reactive {
             ...data,
         });
 
-        this.session.sequence_number++;
         order.set_pricelist(this.config.pricelist_id);
         return order;
     }
