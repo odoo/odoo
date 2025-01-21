@@ -72,27 +72,20 @@ class PortalMixin(models.AbstractModel):
 
         user, record = self.env.user, self
         if access_uid:
-            try:
-                record.check_access('read')
-            except exceptions.AccessError:
+            if not record.has_access('read'):
                 return super(PortalMixin, self)._get_access_action(
                     access_uid=access_uid, force_website=force_website
                 )
             user = self.env['res.users'].sudo().browse(access_uid)
             record = self.with_user(user)
         if user.share or force_website:
-            try:
-                record.check_access('read')
-            except exceptions.AccessError:
-                if force_website:
-                    return {
-                        'type': 'ir.actions.act_url',
-                        'url': record.access_url,
-                        'target': 'self',
-                        'res_id': record.id,
-                    }
-                else:
-                    pass
+            if force_website and not record.has_access('read'):
+                return {
+                    'type': 'ir.actions.act_url',
+                    'url': record.access_url,
+                    'target': 'self',
+                    'res_id': record.id,
+                }
             else:
                 return {
                     'type': 'ir.actions.act_url',

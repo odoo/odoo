@@ -4,7 +4,7 @@ import random
 from markupsafe import Markup
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessDenied, AccessError, UserError
+from odoo.exceptions import AccessDenied, UserError
 
 
 class CrmLead(models.Model):
@@ -287,6 +287,7 @@ class CrmLead(models.Model):
         }
 
     #
+    #   FIXME actually implement portal.mixin
     #   DO NOT FORWARD PORT IN MASTER
     #   instead, crm.lead should implement portal.mixin
     #
@@ -297,20 +298,13 @@ class CrmLead(models.Model):
 
         user, record = self.env.user, self
         if access_uid:
-            try:
-                record.check_access("read")
-            except AccessError:
-                return super(CrmLead, self)._get_access_action(access_uid=access_uid, force_website=force_website)
+            if not record.has_access('read'):
+                return super()._get_access_action(access_uid=access_uid, force_website=force_website)
             user = self.env['res.users'].sudo().browse(access_uid)
             record = self.with_user(user)
-        if user.share or force_website:
-            try:
-                record.check_access('read')
-            except AccessError:
-                pass
-            else:
-                return {
-                    'type': 'ir.actions.act_url',
-                    'url': '/my/opportunity/%s' % record.id,
-                }
-        return super(CrmLead, self)._get_access_action(access_uid=access_uid, force_website=force_website)
+        if (user.share or force_website) and record.has_access('read'):
+            return {
+                'type': 'ir.actions.act_url',
+                'url': '/my/opportunity/%s' % record.id,
+            }
+        return super()._get_access_action(access_uid=access_uid, force_website=force_website)
