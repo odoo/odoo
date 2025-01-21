@@ -4,7 +4,7 @@ from odoo.osv import expression
 
 from xmlrpc.client import MAXINT
 
-from odoo.tools import SQL
+from odoo.tools import create_index, make_index_name, SQL
 
 
 class AccountBankStatementLine(models.Model):
@@ -149,6 +149,10 @@ class AccountBankStatementLine(models.Model):
     _unreconciled_idx = models.Index("(journal_id, company_id, internal_index) WHERE is_reconciled IS NOT TRUE")
     _orphan_idx = models.Index("(journal_id, company_id, internal_index) WHERE statement_id IS NULL")
     _main_idx = models.Index("(journal_id, company_id, internal_index)")
+
+    def init(self):
+        super().init()
+        create_index(self._cr, make_index_name(self._table, 'transaction_details'), self._table, ['transaction_details'], method='GIN')
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
