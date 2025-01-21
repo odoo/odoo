@@ -173,6 +173,7 @@ class AccountMoveLine(models.Model):
                 ('product_id', '=', self.product_id.id),
                 ('balance', '>', 0),
             ])
+            posted_cogs = posted_cogs.filtered(lambda l: so_line in l.cogs_origin_id.sale_line_ids)
             qty_invoiced = 0
             product_uom = self.product_id.uom_id
             for line in posted_cogs:
