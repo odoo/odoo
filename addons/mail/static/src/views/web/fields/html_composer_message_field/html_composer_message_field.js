@@ -4,7 +4,19 @@ import { HtmlMailField, htmlMailField } from "../html_mail_field/html_mail_field
 import { MentionPlugin } from "./mention_plugin";
 import { ContentExpandablePlugin } from "./content_expandable_plugin";
 
+import { onMounted } from "@odoo/owl";
+
 export class HtmlComposerMessageField extends HtmlMailField {
+    setup() {
+        super.setup();
+        onMounted(() => {
+            this.editor.shared.selection.setSelection({
+                anchorNode: this.editor.editable,
+                anchorOffset: 0,
+            });
+        });
+    }
+
     getConfig() {
         const config = super.getConfig(...arguments);
         config.Plugins = [...config.Plugins, MentionPlugin];
@@ -34,6 +46,7 @@ export class HtmlComposerMessageField extends HtmlMailField {
 
 export const htmlComposerMessageField = {
     ...htmlMailField,
+    additionalClasses: [...htmlMailField.additionalClasses, "ps-0"],
     component: HtmlComposerMessageField,
 };
 

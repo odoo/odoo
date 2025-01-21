@@ -6,7 +6,7 @@
             <field name="model">mail.compose.message</field>
             <field name="groups_id" eval="[Command.link(ref('base.group_user'))]"/>
             <field name="arch" type="xml">
-                <form string="Compose Email" class="pt-0 pb-0 o_mail_composer_form" js_class="mail_composer_form">
+                <form string="Compose Email" class="pt-0 pb-0 o_mail_composer_form" js_class="mail_composer_form" disable_autofocus="1">
                     <group>
                         <!-- truly invisible fields for control and options -->
                         <field name="author_id" invisible="1"/>
@@ -42,8 +42,13 @@
                         <label for="partner_ids" string="To" invisible="composition_mode != 'comment' or subtype_is_log"/>
                         <div groups="base.group_user" invisible="composition_mode != 'comment' or subtype_is_log">
                             <field name="partner_ids" widget="many2many_tags_email" placeholder="Followers only"
-                                required="composition_comment_option == 'forward'"
+                                invisible="composition_comment_option == 'forward'"
+                                required="context.get('force_email', False)"
                                 options="{'no_quick_create': True}" context="{'show_email':True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
+                            <field name="partner_ids" widget="many2many_tags_email" placeholder="Add recipients..."
+                                required="True" invisible="composition_comment_option != 'forward'"
+                                options="{'no_quick_create': True}"
+                                context="{'show_email':True, 'form_view_ref': 'base.view_partner_simple_form', 'forward_mode': True}"/>
                         </div>
                         <field name="subject" placeholder="Welcome to MyCompany!" required="True"/>
                     </group>

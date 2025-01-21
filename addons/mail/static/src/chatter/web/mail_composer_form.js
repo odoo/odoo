@@ -19,19 +19,23 @@ export class MailComposerFormRenderer extends formView.Renderer {
         this.orm = useService("orm");
         // Autofocus the visible editor in edition mode.
         this.root = useRef("compiled_view_root");
-        useEffect((isInEdition, root) => {
-            if (root && root.el && isInEdition && this.props.record.data.composition_comment_option !== "reply_all") {
-                const element = root.el.querySelector(".note-editable[contenteditable]");
-                if (element) {
-                    element.focus();
-                    document.dispatchEvent(new Event("selectionchange", {}));
+        useEffect(
+            (isInEdition, root) => {
+                if (
+                    root &&
+                    root.el &&
+                    isInEdition &&
+                    this.props.record.data.composition_comment_option === "reply_all"
+                ) {
+                    const element = root.el.querySelector(".note-editable[contenteditable]");
+                    if (element) {
+                        element.focus();
+                        document.dispatchEvent(new Event("selectionchange", {}));
+                    }
                 }
-            }
-        }, () => [
-            this.props.record.isInEdition,
-            this.root,
-            this.props.record.resId
-        ]);
+            },
+            () => [this.props.record.isInEdition, this.root, this.props.record.resId]
+        );
 
         const getActiveMailThread = () => {
             const resIds = JSON.parse(this.props.record.data.res_ids);

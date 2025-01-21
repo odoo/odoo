@@ -176,6 +176,7 @@
 </t>
 
 <t t-name="mail.Message.bodyInForward">
+    <p><br/></p>
     <div>
         <span>---------- Forwarded message ----------</span><br/>
         <span>Date: <t t-esc="date"/></span><br/>
@@ -186,6 +187,7 @@
 </t>
 
 <t t-name="mail.Message.bodyInReply">
+    <p><br/></p>
     <div class="o_mail_reply_content">
         <div class="d-none">
             <span>On <t t-esc="date"/> <t t-esc="name"/> <a t-att-href="'mailto:' + email" target="_blank">&lt;<t t-esc="email"/>&gt;</a>wrote</span>

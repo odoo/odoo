@@ -14,6 +14,7 @@ export class FieldMany2ManyTagsEmailTagsList extends TagsList {
 }
 
 export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
+    static template = "FieldMany2ManyTagsEmailTags";
     static components = {
         ...FieldMany2ManyTagsEmail.components,
         TagsList: FieldMany2ManyTagsEmailTagsList,
@@ -111,9 +112,10 @@ export const fieldMany2ManyTagsEmail = {
         props.context = dynamicInfo.context;
         return props;
     },
-    relatedFields: (fieldInfo) => {
-        return [...many2ManyTagsField.relatedFields(fieldInfo), { name: "email", type: "char" }];
-    },
+    relatedFields: (fieldInfo) => [
+        ...many2ManyTagsField.relatedFields(fieldInfo),
+        { name: "email", type: "char" },
+    ],
     additionalClasses: ["o_field_many2many_tags"],
 };
 

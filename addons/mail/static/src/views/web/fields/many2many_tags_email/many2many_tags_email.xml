@@ -8,4 +8,9 @@
             </div>
         </xpath>
     </t>
+    <t t-name="FieldMany2ManyTagsEmailTags" t-inherit="web.Many2ManyTagsField">
+        <xpath expr="//Many2XAutocomplete" position="attributes">
+            <attribute name="autofocus">props.context.forward_mode</attribute>
+        </xpath>
+    </t>
 </templates>
