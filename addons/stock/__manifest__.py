@@ -39,6 +39,7 @@
         'report/report_stock_rule.xml',
         'report/stock_lot_customer.xml',
         'report/package_templates.xml',
+        'report/packaging_barcode.xml',
         'report/picking_templates.xml',
         'report/product_templates.xml',
         'report/report_return_slip.xml',
