@@ -218,6 +218,10 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         ''' Test mapping a price-included tax (10%) with a price-excluded tax (20%) on a price_unit of 110.0.
         The price_unit should be 100.0 after applying the fiscal position.
         '''
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'fiscal_pos_a',
+        })
+
         tax_price_include = self.env['account.tax'].create({
             'name': '10% incl',
             'type_tax_use': 'purchase',
@@ -231,16 +235,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'type_tax_use': 'purchase',
             'amount_type': 'percent',
             'amount': 15,
-        })
-
-        fiscal_position = self.env['account.fiscal.position'].create({
-            'name': 'fiscal_pos_a',
-            'tax_ids': [
-                (0, None, {
-                    'tax_src_id': tax_price_include.id,
-                    'tax_dest_id': tax_price_exclude.id,
-                }),
-            ],
+            'fiscal_position_ids': [Command.set(fiscal_position.ids)],
+            'original_tax_ids': [Command.set(tax_price_include.ids)],
         })
 
         product = self.env['product.product'].create({
@@ -361,6 +357,9 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         ''' Test mapping a price-included tax (10%) with another price-included tax (20%) on a price_unit of 110.0.
         The price_unit should be 120.0 after applying the fiscal position.
         '''
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'fiscal_pos_a',
+        })
         tax_price_include_1 = self.env['account.tax'].create({
             'name': '10% incl',
             'type_tax_use': 'purchase',
@@ -376,16 +375,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount': 20,
             'price_include_override': 'tax_included',
             'include_base_amount': True,
-        })
-
-        fiscal_position = self.env['account.fiscal.position'].create({
-            'name': 'fiscal_pos_a',
-            'tax_ids': [
-                (0, None, {
-                    'tax_src_id': tax_price_include_1.id,
-                    'tax_dest_id': tax_price_include_2.id,
-                }),
-            ],
+            'fiscal_position_ids': [Command.link(fiscal_position.id)],
+            'original_tax_ids': [Command.link(tax_price_include_1.id)],
         })
 
         product = self.env['product.product'].create({

@@ -563,6 +563,14 @@ class TestSalePrices(SaleCommon):
     # If you need the accounting common (journals, ...), use/make another test class
 
     def test_sale_tax_mapping(self):
+        country_belgium = self.env['res.country'].search([
+            ('name', '=', 'Belgium'),
+        ], limit=1)
+        fiscal_pos = self.env['account.fiscal.position'].create({
+            'name': 'Test Fiscal Position',
+            'auto_apply': True,
+            'country_id': country_belgium.id,
+        })
         tax_a, tax_b = self.env['account.tax'].create([{
             'name': 'Test tax A',
             'type_tax_use': 'sale',
@@ -572,20 +580,9 @@ class TestSalePrices(SaleCommon):
             'name': 'Test tax B',
             'type_tax_use': 'sale',
             'amount': 6.0,
+            'fiscal_position_ids': fiscal_pos,
         }])
-
-        country_belgium = self.env['res.country'].search([
-            ('name', '=', 'Belgium'),
-        ], limit=1)
-        fiscal_pos = self.env['account.fiscal.position'].create({
-            'name': 'Test Fiscal Position',
-            'auto_apply': True,
-            'country_id': country_belgium.id,
-            'tax_ids': [Command.create({
-                'tax_src_id': tax_a.id,
-                'tax_dest_id': tax_b.id
-            })]
-        })
+        tax_b.original_tax_ids = tax_a
 
         # setting up partner:
         self.partner.country_id = country_belgium
@@ -644,6 +641,25 @@ class TestSalePrices(SaleCommon):
         partner = self.partner
 
         (
+            fpos_incl_incl,
+            fpos_excl_incl,
+            fpos_incl_excl,
+            fpos_excl_excl,
+        ) = self.env['account.fiscal.position'].create([{
+            'name': "incl -> incl",
+            'sequence': 1,
+        }, {
+            'name': "excl -> incl",
+            'sequence': 2,
+        }, {
+            'name': "incl -> excl",
+            'sequence': 3,
+        }, {
+            'name': "excl -> excl",
+            'sequence': 4,
+        }])
+
+        (
             tax_fixed_incl,
             tax_fixed_excl,
             tax_include_src,
@@ -682,6 +698,15 @@ class TestSalePrices(SaleCommon):
             'price_include_override': 'tax_excluded',
         }])
 
+        tax_include_dst.write({
+            'fiscal_position_ids': fpos_incl_incl | fpos_excl_incl,
+            'original_tax_ids': tax_include_src | tax_exclude_src,
+        })
+        tax_exclude_dst.write({
+            'fiscal_position_ids': fpos_incl_excl | fpos_excl_excl,
+            'original_tax_ids': tax_include_src | tax_exclude_src,
+        })
+
         (
             product_tmpl_a,
             product_tmpl_b,
@@ -703,41 +728,6 @@ class TestSalePrices(SaleCommon):
             'name': "Voiture",
             'list_price': 100,
             'taxes_id': [Command.set([tax_fixed_excl.id, tax_include_src.id])]
-        }])
-
-        (
-            fpos_incl_incl,
-            fpos_excl_incl,
-            fpos_incl_excl,
-            fpos_excl_excl,
-        ) = self.env['account.fiscal.position'].create([{
-            'name': "incl -> incl",
-            'sequence': 1,
-            'tax_ids': [Command.create({
-                'tax_src_id': tax_include_src.id,
-                'tax_dest_id': tax_include_dst.id,
-            })]
-        }, {
-            'name': "excl -> incl",
-            'sequence': 2,
-            'tax_ids': [Command.create({
-                'tax_src_id': tax_exclude_src.id,
-                'tax_dest_id': tax_include_dst.id,
-            })]
-        }, {
-            'name': "incl -> excl",
-            'sequence': 3,
-            'tax_ids': [Command.create({
-                'tax_src_id': tax_include_src.id,
-                'tax_dest_id': tax_exclude_dst.id,
-            })]
-        }, {
-            'name': "excl -> excp",
-            'sequence': 4,
-            'tax_ids': [Command.create({
-                'tax_src_id': tax_exclude_src.id,
-                'tax_dest_id': tax_exclude_dst.id,
-            })]
         }])
 
         # Create the SO with one SO line and apply a pricelist and fiscal position on it
@@ -820,6 +810,11 @@ class TestSalePrices(SaleCommon):
     def test_so_tax_mapping(self):
         order = self.empty_order
 
+        fpos = self.env['account.fiscal.position'].create({
+            'name': 'Test Fiscal Position',
+            'sequence': 1,
+        })
+
         tax_include, tax_exclude = self.env['account.tax'].create([{
             'name': 'Include Tax',
             'amount': '21.00',
@@ -829,20 +824,13 @@ class TestSalePrices(SaleCommon):
             'name': 'Exclude Tax',
             'amount': '0.00',
             'type_tax_use': 'sale',
+            'fiscal_position_ids': fpos,
         }])
+        tax_exclude.original_tax_ids = tax_include
 
         self.product.write({
             'list_price': 121,
             'taxes_id': [Command.set(tax_include.ids)]
-        })
-
-        fpos = self.env['account.fiscal.position'].create({
-            'name': 'Test Fiscal Position',
-            'sequence': 1,
-            'tax_ids': [Command.create({
-                'tax_src_id': tax_include.id,
-                'tax_dest_id': tax_exclude.id,
-            })],
         })
 
         order.write({

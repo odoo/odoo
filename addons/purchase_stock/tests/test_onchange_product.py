@@ -18,7 +18,6 @@ class TestOnchangeProductId(TransactionCase):
         super().setUpClass()
         cls.env.company.country_id = cls.env.ref('base.us')
         cls.fiscal_position_model = cls.env['account.fiscal.position']
-        cls.fiscal_position_tax_model = cls.env['account.fiscal.position.tax']
         cls.tax_model = cls.env['account.tax']
         cls.po_model = cls.env['purchase.order']
         cls.po_line_model = cls.env['purchase.order.line']
@@ -38,11 +37,14 @@ class TestOnchangeProductId(TransactionCase):
         uom_id = self.product_uom_model.search([('name', '=', 'Units')])[0]
 
         partner_id = self.res_partner_model.create(dict(name="George"))
+        fp_id = self.fiscal_position_model.create(dict(name="fiscal position", sequence=1))
         tax_include_id = self.tax_model.create(dict(name="Include tax",
                                                     amount='21.00',
                                                     price_include_override='tax_included',
                                                     type_tax_use='purchase'))
         tax_exclude_id = self.tax_model.create(dict(name="Exclude tax",
+                                                    fiscal_position_ids=fp_id,
+                                                    original_tax_ids=tax_include_id,
                                                     amount='0.00',
                                                     type_tax_use='purchase'))
         supplierinfo_vals = {
@@ -58,11 +60,6 @@ class TestOnchangeProductId(TransactionCase):
                                                               supplier_taxes_id=[(6, 0, [tax_include_id.id])]))
         product_id = product_tmpl_id.product_variant_id
 
-        fp_id = self.fiscal_position_model.create(dict(name="fiscal position", sequence=1))
-
-        fp_tax_id = self.fiscal_position_tax_model.create(dict(position_id=fp_id.id,
-                                                               tax_src_id=tax_include_id.id,
-                                                               tax_dest_id=tax_exclude_id.id))
         po_vals = {
             'partner_id': partner_id.id,
             'fiscal_position_id': fp_id.id,

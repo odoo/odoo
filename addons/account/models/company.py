@@ -193,6 +193,11 @@ class ResCompany(models.Model):
     )
 
     # Taxes
+    domestic_fiscal_position_id = fields.Many2one(
+        comodel_name='account.fiscal.position',
+        compute='_compute_domestic_fiscal_position_id',
+        store=True,
+    )
     account_fiscal_country_id = fields.Many2one(
         string="Fiscal Country",
         comodel_name='res.country',
@@ -332,6 +337,12 @@ class ResCompany(models.Model):
     def _compute_force_restrictive_audit_trail(self):
         for company in self:
             company.force_restrictive_audit_trail = False
+
+    @api.depends('fiscal_position_ids', 'fiscal_position_ids.sequence', 'fiscal_position_ids.country_id')
+    def _compute_domestic_fiscal_position_id(self):
+        for company in self:
+            potential_domestic_fps = company.fiscal_position_ids.filtered_domain([('country_id', '=', company.country_id.id)]).sorted('sequence')
+            company.domestic_fiscal_position_id = potential_domestic_fps[0] if potential_domestic_fps else False
 
     @api.depends('fiscal_position_ids.foreign_vat')
     def _compute_multi_vat_foreign_country(self):

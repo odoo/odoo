@@ -88,13 +88,6 @@ class AccountTestInvoicingCommon(ProductCommon):
         # ==== Fiscal positions ====
         cls.fiscal_pos_a = cls.env['account.fiscal.position'].create({
             'name': 'fiscal_pos_a',
-            'tax_ids': ([(0, None, {
-                    'tax_src_id': cls.tax_sale_a.id,
-                    'tax_dest_id': cls.tax_sale_b.id,
-            })] if cls.tax_sale_b else []) + ([(0, None, {
-                    'tax_src_id': cls.tax_purchase_a.id,
-                    'tax_dest_id': cls.tax_purchase_b.id,
-            })] if cls.tax_purchase_b else []),
             'account_ids': [
                 (0, None, {
                     'account_src_id': cls.product_a.property_account_income_id.id,
@@ -106,6 +99,12 @@ class AccountTestInvoicingCommon(ProductCommon):
                 }),
             ] if cls.env.registry.loaded else [],
         })
+        if cls.tax_sale_b:
+            cls.tax_sale_b.fiscal_position_ids = cls.fiscal_pos_a.ids
+            cls.tax_sale_b.original_tax_ids = cls.tax_sale_a
+        if cls.tax_purchase_b:
+            cls.tax_purchase_b.fiscal_position_ids = cls.fiscal_pos_a.ids
+            cls.tax_purchase_b.original_tax_ids = cls.tax_purchase_a
 
         # ==== Payment terms ====
         cls.pay_terms_a = cls.env.ref('account.account_payment_term_immediate')

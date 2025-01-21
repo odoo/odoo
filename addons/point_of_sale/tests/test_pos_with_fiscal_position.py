@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import tools
+from odoo import Command
 import odoo
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
@@ -56,14 +56,12 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
             'account_src_id': cls.sale_account.id,
             'account_dest_id': cls.other_sale_account.id,
         })
-        tax_fpos = cls.env['account.fiscal.position.tax'].create({
-            'position_id': fpos.id,
-            'tax_src_id': cls.taxes['tax7'].id,
-            'tax_dest_id': cls.new_tax_17.id,
-        })
         fpos.write({
             'account_ids': [(6, 0, account_fpos.ids)],
-            'tax_ids': [(6, 0, tax_fpos.ids)],
+        })
+        cls.new_tax_17.write({
+            'fiscal_position_ids': [Command.link(fpos.id)],
+            'original_tax_ids': [Command.link(cls.taxes['tax7'].id)],
         })
         return fpos
 
@@ -75,13 +73,14 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
             'account_src_id': cls.sale_account.id,
             'account_dest_id': cls.other_sale_account.id,
         })
-        tax_fpos = cls.env['account.fiscal.position.tax'].create({
-            'position_id': fpos_no_tax_dest.id,
-            'tax_src_id': cls.taxes['tax7'].id,
-        })
         fpos_no_tax_dest.write({
             'account_ids': [(6, 0, account_fpos.ids)],
-            'tax_ids': [(6, 0, tax_fpos.ids)],
+        })
+        cls.env['account.tax'].create({
+            'name': 'Exempt',
+            'amount': 0,
+            'fiscal_position_ids': [Command.link(fpos_no_tax_dest.id)],
+            'original_tax_ids': [Command.link(cls.taxes['tax7'].id)],
         })
         return fpos_no_tax_dest
 

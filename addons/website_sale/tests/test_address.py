@@ -287,27 +287,26 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             },
         ]
 
-        tax_10_incl, tax_20_excl, tax_15_incl = self.env['account.tax'].create([
-            {'name': 'Tax 10% incl', 'amount': 10, 'price_include_override': 'tax_included'},
-            {'name': 'Tax 20% excl', 'amount': 20, 'price_include_override': 'tax_excluded'},
-            {'name': 'Tax 15% incl', 'amount': 15, 'price_include_override': 'tax_included'},
-        ])
         fpos_be, fpos_nl = self.env['account.fiscal.position'].create([
             {
                 'sequence': 1,
                 'name': 'BE',
                 'auto_apply': True,
                 'country_id': self.env.ref('base.be').id,
-                'tax_ids': [Command.create({'tax_src_id': tax_10_incl.id, 'tax_dest_id': tax_20_excl.id})],
             },
             {
                 'sequence': 2,
                 'name': 'NL',
                 'auto_apply': True,
                 'country_id': self.env.ref('base.nl').id,
-                'tax_ids': [Command.create({'tax_src_id': tax_10_incl.id, 'tax_dest_id': tax_15_incl.id})],
             },
         ])
+        tax_10_incl, tax_20_excl, tax_15_incl = self.env['account.tax'].create([
+            {'name': 'Tax 10% incl', 'amount': 10, 'price_include_override': 'tax_included'},
+            {'name': 'Tax 20% excl', 'amount': 20, 'price_include_override': 'tax_excluded', 'fiscal_position_ids': fpos_be},
+            {'name': 'Tax 15% incl', 'amount': 15, 'price_include_override': 'tax_included', 'fiscal_position_ids': fpos_nl},
+        ])
+        (tax_20_excl | tax_15_incl).original_tax_ids = tax_10_incl
 
         product = self.env['product.product'].create({
             'name': 'Product test',

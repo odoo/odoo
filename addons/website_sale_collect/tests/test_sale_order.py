@@ -28,17 +28,17 @@ class TestSaleOrder(ClickAndCollectCommon):
         self.assertEqual(so.warehouse_id, self.warehouse)
 
     def test_setting_pickup_location_assigns_correct_fiscal_position(self):
-        fp_us = self.env['account.fiscal.position'].create({
+        fp_be = self.env['account.fiscal.position'].create({
             'name': "Test US fiscal position",
-            'country_id': self.country_us.id,
+            'country_id': self.country_be.id,
             'auto_apply': True,
         })
         so = self._create_in_store_delivery_order()
-        self.default_partner.country_id = self.country_us
+        self.default_partner.country_id = self.country_be
         warehouse = self._create_warehouse()
         warehouse.partner_id = self.default_partner
         so._set_pickup_location('{"id":' + str(warehouse.id) + '}')
-        self.assertEqual(so.fiscal_position_id, fp_us)
+        self.assertEqual(so.fiscal_position_id, fp_be)
 
     def test_selecting_not_in_store_dm_resets_fiscal_position(self):
         fp_us = self.env['account.fiscal.position'].create({

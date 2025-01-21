@@ -889,7 +889,7 @@ class AccountMoveLine(models.Model):
             tax_ids = filtered_supplier_taxes_id or self.account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'purchase')
 
         else:
-            tax_ids = False if self.env.context.get('skip_computed_taxes') else self.account_id.tax_ids
+            tax_ids = False if self.env.context.get('skip_computed_taxes') or self.move_id.is_entry() else self.account_id.tax_ids
 
         if self.company_id and tax_ids:
             tax_ids = tax_ids._filter_taxes_by_company(self.company_id)
