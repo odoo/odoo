@@ -158,6 +158,7 @@ class AccountMoveSendWizard(models.TransientModel):
                 for edi_key in self._get_default_extra_edis(wizard.move_id)
             }
 
+    @api.depends('move_id')
     def _compute_invoice_edi_format(self):
         for wizard in self:
             wizard.invoice_edi_format = self._get_default_invoice_edi_format(wizard.move_id)

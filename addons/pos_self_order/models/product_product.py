@@ -71,6 +71,8 @@ class ProductProduct(models.Model):
             order='sequence,default_code,name',
             load=False
         )
+        for product in products:
+            product['image_128'] = bool(product['image_128'])
 
         data['pos.config']['data'][0]['_product_default_values'] = \
             self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(product_fields)

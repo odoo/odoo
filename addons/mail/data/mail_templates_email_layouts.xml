@@ -11,7 +11,7 @@
 <t t-set="show_header" t-value="email_notification_force_header or (
     email_notification_allow_header and has_button_access)"/>
 <t t-set="show_footer" t-value="email_notification_force_footer or (
-    email_notification_allow_footer and show_header and author_user._is_internal())"/>
+    email_notification_allow_footer and show_header and author_user and author_user._is_internal())"/>
 <!-- HEADER -->
 <t t-call="mail.notification_preview"/>
 <div style="max-width: 900px; width: 100%;">

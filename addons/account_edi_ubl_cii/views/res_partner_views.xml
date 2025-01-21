@@ -5,8 +5,8 @@
         <field name="inherit_id" ref="account.view_partner_property_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@id='invoice_send_settings']" position="inside">
-                <label for="peppol_eas" string="Peppol Address" invisible="not is_peppol_edi_format"/>
-                <div id="peppol_address" invisible="not is_peppol_edi_format" class="row">
+                <label for="peppol_eas" string="Peppol Address"/>
+                <div id="peppol_address" class="row">
                     <field name="peppol_eas" placeholder="EAS" style="width:50%;"/>
                     <field name="peppol_endpoint" placeholder="Endpoint" style="width:50%;"/>
                 </div>

@@ -6,6 +6,8 @@ from markupsafe import Markup
 from itertools import groupby
 from collections import defaultdict
 from uuid import uuid4
+from random import randrange
+from pprint import pformat
 
 import psycopg2
 import pytz
@@ -992,6 +994,10 @@ class PosOrder(models.Model):
                 (invoice_receivables | payment_receivables).sudo().with_company(self.company_id).reconcile()
         return payment_moves
 
+    @staticmethod
+    def _get_order_log_representation(order):
+        return dict((k, order.get(k)) for k in ("name", "uuid"))
+
     @api.model
     def sync_from_ui(self, orders):
         """ Create and update Orders from the frontend PoS application.
@@ -1006,17 +1012,28 @@ class PosOrder(models.Model):
         :type draft: bool.
         :Returns: list -- list of db-ids for the created and updated orders.
         """
+        sync_token = randrange(100_000_000)  # Use to differentiate 2 parallels calls to this function in the logs
+        _logger.info("PoS synchronisation #%d started for PoS orders references: %s", sync_token, [self._get_order_log_representation(order) for order in orders])
         order_ids = []
         session_ids = set({order.get('session_id') for order in orders})
         for order in orders:
+            order_log_name = self._get_order_log_representation(order)
+            _logger.debug("PoS synchronisation #%d processing order %s order full data: %s", sync_token, order_log_name, pformat(order))
+
             if len(self._get_refunded_orders(order)) > 1:
                 raise ValidationError(_('You can only refund products from the same order.'))
 
             existing_order = self._get_open_order(order)
             if existing_order and existing_order.state == 'draft':
                 order_ids.append(self._process_order(order, existing_order))
+                _logger.info("PoS synchronisation #%d order %s updated pos.order #%d", sync_token, order_log_name, order_ids[-1])
             elif not existing_order:
                 order_ids.append(self._process_order(order, False))
+                _logger.info("PoS synchronisation #%d order %s created pos.order #%d", sync_token, order_log_name, order_ids[-1])
+            else:
+                # In theory, this situation is unintended
+                # In practice it can happen when "Tip later" option is used
+                _logger.info("PoS synchronisation #%d order %s sync ignored for existing PoS order %s (state: %s)", sync_token, order_log_name, existing_order, existing_order.state)
 
         # Sometime pos_orders_ids can be empty.
         pos_order_ids = self.env['pos.order'].browse(order_ids)
@@ -1027,6 +1044,8 @@ class PosOrder(models.Model):
 
         # If the previous session is closed, the order will get a new session_id due to _get_valid_session in _process_order
         is_new_session = any(order.get('session_id') not in session_ids for order in orders)
+
+        _logger.info("PoS synchronisation #%d finished", sync_token)
         return {
             'pos.order': pos_order_ids.read(pos_order_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
             'pos.session': pos_order_ids.session_id._load_pos_data({})['data'] if config_id and is_new_session else [],
