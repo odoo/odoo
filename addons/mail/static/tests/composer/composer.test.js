@@ -1097,3 +1097,30 @@ test("Tab to select of canned response suggestion works in chat window", async (
         value: "Hello! How are you? ",
     });
 });
+
+test('can quickly add emoji with ":" keyword', async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ guest_id: guestId }),
+        ],
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-input");
+    await insertText(".o-mail-Composer-input", ":sweat");
+    await contains(".o-mail-Composer-suggestionList .o-open");
+    await contains(".o-mail-NavigableList-item", { text: "😅:sweat_smile:" });
+    await click(".o-mail-NavigableList-item", { text: "😅:sweat_smile:" });
+    await contains(".o-mail-Composer-input", { value: "😅 " });
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    // check at least 2 chars to trigger it, so that emoji substitution like :p are still easy to use
+    await insertText(".o-mail-Composer-input", ":sw");
+    await contains(".o-mail-Composer-suggestionList .o-open");
+    await contains(".o-mail-NavigableList-item", { text: "😅:sweat_smile:" });
+    await insertText(".o-mail-Composer-input", ":s", { replace: true });
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+});
