@@ -52,6 +52,8 @@ test("simple chatter on a record", async () => {
     await contains(".o-mail-Thread");
     await waitForSteps(
         [
+            '/mail/thread/recipients/fields - {"thread_model":"res.partner"}',
+            '/mail/thread/recipients/fields - {"thread_model":"res.partner"}',
             `/mail/data - ${JSON.stringify({
                 fetch_params: [
                     [

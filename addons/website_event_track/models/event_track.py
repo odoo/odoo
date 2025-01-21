@@ -480,8 +480,8 @@ class EventTrack(models.Model):
             } for track in self
         }
 
-    def _message_add_suggested_recipients(self):
-        email_to_lst, partners = super()._message_add_suggested_recipients()
+    def _message_add_suggested_recipients(self, primary_email=False):
+        email_to_lst, partners = super()._message_add_suggested_recipients(primary_email)
         if not self.partner_id:
             #  Priority: contact information then speaker information
             if self.contact_email:
