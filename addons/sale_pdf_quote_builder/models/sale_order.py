@@ -8,10 +8,10 @@ from odoo import _, api, fields, models
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    available_product_document_ids = fields.Many2many(
-        string="Available Product Documents",
+    available_quotation_document_ids = fields.Many2many(
+        string="Available Quotation Documents",
         comodel_name='quotation.document',
-        compute='_compute_available_product_document_ids',
+        compute='_compute_available_quotation_document_ids',
     )
     is_pdf_quote_builder_available = fields.Boolean(
         compute='_compute_is_pdf_quote_builder_available',
@@ -30,9 +30,9 @@ class SaleOrder(models.Model):
     # === COMPUTE METHODS === #
 
     @api.depends('sale_order_template_id')
-    def _compute_available_product_document_ids(self):
+    def _compute_available_quotation_document_ids(self):
         for order in self:
-            order.available_product_document_ids = self.env['quotation.document'].search(
+            order.available_quotation_document_ids = self.env['quotation.document'].search(
                 self.env['quotation.document']._check_company_domain(self.company_id),
                 order='sequence',
             ).filtered(lambda doc:
@@ -40,11 +40,15 @@ class SaleOrder(models.Model):
                 or not doc.quotation_template_ids
             )
 
-    @api.depends('available_product_document_ids', 'order_line', 'order_line.available_product_document_ids')
+    @api.depends(
+        'available_quotation_document_ids',
+        'order_line',
+        'order_line.available_product_document_ids',
+    )
     def _compute_is_pdf_quote_builder_available(self):
         for order in self:
             order.is_pdf_quote_builder_available = bool(
-                order.available_product_document_ids
+                order.available_quotation_document_ids
                 or order.order_line.available_product_document_ids
             )
 
@@ -63,10 +67,10 @@ class SaleOrder(models.Model):
             and json.loads(self.customizable_pdf_form_fields)
         ) or {}
 
-        headers_available = self.available_product_document_ids.filtered(
+        headers_available = self.available_quotation_document_ids.filtered(
             lambda doc: doc.document_type == 'header'
         )
-        footers_available = self.available_product_document_ids.filtered(
+        footers_available = self.available_quotation_document_ids.filtered(
             lambda doc: doc.document_type == 'footer'
         )
         selected_documents = self.quotation_document_ids
