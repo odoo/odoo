@@ -951,7 +951,8 @@ class AccountJournal(models.Model):
                 'invoice_due_date': invoice_date + timedelta(days=30),
             })
             bodies = self.env['ir.actions.report']._prepare_html(html)[0]
-            content = self.env['ir.actions.report']._run_wkhtmltopdf(bodies)
+            pdf_engine = self.env['ir.actions.report']._get_render_pdf_engine()
+            content = pdf_engine(bodies)
             attachment = self.env['ir.attachment'].create({
                 'type': 'binary',
                 'name': 'INV-%s-0001.pdf' % invoice_date.strftime('%Y-%m'),

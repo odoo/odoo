@@ -221,7 +221,9 @@ class StockTraceabilityReport(models.TransientModel):
         header = self.env['ir.actions.report']._render_template("web.internal_layout", values=rcontext)
         header = self.env['ir.actions.report']._render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=Markup(header.decode())))
 
-        return self.env['ir.actions.report']._run_wkhtmltopdf(
+        pdf_engine = self.env['ir.actions.report']._get_render_pdf_engine()
+
+        return pdf_engine(
             [body],
             header=header.decode(),
             landscape=True,

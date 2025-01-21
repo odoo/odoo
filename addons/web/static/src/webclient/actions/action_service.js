@@ -1323,7 +1323,7 @@ export function makeActionManager(env, router = _router) {
         }
         if (action.report_type === "qweb-html") {
             return _executeReportClientAction(action, options);
-        } else if (action.report_type === "qweb-pdf" || action.report_type === "qweb-text") {
+        } else if (action.report_type.startsWith("qweb-pdf") || action.report_type === "qweb-text") {
             const type = action.report_type.slice(5);
             let success, message;
             env.services.ui.block();
