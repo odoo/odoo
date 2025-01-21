@@ -5,6 +5,12 @@
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
             <list string="Applicants" class="o_search_matching_applicant" multi_edit="1" sample="1" decoration-danger="application_status == 'refused'" default_order="stage_id">
+                <header>
+                    <button type="object" 
+                        name="archive_applicant" 
+                        string="Refuse" class="btn btn-secondary" 
+                    />
+                </header>
                 <field name="message_needaction" column_invisible="True"/>
                 <field name="last_stage_id" column_invisible="True"/>
                 <field name="date_last_stage_update" column_invisible="True"/>
@@ -611,18 +617,6 @@
         <field name="binding_view_types">list</field>
         <field name="state">code</field>
         <field name="code">action = records.action_send_email()</field>
-    </record>
-
-    <record id="ir_actions_server_refuse_applicant" model="ir.actions.server">
-        <field name="name">Refuse</field>
-        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
-        <field name="binding_model_id" ref="hr_recruitment.model_hr_applicant"/>
-        <field name="binding_view_types">list,form</field>
-        <field name="state">code</field>
-        <field name="code">
-if records:
-    action = records.archive_applicant()
-        </field>
     </record>
 
     <!-- Custom reports (aka filters) -->
