@@ -103,17 +103,17 @@
                             </div>
                         </setting>
                     </block>
-                    <block title="SEO" id="website_settings" invisible="not website_id">
+                    <block title="SEO - Search Engine Optimization" id="website_settings" invisible="not website_id">
                         <setting
                             id="google_analytics_setting"
-                            help="Track visits using Google Analytics"
+                            help="Track visits using Google Analytics or Google Tag Manager"
                             documentation="/applications/websites/website/reporting/analytics.html#analytics-google-analytics"
                         >
                             <field name="has_google_analytics"/>
                             <div class="content-group" invisible="not has_google_analytics">
                                 <div class="row mt16">
-                                    <label class="col-lg-3 o_light_label" string="Measurement ID" for="google_analytics_key"/>
-                                    <field name="google_analytics_key" placeholder="G-XXXXXXXXXX"
+                                    <label class="col-lg-3 o_light_label" string="Measurement ID or Tag" for="google_analytics_key"/>
+                                    <field name="google_analytics_key" placeholder="G-XXXXXXXXXX or GTM-XXXXXXX"
                                         required="has_google_analytics"/>
                                 </div>
                             </div>
@@ -161,7 +161,7 @@
                         </setting>
                         <setting
                             id="google_console_setting"
-                            help="Monitor Google Search results data"
+                            help="Ensure your website is indexed by Google and monitor Google Search results data"
                             documentation="/applications/websites/website/configuration/google_search_console.html"
                         >
                             <field name="has_google_search_console"/>
@@ -173,9 +173,13 @@
                                 </div>
                             </div>
                             <div invisible="not has_google_search_console">
-                                <small class='text-muted'>
-                                    <i class="fa fa-info"/>: type some of the first chars after 'google' is enough, we'll guess the rest.
-                                </small>
+                                <widget
+                                    class="oe_link"
+                                    name="documentation_link"
+                                    path="/applications/websites/website/configuration/google_search_console.html"
+                                    label=" How to?"
+                                    icon="oi oi-arrow-right"
+                                />
                             </div>
                         </setting>
                         <setting
