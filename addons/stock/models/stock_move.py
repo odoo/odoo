@@ -377,7 +377,7 @@ class StockMove(models.Model):
                 move_lines_ids |= set(move.move_line_ids.ids)
 
             data = self.env['stock.move.line']._read_group(
-                [('id', 'in', list(move_lines_ids))],
+                ['&', ('id', 'in', list(move_lines_ids)), ('picked', '=', True)],
                 ['move_id', 'product_uom_id'], ['quantity:sum']
             )
             sum_qty = defaultdict(float)
