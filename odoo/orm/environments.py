@@ -534,6 +534,12 @@ class Transaction:
         """ Flush pending computations and updates in the transaction. """
         if self.default_env is not None:
             self.default_env.flush_all()
+        else:
+            for env in self.envs:
+                _logger.warning("Missing default_env, flushing as public user")
+                public_user = env.ref('base.public_user')
+                Environment(env.cr, public_user.id, {}).flush_all()
+                break
 
     def clear(self):
         """ Clear the caches and pending computations and updates in the transactions. """
