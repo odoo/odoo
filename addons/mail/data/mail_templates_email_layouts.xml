@@ -8,6 +8,18 @@
 </head>
 <body style="font-family:Verdana, Arial,sans-serif; color: #454748;">
 <t t-set="subtype_internal" t-value="subtype and subtype.internal"/>
+<<<<<<< saas-18.1
+||||||| ce28ae1d346f880a8cefb3d5ecbbd61fdb6868d7
+<t t-set="show_header" t-value="email_notification_force_header or (
+    email_notification_allow_header and has_button_access)"/>
+<t t-set="show_footer" t-value="email_notification_force_footer or (
+    email_notification_allow_footer and show_header and author_user._is_internal())"/>
+=======
+<t t-set="show_header" t-value="email_notification_force_header or (
+    email_notification_allow_header and has_button_access)"/>
+<t t-set="show_footer" t-value="email_notification_force_footer or (
+    email_notification_allow_footer and show_header and author_user and author_user._is_internal())"/>
+>>>>>>> b08955380bbb6ba5eaf79df7125ee1ba81c10b88
 <!-- HEADER -->
 <t t-call="mail.notification_preview"/>
 <div style="max-width: 900px; width: 100%;">
