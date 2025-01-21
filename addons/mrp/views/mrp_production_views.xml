@@ -355,7 +355,7 @@
                                 <list editable="bottom">
                                     <field name="product_id" readonly="state == 'done'"/>
                                     <field name="product_uom_qty" readonly="state == 'done'"/>
-                                    <field name="product_uom"/>
+                                    <field name="product_uom" widget="many2one_uom"/>
                                     <field name="operation_id"/>
                                     <field name="byproduct_id"/>
                                     <field name="name"/>
