@@ -74,7 +74,12 @@ class DiscussChannel(models.Model):
     # sudo: discuss.channel - sudo for performance, invited members can be accessed on accessible channel
     invited_member_ids = fields.One2many("discuss.channel.member", compute="_compute_invited_member_ids", compute_sudo=True)
     member_count = fields.Integer(string="Member Count", compute='_compute_member_count', compute_sudo=True)
-    last_interest_dt = fields.Datetime("Last Interest", index=True, help="Contains the date and time of the last interesting event that happened in this channel. This updates itself when new message posted.")
+    last_interest_dt = fields.Datetime(
+        "Last Interest",
+        default=lambda self: fields.Datetime.now() - timedelta(seconds=1),
+        index=True,
+        help="Contains the date and time of the last interesting event that happened in this channel. This updates itself when new message posted.",
+    )
     group_ids = fields.Many2many(
         'res.groups', string='Auto Subscription',
         help="Members of those groups will automatically added as followers. "
@@ -1084,9 +1089,7 @@ class DiscussChannel(models.Model):
                     Command.create({
                         'partner_id': partner_id,
                         # only pin for the current user, so the chat does not show up for the correspondent until a message has been sent
-                        # manually set the last_interest_dt to make sure that it works well with the default last_interest_dt (datetime.now())
                         'unpin_dt': False if partner_id == self.env.user.partner_id.id else fields.Datetime.now(),
-                        'last_interest_dt': fields.Datetime.now() if partner_id == self.env.user.partner_id.id else fields.Datetime.now() - timedelta(seconds=30),
                     }) for partner_id in partners_to
                 ],
                 'channel_type': 'chat',
