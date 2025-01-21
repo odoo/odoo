@@ -19,6 +19,7 @@ export class DynamicSnippetCarousel extends DynamicSnippet {
                 rowPerSlide: parseInt(uiUtils.isSmall() ? 1 : this.el.dataset.rowPerSlide || 1),
                 arrowPosition: this.el.dataset.arrowPosition || "",
                 scrollMode: this.el.dataset.scrollMode || '',
+                carouselWrap: this.el.dataset.carouselWrap || 'false',
             },
         );
     }
