@@ -173,6 +173,7 @@
                                                         'webhook': 'fa-paper-plane',
                                                     }[record.state.raw_value]"
                                                 />
+                                                <i class="fa fa-warning text-warning px-2 m-0" invisible="not warning" t-att-title="record.warning.raw_value"/>
                                                 <field name="name" class="text-truncate" />
                                                 <t invisible="state != 'object_write'">
                                                     <t invisible="not (update_field_type == 'many2many' and update_m2m_operation == 'clear') or evaluation_type != 'value'">

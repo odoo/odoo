@@ -1014,6 +1014,19 @@ if env.context.get('old_values', None):  # on write
         })
         self.assertEqual(thread_test.message_follower_ids.partner_id, user.partner_id)
 
+    def test_cannot_have_actions_with_warnings(self):
+        with self.assertRaises(ValidationError) as e:
+            create_automation(
+                self,
+                model_id=self.env['ir.model']._get('ir.actions.server').id,
+                trigger='on_time',
+                _actions={
+                    'state': 'webhook',
+                    'webhook_field_ids': [self.env['ir.model.fields']._get('ir.actions.server', 'code').id],
+                },
+            )
+        self.assertEqual(e.exception.args[0], "Following child actions have warnings: Send Webhook Notification")
+
 
 @common.tagged('post_install', '-at_install')
 class TestCompute(common.TransactionCase):
