@@ -626,7 +626,6 @@ class AccountTax(models.Model):
                     else:
                         # tax.amount_type == other (python)
                         tax_amount = tax._compute_amount(base, sign * price_unit, quantity, product, partner, fixed_multiplicator)
-                        tax_amount = float_round(tax_amount, precision_rounding=prec)
                         incl_tax_amounts['fixed_amount'] += tax_amount
                         # Avoid unecessary re-computation
                         cached_tax_amounts[i] = tax_amount
@@ -686,8 +685,7 @@ class AccountTax(models.Model):
                     tax_base_amount, sign * price_unit, quantity, product, partner, fixed_multiplicator)
 
             # Round the tax_amount multiplied by the computed repartition lines factor.
-            tax_amount = float_round(tax_amount, precision_rounding=prec)
-            factorized_tax_amount = float_round(tax_amount * sum_repartition_factor, precision_rounding=prec)
+            factorized_tax_amount = tax_amount * sum_repartition_factor
 
             if price_include and total_included_checkpoints.get(i) is None:
                 cumulated_tax_included_amount += factorized_tax_amount
@@ -770,7 +768,7 @@ class AccountTax(models.Model):
             'base_tags': base_rep_lines.tag_ids.ids + product_tag_ids,
             'taxes': taxes_vals,
             'total_excluded': sign * total_excluded,
-            'total_included': sign * currency.round(total_included),
+            'total_included': sign * total_included,
             'total_void': sign * total_void,
         }
 
