@@ -360,8 +360,6 @@ class IrHttp(models.AbstractModel):
             return parent
 
         # minimal setup to serve frontend pages
-        if not request.uid:
-            cls._auth_method_public()
         cls._frontend_pre_dispatch()
         cls._handle_debug()
 
