@@ -39,7 +39,11 @@ export function useEmojiPicker(ref, props, options = {}) {
             options.onClose?.();
         },
     };
-    const popover = usePopover(EmojiPicker, { ...newOptions, animation: false });
+    const popover = usePopover(EmojiPicker, {
+        ...newOptions,
+        animation: false,
+        popoverClass: "border-secondary",
+    });
     props.storeScroll = {
         scrollValue: 0,
         set: (value) => {
