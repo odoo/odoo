@@ -41,7 +41,7 @@ class ResourceCalendarLeaves(models.Model):
             ]
             for date in time_domain_dict
         ])
-        return expression.AND([domain, [('state', '!=', 'refuse')]])
+        return expression.AND([domain, [('state', 'not in', ['refuse', 'cancel'])]])
 
     def _get_time_domain_dict(self):
         return [{
