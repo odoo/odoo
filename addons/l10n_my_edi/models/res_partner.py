@@ -54,7 +54,8 @@ class ResPartner(models.Model):
     @api.depends_context('company', 'l10n_my_identification_number')
     def _compute_l10n_my_edi_display_tin_warning(self):
         """ We want to display the tin warning for companies registered to use MyInvois. """
-        proxy_user = self.env.company.l10n_my_edi_proxy_user_id
+        # We need to sudo here, as all users having access to partners may not have the rights to access the proxy users.
+        proxy_user = self.env.company.sudo().l10n_my_edi_proxy_user_id
         is_edi_used = proxy_user and proxy_user.proxy_type == 'l10n_my_edi'
         for partner in self:
             # Users with no business number can't be validated using the api
@@ -87,7 +88,8 @@ class ResPartner(models.Model):
         if not self.vat or not self.l10n_my_identification_type or not self.l10n_my_identification_number:
             raise UserError(_('In order to validate the TIN, you must provide the Identification type and number.'))
 
-        proxy_user = self.env.company.l10n_my_edi_proxy_user_id
+        # Sudo to allow a user without access to the proxy user to validate the ID if needed.
+        proxy_user = self.env.company.sudo().l10n_my_edi_proxy_user_id
         if not proxy_user:
             raise UserError(_("Please register for the E-Invoicing service in the settings first."))
 
