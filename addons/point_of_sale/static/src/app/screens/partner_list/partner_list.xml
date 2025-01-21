@@ -19,40 +19,42 @@
                     autofocus="true"
                     debounceMillis="100" />
             </t>
-            <div class="overflow-auto h-100 pb-1" t-ref="partner-list">
-                <table class="table table-hover">
+            <div class="fixed-head h-100 pt-0 overflow-hidden">
+                <div class="overflow-y-auto overflow-x-hidden h-100" t-ref="partner-list">
                     <t t-set="initialPartners" t-value="getPartners(this.state.initialPartners)"/>
                     <t t-set="loadedPartners" t-value="getPartners(this.state.loadedPartners)"/>
                     <t t-set="nbrPartners" t-value="initialPartners.length + loadedPartners.length"/>
-                    <tbody>
-                        <t t-foreach="initialPartners" t-as="partner" t-key="partner.id">
-                            <PartnerLine
-                                close="props.close"
-                                partner="partner"
-                                isSelected="props.partner?.id === partner.id"
-                                isBalanceDisplayed="isBalanceDisplayed"
-                                onClickEdit.bind="(p) => this.editPartner(p)"
-                                onClickUnselect.bind="() => this.clickPartner()"
-                                onClickOrders.bind="(p) => this.goToOrders(p)"
-                                onClickPartner.bind="clickPartner"/>
-                        </t>
-                        <t t-foreach="loadedPartners" t-as="partner" t-key="partner.id">
-                            <PartnerLine
-                                close="props.close"
-                                partner="partner"
-                                isSelected="props.partner?.id === partner.id"
-                                isBalanceDisplayed="isBalanceDisplayed"
-                                onClickEdit.bind="(p) => this.editPartner(p)"
-                                onClickUnselect.bind="() => this.clickPartner()"
-                                onClickOrders.bind="(p) => this.goToOrders(p)"
-                                onClickPartner.bind="clickPartner"/>
-                        </t>
-                    </tbody>
-                </table>
-                <div class="text-center" t-if="!nbrPartners">
-                    <div class="text-muted mt-5">
-                        <i class="fa fa-users fa-3x"></i>
-                        <p class="mt-3">No customers found, press enter to load more.</p>
+                    <table class="table table-hover">
+                        <tbody class="h-100" t-att-class="{'d-none': !nbrPartners}">
+                            <t t-foreach="initialPartners" t-as="partner" t-key="partner.id">
+                                <PartnerLine
+                                    close="props.close"
+                                    partner="partner"
+                                    isSelected="props.partner?.id === partner.id"
+                                    isBalanceDisplayed="isBalanceDisplayed"
+                                    onClickEdit.bind="(p) => this.editPartner(p)"
+                                    onClickUnselect.bind="() => this.clickPartner()"
+                                    onClickOrders.bind="(p) => this.goToOrders(p)"
+                                    onClickPartner.bind="clickPartner"/>
+                            </t>
+                            <t t-foreach="loadedPartners" t-as="partner" t-key="partner.id">
+                                <PartnerLine
+                                    close="props.close"
+                                    partner="partner"
+                                    isSelected="props.partner?.id === partner.id"
+                                    isBalanceDisplayed="isBalanceDisplayed"
+                                    onClickEdit.bind="(p) => this.editPartner(p)"
+                                    onClickUnselect.bind="() => this.clickPartner()"
+                                    onClickOrders.bind="(p) => this.goToOrders(p)"
+                                    onClickPartner.bind="clickPartner"/>
+                            </t>
+                        </tbody>
+                    </table>
+                    <div class="text-center" t-if="!nbrPartners">
+                        <div class="text-muted mt-5">
+                            <i class="fa fa-users fa-3x"></i>
+                            <p class="mt-3">No customers found, press enter to load more.</p>
+                        </div>
                     </div>
                 </div>
             </div>
