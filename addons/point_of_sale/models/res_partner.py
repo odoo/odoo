@@ -16,8 +16,13 @@ class ResPartner(models.Model):
     @api.model
     def get_new_partner(self, config_id, domain, offset):
         config = self.env['pos.config'].browse(config_id)
-        limited_partner_ids = {partner[0] for partner in config.get_limited_partners_loading(offset)}
-        new_partner = self.search_read(domain + [('id', 'in', list(limited_partner_ids))], self._load_pos_data_fields(config_id), load=False)
+        if len(domain) == 0:
+            limited_partner_ids = {partner[0] for partner in config.get_limited_partners_loading(offset)}
+            domain += [('id', 'in', list(limited_partner_ids))]
+            new_partner = self.search_read(domain, self._load_pos_data_fields(config_id), load=False)
+        else:
+            # If search domain is not empty, we need to search inside all partners
+            new_partner = self.search_read(domain, self._load_pos_data_fields(config_id), offset=offset, limit=100, load=False)
         return {
             'res.partner': new_partner,
         }
