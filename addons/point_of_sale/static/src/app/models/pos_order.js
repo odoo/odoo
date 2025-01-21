@@ -303,15 +303,13 @@ export class PosOrder extends Base {
                         line.getQuantity();
                 } else {
                     this.last_order_preparation_change.lines[line.preparationKey] = {
-                        attribute_value_ids: line.attribute_value_ids.map((a) => ({
-                            ...a.serialize({ orm: true }),
-                            name: a.name,
-                        })),
+                        attribute_value_names: line.attribute_value_ids.map((a) => a.name),
                         uuid: line.uuid,
                         isCombo: line.combo_item_id?.id,
                         product_id: line.getProduct().id,
                         name: line.getFullProductName(),
                         basic_name: line.getProduct().name,
+                        display_name: line.getProduct().display_name,
                         note: line.getNote(),
                         quantity: line.getQuantity(),
                     };
