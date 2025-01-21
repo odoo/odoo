@@ -1,7 +1,24 @@
+import logging
+import subprocess
 from odoo import api, models, fields
+from odoo.tools.misc import find_in_path
 
+_logger = logging.getLogger(__name__)
 papermuncher_state = 'install'
 
+def _get_paper_muncher_bin():
+    return find_in_path('paper-muncher')
+
+try:
+    process = subprocess.Popen(
+        [_get_paper_muncher_bin(), '--usage'], stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
+except (OSError, IOError):
+    _logger.info('You need \'paper-muncher\' to print a pdf version of the reports.')
+    papermuncher_state = 'broken'
+else:
+    _logger.info(f'Will use the \'paper-muncher\' binary at {_get_paper_muncher_bin()}')
+    papermuncher_state = 'ok'
 
 class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'
@@ -15,9 +32,7 @@ class IrActionsReport(models.Model):
 
         The state of the pdf engine: install, ok, upgrade, workers or broken.
         * install: Starting state.
-        * upgrade: The binary is an older version (< 0.12.0).
-        * ok: A binary was found with a recent version (>= 0.12.0).
-        * workers: Not enough workers found to perform the pdf rendering process (< 2 workers).
+        * ok: The engine is ready.
         * broken: A binary was found but not responding.
 
         :return: engine_name, state
