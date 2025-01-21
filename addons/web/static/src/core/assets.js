@@ -55,6 +55,10 @@ const onLoadAndError = (el, onLoad, onError) => {
 
     el.addEventListener("load", onLoadListener);
     el.addEventListener("error", onErrorListener);
+
+    window.addEventListener("pagehide", () => {
+        removeListeners();
+    });
 };
 
 /** @type {typeof assets["getBundle"]} */
