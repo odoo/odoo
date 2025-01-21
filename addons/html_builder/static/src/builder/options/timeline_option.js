@@ -10,6 +10,14 @@ class TimelineOptionPlugin extends Plugin {
                 template: "html_builder.TimelineOption",
                 selector: ".s_timeline",
             }),
+            withSequence(10, {
+                template: "html_builder.DotLinesColorOption",
+                selector: ".s_timeline",
+            }),
+            withSequence(5, {
+                template: "html_builder.DotColorOption",
+                selector: ".s_timeline .s_timeline_row",
+            }),
         ],
         dropzone_selector: {
             selector: ".s_timeline_row",

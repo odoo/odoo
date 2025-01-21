@@ -40,11 +40,7 @@ export class DropZoneSelectorPlugin extends Plugin {
                 dropIn: ":not(p).oe_structure:not(.oe_structure_solo):not([data-snippet] *), :not(.o_mega_menu):not(p)[data-oe-type=html]:not([data-snippet] *)",
             },
             {
-                selector: ".s_timeline_list_row",
-                dropNear: ".s_timeline_list_row",
-            },
-            {
-                selector: ".s_timeline_list_row",
+                selector: ".s_website_form_field",
                 exclude: ".s_website_form_dnone",
                 dropNear: ".s_website_form_field",
                 //TODO DROP LOCK WITHIN drop-lock-within="form"

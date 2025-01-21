@@ -35,6 +35,7 @@ export class BuilderColorPicker extends Component {
                           this.env.editor.shared.color.colorElement(element, color, styleAction);
                       }
                     : (element) => {
+                          // TODO should support prefix (border- etc )
                           element.style.setProperty(styleAction, color, "important");
                       };
 
