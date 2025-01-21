@@ -581,7 +581,7 @@ class Websocket:
         dispatch.unsubscribe(self)
         self._trigger_lifecycle_event(LifecycleEvent.CLOSE)
         with acquire_cursor(self._db) as cr:
-            env = api.Environment(cr, self._session.uid, self._session.context)
+            env = self.new_env(cr, self._session)
             env["ir.websocket"]._on_websocket_closed(self._cookies)
 
     def _handle_control_frame(self, frame):
@@ -655,8 +655,7 @@ class Websocket:
         if not self.__event_callbacks[event_type]:
             return
         with closing(acquire_cursor(self._db)) as cr:
-            lang = api.Environment(cr, self._session.uid, {})['res.lang']._get_code(self._session.context.get('lang'))
-            env = api.Environment(cr, self._session.uid, dict(self._session.context, lang=lang))
+            env = self.new_env(cr, self._session, set_lang=True)
             for callback in self.__event_callbacks[event_type]:
                 try:
                     service_model.retrying(functools.partial(callback, env, self), env)
@@ -678,7 +677,7 @@ class Websocket:
         if not session:
             raise SessionExpiredException()
         with acquire_cursor(session.db) as cr:
-            env = api.Environment(cr, session.uid, dict(session.context, lang=None))
+            env = self.new_env(cr, session)
             if session.uid is not None and not check_session(session, env):
                 raise SessionExpiredException()
             # Mark the notification request as processed.
@@ -711,6 +710,23 @@ class Websocket:
             self._last_notif_sent_id = self._notif_history[last_index][0]
             self._notif_history = self._notif_history[last_index + 1 :]
         self._send(notifications)
+
+    def new_env(self, cr, session, *, set_lang=False):
+        """
+        Create a new environment.
+        Make sure the transaction has a `default_env` and if requested, set the
+        language of the user in the context.
+        """
+        uid = session.uid
+        # lang is not guaranteed to be correct, set None
+        ctx = dict(session.context, lang=None)
+        env = api.Environment(cr, uid, ctx)
+        if set_lang:
+            lang = env['res.lang']._get_code(ctx['lang'])
+            env = env(context=dict(ctx, lang=lang))
+        if not env.transaction.default_env:
+            env.transaction.default_env = env
+        return env
 
 
 class TimeoutReason(IntEnum):
@@ -829,9 +845,7 @@ class WebsocketRequest:
             raise InvalidDatabaseException() from exc
 
         with closing(acquire_cursor(self.db)) as cr:
-            self.env = api.Environment(cr, self.session.uid, {})
-            lang = self.env['res.lang']._get_code(self.session.context.get('lang'))
-            self.update_env(context=dict(self.session.context, lang=lang))
+            self.env = self.ws.new_env(cr, self.session, set_lang=True)
             service_model.retrying(
                 functools.partial(self._serve_ir_websocket, event_name, data),
                 self.env,
