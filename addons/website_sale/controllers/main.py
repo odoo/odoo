@@ -810,6 +810,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     order_sudo._set_delivery_method(delivery_method, rate=rate)
 
         if try_skip_step and can_skip_delivery:
+            extra_step = request.website.viewref('website_sale.extra_info')
+            if extra_step.active:
+                return request.redirect("/shop/extra_info")
             return request.redirect('/shop/confirm_order')
 
         checkout_page_values.update(request.website._get_checkout_step_values('/shop/checkout'))
@@ -1540,9 +1543,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         order_sudo._recompute_taxes()
         order_sudo._recompute_prices()
-        extra_step = request.website.viewref('website_sale.extra_info')
-        if extra_step.active:
-            return request.redirect("/shop/extra_info")
 
         return request.redirect("/shop/payment")
 

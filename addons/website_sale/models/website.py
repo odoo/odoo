@@ -589,6 +589,8 @@ class Website(models.Model):
         return steps
 
     def _get_checkout_step_values(self, href):
+
+        current_href = href
         # /shop/address is associated with the delivery step
         if href == '/shop/address':
             href = '/shop/checkout'
@@ -615,6 +617,7 @@ class Website(models.Model):
             'previous_website_checkout_step': previous_step,
             'next_website_checkout_step': next_step,
             'next_href': next_href,
+            'current_href': current_href,
         }
 
     def has_ecommerce_access(self):
