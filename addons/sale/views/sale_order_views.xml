@@ -463,6 +463,7 @@
                                                 force_save="1"
                                                 groups="uom.group_uom"
                                                 class="oe_no_button"
+                                                widget="many2one_uom"
                                                 readonly="product_uom_readonly"
                                                 required="not display_type and not is_downpayment"/>
                                         </div>
@@ -628,6 +629,7 @@
                                     force_save="1"
                                     readonly="product_uom_readonly"
                                     required="not display_type and not is_downpayment"
+                                    widget="many2one_uom"
                                     context="{'company_id': parent.company_id}"
                                     groups="uom.group_uom"
                                     options='{"no_open": True, "no_create": True}'
