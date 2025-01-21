@@ -57,7 +57,9 @@ class PosOrder(models.Model):
         if not self.env.context.get('from_self'):
             return open_order
         elif open_order:
-            del order['table_id']
+            # If we found an open order they should be merged
+            order['id'] = open_order.id
+            return open_order
         return self.env['pos.order'].search([('uuid', '=', order.get('uuid'))], limit=1)
 
     def _process_saved_order(self, draft):
