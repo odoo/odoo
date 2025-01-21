@@ -158,7 +158,7 @@ class PosSession(models.Model):
                     'id',
                     'display_name', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode',
                     'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'product_tmpl_id', 'tracking',
-                    'write_date', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids', 'product_tag_ids',
+                    'write_date', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids', 'product_tag_ids', 'name'
                 ],
                 'order': 'sequence,default_code,name',
                 'limit': config_id.get_limited_product_count(),
