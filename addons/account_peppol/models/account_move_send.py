@@ -1,6 +1,7 @@
 from base64 import b64encode
+from datetime import timedelta
 
-from odoo import api, models, _
+from odoo import api, fields, models, _
 from odoo.addons.account.models.company import PEPPOL_LIST
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 
@@ -206,6 +207,7 @@ class AccountMoveSend(models.AbstractModel):
                     invoices |= invoice
                 log_message = _('The document has been sent to the Peppol Access Point for processing')
                 invoices._message_log_batch(bodies={invoice.id: log_message for invoice in invoices})
+                self.env.ref('account_peppol.ir_cron_peppol_get_message_status')._trigger(at=fields.Datetime.now() + timedelta(minutes=5))
 
         if self._can_commit():
             self._cr.commit()
