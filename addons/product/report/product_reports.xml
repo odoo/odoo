@@ -66,7 +66,7 @@
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">product.report_packagingbarcode</field>
             <field name="report_file">product.report_packagingbarcode</field>
-            <field name="print_report_name">'Products packaging - %s' % (object.name)</field>
+            <field name="print_report_name">'Products packaging - %s' % (object.uom_id.name)</field>
             <field name="binding_model_id" ref="product.model_product_uom"/>
             <field name="binding_type">report</field>
         </record>
