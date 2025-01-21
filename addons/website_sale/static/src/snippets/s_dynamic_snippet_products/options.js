@@ -40,7 +40,8 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
         if (
             (this.isAlternativeProductSnippet &&
                 alternativeSnippetRemovedOptions.includes(widgetName)) ||
-            (this.$target.hasClass("s_dynamic_snippet_products") && widgetName === "template_opt")
+            (this.$target[0].classList.contains("s_dynamic_snippet_products") &&
+                widgetName === "template_opt")
         ) {
             return false;
         }

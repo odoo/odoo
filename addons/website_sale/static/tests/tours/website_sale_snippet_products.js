@@ -13,10 +13,7 @@ const optionBlock = 'dynamic_snippet_products';
 const productsSnippet = {id: "s_dynamic_filter_template_product_product_borderless_1", name: "Products", groupName: "Products"};
 const modifiedProductsSnippet = {
     ...productsSnippet,
-    id: "s_dynamic_filter_template_product_product_borderless_1".replace(
-        /s_dynamic_filter_template_/,
-        "s_"
-    ),
+    id: "s_product_product_borderless_1",
 };
 const templates = [
     "dynamic_filter_template_product_product_add_to_cart",

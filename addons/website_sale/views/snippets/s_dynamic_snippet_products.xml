@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="s_dynamic_filter_template_product_product_borderless_1" name="Products">
+    <!-- Base definition for the product snippet, not to be used as a snippet on its own. -->
+    <template id="s_dynamic_snippet_products" name="Dynamic snippet template">
         <t t-call="website.s_dynamic_snippet_template">
+            <t t-set="main_page_url" t-value="'/shop'"/>
+            <t t-out="0"/>
+        </t>
+    </template>
+    <template id="s_dynamic_filter_template_product_product_borderless_1" name="Products">
+        <t t-call="website_sale.s_dynamic_snippet_products">
             <t t-set="snippet_name" t-value="'s_product_product_borderless_1'"/>
             <!--
                 TODO: `.oe_website_sale` is used as a selector in `website_sale_tracking.js`. This
@@ -9,14 +16,13 @@
                 tracking utilities will be fully integrated into a service.
             -->
             <t t-set="snippet_classes" t-value="'s_dynamic_snippet_products oe_website_sale'"/>
-            <t t-set="main_page_url" t-value="'/shop'"/>
             <t t-set="snippet_template_key" t-value="'website_sale.dynamic_filter_template_product_product_borderless_1'"/>
             <t t-call="website_sale.s_dynamic_filter_template_product_product_borderless_1_preview_data"/>
         </t>
     </template>
 
     <template id="s_dynamic_filter_template_product_product_borderless_2" name="Products">
-        <t t-call="website.s_dynamic_snippet_template">
+        <t t-call="website_sale.s_dynamic_snippet_products">
             <t t-set="snippet_name" t-value="'s_product_product_borderless_2'"/>
             <t t-set="snippet_classes" t-value="'s_dynamic_snippet_products oe_website_sale'"/>
             <t t-set="snippet_template_key" t-value="'website_sale.dynamic_filter_template_product_product_borderless_2'"/>
@@ -25,7 +31,7 @@
     </template>
 
     <template id="s_dynamic_filter_template_product_product_card_group" name="Products">
-        <t t-call="website.s_dynamic_snippet_template">
+        <t t-call="website_sale.s_dynamic_snippet_products">
             <t t-set="snippet_name" t-value="'s_product_product_card_group'"/>
             <t t-set="snippet_classes" t-value="'s_dynamic_snippet_products oe_website_sale'"/>
             <t t-set="snippet_no_of_element" t-value="2" />
@@ -37,7 +43,7 @@
     </template>
 
     <template id="s_dynamic_filter_template_product_product_centered" name="Products">
-        <t t-call="website.s_dynamic_snippet_template">
+        <t t-call="website_sale.s_dynamic_snippet_products">
             <t t-set="snippet_name" t-value="'s_product_product_centered'"/>
             <t t-set="snippet_classes" t-value="'s_dynamic_snippet_products oe_website_sale'"/>
             <t t-set="snippet_template_key" t-value="'website_sale.dynamic_filter_template_product_product_centered'"/>
@@ -46,7 +52,7 @@
     </template>
 
     <template id="s_dynamic_filter_template_product_product_add_to_cart" name="Products">
-        <t t-call="website.s_dynamic_snippet_template">
+        <t t-call="website_sale.s_dynamic_snippet_products">
             <t t-set="snippet_name" t-value="'s_product_product_add_to_cart'"/>
             <t t-set="snippet_classes" t-value="'s_dynamic_snippet_products oe_website_sale'"/>
             <t t-set="snippet_template_key" t-value="'website_sale.dynamic_filter_template_product_product_add_to_cart'"/>
@@ -55,7 +61,7 @@
     </template>
 
     <template id="s_dynamic_filter_template_product_product_view_detail" name="Products">
-        <t t-call="website.s_dynamic_snippet_template">
+        <t t-call="website_sale.s_dynamic_snippet_products">
             <t t-set="snippet_name" t-value="'s_product_product_view_detail'"/>
             <t t-set="snippet_classes" t-value="'s_dynamic_snippet_products oe_website_sale'"/>
             <t t-set="snippet_no_of_element" t-value="3"/>
@@ -65,7 +71,7 @@
     </template>
 
     <template id="s_dynamic_filter_template_product_product_horizontal_card" name="Products">
-        <t t-call="website.s_dynamic_snippet_template">
+        <t t-call="website_sale.s_dynamic_snippet_products">
             <t t-set="snippet_name" t-value="'s_product_product_horizontal_card'"/>
             <t t-set="snippet_classes" t-value="'s_dynamic_snippet_products o_carousel_multiple_rows oe_website_sale'"/>
             <t t-set="snippet_no_of_element" t-value="3" />
@@ -77,7 +83,7 @@
     </template>
 
     <template id="s_dynamic_filter_template_product_product_horizontal_card_2" name="Products">
-        <t t-call="website.s_dynamic_snippet_template">
+        <t t-call="website_sale.s_dynamic_snippet_products">
             <t t-set="snippet_name" t-value="'s_product_product_horizontal_card_2'"/>
             <t t-set="snippet_classes" t-value="'s_dynamic_snippet_products o_carousel_multiple_rows oe_website_sale'"/>
             <t t-set="snippet_no_of_element" t-value="2" />
@@ -89,7 +95,7 @@
     </template>
 
     <template id="s_dynamic_filter_template_product_product_mini_image" name="Products">
-        <t t-call="website.s_dynamic_snippet_template">
+        <t t-call="website_sale.s_dynamic_snippet_products">
             <t t-set="snippet_name" t-value="'s_product_product_mini_image'"/>
             <t t-set="snippet_element_on_small_device" t-value="1" />
             <t t-set="snippet_classes" t-value="'s_dynamic_snippet_products oe_website_sale'"/>
@@ -99,7 +105,7 @@
     </template>
 
     <template id="s_dynamic_filter_template_product_product_mini_name" name="Products">
-        <t t-call="website.s_dynamic_snippet_template">
+        <t t-call="website_sale.s_dynamic_snippet_products">
             <t t-set="snippet_name" t-value="'s_product_product_mini_name'"/>
             <t t-set="snippet_element_on_small_device" t-value="1" />
             <t t-set="snippet_classes" t-value="'s_dynamic_snippet_products oe_website_sale'"/>
@@ -109,7 +115,7 @@
     </template>
 
     <template id="s_dynamic_filter_template_product_product_mini_price" name="Products">
-        <t t-call="website.s_dynamic_snippet_template">
+        <t t-call="website_sale.s_dynamic_snippet_products">
             <t t-set="snippet_name" t-value="'s_product_product_mini_price'"/>
             <t t-set="snippet_element_on_small_device" t-value="1" />
             <t t-set="snippet_classes" t-value="'s_dynamic_snippet_products oe_website_sale'"/>
@@ -119,7 +125,7 @@
     </template>
 
     <template id="s_dynamic_filter_template_product_product_banner" name="Products">
-        <t t-call="website.s_dynamic_snippet_template">
+        <t t-call="website_sale.s_dynamic_snippet_products">
             <t t-set="snippet_name" t-value="'s_product_product_banner'"/>
             <t t-set="snippet_classes" t-value="'s_dynamic_snippet_products oe_website_sale'"/>
             <t t-set="snippet_no_of_element" t-value="1" />
