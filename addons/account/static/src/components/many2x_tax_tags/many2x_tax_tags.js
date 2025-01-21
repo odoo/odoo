@@ -12,8 +12,18 @@ export class Many2XTaxTagsAutocomplete extends Many2XAutocomplete {
         ...Many2XAutocomplete.components,
         AutoComplete: TaxAutoComplete,
     };
-    get SearchMoreButtonLabel() {
-        return _t("Not sure... Help me!");
+
+    async loadOptionsSource(request) {
+        // Always include Search More
+        let options = await super.loadOptionsSource(...arguments);
+        if (!options?.slice(-1)[0].classList?.includes("o_m2o_dropdown_option_search_more")) {
+            options.push({
+                label: this.SearchMoreButtonLabel,
+                action: this.onSearchMore.bind(this, request),
+                classList: "o_m2o_dropdown_option o_m2o_dropdown_option_search_more",
+            });
+        }
+        return options;
     }
 
     search(name) {
@@ -21,6 +31,7 @@ export class Many2XTaxTagsAutocomplete extends Many2XAutocomplete {
             .call(this.props.resModel, "search_read", [], {
                 domain: [...this.props.getDomain(), ["name", "ilike", name]],
                 fields: ["id", "name", "tax_scope"],
+                context: this.props.context,
             })
             .then((records) => {
                 return this.orm
@@ -49,6 +60,46 @@ export class Many2XTaxTagsAutocomplete extends Many2XAutocomplete {
             tax_scope: result.tax_scope,
         };
     }
+
+    async onSearchMore(request) {
+        const { resModel, getDomain, context, fieldString } = this.props;
+
+        const domain = getDomain();
+        let dynamicFilters = [];
+        if (request.length) {
+            const nameGets = await this.orm.call(resModel, "name_search", [], {
+                name: request,
+                domain: domain,
+                operator: "ilike",
+                limit: this.props.searchMoreLimit,
+                context,
+            });
+
+            dynamicFilters = [
+                {
+                    description: _t("Quick search: %s", request),
+                    domain: [["id", "in", nameGets.map((nameGet) => nameGet[0])]],
+                },
+            ];
+        }
+
+        const filterFP = context.dynamic_fiscal_position_id;
+        if (filterFP) {
+            dynamicFilters.push({
+                description: _t("Document Fiscal Position"),
+                domain: [["fiscal_position_ids", "in", [parseInt(filterFP)]]]
+            })
+        }
+
+        const title = _t("Search: %s", fieldString);
+        this.selectCreate({
+            domain,
+            context,
+            filters: dynamicFilters,
+            title,
+        });
+    }
+
 }
 
 export class Many2ManyTaxTagsField extends Many2ManyTagsField {

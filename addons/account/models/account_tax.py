@@ -99,6 +99,27 @@ class AccountTax(models.Model):
         e.g 180 / (1 - 10%) = 200 (not price included)
         e.g 200 * (1 - 10%) = 180 (price included)
         """)
+    fiscal_position_ids = fields.Many2many(
+        comodel_name='account.fiscal.position',
+        relation='account_fiscal_position_account_tax_rel',
+        column1='account_tax_id',
+        column2='account_fiscal_position_id',
+    )
+    original_tax_ids = fields.Many2many(
+        comodel_name='account.tax',
+        relation='account_tax_alternatives',
+        column1='dest_tax_id',  # This Replacement tax
+        column2='src_tax_id',  # Domestic Tax to replace
+        string="Replaces",
+        domain="""[
+            ('type_tax_use', '=', type_tax_use),
+            ('id', '!=', id),
+            ('is_domestic', '=', True),
+        ]""",
+        ondelete='cascade',
+    )
+    display_alternative_taxes_field = fields.Boolean(compute='_compute_display_alternative_taxes_field')
+    is_domestic = fields.Boolean(compute='_compute_is_domestic', store=True, precompute=True)
     active = fields.Boolean(default=True, help="Set active to false to hide the tax without removing it.")
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, default=lambda self: self.env.company)
     children_tax_ids = fields.Many2many('account.tax',
@@ -229,6 +250,14 @@ class AccountTax(models.Model):
             ):
                 raise ValidationError(_("The cash basis transition account needs to allow reconciliation."))
 
+    @api.model
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None, **read_kwargs):
+        if 'search_default_domestictax' in self.env.context:
+            domain = expression.AND([domain, ['|', ('fiscal_position_ids', '=', False), ('fiscal_position_ids.is_domestic', '=', True)]])
+        if fp_id := self.env.context.get('dynamic_fiscal_position_id'):
+            domain = expression.AND([domain, [('fiscal_position_ids', 'in', [int(fp_id)])]])
+        return super().search_read(domain, fields, offset, limit, order, **read_kwargs)
+
     @api.depends('company_id')
     def _compute_country_id(self):
         for tax in self:
@@ -280,6 +309,22 @@ class AccountTax(models.Model):
             ids of the taxes from that input set that are used in transactions.
         '''
         return set()
+
+    @api.depends('company_id', 'company_id.domestic_fiscal_position_id', 'fiscal_position_ids')
+    def _compute_is_domestic(self):
+        for tax in self:
+            tax.is_domestic = not tax.fiscal_position_ids or tax.company_id.domestic_fiscal_position_id in tax.fiscal_position_ids
+
+    @api.depends('fiscal_position_ids')
+    def _compute_display_alternative_taxes_field(self):
+        for tax in self:
+            tax.display_alternative_taxes_field = (
+                tax.original_tax_ids
+                or (
+                    tax.fiscal_position_ids
+                    and tax.fiscal_position_ids._origin != tax.company_id.domestic_fiscal_position_id  # _origin used to get the actual records
+                )
+            )
 
     def _compute_is_used(self):
         used_taxes = set()

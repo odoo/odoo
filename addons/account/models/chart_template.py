@@ -22,11 +22,11 @@ _logger = logging.getLogger(__name__)
 TEMPLATE_MODELS = (
     'account.group',
     'account.account',
+    'account.fiscal.position',
     'account.tax.group',
     'account.tax',
     'account.journal',
     'account.reconcile.model',
-    'account.fiscal.position',
 )
 
 TAX_TAG_DELIMITER = '||'
@@ -257,7 +257,6 @@ class AccountChartTemplate(models.AbstractModel):
         When we reload the chart of accounts, we only want to update fields that are main
         configuration, like:
         - tax tags
-        - fiscal position mappings linked to new records
         """
         for prop in list(template_data):
             if prop.startswith('property_'):
@@ -335,21 +334,7 @@ class AccountChartTemplate(models.AbstractModel):
                     if xmlid not in xmlid2fiscal_position and not force_create:
                         skip_update.add((model_name, xmlid))
                         continue
-                    # Only add tax mappings containing new taxes
-                    if old_tax_ids := values.pop('tax_ids', []):
-                        new_tax_ids = []
-                        for element in old_tax_ids:
-                            match element:
-                                case Command.CREATE, _, {'tax_src_id': src_id, 'tax_dest_id': dest_id} if (
-                                    not self.ref(src_id, raise_if_not_found=False)
-                                    or (dest_id and not self.ref(dest_id, raise_if_not_found=False))
-                                ):
-                                    new_tax_ids.append(element)
-                        if new_tax_ids:
-                            values['tax_ids'] = new_tax_ids
-
                 elif model_name == 'account.tax':
-                    # Only update the tags of existing taxes
                     if xmlid not in xmlid2tax or tax_template_changed(xmlid2tax[xmlid], values):
                         if not force_create:
                             skip_update.add((model_name, xmlid))
@@ -372,8 +357,24 @@ class AccountChartTemplate(models.AbstractModel):
                             if rename_idx:
                                 tax_to_rename.name = f"[old{rename_idx - 1 if rename_idx > 1 else ''}] {tax_to_rename.name}"
                     else:
+                        fiscal_position_ids = values.get('fiscal_position_ids')
+                        original_tax_ids = values.get('original_tax_ids')
                         repartition_lines = values.get('repartition_line_ids')
                         values.clear()
+                        # taxes will always be (re)linked to fiscal positions (unless the fp doesn't exist and won't be created)
+                        if fiscal_position_ids:
+                            link_commands = [
+                                Command.link(xml_id)
+                                for xml_id in fiscal_position_ids.split(',') if force_create or xml_id in xmlid2fiscal_position
+                            ]
+                            if link_commands:
+                                values['fiscal_position_ids'] = link_commands
+                        # Only add tax mappings containing new taxes
+                        if original_tax_ids and (new_taxes := [xml_id for xml_id in original_tax_ids.split(',') if xml_id not in xmlid2tax]):
+                            values['original_tax_ids'] = [
+                                Command.link(alt_xml_id)
+                                for alt_xml_id in new_taxes
+                            ]
                         if repartition_lines:
                             values['repartition_line_ids'] = repartition_lines
                             for element in values.get('repartition_line_ids', []):
@@ -419,9 +420,6 @@ class AccountChartTemplate(models.AbstractModel):
                 ('module', '=', 'account'),
             ]).unlink()
 
-        custom_fields = {  # Don't alter values that can be changed by the users
-            'account.fiscal.position.tax_ids',
-        }
         for model_name, records in data.items():
             _fields = self.env[model_name]._fields
             for xmlid, values in records.items():
@@ -429,7 +427,6 @@ class AccountChartTemplate(models.AbstractModel):
                     fname
                     for fname in values
                     if fname in _fields
-                    and f"{model_name}.{fname}" not in custom_fields
                     and _fields[fname].type in ('one2many', 'many2many')
                     and isinstance(values[fname], (list, tuple))
                 ]
@@ -996,6 +993,10 @@ class AccountChartTemplate(models.AbstractModel):
 
             for _command, _id, rep_line in tax_template.get('repartition_line_ids', []):
                 rep_line['account_id'] = existing_accounts.get(rep_line.get('account_id'))
+
+            # Since Foreign Fiscal Positions and Replacement Taxes are not relevant to the OSS company
+            tax_template.pop('fiscal_position_ids', None)
+            tax_template.pop('original_tax_ids', None)
 
             account_xml_id = tax_template.get('cash_basis_transition_account_id')
             tax_template['cash_basis_transition_account_id'] = existing_accounts[account_xml_id]

@@ -44,7 +44,6 @@ from . import res_country
 from . import res_country_state
 from . import res_lang
 from . import account_fiscal_position
-from . import account_fiscal_position_tax
 from . import res_currency
 from . import pos_preset
 from . import product_tag
