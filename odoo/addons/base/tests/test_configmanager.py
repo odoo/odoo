@@ -75,7 +75,7 @@ class TestConfigManager(TransactionCase):
             'save': False,
             'init': {},
             'update': {},
-            'without_demo': False,
+            'with_demo': True,
             'demo': {},
             'import_partial': '',
             'pidfile': '',
@@ -190,7 +190,7 @@ class TestConfigManager(TransactionCase):
             'save': False,
             'init': {},  # blacklist for save, ignored from the config file
             'update': {},  # blacklist for save, ignored from the config file
-            'without_demo': True,
+            'with_demo': False,
             'demo': {},  # blacklist for save, ignored from the config file
             'import_partial': '/tmp/import-partial',
             'pidfile': '/tmp/pidfile',
@@ -363,7 +363,7 @@ class TestConfigManager(TransactionCase):
             'unaccent': False,
             'update': {},
             'upgrade_path': [],
-            'without_demo': False,
+            'with_demo': True,
 
             # options that are not taken from the file (also in 14.0)
             'addons_path': [],
@@ -441,7 +441,6 @@ class TestConfigManager(TransactionCase):
             with self.assertLogs('odoo.tools.config', 'WARNING') as capture:
                 self.config._parse_config(file.read().split())
         self.assertEqual(capture.output, [
-            "WARNING:odoo.tools.config:option --without-demo: since 19.0, invalid boolean value: 'rigolo', assume True",
             "WARNING:odoo.tools.config:test file '/tmp/file-file' cannot be found",
         ])
 
@@ -463,7 +462,7 @@ class TestConfigManager(TransactionCase):
             'save': False,
             'init': {'hr': True, 'stock': True},
             'update': {'account': True, 'website': True},
-            'without_demo': True,
+            'with_demo': False,
             'demo': {},
             'import_partial': '/tmp/import-partial',
             'pidfile': '/tmp/pidfile',
@@ -606,14 +605,26 @@ class TestConfigManager(TransactionCase):
                 _, options = self.parse_reset(args)
                 self.assertEqual(options['stop_after_init'], stop_after_init)
 
-    def test_12_without_demo_equal_1(self):
+    def test_12_without_demo(self):
         _, options = self.parse_reset(['-i', 'mail'])
         self.assertEqual(options['demo'], {'mail': 1})
         _, options = self.parse_reset(['-i', 'mail', '--without-demo'])
         self.assertEqual(options['demo'], {})
         _, options = self.parse_reset(['--without-demo', '-i', 'mail'])
         self.assertEqual(options['demo'], {})
-        _, options = self.parse_reset(['-i', 'mail', '--without-demo', '1'])
+        _, options = self.parse_reset(['--with-demo', '-i', 'mail'])
+        self.assertEqual(options['demo'], {'mail': 1})
+        _, options = self.parse_reset(['--with-demo', '--without-demo', '-i', 'mail'])
         self.assertEqual(options['demo'], {})
-        _, options = self.parse_reset(['-i', 'mail', '--without-demo=1'])
+        _, options = self.parse_reset(['--without-demo', '--with-demo', '-i', 'mail'])
+        self.assertEqual(options['demo'], {'mail': 1})
+        _, options = self.parse_reset(['--without-demo', 'True', '-i', 'mail'])
         self.assertEqual(options['demo'], {})
+        _, options = self.parse_reset(['--without-demo', 'False', '-i', 'mail'])
+        self.assertEqual(options['demo'], {'mail': 1})
+        with self.assertLogs('odoo.tools.config', 'WARNING') as capture:
+            _, options = self.parse_reset(['--without-demo', 'rigolo', '-i', 'mail'])
+            self.assertEqual(options['demo'], {})
+        self.assertEqual(capture.output, [
+            "WARNING:odoo.tools.config:option --without-demo: since 19.0, invalid boolean value: 'rigolo', assume True"
+        ])
