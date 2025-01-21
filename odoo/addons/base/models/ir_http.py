@@ -246,6 +246,7 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _auth_method_none(cls):
         request.env = api.Environment(request.env.cr, None, request.env.context)
+        request.env.transaction.default_env = request.env
 
     @classmethod
     def _auth_method_public(cls):
