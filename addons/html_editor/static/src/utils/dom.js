@@ -225,6 +225,12 @@ export function toggleClass(node, className) {
  * Remove all occurrences of a character from a text node and optionally update
  * cursors for later selection restore.
  *
+ * In web_editor the text nodes used to be replaced by new ones with the updated
+ * text rather than just changing the text content of the node because it
+ * creates different mutations and it used to break the tour system. In
+ * html_editor the text content is changed instead because other plugins rely on
+ * the reference to the text node.
+ *
  * @param {Node} node text node
  * @param {String} char character to remove (string of length 1)
  * @param {Cursors} [cursors]

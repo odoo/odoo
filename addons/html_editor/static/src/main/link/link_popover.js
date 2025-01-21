@@ -14,7 +14,15 @@ export class LinkPopover extends Component {
         onClose: Function,
         getInternalMetaData: Function,
         getExternalMetaData: Function,
+        getAttachmentMetadata: Function,
         isImage: Boolean,
+        recordInfo: Object,
+        canEdit: { type: Boolean, optional: true },
+        canUpload: { type: Boolean, optional: true },
+        onUpload: { type: Function, optional: true },
+    };
+    static defaultProps = {
+        canEdit: true,
     };
     colorsData = [
         { type: "", label: _t("Link"), btnPreview: "link" },
@@ -40,19 +48,21 @@ export class LinkPopover extends Component {
     setup() {
         this.ui = useService("ui");
         this.notificationService = useService("notification");
-        this.http = useService("http");
+        this.uploadService = useService("uploadLocalFiles");
 
         this.state = useState({
             editing: this.props.linkEl.href ? false : true,
             url: this.props.linkEl.href || "",
             label: cleanZWChars(this.props.linkEl.textContent),
-            previewIcon: false,
-            faIcon: "fa-globe",
+            previewIcon: {
+                /** @type {'fa'|'imgSrc'|'mimetype'} */
+                type: "fa",
+                value: "fa-globe",
+            },
             urlTitle: "",
             urlDescription: "",
             linkPreviewName: "",
             imgSrc: "",
-            iconSrc: "",
             classes: this.props.linkEl.className || "",
             type:
                 this.props.linkEl.className.match(/btn(-[a-z0-9_-]*)(primary|secondary)/)?.pop() ||
@@ -162,8 +172,7 @@ export class LinkPopover extends Component {
      * link preview in the popover
      */
     resetPreview() {
-        this.state.faIcon = "fa-globe";
-        this.state.previewIcon = false;
+        this.state.previewIcon = { type: "fa", value: "fa-globe" };
         this.state.urlTitle = this.state.url || _t("No URL specified");
         this.state.urlDescription = "";
         this.state.linkPreviewName = "";
@@ -172,7 +181,14 @@ export class LinkPopover extends Component {
         let url;
         if (this.state.url === "") {
             this.resetPreview();
-            this.state.faIcon = "fa-question-circle-o";
+            this.state.previewIcon.value = "fa-question-circle-o";
+            return;
+        }
+        if (this.isAttachmentUrl()) {
+            const { name, mimetype } = await this.props.getAttachmentMetadata(this.state.url);
+            this.resetPreview();
+            this.state.urlTitle = name;
+            this.state.previewIcon = { type: "mimetype", value: mimetype };
             return;
         }
 
@@ -192,17 +208,17 @@ export class LinkPopover extends Component {
             const faMap = { "mailto:": "fa-envelope-o", "tel:": "fa-phone" };
             const icon = faMap[protocol];
             if (icon) {
-                this.state.faIcon = icon;
+                this.state.previewIcon.value = icon;
             }
         } else if (window.location.hostname !== url.hostname) {
             // Preview pages from current website only. External website will
             // most of the time raise a CORS error. To avoid that error, we
             // would need to fetch the page through the server (s2s), involving
             // enduser fetching problematic pages such as illicit content.
-            this.state.iconSrc = `https://www.google.com/s2/favicons?sz=16&domain=${encodeURIComponent(
-                url
-            )}`;
-            this.state.previewIcon = true;
+            this.state.previewIcon = {
+                type: "imgSrc",
+                value: `https://www.google.com/s2/favicons?sz=16&domain=${encodeURIComponent(url)}`,
+            };
 
             const externalMetadata = await this.props.getExternalMetaData(this.state.url);
 
@@ -222,8 +238,10 @@ export class LinkPopover extends Component {
             // for other errors, we log them to not block the ui
             const internalMetadata = await this.props.getInternalMetaData(this.state.url);
             if (internalMetadata.favicon) {
-                this.state.iconSrc = internalMetadata.favicon.href;
-                this.state.previewIcon = true;
+                this.state.previewIcon = {
+                    type: "imgSrc",
+                    value: internalMetadata.favicon.href,
+                };
             }
             if (internalMetadata.error_msg) {
                 this.notificationService.add(internalMetadata.error_msg, {
@@ -267,5 +285,22 @@ export class LinkPopover extends Component {
             (this.state.type ? `btn btn-${style}${this.state.type}` : "") +
             (this.state.type && shapeClasses ? ` ${shapeClasses}` : "") +
             (this.state.type && this.state.buttonSize ? " btn-" + this.state.buttonSize : "");
+    }
+
+    async uploadFile() {
+        const { upload, getURL } = this.uploadService;
+        const { resModel, resId } = this.props.recordInfo;
+        const [attachment] = await upload({ resModel, resId, accessToken: true });
+        if (!attachment) {
+            // No file selected or upload failed
+            return;
+        }
+        this.props.onUpload?.(attachment);
+        this.state.url = getURL(attachment, { download: true, unique: true, accessToken: true });
+        this.state.label ||= attachment.name;
+    }
+
+    isAttachmentUrl() {
+        return !!this.state.url.match(/\/web\/content\/\d+/);
     }
 }
