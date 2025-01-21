@@ -23,7 +23,17 @@
                     </div>
 
                     <sheet>
-                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="action_open_related_taxes"
+                                type="object" icon="fa-bars"
+                                invisible="not tax_ids">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">
+                                    Taxes
+                                </span>
+                            </div>
+                        </button>
+                    </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <group>
                         <group>
@@ -58,35 +68,6 @@
                         </group>
                     </group>
                     <notebook>
-                        <page name="tax_mapping" string="Tax Mapping">
-                            <field name="tax_ids" widget="one2many" nolabel="1" context="{'append_type_to_tax_name': True}">
-                                <list name="tax_map_tree" string="Tax Mapping" editable="bottom" no_open="1" decoration-muted="tax_dest_id and not tax_dest_active">
-                                    <field name="tax_dest_active" column_invisible="1"/>
-                                    <field name="tax_src_id" widget="many2one_tax_tags"
-                                        domain="[
-                                            ('type_tax_use', '!=', 'none'),
-                                            ('country_id', '=', parent.company_country_id),
-                                            '|', ('company_id', '=', False), ('company_id', 'parent_of', parent.company_id)
-                                        ]"
-                                        context="{'append_type_to_tax_name': True}"
-                                    />
-
-                                    <field name="tax_dest_id" widget="many2one_tax_tags"
-                                        domain="[
-                                            ('type_tax_use', '!=', 'none'),
-                                            ('country_id', '=', parent.country_id if parent.foreign_vat else parent.company_country_id),
-                                            '|', ('company_id', '=', False), ('company_id', 'parent_of', parent.company_id)]"
-                                        context="{'append_type_to_tax_name': True}"
-                                    />
-                                </list>
-                                <form name="tax_map_form" string="Tax Mapping">
-                                    <group>
-                                        <field name="tax_src_id" domain="[('type_tax_use', '!=', 'none')]" context="{'append_type_to_tax_name': True}"/>
-                                        <field name="tax_dest_id" domain="[('type_tax_use', '!=', 'none')]" context="{'append_type_to_tax_name': True}"/>
-                                    </group>
-                                </form>
-                            </field>
-                        </page>
                         <page name="account_mapping" string="Account Mapping" groups="account.group_account_readonly">
                             <field name="account_ids" widget="one2many" nolabel="1">
                                 <list string="Account Mapping" editable="bottom">
@@ -112,6 +93,7 @@
                 <search string="Search Fiscal Positions">
                     <field name="name" string="Fiscal Position"/>
                     <filter name="active" string="Archived" domain="[('active', '=', False)]"/>
+                    <filter name="domestic" string="Domestic" domain="[('is_domestic', '=', True)]"/>
                 </search>
             </field>
         </record>

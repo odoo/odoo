@@ -505,21 +505,19 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         ])
         all_pricelists.write(dict(currency_id=main_company.currency_id.id))
 
+        FP_POS_2M = env['account.fiscal.position'].create({
+            'name': "FP-POS-2M",
+        })
+
         src_tax = env['account.tax'].create({'name': "SRC", 'amount': 10})
-        dst_tax = env['account.tax'].create({'name': "DST", 'amount': 5})
+        env['account.tax'].create({'name': "DST", 'amount': 5, 'fiscal_position_ids': [Command.link(FP_POS_2M.id)], 'original_tax_ids': [Command.link(src_tax.id)]})
+        env['account.tax'].create({'name': "DST2", 'amount': 10, 'fiscal_position_ids': [Command.link(FP_POS_2M.id)], 'original_tax_ids': [Command.link(src_tax.id)]})
 
         cls.letter_tray.taxes_id = [(6, 0, [src_tax.id])]
 
         cls.main_pos_config.write({
             'tax_regime_selection': True,
-            'fiscal_position_ids': [(0, 0, {
-                                            'name': "FP-POS-2M",
-                                            'tax_ids': [
-                                                (0,0,{'tax_src_id': src_tax.id,
-                                                      'tax_dest_id': src_tax.id}),
-                                                (0,0,{'tax_src_id': src_tax.id,
-                                                      'tax_dest_id': dst_tax.id})]
-                                            })],
+            'fiscal_position_ids': FP_POS_2M,
             'journal_id': test_sale_journal.id,
             'invoice_journal_id': test_sale_journal.id,
             'payment_method_ids': [(0, 0, { 'name': 'Cash',
@@ -852,10 +850,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         #create a fiscal position that map the tax to no tax
         fiscal_position = self.env['account.fiscal.position'].create({
             'name': 'No Tax',
-            'tax_ids': [(0, 0, {
-                'tax_src_id': tax.id,
-                'tax_dest_id': False,
-            })],
         })
 
         pricelist = self.env['product.pricelist'].create({
@@ -873,6 +867,20 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_fiscal_position_inclusive_and_exclusive_tax(self):
         """ Test the mapping of fiscal position for both Tax Inclusive ans Tax Exclusive"""
+        # create a fiscal position that map the tax
+        fiscal_position_1 = self.env['account.fiscal.position'].create({
+            'name': 'Incl. to Incl.',
+        })
+        fiscal_position_2 = self.env['account.fiscal.position'].create({
+            'name': 'Incl. to Excl.',
+        })
+        fiscal_position_3 = self.env['account.fiscal.position'].create({
+            'name': 'Excl. to Excl.',
+        })
+        fiscal_position_4 = self.env['account.fiscal.position'].create({
+            'name': 'Excl. to Incl.',
+        })
+
         # create a tax with price included
         tax_inclusive_1 = self.env['account.tax'].create({
             'name': 'Tax incl.20%',
@@ -888,19 +896,23 @@ class TestUi(TestPointOfSaleHttpCommon):
             'amount_type': 'percent',
             'type_tax_use': 'sale',
         })
-        tax_inclusive_2 = self.env['account.tax'].create({
+        self.env['account.tax'].create({
             'name': 'Tax incl.10%',
             'amount': 10,
             'price_include_override': 'tax_included',
             'amount_type': 'percent',
             'type_tax_use': 'sale',
+            'fiscal_position_ids': [Command.set((fiscal_position_1 | fiscal_position_4).ids)],
+            'original_tax_ids': [Command.set((tax_inclusive_1 | tax_exclusive_1).ids)],
         })
-        tax_exclusive_2 = self.env['account.tax'].create({
+        self.env['account.tax'].create({
             'name': 'Tax excl.10%',
             'amount': 10,
             'price_include_override': 'tax_excluded',
             'amount_type': 'percent',
             'type_tax_use': 'sale',
+            'fiscal_position_ids': [Command.set((fiscal_position_2 | fiscal_position_3).ids)],
+            'original_tax_ids': [Command.set((tax_inclusive_1 | tax_exclusive_1).ids)],
         })
         self.test_product_1 = self.env['product.product'].create({
             'name': 'Test Product 1',
@@ -914,36 +926,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
             'list_price': 100,
             'taxes_id': [(6, 0, [tax_exclusive_1.id])],
-        })
-
-        # create a fiscal position that map the tax
-        fiscal_position_1 = self.env['account.fiscal.position'].create({
-            'name': 'Incl. to Incl.',
-            'tax_ids': [(0, 0, {
-                'tax_src_id': tax_inclusive_1.id,
-                'tax_dest_id': tax_inclusive_2.id,
-            })],
-        })
-        fiscal_position_2 = self.env['account.fiscal.position'].create({
-            'name': 'Incl. to Excl.',
-            'tax_ids': [(0, 0, {
-                'tax_src_id': tax_inclusive_1.id,
-                'tax_dest_id': tax_exclusive_2.id,
-            })],
-        })
-        fiscal_position_3 = self.env['account.fiscal.position'].create({
-            'name': 'Excl. to Excl.',
-            'tax_ids': [(0, 0, {
-                'tax_src_id': tax_exclusive_1.id,
-                'tax_dest_id': tax_exclusive_2.id,
-            })],
-        })
-        fiscal_position_4 = self.env['account.fiscal.position'].create({
-            'name': 'Excl. to Incl.',
-            'tax_ids': [(0, 0, {
-                'tax_src_id': tax_exclusive_1.id,
-                'tax_dest_id': tax_inclusive_2.id,
-            })],
         })
 
         # add the fiscal position to the PoS
@@ -1141,6 +1123,10 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'GS1BarcodeScanningTour', login="pos_user")
 
     def test_refund_order_with_fp_tax_included(self):
+        # create a fiscal position
+        self.fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'No Tax',
+        })
         #create a tax of 15% tax included
         self.tax1 = self.env['account.tax'].create({
             'name': 'Tax 1',
@@ -1156,14 +1142,8 @@ class TestUi(TestPointOfSaleHttpCommon):
             'amount_type': 'percent',
             'type_tax_use': 'sale',
             'price_include_override': 'tax_included',
-        })
-        #create a fiscal position with the two taxes
-        self.fiscal_position = self.env['account.fiscal.position'].create({
-            'name': 'No Tax',
-            'tax_ids': [(0, 0, {
-                'tax_src_id': self.tax1.id,
-                'tax_dest_id': self.tax2.id,
-            })],
+            'fiscal_position_ids': self.fiscal_position,
+            'original_tax_ids': self.tax1,
         })
 
         self.product_test = self.env['product.product'].create({
@@ -1471,6 +1451,10 @@ class TestUi(TestPointOfSaleHttpCommon):
         Verify than when the fiscal position is changed,
         the price of the combo doesn't change and taxes are well taken into account
         """
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'test fp',
+        })
+
         tax_1 = self.env['account.tax'].create({
             'name': 'Tax 10%',
             'amount': 10,
@@ -1479,12 +1463,14 @@ class TestUi(TestPointOfSaleHttpCommon):
             'type_tax_use': 'sale',
         })
 
-        tax_2 = self.env['account.tax'].create({
+        self.env['account.tax'].create({
             'name': 'Tax 5%',
             'amount': 5,
             'price_include_override': 'tax_included',
             'amount_type': 'percent',
             'type_tax_use': 'sale',
+            'fiscal_position_ids': [Command.link(fiscal_position.id)],
+            'original_tax_ids': [Command.link(tax_1.id)],
         })
 
         setup_product_combo_items(self)
@@ -1492,14 +1478,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         for combo in self.office_combo.combo_ids:  # Set the tax to all the products of the combo
             for item in combo.combo_item_ids:
                 item.product_id.taxes_id = [(6, 0, [tax_1.id])]
-
-        fiscal_position = self.env['account.fiscal.position'].create({
-            'name': 'test fp',
-            'tax_ids': [(0, 0, {
-                'tax_src_id': tax_1.id,
-                'tax_dest_id': tax_2.id,
-            })],
-        })
 
         self.main_pos_config.write({
             'tax_regime_selection': True,
@@ -1851,6 +1829,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(frontend_created_product_edited.list_price, 50.0)
 
     def test_fiscal_position_tax_group_labels(self):
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'Fiscal Position Test',
+        })
         tax_1 = self.env['account.tax'].create({
             'name': 'Tax 15%',
             'amount': 15,
@@ -1866,6 +1847,8 @@ class TestUi(TestPointOfSaleHttpCommon):
             'price_include_override': 'tax_included',
             'amount_type': 'percent',
             'type_tax_use': 'sale',
+            'fiscal_position_ids': [Command.link(fiscal_position.id)],
+            'original_tax_ids': [Command.link(tax_1.id)],
         })
         tax_2.tax_group_id.pos_receipt_label = 'Tax Group 2'
 
@@ -1874,14 +1857,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             'taxes_id': [(6, 0, [tax_1.id])],
             'list_price': 100,
             'available_in_pos': True,
-        })
-
-        fiscal_position = self.env['account.fiscal.position'].create({
-            'name': 'Fiscal Position Test',
-            'tax_ids': [(0, 0, {
-                'tax_src_id': tax_1.id,
-                'tax_dest_id': tax_2.id,
-            })],
         })
 
         self.main_pos_config.write({

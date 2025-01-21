@@ -119,20 +119,16 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
         self.assertEqual(combination_info['list_price'], 575, "500$ + 15% tax (2)")
 
         # Setup fiscal position 15% => 0%.
-        us_country = self.env.ref('base.us')
-        tax0 = self.env['account.tax'].create({'name': "Test tax 0", 'amount': 0})
-        self.env['account.fiscal.position'].create({
+        jp_country = self.env.ref('base.jp')
+        fp = self.env['account.fiscal.position'].create({
             'name': "test_get_combination_info_with_fpos",
             'auto_apply': True,
-            'country_id': us_country.id,
-            'tax_ids': [Command.create({
-                'tax_src_id': self.company_data['default_tax_sale'].id,
-                'tax_dest_id': tax0.id,
-            })],
+            'country_id': jp_country.id,
         })
+        tax0 = self.env['account.tax'].create({'name': "Test tax 0", 'amount': 0, 'fiscal_position_ids': [Command.link(fp.id)], 'original_tax_ids': [Command.set(self.company_data['default_tax_sale'].ids)]})
 
         # Now with fiscal position, taxes should be mapped
-        self.env.user.partner_id.country_id = us_country
+        self.env.user.partner_id.country_id = jp_country
         with MockRequest(product.env, website=website):
             combination_info = product._get_combination_info()
         self.assertEqual(combination_info['price'], 500, "500% + 0% tax (mapped from fp 15% -> 0%)")
@@ -149,7 +145,7 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
         self.assertEqual(combination_info['list_price'], 500, "434.78$ + 15% tax (2)")
 
         # Now with fiscal position, taxes should be mapped
-        self.env.user.partner_id.country_id = us_country.id
+        self.env.user.partner_id.country_id = jp_country.id
         with MockRequest(product.env, website=website):
             combination_info = product._get_combination_info()
         self.assertEqual(round(combination_info['price'], 2), 434.78, "434.78$ + 0% tax (mapped from fp 15% -> 0%)")

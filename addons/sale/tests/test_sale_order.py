@@ -871,12 +871,20 @@ class TestSalesTeam(SaleCommon):
             'price_include_override': 'tax_included',
         })
 
+        mapping_a = self.env['account.fiscal.position'].create({
+            'name': 'Special Tax Reduction',
+        })
+        mapping_b = self.env['account.fiscal.position'].create({
+            'name': 'Special Tax Reduction',
+        })
         mapped_tax_a = self.env['account.tax'].create({
             'name': "tax_a",
             'amount_type': 'percent',
             'amount': 12.5,
             'include_base_amount': True,
             'price_include_override': 'tax_included',
+            'fiscal_position_ids': mapping_a,
+            'original_tax_ids': special_tax,
         })
 
         mapped_tax_b = self.env['account.tax'].create({
@@ -885,6 +893,8 @@ class TestSalesTeam(SaleCommon):
             'amount': 5.0,
             'include_base_amount': True,
             'price_include_override': 'tax_included',
+            'fiscal_position_ids': mapping_b,
+            'original_tax_ids': special_tax,
         })
 
         sales_tax = self.env['account.tax'].create({
@@ -894,14 +904,6 @@ class TestSalesTeam(SaleCommon):
             'price_include_override': 'tax_included',
         })
 
-        mapping_a = self.env['account.fiscal.position'].create({
-            'name': 'Special Tax Reduction',
-            'tax_ids': [Command.create({'tax_src_id': special_tax.id, 'tax_dest_id': mapped_tax_a.id})],
-        })
-        mapping_b = self.env['account.fiscal.position'].create({
-            'name': 'Special Tax Reduction',
-            'tax_ids': [Command.create({'tax_src_id': special_tax.id, 'tax_dest_id': mapped_tax_b.id})],
-        })
 
         # taxes and standard price need to be set on the product, as they will be
         # recomputed when changing the fiscal position.

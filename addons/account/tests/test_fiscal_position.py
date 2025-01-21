@@ -3,6 +3,7 @@
 
 from odoo.tests import common
 from odoo.exceptions import ValidationError
+from odoo import Command
 
 
 class TestFiscalPosition(common.TransactionCase):
@@ -142,22 +143,13 @@ class TestFiscalPosition(common.TransactionCase):
         )
 
         self.src_tax = self.env['account.tax'].create({'name': "SRC", 'amount': 0.0})
-        self.dst1_tax = self.env['account.tax'].create({'name': "DST1", 'amount': 0.0})
-        self.dst2_tax = self.env['account.tax'].create({'name': "DST2", 'amount': 0.0})
 
         self.fp2m = self.fp.create({
             'name': "FP-TAX2TAXES",
-            'tax_ids': [
-                (0,0,{
-                    'tax_src_id': self.src_tax.id,
-                    'tax_dest_id': self.dst1_tax.id
-                }),
-                (0,0,{
-                    'tax_src_id': self.src_tax.id,
-                    'tax_dest_id': self.dst2_tax.id
-                })
-            ]
         })
+
+        self.dst1_tax = self.env['account.tax'].create({'name': "DST1", 'amount': 0.0, 'fiscal_position_ids': [Command.set(self.fp2m.ids)], 'original_tax_ids': [Command.set(self.src_tax.ids)], 'sequence': 10})
+        self.dst2_tax = self.env['account.tax'].create({'name': "DST2", 'amount': 0.0, 'fiscal_position_ids': [Command.set(self.fp2m.ids)], 'original_tax_ids': [Command.set(self.src_tax.ids)], 'sequence': 5})
         mapped_taxes = self.fp2m.map_tax(self.src_tax)
 
         self.assertEqual(mapped_taxes, self.dst1_tax | self.dst2_tax)
@@ -272,6 +264,42 @@ class TestFiscalPosition(common.TransactionCase):
             self.env['account.fiscal.position']._get_fiscal_position(partner_us_no_vat, partner_us_no_vat),
             fp_eu_extra
         )
+
+    def test_map_inactive(self):
+        self.env.company.country_id = self.us
+        self.env['account.tax.group'].create(
+            {'name': 'Test Tax Group', 'company_id': self.env.company.id}
+        )
+        fp = self.env['account.fiscal.position'].create({
+            'name': 'FP With Inactive Taxes',
+        })
+        src_tax = self.env['account.tax'].create({
+            'name': 'Source Tax',
+            'amount': 10,
+        })
+        dest_tax = self.env['account.tax'].create({
+            'name': 'Destination Tax',
+            'amount': 20,
+            'fiscal_position_ids': [Command.link(fp.id)],
+            'original_tax_ids': [Command.link(src_tax.id)],
+            'active': False,
+        })
+        self.assertEqual(fp.map_tax(src_tax), dest_tax)
+
+    def test_domestic_fp_map_self(self):
+        self.env.company.country_id = self.us
+        self.env['account.tax.group'].create(
+            {'name': 'Test Tax Group', 'company_id': self.env.company.id}
+        )
+        fp = self.env['account.fiscal.position'].create({
+            'name': 'FP Self',
+        })
+        tax = self.env['account.tax'].create({
+            'name': 'Source Dest Tax',
+            'amount': 10,
+            'fiscal_position_ids': [Command.link(fp.id)],
+        })
+        self.assertEqual(fp.map_tax(tax), tax)
 
     def test_fiscal_position_constraint(self):
         """

@@ -6,7 +6,6 @@ from uuid import uuid4
 
 import odoo.tests
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
-from odoo import Command
 
 
 @odoo.tests.tagged("post_install", "-at_install")
@@ -14,21 +13,15 @@ class TestFrontendMobile(SelfOrderCommonTest):
     def test_order_fiscal_position(self):
         """ Orders made in take away should have the alternative fiscal position. """
 
-        tax30 = self.env['account.tax'].create({
-            'name': '30%',
-            'amount': 30,
-            'amount_type': 'percent',
-        })
-
         alternative_fp = self.env['account.fiscal.position'].create({
             'name': "Test",
             'auto_apply': True,
-            'tax_ids': [
-                Command.create({
-                    'tax_src_id': self.default_tax15.id,
-                    'tax_dest_id': tax30.id,
-                }),
-            ]
+        })
+        self.env['account.tax'].create({
+            'name': '30%',
+            'amount': 30,
+            'amount_type': 'percent',
+            'fiscal_position_ids': alternative_fp,
         })
 
         self.out_preset.write({

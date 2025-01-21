@@ -65,11 +65,11 @@ class ResCompany(models.Model):
                         'auto_apply': True,
                     })
 
-                foreign_taxes = {tax.amount: tax for tax in fpos.tax_ids.tax_dest_id if tax.amount_type == 'percent'}
+                foreign_taxes = {tax.amount: tax for tax in fpos.tax_ids if tax.amount_type == 'percent'}
 
                 for domestic_tax in taxes:
                     tax_amount = EU_TAX_MAP.get((domestic_tax.country_id.code, domestic_tax.amount, destination_country.code), False)
-                    if tax_amount and domestic_tax not in fpos.tax_ids.tax_src_id:
+                    if tax_amount and domestic_tax not in fpos.tax_ids.original_tax_ids:
                         if not foreign_taxes.get(tax_amount, False):
                             oss_tax_group_local_xml_id = f"{company.id}_oss_tax_group_{str(tax_amount).replace('.', '_')}_{company.account_fiscal_country_id.code}"
                             if not self.env.ref(f"account.{oss_tax_group_local_xml_id}", raise_if_not_found=False):
@@ -114,12 +114,9 @@ class ResCompany(models.Model):
                                 'country_id': company.account_fiscal_country_id.id,
                                 'sequence': 1000,
                                 'company_id': company.id,
+                                'fiscal_position_ids': [Command.link(fpos.id)],
+                                'original_tax_ids': [Command.link(domestic_tax.id)],
                             })
-                        mapping.append((0, 0, {'tax_src_id': domestic_tax.id, 'tax_dest_id': foreign_taxes[tax_amount].id}))
-                if mapping:
-                    fpos.write({
-                        'tax_ids': mapping
-                    })
 
     def _get_repartition_lines_oss(self):
         self.ensure_one()
