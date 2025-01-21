@@ -6,7 +6,7 @@ import { floatIsZero } from "@web/core/utils/numbers";
 import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { deduceUrl, random5Chars, uuidv4, getOnNotified, Counter } from "@point_of_sale/utils";
+import { deduceUrl, random5Chars, uuidv4, Counter } from "@point_of_sale/utils";
 import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
 import { ConnectionAbortedError, ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
@@ -261,9 +261,8 @@ export class PosStore extends WithLazyGetterTrap {
 
     async initServerData() {
         await this.processServerData();
-        this.onNotified = getOnNotified(this.bus, this.config.access_token);
-        this.onNotified("CLOSING_SESSION", this.closingSessionNotification.bind(this));
-        this.onNotified("SYNCHRONISATION", this.recordSynchronisation.bind(this));
+        this.data.connectWebSocket("CLOSING_SESSION", this.closingSessionNotification.bind(this));
+        this.data.connectWebSocket("SYNCHRONISATION", this.recordSynchronisation.bind(this));
         return await this.afterProcessServerData();
     }
 
