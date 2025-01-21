@@ -151,7 +151,7 @@ class HrEmployee(models.Model):
         ])
         contracts_by_employee = defaultdict(lambda: self.env['hr.contract'])
         for contract in contracts:
-            contracts_by_employee[contract.employee_id] += contract
+            contracts_by_employee[contract.employee_id.id] += contract
         for employee in self:
             employee_contracts = contracts_by_employee[employee.id]
             if employee_contracts:
