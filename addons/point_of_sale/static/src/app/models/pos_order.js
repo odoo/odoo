@@ -23,6 +23,7 @@ export class PosOrder extends Base {
 
         // Data present in python model
         this.date_order = vals.date_order || serializeDateTime(luxon.DateTime.now());
+        this.nb_print = vals.nb_print || 0;
         this.to_invoice = vals.to_invoice || false;
         this.shipping_date = vals.shipping_date || false;
         this.state = vals.state || "draft";
