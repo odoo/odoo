@@ -25,6 +25,8 @@ class StructuredReferenceTest(TransactionCase):
         self.assertFalse(is_valid_structured_reference_iso('18539007547034RF'))
         # Does not validate invalid checksum
         self.assertFalse(is_valid_structured_reference_iso('RF17539007547034'))
+        # Validates the entire string
+        self.assertFalse(is_valid_structured_reference_be('RF18539007547034-OTHER-RANDOM-STUFF'))
 
     def test_structured_reference_be(self):
         # Accepts references in both structured formats
@@ -39,6 +41,8 @@ class StructuredReferenceTest(TransactionCase):
         self.assertFalse(is_valid_structured_reference_be('***02/03430/57642***'))
         # Does not validate invalid checksum
         self.assertFalse(is_valid_structured_reference_be('020343057641'))
+        # Validates the entire string
+        self.assertFalse(is_valid_structured_reference_be('020343053497-OTHER-RANDOM-STUFF'))
 
     def test_structured_reference_fi(self):
         # Accepts references in structured format
@@ -54,6 +58,8 @@ class StructuredReferenceTest(TransactionCase):
         self.assertFalse(is_valid_structured_reference_fi('000000000002023000098'))
         # Does not validate invalid checksum
         self.assertFalse(is_valid_structured_reference_fi('2023000095'))
+        # Validates the entire string
+        self.assertFalse(is_valid_structured_reference_fi('2023000098-OTHER-RANDOM-STUFF'))
 
     def test_structured_reference_no_se(self):
         # Accepts references in structured format
@@ -67,6 +73,8 @@ class StructuredReferenceTest(TransactionCase):
         self.assertFalse(is_valid_structured_reference_no_se('1234/5678/97'))
         # Does not validate invalid checksum
         self.assertFalse(is_valid_structured_reference_no_se('1234567898'))
+        # Validates the entire string
+        self.assertFalse(is_valid_structured_reference_no_se('1234567897-OTHER-RANDOM-STUFF'))
 
     def test_structured_reference(self):
         # Accepts references in structured format
