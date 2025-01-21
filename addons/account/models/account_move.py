@@ -4137,6 +4137,7 @@ class AccountMove(models.Model):
                 continue
 
             decoder = (current_invoice or current_invoice.new(self.default_get(['move_type', 'journal_id'])))._get_edi_decoder(file_data, new=new)
+            current_invoice.flush_recordset()
             if decoder or file_data['type'] in ('pdf', 'binary'):
                 try:
                     with self.env.cr.savepoint():
