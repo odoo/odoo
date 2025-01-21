@@ -43,8 +43,8 @@ class MailThreadCc(models.AbstractModel):
         cc_values.update(update_vals)
         return super().message_update(msg_dict, cc_values)
 
-    def _message_add_suggested_recipients(self):
-        email_to_lst, partners = super()._message_add_suggested_recipients()
+    def _message_add_suggested_recipients(self, primary_email_override=False):
+        email_to_lst, partners = super()._message_add_suggested_recipients(primary_email_override)
         if self.email_cc:
             email_to_lst.append(self.email_cc)
         return email_to_lst, partners

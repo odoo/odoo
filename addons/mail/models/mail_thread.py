@@ -2071,7 +2071,7 @@ class MailThread(models.AbstractModel):
                 found_results[res_id] |= partner
         return found_results
 
-    def _message_add_suggested_recipients(self):
+    def _message_add_suggested_recipients(self, primary_email_override=False):
         self.ensure_one()
         email_to_lst, partners = [], self.env['res.partner']
 
@@ -2085,14 +2085,17 @@ class MailThread(models.AbstractModel):
         partners += self._mail_get_partners()[self.id].filtered(lambda p: not p.is_public)
 
         # add email
-        email_fname = self._mail_get_primary_email_field()
-        if email_fname and self[email_fname]:
-            email_to_lst.append(self[email_fname])
+        if not primary_email_override:
+            email_fname = self._mail_get_primary_email_field()
+            if email_fname and self[email_fname]:
+                email_to_lst.append(self[email_fname])
+        else:
+            email_to_lst.append(primary_email_override)
 
         return email_to_lst, partners
 
     def _message_get_suggested_recipients(self, reply_discussion=False, reply_message=None,
-                                          no_create=True):
+                                          no_create=True, primary_email_override=False, additional_partners=None):
         """ Get suggested recipients, contextualized depending on discussion.
 
         :param bool reply_discussion: consider user replies to the discussion.
@@ -2102,6 +2105,8 @@ class MailThread(models.AbstractModel):
           'reply_discussion';
         :param bool no_create: do not create partners when emails are not linked
           to existing partners, see '_partner_find_from_emails';
+        :param bool primary_email_override: new primary_email that isn't stored inside DB;
+        :param bool additional_partners: partners that needs to be added to the suggested recipients;
 
         :returns: list of dictionaries (per suggested recipient) containing:
             * create_values:         dict: data to populate new partner, if not found
@@ -2113,7 +2118,8 @@ class MailThread(models.AbstractModel):
             return email_normalize(email, strict=False) or email.strip()
 
         self.ensure_one()
-        email_to_lst, partners = self._message_add_suggested_recipients()
+        email_to_lst, partners = self._message_add_suggested_recipients(primary_email_override)
+        partners += additional_partners or self.env['res.partner']
 
         # find last relevant message
         if reply_discussion:

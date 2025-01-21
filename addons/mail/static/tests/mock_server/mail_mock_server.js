@@ -869,6 +869,19 @@ async function mail_thread_messages(request) {
     };
 }
 
+registerRoute("/mail/thread/recipients/fields", mail_thread_recipients_fields);
+async function mail_thread_recipients_fields(request) {
+    return {
+        fields: [],
+        mail_field: []
+    };
+}
+
+registerRoute("mail/thread/update_suggested_recipents", mail_thread_update_suggested_recipients);
+async function mail_thread_update_suggested_recipients(request) {
+    return [];
+}
+
 registerRoute("/mail/action", mail_action);
 /** @type {RouteCallback} */
 async function mail_action(request) {
