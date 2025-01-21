@@ -718,3 +718,19 @@ class TestAccountPayment(AccountTestInvoicingCommon):
 
         self.assertEqual(payment.move_id.name, 'PBNK1/2025/00002')
         self.assertEqual(payment.name, 'PBNK1/2025/00002')
+
+    def test_vendor_payment_save_user_selected_journal_id(self):
+        journal_bank = self.env['account.journal'].search([('name', '=', 'Bank')])
+        journal_cash = self.env['account.journal'].search([('name', '=', 'Cash')])
+
+        self.partner.property_outbound_payment_method_line_id = journal_cash.outbound_payment_method_line_ids
+        payment = self.env['account.payment'].create({
+            'payment_type': 'outbound',
+            'partner_id': self.partner.id,
+            'journal_id': journal_cash.id,
+        })
+        self.assertEqual(payment.journal_id, journal_cash)
+        payment.journal_id = journal_bank
+
+        self.assertEqual(payment.payment_method_line_id.journal_id, payment.journal_id)
+        self.assertEqual(payment.journal_id, journal_bank)
