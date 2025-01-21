@@ -113,12 +113,16 @@
                 <field name="legend_blocked" invisible="1"/>
                 <field name="legend_done" invisible="1"/>
                 <field name="kanban_state" widget="state_selection" invisible="application_status == 'refused' or application_status == 'archived'"/>
-                <field name="priority" widget="priority"/>
                 <div class="oe_title pe-0">
                     <label for="candidate_id" class="oe_edit_only"/>
-                    <h1 class="d-flex justify-content-between align-items-center">
-                        <field name="candidate_id" options="{'line_breaks': False}" context="{'default_company_id': company_id}"/>
-                    </h1>
+                    <div class="d-flex align-items-end">
+                        <h1 class="me-4">
+                            <field name="candidate_id" options="{'line_breaks': False}" context="{'default_company_id': company_id}"/>
+                        </h1>
+                        <h2>
+                            <field name="priority" widget="priority"/>
+                        </h2>
+                    </div>
                 </div>
                 <group>
                     <group>
@@ -134,13 +138,13 @@
                         <field name="user_id" widget="many2one_avatar_user" placeholder="Unassigned"/>
                         <field name="interviewer_ids" options="{'no_create': True, 'no_create_edit': True}" widget="many2many_avatar_user" placeholder="Who can access candidates" />
                         <field name="date_closed" invisible="not date_closed" />
-                        <field name="categ_ids" placeholder="Tags" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                        <field name="categ_ids" placeholder="e.g. Trainee" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                     </group>
                 </group>
                 <field name="applicant_properties" columns="2"/>
                 <notebook>
                     <page string="Note" name="application_note">
-                        <field name="applicant_notes" type="html" options="{'collaborative': true, 'resizable': false}" placeholder="Internal notes..."/>
+                        <field name="applicant_notes" type="html" options="{'collaborative': true, 'resizable': false}" placeholder="Add private notes about this applicant..."/>
                     </page>
                     <page string="Details" name="application_details">
                         <group>
