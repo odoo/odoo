@@ -68,6 +68,9 @@
                         <group string="Event Information" name="event">
                             <field class="text-break" name="event_id"
                                    context="{'name_with_seats_availability': True}" options="{'no_create': True}"/>
+                            <field name="slot_start" invisible="not is_multi_slots" required="is_multi_slots" string="Slot"
+                                widget="slot_picker" options="{'end_datetime_field': 'slot_end'}"/>
+                            <field name="slot_end" invisible="1"/>
                             <field name="barcode" groups="base.group_no_one"/>
                             <field name="event_ticket_id" invisible="not event_id"
                                    context="{'name_with_seats_availability': True}" options="{'no_open': True, 'no_create': True}"

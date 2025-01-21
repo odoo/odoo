@@ -22,3 +22,19 @@
         }
     }
 }
+
+.modal-content:has(.o_event_slot_calendar_view) {
+    .fc-event {
+        border-color: $o-info;
+        background: #{mix($o-info, $o-view-background-color, 50%)};
+    }
+    .fc-event-main {
+        max-height: inherit !important;
+    }
+    .o_calendar_wrapper {
+        min-height: 75vh;
+    }
+    footer > button,.o_control_panel,.fc-event-time {
+        display: none !important;
+    }
+}

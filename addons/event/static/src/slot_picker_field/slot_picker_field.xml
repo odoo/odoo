@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="event.SlotPickerField">
+        <t t-if="props.readonly">
+            <span class="text-truncate" t-esc="getFormattedValue()"/>
+        </t>
+        <t t-else="">
+            <div class="d-flex flex-nowrap">
+                <input type="text" class="o_input cursor-pointer" autocomplete="off" readonly="1"
+                    t-att-value="getFormattedValue()" t-on-click="openSlotPicker"/>
+                <button type="button" class="btn btn-link text-action fa fa-trash px-1"
+                    data-tooltip="Clear" tabindex="-1" draggable="false" t-on-click="clearSlot"/>
+            </div>
+        </t>
+    </t>
+
+</templates>

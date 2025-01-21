@@ -7,6 +7,26 @@
         <field name="path">registration-desk</field>
     </record>
 
+    <record model="ir.ui.view" id="view_event_slot_calendar">
+        <field name="name">event.event.calendar</field>
+        <field name="model">event.event</field>
+        <field eval="1" name="priority"/>
+        <field name="arch" type="xml">
+            <calendar js_class="event_slot_calendar" string="Slots" mode="month"
+                create="0" date_start="date_begin"/>
+        </field>
+    </record>
+
+    <record id="action_open_event_slot_calendar" model="ir.actions.act_window">
+        <field name="name">Choose a Slot</field>
+        <field name="res_model">event.event</field>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="event.view_event_slot_calendar"/>
+        <field name="domain">[('id', '=', 0)]</field>
+        <field name="context">{"dialog_size": "extra-large"}</field>
+        <field name="target">new</field>
+    </record>
+
     <record model="ir.ui.view" id="view_event_form">
         <field name="name">event.event.form</field>
         <field name="model">event.event</field>
@@ -103,6 +123,11 @@
                         <page string="Dates &amp; Slots" name="event_slots" invisible="not is_multi_slots">
                             <field name="slot_ids" string="Slots">
                                 <list string="Slots" editable="bottom">
+                                    <control>
+                                        <create string="Add a slot"/>
+                                        <button name="%(event.action_open_event_slot_calendar)d" type="action" string="Preview"
+                                            class="btn-link" context="{'event_id': parent.id}"/>
+                                    </control>
                                     <field name="weekdays" string="Every" required="not date"
                                         widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <field name="date" required="not weekdays"/>
