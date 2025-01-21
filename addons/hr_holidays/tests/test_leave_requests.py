@@ -1250,3 +1250,34 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(len(activities), 1, "One activity should be created for the Employee's Approver.")
         self.assertEqual(activities.activity_type_id, self.env.ref('hr_holidays.mail_act_leave_approval'), "The activity type should be for leave approval by the Employee's Approver.")
         self.assertEqual(activities.user_id, self.employee_hrmanager.leave_manager_id, "The activity should be assigned to the Employee's Approver.")
+
+    @freeze_time('2019-11-01')
+    def test_holiday_custom_hour_multiple_employees(self):
+        """When we create a leave with custom hours for multiple employees, we want to make sure that the
+        linked requests have the same custom hours as the main request."""
+
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Paid Time Off',
+            'request_unit': 'hour',
+            'leave_validation_type': 'both',
+        })
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Test leave',
+            'employee_ids': [(4, self.employee_hruser.id), (4, self.employee_emp.id)],
+            'holiday_status_id': leave_type.id,
+            'request_date_from': datetime.today(),
+            'request_unit_hours': True,
+            'request_hour_from': '8',
+            'request_hour_to': '12',
+            'multi_employee': True,  # needed otherwise we break SQL constraint type_value, as this stored field is computed afterwards
+        })
+        leave.action_validate()
+
+        self.assertEqual(len(leave.linked_request_ids), 2)
+
+        for linked_request in leave.linked_request_ids:
+            self.assertTrue(linked_request.request_unit_hours)
+            self.assertEqual(linked_request.date_from, datetime(2019, 11, 1, 7, 0))  # not 8 because test calendar is in Europe/Brussels
+            self.assertEqual(linked_request.date_to, datetime(2019, 11, 1, 11, 0))
+            self.assertEqual(linked_request.number_of_hours, 4)

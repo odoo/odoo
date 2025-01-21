@@ -704,6 +704,38 @@ def _normalize_email(email):
         local_part = local_part.lower()
     return local_part + at + domain.lower()
 
+def email_anonymize(normalized_email, *, redact_domain=False):
+    """
+    Replace most charaters in the local part of the email address with
+    '*' to hide the recipient, but keep enough characters for debugging
+    purpose.
+
+    The email address must be normalized already.
+
+    >>> email_anonymize('admin@example.com')
+    'a****@example.com'
+    >>> email_anonymize('portal@example.com')
+    'p***al@example.com'
+    >>> email_anonymize('portal@example.com', redact_domain=True)
+    'p***al@e******.com'
+    """
+    if not normalized_email:
+        return normalized_email
+
+    local, at, domain = normalized_email.partition('@')
+    if len(local) <= 5:
+        anon_local = local[:1] + '*' * (len(local) - 1)
+    else:
+        anon_local = local[:1] + '*' * (len(local) - 3) + local[-2:]
+
+    host, dot, tld = domain.rpartition('.')
+    if redact_domain and not domain.startswith('[') and all((host, dot, tld)):
+        anon_host = host[0] + '*' * (len(host) - 1)
+    else:
+        anon_host = host
+
+    return f'{anon_local}{at}{anon_host}{dot}{tld}'
+
 def email_domain_extract(email):
     """ Extract the company domain to be used by IAP services notably. Domain
     is extracted from email information e.g:
