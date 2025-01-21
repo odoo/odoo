@@ -1076,7 +1076,84 @@ export class PosStore extends WithLazyGetterTrap {
         return this.user.id;
     }
     cashierHasPriceControlRights() {
+<<<<<<< saas-18.1:addons/point_of_sale/static/src/app/services/pos_store.js
         return !this.config.restrict_price_control || this.getCashier()._role == "manager";
+||||||| d8d4e946933156249991ca76a9c00e9b28063120:addons/point_of_sale/static/src/app/store/pos_store.js
+        return !this.config.restrict_price_control || this.get_cashier()._role == "manager";
+    }
+    generate_unique_id() {
+        // Generates a public identification number for the order.
+        // The generated number must be unique and sequential. They are made 12 digit long
+        // to fit into EAN-13 barcodes, should it be needed
+
+        function zero_pad(num, size) {
+            var s = "" + num;
+            while (s.length < size) {
+                s = "0" + s;
+            }
+            return s;
+        }
+        return (
+            zero_pad(this.session.id, 5) +
+            "-" +
+            zero_pad(this.session.login_number, 3) +
+            "-" +
+            zero_pad(this.session.sequence_number, 4)
+        );
+=======
+        return !this.config.restrict_price_control || this.get_cashier()._role == "manager";
+    }
+    get currentSequenceNumber() {
+        return this._sequenceNumber || 1;
+    }
+    getNextSequenceNumber() {
+        const sessionId = this.session.id;
+        const configId = this.config.id;
+        const storedData = localStorage.getItem("pos.sequenceNumbers") || "{}";
+        const cache = JSON.parse(storedData);
+
+        if (!cache[configId]) {
+            cache[configId] = {};
+        }
+        // Cleanup: Remove sequence numbers for previous sessions under the same configId
+        // If we used only sessionId, we wouldn't be able to remove outdated session data properly,
+        // because some session IDs might belong to a different configuration, which we must preserve.
+        for (const sid in cache[configId]) {
+            if (sid !== String(sessionId)) {
+                delete cache[configId][sid];
+            }
+        }
+
+        if (!cache[configId][sessionId]) {
+            cache[configId][sessionId] = 0;
+        }
+
+        cache[configId][sessionId] += 1;
+        this._sequenceNumber = cache[configId][sessionId];
+        localStorage.setItem("pos.sequenceNumbers", JSON.stringify(cache));
+
+        return this._sequenceNumber;
+    }
+    generate_unique_id() {
+        // Generates a public identification number for the order.
+        // The generated number must be unique and sequential. They are made 12 digit long
+        // to fit into EAN-13 barcodes, should it be needed
+
+        function zero_pad(num, size) {
+            var s = "" + num;
+            while (s.length < size) {
+                s = "0" + s;
+            }
+            return s;
+        }
+        return (
+            zero_pad(this.session.id, 5) +
+            "-" +
+            zero_pad(this.session.login_number, 3) +
+            "-" +
+            zero_pad(this.getNextSequenceNumber(), 4)
+        );
+>>>>>>> ab46abf64479527a52993d6dff0020f79b583f98:addons/point_of_sale/static/src/app/store/pos_store.js
     }
     createNewOrder(data = {}) {
         const fiscalPosition = this.models["account.fiscal.position"].find(
@@ -1089,6 +1166,12 @@ export class PosStore extends WithLazyGetterTrap {
             config_id: this.config,
             picking_type_id: this.pickingType,
             user_id: this.user,
+<<<<<<< saas-18.1:addons/point_of_sale/static/src/app/services/pos_store.js
+||||||| d8d4e946933156249991ca76a9c00e9b28063120:addons/point_of_sale/static/src/app/store/pos_store.js
+            sequence_number: this.session.sequence_number,
+=======
+            sequence_number: this.currentSequenceNumber,
+>>>>>>> ab46abf64479527a52993d6dff0020f79b583f98:addons/point_of_sale/static/src/app/store/pos_store.js
             access_token: uuidv4(),
             ticket_code: random5Chars(),
             fiscal_position_id: fiscalPosition,
@@ -1098,11 +1181,28 @@ export class PosStore extends WithLazyGetterTrap {
             ...data,
         });
 
+<<<<<<< saas-18.1:addons/point_of_sale/static/src/app/services/pos_store.js
         this.getNextOrderRefs(order);
         order.setPricelist(this.config.pricelist_id);
 
         if (this.config.use_presets) {
             this.selectPreset(this.config.default_preset_id, order);
+||||||| d8d4e946933156249991ca76a9c00e9b28063120:addons/point_of_sale/static/src/app/store/pos_store.js
+        this.session.sequence_number++;
+        order.set_pricelist(this.config.pricelist_id);
+        return order;
+    }
+    add_new_order(data = {}) {
+        if (this.get_order()) {
+            this.get_order().updateSavedQuantity();
+=======
+        order.set_pricelist(this.config.pricelist_id);
+        return order;
+    }
+    add_new_order(data = {}) {
+        if (this.get_order()) {
+            this.get_order().updateSavedQuantity();
+>>>>>>> ab46abf64479527a52993d6dff0020f79b583f98:addons/point_of_sale/static/src/app/store/pos_store.js
         }
 
         order.recomputeOrderData();
