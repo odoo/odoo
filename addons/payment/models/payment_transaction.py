@@ -4,7 +4,7 @@ import logging
 import pprint
 import re
 import unicodedata
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import psycopg2
 from dateutil import relativedelta
@@ -136,6 +136,14 @@ class PaymentTransaction(models.Model):
         data = {source_transaction.id: count for source_transaction, count in rg_data}
         for record in self:
             record.refunds_count = data.get(record.id, 0)
+
+    def _is_created_within_last_hour(self):
+        self.ensure_one()
+        if self.create_date:
+            one_hour_ago = fields.Datetime.now() - timedelta(hours=1)
+            if self.create_date >= one_hour_ago:
+                return True
+        return False
 
     #=== CONSTRAINT METHODS ===#
 
