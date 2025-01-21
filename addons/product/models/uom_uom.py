@@ -15,7 +15,7 @@ class UomUom(models.Model):
         uom_to_barcode_count = self.env['product.uom'].read_group([('uom_id', 'in', self.ids)], ['barcode:count'], ['uom_id'])
         uom_to_barcode_count = {data['uom_id'][0]: data['barcode'] for data in uom_to_barcode_count}
         for uom in self:
-            uom.packaging_barcodes_count = uom_to_barcode_count.get(uom.id, 0)
+            uom.packaging_barcodes_count = uom_to_barcode_count.get(uom.id, 1)  # We always want to show the barcodes smart button
 
     def action_open_packaging_barcodes(self):
         self.ensure_one()
