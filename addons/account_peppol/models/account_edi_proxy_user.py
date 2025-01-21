@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from datetime import timedelta
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
@@ -105,8 +106,12 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         edi_users._peppol_get_message_status()
 
     def _cron_peppol_get_participant_status(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', ['in_verification', 'sender', 'smp_registration'])])
+        edi_users = self.search([('proxy_type', '=', 'peppol')])
         edi_users._peppol_get_participant_status()
+
+        # throughout the registration process, we need to check the status more frequently
+        if self.search_count([('company_id.account_peppol_proxy_state', '=', 'smp_registration')], limit=1):
+            self.env.ref('account_peppol.ir_cron_peppol_get_participant_status')._trigger(at=fields.Datetime.now() + timedelta(hours=1))
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
@@ -315,6 +320,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             self.company_id.peppol_external_provider = peppol_external_provider
 
     def _peppol_register_receiver(self):
+        # remove in master
         self.ensure_one()
         params = {
             'company_details': self._get_company_details(),
@@ -355,6 +361,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         company.account_peppol_migration_key = False
         company.account_peppol_proxy_state = 'smp_registration'
         company.peppol_external_provider = None
+
+        self.env.ref('account_peppol.ir_cron_peppol_get_participant_status')._trigger(at=fields.Datetime.now() + timedelta(hours=1))
 
     def _peppol_deregister_participant(self):
         self.ensure_one()
