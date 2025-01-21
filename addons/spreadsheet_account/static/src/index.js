@@ -53,4 +53,5 @@ cellMenuRegistry.add("move_lines_see_records", {
             getNumberOfAccountFormulas(cell.compiledFormula.tokens) === 1
         );
     },
+    icon: "o-spreadsheet-Icon.SEE_RECORDS",
 });
