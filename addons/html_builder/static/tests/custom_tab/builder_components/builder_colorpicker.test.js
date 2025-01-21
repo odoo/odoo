@@ -39,7 +39,7 @@ test("hide/display base on applyTo", async () => {
     });
     addOption({
         selector: ".parent-target",
-        template: xml`<BuilderColorPicker applyTo="'.my-custom-class'"/>`,
+        template: xml`<BuilderColorPicker applyTo="'.my-custom-class'" styleAction="'backgroundColor'"/>`,
     });
     const { getEditor } = await setupWebsiteBuilder(
         `<div class="parent-target"><div class="child-target b">b</div></div>`
@@ -63,7 +63,7 @@ test("hide/display base on applyTo", async () => {
 test("apply color to a different style than color or backgroundColor", async () => {
     addOption({
         selector: ".test-options-target",
-        template: xml`<BuilderColorPicker styleAction="'borderTopColor'"/>`,
+        template: xml`<BuilderColorPicker styleAction="'border-top-color'"/>`,
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
