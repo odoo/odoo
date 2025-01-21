@@ -502,7 +502,7 @@ function getAllActionsAndOperations(comp) {
             const action = getAction(actionId);
             // Take the action value defined by the clickable or the input given
             // by the user.
-            actionValue = actionValue || userValueInput;
+            actionValue = actionValue === undefined ? userValueInput : actionValue;
             for (const editingElement of comp.env.getEditingElements()) {
                 specs.push({
                     editingElement,

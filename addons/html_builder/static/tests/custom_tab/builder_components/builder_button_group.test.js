@@ -149,3 +149,23 @@ test("hide/display base on applyTo - 2", async () => {
     await contains("[data-class-action='my-custom-class']").click();
     expect(".options-container .btn-group").toBeVisible();
 });
+
+test("click on BuilderButton with empty value should remove styleAction", async () => {
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderButtonGroup>
+            <BuilderButton styleAction="'width'" styleActionValue="''"/>
+            <BuilderButton styleAction="'width'" styleActionValue="'25%'"/>
+        </BuilderButtonGroup>`,
+    });
+    const { getEditor } = await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    const editor = getEditor();
+    await contains(":iframe .test-options-target").click();
+    await contains("[data-style-action='width'][data-style-action-value='25%']").click();
+    expect(editor.editable).toHaveInnerHTML(
+        `<div class="test-options-target" style="width: 25% !important;">b</div>`
+    );
+
+    await contains("[data-style-action='width'][data-style-action-value='']").click();
+    expect(editor.editable).toHaveInnerHTML(`<div class="test-options-target" style="">b</div>`);
+});
