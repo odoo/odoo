@@ -7,14 +7,13 @@ import {
     onRpcBefore,
     openDiscuss,
     openFormView,
-    scroll,
     start,
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { press, queryFirst } from "@odoo/hoot-dom";
-import { mockDate, tick } from "@odoo/hoot-mock";
+import { mockDate } from "@odoo/hoot-mock";
 import {
     asyncStep,
     Command,
@@ -66,10 +65,10 @@ test("keep new message separator when message is deleted", async () => {
     await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "message 1" });
 });
 
-test("separator is not shown if message is not yet loaded", async () => {
+test("separator is not shown if all messages are new", async () => {
     const pyEnv = await startServer();
     const generalId = pyEnv["discuss.channel"].create({ name: "General" });
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 5; i++) {
         pyEnv["mail.message"].create({
             body: `message ${i}`,
             message_type: "comment",
@@ -80,12 +79,8 @@ test("separator is not shown if message is not yet loaded", async () => {
     }
     await start();
     await openDiscuss(generalId);
-    await contains(".o-mail-Message", { count: 30 });
-    await scroll(".o-mail-Thread", 0);
-    await contains(".o-mail-Message", { text: "message 0" });
-    await tick(); // give enough time for the useVisible hook to register load more as hidden
-    await scroll(".o-mail-Thread", 0);
-    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "message 0" });
+    await contains(".o-mail-Message", { count: 5 });
+    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New" });
 });
 
 test("keep new message separator until user goes back to the thread", async () => {
@@ -98,23 +93,38 @@ test("keep new message separator until user goes back to the thread", async () =
             Command.create({ partner_id: serverState.partnerId }),
         ],
     });
-    pyEnv["mail.message"].create({
-        author_id: partnerId,
-        body: "hello",
-        message_type: "comment",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
+    const messageIds = pyEnv["mail.message"].create([
+        {
+            author_id: partnerId,
+            body: "Message body 1",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            author_id: partnerId,
+            body: "Message body 2",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
+    // simulate that there is at least one read message in the channel
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: messageIds[0] + 1 });
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Thread");
-    await contains(".o-mail-Message", { text: "hello" });
+    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "Message body 2" });
     await contains(".o-mail-Thread-newMessage hr + span", { text: "New" });
     await click(".o-mail-DiscussSidebar-item", { text: "History" });
     await contains(".o-mail-Discuss-threadName", { value: "History" });
     await click(".o-mail-DiscussSidebar-item", { text: "test" });
     await contains(".o-mail-Discuss-threadName", { value: "test" });
-    await contains(".o-mail-Message", { text: "hello" });
+    await contains(".o-mail-Message", { text: "Message body 2" });
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New" });
 });
 
@@ -137,6 +147,17 @@ test("show new message separator on receiving new message when out of odoo focus
         channel_type: "channel",
         name: "General",
     });
+    const messageId = pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    // simulate that there is at least one read message in the channel
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: messageId + 1 });
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Thread");
@@ -249,6 +270,17 @@ test("show new message separator when message is received while chat window is c
         ],
         channel_type: "chat",
     });
+    const messageId = pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    // simulate that there is at least one read message in the channel
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: messageId + 1 });
     onRpcBefore("/mail/data", (args) => {
         if (args.init_messaging) {
             asyncStep(`/mail/data - ${JSON.stringify(args)}`);
@@ -286,15 +318,30 @@ test("only show new message separator in its thread", async () => {
     const pyEnv = await startServer();
     const demoPartnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    pyEnv["mail.message"].create({
-        author_id: demoPartnerId,
-        body: "@Mitchell Admin",
-        attachment_ids: [],
-        message_type: "comment",
-        model: "discuss.channel",
-        res_id: channelId,
-        needaction: true,
-    });
+    const messageIds = pyEnv["mail.message"].create([
+        {
+            author_id: demoPartnerId,
+            body: "Hello",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            author_id: demoPartnerId,
+            body: "@Mitchell Admin",
+            attachment_ids: [],
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+            needaction: true,
+        },
+    ]);
+    // simulate that there is at least one read message in the channel
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: messageIds[0] + 1 });
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "@Mitchell Admin" });

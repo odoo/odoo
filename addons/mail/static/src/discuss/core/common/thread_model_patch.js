@@ -51,9 +51,6 @@ const threadPatch = {
                 }
                 const messages = this.messages;
                 const separator = this.selfMember.localNewMessageSeparator;
-                if (separator === 0 && !this.loadOlder) {
-                    return messages[0];
-                }
                 if (!separator || messages.length === 0 || messages.at(-1).id < separator) {
                     return null;
                 }
