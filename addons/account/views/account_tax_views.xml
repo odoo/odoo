@@ -147,11 +147,13 @@
                                 <field name="amount" class="oe_inline" nolabel="1"/>
                                 <span class="o_form_label oe_inline" invisible="amount_type == 'fixed'">%</span>
                             </div>
+                            <field name="fiscal_position_ids" widget="many2many_tags" placeholder="all"/>
+                            <field name="alternative_tax_ids" widget="many2many_tags" placeholder="default product tax" invisible="not display_alternative_taxes_field" domain="[('type_tax_use', '=', type_tax_use), ('id', '!=', id), ('id', 'in', domestic_tax_ids)]"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Definition" name="definition">
-                            <div invisible="amount_type == 'group'">
+                            <group invisible="amount_type == 'group'">
                                 <field name="country_code" invisible="1"/>
                                 <group string="Distribution for Invoices" class="mw-100">
                                     <field name="invoice_repartition_line_ids" nolabel="1" colspan="2"/>
@@ -159,7 +161,7 @@
                                 <group string="Distribution for Refunds" class="mw-100">
                                     <field name="refund_repartition_line_ids" nolabel="1" colspan="2"/>
                                 </group>
-                            </div>
+                            </group>
                             <field name="children_tax_ids" invisible="amount_type != 'group' or type_tax_use == 'none'" domain="[('type_tax_use','in',('none',type_tax_use)), ('amount_type','!=','group')]">
                                 <list string="Children Taxes">
                                     <field name="sequence" widget="handle"/>

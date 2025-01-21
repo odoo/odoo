@@ -115,6 +115,21 @@ class AccountTax(models.Model):
         e.g 180 / (1 - 10%) = 200 (not price included)
         e.g 200 * (1 - 10%) = 180 (price included)
         """)
+    fiscal_position_ids = fields.Many2many(
+        comodel_name='account.fiscal.position',
+        relation='account_fiscal_position_account_tax_rel',
+        column1='account_tax_id',
+        column2='account_fiscal_position_id',
+    )
+    alternative_tax_ids = fields.Many2many(
+        comodel_name='account.tax',
+        relation='account_tax_alternatives',
+        column1='dest_tax_id',  # This Replacement tax
+        column2='src_tax_id',  # Domestic Tax to replace
+        string="Replaces",
+    )
+    display_alternative_taxes_field = fields.Boolean(compute='_compute_display_alternative_taxes_field')
+    domestic_tax_ids = fields.Many2many(comodel_name='account.tax', compute='_compute_domestic_tax_ids')
     active = fields.Boolean(default=True, help="Set active to false to hide the tax without removing it.")
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, default=lambda self: self.env.company)
     children_tax_ids = fields.Many2many('account.tax',
@@ -286,6 +301,28 @@ class AccountTax(models.Model):
             ids of the taxes from that input set that are used in transactions.
         '''
         return set()
+
+    def _get_domestic_fiscal_positions(self, country_codes: list):
+        # this doesn't cover all cases as some l10ns don't use the default (consider using the 1st fiscal position in the company instead)
+        return {
+            cc: self.env['account.chart.template'].ref(f"l10n_{cc.lower()}_domestic_fiscal_position", raise_if_not_found=False) or self.env['account.fiscal.position']
+            for cc in country_codes
+        }
+
+    def _compute_domestic_tax_ids(self):
+        fps = self._get_domestic_fiscal_positions(self.company_id.account_fiscal_country_id.mapped('code'))
+        for tax in self:
+            domestic_fiscal_position = fps.get(tax.company_id.account_fiscal_country_id.code)
+            tax.domestic_tax_ids = self.search([('fiscal_position_ids', 'in', [False, domestic_fiscal_position.id])])
+
+    @api.depends('fiscal_position_ids')
+    def _compute_display_alternative_taxes_field(self):
+        fps = self._get_domestic_fiscal_positions(self.company_id.account_fiscal_country_id.mapped('code'))
+        for tax in self:
+            tax.display_alternative_taxes_field = (
+                tax.fiscal_position_ids
+                and tax.fiscal_position_ids._origin != fps.get(tax.company_id.account_fiscal_country_id.code)  # _origin used to get the actual records
+            )
 
     def _compute_is_used(self):
         used_taxes = set()

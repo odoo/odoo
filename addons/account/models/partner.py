@@ -39,7 +39,13 @@ class AccountFiscalPosition(models.Model):
         default=lambda self: self.env.company)
     account_ids = fields.One2many('account.fiscal.position.account', 'position_id', string='Account Mapping', copy=True)
     account_map = fields.Binary(compute='_compute_account_map')
-    tax_ids = fields.One2many('account.fiscal.position.tax', 'position_id', string='Tax Mapping', copy=True)
+    tax_ids = fields.Many2many(
+        comodel_name='account.tax',
+        relation='account_fiscal_position_account_tax_rel',
+        column1='account_fiscal_position_id',
+        column2='account_tax_id',
+        string='Taxes'
+    )
     tax_map = fields.Binary(compute='_compute_tax_map')
     note = fields.Html('Notes', translate=True, help="Legal mentions that have to be printed on the invoices.")
     auto_apply = fields.Boolean(string='Detect Automatically', help="Apply tax & account mappings on invoices automatically if the matching criterias (VAT/Country) are met.")
@@ -86,15 +92,15 @@ class AccountFiscalPosition(models.Model):
                 # 'no_template' kept for compatibility in stable. To remove in master
                 fiscal_position.foreign_vat_header_mode = 'templates_found' if template['installed'] else 'no_template'
 
-    @api.depends('tax_ids.tax_src_id', 'tax_ids.tax_dest_id')
+    @api.depends('tax_ids')
     def _compute_tax_map(self):
         for position in self:
             tax_map = defaultdict(list)
-            for tl in position.tax_ids:
-                if tl.tax_dest_id:
-                    tax_map[tl.tax_src_id.id].append(tl.tax_dest_id.id)
-                else:
-                    tax_map[tl.tax_src_id.id]  # map to an empty list
+            for dest_tax in position.tax_ids:
+                for src_tax in dest_tax.alternative_tax_ids:
+                    tax_map[src_tax.id].append(dest_tax.id)
+                # else:
+                #     tax_map[src_tax.id]  # map to an empty list
             position.tax_map = dict(tax_map)
 
     @api.depends('account_ids.account_src_id', 'account_ids.account_dest_id')
@@ -284,6 +290,10 @@ class AccountFiscalPosition(models.Model):
             default=(self.env['account.fiscal.position'], False)
         )[0]
 
+    def action_open_related_taxes(self):
+        self.ensure_one()
+        return self.tax_ids._get_records_action(name=_("%s taxes", self.display_name))
+
     def action_create_foreign_taxes(self):
         self.ensure_one()
         template_code = self.env['account.chart.template']._guess_chart_template(self.country_id)
@@ -292,26 +302,6 @@ class AccountFiscalPosition(models.Model):
             localization_module = self.env['ir.module.module'].search([('name', '=', template['module'])])
             localization_module.sudo().button_immediate_install()
         self.env["account.chart.template"]._instantiate_foreign_taxes(self.country_id, self.company_id)
-
-
-class AccountFiscalPositionTax(models.Model):
-    _name = 'account.fiscal.position.tax'
-    _description = 'Tax Mapping of Fiscal Position'
-    _rec_name = 'position_id'
-    _check_company_auto = True
-    _check_company_domain = models.check_company_domain_parent_of
-
-    position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
-        required=True, index=True, ondelete='cascade')
-    company_id = fields.Many2one('res.company', string='Company', related='position_id.company_id', store=True)
-    tax_src_id = fields.Many2one('account.tax', string='Tax on Product', required=True, check_company=True)
-    tax_dest_id = fields.Many2one('account.tax', string='Tax to Apply', check_company=True)
-    tax_dest_active = fields.Boolean(related="tax_dest_id.active")
-
-    _tax_src_dest_uniq = models.Constraint(
-        'unique (position_id,tax_src_id,tax_dest_id)',
-        'A tax fiscal position could be defined only one time on same taxes.',
-    )
 
 
 class AccountFiscalPositionAccount(models.Model):

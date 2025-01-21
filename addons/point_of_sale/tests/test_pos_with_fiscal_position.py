@@ -56,14 +56,8 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
             'account_src_id': cls.sale_account.id,
             'account_dest_id': cls.other_sale_account.id,
         })
-        tax_fpos = cls.env['account.fiscal.position.tax'].create({
-            'position_id': fpos.id,
-            'tax_src_id': cls.taxes['tax7'].id,
-            'tax_dest_id': cls.new_tax_17.id,
-        })
         fpos.write({
             'account_ids': [(6, 0, account_fpos.ids)],
-            'tax_ids': [(6, 0, tax_fpos.ids)],
         })
         return fpos
 
@@ -75,13 +69,8 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
             'account_src_id': cls.sale_account.id,
             'account_dest_id': cls.other_sale_account.id,
         })
-        tax_fpos = cls.env['account.fiscal.position.tax'].create({
-            'position_id': fpos_no_tax_dest.id,
-            'tax_src_id': cls.taxes['tax7'].id,
-        })
         fpos_no_tax_dest.write({
             'account_ids': [(6, 0, account_fpos.ids)],
-            'tax_ids': [(6, 0, tax_fpos.ids)],
         })
         return fpos_no_tax_dest
 

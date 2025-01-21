@@ -257,7 +257,6 @@ class AccountChartTemplate(models.AbstractModel):
         When we reload the chart of accounts, we only want to update fields that are main
         configuration, like:
         - tax tags
-        - fiscal position mappings linked to new records
         """
         for prop in list(template_data):
             if prop.startswith('property_'):
@@ -335,19 +334,6 @@ class AccountChartTemplate(models.AbstractModel):
                     if xmlid not in xmlid2fiscal_position and not force_create:
                         skip_update.add((model_name, xmlid))
                         continue
-                    # Only add tax mappings containing new taxes
-                    if old_tax_ids := values.pop('tax_ids', []):
-                        new_tax_ids = []
-                        for element in old_tax_ids:
-                            match element:
-                                case Command.CREATE, _, {'tax_src_id': src_id, 'tax_dest_id': dest_id} if (
-                                    not self.ref(src_id, raise_if_not_found=False)
-                                    or (dest_id and not self.ref(dest_id, raise_if_not_found=False))
-                                ):
-                                    new_tax_ids.append(element)
-                        if new_tax_ids:
-                            values['tax_ids'] = new_tax_ids
-
                 elif model_name == 'account.tax':
                     # Only update the tags of existing taxes
                     if xmlid not in xmlid2tax or tax_template_changed(xmlid2tax[xmlid], values):
@@ -419,9 +405,6 @@ class AccountChartTemplate(models.AbstractModel):
                 ('module', '=', 'account'),
             ]).unlink()
 
-        custom_fields = {  # Don't alter values that can be changed by the users
-            'account.fiscal.position.tax_ids',
-        }
         for model_name, records in data.items():
             _fields = self.env[model_name]._fields
             for xmlid, values in records.items():
@@ -429,7 +412,6 @@ class AccountChartTemplate(models.AbstractModel):
                     fname
                     for fname in values
                     if fname in _fields
-                    and f"{model_name}.{fname}" not in custom_fields
                     and _fields[fname].type in ('one2many', 'many2many')
                     and isinstance(values[fname], (list, tuple))
                 ]

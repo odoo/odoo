@@ -119,16 +119,12 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
 
         # Setup fiscal position 15% => 0%.
         us_country = self.env.ref('base.us')
-        tax0 = self.env['account.tax'].create({'name': "Test tax 0", 'amount': 0})
-        self.env['account.fiscal.position'].create({
+        fp = self.env['account.fiscal.position'].create({
             'name': "test_get_combination_info_with_fpos",
             'auto_apply': True,
             'country_id': us_country.id,
-            'tax_ids': [Command.create({
-                'tax_src_id': self.company_data['default_tax_sale'].id,
-                'tax_dest_id': tax0.id,
-            })],
         })
+        tax0 = self.env['account.tax'].create({'name': "Test tax 0", 'amount': 0, 'fiscal_position_ids': fp})
 
         # Now with fiscal position, taxes should be mapped
         self.env.user.partner_id.country_id = us_country

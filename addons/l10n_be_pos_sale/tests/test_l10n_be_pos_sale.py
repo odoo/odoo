@@ -31,9 +31,8 @@ class TestPoSSaleL10NBe(TestPointOfSaleHttpCommon):
                 (0, 0, {'repartition_type': 'tax', 'factor_percent': 100.0}),
                 (0, 0, {'repartition_type': 'tax', 'factor_percent': -100.0}),
             ],
+            'fiscal_position_ids': intracom_fpos,
         })
-
-        intracom_fpos.tax_ids.tax_dest_id = intracom_tax
 
         self.product_a = self.env['product.product'].create({
             'name': 'Product A',

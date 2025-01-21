@@ -13,15 +13,10 @@ class PosConfig(models.Model):
             fp = self.env['account.fiscal.position'].create({
                 'name': 'Take out',
             })
-            self.env['account.fiscal.position.tax'].create({
-                'tax_src_id': tax_21.id,
-                'tax_dest_id': tax_6.id,
-                'position_id': fp.id
-            })
-            self.env['account.fiscal.position.tax'].create({
-                'tax_src_id': tax_12.id,
-                'tax_dest_id': tax_6.id,
-                'position_id': fp.id
+            tax_6.copy({
+                'name': f"{tax_6.name} Take out",
+                'fiscal_position_ids': fp,
+                'alternative_tax_ids': tax_12 | tax_21,
             })
             takeaway_preset = self.env.ref('pos_restaurant.pos_takeout_preset', raise_if_not_found=False)
             if takeaway_preset:
