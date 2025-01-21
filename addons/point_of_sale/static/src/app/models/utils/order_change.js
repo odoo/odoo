@@ -72,7 +72,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                 basic_name: orderline.product_id.name,
                 isCombo: orderline.combo_item_id?.id,
                 product_id: product.id,
-                attribute_value_ids: orderline.attribute_value_ids.map((a) => a.name),
+                attribute_value_names: orderline.attribute_value_ids.map((a) => a.name),
                 quantity: quantityDiff,
                 note: note,
                 pos_categ_id: product.pos_categ_ids[0]?.id ?? 0,
@@ -124,9 +124,10 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                     product_id: lineResume["product_id"],
                     name: lineResume["name"],
                     basic_name: lineResume["basic_name"],
+                    display_name: lineResume["display_name"],
                     isCombo: lineResume["isCombo"],
                     note: lineResume["note"],
-                    attribute_value_ids: lineResume["attribute_value_ids"],
+                    attribute_value_names: lineResume["attribute_value_names"],
                     quantity: -quantity,
                 };
                 changeAbsCount += Math.abs(quantity);
