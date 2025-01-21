@@ -313,9 +313,7 @@ class MailPluginController(http.Controller):
         if not company:
             return {'id': -1}
 
-        try:
-            company.check_access('read')
-        except AccessError:
+        if not company.has_access('read'):
             return {'id': company.id, 'name': _('No Access')}
 
         fields_list = ['id', 'name', 'phone', 'email', 'website']
@@ -393,12 +391,7 @@ class MailPluginController(http.Controller):
         partner_values['image'] = partner.image_128
         partner_values['title'] = partner.function
         partner_values['enrichment_info'] = None
-
-        try:
-            partner.check_access('write')
-            partner_values['can_write_on_partner'] = True
-        except AccessError:
-            partner_values['can_write_on_partner'] = False
+        partner_values['can_write_on_partner'] = partner.has_access('write')
 
         if not partner_values['name']:
             # Always ensure that the partner has a name

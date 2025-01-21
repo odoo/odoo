@@ -2224,12 +2224,9 @@ class CrmLead(models.Model):
 
     def _rebuild_pls_frequency_table(self):
         # Clear the frequencies table (in sql to speed up the cron)
-        try:
-            self.browse().check_access('unlink')
-        except AccessError:
+        if not self.browse().has_access('unlink'):
             raise UserError(_("You don't have the access needed to run this cron."))
-        else:
-            self._cr.execute('TRUNCATE TABLE crm_lead_scoring_frequency')
+        self._cr.execute('TRUNCATE TABLE crm_lead_scoring_frequency')
 
         new_frequencies_by_team, unused = self._pls_prepare_update_frequency_table(rebuild=True)
         # update frequency table

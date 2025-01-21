@@ -1471,11 +1471,8 @@ class SaleOrder(models.Model):
         :rtype: `account.move` recordset
         :raises: UserError if one of the orders has no invoiceable lines.
         """
-        if not self.env['account.move'].has_access('create'):
-            try:
-                self.check_access('write')
-            except AccessError:
-                return self.env['account.move']
+        if not self.env['account.move'].has_access('create') and not self.has_access('write'):
+            return self.env['account.move']
 
         # 1) Create invoices.
         invoice_vals_list = []

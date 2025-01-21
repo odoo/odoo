@@ -213,16 +213,12 @@ class IrHttp(models.AbstractModel):
         super()._pre_dispatch(rule, arguments)
 
         for record in arguments.values():
-            if isinstance(record, models.BaseModel) and hasattr(record, 'can_access_from_current_website'):
-                try:
-                    if not record.can_access_from_current_website():
-                        raise werkzeug.exceptions.NotFound()
-                except AccessError:
-                    # record.website_id might not be readable as
-                    # unpublished `event.event` due to ir.rule, return
-                    # 403 instead of using `sudo()` for perfs as this is
-                    # low level.
-                    raise werkzeug.exceptions.Forbidden()
+            if (
+                isinstance(record, models.BaseModel)
+                and hasattr(record, 'can_access_from_current_website')
+                and not record.can_access_from_current_website()
+            ):
+                raise werkzeug.exceptions.NotFound()
 
     @classmethod
     def _get_web_editor_context(cls):

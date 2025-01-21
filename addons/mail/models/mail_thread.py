@@ -4319,9 +4319,7 @@ class MailThread(models.AbstractModel):
         customer_ids = [] if adding_current else None
 
         if partner_ids and adding_current:
-            try:
-                self.check_access('read')
-            except exceptions.AccessError:
+            if not self.has_access('read'):
                 return False
         else:
             self.check_access('write')
@@ -4682,13 +4680,8 @@ class MailThread(models.AbstractModel):
             res = {}
             if request_list:
                 res["hasReadAccess"] = True
-                res["hasWriteAccess"] = False
+                res["hasWriteAccess"] = thread.has_access("write")
                 res["canPostOnReadonly"] = self._mail_post_access == "read"
-                try:
-                    thread.check_access("write")
-                    res["hasWriteAccess"] = True
-                except AccessError:
-                    pass
             if (
                 request_list
                 and "activities" in request_list
