@@ -67,6 +67,27 @@ export const TABLE_STYLES = {
     "line-height": "inherit",
 };
 
+const GROUPED_STYLES = {
+    border: [
+        "border-top-width",
+        "border-right-width",
+        "border-bottom-width",
+        "border-left-width",
+        "border-top-style",
+        "border-right-style",
+        "border-bottom-style",
+        "border-left-style",
+    ],
+    padding: ["padding-top", "padding-bottom", "padding-left", "padding-right"],
+    margin: ["margin-top", "margin-bottom", "margin-left", "margin-right"],
+    "border-radius": [
+        "border-top-left-radius",
+        "border-top-right-radius",
+        "border-bottom-right-radius",
+        "border-bottom-left-radius",
+    ],
+};
+
 //--------------------------------------------------------------------------
 // Public
 //--------------------------------------------------------------------------
@@ -1687,6 +1708,31 @@ function _getMatchedCSSRules(node, cssRules) {
     for (const [key, value] of Object.entries(processedStyle)) {
         if (value && value.endsWith("important")) {
             processedStyle[key] = value.replace(/\s*!important\s*$/, "");
+        }
+    }
+
+    // When a grouped style (e.g., border-width, margin, padding) uses a CSS variable
+    // (e.g., var(--some-variable)), its substyles (e.g., margin-left, padding-top)
+    // won't have explicit values in CSSRule's style property. The grouped style itself
+    // also won't appear directly. To prevent losing these styles, we add the substyles
+    // explicitly using their computed values.
+    const computedStyle = getComputedStyle(node);
+    for (const groupName in GROUPED_STYLES) {
+        // We exclude the 'margin' and 'padding' styles from force apply because
+        // it's common that they have a value set by auto which doesn't make sense to
+        // force their computed value.
+        const force = !groupName.includes("margin") && !groupName.includes("padding");
+        const hasSubStyleApplied = GROUPED_STYLES[groupName].some(
+            (styleName) => styleName in processedStyle
+        );
+        if (!force && hasSubStyleApplied) {
+            continue;
+        }
+        for (const styleName of GROUPED_STYLES[groupName]) {
+            const styleValue = computedStyle.getPropertyValue(styleName);
+            if (styleValue && typeof styleValue === "string" && styleValue.length) {
+                processedStyle[styleName] = styleValue;
+            }
         }
     }
 
