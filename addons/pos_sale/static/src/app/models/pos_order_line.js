@@ -44,9 +44,7 @@ patch(PosOrderline.prototype, {
      * @param {'sale.order.line'} saleOrderLine
      */
     async setQuantityFromSOL(saleOrderLine) {
-        if (!saleOrderLine.has_valued_move_ids && !saleOrderLine.is_downpayment) {
-            this.setQuantity(saleOrderLine.product_uom_qty);
-        } else if (
+        if (
             this.product_id.type === "service" &&
             !["sent", "draft"].includes(this.sale_order_origin_id.state)
         ) {
