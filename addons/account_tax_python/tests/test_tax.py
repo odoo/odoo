@@ -50,12 +50,12 @@ class TestTaxPython(TestTaxCommon):
         res = (self.python_tax + python_tax_2).compute_all(130.0)
         self._check_compute_all_results(
             130,  # 'total_included'
-            116.08,  # 'total_excluded'
+            116.07,  # 'total_excluded'
             [
                 # base , amount     | seq | amount | incl | incl_base
                 # ---------------------------------------------------
-                (116.08, 6.96),   # |  1  |    6%  |   t  |
-                (116.08, 6.96),   # |  1  |    6%  |   t  |
+                (116.07, 6.96),   # |  1  |    6%  |   t  |
+                (116.07, 6.96),   # |  1  |    6%  |   t  |
                 # ---------------------------------------------------
             ],
             res

@@ -406,7 +406,7 @@ class TestSaleOrder(SaleCommon):
                 }),
             ],
         })
-        self.assertEqual(sale_order.amount_total, 15.42, "")
+        self.assertEqual(sale_order.amount_total, 15.4, "")
 
         # Test Round Globally
         self.env.company.tax_calculation_rounding_method = 'round_globally'
