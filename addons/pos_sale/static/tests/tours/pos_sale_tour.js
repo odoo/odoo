@@ -326,16 +326,6 @@ registry.category("web_tour.tours").add("PosSettleOrder4", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("PosRepairSettleOrder", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            PosSale.settleNthOrder(1),
-            ProductScreen.selectedOrderlineHas("Test Product", 1),
-        ].flat(),
-});
-
 registry.category("web_tour.tours").add("PosSettleOrderShipLater", {
     steps: () =>
         [
@@ -419,5 +409,18 @@ registry.category("web_tour.tours").add("PoSDownPaymentFixedTax", {
                 quantity: "1.0",
                 price: "22.00",
             }),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PoSSettleQuotation", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
         ].flat(),
 });
