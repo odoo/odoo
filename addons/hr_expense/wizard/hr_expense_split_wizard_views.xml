@@ -36,7 +36,7 @@
                     </group>
                     <field name="split_possible" invisible="1"/>
                     <footer>
-                        <button name="action_split_expense" attrs="{'invisible': [ ('split_possible', '=', True)]}" string="Split Expense" type="object" class="oe_highlight disabled"  data-hotkey="q"/>
+                        <button name="action_split_expense" attrs="{'invisible': [ ('split_possible', '=', True)]}" string="Split Expense" type="object" class="oe_highlight" disabled="disabled" data-hotkey="q"/>
                         <button name="action_split_expense" string="Split Expense" attrs="{'invisible': [('split_possible', '=', False)]}" type="object" class="oe_highlight"  data-hotkey="q"/>
                         <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
                     </footer>
