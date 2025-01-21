@@ -4,6 +4,8 @@ import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { EditOrderNamePopup } from "@pos_restaurant/app/popup/edit_order_name_popup/edit_order_name_popup";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
+import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
+import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 
 patch(PosStore.prototype, {
     /**
@@ -45,6 +47,54 @@ patch(PosStore.prototype, {
             return screens[this.config.default_screen];
         }
         return super.defaultScreen;
+    },
+    createNewOrder(data) {
+        const order = super.createNewOrder(data);
+
+        if (order.table_id) {
+            order.setCustomerCount(order.table_id.seats);
+        }
+
+        return order;
+    },
+    async setCustomerCount(o = false) {
+        const currentOrder = o || this.getOrder();
+        const count = await makeAwaitable(this.dialog, NumberPopup, {
+            feedback: (buffer) => {
+                const value = this.env.utils.formatCurrency(
+                    currentOrder?.amountPerGuest(parseInt(buffer, 10) || 0) || 0
+                );
+                return value ? `${value} / ${_t("Guest")}` : "";
+            },
+        });
+        const guestCount = parseInt(count, 10) || 0;
+        if (guestCount == 0 && currentOrder.lines.length === 0) {
+            this.removeOrder(currentOrder);
+            this.showScreen("FloorScreen");
+            return false;
+        }
+        currentOrder.setCustomerCount(guestCount);
+        this.addPendingOrder([currentOrder.id]);
+        return true;
+    },
+    async sendOrderInPreparationUpdateLastChange(o, cancelled = false) {
+        const currentPreset = o.preset_id;
+        if (
+            this.config.use_presets &&
+            currentPreset?.use_guest &&
+            !o.uiState.guestSetted &&
+            !cancelled
+        ) {
+            const response = await this.setCustomerCount(o);
+
+            if (!response) {
+                return;
+            }
+
+            o.uiState.guestSetted = true;
+        }
+
+        return await super.sendOrderInPreparationUpdateLastChange(o, cancelled);
     },
     handlePreparationHistory(srcPrep, destPrep, srcLine, destLine, qty) {
         const srcKey = srcLine.preparationKey;
