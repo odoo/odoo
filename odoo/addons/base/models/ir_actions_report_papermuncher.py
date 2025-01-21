@@ -1,7 +1,10 @@
 import logging
+from pathlib import Path
 import subprocess
+from tempfile import TemporaryFile
 from odoo import api, models, fields
 from odoo.tools.misc import find_in_path
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 papermuncher_state = 'install'
@@ -70,4 +73,36 @@ class IrActionsReport(models.Model):
         :rtype: bytes
         '''
 
-        raise NotImplementedError
+        args : list[str] = []
+        if landscape:
+            args += ['--orientation', 'landscape']
+
+        paperformat_id = self._get_report(report_ref).get_paperformat() if report_ref else self.get_paperformat()
+        if paperformat_id:
+            if paperformat_id.format and paperformat_id.format != 'custom':
+                args += ['--paper', str(paperformat_id.format)]
+
+            if paperformat_id.page_height and paperformat_id.page_width and paperformat_id.format == 'custom':
+                args += ['--width', str(paperformat_id.page_width) + 'mm']
+                args += ['--height', str(paperformat_id.page_height) + 'mm']
+
+
+        if len(bodies) != 1:
+            raise ValueError('Paper Muncher only supports one body per report')
+
+        body = bodies[0]
+
+        command : list[str] = [_get_paper_muncher_bin(), "print"] + args
+
+        process = subprocess.Popen(
+            command,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        stdout, stderr = process.communicate(body.encode("utf-8"))
+
+        if process.returncode != 0:
+            raise UserError(f'Error while running paper-muncher:\n{stderr.decode("utf-8")}')
+
+        return stdout
