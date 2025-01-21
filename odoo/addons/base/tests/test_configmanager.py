@@ -75,7 +75,7 @@ class TestConfigManager(TransactionCase):
             'save': False,
             'init': {},
             'update': {},
-            'with_demo': True,
+            'with_demo': False,
             'demo': {},
             'import_partial': '',
             'pidfile': '',
@@ -190,7 +190,7 @@ class TestConfigManager(TransactionCase):
             'save': False,
             'init': {},  # blacklist for save, ignored from the config file
             'update': {},  # blacklist for save, ignored from the config file
-            'with_demo': False,
+            'with_demo': True,
             'demo': {},  # blacklist for save, ignored from the config file
             'import_partial': '/tmp/import-partial',
             'pidfile': '/tmp/pidfile',
@@ -462,8 +462,8 @@ class TestConfigManager(TransactionCase):
             'save': False,
             'init': {'hr': True, 'stock': True},
             'update': {'account': True, 'website': True},
-            'with_demo': False,
-            'demo': {},
+            'with_demo': True,
+            'demo': {'hr': True, 'stock': True},
             'import_partial': '/tmp/import-partial',
             'pidfile': '/tmp/pidfile',
             'addons_path': [],
@@ -607,7 +607,7 @@ class TestConfigManager(TransactionCase):
 
     def test_12_without_demo(self):
         _, options = self.parse_reset(['-i', 'mail'])
-        self.assertEqual(options['demo'], {'mail': 1})
+        self.assertEqual(options['demo'], {})
         _, options = self.parse_reset(['-i', 'mail', '--without-demo'])
         self.assertEqual(options['demo'], {})
         _, options = self.parse_reset(['--without-demo', '-i', 'mail'])

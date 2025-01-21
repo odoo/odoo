@@ -200,10 +200,10 @@ class configmanager:
                          help="install one or more modules (comma-separated list, use \"all\" for all modules), requires -d")
         group.add_option("-u", "--update", dest="update", type='comma',  metavar="MODULE,...", my_default=[], file_loadable=False,
                          help="update one or more modules (comma-separated list, use \"all\" for all modules). Requires -d.")
-        group.add_option("--with-demo", dest="with_demo", action='store_true', my_default=True,
-                         help="install demo data in new databases (default)")
+        group.add_option("--with-demo", dest="with_demo", action='store_true', my_default=False,
+                         help="install demo data in new databases")
         group.add_option("--without-demo", dest="with_demo", type='without_demo', metavar='BOOL', nargs='?', const=True,
-                         help="don't install demo data in new databases")
+                         help="don't install demo data in new databases (default)")
         group.add_option("-P", "--import-partial", dest="import_partial", type='path', my_default='',
                          help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.")
         group.add_option("--pidfile", dest="pidfile", type='path', my_default='',
