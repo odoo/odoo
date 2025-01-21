@@ -1,3 +1,4 @@
+import { applyFunDependOnSelectorAndExclude } from "@html_builder/builder/options/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
@@ -120,13 +121,11 @@ class TableOfContentOptionPlugin extends Plugin {
         for (const navbar of root.querySelectorAll(".s_table_of_content_navbar")) {
             navbar.setAttribute("contenteditable", "false");
         }
-        const closestTocEl = root.closest(".s_table_of_content_main");
-        const tableOfContentMainEls = closestTocEl
-            ? [closestTocEl]
-            : [...root.querySelectorAll(".s_table_of_content_main")];
-        for (const tableOfContentMainEl of tableOfContentMainEls) {
-            this.updateTableOfContentNavbar(tableOfContentMainEl);
-        }
+        applyFunDependOnSelectorAndExclude(
+            this.updateTableOfContentNavbar.bind(this),
+            root,
+            ".s_table_of_content_main"
+        );
     }
 
     updateTableOfContentNavbar(tableOfContentMain) {

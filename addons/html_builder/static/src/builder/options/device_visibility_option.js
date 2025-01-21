@@ -1,6 +1,7 @@
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { hideInvisibleEl, showInvisibleEl } from "@html_builder/builder/plugins/visibility_plugin";
+import { applyFunDependOnSelectorAndExclude } from "@html_builder/builder/options/utils";
 
 export const device_visibility_option_selector = "section .row > div";
 
@@ -101,20 +102,3 @@ class DeviceVisibilityOptionPlugin extends Plugin {
 registry
     .category("website-plugins")
     .add(DeviceVisibilityOptionPlugin.id, DeviceVisibilityOptionPlugin);
-
-/**
- * Apply a function on an element if the element matches the selector and does
- * does not match the exclude.
- * @param {Function} fn - The function to apply.
- * @param {HTMLElement} editingEl - The element on which the function has to be
- * applied.
- * @param {String} selector - The selector that the editing element has to match
- * to apply the function.
- * @param {String} exclude - The selector that the editing element can not match
- * to apply the function.
- */
-function applyFunDependOnSelectorAndExclude(fn, editingEl, selector, exclude = false) {
-    if (editingEl.matches(selector) && !editingEl.matches(exclude)) {
-        fn(editingEl);
-    }
-}
