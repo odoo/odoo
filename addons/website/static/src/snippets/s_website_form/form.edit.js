@@ -1,7 +1,6 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { Form } from "./form";
-
 import { patch } from "@web/core/utils/patch";
 import {
     formatDate,
