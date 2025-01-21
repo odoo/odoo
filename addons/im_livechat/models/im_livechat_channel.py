@@ -101,7 +101,7 @@ class Im_LivechatChannel(models.Model):
         counts = {}
         if livechat_channels := self.filtered(lambda c: c.max_sessions_mode == "limited"):
             possible_users = users if users is not None else livechat_channels.user_ids
-            limited_users = possible_users.filtered(lambda user: user._is_user_available())
+            limited_users = possible_users.filtered(lambda user: "online" in user.im_status)
             counts = dict(
                 ((partner, livechat_channels), count)
                 for (partner, livechat_channels, count) in self.env["discuss.channel"]._read_group(
@@ -117,7 +117,7 @@ class Im_LivechatChannel(models.Model):
 
         def is_available(user, livechat_channel):
             partner = user.partner_id
-            return user._is_user_available() and (
+            return "online" in user.im_status and (
                 livechat_channel.max_sessions_mode == "unlimited"
                 or (
                     counts.get((partner, livechat_channel), 0) < livechat_channel.max_sessions
@@ -216,13 +216,7 @@ class Im_LivechatChannel(models.Model):
         # partner to add to the discuss.channel
         operator_partner_id = user_operator.partner_id.id if user_operator else chatbot_script.operator_partner_id.id
         members_to_add = [
-            Command.create({
-                # making sure the unpin_dt is always later than the last_interest_dt
-                # so that the channel is always unpinned at first
-                'last_interest_dt': fields.Datetime.now() - timedelta(seconds=30),
-                'partner_id': operator_partner_id,
-                'unpin_dt': fields.Datetime.now(),
-            })
+            Command.create({"partner_id": operator_partner_id, "unpin_dt": fields.Datetime.now()})
         ]
         visitor_user = False
         if user_id:
