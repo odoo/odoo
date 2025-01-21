@@ -409,6 +409,15 @@ export class Composer extends Component {
                         classList: "o-mail-Composer-suggestion",
                     })),
                 };
+            case "emoji":
+                return {
+                    ...props,
+                    optionTemplate: "mail.Composer.suggestionEmoji",
+                    options: suggestions.map((suggestion) => ({
+                        emoji: suggestion,
+                        label: suggestion.codepoints,
+                    })),
+                };
             default:
                 return props;
         }

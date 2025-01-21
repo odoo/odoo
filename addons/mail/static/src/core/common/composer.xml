@@ -235,4 +235,12 @@
             <t t-esc="option.label"/>
         </em>
     </t>
+    <t t-name="mail.Composer.suggestionEmoji">
+        <strong class="px-2 align-self-center flex-shrink-1 fs-3">
+            <t t-esc="option.emoji.codepoints"/>
+        </strong>
+        <em class="text-600 text-truncate align-self-center">
+            <t t-esc="option.emoji.shortcodes.join(', ')"/>
+        </em>
+    </t>
 </templates>

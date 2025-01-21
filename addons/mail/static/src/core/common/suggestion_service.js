@@ -1,8 +1,10 @@
 import { partnerCompareRegistry } from "@mail/core/common/partner_compare";
 import { cleanTerm } from "@mail/utils/common/format";
 import { toRaw } from "@odoo/owl";
+import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 
 import { registry } from "@web/core/registry";
+import { fuzzyLookup } from "@web/core/utils/search";
 
 export class SuggestionService {
     /**
@@ -13,10 +15,21 @@ export class SuggestionService {
         this.env = env;
         this.orm = services.orm;
         this.store = services["mail.store"];
+        this.emojis;
     }
 
+    /**
+     * Returns list of supported delimiters, each supported
+     * delimiter is in an array [a, b, c] where:
+     * - a: chars to trigger
+     * - b: (optional) if set, the exact position in composer text input to allow using this delimiter
+     * - c: (optional) if set, this is the minimum amount of extra char after delimiter to allow using this delimiter
+     *
+     * @param {import('models').Thread} thread
+     * @returns {Array<[string, number, number]>}
+     */
     getSupportedDelimiters(thread) {
-        return [["@"], ["#"], ["::"]];
+        return [["@"], ["#"], ["::"], [":", undefined, 2]];
     }
 
     async fetchSuggestions({ delimiter, term }, { thread, abortSignal } = {}) {
@@ -32,6 +45,11 @@ export class SuggestionService {
             case "::":
                 await this.store.cannedReponses.fetch();
                 break;
+            case ":": {
+                const { emojis } = await loadEmoji();
+                this.emojis = emojis;
+                break;
+            }
         }
     }
 
@@ -130,6 +148,17 @@ export class SuggestionService {
         };
     }
 
+    searchEmojisSuggestions(cleanedSearchTerm) {
+        let emojis = [];
+        if (this.emojis && cleanedSearchTerm) {
+            emojis = fuzzyLookup(cleanedSearchTerm, this.emojis, (emoji) => emoji.shortcodes);
+        }
+        return {
+            type: "emoji",
+            suggestions: emojis,
+        };
+    }
+
     /**
      * Returns suggestions that match the given search term from specified type.
      *
@@ -152,6 +181,8 @@ export class SuggestionService {
                 return this.searchChannelSuggestions(cleanedSearchTerm, sort);
             case "::":
                 return this.searchCannedResponseSuggestions(cleanedSearchTerm, sort);
+            case ":":
+                return this.searchEmojisSuggestions(cleanedSearchTerm);
         }
         return {
             type: undefined,
