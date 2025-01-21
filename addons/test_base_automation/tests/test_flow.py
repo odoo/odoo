@@ -1093,63 +1093,6 @@ class TestCompute(common.TransactionCase):
         ])
         self.assertEqual(automation.on_change_field_ids.ids, [])
 
-    def test_automation_form_view_on_change_filter_domain_2(self):
-        a_lead_tag = self.env['test_base_automation.tag'].create({'name': '*AWESOME*'})
-        automation = self.env['base.automation'].create({
-            'name': 'Test Automation',
-            'model_id': self.env.ref('test_base_automation.model_base_automation_lead_test').id,
-            'trigger': 'on_tag_set',
-            'trg_field_ref': a_lead_tag.id,
-        })
-        self.assertEqual(automation.filter_pre_domain, repr([('tag_ids', 'not in', [a_lead_tag.id])]))
-        self.assertEqual(automation.filter_domain, repr([('tag_ids', 'in', [a_lead_tag.id])]))
-        self.assertEqual(automation.trigger_field_ids.ids, [
-            self.env.ref('test_base_automation.field_base_automation_lead_test__tag_ids').id
-        ])
-        self.assertEqual(automation.on_change_field_ids.ids, [])
-
-        # Change the trigger to "On UI change" will erase the domains and the trigger fields
-        automation_form = Form(automation, view='base_automation.view_base_automation_form')
-        automation_form.trigger = 'on_change'
-        automation = automation_form.save()
-        self.assertEqual(automation.filter_pre_domain, False)
-        self.assertEqual(automation.filter_domain, False)
-        self.assertEqual(automation.trigger_field_ids.ids, [])
-        self.assertEqual(automation.on_change_field_ids.ids, [])
-
-        # Change the domain will append each used field to the onchange fields
-        automation_form.filter_domain = repr([('priority', '=', True), ('employee', '=', False)])
-        automation = automation_form.save()
-        self.assertEqual(automation.filter_pre_domain, False)
-        self.assertEqual(automation.filter_domain, repr([('priority', '=', True), ('employee', '=', False)]))
-        self.assertEqual(automation.trigger_field_ids.ids, [])
-        self.assertSetEqual(set(automation.on_change_field_ids.ids), {
-            self.env.ref('test_base_automation.field_base_automation_lead_test__priority').id,
-            self.env.ref('test_base_automation.field_base_automation_lead_test__employee').id,
-        })
-
-        # Change the onchange fields will not change the domain
-        automation_form.on_change_field_ids.set(
-            self.env.ref('test_base_automation.field_base_automation_lead_test__tag_ids')
-        )
-        automation = automation_form.save()
-        self.assertEqual(automation.filter_pre_domain, False)
-        self.assertEqual(automation.filter_domain, repr([('priority', '=', True), ('employee', '=', False)]))
-        self.assertEqual(automation.trigger_field_ids.ids, [])
-        self.assertEqual(automation.on_change_field_ids.ids, [
-            self.env.ref('test_base_automation.field_base_automation_lead_test__tag_ids').id
-        ])
-
-        # Erase the domain will not change the onchange fields
-        automation_form.filter_domain = False
-        automation = automation_form.save()
-        self.assertEqual(automation.filter_pre_domain, False)
-        self.assertEqual(automation.filter_domain, False)
-        self.assertEqual(automation.trigger_field_ids.ids, [])
-        self.assertEqual(automation.on_change_field_ids.ids, [
-            self.env.ref('test_base_automation.field_base_automation_lead_test__tag_ids').id
-        ])
-
     def test_automation_form_view_time_triggers(self):
         # Starting from a "On save" automation
         on_save_automation = self.env['base.automation'].create({
