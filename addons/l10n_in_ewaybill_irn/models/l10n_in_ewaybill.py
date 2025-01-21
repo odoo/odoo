@@ -122,10 +122,10 @@ class L10nInEwaybill(models.Model):
             if '4002' in error_codes or '4026' in error_codes:
                 # Get E-waybill by details in case of IRN is already generated
                 # this happens when timeout from the Government portal but E-waybill is generated
-                self._ewaybill_get_by_irn(json_payload.get("Irn"))
+                response = self._ewaybill_get_by_irn(json_payload.get("Irn"))
                 response.update({
                     'odoo_warning': [{
-                        'message': EWayBillApi.DEFAULT_HELP_MESSAGE % 'generated',
+                        'message': self._get_default_help_message(self.env._('generated')),
                         'message_post': True
                     }]
                 })

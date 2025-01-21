@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.1alpha1+e\n"
+"Project-Id-Version: Odoo Server saas~18.1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-24 12:06+0000\n"
-"PO-Revision-Date: 2024-10-24 12:06+0000\n"
+"POT-Creation-Date: 2025-01-22 06:18+0000\n"
+"PO-Revision-Date: 2025-01-22 06:18+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -576,6 +576,11 @@ msgid "Could not update vehicle details, pl contact helpdesk"
 msgstr ""
 
 #. module: l10n_in_ewaybill
+#: model_terms:ir.ui.view,arch_db:l10n_in_ewaybill.invoice_form_inherit_l10n_in_ewaybill
+msgid "Create e-Waybill"
+msgstr ""
+
+#. module: l10n_in_ewaybill
 #: model:ir.model.fields,field_description:l10n_in_ewaybill.field_l10n_in_ewaybill__create_uid
 #: model:ir.model.fields,field_description:l10n_in_ewaybill.field_l10n_in_ewaybill_cancel__create_uid
 #: model:ir.model.fields,field_description:l10n_in_ewaybill.field_l10n_in_ewaybill_type__create_uid
@@ -636,9 +641,13 @@ msgid ""
 msgstr ""
 
 #. module: l10n_in_ewaybill
+#: model:ir.model.fields,field_description:l10n_in_ewaybill.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_in_ewaybill.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_in_ewaybill.field_l10n_in_ewaybill__display_name
 #: model:ir.model.fields,field_description:l10n_in_ewaybill.field_l10n_in_ewaybill_cancel__display_name
 #: model:ir.model.fields,field_description:l10n_in_ewaybill.field_l10n_in_ewaybill_type__display_name
+#: model:ir.model.fields,field_description:l10n_in_ewaybill.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_in_ewaybill.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -1200,9 +1209,13 @@ msgid "Has Message"
 msgstr ""
 
 #. module: l10n_in_ewaybill
+#: model:ir.model.fields,field_description:l10n_in_ewaybill.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_in_ewaybill.field_account_move__id
 #: model:ir.model.fields,field_description:l10n_in_ewaybill.field_l10n_in_ewaybill__id
 #: model:ir.model.fields,field_description:l10n_in_ewaybill.field_l10n_in_ewaybill_cancel__id
 #: model:ir.model.fields,field_description:l10n_in_ewaybill.field_l10n_in_ewaybill_type__id
+#: model:ir.model.fields,field_description:l10n_in_ewaybill.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_in_ewaybill.field_res_config_settings__id
 msgid "ID"
 msgstr ""
 
@@ -2203,11 +2216,6 @@ msgid "Security Token"
 msgstr ""
 
 #. module: l10n_in_ewaybill
-#: model_terms:ir.ui.view,arch_db:l10n_in_ewaybill.invoice_form_inherit_l10n_in_ewaybill
-msgid "Send E-waybill"
-msgstr ""
-
-#. module: l10n_in_ewaybill
 #. odoo-python
 #: code:addons/l10n_in_ewaybill/models/l10n_in_ewaybill.py:0
 msgid "Set GST Treatment for in %s"
@@ -2246,11 +2254,11 @@ msgstr ""
 
 #. module: l10n_in_ewaybill
 #. odoo-python
-#: code:addons/l10n_in_ewaybill/tools/ewaybill_api.py:0
+#: code:addons/l10n_in_ewaybill/models/l10n_in_ewaybill.py:0
 msgid ""
 "Somehow this E-waybill has been %s in the government portal before. You can "
 "verify by checking the details into the government "
-"(https://ewaybillgst.gov.in/Others/EBPrintnew.asp)"
+"(https://ewaybillgst.gov.in/Others/EBPrintnew.aspx)"
 msgstr ""
 
 #. module: l10n_in_ewaybill
@@ -3039,6 +3047,12 @@ msgstr ""
 
 #. module: l10n_in_ewaybill
 #. odoo-python
+#: code:addons/l10n_in_ewaybill/tools/ewaybill_api.py:0
+msgid "cancelled"
+msgstr ""
+
+#. module: l10n_in_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_ewaybill/models/error_codes.py:0
 msgid "dispatch from gstin is mandatary "
 msgstr ""
@@ -3072,6 +3086,12 @@ msgstr ""
 #. module: l10n_in_ewaybill
 #: model_terms:ir.ui.view,arch_db:l10n_in_ewaybill.report_ewaybill
 msgid "eway Bill No:"
+msgstr ""
+
+#. module: l10n_in_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_ewaybill/tools/ewaybill_api.py:0
+msgid "generated"
 msgstr ""
 
 #. module: l10n_in_ewaybill
