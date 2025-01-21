@@ -715,6 +715,41 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             'balance': 686.54,
         }])
 
+    def test_tax_calculation_multi_currency_100_included_tax(self):
+        self.env['res.currency.rate'].create({
+            'name': '2018-01-01',
+            'rate': 0.273748,
+            'currency_id': self.other_currency.id,
+            'company_id': self.env.company.id,
+        })
+        self.other_currency.rounding = 0.01
+
+        tax = self.env['account.tax'].create({
+            'name': 'tax_100',
+            'amount_type': 'division',
+            'amount': 100,
+            'price_include': True,
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.other_currency.id,
+            'invoice_date': '2018-01-01',
+            'date': '2018-01-01',
+            'invoice_line_ids': [(0, 0, {
+                'name': 'xxxx',
+                'quantity': 1,
+                'price_unit': 100.00,
+                'tax_ids': [(6, 0, tax.ids)],
+            })]
+        })
+
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
+            'tax_base_amount': 0.0,
+            'balance': -365.3,    # 100 * (1 / 0.273748)
+        }])
+
     def test_fixed_tax_with_zero_price(self):
         fixed_tax = self.env['account.tax'].create({
             'name': 'Test 5 fixed',
