@@ -75,7 +75,7 @@ class TestConfigManager(TransactionCase):
             'save': False,
             'init': {},
             'update': {},
-            'without_demo': False,
+            'with_demo': True,
             'import_partial': '',
             'pidfile': '',
             'addons_path': [],
@@ -190,7 +190,7 @@ class TestConfigManager(TransactionCase):
             'save': False,
             'init': {},  # blacklist for save, ignored from the config file
             'update': {},  # blacklist for save, ignored from the config file
-            'without_demo': True,
+            'with_demo': False,
             'import_partial': '/tmp/import-partial',
             'pidfile': '/tmp/pidfile',
             'addons_path': [],  # the path found in the config file is invalid
@@ -364,7 +364,7 @@ class TestConfigManager(TransactionCase):
             'unaccent': False,
             'update': {},
             'upgrade_path': [],
-            'without_demo': False,
+            'with_demo': True,
 
             # options that are not taken from the file (also in 14.0)
             'addons_path': [],
@@ -442,7 +442,6 @@ class TestConfigManager(TransactionCase):
             with self.assertLogs('odoo.tools.config', 'WARNING') as capture:
                 self.config._parse_config(file.read().split())
         self.assertEqual(capture.output, [
-            "WARNING:odoo.tools.config:option --without-demo: since 19.0, invalid boolean value: 'rigolo', assume True",
             "WARNING:odoo.tools.config:test file '/tmp/file-file' cannot be found",
         ])
 
@@ -464,7 +463,7 @@ class TestConfigManager(TransactionCase):
             'save': False,
             'init': {'hr': True, 'stock': True},
             'update': {'account': True, 'website': True},
-            'without_demo': True,
+            'with_demo': False,
             'import_partial': '/tmp/import-partial',
             'pidfile': '/tmp/pidfile',
             'addons_path': [],

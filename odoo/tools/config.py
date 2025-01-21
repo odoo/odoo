@@ -200,8 +200,10 @@ class configmanager:
                          help="install one or more modules (comma-separated list, use \"all\" for all modules), requires -d")
         group.add_option("-u", "--update", dest="update", type='comma',  metavar="MODULE,...", my_default=[], file_loadable=False,
                          help="update one or more modules (comma-separated list, use \"all\" for all modules). Requires -d.")
-        group.add_option("--without-demo", dest="without_demo", my_default=False, type='without_demo', metavar='BOOL', nargs='?', const=True,
-                         help="use with -i/--init, skip installing fake demonstration data (e.g. Mitchel Admin/Azure Interior)")
+        group.add_option("--with-demo", dest="with_demo", action='store_true', my_default=True,
+                         help="install demo data in new databases (default)")
+        group.add_option("--without-demo", dest="with_demo", type='without_demo', metavar='BOOL', nargs='?', const=True,
+                         help="don't install demo data in new databases")
         group.add_option("-P", "--import-partial", dest="import_partial", type='path', my_default='',
                          help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.")
         group.add_option("--pidfile", dest="pidfile", type='path', my_default='',
@@ -795,11 +797,12 @@ class configmanager:
 
     @classmethod
     def _check_without_demo(cls, option, opt, value):
+        # invert the result because it is stored in "with_demo"
         try:
-            return cls._check_bool(option, opt, value)
+            return not cls._check_bool(option, opt, value)
         except optparse.OptionValueError:
             cls._log(logging.WARNING, "option %s: since 19.0, invalid boolean value: %r, assume %s", opt, value, value != 'None')
-            return value != 'None'
+            return value == 'None'
 
     def parse(self, option_name, value):
         if not isinstance(value, str):
@@ -844,6 +847,9 @@ class configmanager:
         try:
             p.read([rcfile])
             for (name,value) in p.items('options'):
+                if name == 'without_demo':
+                    name = 'with_demo'
+                    value = str(self._check_without_demo(None, 'without_demo', value))
                 option = self.options_index.get(name)
                 if not option:
                     self._log(logging.WARNING,
