@@ -248,6 +248,11 @@ class BaseAutomation(models.Model):
     @api.constrains('trigger', 'action_server_ids')
     def _check_trigger_state(self):
         for record in self:
+            warning_actions = record.action_server_ids.filtered('warning')
+            if warning_actions:
+                raise exceptions.ValidationError(
+                    _("Following child actions have warnings: %(children)s", children=', '.join(warning_actions.mapped('name')))
+                )
             no_code_actions = record.action_server_ids.filtered(lambda a: a.state != 'code')
             if record.trigger == 'on_change' and no_code_actions:
                 raise exceptions.ValidationError(

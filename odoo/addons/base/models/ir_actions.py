@@ -477,6 +477,11 @@ WEBHOOK_SAMPLE_VALUES = {
 }
 
 
+class ServerActionWithWarningsError(UserError):
+    """ Exception raised when a server action that has warnings is run. """
+    pass
+
+
 class IrActionsServer(models.Model):
     """ Server actions model. Server action work on a base model and offer various
     type of actions that can be executed automatically, for example using base
@@ -560,6 +565,7 @@ class IrActionsServer(models.Model):
                                help="Model on which the server action runs.")
     available_model_ids = fields.Many2many('ir.model', string='Available Models', compute='_compute_available_model_ids', store=False)
     model_name = fields.Char(related='model_id.model', string='Model Name')
+    warning = fields.Text(string='Warning', compute='_compute_warning', recursive=True)
     # Python code
     code = fields.Text(string='Python Code', groups='base.group_system',
                        default=DEFAULT_PYTHON_CODE,
@@ -623,25 +629,56 @@ class IrActionsServer(models.Model):
                                               "The name of the action that triggered the webhook is always sent as '_name'.")
     webhook_sample_payload = fields.Text(string='Sample Payload', compute='_compute_webhook_sample_payload')
 
-    @api.constrains('webhook_field_ids')
-    def _check_webhook_field_ids(self):
-        """Check that the selected fields don't have group restrictions"""
-        restricted_fields = dict()
-        for action in self:
-            Model = self.env[action.model_id.model]
-            for model_field in action.webhook_field_ids:
+    @api.model
+    def _warning_depends(self):
+        return [
+            'model_id',
+            'state',
+            'child_ids.model_id',
+            'child_ids.warning',
+            'update_path',
+            'webhook_field_ids'
+        ]
+
+    def _get_warning_messages(self):
+        self.ensure_one()
+        warnings = []
+
+        if self.model_id and (children_with_different_model := self.child_ids.filtered(lambda a: a.model_id != self.model_id)):
+            warnings.append(_("Following child actions should have the same model (%(model)s): %(children)s",
+                              model=self.model_id.name,
+                              children=', '.join(children_with_different_model.mapped('name'))))
+
+        if (children_with_warnings := self.child_ids.filtered('warning')):
+            warnings.append(_("Following child actions have warnings: %(children)s", children=', '.join(children_with_warnings.mapped('name'))))
+
+        if (relation_chain := self._get_relation_chain("update_path")) and relation_chain[0] and isinstance(relation_chain[0][-1], fields.Json):
+            warnings.append(_("I'm sorry to say that JSON fields (such as '%s') are currently not supported.", relation_chain[0][-1].string))
+
+        if self.state == 'webhook':
+            restricted_fields = []
+            Model = self.env[self.model_id.model]
+            for model_field in self.webhook_field_ids:
                 # you might think that the ir.model.field record holds references
                 # to the groups, but that's not the case - we need to field object itself
                 field = Model._fields[model_field.name]
                 if field.groups:
-                    restricted_fields.setdefault(action.name, []).append(model_field.field_description)
-        if restricted_fields:
-            restricted_field_per_action = "\n".join([f"{action}: {', '.join(f for f in fields)}" for action, fields in restricted_fields.items()])
-            raise ValidationError(_("Group-restricted fields cannot be included in "
-                                    "webhook payloads, as it could allow any user to "
-                                    "accidentally leak sensitive information. You will "
-                                    "have to remove the following fields from the webhook payload "
-                                    "in the following actions:\n %s", restricted_field_per_action))
+                    restricted_fields.append(f"- {model_field.field_description}")
+            if restricted_fields:
+                warnings.append(_("Group-restricted fields cannot be included in "
+                                "webhook payloads, as it could allow any user to "
+                                "accidentally leak sensitive information. You will "
+                                "have to remove the following fields from the webhook payload:\n%(restricted_fields)s", restricted_fields="\n".join(restricted_fields)))
+
+        return warnings
+
+    @api.depends(lambda self: self._warning_depends())
+    def _compute_warning(self):
+        for action in self:
+            if (warnings := action._get_warning_messages()):
+                action.warning = "\n\n".join(warnings)
+            else:
+                action.warning = False
 
     @api.depends('state')
     def _compute_available_model_ids(self):
@@ -692,8 +729,6 @@ class IrActionsServer(models.Model):
         self.ensure_one()
         field_chain, _field_chain_str = self._get_relation_chain("update_path")
         last_field = field_chain[-1]
-        if isinstance(last_field, fields.Json):
-            raise ValidationError(_("I'm sorry to say that JSON fields (such as '%s') are currently not supported.", last_field.string))
         model_id = self.env['ir.model']._get(last_field.model_name)
         field_id = self.env['ir.model.fields']._get(last_field.model_name, last_field.name)
         return model_id, field_id
@@ -756,9 +791,12 @@ class IrActionsServer(models.Model):
                 raise ValidationError(msg)
 
     @api.constrains('child_ids')
-    def _check_child_recursion(self):
+    def _check_children(self):
         if self._has_cycle('child_ids'):
             raise ValidationError(_('Recursion found in child server actions'))
+
+        if (children_with_warnings := self.child_ids.filtered('warning')):
+            raise ValidationError(_("Following child actions have warnings: %(children)s", children=', '.join(children_with_warnings.mapped('name'))))
 
     def _get_readable_fields(self):
         return super()._get_readable_fields() | {
@@ -967,6 +1005,9 @@ class IrActionsServer(models.Model):
                         action.name, self.env.user.login, records,
                     )
                     raise
+
+            if action.warning:
+                raise ServerActionWithWarningsError(_("Server action %(action_name)s has one or more warnings, address them first.", action_name=action.name))
 
             runner, multi = action._get_runner()
             if runner and multi:

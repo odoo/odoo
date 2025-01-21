@@ -4,7 +4,6 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
 
 
 class IrActionsServer(models.Model):
@@ -188,34 +187,38 @@ class IrActionsServer(models.Model):
             if not action.activity_user_field_name:
                 action.activity_user_field_name = 'user_id'
 
-    @api.constrains('activity_date_deadline_range')
-    def _check_activity_date_deadline_range(self):
-        if any(action.activity_date_deadline_range < 0 for action in self):
-            raise ValidationError(_("The 'Due Date In' value can't be negative."))
+    @api.model
+    def _warning_depends(self):
+        return super()._warning_depends() + [
+            'activity_date_deadline_range',
+            'model_id',
+            'template_id',
+            'state',
+        ]
 
-    @api.constrains('model_id', 'template_id')
-    def _check_mail_template_model(self):
-        for action in self.filtered(lambda action: action.state == 'mail_post'):
-            if action.template_id and action.template_id.model_id != action.model_id:
-                raise ValidationError(
-                    _('Mail template model of %(action_name)s does not match action model.',
-                      action_name=action.name
-                     )
-                )
+    def _get_warning_messages(self):
+        warnings = super()._get_warning_messages()
 
-    @api.constrains('state', 'model_id', 'mail_post_method')
-    def _check_mail_model_coherency(self):
-        for action in self:
-            if action.state in {'mail_post', 'followers', 'remove_followers', 'next_activity'} and action.model_id.transient:
-                raise ValidationError(_("This action cannot be done on transient models."))
-            if (
-                (action.state in {"followers", "remove_followers"}
-                or (action.state == "mail_post" and action.mail_post_method != "email"))
-                and not action.model_id.is_mail_thread
-            ):
-                raise ValidationError(_("This action can only be done on a mail thread models"))
-            if action.state == 'next_activity' and not action.model_id.is_mail_activity:
-                raise ValidationError(_("A next activity can only be planned on models that use activities."))
+        if self.activity_date_deadline_range < 0:
+            warnings.append(_("The 'Due Date In' value can't be negative."))
+
+        if self.state == 'mail_post' and self.template_id and self.template_id.model_id != self.model_id:
+            warnings.append(_("Mail template model of $(action_name)s does not match action model.", action_name=self.name))
+
+        if self.state in {'mail_post', 'followers', 'remove_followers', 'next_activity'} and self.model_id.transient:
+            warnings.append(_("This action cannot be done on transient models."))
+
+        if (
+            (self.state in {"followers", "remove_followers"}
+            or (self.state == "mail_post" and self.mail_post_method != "email"))
+            and not self.model_id.is_mail_thread
+        ):
+            warnings.append(_("This action can only be done on a mail thread models"))
+
+        if self.state == 'next_activity' and not self.model_id.is_mail_activity:
+            warnings.append(_("A next activity can only be planned on models that use activities."))
+
+        return warnings
 
     def _run_action_followers_multi(self, eval_context=None):
         Model = self.env[self.model_name]
