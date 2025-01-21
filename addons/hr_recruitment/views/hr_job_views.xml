@@ -168,7 +168,7 @@
                     <div name="alias_def">
                         <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"/>
                         <div class="oe_edit_only" name="edit_alias">
-                            <field name="alias_name" class="oe_inline o_job_alias" placeholder="e.g. sales-manager"/>@
+                            <field name="alias_name" class="oe_inline o_job_alias border-bottom border-2 border-info" placeholder="e.g. sales-manager"/>@
                             <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
                                    options="{'no_create': True, 'no_open': True}"/>
                         </div>
@@ -216,7 +216,6 @@
                     <span invisible="address_id" class="oe_read_only">Remote</span>
                     <field name="address_id" context="{'show_address': 1}" placeholder="Remote"/>
                 </div>
-                <field name="industry_id"/>
                 <label for="alias_name" string="Email Alias"
                        help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
                 <div name="alias_def">
@@ -230,12 +229,7 @@
             </xpath>
             <xpath expr="//field[@name='contract_type_id']" position="after">
                 <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
-                <field
-                    name="date_from"
-                    widget="daterange"
-                    string="Mission Dates"
-                    options="{'end_date_field': 'date_to'}"/>
-                <field name="date_to" invisible="1" />
+                <field name="industry_id"/>
             </xpath>
             <xpath expr="//group" position="after">
                 <field name="job_properties" columns="2"/>
