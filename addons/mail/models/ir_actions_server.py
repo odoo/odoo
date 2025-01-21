@@ -42,10 +42,10 @@ class IrActionsServer(models.Model):
     )
     followers_partner_field_name = fields.Char(
         string='Followers Field',
-        compute='_compute_followers_partner_field_name',
+        compute='_compute_followers_info',
         readonly=False, store=True
     )
-    partner_ids = fields.Many2many('res.partner', compute='_compute_partner_ids', readonly=False, store=True)
+    partner_ids = fields.Many2many('res.partner', compute='_compute_followers_info', readonly=False, store=True)
 
     # Message Post / Email
     template_id = fields.Many2one(
@@ -68,7 +68,7 @@ class IrActionsServer(models.Model):
     activity_type_id = fields.Many2one(
         'mail.activity.type', string='Activity Type',
         domain="['|', ('res_model', '=', False), ('res_model', '=', model_name)]",
-        compute='_compute_activity_type_id', readonly=False, store=True,
+        compute='_compute_activity_info', readonly=False, store=True,
         ondelete='restrict')
     activity_summary = fields.Char(
         'Title',
@@ -93,10 +93,10 @@ class IrActionsServer(models.Model):
         help="Use 'Specific User' to always assign the same user on the next activity. Use 'Dynamic User' to specify the field name of the user to choose on the record.")
     activity_user_id = fields.Many2one(
         'res.users', string='Responsible',
-        compute='_compute_activity_info', readonly=False, store=True)
+        compute='_compute_activity_user_info', readonly=False, store=True)
     activity_user_field_name = fields.Char(
         'User Field',
-        compute='_compute_activity_info', readonly=False, store=True)
+        compute='_compute_activity_user_info', readonly=False, store=True)
 
     @api.depends('state')
     def _compute_available_model_ids(self):
@@ -136,56 +136,66 @@ class IrActionsServer(models.Model):
         if other:
             other.mail_post_method = 'comment'
 
-    @api.depends('state')
+    @api.depends('model_id', 'state')
     def _compute_followers_type(self):
-        to_reset = self.filtered(lambda act: act.state not in ['followers', 'remove_followers'])
+        to_reset = self.filtered(lambda act: not act.model_id or act.state not in ['followers', 'remove_followers'])
         to_reset.followers_type = False
-        (self - to_reset).followers_type = 'specific'
+        to_default = (self - to_reset).filtered(lambda act: not act.followers_type)
+        to_default.followers_type = 'specific'
 
-    @api.depends('model_id', 'state', 'followers_type')
-    def _compute_followers_partner_field_name(self):
-        to_reset = self.filtered(
-            lambda act: not act.model_id
-            or act.state not in ["followers", "remove_followers"]
-            or act.followers_type == 'specific'
-        )
-        to_reset.followers_partner_field_name = False
-
-    @api.depends('state', 'followers_type')
-    def _compute_partner_ids(self):
-        to_reset = self.filtered(lambda act: act.state not in ['followers', 'remove_followers'] or act.followers_type == 'generic')
-        to_reset.partner_ids = False
+    @api.depends('followers_type')
+    def _compute_followers_info(self):
+        for action in self:
+            if action.followers_type == 'specific':
+                action.followers_partner_field_name = False
+            elif action.followers_type == 'generic':
+                action.partner_ids = False
+                IrModelFields = self.env['ir.model.fields']
+                domain = [('model', '=', action.model_id.model), ("relation", "=", "res.partner")]
+                action.followers_partner_field_name = (
+                    IrModelFields.search([*domain, ("name", "=", "partner_id")], limit=1)
+                    or IrModelFields.search(domain, limit=1)
+                ).name
+            else:
+                action.partner_ids = False
+                action.followers_partner_field_name = False
 
     @api.depends('model_id', 'state')
-    def _compute_activity_type_id(self):
-        to_reset = self.filtered(
-            lambda act: act.state != 'next_activity' or \
-                        (act.model_id.model != act.activity_type_id.res_model)
-        )
+    def _compute_activity_info(self):
+        to_reset = self.filtered(lambda act: not act.model_id or act.state != 'next_activity')
         if to_reset:
             to_reset.activity_type_id = False
-
-    @api.depends('state', 'activity_type_id')
-    def _compute_activity_info(self):
-        to_reset = self.filtered(lambda act: act.state != 'next_activity')
-        if to_reset:
             to_reset.activity_summary = False
             to_reset.activity_note = False
             to_reset.activity_date_deadline_range = False
             to_reset.activity_date_deadline_range_type = False
             to_reset.activity_user_type = False
-            to_reset.activity_user_id = False
-            to_reset.activity_user_field_name = False
-        to_default = self.filtered(lambda act: act.state == 'next_activity')
-        for action in to_default:
+        for action in (self - to_reset):
+            if action.activity_type_id.res_model and action.model_id.model != action.activity_type_id.res_model:
+                action.activity_type_id = False
             if not action.activity_summary:
                 action.activity_summary = action.activity_type_id.summary
             if not action.activity_date_deadline_range_type:
                 action.activity_date_deadline_range_type = 'days'
             if not action.activity_user_type:
                 action.activity_user_type = 'specific'
-            if not action.activity_user_field_name:
-                action.activity_user_field_name = 'user_id'
+
+    @api.depends('model_id', 'activity_user_type')
+    def _compute_activity_user_info(self):
+        to_compute = self.filtered("activity_user_type")
+        (self - to_compute).activity_user_id = False
+        (self - to_compute).activity_user_field_name = False
+        for action in to_compute:
+            if action.activity_user_type == 'specific':
+                action.activity_user_field_name = False
+            else:
+                action.activity_user_id = False
+                IrModelFields = self.env['ir.model.fields']
+                domain = [('model', '=', action.model_id.model), ("relation", "=", "res.users")]
+                action.activity_user_field_name = (
+                    IrModelFields.search([*domain, ("name", "=", "user_id")], limit=1)
+                    or IrModelFields.search(domain, limit=1)
+                ).name
 
     @api.model
     def _warning_depends(self):
@@ -194,6 +204,10 @@ class IrActionsServer(models.Model):
             'model_id',
             'template_id',
             'state',
+            'followers_type',
+            'followers_partner_field_name',
+            'activity_user_type',
+            'activity_user_field_name',
         ]
 
     def _get_warning_messages(self):
@@ -217,6 +231,22 @@ class IrActionsServer(models.Model):
 
         if self.state == 'next_activity' and not self.model_id.is_mail_activity:
             warnings.append(_("A next activity can only be planned on models that use activities."))
+
+        if self.state in ('followers', 'remove_followers') and self.followers_type == 'generic' and self.followers_partner_field_name:
+            fields, field_chain_str = self._get_relation_chain("followers_partner_field_name")
+            if fields and fields[-1].comodel_name != "res.partner":
+                warnings.append(_(
+                    "The field '%(field_chain_str)s' is not a partner field.",
+                    field_chain_str=field_chain_str,
+                ))
+
+        if self.state == 'next_activity' and self.activity_user_type == 'generic' and self.activity_user_field_name:
+            fields, field_chain_str = self._get_relation_chain("activity_user_field_name")
+            if fields and fields[-1].comodel_name != "res.users":
+                warnings.append(_(
+                    "The field '%(field_chain_str)s' is not a user field.",
+                    field_chain_str=field_chain_str,
+                ))
 
         return warnings
 
