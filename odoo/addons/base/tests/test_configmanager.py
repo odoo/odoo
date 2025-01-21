@@ -75,7 +75,7 @@ class TestConfigManager(TransactionCase):
             'save': False,
             'init': {},
             'update': {},
-            'with_demo': True,
+            'with_demo': False,
             'import_partial': '',
             'pidfile': '',
             'addons_path': [],
@@ -190,7 +190,7 @@ class TestConfigManager(TransactionCase):
             'save': False,
             'init': {},  # blacklist for save, ignored from the config file
             'update': {},  # blacklist for save, ignored from the config file
-            'with_demo': False,
+            'with_demo': True,
             'import_partial': '/tmp/import-partial',
             'pidfile': '/tmp/pidfile',
             'addons_path': [],  # the path found in the config file is invalid
@@ -463,7 +463,7 @@ class TestConfigManager(TransactionCase):
             'save': False,
             'init': {'hr': True, 'stock': True},
             'update': {'account': True, 'website': True},
-            'with_demo': False,
+            'with_demo': True,
             'import_partial': '/tmp/import-partial',
             'pidfile': '/tmp/pidfile',
             'addons_path': [],
